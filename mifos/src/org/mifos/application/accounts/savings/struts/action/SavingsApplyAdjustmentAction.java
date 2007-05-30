@@ -88,7 +88,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	}
 	
 	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("");
+		ActionSecurity security = new ActionSecurity("savingsApplyAdjustmentAction");
 		security.allow("load", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("previous", SecurityConstants.VIEW);

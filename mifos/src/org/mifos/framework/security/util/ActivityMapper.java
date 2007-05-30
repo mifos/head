@@ -3,7 +3,10 @@
  */
 package org.mifos.framework.security.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.accounts.loan.struts.action.AccountStatusAction;
@@ -32,8 +35,8 @@ import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigur
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.customer.center.struts.action.CenterCustAction;
 import org.mifos.application.customer.client.struts.action.ClientCustAction;
-import org.mifos.application.customer.group.struts.action.AddGroupMembershipAction;
 import org.mifos.application.customer.client.struts.action.ClientTransferAction;
+import org.mifos.application.customer.group.struts.action.AddGroupMembershipAction;
 import org.mifos.application.customer.group.struts.action.GroupCustAction;
 import org.mifos.application.customer.group.struts.action.GroupTransferAction;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -427,9 +430,14 @@ public class ActivityMapper {
 
 	private Map<String, Short> activityMap = new HashMap<String, Short>();
 
-	public Short getActivityId(String key) {
+	private List<ActionSecurity> allSecurity = new ArrayList<ActionSecurity>();
 
+	public Short getActivityId(String key) {
 		return activityMap.get(key);
+	}
+	
+	public List<ActionSecurity> getAllSecurity() {
+		return Collections.unmodifiableList(allSecurity);
 	}
 
 	public short getActivityIdForNewStateId(short newState, short cancelFlag) {
@@ -893,6 +901,7 @@ public class ActivityMapper {
 			String fullKey = "/" + security.getActionName() + "-" + method;
 			activityMap.put(fullKey, security.get(method));
 		}
+		allSecurity.add(security);
 	}
 
 }

@@ -832,7 +832,11 @@
 			<forward name="makePayment_failure" path="/pages/application/savings/jsp/review_transaction_savings.jsp"/>
 		</action>
 		<!-- Edit Status Action -->
-		<action path="/editStatusAction" type="org.mifos.application.accounts.struts.action.EditStatusAction" name="editStatusActionForm" parameter="method" input="/editStatusAction.do?method=validate" validate="true" scope="session">
+		<action path="/editStatusAction" 
+			type="org.mifos.application.accounts.struts.action.EditStatusAction" 
+			name="editStatusActionForm" parameter="method" 
+			input="/editStatusAction.do?method=validate" validate="true" 
+			scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/change_status.jsp" />
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 			<forward name="savings_details_page" path="/savingsAction.do?method=get" />

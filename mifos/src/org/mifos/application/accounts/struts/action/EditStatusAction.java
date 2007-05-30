@@ -45,7 +45,7 @@ public class EditStatusAction extends BaseAction {
 	}
 	
 	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("");
+		ActionSecurity security = new ActionSecurity("editStatusAction");
 		security.allow("load", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("previous", SecurityConstants.VIEW);

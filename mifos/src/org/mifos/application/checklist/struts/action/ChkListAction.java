@@ -54,12 +54,11 @@ public class ChkListAction extends BaseAction {
 	}
 	
 	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("");
+		ActionSecurity security = new ActionSecurity("chkListAction");
 		security.allow("load", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		security.allow("getStates", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
-		security
-				.allow("previous", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		security.allow("previous", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		security.allow("create", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		security.allow("cancelCreate", SecurityConstants.VIEW);
 		security.allow("cancelManage", SecurityConstants.VIEW);

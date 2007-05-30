@@ -17,7 +17,8 @@ public class MethodInvokerTest extends MifosTestCase {
 	}
 	
 	public void testInvoke() throws Exception {
-		Money interest=(Money)MethodInvoker.invoke(new EMIInstallment(), "getInterest", new Object[]{});
+		Money interest=(Money)MethodInvoker.invoke(
+			new EMIInstallment(), "getInterest", new Object[]{});
 		assertEquals(Double.valueOf("0.0"),interest.getAmountDoubleValue());	
 		
 	}
@@ -28,7 +29,8 @@ public class MethodInvokerTest extends MifosTestCase {
 	}
 	
 	public void testInvokeWithNoException() throws Exception {
-		Money interest=(Money)MethodInvoker.invoke(new EMIInstallment(), "getInterest", new Object[]{});
+		Money interest=(Money)MethodInvoker.invokeWithNoException(
+			new EMIInstallment(), "getInterest", new Object[]{});
 		assertEquals(Double.valueOf("0.0"),interest.getAmountDoubleValue());	
 		
 	}

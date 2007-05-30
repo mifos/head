@@ -96,7 +96,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 	
 	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("");
+		ActionSecurity security = new ActionSecurity("loanAccountAction");
 		security.allow("getAllActivity", SecurityConstants.VIEW);
 		security.allow("get", SecurityConstants.VIEW);
 		security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);

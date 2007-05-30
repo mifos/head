@@ -58,6 +58,7 @@ import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.persistence.DowngraderTest;
+import org.mifos.framework.security.util.ActivityMapperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
@@ -76,15 +77,17 @@ import org.mifos.framework.util.helpers.MoneyTest;
  * which take many seconds to start up.
  * 
  * It is also true that tests here do not depend on the MySQL
- * test database.  We probably want to keep it that way (partly
+ * test database.  We want to keep it that way (partly
  * for speed, partly for isolation from other test runs and the
  * like).
  * 
  * If your only reason for wanting {@link MifosTestCase} is logging,
- * it might be possible to just call
- * {@link DatabaseSetup#configureLogging()} (haven't verified this
- * is fast).  Or pass around a {@link TestLogger}
- * (see {@link RoleActivityEntityTest} for an example).
+ * you can call {@link DatabaseSetup#configureLogging()} (this seems
+ * fast enough).  Another choice is to pass around a {@link TestLogger}
+ * (see {@link RoleActivityEntityTest} for an example) - this does a
+ * better job of avoiding side effects, strange dependencies on
+ * configuration files, etc, and is what we'll need to do if we want 
+ * to assert on log messages, for example.
  */
 public class FastTests extends TestSuite {
 
@@ -118,6 +121,7 @@ public class FastTests extends TestSuite {
 		suite.addTest(DowngraderTest.suite());
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
+		suite.addTest(ActivityMapperTest.suite());
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TestKey.class);
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
