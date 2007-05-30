@@ -14,7 +14,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 119;
+	public static final int APPLICATION_VERSION = 120;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	private final Connection connection;

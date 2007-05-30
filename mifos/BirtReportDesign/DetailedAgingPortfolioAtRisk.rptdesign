@@ -458,8 +458,8 @@ row["LoanNumber"]= loan.getGlobalAccountNum();
 row["Client"] = loan.getCustomer().getDisplayName();
 row["LoanAmount"] = loan.getLoanAmount().getAmount();
 row["Balance"] = loan.getRemainingPrincipalAmount().getAmount();
-row["Principal"] = loan.getTotalPrincipalAmountInArrears().getAmount();
-row["Interest"] = loan.getTotalInterestAmountInArrears().getAmount();
+row["Principal"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount();
+row["Interest"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
 row["DaysInArrears"] = loan.getDaysInArrears();
 
 if (loan.getDaysInArrears()>=1 && loan.getDaysInArrears() <=30)
@@ -771,13 +771,13 @@ current = null;]]></method>
                 <property name="width">1.21875in</property>
             </column>
             <column id="177">
-                <property name="width">0.8333333333in</property>
-            </column>
-            <column id="178">
                 <property name="width">0.7291666667in</property>
             </column>
+            <column id="178">
+                <property name="width">0.7395833333in</property>
+            </column>
             <column id="179">
-                <property name="width">0.46875in</property>
+                <property name="width">0.5729166667in</property>
             </column>
             <column id="180">
                 <property name="width">0.3541666667in</property>

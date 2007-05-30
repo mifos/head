@@ -107,6 +107,8 @@ public class TestLoanBO extends MifosTestCase {
 	// TODO: probably should be of type LoanBO
 	protected AccountBO accountBO = null;
 
+	protected AccountBO badAccountBO = null;
+
 	protected CustomerBO center = null;
 
 	protected CustomerBO group = null;
@@ -132,6 +134,9 @@ public class TestLoanBO extends MifosTestCase {
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
+		if (badAccountBO != null)
+			badAccountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+					AccountBO.class, badAccountBO.getAccountId());
 		if (group != null)
 			group = (CustomerBO) HibernateUtil.getSessionTL().get(
 					CustomerBO.class, group.getCustomerId());
@@ -139,6 +144,7 @@ public class TestLoanBO extends MifosTestCase {
 			center = (CustomerBO) HibernateUtil.getSessionTL().get(
 					CustomerBO.class, center.getCustomerId());
 		TestObjectFactory.cleanUp(accountBO);
+		TestObjectFactory.cleanUp(badAccountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -4759,6 +4765,39 @@ public class TestLoanBO extends MifosTestCase {
 				.getTotalInterestAmountInArrears());
 	}
 
+	public void testGetTotalInterestAmountInArrearsAndOutsideLateness() throws PersistenceException {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+		
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+		accountBO = getLoanAccount();
+		Money interest = new Money();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				((LoanScheduleEntity) installment).setActionDate(lastWeekDate);
+			}
+			else if (installment.getInstallmentId().intValue() == 2) {
+				interest = interest.add(((LoanScheduleEntity) installment)
+						.getInterest());
+				((LoanScheduleEntity) installment)
+				.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
+				.getAccountId());
+		assertEquals(interest, ((LoanBO) accountBO).getTotalInterestAmountInArrearsAndOutsideLateness());
+	}
+	
 	public void testGetTotalPrincipalAmountInArrears() {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
@@ -4788,6 +4827,37 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountId());
 		assertEquals(new Money("200"), ((LoanBO) accountBO)
 				.getTotalPrincipalAmountInArrears());
+	}
+	public void testGetTotalPrincipalAmountInArrearsAndOutsideLateness() throws PersistenceException {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+		
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				((LoanScheduleEntity) installment).setActionDate(lastWeekDate);
+			}
+			
+			else if (installment.getInstallmentId().intValue() == 2) {
+				((LoanScheduleEntity) installment)
+				.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
+				.getAccountId());
+		assertEquals(new Money("100"), ((LoanBO) accountBO)
+				.getTotalPrincipalAmountInArrearsAndOutsideLateness());
 	}
 
 	public void testSaveLoanForInvalidConnection() throws Exception {

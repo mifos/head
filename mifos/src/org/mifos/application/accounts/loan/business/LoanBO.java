@@ -109,6 +109,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -128,6 +129,8 @@ public class LoanBO extends AccountBO {
 	private final LoanOfferingBO loanOffering;
 
 	private final LoanSummaryEntity loanSummary;
+	
+	private LoanPrdPersistence loanPrdPersistence;
 
 	private Money loanAmount;
 
@@ -179,6 +182,7 @@ public class LoanBO extends AccountBO {
 		super();
 		this.loanOffering = null;
 		this.loanSummary = null;
+		this.loanPrdPersistence = null;
 		this.performanceHistory = null;
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 	}
@@ -508,6 +512,19 @@ public class LoanBO extends AccountBO {
 		}
 		return amount;
 	}
+	public Money getTotalPrincipalAmountInArrearsAndOutsideLateness() throws PersistenceException {
+		Money amount = new Money();
+		loanPrdPersistence = new LoanPrdPersistence();
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
+		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
+			if(currentDate.getTime() - accountActionDateEntity.getActionDate().getTime() > loanPrdPersistence.retrieveLatenessForPrd().intValue()*24*60*60*1000){
+				amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
+						.getPrincipal());
+			}
+		}
+		return amount;
+	}
 
 	public Money getTotalInterestAmountInArrears() {
 		Money amount = new Money();
@@ -515,6 +532,19 @@ public class LoanBO extends AccountBO {
 		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
 			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
 					.getInterest());
+		}
+		return amount;
+	}
+	public Money getTotalInterestAmountInArrearsAndOutsideLateness() throws PersistenceException {
+		Money amount = new Money();
+		loanPrdPersistence = new LoanPrdPersistence();
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
+		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
+			if(currentDate.getTime() - accountActionDateEntity.getActionDate().getTime() > loanPrdPersistence.retrieveLatenessForPrd().intValue()*24*60*60*1000){
+				amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
+						.getInterest());	
+			}
 		}
 		return amount;
 	}

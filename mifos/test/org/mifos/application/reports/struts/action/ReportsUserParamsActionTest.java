@@ -72,6 +72,7 @@ public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 		assertEquals(ReportSecurityConstants.DAILY_PORTFOLIO_QUALITY_DATA_REPORT, security.get("loadAddList-25").shortValue());
 		assertEquals(ReportSecurityConstants.CENTER_MEETING_SCHEDULE, security.get("loadAddList-26").shortValue());
 		assertEquals(ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK, security.get("loadAddList-28").shortValue());
+		assertEquals(ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER, security.get("loadAddList-29").shortValue());
 		
 	}
 		
