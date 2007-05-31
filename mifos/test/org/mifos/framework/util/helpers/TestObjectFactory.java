@@ -105,6 +105,7 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
+import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -851,6 +852,14 @@ public class TestObjectFactory {
 		return dates;
 	}
 
+	/**
+	 * createPeriodicAmountFee.
+	 * 
+	 * Changing {@link TestObjectFactory#getUserContext()} to
+	 * {@link TestUtils#makeUserWithLocales()} caused a failure
+	 * in {@link TestClientBO#testUpdateGroupFailure_GroupCancelled}
+	 * (and other tests).
+	 */
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter) {
@@ -886,12 +895,21 @@ public class TestObjectFactory {
 		}
 	}
 
+	/**
+	 * createOneTimeAmountFee.
+	 * 
+	 * Changing {@link TestObjectFactory#getUserContext()} to
+	 * {@link TestUtils#makeUserWithLocales()} caused a failure
+	 * in {@link TestCustomerAccountBO#testApplyUpfrontFee}
+	 * (and other tests).
+	 */
 	public static FeeBO createOneTimeAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
 		FeeBO fee;
 		try {
-			fee = createOneTimeAmountFee(feeName, feeCategory, feeAmnt, feePayment, 
-					TestObjectFactory.getUserContext());
+			fee = createOneTimeAmountFee(
+					feeName, feeCategory, feeAmnt, feePayment, 
+					getUserContext());
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -917,6 +935,14 @@ public class TestObjectFactory {
 		}
 	}
 	
+	/**
+	 * createOneTimeRateFee.
+	 * 
+	 * Changing {@link TestObjectFactory#getUserContext()} to
+	 * {@link TestUtils#makeUserWithLocales()} caused a failure
+	 * in {@link TestLoanBO#testApplyUpfrontFee}
+	 * (and other tests).
+	 */
 	public static FeeBO createOneTimeRateFee(String feeName,
 			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
 			FeePayment feePayment) {
@@ -924,7 +950,8 @@ public class TestObjectFactory {
 				GLCodeEntity.class, TestGeneralLedgerCode.FEES);
 		FeeBO fee;
 		try {
-			fee = new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
+			fee = new RateFeeBO(
+					getUserContext(), feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					glCode, rate, new FeeFormulaEntity(feeFormula), false,
@@ -1444,8 +1471,8 @@ public class TestObjectFactory {
 				CustomerStatus.fromInt(customerStatus));
 		CustomerCheckListBO customerChecklist = new CustomerCheckListBO(
 				customerLevelEntity, customerStatusEntity, "productchecklist",
-				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
-						.getUserContext().getId());
+				checklistStatus, details, TEST_LOCALE, 
+				PersonnelConstants.SYSTEM_USER);
 		customerChecklist.save();
 		HibernateUtil.commitTransaction();
 		return customerChecklist;
@@ -1461,8 +1488,8 @@ public class TestObjectFactory {
 				accountState);
 		AccountCheckListBO accountChecklist = new AccountCheckListBO(
 				productTypeEntity, accountStateEntity, "productchecklist",
-				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
-						.getUserContext().getId());
+				checklistStatus, details, TEST_LOCALE, 
+				PersonnelConstants.SYSTEM_USER);
 		accountChecklist.save();
 		HibernateUtil.commitTransaction();
 		return accountChecklist;
@@ -1882,7 +1909,8 @@ public class TestObjectFactory {
 	public static OfficeBO createOffice(OfficeLevel level,
 			OfficeBO parentOffice, String officeName, String shortName)
 			throws Exception {
-		OfficeBO officeBO = new OfficeBO(TestObjectFactory.getUserContext(),
+		OfficeBO officeBO = new OfficeBO(
+				TestUtils.makeUserWithLocales(),
 				level, parentOffice, null, officeName, shortName, null,
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();

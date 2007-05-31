@@ -38,6 +38,7 @@ public class CheckListDetailEntity extends PersistentObject {
 		return this.detailText;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setDetailText(String detailText) {
 		this.detailText = detailText;
 	}
@@ -46,6 +47,7 @@ public class CheckListDetailEntity extends PersistentObject {
 		return this.answerType;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setAnswerType(Short answerType) {
 		this.answerType = answerType;
 	}
@@ -54,6 +56,7 @@ public class CheckListDetailEntity extends PersistentObject {
 		return this.supportedLocales;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
 		this.supportedLocales = supportedLocales;
 	}
