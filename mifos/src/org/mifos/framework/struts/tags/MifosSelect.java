@@ -36,19 +36,6 @@
 
  */
 
-/*
- * Created on Aug 3, 2005
- * Mifos Select is the class which will be used by the end user to create the
- * Mifos select Tag
- * usages: <mifos:MifosSelect [name][label] [property] [property1] [multiple] [selectStyle] >
- * [name] : name of the bean from which you want to populate the left listbox
- * [label] : label of the MifosSelect
- * [property] : name of the String array as declared in bean with first letter in caps
- * [property1] : name of the form bean property in which you want to store the selected list
- * [multiple] : whether list boxes are multiple or not
- * [selectStyle] : Style information of list boxes
- *  e.g <mifos:MifosSelect name="inputForm" label="abc" property="InList" property1="outList" multiple="true" selectStyle=" width:100 ">
- */
 package org.mifos.framework.struts.tags;
 
 import java.lang.reflect.InvocationTargetException;
@@ -70,6 +57,17 @@ import org.apache.struts.taglib.TagUtils;
  *  User should call the javascript the function transferData(outSel) onclick event of
  *  submit button passing the refrence of the output list i.e. whatever he has given
  *  as property1 above e.g. <html:submit onclick="transferData(this.form.outList)"/>
+ * 
+ * Mifos Select is the class which will be used by the end user to create the
+ * Mifos select Tag
+ * usages: <mifos:MifosSelect [name][label] [property] [property1] [multiple] [selectStyle] >
+ * [name] : name of the bean from which you want to populate the left listbox
+ * [label] : label of the MifosSelect
+ * [property] : name of the String array as declared in bean with first letter in caps
+ * [property1] : name of the form bean property in which you want to store the selected list
+ * [multiple] : whether list boxes are multiple or not
+ * [selectStyle] : Style information of list boxes
+ *  e.g <mifos:MifosSelect name="inputForm" label="abc" property="InList" property1="outList" multiple="true" selectStyle=" width:100 ">
  */
 
 public class MifosSelect extends BodyTagSupport {
@@ -270,8 +268,6 @@ public class MifosSelect extends BodyTagSupport {
 
     /**
      * Constructor Initializes the label of the select tag
-     *
-     * @param label
      */
     public MifosSelect(String label) {
         super();
@@ -294,54 +290,61 @@ public class MifosSelect extends BodyTagSupport {
      */
     @Override
 	public int doEndTag() throws JspException {
-        StringBuffer results = new StringBuffer();
-        Collection inColl= (Collection)pageContext.getRequest().getAttribute(this.input);
+        Collection inColl= (Collection)pageContext.getRequest().getAttribute(
+        	this.input);
+
         Collection outColl= null;
         if(this.output!=null) {
-        	outColl=(Collection)pageContext.getRequest().getAttribute(this.output);
+        	outColl=(Collection)pageContext.getRequest().getAttribute(
+        		this.output);
         }
 
-        Map<Object,Object> inMap=null;
-        Map<Object,Object> outMap=null;
+        String html = render(inColl, outColl);
+		TagUtils.getInstance().write(pageContext, html);
+        return super.doEndTag();
+    }
+
+	String render(Collection inColl, Collection outColl) {
+		StringBuffer results = new StringBuffer();
+        Map<Object,Object> inMap;
+        Map<Object,Object> outMap;
         try {
-			inMap=helper(inColl);
-		if(outColl!=null) {
-			outMap=helper(outColl);
-		}
+			inMap = helper(inColl);
+			if (outColl != null) {
+				outMap = helper(outColl);
+			}
+			else {
+				outMap = null;
+			}
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		Map inputCopy = new HashMap();
 		if(inMap != null)
 		{
 			inputCopy = new HashMap(inMap);
-        if(outMap != null) {
-        	Set input = inMap.keySet();
-        	Set output = outMap.keySet();
-        	for(Iterator in= input.iterator();in.hasNext();) {
-        		Object obj1 = in.next();
-        		for(Iterator out= output.iterator();out.hasNext();) {
-            		Object obj2 = out.next();
-        			if(obj1.equals(obj2)) {
-        				inputCopy.remove(obj1);
-        			}
-        		}
-        	}
-        }
+	        if(outMap != null) {
+	        	Set input = inMap.keySet();
+	        	Set output = outMap.keySet();
+	        	for(Iterator in= input.iterator();in.hasNext();) {
+	        		Object obj1 = in.next();
+	        		for(Iterator out= output.iterator();out.hasNext();) {
+	            		Object obj2 = out.next();
+	        			if(obj1.equals(obj2)) {
+	        				inputCopy.remove(obj1);
+	        			}
+	        		}
+	        	}
+	        }
 		}
         rawselect[0].setData(inputCopy);
         rawselect[1].setData(outMap);
@@ -367,9 +370,9 @@ public class MifosSelect extends BodyTagSupport {
         results.append("</td></tr></table>");
         results.append("<div id=\"tooltip\" style=\"position:absolute;visibility:hidden;border:1px solid black;font-size:12px;layer-background-color:lightyellow;background-color:lightyellow;z-index:1;padding:1px\"></div>" );
 
-        TagUtils.getInstance().write(pageContext, results.toString());
-        return super.doEndTag();
-    }
+        String html = results.toString();
+		return html;
+	}
 
     /**
      * This function Add the javascript to the tag for moving
@@ -418,9 +421,10 @@ public class MifosSelect extends BodyTagSupport {
                 + rawselect[0].getName() + ")");
     }
 
-    private Map helper(Collection coll) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    Map helper(Collection coll) 
+    throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
+    IllegalAccessException, InvocationTargetException {
     	Map<Object,Object> map=new HashMap<Object,Object>();
-    	// System.out.println("in the helper method$$$$$$$$$$$$$$$$$$$$$$"+coll);
     	if(coll!=null&&!coll.isEmpty()) {
     		for (Iterator it = coll.iterator(); it.hasNext();) {
     			Object object = it.next();
@@ -438,7 +442,6 @@ public class MifosSelect extends BodyTagSupport {
 				string1 =  getList.invoke(object, (Object[]) null);
 				map.put(string1,string2);
     		}
-    		// System.out.println("size of the map----------------------------"+map.size());
     		return map;
     	}
     	return null;

@@ -59,6 +59,7 @@ import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.persistence.DowngraderTest;
 import org.mifos.framework.security.util.ActivityMapperTest;
+import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
@@ -109,6 +110,7 @@ public class FastTests extends TestSuite {
 		//suite.addTestSuite(OfficeListTagTest.class);
 
 		suite.addTestSuite(TableTagTest.class);
+		suite.addTest(MifosSelectTest.suite());
 		suite.addTestSuite(XmlBuilderTest.class);
 		// Slow because it needs logging (and thus extends MifosTestCase)
 //		suite.addTestSuite(MethodInvokerTest.class);

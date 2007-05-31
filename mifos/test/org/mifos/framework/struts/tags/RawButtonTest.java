@@ -1,4 +1,4 @@
-package org.mifos.framework.struts.tag;
+package org.mifos.framework.struts.tags;
 
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.struts.tags.RawButton;
