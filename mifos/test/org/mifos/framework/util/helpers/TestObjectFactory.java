@@ -694,7 +694,8 @@ public class TestObjectFactory {
 			new RecommendedAmntUnitEntity(recommendedAmountUnit);
 		SavingsOfferingBO product;
 		try {
-			product = new SavingsOfferingBO(getUserContext(), name,
+			product = new SavingsOfferingBO(TestUtils.makeUserWithLocales(), 
+					name,
 					shortName, productCategory, prdApplicableMaster, startDate,
 					null, null, amountUnit, savingsTypeEntity, intCalType,
 					intCalcMeeting, intPostMeeting, new Money(recommendedAmount
@@ -705,9 +706,6 @@ public class TestObjectFactory {
 		} catch (ProductDefinitionException e) {
 			throw new RuntimeException(e);
 		} catch (SystemException e) {
-			throw new RuntimeException(e);
-		}
-		catch (ApplicationException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -737,7 +735,7 @@ public class TestObjectFactory {
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			SavingsOfferingBO savingsOffering) throws Exception {
-		UserContext userContext = getUserContext();
+		UserContext userContext = TestUtils.makeUserWithLocales();
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
@@ -778,7 +776,7 @@ public class TestObjectFactory {
 			CustomerBO customer, AccountState state, Date startDate,
 			SavingsOfferingBO savingsOffering, UserContext userContext)
 			throws Exception {
-		userContext = getUserContext();
+		userContext = TestUtils.makeUserWithLocales();
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
 				customer, state,
 				savingsOffering.getRecommendedAmount(), getCustomFieldView());
