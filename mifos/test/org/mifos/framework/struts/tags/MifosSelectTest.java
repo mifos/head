@@ -53,7 +53,12 @@ public class MifosSelectTest {
 		assertEquals("newlabel",mifosSelect.getLabel());
 	}
 	
-	@Test public void renderEmpty() {
+	@Test public void renderEmpty() throws Exception {
+		String output = 
+			new MifosSelect().render(
+				Collections.EMPTY_LIST,
+				Collections.EMPTY_LIST);
+		//TestUtils.assertWellFormedFragment(output);
 		assertEquals(INTRODUCTORY_STYLES_AND_SCRIPT +
 			"<table >" +
 			"<tr> " +
@@ -100,9 +105,7 @@ public class MifosSelectTest {
 			"z-index:1;" +
 			"padding:1px\">" +
 			"</div>",
-			new MifosSelect().render(
-				Collections.EMPTY_LIST,
-				Collections.EMPTY_LIST));
+			output);
 	}
 	
 	private String selectTheItem(boolean leftSelect) {
@@ -121,17 +124,17 @@ public class MifosSelectTest {
 		assertEquals(null, map);
 	}
 	
-	@Test public void helperNonEmpty() throws Exception {
+	@Test public void helperSameClass() throws Exception {
 		MifosSelect select = new MifosSelect();
 		select.setProperty1("propertyOne");
 		select.setProperty2("propertyTwo");
 		Map map = select.helper(Collections.singletonList(new Foo()));
 		assertEquals(1, map.size());
 		assertEquals(new Integer(5), map.keySet().iterator().next());
-		assertEquals("Elm", map.get(5));
+		assertEquals("Acorn", map.get(5));
 	}
 	
-	@Test(expected=IllegalAccessException.class)
+	@Test(expected=NoSuchMethodException.class)
 	public void helperPrivate() throws Exception {
 		MifosSelect select = new MifosSelect();
 		select.setProperty1("propertyOne");
@@ -139,18 +142,38 @@ public class MifosSelectTest {
 		select.helper(Collections.singletonList(new Foo()));
 	}
 	
-	class Foo {
+	@Test public void helperParent() throws Exception {
+		MifosSelect select = new MifosSelect();
+		select.setProperty1("parentPropertyOne");
+		select.setProperty2("parentPropertyTwo");
+		Map map = select.helper(Collections.singletonList(new Foo()));
+		assertEquals(1, map.size());
+		assertEquals(new Integer(55), map.keySet().iterator().next());
+		assertEquals("Oak", map.get(55));
+	}
+
+	class Foo extends ParentFoo{
 		public int getPropertyOne() {
 			return 5;
 		}
 		
 		public String getPropertyTwo() {
-			return "Elm";
+			return "Acorn";
 		}
 		
 		@SuppressWarnings("unused")
 		private String getPrivateProperty() {
 			return "mine";
+		}
+	}
+
+	class ParentFoo {
+		public int getParentPropertyOne() {
+			return 55;
+		}
+		
+		public String getParentPropertyTwo() {
+			return "Oak";
 		}
 	}
 

@@ -431,12 +431,12 @@ public class MifosSelect extends BodyTagSupport {
 				Object string1=null;
 				Object string2=null;
 				String str1 = this.Property2.substring(0, 1);
-				getList = object.getClass().getDeclaredMethod(
+				getList = object.getClass().getMethod(
 						"get" + str1.toUpperCase() + this.Property2.substring(1),
 						(Class[]) null);
 				string2 =  getList.invoke(object, (Object[]) null);
 				String str2 = this.Property1.substring(0, 1);
-				getList = object.getClass().getDeclaredMethod(
+				getList = object.getClass().getMethod(
 						"get" + str2.toUpperCase() + this.Property1.substring(1),
 						(Class[]) null);
 				string1 =  getList.invoke(object, (Object[]) null);
