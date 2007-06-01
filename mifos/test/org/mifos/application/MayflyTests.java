@@ -17,7 +17,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * {@link DatabaseSetup}.
  * 
  * Does not include tests which are hardcoded to always use Mayfly,
- * like {@link LatestTest} or some of {@link DatabaseVersionPersistenceTest}.
+ * like {@link LatestTest} or {@link DatabaseVersionPersistenceTest}.
  */
 public class MayflyTests extends TestSuite {
 	

@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -17,16 +19,40 @@ public class DatabaseVersionPersistence {
 	public static final int APPLICATION_VERSION = 120;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
+	private static Map<Integer, Upgrade> masterRegister =
+		new HashMap<Integer, Upgrade>();
+	
+	public static void register(
+		Map<Integer, Upgrade> register, Upgrade upgrade) {
+		int higherVersion = upgrade.higherVersion();
+		if (register.containsKey(higherVersion)) {
+			throw new IllegalStateException(
+				"already have an upgrade to " + higherVersion);
+		}
+		register.put(higherVersion, upgrade);
+	}
+	
+	public static void register(Upgrade upgrade) {
+		register(masterRegister, upgrade);
+	}
+
 	private final Connection connection;
+	private final Map<Integer, Upgrade> registeredUpgrades;
 	
 	public DatabaseVersionPersistence() {
 		this(HibernateUtil.getOrCreateSessionHolder().getSession().connection());
 	}
 
 	public DatabaseVersionPersistence(Connection connection) {
-		this.connection = connection;
+		this(connection, Collections.unmodifiableMap(masterRegister));
 	}
 	
+	public DatabaseVersionPersistence(Connection connection, 
+			Map<Integer, Upgrade> registeredUpgrades) {
+		this.connection = connection;
+		this.registeredUpgrades = registeredUpgrades;
+	}
+
 	private Connection getConnection() {
 		return connection;
 	}
@@ -105,10 +131,25 @@ public class DatabaseVersionPersistence {
 
 	Upgrade findUpgrade(int fromVersion) {
 		int higherVersion = fromVersion + 1;
+
+		boolean foundInJava = registeredUpgrades.containsKey(higherVersion);
+
 		String name = "upgrade_to_" + higherVersion + ".sql";
 		URL url = lookup(name);
-		Upgrade upgrade;
-		if (url == null) {
+		boolean foundInSql = url != null;
+
+		if (foundInJava && foundInSql) {
+			throw new IllegalStateException(
+				"Found upgrade to " + higherVersion +
+				" both in java and in " + name);
+		}
+		else if (foundInJava) {
+			return registeredUpgrades.get(higherVersion);
+		}
+		else if (foundInSql) {
+			return new SqlUpgrade(url, higherVersion);
+		}
+		else {
 			String location;
 			try {
 				location = " in " + 
@@ -117,14 +158,12 @@ public class DatabaseVersionPersistence {
 			} catch (Throwable e) {
 				location = "";
 			}
-			throw new IllegalStateException("WAR built without "+name+" next to "+
-					getClass().getName()+
+			throw new IllegalStateException(
+					"Did not find upgrade to " + higherVersion +
+					" in java or in " + name + " next to " +
+					getClass().getName() +
 					location);
 		}
-		else {
-			upgrade = new SqlUpgrade(url, higherVersion);
-		}
-		return upgrade;
 	}
 
 	URL lookup(String name) {

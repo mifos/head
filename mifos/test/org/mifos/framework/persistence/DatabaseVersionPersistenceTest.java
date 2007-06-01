@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.CharacterCodingException;
@@ -13,11 +14,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.JUnit4TestAdapter;
 import junitx.framework.ObjectAssert;
+import junitx.framework.StringAssert;
 import net.sourceforge.mayfly.Database;
 
 import org.junit.Before;
@@ -30,18 +35,13 @@ public class DatabaseVersionPersistenceTest {
 	@Before
 	public void setUp() throws Exception {
 		DatabaseSetup.configureLogging();
-		DatabaseSetup.initializeHibernate();
 	}
 
-	@Test public void read() throws Exception {
-		new DatabaseVersionPersistence().read();
-	}
-	
 	@Test public void readSuccess() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
-		new DatabaseVersionPersistence().read(database.openConnection());
+		new DatabaseVersionPersistence(database.openConnection()).read();
 	}
 	
 	@Test public void readTwoRows() throws Exception {
@@ -50,7 +50,7 @@ public class DatabaseVersionPersistenceTest {
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(54)");
 		try {
-			new DatabaseVersionPersistence().read(database.openConnection());
+			new DatabaseVersionPersistence(database.openConnection()).read();
 			fail();
 		}
 		catch (RuntimeException e) {
@@ -62,7 +62,7 @@ public class DatabaseVersionPersistenceTest {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		try {
-			new DatabaseVersionPersistence().read(database.openConnection());
+			new DatabaseVersionPersistence(database.openConnection()).read();
 			fail();
 		}
 		catch (RuntimeException e) {
@@ -70,28 +70,23 @@ public class DatabaseVersionPersistenceTest {
 		}
 	}
 	
-	@Test public void readNoTable() throws Exception {
+	@Test(expected=SQLException.class)
+	public void readNoTable() throws Exception {
 		/* This is the case where the user has an old database (from before
 		   version 100).  They will need to upgrade to 100 manually.  */
 		Database database = new Database();
-		try {
-			new DatabaseVersionPersistence().read(database.openConnection());
-			fail();
-		}
-		catch (SQLException e) {
-		}
+		new DatabaseVersionPersistence(database.openConnection()).read();
 	}
 	
 	@Test public void write() throws Exception {
-		new DatabaseVersionPersistence().write(77);
+		Database database = new Database();
+		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+		new DatabaseVersionPersistence(database.openConnection()).write(77);
 		assertEquals(77, 
-			new DatabaseVersionPersistence().read());
+			new DatabaseVersionPersistence(database.openConnection()).read());
 	}
 
-	@Test public void isVersioned() throws Exception {
-		assertTrue(new DatabaseVersionPersistence().isVersioned());
-	}
-	
 	@Test public void isNotVersioned() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		DatabaseVersionPersistence persistence = 
@@ -106,13 +101,15 @@ public class DatabaseVersionPersistenceTest {
 	}
 	
 	@Test public void noUpgrade() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(null);
 		List<Upgrade> scripts = persistence.scripts(88, 88);
 		assertEquals(0, scripts.size());
 	}
 
 	@Test public void upgrade() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence() {
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(null) {
 			@Override
 			URL lookup(String name) {
 				if ("upgrade_to_89.sql".equals(name) 
@@ -136,21 +133,9 @@ public class DatabaseVersionPersistenceTest {
 			((SqlUpgrade) scripts.get(1)).sql().getPath());
 	}
 
-	/*
-	Like the above test, but with files instead of overriding lookup.
-	
-	@Test public void testUpgradeWithFile() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
-		URL[] scripts = persistence.scripts(90, 88);
-		assertEquals(2, scripts.length);
-		scripts[0].openStream().close();
-		scripts[1].openStream().close();
-	}
-	*/
-
 	@Test public void detectDowngrade() throws Exception {
 		DatabaseVersionPersistence persistence = 
-			new DatabaseVersionPersistence();
+			new DatabaseVersionPersistence(null);
 		try {
 			persistence.scripts(87, 88);
 			fail();
@@ -164,7 +149,7 @@ public class DatabaseVersionPersistenceTest {
 	
 	@Test public void downgradeScripts() throws Exception {
 		DatabaseVersionPersistence persistence = 
-			new DatabaseVersionPersistence();
+			new DatabaseVersionPersistence(null);
 		List<Upgrade> upgrades = persistence.downgrades(87, 88);
 		assertEquals(1, upgrades.size());
 		SqlUpgrade first = (SqlUpgrade) upgrades.get(0);
@@ -173,7 +158,7 @@ public class DatabaseVersionPersistenceTest {
 	
 	@Test public void downgradesInOrderOfExecution() throws Exception {
 		DatabaseVersionPersistence persistence = 
-			new DatabaseVersionPersistence();
+			new DatabaseVersionPersistence(null);
 		List<Upgrade> upgrades = persistence.downgrades(86, 88);
 		assertEquals(2, upgrades.size());
 		assertEquals(88, ((SqlUpgrade) upgrades.get(0)).higherVersion());
@@ -221,20 +206,22 @@ public class DatabaseVersionPersistenceTest {
 	}
 
 	@Test public void upgradeDatabase() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
-		Connection conn = database.openConnection();
-		conn.setAutoCommit(false);
-		persistence.upgradeDatabase(conn, 80);
-		conn.commit();
+		Connection connection = database.openConnection();
+		connection.setAutoCommit(false);
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(connection);
+		persistence.upgradeDatabase(connection, 80);
+		connection.commit();
 		
-		readOneValueFromFoo(conn);
+		readOneValueFromFoo(connection);
 	}
 
-	private void readOneValueFromFoo(Connection conn) throws SQLException {
-		Statement statement = conn.createStatement();
+	private void readOneValueFromFoo(Connection connection) 
+	throws SQLException {
+		Statement statement = connection.createStatement();
 		ResultSet results = statement.executeQuery("select * from FOO");
 		assertTrue(results.next());
 		int valueFromFoo = results.getInt(1);
@@ -244,6 +231,112 @@ public class DatabaseVersionPersistenceTest {
 		statement.close();
 	}
 	
+	@Test public void notJavaOrSql() throws Exception {
+		Database database = new Database();
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(database.openConnection(),
+				Collections.EMPTY_MAP) {
+			@Override
+			URL lookup(String name) {
+				return null;
+			}
+		};
+		try {
+			persistence.findUpgrade(68);
+			fail();
+		}
+		catch (IllegalStateException e) {
+			StringAssert.assertStartsWith(
+				"Did not find upgrade to 69 in java " +
+				"or in upgrade_to_69.sql next to ",
+				e.getMessage());
+		}
+	}
+	
+	@Test public void javaOnly() throws Exception {
+		Database database = new Database();
+		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
+		DatabaseVersionPersistence.register(registrations, new TestUpgrade(69));
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(database.openConnection(),
+				registrations) {
+			@Override
+			URL lookup(String name) {
+				return null;
+			}
+		};
+		TestUpgrade found = (TestUpgrade) persistence.findUpgrade(68);
+		found.upgrade(null);
+		assertEquals("upgrade to 69\n", found.getLog());
+	}
+	
+	@Test public void javaAndSql() throws Exception {
+		Database database = new Database();
+		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
+		DatabaseVersionPersistence.register(registrations, new TestUpgrade(69));
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(database.openConnection(),
+				registrations) {
+			@Override
+			URL lookup(String name) {
+				if ("upgrade_to_69.sql".equals(name)) {
+					try {
+						return new URL("file:" + name);
+					} catch (MalformedURLException e) {
+						throw (AssertionFailedError)new AssertionFailedError().initCause(e);
+					}
+				}
+				else {
+					throw new AssertionFailedError("got unexpected " + name);
+				}
+			}
+		};
+		
+		try {
+			persistence.findUpgrade(68);
+			fail();
+		}
+		catch (IllegalStateException e) {
+			assertEquals(
+				"Found upgrade to 69 both in java and in upgrade_to_69.sql",
+				e.getMessage());
+		}
+	}
+	
+	@Test public void duplicateRegistration() throws Exception {
+		Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
+		DatabaseVersionPersistence.register(register, new TestUpgrade(70));
+		try {
+			DatabaseVersionPersistence.register(register, new TestUpgrade(70));
+			fail();
+		}
+		catch (IllegalStateException e) {
+			assertEquals("already have an upgrade to 70", e.getMessage());
+		}
+	}
+	
+	static final class TestUpgrade extends Upgrade {
+		private StringBuilder log = new StringBuilder();
+
+		TestUpgrade(int version) {
+			super(version);
+		}
+
+		@Override
+		public void downgrade(Connection conn) throws IOException, SQLException {
+			log.append("downgrade from " + higherVersion() + "\n");
+		}
+
+		@Override
+		public void upgrade(Connection conn) throws IOException, SQLException {
+			log.append("upgrade to " + higherVersion() + "\n");
+		}
+		
+		String getLog() {
+			return log.toString();
+		}
+	}
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(DatabaseVersionPersistenceTest.class);
 	}

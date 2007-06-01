@@ -57,6 +57,7 @@ import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
+import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.DowngraderTest;
 import org.mifos.framework.security.util.ActivityMapperTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
@@ -120,6 +121,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(CreateReportTest.class);
 		
 		suite.addTestSuite(DatabaseVersionFilterTest.class);
+		suite.addTest(DatabaseVersionPersistenceTest.suite());
 		suite.addTest(DowngraderTest.suite());
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
