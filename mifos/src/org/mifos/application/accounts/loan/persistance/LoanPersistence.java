@@ -253,4 +253,28 @@ public class LoanPersistence extends Persistence {
 		}
 		return totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding;
 	}
+
+	public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException {
+
+		StringBuilder queryString = new StringBuilder(
+				"from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id in (5,9)");
+		if (loanOfficerId != null) {
+			queryString.append(" and loan.personnel.personnelId = "
+					+ loanOfficerId);
+		}
+		if (loanProductId != null) {
+			queryString.append(" and loan.loanOffering.prdOfferingId = "
+					+ loanProductId);
+		}
+		queryString.append(" and loan.office.officeId = " + branchId);
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			Query query = session.createQuery(queryString.toString());
+			return query.list();
+		}
+		catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+	
+	}
 }

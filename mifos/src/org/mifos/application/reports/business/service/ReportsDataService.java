@@ -34,39 +34,67 @@ public class ReportsDataService {
 	}
 
 	public void initialize(Integer userId) throws ServiceException {
-		this.personnel = personnelBusinessService.getPersonnel(convertIntegerToShort(userId));
+		this.personnel = personnelBusinessService
+				.getPersonnel(convertIntegerToShort(userId));
 	}
 
 	public List<OfficeBO> getActiveBranchesUnderUser() throws ServiceException {
 		return officeBusinessService.getActiveBranchesUnderUser(personnel);
 	}
 
-	public List<PersonnelBO> getActiveLoanOfficers(Integer branchId) throws ServiceException {
+	public List<PersonnelBO> getActiveLoanOfficers(Integer branchId)
+			throws ServiceException {
 		List<PersonnelBO> loanOfficers = new ArrayList<PersonnelBO>();
 		if (personnel.isLoanOfficer()) {
 			loanOfficers.add(personnel);
-		} else {
-			loanOfficers = personnelBusinessService.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
+		}
+		else {
+			loanOfficers = personnelBusinessService
+					.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
 		}
 		return loanOfficers;
 	}
 
 	public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
-		return loanPrdBusinessService.getAllLoanOfferings(personnel.getLocaleId());
+		return loanPrdBusinessService.getAllLoanOfferings(personnel
+				.getLocaleId());
 	}
 
-	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId, Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
-		return loanPersistence.getLoanAccountsInActiveBadStanding(convertIntegerToShort(branchId), convertIntegerToShort(loanOfficerId), convertIntegerToShort(loanProductId));
+	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId,
+			Integer loanOfficerId, Integer loanProductId)
+			throws PersistenceException {
+		return loanPersistence.getLoanAccountsInActiveBadStanding(
+				convertIntegerToShort(branchId),
+				convertIntegerToShort(loanOfficerId),
+				convertIntegerToShort(loanProductId));
 	}
-	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(Integer branchId, Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
-		return loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(convertIntegerToShort(branchId), convertIntegerToShort(loanOfficerId), convertIntegerToShort(loanProductId));
+
+	public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
+			Integer branchId, Integer loanOfficerId, Integer loanProductId)
+			throws PersistenceException {
+		return loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
+						convertIntegerToShort(branchId),
+						convertIntegerToShort(loanOfficerId),
+						convertIntegerToShort(loanProductId));
 	}
-	
+
+	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
+			Integer branchId, Integer loanOfficerId, Integer loanProductId)
+			throws PersistenceException {
+		return loanPersistence
+				.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
+						convertIntegerToShort(branchId),
+						convertIntegerToShort(loanOfficerId),
+						convertIntegerToShort(loanProductId));
+	}
+
+
 	void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
 		this.loanPrdBusinessService = loanPrdBusinessService;
 	}
 
-	void setPersonnelBusinessService(PersonnelBusinessService personnelBusinessService) {
+	void setPersonnelBusinessService(
+			PersonnelBusinessService personnelBusinessService) {
 		this.personnelBusinessService = personnelBusinessService;
 	}
 
@@ -78,11 +106,12 @@ public class ReportsDataService {
 		this.personnel = personnel;
 	}
 
+	public void setLoanPersistence(LoanPersistence loanPersistence) {
+		this.loanPersistence = loanPersistence;
+	}
+
 	PersonnelBO getPersonnel() {
 		return personnel;
-	}
-	void setLoanPrdBusinessService(LoanPersistence loanPersistence) {
-		this.loanPersistence = loanPersistence;
 	}
 
 	private Short convertIntegerToShort(Integer intValue) {
@@ -91,5 +120,6 @@ public class ReportsDataService {
 		}
 		return intValue.shortValue();
 	}
+
 
 }

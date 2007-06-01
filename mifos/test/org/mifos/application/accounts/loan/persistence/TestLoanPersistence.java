@@ -361,4 +361,23 @@ public class TestLoanPersistence extends MifosTestCase {
 		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
 		assertEquals(300,money);
 	}
+	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficer() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		List<LoanBO> loanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,null);
+		assertEquals(3,loanList.size());
+	}
+	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficerAndLoanProduct() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		short goodLoanProductId = goodAccount.getLoanOffering().getPrdOfferingId();
+		List<LoanBO> goodLoanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,goodLoanProductId);
+		assertEquals(1,goodLoanList.size());
+		
+		short badLoanProductId = badAccount.getLoanOffering().getPrdOfferingId();
+		List<LoanBO> badLoanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,badLoanProductId);
+		assertEquals(1,badLoanList.size());
+		
+		
+	}
 }

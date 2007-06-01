@@ -52,7 +52,6 @@ public class ReportsDataServiceTest extends TestCase {
 		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
 		personnelMock = createMock(PersonnelBO.class);
 		loanPersistenceMock = createMock(LoanPersistence.class);
-		
 		expectedException = new ServiceException("someServiceException");
 
 		userId = 1;
@@ -62,11 +61,12 @@ public class ReportsDataServiceTest extends TestCase {
 		loanProductId =4;
 
 		reportsDataService = new ReportsDataService();
+		
 		reportsDataService.setLoanPrdBusinessService(loanPrdBusinessServiceMock);
 		reportsDataService.setPersonnelBusinessService(personnelBusinessServiceMock);
 		reportsDataService.setOfficeBusinessService(officeBusinessServiceMock);
 		reportsDataService.setPersonnel(personnelMock);
-		reportsDataService.setLoanPrdBusinessService(loanPersistenceMock);
+		reportsDataService.setLoanPersistence(loanPersistenceMock);
 	}
 
 	public void testInitialize() throws Exception {
@@ -175,5 +175,13 @@ public class ReportsDataServiceTest extends TestCase {
 		assertSame(exceptedSum, reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId.intValue(),loanOfficerId.intValue(),loanProductId.intValue()));
 		verify(loanPersistenceMock);
 	}
-
+	
+	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficerShouldReturnListOfAllActiveLoans() throws Exception {
+		List<LoanBO> exceptedLoans = new ArrayList<LoanBO>();
+		
+		expect(loanPersistenceMock.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,loanProductId)).andReturn(exceptedLoans);
+		replay(loanPersistenceMock);
+		assertSame(exceptedLoans, reportsDataService.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId.intValue(),loanOfficerId.intValue(),loanProductId.intValue()));
+		verify(loanPersistenceMock);
+	}
 }
