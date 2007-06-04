@@ -13,5 +13,17 @@ function submitQuestionForm(method) {
 	form.action='questionsAction.do?method=' + method;
 	form.submit();
 }
-	
 
+function submitForm(form, action) {
+	form = document.forms[form];
+	form.action=action;
+	form.submit();
+}
+
+	
+function submitSurveyForm(method) {
+	form = document.forms['surveyActionForm'];
+	form.action='surveysAction.do?method=' + method;
+	form.submit();
+}
+	

@@ -171,6 +171,9 @@ public enum ActionForwards {
 	confirmAddClientToGroup_success,
 	loadSearch_failure,
 	welcome,
-	manage_questions,
-	birtreport_path;
+	birtreport_path,
+	
+	// surveys additions
+	create_entry_success,
+	manage_questions;
 }

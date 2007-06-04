@@ -1324,5 +1324,17 @@
 				<arg key="configuration.bulkentry" />
 			</field>
 		</form>
+		<form name="/surveysAction">
+			<field property="appliesTo" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="SurveysUIResources"/>
+				<arg key="Surveys.appliesToField" bundle="SurveysUIResources"/>
+			</field>
+			<field property="name" depends="required,minlength">
+				<msg name="required" key="errors.mandatory" bundle="SurveysUIResources"/>
+				<msg name="minlength" key="errors.minlength" bundle="SurveysUIResources" />
+				<arg key="Surveys.nameField" bundle="SurveysUIResources"/>
+				<var><var-name>minlength</var-name><var-value>3</var-value></var>
+			</field>
+		</form>
 	</formset>
 </form-validation>

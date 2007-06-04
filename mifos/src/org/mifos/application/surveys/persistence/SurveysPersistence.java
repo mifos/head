@@ -6,6 +6,8 @@ import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
+import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -52,10 +54,23 @@ public class SurveysPersistence extends SessionPersistence {
     public List<Question> retrieveAllQuestions() throws PersistenceException {
         Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_ALL);
         return query.list();
-}
+    }
+    
+    public List<Question> retrieveQuestionsByState(QuestionState state) throws PersistenceException {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_STATE);
+    	query.setParameter("QUESTION_STATE", state.getValue());
+    	return query.list();
+    }
 
+    
+    public List<Question> retrieveQuestionsByAnswerType(AnswerType type) throws PersistenceException {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_TYPE);
+    	query.setParameter("ANSWER_TYPE", type.getValue());
+    	return query.list();
+    }
+    
     public Question getQuestion(int id) {
         return (Question) getSession().get(Question.class, id);
-}
+    }
 
 }

@@ -60,6 +60,66 @@ public class TestSurvey extends MifosTestCase {
 		assertEquals(SurveyType.BOTH, SurveyType.fromString("both"));
 	}
 	
+	public void testRetrieveQuestionsByState() throws Exception {
+		SessionHolder holder = new SessionHolder(session);
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		String questionText1 = "testGetQuestionsByState question 1";
+		String questionText2 = "testGetQuestionsByState question 2";
+		String questionText3 = "testGetQuestionsByState question 3";
+		
+		Question question1 = new Question(questionText1);
+		Question question2 = new Question(questionText2);
+		question2.setQuestionState(QuestionState.INACTIVE);
+		Question question3 = new Question(questionText3);
+		question3.setQuestionState(QuestionState.ACTIVE);
+		
+		surveysPersistence.createOrUpdate(question1);
+		surveysPersistence.createOrUpdate(question2);
+		surveysPersistence.createOrUpdate(question3);
+		
+		List<Question> results = surveysPersistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+		assertEquals(2, results.size());
+		assertEquals(questionText1, results.get(0).getQuestionText());
+		results = surveysPersistence.retrieveQuestionsByState(QuestionState.INACTIVE);
+		assertEquals(questionText2, results.get(0).getQuestionText());
+	}
+	
+	public void testRetrieveQuestionsByAnswerType() throws Exception {
+		SessionHolder holder = new SessionHolder(session);
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		String questionText1 = "testGetQuestionsByState question 1";
+		String questionText2 = "testGetQuestionsByState question 2";
+		String questionText3 = "testGetQuestionsByState question 3";
+		String questionText4 = "testGetQuestionsByState question 4";
+		Question question1 = new Question(questionText1, AnswerType.FREETEXT);
+		Question question2 = new Question(questionText2, AnswerType.NUMBER);
+		Question question3 = new Question(questionText3, AnswerType.DATE);
+		Question question4 = new Question(questionText4, AnswerType.CHOICE);
+		
+		surveysPersistence.createOrUpdate(question1);
+		surveysPersistence.createOrUpdate(question2);
+		surveysPersistence.createOrUpdate(question3);
+		surveysPersistence.createOrUpdate(question4);
+		
+		List<Question> results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.FREETEXT);
+		assertEquals(1, results.size());
+		assertEquals(questionText1, results.get(0).getQuestionText());
+		
+		results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.NUMBER);
+		assertEquals(1, results.size());
+		assertEquals(questionText2, results.get(0).getQuestionText());
+		
+		results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.DATE);
+		assertEquals(1, results.size());
+		assertEquals(questionText3, results.get(0).getQuestionText());
+		
+		results = surveysPersistence.retrieveQuestionsByAnswerType(AnswerType.CHOICE);
+		assertEquals(1, results.size());
+		assertEquals(questionText4, results.get(0).getQuestionText());
+		
+	}
+
+	
 	public void testGetSurveysByType() throws Exception {
 		SessionHolder holder = new SessionHolder(session);
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
@@ -70,9 +130,9 @@ public class TestSurvey extends MifosTestCase {
 		Survey survey3 = new Survey(
 			"Survey 3", SurveyState.ACTIVE, SurveyType.BOTH);
 		
-		session.save(survey1);
-		session.save(survey2);
-		session.save(survey3);
+		surveysPersistence.createOrUpdate(survey1);
+		surveysPersistence.createOrUpdate(survey2);
+		surveysPersistence.createOrUpdate(survey3);
 		
 		List<Survey> bothResults = surveysPersistence.retrieveSurveysByType(SurveyType.BOTH);
 		assertEquals(1, bothResults.size());
@@ -125,6 +185,34 @@ public class TestSurvey extends MifosTestCase {
 			assertEquals(AnswerType.FREETEXT, retrieved.getAnswerTypeAsEnum());
 			assertEquals(QuestionState.ACTIVE, retrieved.getQuestionStateAsEnum());
 		}
+	}
+	
+	public void testRetrieveQuestions() throws Exception {
+		String questionText1 = "test question 1";
+		String questionText2 = "test question 2";
+		String questionText3 = "test question 3";
+		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test question 2", AnswerType.NUMBER);
+		Question question3 = new Question("test question 3", AnswerType.DATE);
+		question2.setQuestionState(QuestionState.INACTIVE);
+		
+		SessionHolder holder = new SessionHolder(session);
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		surveysPersistence.createOrUpdate(question1);
+		surveysPersistence.createOrUpdate(question2);
+		surveysPersistence.createOrUpdate(question3);
+		
+		List<Question> results = surveysPersistence.retrieveAllQuestions();
+		assertEquals(3, results.size());
+		assertEquals(questionText1, results.get(0).getQuestionText());
+		assertEquals(questionText2, results.get(1).getQuestionText());
+		assertEquals(questionText3, results.get(2).getQuestionText());
+		
+		results = surveysPersistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+		assertEquals(2, results.size());
+		assertEquals(questionText1, results.get(0).getQuestionText());
+		assertEquals(questionText3, results.get(1).getQuestionText());
+		
 	}
 	
 	private SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {

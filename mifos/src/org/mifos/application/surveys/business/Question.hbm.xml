@@ -9,11 +9,10 @@
 		</id>
 		<property name="questionText" column="QUESTION_TEXT"/>
 		<property name="answerType" column="ANSWER_TYPE" />
-		<property name="questionState"  
-			column="QUESTION_STATE"/>
+		<property name="questionState" column="QUESTION_STATE"/>
 		<property name="numericMin" column="NUMERIC_MIN"/>
 		<property name="numericMax" column="NUMERIC_MAX"/>
-		<list name="choices" cascade="all">
+		<list name="choices" cascade="all" lazy="false">
 			<key column="QUESTION_ID" not-null="true"/>
 			<index column="CHOICE_ORDER"/>
 			<one-to-many class="org.mifos.application.surveys.business.QuestionChoice"/>
@@ -22,4 +21,10 @@
 	<query name="questions.retrieveAll">
        <![CDATA[from Question]]>
     </query>
+ 	<query name="questions.retrieveByState">
+       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE]]>
+    </query>    
+     	<query name="questions.retrieveByAnswerType">
+       <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
+    </query>    
 </hibernate-mapping>

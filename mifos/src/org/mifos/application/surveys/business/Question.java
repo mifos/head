@@ -24,6 +24,7 @@ public class Question implements Serializable {
 	
 	public Question() {
 		questionState = QuestionState.ACTIVE;
+		answerType = AnswerType.FREETEXT;
 	}
 	
 	public Question(String questionText) {
@@ -117,5 +118,16 @@ public class Question implements Serializable {
 	
 	public void addChoice(QuestionChoice choice) {
 		getChoices().add(choice);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		try {
+			Question question = (Question) o;
+			return question.getQuestionId() == questionId;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 }

@@ -3,6 +3,7 @@ package org.mifos.application.surveys.struts.action;
 import java.util.List;
 
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Session;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
@@ -17,6 +18,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
@@ -28,6 +30,10 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
+		database = TestDatabase.makeStandard();
+		PersistenceAction.setDefaultSessionOpener(database);
+		
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
 		setConfigFile(ResourceLoader.getURI(
@@ -38,9 +44,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-
-		database = TestDatabase.makeStandard();
-		moduleMapping = findMapping("/surveysAction");
 	}
 	
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
@@ -55,8 +58,9 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String testName = "Test Survey 1";
 		String questionText= "A question";
 		makeTestSurvey(testName, questionText);
-		SurveysAction action = new SurveysAction(database);
-		action.mainpage(moduleMapping, null, request, response);
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "mainpage");
+		actionPerform();
 		verifyNoActionErrors();
 		List<Survey> surveys = (List<Survey>) request.getSession().getAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST);
 		assertEquals(testName, surveys.get(0).getName());
@@ -67,14 +71,55 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String testName = "Test Survey 2";
 		String questionText= "Some question here";
 		Survey survey = makeTestSurvey(testName, questionText);
-		SurveysAction action = new SurveysAction(database);
-		SurveyActionForm form = new SurveyActionForm();
-		form.setSurveyId(Integer.toString(survey.getSurveyId()));
-		action.load(moduleMapping, form, request, response);
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "get");
+		addRequestParameter("surveyId", Integer.toString(survey.getSurveyId()));
+		actionPerform();
 		verifyNoActionErrors();
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		assertEquals(testName, retrievedSurvey.getName());
 		Question question = retrievedSurvey.getQuestion(0);
 		assertEquals(questionText, question.getQuestionText());
+	}
+
+	public void testCreateEntry() throws Exception {
+		//String name = "testCreateEntry test survey name";
+		String name = "g";
+		String appliesTo = "customers";
+		SurveysPersistence surveysPersistence = new SurveysPersistence(database.open());
+		assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
+		String questionText = "testCreateEntry question 1";
+		Question question = new Question(questionText, AnswerType.CHOICE);
+		surveysPersistence.createOrUpdate(question);
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();	
+		List<Question> questionsList = (List<Question>) request.getSession()
+				.getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
+		List<Question> addedQuestions = (List<Question>) request.getSession()
+				.getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
+		assertEquals(1, questionsList.size());
+		assertEquals(0, addedQuestions.size());
+		
+		addRequestParameter("newQuestion", Integer.toString(question.getQuestionId()));
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "add_new_question");
+		actionPerform();
+		verifyNoActionErrors();
+		assertEquals(0, questionsList.size());
+		assertEquals(1, addedQuestions.size());
+		
+		addRequestParameter("name", name);
+		addRequestParameter("appliesTo", appliesTo);
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();
+		assertEquals(1, surveysPersistence.retrieveAllSurveys().size());
+		assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
 	}
 }

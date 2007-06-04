@@ -19,15 +19,18 @@
 	</global-forwards>
 	<action-mappings>
 		<action path="/surveysAction"
-		type="org.mifos.application.surveys.struts.action.SurveysAction"
-		parameter="method"
-		scope="session"
-		validate="false"
-		name="surveyActionForm"
-		input="/surveysAction.do?method=validate">
-		   	 <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
+   	      type="org.mifos.application.surveys.struts.action.SurveysAction"
+   	      parameter="method"
+   	      scope="session"
+   	      validate="true"
+   	      name="surveyActionForm"
+   	      input="/surveysAction.do?method=create_entry">
+   	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
    	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
-		</action>
+   	         <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_survey.jsp"/>   	         
+			 <forward name="preview_success" path="/pages/application/surveys/jsp/survey_preview.jsp"/>   	            	         
+			 <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>		 
+   	    </action>
 		
    	    <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
@@ -38,16 +41,11 @@
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
-             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
-        </action>
-        <action path="/questionsAction"
-          type="org.mifos.application.surveys.struts.action.QuestionsAction"
-          parameter="method"
-          scope="session"
-          validate="false"
-          input="/questionsAction.do?method=validate">
-          <forward name="load_main_page" path="/pages/application/surveys/jsp/view_questions.jsp"/>
-          <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
-        </action>
+             <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+        </action>   	    
 	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
 </struts-config>

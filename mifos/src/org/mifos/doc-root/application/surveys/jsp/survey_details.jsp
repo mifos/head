@@ -5,6 +5,7 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
     <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
             <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
@@ -42,6 +43,8 @@
                     <td width="44%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Answer"/></td>
                   </tr>
 
+                  <c:choose>
+                  <c:when test="${sessionScope.itemCount !=0}">
 		  <c:forEach var="question" items="${sessionScope.BusinessKey.questions}">
                   <tr>
                     <td width="39%" class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
@@ -57,8 +60,17 @@
                     <td width="44%" class="drawtablerow">&nbsp;</td>
                   </tr>
 		  </c:forEach>
+                  </c:when>
+                  <c:otherwise>
+                    <tr><td class="drawtablerow"><em><mifos:mifoslabel name="Surveys.noquestionsadded"/></em></td></tr>
+                  </c:otherwise>
+                  </c:choose>
+                  
                 </table></td>
               </tr>
+<tr><td align="center" class="blueline">&nbsp;</td></tr>
+
+<tr><td><html-el:button property="calcelButton" onclick="window.location='./surveysAction.do?method=newVersion&surveyId=${sessionScope.BusinessKey.surveyId}'" styleClass="buttn"><mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" /></html-el:button></td></tr>
             </table>              
             <br></td>
           </tr>

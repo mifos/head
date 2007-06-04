@@ -27,19 +27,11 @@ import org.mifos.framework.persistence.ThreadLocalOpener;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.util.helpers.Constants;
 
-public class QuestionsAction extends BaseAction {
+public class QuestionsAction extends PersistenceAction {
 	
-	private SessionOpener opener;
-	
-	public QuestionsAction() {
-		this(new ThreadLocalOpener());
-	}
-	
-	public QuestionsAction(SessionOpener opener) {
-		this.opener = opener;
-	}
 	
 	@Override
 	protected BusinessService getService() throws ServiceException {
@@ -68,9 +60,7 @@ public class QuestionsAction extends BaseAction {
 		
 		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
 
-		request.getSession().setAttribute("questionList", questionList);
-
-		//request.getSession().setAttribute("types", AnswerType.values());
+		request.setAttribute(SurveysConstants.KEY_QUESTIONS_LIST, questionList);
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
 
@@ -125,7 +115,6 @@ public class QuestionsAction extends BaseAction {
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);
 		}
-		
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 	

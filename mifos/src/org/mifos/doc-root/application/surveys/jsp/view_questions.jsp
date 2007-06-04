@@ -39,7 +39,7 @@
                 <td width="19%" class="drawtablehd">Answer type </td>
                 <td width="53%" class="drawtablehd">Answer</td>
               </tr>
-              <c:forEach var="question" items="${sessionScope.questionList}">
+              <c:forEach var="question" items="${requestScope.questionsList}">
               <tr>
                 <td width="28%" class="drawtablerow"><c:out value="${question.questionText}"/></td>
                 <td width="19%" class="drawtablerow"><c:choose>

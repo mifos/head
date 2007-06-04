@@ -179,13 +179,5 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
-	
-	protected ActionMapping findMapping(String path) {
-		setRequestPathInfo(path);
-		addRequestParameter("method", "findActionMapping");
-		actionPerform();
-		return (ActionMapping) request
-				.getAttribute(Constants.ACTION_MAPPING);
-	}
 
 }
