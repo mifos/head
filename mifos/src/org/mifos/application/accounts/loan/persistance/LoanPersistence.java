@@ -203,17 +203,8 @@ public class LoanPersistence extends Persistence {
 	public List<LoanBO> getLoanAccountsInActiveBadStanding(Short branchId,
 			Short loanOfficerId, Short loanProductId)
 			throws PersistenceException {
-		StringBuilder queryString = new StringBuilder(
-				"from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9");
-		if (loanOfficerId != null) {
-			queryString.append(" and loan.personnel.personnelId = "
-					+ loanOfficerId);
-		}
-		if (loanProductId != null) {
-			queryString.append(" and loan.loanOffering.prdOfferingId = "
-					+ loanProductId);
-		}
-		queryString.append(" and loan.office.officeId = " + branchId);
+		String activeBadAccountIdQuery = "from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9";
+		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,activeBadAccountIdQuery);
 		try {
 			Session session = HibernateUtil.getSessionTL();
 			Query query = session.createQuery(queryString.toString());
@@ -227,17 +218,8 @@ public class LoanPersistence extends Persistence {
 	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
 			Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException{
 		int totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = 0;
-		StringBuilder queryString = new StringBuilder(
-				"select loan.loanBalance from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 5");
-		if (loanOfficerId != null) {
-			queryString.append(" and loan.personnel.personnelId = "
-					+ loanOfficerId);
-		}
-		if (loanProductId != null) {
-			queryString.append(" and loan.loanOffering.prdOfferingId = "
-					+ loanProductId);
-		}
-		queryString.append(" and loan.office.officeId = " + branchId);
+		String goodAccountIdQuery = "select loan.loanBalance from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 5";
+		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,goodAccountIdQuery);
 		try {
 			Session session = HibernateUtil.getSessionTL();
 			Query query = session.createQuery(queryString.toString());
@@ -254,19 +236,11 @@ public class LoanPersistence extends Persistence {
 		return totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding;
 	}
 
+
 	public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException {
 
-		StringBuilder queryString = new StringBuilder(
-				"from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id in (5,9)");
-		if (loanOfficerId != null) {
-			queryString.append(" and loan.personnel.personnelId = "
-					+ loanOfficerId);
-		}
-		if (loanProductId != null) {
-			queryString.append(" and loan.loanOffering.prdOfferingId = "
-					+ loanProductId);
-		}
-		queryString.append(" and loan.office.officeId = " + branchId);
+		String activeLoansQuery = "from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id in (5,9)";
+		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,activeLoansQuery);
 		try {
 			Session session = HibernateUtil.getSessionTL();
 			Query query = session.createQuery(queryString.toString());
@@ -276,5 +250,19 @@ public class LoanPersistence extends Persistence {
 			throw new PersistenceException(e);
 		}
 	
+	}
+	private StringBuilder loanQueryString(Short branchId, Short loanOfficerId, Short loanProductId,String goodAccountIdQueryString) {
+		
+		StringBuilder queryString = new StringBuilder(goodAccountIdQueryString);
+		if (loanOfficerId != null) {
+			queryString.append(" and loan.personnel.personnelId = "
+					+ loanOfficerId);
+		}
+		if (loanProductId != null) {
+			queryString.append(" and loan.loanOffering.prdOfferingId = "
+					+ loanProductId);
+		}
+		queryString.append(" and loan.office.officeId = " + branchId);
+		return queryString;
 	}
 }

@@ -2881,6 +2881,17 @@ public class LoanBO extends AccountBO {
 		}
 
 	}
-	
+	public int getDisbursementTerm() {
+		List<AccountActionDateEntity> installmentsInDisbursement = getPastInstallments();
+		if (!installmentsInDisbursement.isEmpty()) {
+			for (AccountActionDateEntity accountAction : installmentsInDisbursement) {
+				if (accountAction.getPaymentStatus().equals(
+								PaymentStatus.PAID.getValue()))
+					installmentsInDisbursement.add(accountAction);
+			}
+		}
+		return installmentsInDisbursement.size();
+	}
+
 	
 }

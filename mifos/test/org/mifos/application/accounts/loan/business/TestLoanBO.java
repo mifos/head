@@ -4728,6 +4728,8 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(Short.valueOf("21"), ((LoanBO) accountBO)
 				.getDaysInArrears());
 	}
+	
+	
 
 	public void testGetTotalInterestAmountInArrears() {
 		Calendar calendar = new GregorianCalendar();
@@ -4858,6 +4860,16 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountId());
 		assertEquals(new Money("100"), ((LoanBO) accountBO)
 				.getTotalPrincipalAmountInArrearsAndOutsideLateness());
+	}
+	
+	public void testGetDisbursementTerm() throws Exception {
+		accountBO = getLoanAccount();
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
+				.getAccountId());
+		assertEquals(0,((LoanBO)accountBO).getDisbursementTerm());
+		
 	}
 
 	public void testSaveLoanForInvalidConnection() throws Exception {

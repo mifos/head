@@ -463,6 +463,7 @@ row["Number"]= loan.getGlobalAccountNum();
 row["Name"] = loan.getCustomer().getDisplayName();
 row["DisbursementAmount"] = loan.getLoanAmount().getAmount();
 row["DisbursementDate"] = loan.getDisbursementDate();
+row["DisbursementTerm"] = loan.getDisbursementTerm();
 
 row["NextPaymentAmount"] = loan.getDetailsOfNextInstallment().getPrincipal().getAmount();
 
@@ -472,6 +473,7 @@ row["LoanBalance"] = loan.getRemainingPrincipalAmount().getAmount();
 row["PrincipalInArrears"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount();
 row["InterestInArrears"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
 
+row["DaysWithoutPayment"] = loan.getDaysWithoutPayment();
 return true;]]></method>
             <method name="close"><![CDATA[loans = null;
 iterator = null;]]></method>
@@ -1078,7 +1080,12 @@ iterator = null;]]></method>
                             <property name="resultSetColumn">DisbursementDate</property>
                         </data>
                     </cell>
-                    <cell id="932"/>
+                    <cell id="932">
+                        <data id="1111">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DisbursementTerm</property>
+                        </data>
+                    </cell>
                     <cell id="933">
                         <data id="1018">
                             <property name="textAlign">center</property>
@@ -1114,7 +1121,12 @@ iterator = null;]]></method>
                             <property name="resultSetColumn">InterestInArrears</property>
                         </data>
                     </cell>
-                    <cell id="939"/>
+                    <cell id="939">
+                        <data id="1112">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DaysWithoutPayment</property>
+                        </data>
+                    </cell>
                     <cell id="940"/>
                 </row>
             </detail>
