@@ -7,15 +7,17 @@ import java.util.TimeZone;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 
-public class SystemConfiguration{
+public class SystemConfiguration {
 	
-	  private MifosCurrency currency;
-	  private SupportedLocalesEntity mfiLocale;
-	  private Locale locale;
-	  private Integer sessionTimeOut;
-	  private TimeZone timeZone;
+	  private final MifosCurrency currency;
+	  private final SupportedLocalesEntity mfiLocale;
+	  private final Locale locale;
+	  private final Integer sessionTimeOut;
+	  private final TimeZone timeZone;
 
-	  public SystemConfiguration(SupportedLocalesEntity mfiLocale, MifosCurrency currency, int sessionTimeOut, int timeZoneOffSet){
+	  public SystemConfiguration(SupportedLocalesEntity mfiLocale, 
+			  MifosCurrency currency, int sessionTimeOut, 
+			  int timeZoneOffSet) {
 		  this.mfiLocale = mfiLocale;
 		  this.currency = currency;
 		  this.sessionTimeOut = sessionTimeOut;

@@ -38,14 +38,15 @@
 
 package org.mifos.framework.components.configuration.cache;
 
+import org.mifos.framework.components.configuration.business.SystemConfiguration;
+
 public class CacheRepository {
 	
-	private Cache systemCache;
+	private SystemConfiguration systemConfiguration;
 	private OfficeCache officeCache;
-	private static CacheRepository cacheRep=new CacheRepository();
+	private static CacheRepository cacheRep = new CacheRepository();
 	
-	public CacheRepository(){
-		systemCache = new Cache();
+	private CacheRepository() {
 		officeCache = new OfficeCache();
 	}
 
@@ -57,23 +58,20 @@ public class CacheRepository {
 		this.officeCache = officeCache;
 	}
 
-	public Cache getSystemCache() {
-		return systemCache;
-	}
-
-	public void setSystemCache(Cache systemCache) {
-		this.systemCache = systemCache;
+	public void setSystemConfiguration(SystemConfiguration configuration) {
+		this.systemConfiguration = configuration;
 	}
 
 	public Object getValueFromOfficeCache(Key key) {
 		return (key!=null)?officeCache.getElement(key):null;
 	}
 
-	public Object getValueFromSystemCache(String key) {
-		return (key!=null)?systemCache.getElement(key):null;
-	}
-	
 	public static CacheRepository getInstance() {
 	    return cacheRep;
+	}
+
+	public SystemConfiguration getSystemConfiguration() {
+		return systemConfiguration;
 	}	
+
 }

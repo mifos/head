@@ -45,7 +45,7 @@ import java.util.Map;
  *  Cache is maintained as a hashmap.  
  *  Here Key is the combination of officeId and a String Constant.  
  */
-public class OfficeCache implements OfficeCacheIntf {
+public class OfficeCache {
 	  private Map<Key,Object> cache;
 	  
 	  public OfficeCache(){	}

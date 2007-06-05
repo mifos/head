@@ -43,21 +43,22 @@ package org.mifos.framework.components.configuration.util.helpers;
 public interface ConfigConstants {
 	 // constants for System configuration
 	 public static final String SESSION_TIMEOUT = "sessionTimeout";
-	 public static final Short SESSION_TIMEOUT_DEFAULT = 15;
-	 public static final String MFI_LOCALE = "mfiLocale";
-	 public static final String CURRENCY = "currency";
-	 public static final String TIMEZONE = "timezonet";
 	 
 	 //constants for Customer configuration
-	 public static final  String PENDING_APPROVAL_DEFINED_FOR_CLIENT="PendingApprovalDefinedForClient";
-	 public static final  String PENDING_APPROVAL_DEFINED_FOR_GROUP="PendingApprovalDefinedForGroup";
+	 public static final String PENDING_APPROVAL_DEFINED_FOR_CLIENT =
+		 "PendingApprovalDefinedForClient";
+	 public static final String PENDING_APPROVAL_DEFINED_FOR_GROUP =
+		 "PendingApprovalDefinedForGroup";
 	 
 	 //constants for Account configuration
-	 public static final  String DISBURSED_TO_LO_DEFINED_FOR_LOAN="DisbursedToLODefinedForLoan";
-	 public static final  String PENDING_APPROVAL_DEFINED_FOR_LOAN="PendingApprovalDefinedForLoan";
-	 public static final  String PENDING_APPROVAL_DEFINED_FOR_SAVINGS="PendingApprovalDefinedForSavings";
-	 public static final  String LATENESS_DAYS="latenessDays";
-	 public static final  String DORMANCY_DAYS="dormancyDays";
+	 public static final String DISBURSED_TO_LO_DEFINED_FOR_LOAN =
+		 "DisbursedToLODefinedForLoan";
+	 public static final String PENDING_APPROVAL_DEFINED_FOR_LOAN =
+		 "PendingApprovalDefinedForLoan";
+	 public static final String PENDING_APPROVAL_DEFINED_FOR_SAVINGS =
+		 "PendingApprovalDefinedForSavings";
+	 public static final String LATENESS_DAYS = "latenessDays";
+	 public static final String DORMANCY_DAYS = "dormancyDays";
 	 
 	 //constants for Meeting configuration
 	 public static final  String FISCAL_START_OF_WEEK="fiscalStartOfWeek";

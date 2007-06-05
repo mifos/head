@@ -3,7 +3,7 @@ package org.mifos.framework.components.configuration.util.helpers;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.configuration.cache.Cache;
+import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
@@ -28,12 +28,14 @@ public class TestConfigurationIntializer extends MifosTestCase{
 	}
 
 	public void testCreateSystemCache() throws Exception{
-		Cache cache = configInitializer.createSystemCache();
-		assertNotNull(cache);
-		assertNotNull(cache.getElement(ConfigConstants.SESSION_TIMEOUT));
-		assertNotNull(cache.getElement(ConfigConstants.CURRENCY));
-		assertNotNull(cache.getElement(ConfigConstants.TIMEZONE));
-		assertNotNull(cache.getElement(ConfigConstants.MFI_LOCALE));
+		SystemConfiguration configuration = 
+			configInitializer.createSystemConfiguration();
+		assertNotNull(configuration);
+		assertNotNull(configuration.getSessionTimeOut());
+		assertNotNull(configuration.getCurrency());
+		assertNotNull(configuration.getMifosTimeZone());
+		assertNotNull(configuration.getMFILocale());
+		assertNotNull(configuration.getMFILocaleId());
 	}
 
 	public void testCreateOfficeCache() throws Exception{
@@ -71,10 +73,11 @@ public class TestConfigurationIntializer extends MifosTestCase{
 
 		//check values of systemCache
 		CacheRepository cacheRepo = CacheRepository.getInstance();
-		assertNotNull(cacheRepo.getValueFromSystemCache(ConfigConstants.SESSION_TIMEOUT));
-		assertNotNull(cacheRepo.getValueFromSystemCache(ConfigConstants.CURRENCY));
-		assertNotNull(cacheRepo.getValueFromSystemCache(ConfigConstants.MFI_LOCALE));
-		assertNotNull(cacheRepo.getValueFromSystemCache(ConfigConstants.TIMEZONE));
+		assertNotNull(cacheRepo.getSystemConfiguration().getSessionTimeOut());
+		assertNotNull(cacheRepo.getSystemConfiguration().getCurrency());
+		assertNotNull(cacheRepo.getSystemConfiguration().getMFILocale());
+		assertNotNull(cacheRepo.getSystemConfiguration().getMFILocaleId());
+		assertNotNull(cacheRepo.getSystemConfiguration().getMifosTimeZone());
 
 		//check values of officeCache
 		OfficeBO headOffice = new OfficePersistence().getHeadOffice();

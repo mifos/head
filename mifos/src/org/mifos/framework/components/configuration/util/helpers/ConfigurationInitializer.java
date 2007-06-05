@@ -56,13 +56,15 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
-import org.mifos.framework.components.configuration.cache.Cache;
+import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
@@ -88,22 +90,22 @@ public class ConfigurationInitializer {
 		return headOffice;
 	}
 
-	protected Cache createSystemCache() throws SystemException,
+	protected SystemConfiguration createSystemConfiguration() throws SystemException,
 			ApplicationException {
-		Map<String, Object> systemConfigMap = new HashMap<String, Object>();
 
-		systemConfigMap.put(ConfigConstants.SESSION_TIMEOUT,
-			Integer.valueOf(configurationPersistence.getConfigurationValueInteger(
-				configurationPersistence.CONFIGURATION_KEY_SESSION_TIMEOUT)));
+		int sessionTimeout = configurationPersistence.getConfigurationValueInteger(
+						configurationPersistence.CONFIGURATION_KEY_SESSION_TIMEOUT);
 
-		systemConfigMap.put(ConfigConstants.CURRENCY, configurationPersistence
-				.getDefaultCurrency());
-		systemConfigMap.put(ConfigConstants.MFI_LOCALE, configurationPersistence
-				.getSupportedLocale());
+		MifosCurrency defaultCurrency = configurationPersistence
+						.getDefaultCurrency();
+		SupportedLocalesEntity supportedLocale = configurationPersistence
+						.getSupportedLocale();
 
 		// TODO: pick timezone offset from database
-		systemConfigMap.put(ConfigConstants.TIMEZONE, 19800000);
-		return new Cache(systemConfigMap);
+		int timeZone = 19800000;
+
+		return new SystemConfiguration(supportedLocale, defaultCurrency, 
+				sessionTimeout, timeZone);
 	}
 
 	protected OfficeCache createOfficeCache() throws SystemException,
@@ -273,7 +275,7 @@ public class ConfigurationInitializer {
 	public void initialize() {
 		try {
 			CacheRepository cacheRepository = CacheRepository.getInstance();
-			cacheRepository.setSystemCache(createSystemCache());
+			cacheRepository.setSystemConfiguration(createSystemConfiguration());
 			loadOfficeConfigConstants();
 			cacheRepository.setOfficeCache(createOfficeCache());
 		} catch (SystemException se) {

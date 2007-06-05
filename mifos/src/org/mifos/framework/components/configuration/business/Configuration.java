@@ -40,10 +40,7 @@ package org.mifos.framework.components.configuration.business;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.configuration.util.helpers.ConfigurationInitializer;
 
 public class Configuration {
@@ -73,10 +70,7 @@ public class Configuration {
   
   //TODO:Currently offset is being passed for TimeZone. It should be changed to Timezone value picked from database
   private void initializeSystemConfiguration(){
-	 systemConfig = new SystemConfiguration((SupportedLocalesEntity)cacheRepo.getValueFromSystemCache(ConfigConstants.MFI_LOCALE),
-			  (MifosCurrency)cacheRepo.getValueFromSystemCache(ConfigConstants.CURRENCY),
-			  (Integer)cacheRepo.getValueFromSystemCache(ConfigConstants.SESSION_TIMEOUT),
-			  (Integer)cacheRepo.getValueFromSystemCache(ConfigConstants.TIMEZONE));
+	 systemConfig = cacheRepo.getSystemConfiguration();
   }
   
   private Configuration() {
