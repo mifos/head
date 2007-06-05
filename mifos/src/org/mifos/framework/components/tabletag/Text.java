@@ -91,7 +91,7 @@ public class Text {
 		String imagePath = null;
 		try {
 			method = obj.getClass().getDeclaredMethod("getCustomerType",(Class[]) null);
-			customerType = (Object) method.invoke(obj, (Object[]) null);
+			customerType = method.invoke(obj, (Object[]) null);
 		} catch (NoSuchMethodException nsme) {
 			throw new TableTagException(nsme.getMessage());
 		} catch (IllegalArgumentException iae) {

@@ -980,10 +980,10 @@ public class SavingsBO extends AccountBO {
 							.getCustomerId());
 			if (accountAction != null
 					&& enteredAmount.getAmountDoubleValue() > 0.0) {
-				if (accountAction.getPaymentStatus().equals(
-						PaymentStatus.PAID.getValue()))
+				if (accountAction.isPaid()) {
 					throw new AccountException("errors.update",
 							new String[] { getGlobalAccountNum() });
+				}
 				Money depositAmount = new Money();
 				PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 				if (enteredAmount.getAmountDoubleValue() >= accountAction
@@ -1374,8 +1374,7 @@ public class SavingsBO extends AccountBO {
 		List<AccountActionDateEntity> accountActions = new ArrayList<AccountActionDateEntity>();
 		for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 			if (accountAction.getActionDate().compareTo(dueDate) <= 0
-					&& accountAction.getPaymentStatus().equals(
-							PaymentStatus.UNPAID.getValue())
+					&& !accountAction.isPaid()
 					&& accountAction.getCustomer().getCustomerId().equals(
 							customerId))
 				accountActions.add(accountAction);
@@ -1761,8 +1760,7 @@ public class SavingsBO extends AccountBO {
 		Money overdueAmount = new Money();
 		if (isMandatory()) {
 			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-				if (accountActionDate.getPaymentStatus().shortValue() == PaymentStatus.UNPAID
-						.getValue()
+				if (!accountActionDate.isPaid()
 						&& (accountActionDate.getActionDate()
 								.before(meetingDate))) {
 					overdueAmount = overdueAmount
@@ -1837,8 +1835,7 @@ public class SavingsBO extends AccountBO {
 					&& getAccountActionDates().size() > 0) {
 				for (AccountActionDateEntity accntActionDate : getAccountActionDates()) {
 					if (accntActionDate.getInstallmentId().equals(nextAccountAction.getInstallmentId())
-							&& accntActionDate.getPaymentStatus().equals(
-									PaymentStatus.UNPAID.getValue())) {
+							&& !accntActionDate.isPaid()) {
 						if(!(accntActionDate.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()) 
 								&& 	accntActionDate.getCustomer().getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
 							totalAmount = totalAmount.add(((SavingsScheduleEntity) accntActionDate)
@@ -1884,8 +1881,7 @@ public class SavingsBO extends AccountBO {
 			for (AccountActionDateEntity accntActionDate : getAccountActionDates())
 				if (accntActionDate.getInstallmentId().equals(
 						nextAccountAction.getInstallmentId())
-						&& accntActionDate.getPaymentStatus().equals(
-								PaymentStatus.UNPAID.getValue()))
+						&& !accntActionDate.isPaid())
 					nextInstallment.add(accntActionDate);
 		}
 		return nextInstallment;
@@ -2025,8 +2021,7 @@ public class SavingsBO extends AccountBO {
 				&& getAccountActionDates().size() > 0) {
 			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 				if (accountAction.getActionDate().compareTo(currentDate) <= 0
-						&& accountAction.getPaymentStatus().equals(
-								PaymentStatus.UNPAID.getValue())
+						&& !accountAction.isPaid()
 						&& accountAction.getCustomer().getCustomerId().equals(
 								customerId))
 					dueInstallements.add(accountAction);

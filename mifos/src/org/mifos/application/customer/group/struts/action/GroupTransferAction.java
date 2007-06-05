@@ -12,7 +12,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
-
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -168,7 +167,9 @@ public class GroupTransferAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-		CenterBO transferToCenter = (CenterBO)getCenterBusinessService().findBySystemId(actionForm.getCenterSystemId());
+		CenterBO transferToCenter = 
+			getCenterBusinessService()
+				.findBySystemId(actionForm.getCenterSystemId());
 		transferToCenter.setUserContext(getUserContext(request));
 		
 		GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(
@@ -336,6 +337,7 @@ public class GroupTransferAction extends BaseAction {
 		return (CenterBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Center);
 	}
+
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {

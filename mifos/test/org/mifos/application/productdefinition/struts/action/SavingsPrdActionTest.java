@@ -1,6 +1,5 @@
 package org.mifos.application.productdefinition.struts.action;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

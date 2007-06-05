@@ -20,7 +20,6 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
@@ -117,8 +116,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				testBO.getAccountState().getId());
 		AccountActionDateEntity actionDate = testBO.getAccountActionDate(Short
 				.valueOf("1"));
-		assertEquals(PaymentStatus.UNPAID.getValue(), actionDate
-				.getPaymentStatus());
+		assertFalse(actionDate.isPaid());
 
 		HibernateUtil.closeSession();
 		list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("3"));
@@ -172,14 +170,14 @@ public class TestLoanPersistence extends MifosTestCase {
 				.get(0));
 		assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
 				testBO.getAccountState().getId());
+
 		// Get the first action date i.e for the first Installment
-		AccountActionDateEntity actionDates = testBO.getAccountActionDate(Short
-				.valueOf("1"));
-		// assert that the date comes after the action date
+		Short firstInstallment = 1;
+		AccountActionDateEntity actionDates = 
+			testBO.getAccountActionDate(firstInstallment);
+
 		assertTrue(date.after(actionDates.getActionDate()));
-		// assert that the payment status in 0 - unpaid
-		assertEquals(PaymentStatus.UNPAID.getValue(), actionDates
-				.getPaymentStatus());
+		assertFalse(actionDates.isPaid());
 	}
 
 	public void testGetAccount() throws Exception {

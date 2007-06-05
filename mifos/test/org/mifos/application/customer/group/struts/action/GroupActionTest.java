@@ -38,7 +38,6 @@
 
 package org.mifos.application.customer.group.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

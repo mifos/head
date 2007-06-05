@@ -49,7 +49,6 @@ import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
@@ -109,11 +108,11 @@ public class BulkEntryPersistenceService {
 					.iterator(); iter.hasNext();) {
 				AccountActionDateEntity actionDate = iter.next();
 				actionDate.getCustomer().getCustomerId();
-				if (actionDate.getPaymentStatus().equals(
-						PaymentStatus.PAID.getValue())
+				if (actionDate.isPaid()
 						|| actionDate.compareDate(DateUtils
-								.getCurrentDateWithoutTimeStamp()) > 0)
+								.getCurrentDateWithoutTimeStamp()) > 0) {
 					iter.remove();
+				}
 			}
 		}
 		SavingsBO savings = (SavingsBO) bulkEntryCache.getAccount(accountId);

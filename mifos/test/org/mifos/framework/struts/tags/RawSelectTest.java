@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.struts.tags.RawSelect;
 
 public class RawSelectTest extends MifosTestCase {
 

@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -111,6 +112,14 @@ public class BaseActionForm extends ValidatorActionForm {
 		SessionUtils.setRemovableAttribute("forwardkey",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("action",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.removeAttribute(Constants.SEARCH_RESULTS,request);
-
 	}
+
+	public CustomFieldView getCustomField(
+			List<CustomFieldView> customFields, int i) {
+		while (i >= customFields.size()) {
+			customFields.add(new CustomFieldView());
+		}
+		return customFields.get(i);
+	}
+
 }

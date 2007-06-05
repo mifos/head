@@ -104,8 +104,15 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		this.paymentDate = paymentDate;
 	}
 
-	public Short getPaymentStatus() {
+	/**
+	 * Most callers will want to call {@link #isPaid()} instead.
+	 */
+	Short getPaymentStatus() {
 		return paymentStatus;
+	}
+	
+	private PaymentStatus getPaymentStatusAsEnum() {
+		return PaymentStatus.fromInt(paymentStatus);
 	}
 
 	void setPaymentStatus(Short paymentStatus) {
@@ -121,6 +128,6 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 	}
 
 	public boolean isPaid() {
-		return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
+		return getPaymentStatusAsEnum() == PaymentStatus.PAID;
 	}
 }

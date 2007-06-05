@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
@@ -127,6 +128,10 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 
 	public AccountActionEntity getAccountActionEntity() {
 		return accountActionEntity;
+	}
+
+	public AccountActionTypes getAccountAction() {
+		return AccountActionTypes.fromInt(accountActionEntity.getId());
 	}
 
 	public AccountPaymentEntity getAccountPayment() {

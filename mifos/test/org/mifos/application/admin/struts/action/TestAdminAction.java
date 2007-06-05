@@ -1,7 +1,5 @@
 package org.mifos.application.admin.struts.action;
 
-import java.net.URISyntaxException;
-
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;

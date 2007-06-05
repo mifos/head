@@ -12,23 +12,16 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
-import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.surveys.struts.actionforms.QuestionActionForm;
-import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.SessionHolder;
-import org.mifos.framework.persistence.SessionOpener;
-import org.mifos.framework.persistence.SessionPersistence;
-import org.mifos.framework.persistence.ThreadLocalOpener;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.action.PersistenceAction;
-import org.mifos.framework.util.helpers.Constants;
 
 public class QuestionsAction extends PersistenceAction {
 	

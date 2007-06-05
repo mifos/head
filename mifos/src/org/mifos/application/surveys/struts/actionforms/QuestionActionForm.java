@@ -1,8 +1,7 @@
 package org.mifos.application.surveys.struts.actionforms;
 
-import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.application.surveys.business.QuestionChoice;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 public class QuestionActionForm extends BaseActionForm {
 

@@ -11,11 +11,9 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -182,8 +180,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						totalFees = totalFees.subtract(installment
 								.getTotalFeeAmountPaidWithMiscFee());
 						if (index != list.size()-1
-								&& installment.getPaymentStatus().equals(
-										PaymentStatus.PAID.getValue())) {
+								&& installment.isPaid()) {
 							index++;
 							installment = (LoanScheduleEntity) list.get(index);
 
@@ -193,8 +190,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					}
 
 					boolean dueInstallments = false;
-					if (installment.getPaymentStatus().equals(
-							PaymentStatus.UNPAID.getValue())
+					if (!installment.isPaid()
 							&& installment.getActionDate().getTime() <= new java.util.Date()
 									.getTime())
 						dueInstallments = true;
@@ -205,8 +201,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 										+ getLabel("loan.instt_due", locale)
 										+ "</tr>");
 						while (index < list.size() - 1
-								&& installment.getPaymentStatus().equals(
-										YesNoFlag.NO.getValue())
+								&& !installment.isPaid()
 								&& installment.getActionDate().getTime() <= new java.util.Date()
 										.getTime()) {
 							index++;
@@ -217,8 +212,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					}
 
 					boolean futureInstallments = false;
-					if (installment.getPaymentStatus().equals(
-							PaymentStatus.UNPAID.getValue())
+					if (!installment.isPaid()
 							&& installment.getActionDate().getTime() > new java.util.Date()
 									.getTime())
 						futureInstallments = true;
@@ -235,8 +229,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						}
 					}
 					// append the last transaction
-					if(installment.getPaymentStatus().equals(PaymentStatus.UNPAID.getValue()))
+					if (!installment.isPaid()) {
 						builder1.append(createInstallmentRow(installment, false));
+					}
 
 					if (twoTables) {
 						// add a tr with 2 td for each of the 2 tables

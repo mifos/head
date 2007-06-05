@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.struts.action;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
 
 import org.mifos.application.accounts.loan.business.LoanBO;

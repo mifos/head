@@ -61,7 +61,6 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -368,6 +367,12 @@ public class AccountBO extends BusinessObject {
 	protected void resetUpdatedFlag()throws AccountException{
 	}
 	
+	public void changeStatus(
+			AccountState newStatus, Short flagId, String comment) 
+	throws AccountException {
+		changeStatus(newStatus.getValue(), flagId, comment);
+	}
+
 	public final void changeStatus(Short newStatusId, Short flagId,
 			String comment) throws AccountException {
 		try {
@@ -513,8 +518,7 @@ public class AccountBO extends BusinessObject {
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null) {
 			for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-				if (accountActionDate.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())) {
+				if (!accountActionDate.isPaid()) {
 					if (accountActionDate.getInstallmentId() > nextInstallment
 							.getInstallmentId())
 						futureActionDateList.add(accountActionDate);
@@ -586,8 +590,7 @@ public class AccountBO extends BusinessObject {
 				&& getAccountActionDates().size() > 0) {
 			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 				if (accountAction.getActionDate().compareTo(currentDate) < 0
-						&& accountAction.getPaymentStatus().equals(
-								PaymentStatus.UNPAID.getValue()))
+						&& !accountAction.isPaid())
 					installmentsInArrears.add(accountAction);
 			}
 		}
@@ -615,8 +618,7 @@ public class AccountBO extends BusinessObject {
 		Money totalAmt = getTotalAmountInArrears();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue()))
+				&& !nextInstallment.isPaid())
 			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
 		return totalAmt;
 	}
@@ -625,8 +627,7 @@ public class AccountBO extends BusinessObject {
 		Money totalAmt = getTotalAmountInArrears();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
+				&& !nextInstallment.isPaid()
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))
@@ -647,8 +648,7 @@ public class AccountBO extends BusinessObject {
 		List<AccountActionDateEntity> dueInstallments = getDetailsOfInstallmentsInArrears();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
+				&& !nextInstallment.isPaid()
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))
@@ -792,8 +792,7 @@ public class AccountBO extends BusinessObject {
 	protected final List<AccountActionDateEntity> getDueInstallments() {
 		List<AccountActionDateEntity> dueInstallmentList = new ArrayList<AccountActionDateEntity>();
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			if (accountActionDateEntity.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
+			if (!accountActionDateEntity.isPaid()) {
 				if (accountActionDateEntity.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) > 0) {
 					dueInstallmentList.add(accountActionDateEntity);
@@ -806,8 +805,7 @@ public class AccountBO extends BusinessObject {
 	protected final List<AccountActionDateEntity> getTotalDueInstallments() {
 		List<AccountActionDateEntity> dueInstallmentList = new ArrayList<AccountActionDateEntity>();
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			if (accountActionDateEntity.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
+			if (!accountActionDateEntity.isPaid()) {
 				if (accountActionDateEntity.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) >= 0) {
 					dueInstallmentList.add(accountActionDateEntity);
@@ -966,8 +964,7 @@ public class AccountBO extends BusinessObject {
 
 	protected boolean isCurrentDateEquallToInstallmentDate() {
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			if (accountActionDateEntity.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
+			if (!accountActionDateEntity.isPaid()) {
 				if (accountActionDateEntity.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) == 0) {
 					return true;

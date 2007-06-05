@@ -53,7 +53,6 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -202,9 +201,9 @@ public class TestAccountBO extends TestAccount {
 		}
 		AccountActionDateEntity installment = loan
 				.getAccountActionDate(lastLoanTrxn.getInstallmentId());
-		assertEquals(
+		assertFalse(
 				"The installment adjusted should now be marked unpaid(due).",
-				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
+				installment.isPaid());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 	}

@@ -98,8 +98,6 @@ public class PersonActionForm extends BaseActionForm {
 
 	private List<CustomFieldView> customFields;
 	
-	private Calendar cal = new GregorianCalendar();
-
 	public PersonActionForm() {
 		super();
 
@@ -109,19 +107,16 @@ public class PersonActionForm extends BaseActionForm {
 
 	}
 
-	public CustomFieldView getCustomField(int i) {
-		while (i >= customFields.size()) {
-			customFields.add(new CustomFieldView());
-		}
-		return (CustomFieldView) (customFields.get(i));
-	}
-
 	public List<CustomFieldView> getCustomFields() {
 		return customFields;
 	}
 
 	public void setCustomFields(List<CustomFieldView> customFields) {
 		this.customFields = customFields;
+	}
+
+	public CustomFieldView getCustomField(int i) {
+		return getCustomField(customFields, i);
 	}
 
 	public String getDateOfJoiningBranch() {

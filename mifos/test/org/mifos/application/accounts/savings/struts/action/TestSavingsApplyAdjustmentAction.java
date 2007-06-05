@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.savings.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Locale;
 

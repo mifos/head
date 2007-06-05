@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.mifos.application.master.business.EntityMaster;
 import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.struts.tags.LookUpValueTag;
 
 public class LookUpValueTagTest extends MifosTestCase {
 

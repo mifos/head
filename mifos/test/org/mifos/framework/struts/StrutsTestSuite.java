@@ -9,7 +9,6 @@ import org.mifos.framework.struts.plugin.TestEnumPlugin;
 import org.mifos.framework.struts.plugin.TestInitializerPlugin;
 import org.mifos.framework.struts.tags.DateTagTest;
 import org.mifos.framework.struts.tags.LookUpValueTagTest;
-import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
 

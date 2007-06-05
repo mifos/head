@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

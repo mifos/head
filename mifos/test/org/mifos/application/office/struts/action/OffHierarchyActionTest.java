@@ -37,7 +37,6 @@
  */
 package org.mifos.application.office.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.mifos.application.office.business.OfficeLevelEntity;

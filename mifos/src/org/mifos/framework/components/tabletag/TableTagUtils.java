@@ -110,7 +110,7 @@ public class TableTagUtils {
 				getList = obj.getClass().getDeclaredMethod(
 						"get" + c.toUpperCase() + label.substring(1),
 						(Class[]) null);
-				labelValue = (Object) getList.invoke(obj, (Object[]) null);
+				labelValue = getList.invoke(obj, (Object[]) null);
 				
 			} catch (SecurityException se) {
 				throw new TableTagException(se);
@@ -130,7 +130,7 @@ public class TableTagUtils {
 				getList = obj.getClass().getDeclaredMethod(
 						"get" + c.toUpperCase() + label.substring(1),
 						(Class[]) null);
-				labelValue = (Object) getList.invoke(obj, (Object[]) null);
+				labelValue = getList.invoke(obj, (Object[]) null);
 				if(null != labelValue) 
 					labelValue=DateUtils.getUserLocaleDate(locale, labelValue.toString());
 			} catch (SecurityException se) {

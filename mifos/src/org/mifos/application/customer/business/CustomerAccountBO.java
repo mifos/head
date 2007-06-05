@@ -174,8 +174,7 @@ public class CustomerAccountBO extends AccountBO {
 				.getAccountPayments()) {
 			CustomerScheduleEntity accountAction = (CustomerScheduleEntity) getAccountActionDate(accountPaymentData
 					.getInstallmentId());
-			if (accountAction.getPaymentStatus().equals(
-					PaymentStatus.PAID.getValue()))
+			if (accountAction.isPaid())
 				throw new AccountException("errors.update",
 						new String[] { getGlobalAccountNum() });
 			CustomerAccountPaymentData customerAccountPaymentData = (CustomerAccountPaymentData) accountPaymentData;
@@ -701,8 +700,7 @@ public class CustomerAccountBO extends AccountBO {
 	private AccountActionDateEntity getNextUnpaidDueInstallment() {
 		AccountActionDateEntity accountAction = null;
 		for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-			if (accountActionDate.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
+			if (!accountActionDate.isPaid()) {
 				if (accountActionDate.compareDate(DateUtils
 						.getCurrentDateWithoutTimeStamp()) >= 0) {
 					if (accountAction == null)

@@ -296,9 +296,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		AccountActionDateEntity installment = customerAccountBO
 				.getAccountActionDate(custTrxn.getInstallmentId());
-		assertEquals(
+		assertFalse(
 				"The installment adjusted should now be marked unpaid(due).",
-				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
+				installment.isPaid());
 
 	}
 
@@ -1061,9 +1061,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
 										.getActionDate().getTime()));
 			}
-			assertEquals(PaymentStatus.UNPAID.getValue(),
-					((CustomerScheduleEntity) accountActionDateEntity)
-							.getPaymentStatus());
+			assertFalse(((CustomerScheduleEntity) accountActionDateEntity)
+							.isPaid());
 		}
 	}
 
@@ -1122,9 +1121,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
 										.getActionDate().getTime()));
 			}
-			assertEquals(PaymentStatus.UNPAID.getValue(),
-					((CustomerScheduleEntity) accountActionDateEntity)
-							.getPaymentStatus());
+			assertFalse(
+				((CustomerScheduleEntity) accountActionDateEntity).isPaid());
 		}
 	}
 

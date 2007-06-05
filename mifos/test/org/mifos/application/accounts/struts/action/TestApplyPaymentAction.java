@@ -41,7 +41,6 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;

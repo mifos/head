@@ -122,10 +122,7 @@ public class OffActionForm extends BaseActionForm {
 	}
 
 	public CustomFieldView getCustomField(int i) {
-		while (i >= customFields.size()) {
-			customFields.add(new CustomFieldView());
-		}
-		return (CustomFieldView) (customFields.get(i));
+		return getCustomField(customFields, i);
 	}
 
 	public void clear() {

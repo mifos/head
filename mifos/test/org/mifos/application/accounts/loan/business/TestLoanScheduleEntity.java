@@ -178,8 +178,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 						accountActionDateEntity.getPenaltyPaid());
 				assertEquals(accountActionDateEntity.getMiscFee(),
 						accountActionDateEntity.getMiscFeePaid());
-				assertEquals(accountActionDateEntity.getPaymentStatus(), Short
-						.valueOf("1"));
+				assertTrue(accountActionDateEntity.isPaid());
 			}
 		}
 
@@ -197,8 +196,7 @@ public class TestLoanScheduleEntity extends TestAccount {
 						accountActionDateEntity.getPenaltyPaid());
 				assertEquals(accountActionDateEntity.getMiscFee(),
 						accountActionDateEntity.getMiscFeePaid());
-				assertEquals(accountActionDateEntity.getPaymentStatus(), Short
-						.valueOf("1"));
+				assertTrue(accountActionDateEntity.isPaid());
 			}
 		}
 

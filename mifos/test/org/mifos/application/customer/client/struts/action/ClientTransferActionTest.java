@@ -1,6 +1,5 @@
 package org.mifos.application.customer.client.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;

@@ -1238,8 +1238,7 @@ public class LoanBO extends AccountBO {
 								.getPenaltyAmount(), loanTrxn
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
-						if (accntActionDate.getPaymentStatus().equals(
-								PaymentStatus.PAID.getValue()))
+						if (accntActionDate.isPaid())
 							updatePerformanceHistoryOnAdjustment();
 						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 						accntActionDate.setPaymentDate(null);
@@ -2592,8 +2591,7 @@ public class LoanBO extends AccountBO {
 	private List<AccountActionDateEntity> getListOfUnpaidInstallments() {
 		List<AccountActionDateEntity> unpaidInstallmentList = new ArrayList<AccountActionDateEntity>();
 		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-			if (accountActionDateEntity.getPaymentStatus().equals(
-					PaymentStatus.UNPAID.getValue())) {
+			if (!accountActionDateEntity.isPaid()) {
 				unpaidInstallmentList.add(accountActionDateEntity);
 			}
 		}
@@ -2707,8 +2705,7 @@ public class LoanBO extends AccountBO {
 		}
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
+				&& !nextInstallment.isPaid()
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))
@@ -2723,8 +2720,7 @@ public class LoanBO extends AccountBO {
 		}
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
+				&& !nextInstallment.isPaid()
 				&& DateUtils.getDateWithoutTimeStamp(
 						nextInstallment.getActionDate().getTime()).equals(
 						DateUtils.getCurrentDateWithoutTimeStamp()))
@@ -2742,8 +2738,7 @@ public class LoanBO extends AccountBO {
 		}
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
 		if (nextInstallment != null
-				&& nextInstallment.getPaymentStatus().equals(
-						PaymentStatus.UNPAID.getValue())
+				&& !nextInstallment.isPaid()
 				&& totalAmount.getAmountDoubleValue() > 0.0) {
 			LoanPaymentData loanPayment;
 			if (DateUtils.getDateWithoutTimeStamp(
@@ -2895,8 +2890,7 @@ public class LoanBO extends AccountBO {
 		List<AccountActionDateEntity> installmentsInDisbursement = getPastInstallments();
 		if (!installmentsInDisbursement.isEmpty()) {
 			for (AccountActionDateEntity accountAction : installmentsInDisbursement) {
-				if (accountAction.getPaymentStatus().equals(
-								PaymentStatus.PAID.getValue()))
+				if (accountAction.isPaid())
 					installmentsInDisbursement.add(accountAction);
 			}
 		}
