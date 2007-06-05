@@ -2893,5 +2893,12 @@ public class LoanBO extends AccountBO {
 		return installmentsInDisbursement.size();
 	}
 
-	
+	public int getDaysWithoutPayment() throws PersistenceException{
+		int daysWithoutPayment = 0;
+		loanPrdPersistence = new LoanPrdPersistence();
+		if(getDaysInArrears()>loanPrdPersistence.retrieveLatenessForPrd()){
+			daysWithoutPayment = getDaysInArrears().intValue();
+		}
+		return daysWithoutPayment;
+	}
 }
