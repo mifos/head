@@ -73,7 +73,6 @@ import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestS
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
-import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.LatestTest;
 import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.security.SecurityTestSuite;

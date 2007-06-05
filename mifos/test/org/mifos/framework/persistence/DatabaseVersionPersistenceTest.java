@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.CharacterCodingException;
@@ -79,9 +78,7 @@ public class DatabaseVersionPersistenceTest {
 	}
 	
 	@Test public void write() throws Exception {
-		Database database = new Database();
-		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
-		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
+		Database database = DummyUpgrade.databaseWithVersionTable(53);
 		new DatabaseVersionPersistence(database.openConnection()).write(77);
 		assertEquals(77, 
 			new DatabaseVersionPersistence(database.openConnection()).read());
@@ -256,7 +253,7 @@ public class DatabaseVersionPersistenceTest {
 	@Test public void javaOnly() throws Exception {
 		Database database = new Database();
 		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
-		DatabaseVersionPersistence.register(registrations, new TestUpgrade(69));
+		DatabaseVersionPersistence.register(registrations, new DummyUpgrade(69));
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(database.openConnection(),
 				registrations) {
@@ -265,7 +262,7 @@ public class DatabaseVersionPersistenceTest {
 				return null;
 			}
 		};
-		TestUpgrade found = (TestUpgrade) persistence.findUpgrade(68);
+		DummyUpgrade found = (DummyUpgrade) persistence.findUpgrade(68);
 		found.upgrade(null);
 		assertEquals("upgrade to 69\n", found.getLog());
 	}
@@ -273,7 +270,7 @@ public class DatabaseVersionPersistenceTest {
 	@Test public void javaAndSql() throws Exception {
 		Database database = new Database();
 		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
-		DatabaseVersionPersistence.register(registrations, new TestUpgrade(69));
+		DatabaseVersionPersistence.register(registrations, new DummyUpgrade(69));
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(database.openConnection(),
 				registrations) {
@@ -305,9 +302,9 @@ public class DatabaseVersionPersistenceTest {
 	
 	@Test public void duplicateRegistration() throws Exception {
 		Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
-		DatabaseVersionPersistence.register(register, new TestUpgrade(70));
+		DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
 		try {
-			DatabaseVersionPersistence.register(register, new TestUpgrade(70));
+			DatabaseVersionPersistence.register(register, new DummyUpgrade(70));
 			fail();
 		}
 		catch (IllegalStateException e) {
@@ -315,28 +312,6 @@ public class DatabaseVersionPersistenceTest {
 		}
 	}
 	
-	static final class TestUpgrade extends Upgrade {
-		private StringBuilder log = new StringBuilder();
-
-		TestUpgrade(int version) {
-			super(version);
-		}
-
-		@Override
-		public void downgrade(Connection conn) throws IOException, SQLException {
-			log.append("downgrade from " + higherVersion() + "\n");
-		}
-
-		@Override
-		public void upgrade(Connection conn) throws IOException, SQLException {
-			log.append("upgrade to " + higherVersion() + "\n");
-		}
-		
-		String getLog() {
-			return log.toString();
-		}
-	}
-
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(DatabaseVersionPersistenceTest.class);
 	}

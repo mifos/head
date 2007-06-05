@@ -20,7 +20,7 @@ public class ActivityMapperTest {
 		DatabaseSetup.configureLogging();
 	}
 
-	@Test public void namesNotEmpty() {
+	@Test public void namesAcceptable() {
 		for (ActionSecurity security 
 			: ActivityMapper.getInstance().getAllSecurity()) {
 			String name = security.getActionName();

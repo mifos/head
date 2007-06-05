@@ -3,6 +3,7 @@ package org.mifos.framework;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.Connection;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -71,6 +72,10 @@ public class TestDatabase implements SessionOpener {
 
 	public SessionHolder open() {
 		return new SessionHolder(openSession());
+	}
+
+	public Connection openConnection() {
+		return database.openConnection();
 	}
 
 }

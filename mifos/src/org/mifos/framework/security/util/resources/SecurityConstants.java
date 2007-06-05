@@ -252,6 +252,7 @@ public interface SecurityConstants {
 	public final short DEFINE_NEW_SAVING_PRODUCT_INSTANCE = 97;
 
 	public final short EDIT_SAVING_PRODUCT = 98;
+	public final short LOAN_MANAGEMENT = 99;
 
 	// Loan management
 	public final short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;

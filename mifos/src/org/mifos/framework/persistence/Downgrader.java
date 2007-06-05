@@ -90,7 +90,7 @@ public class Downgrader {
 		List<Upgrade> downgrades = 
 			persistence.downgrades(downgradeTo, currentVersion);
 		for (Upgrade downgrade : downgrades) {
-			out.print("Downgrading to " + downgrade.downgradeTo() + "...");
+			out.print("Downgrading to " + downgrade.lowerVersion() + "...");
 			out.flush();
 			downgrade.downgrade(connection);
 			out.print("done.\n");

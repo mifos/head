@@ -8,14 +8,11 @@ import org.mifos.framework.security.util.SecurityHelperTest;
 
 public class SecurityTestSuite extends TestSuite {
 
-    public SecurityTestSuite() {
-        super();
-    }
-
     public static Test suite() throws Exception{
         TestSuite suite = new SecurityTestSuite();
         suite.addTestSuite(SecurityHelperTest.class);
         suite.addTestSuite(LoginFilterTest.class);
+        suite.addTest(AddActivityTest.suite());
         return suite;
     }
 }
