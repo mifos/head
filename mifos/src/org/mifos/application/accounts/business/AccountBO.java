@@ -545,6 +545,14 @@ public class AccountBO extends BusinessObject {
 		}
 		return pastActionDateList;
 	}
+	
+	public List<AccountActionDateEntity> getAllInstallments() {
+		List<AccountActionDateEntity> actionDateList = new ArrayList<AccountActionDateEntity>();
+		for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+			actionDateList.add(accountActionDateEntity);
+		}
+		return actionDateList;
+	}
 
 	public List<TransactionHistoryView> getTransactionHistoryView() {
 		List<TransactionHistoryView> trxnHistory = new ArrayList<TransactionHistoryView>();
@@ -585,7 +593,7 @@ public class AccountBO extends BusinessObject {
 		}
 		return installmentsInArrears;
 	}
-
+	
 	public AccountActionDateEntity getDetailsOfNextInstallment() {
 		AccountActionDateEntity nextAccountAction = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();

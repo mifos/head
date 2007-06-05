@@ -37,6 +37,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -106,6 +107,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	// TODO: probably should be of type LoanBO
 	protected AccountBO accountBO = null;
+	
+	protected SavingsBO savingsBO = null;
 
 	protected AccountBO badAccountBO = null;
 
@@ -120,7 +123,7 @@ public class TestLoanBO extends MifosTestCase {
 	private MeetingBO meeting;
 
 	private UserContext userContext;
-
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -4802,6 +4805,16 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(interest, ((LoanBO) accountBO)
 				.getTotalInterestAmountInArrearsAndOutsideLateness());
 	}
+	
+	public void testGetTotalPrincipalAmount() {
+		accountBO = getLoanAccount();
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
+				.getAccountId());
+		assertEquals(new Money("600"), ((LoanBO) accountBO)
+				.getTotalPrincipalAmount());
+	}
 
 	public void testGetTotalPrincipalAmountInArrears() {
 		java.sql.Date lastWeekDate = setDate(
@@ -4863,6 +4876,33 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(0, ((LoanBO) accountBO).getDisbursementTerm());
 
 	}
+	
+	public void testGetPaymentsInArrears() throws Exception {
+		java.sql.Date lastWeekDate = setDate(
+				new GregorianCalendar().WEEK_OF_MONTH, -1);
+		java.sql.Date twoWeeksBeforeDate = setDate(
+				new GregorianCalendar().WEEK_OF_MONTH, -2);
+		
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				((LoanScheduleEntity) installment).setActionDate(lastWeekDate);
+			}
+			
+			else if (installment.getInstallmentId().intValue() == 2) {
+				((LoanScheduleEntity) installment)
+				.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
+				.getAccountId());
+		assertEquals((float)1.0,((LoanBO)accountBO).getPaymentsInArrears());
+		
+	}
+	
 
 	public void testSaveLoanForInvalidConnection() throws Exception {
 		createInitialCustomers();
@@ -5653,4 +5693,5 @@ public class TestLoanBO extends MifosTestCase {
 				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
+	
 }

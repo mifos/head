@@ -487,6 +487,23 @@ public class TestAccountBO extends TestAccount {
 		assertEquals(1, pastInstallments.size());
 		TestObjectFactory.cleanUp(centerBO);
 	}
+	
+	public void testGetAllInstallments() {
+		
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getTypicalMeeting());
+		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
+				meeting);
+		HibernateUtil.closeSession();
+		centerBO = TestObjectFactory.getObject(CenterBO.class,
+				centerBO.getCustomerId());
+		
+		List<AccountActionDateEntity> allInstallments = centerBO
+		.getCustomerAccount().getAllInstallments();
+		assertNotNull(allInstallments);
+		assertEquals(10, allInstallments.size());
+		TestObjectFactory.cleanUp(centerBO);
+	}
 
 	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());

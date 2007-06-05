@@ -474,6 +474,7 @@ row["PrincipalInArrears"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLaten
 row["InterestInArrears"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
 
 row["DaysWithoutPayment"] = loan.getDaysWithoutPayment();
+row["PaymentInArrears"] = loan.getPaymentsInArrears();
 return true;]]></method>
             <method name="close"><![CDATA[loans = null;
 iterator = null;]]></method>
@@ -1108,7 +1109,12 @@ iterator = null;]]></method>
                             <property name="resultSetColumn">LoanBalance</property>
                         </data>
                     </cell>
-                    <cell id="936"/>
+                    <cell id="936">
+                        <data id="1113">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PaymentInArrears</property>
+                        </data>
+                    </cell>
                     <cell id="937">
                         <data id="1024">
                             <property name="textAlign">center</property>

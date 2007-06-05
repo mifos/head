@@ -503,6 +503,16 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
+	public Money getTotalPrincipalAmount() {
+		Money amount = new Money();
+		List<AccountActionDateEntity> installments = getAllInstallments();
+		for (AccountActionDateEntity accountActionDateEntity : installments) {
+			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
+					.getPrincipal());
+		}
+		return amount;
+	}
+	
 	public Money getTotalPrincipalAmountInArrears() {
 		Money amount = new Money();
 		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
@@ -2901,4 +2911,14 @@ public class LoanBO extends AccountBO {
 		}
 		return daysWithoutPayment;
 	}
+	
+	public Float getPaymentsInArrears() throws PersistenceException{
+		float principalInArrearsAndOutsideLateness = getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount().floatValue();
+		float totalPrincipal = getTotalPrincipalAmount().getAmount().floatValue();
+		float numOfInstallments = getNoOfInstallments().floatValue();
+		return principalInArrearsAndOutsideLateness*numOfInstallments/totalPrincipal;
+		
+	}
+	
+	
 }
