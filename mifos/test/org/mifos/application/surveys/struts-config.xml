@@ -5,6 +5,7 @@
 	<form-beans>
 			<form-bean name="surveyActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyActionForm"/>
 			<form-bean name="questionActionForm" type="org.mifos.application.surveys.struts.actionforms.QuestionActionForm"/>
+			<form-bean name="surveyInstanceActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyInstanceActionForm"/>			
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -30,7 +31,9 @@
    	         <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_survey.jsp"/>   	         
 			 <forward name="preview_success" path="/pages/application/surveys/jsp/survey_preview.jsp"/>   	            	         
 			 <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>		 
+			 <forward name="print_success" path="/pages/application/surveys/jsp/printer_version.jsp"/>
    	    </action>
+
 		
    	    <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
@@ -50,8 +53,11 @@
           scope="session"
           validate="false"
           name="surveyInstanceActionForm">
-             <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
-        </action>            
+          	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+          	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+          	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
+          	  <forward name="get_success" path="/pages/application/surveys/jsp/instance_details.jsp"/>          	  
+        </action> 
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />

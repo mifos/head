@@ -129,6 +129,7 @@
 		<!-- Add group Membership Form -->
 		<form-bean name="addGroupMembershipForm" type="org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm"/>
 		<form-bean name="questionActionForm" type="org.mifos.application.surveys.struts.actionforms.QuestionActionForm"/>
+		<form-bean name="surveyInstanceActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyInstanceActionForm"/>		
 
 
 	</form-beans>
@@ -1192,6 +1193,9 @@
           validate="false"
           name="surveyInstanceActionForm">
           	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+          	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+          	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
+          	  <forward name="get_success" path="/pages/application/surveys/jsp/instance_details.jsp"/>          	  
         </action>
 
 	</action-mappings>

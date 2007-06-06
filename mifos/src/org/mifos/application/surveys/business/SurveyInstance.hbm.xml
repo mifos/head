@@ -4,7 +4,7 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.application.surveys.business.SurveyInstance" table="SURVEY_INSTANCE">
-		<id name="instanceId" column="INSTANCE_ID" type="integer" unsaved-value="null" access="field">
+		<id name="instanceId" column="INSTANCE_ID" type="integer" unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
 		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="all"/>

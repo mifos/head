@@ -215,7 +215,7 @@ public class TestSurvey extends MifosTestCase {
 		
 	}
 	
-	private SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {
+	public static SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {
 		TestObjectFactory factory = new TestObjectFactory();
 		ClientBO client = factory.createClient(
 				"Test Client " + surveyName, CustomerStatus.CLIENT_PARTIAL, null);
@@ -233,11 +233,11 @@ public class TestSurvey extends MifosTestCase {
 		Address address = new Address("abcd" + surveyName, "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = DateUtils.getCurrentDateWithoutTimeStamp();
-		String officerName = "Test Officer";
+		String officerName = "Test Officer " + surveyName;
 		PersonnelBO officer = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office,
 				Integer.valueOf("1"), TestObjectFactory.TEST_LOCALE, "PASSWORD",
 				officerName, "xyz@yahoo.com", null, customFieldView, name,
-				"111111", date, Integer.valueOf("1"), Integer.valueOf("1"),
+				"govId" + surveyName, date, Integer.valueOf("1"), Integer.valueOf("1"),
 				date, date, address, PersonnelConstants.SYSTEM_USER);
 
 		
@@ -245,6 +245,8 @@ public class TestSurvey extends MifosTestCase {
 		instance.setOfficer(officer);
 		instance.setSurvey(survey);
 		instance.setClient(client);
+		instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
+		HibernateUtil.getSessionTL().save(instance);
 		return instance;
 	}
 	
@@ -357,7 +359,7 @@ public class TestSurvey extends MifosTestCase {
 		response.setChoiceValue(choice2);
 
 		HibernateUtil.getSessionTL().saveOrUpdate(instance);
-//		HibernateUtil.getSessionTL().saveOrUpdate(response);
+		HibernateUtil.getSessionTL().saveOrUpdate(response);
 		
 		SurveyInstance refreshedInstance = 
 			(SurveyInstance)HibernateUtil.getSessionTL().get(

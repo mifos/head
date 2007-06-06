@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.surveys.business.TestSurvey;
 import org.mifos.application.surveys.struts.action.TestQuestionsAction;
+import org.mifos.application.surveys.struts.action.TestSurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.TestSurveysAction;
 
 public class SurveysTestSuite extends TestSuite {
@@ -14,6 +15,7 @@ public class SurveysTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestSurvey.class);
 		testSuite.addTestSuite(TestSurveysAction.class);
 		testSuite.addTestSuite(TestQuestionsAction.class);
+		testSuite.addTestSuite(TestSurveyInstanceAction.class);
 		return testSuite;
 	}
 

@@ -113,8 +113,8 @@
 <br/>
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td class="drawtablehd">Question text</td>
-                <td class="drawtablehd">Delete</td>
+                <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
+                <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Delete" bundle="SurveysUIResources"/></td>
 <c:forEach items="${sessionScope.addedQuestions}" var="question" varStatus="status">
 <tr>
 <td class="drawtablerow"><c:out value="${question.questionText}" /></td>

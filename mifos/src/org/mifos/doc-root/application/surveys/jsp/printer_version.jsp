@@ -86,6 +86,16 @@ h2{
     cursor: pointer;
     height: 20px
 }
+input {
+	background-color: transparent;
+	border: 2px #000000 solid;
+	overflow: hidden;
+}
+textarea {
+	background-color: transparent;
+	border: 2px #000000 solid;
+	overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -105,11 +115,11 @@ h2{
 										<tr class="fontnormal">
 											<td>
 											<input type="radio" disabled>
-											<em>Indicates that you can select only one option</em>
+											<em><mifos:mifoslabel name="Surveys.printer.singleSelectDescription" bundle="SurveysUIResources"/></em>
 											</td>
 											<td>
 											<input type="checkbox" disabled>
-											<em>Indicates that you can select more than one option</em>
+											<em><mifos:mifoslabel name="Surveys.printer.multiSelectDescription" bundle="SurveysUIResources"/></em>
 											</td>
 										</tr>
 									</table>
@@ -138,7 +148,7 @@ h2{
 								</c:forEach>
 								</c:when>
 								<c:when test="${question.question.answerType == 2}">
-								<textarea name="textarea" cols="70" rows="10" style=" overflow:hidden;"></textarea>
+								<textarea name="textarea" cols="70" rows="10"></textarea>
 								</c:when>
 								<c:otherwise><input type="text"></c:otherwise>
 								</c:choose>
@@ -153,9 +163,11 @@ h2{
 						<table width="93%">
 							<tr>
 								<td align="center">
-								<input type="button" class="printBtn" value="Print" onClick="window.print();">
+								<html-el:button property="print" onclick="window.print();" styleClass="printBtn">
+								<mifos:mifoslabel name="Surveys.button.print" bundle="SurveysUIResources"/></html-el:button> 
 								&nbsp;
-								<input type="button" value="Cancel" class="cancelBtn" onClick="window.close();">
+								<html-el:button property="cancel" onclick="window.close();" styleClass="cancelBtn">
+								<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources"/></html-el:button> 
 								</td>
 							</tr>
 						</table>
