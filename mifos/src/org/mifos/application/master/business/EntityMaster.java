@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.mifos.framework.business.View;
 
-public class EntityMaster extends View {
+public class EntityMaster extends View implements CustomValueList {
 
 	private Short entityId;
 
@@ -75,6 +75,18 @@ public class EntityMaster extends View {
 			}
 		}
 		return lookUpValue;
+	}
+
+	public List<CustomValueListElement> getElements() {
+		throw new RuntimeException("not implemented");
+	}
+
+	public String getLabel() {
+		return entityLabel;
+	}
+
+	public void addElement(CustomValueListElement newElement) {
+		throw new RuntimeException("not implemented");
 	}
 
 }

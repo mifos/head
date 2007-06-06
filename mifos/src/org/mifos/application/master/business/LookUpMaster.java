@@ -2,7 +2,7 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.business.View;
 
-public class LookUpMaster extends View {
+public class LookUpMaster extends View implements CustomValueListElement {
 
 	private Integer id;
 
@@ -45,6 +45,14 @@ public class LookUpMaster extends View {
 
 	public java.lang.String getLookUpValue() {
 		return lookUpValue;
+	}
+
+	public String getValue() {
+		return lookUpValue;
+	}
+
+	public void setValue(String newValue) {
+		throw new RuntimeException("not implemented");
 	}
 
 }
