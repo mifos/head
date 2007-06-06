@@ -43,6 +43,11 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", ac);
 	}
 	
+	@Override
+	protected void tearDown() throws Exception {
+		PersistenceAction.resetDefaultSessionOpener();
+	}
+
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
 		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CUSTOMERS);
 		Question question = new Question(questionText, AnswerType.FREETEXT);

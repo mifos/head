@@ -37,7 +37,11 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+	}
 	
+	@Override
+	protected void tearDown() throws Exception {
+		PersistenceAction.resetDefaultSessionOpener();
 	}
 
 	private Question makeTestSelectQuestion(String name, int choiceNumber)

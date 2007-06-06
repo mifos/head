@@ -15,12 +15,12 @@ public class PersistenceAction extends BaseAction {
 		throw new RuntimeException("not implemented");
 	}
 
-	public static SessionOpener getDefaultSessionOpener() {
-		return defaultSessionOpener;
-	}
-
 	public static void setDefaultSessionOpener(SessionOpener defaultSessionOpener) {
 		PersistenceAction.defaultSessionOpener = defaultSessionOpener;
+	}
+	
+	public static void resetDefaultSessionOpener() {
+		defaultSessionOpener = new ThreadLocalOpener();
 	}
 	
 	public PersistenceAction() {

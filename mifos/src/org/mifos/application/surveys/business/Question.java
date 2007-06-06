@@ -121,13 +121,22 @@ public class Question implements Serializable {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		try {
-			Question question = (Question) o;
-			return question.getQuestionId() == questionId;
-		}
-		catch (Exception e) {
+	public final boolean equals(Object o) {
+		if (o == null) {
 			return false;
 		}
+		
+		if (!(o instanceof Question)) {
+			return false;
+		}
+
+		Question question = (Question) o;
+		return question.getQuestionId() == questionId;
 	}
+	
+	@Override
+	public int hashCode() {
+		return new Integer(questionId).hashCode();
+	}
+
 }

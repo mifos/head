@@ -48,6 +48,7 @@ import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.meeting.util.helpers.WeekDayTest;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
+import org.mifos.application.surveys.business.QuestionTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
@@ -133,6 +134,8 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
 		suite.addTestSuite(LoanCycleCounterTest.class);
 		suite.addTestSuite(AccountBOTest.class);
+		
+		suite.addTest(QuestionTest.suite());
 		
 		suite.addTestSuite(CustomerStatusFlagTest.class);
 		return suite;
