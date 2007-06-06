@@ -42,7 +42,16 @@
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
              <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
-        </action>   	    
+        </action>   	
+        
+        <action path="/surveyInstanceAction"
+          type="org.mifos.application.surveys.struts.action.SurveyInstanceAction"
+          parameter="method"
+          scope="session"
+          validate="false"
+          name="surveyInstanceActionForm">
+             <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+        </action>            
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />

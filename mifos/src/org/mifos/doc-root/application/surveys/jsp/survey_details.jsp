@@ -31,7 +31,7 @@
                   	</c:choose>
                   	<br>
   <br>
-  <a href="../SurverDetailsPrintPreview.htm" onClick="javascript:openfile(this.href); return false"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
+  <a href="surveysAction.do?method=printVersion&surveyId=<c:out value="${sessionScope.BusinessKey.surveyId}"/>" onClick="javascript:openfile(this.href); return false"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
                   <p><span class="fontnormalbold"><mifos:mifoslabel name="Surveys.Questions"/></span></p></td>
                 </tr>
 

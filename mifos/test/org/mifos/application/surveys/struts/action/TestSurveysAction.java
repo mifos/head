@@ -64,7 +64,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		assertEquals(1, surveys.get(0).getQuestions().size());
 	}
 	
-	public void testGet() throws Exception {
+	public void testGetAndPrint() throws Exception {
 		String testName = "Test Survey 2";
 		String questionText= "Some question here";
 		Survey survey = makeTestSurvey(testName, questionText);
@@ -77,6 +77,12 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		assertEquals(testName, retrievedSurvey.getName());
 		Question question = retrievedSurvey.getQuestion(0);
 		assertEquals(questionText, question.getQuestionText());
+		
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "printVersion");
+		addRequestParameter("surveyId", Integer.toString(survey.getSurveyId()));
+		actionPerform();
+		verifyNoActionErrors();
 	}
 
 	public void testCreateEntry() throws Exception {

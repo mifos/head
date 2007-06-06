@@ -13,8 +13,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
+import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyQuestion;
+import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -44,7 +46,15 @@ public class SurveysAction extends PersistenceAction {
 		security.allow("create", SecurityConstants.VIEW);
 		security.allow("newVersion", SecurityConstants.VIEW);
 		security.allow("edit", SecurityConstants.VIEW);
+		security.allow("printVersion", SecurityConstants.VIEW);
 		return security;
+	}
+	
+	public ActionForward printVersion(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		get(mapping, form, request, response);
+		return mapping.findForward("print_success");
 	}
 
 	@Override
@@ -92,6 +102,12 @@ public class SurveysAction extends PersistenceAction {
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				new LinkedList<Question>());
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
+	}
+	
+	public ActionForward create_instance_entry(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		return mapping.findForward(ActionForwards.create_instance_entry_success.toString());
 	}
 	
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
@@ -162,9 +178,19 @@ public class SurveysAction extends PersistenceAction {
 		SurveyType type = SurveyType.fromString(actionForm.getAppliesTo());
 		Survey newSurvey = new Survey(actionForm.getName(),
 				SurveyState.ACTIVE, type);
+		// we have to ensure that all new question choices are created during this
+		// transaction, so that they're associated with the same hibernate request
+		// that the rest of the survey and questions are
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
 		for (Question question : addedQuestions) {
-			//newSurvey.addQuestion(question, true);
+			LinkedList<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+			if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
+				for (QuestionChoice choice : question.getChoices()) {
+					choices.add(new QuestionChoice(choice.getChoiceText()));
+				}
+			}
+			question.setChoices(choices);
+			newSurvey.addQuestion(question, true);
 		}
 		persistence.createOrUpdate(newSurvey);
 		return mapping.findForward(ActionForwards.create_success.toString());

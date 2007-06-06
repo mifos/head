@@ -1152,6 +1152,7 @@
    	         <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_survey.jsp"/>   	         
 			 <forward name="preview_success" path="/pages/application/surveys/jsp/survey_preview.jsp"/>   	            	         
 			 <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>		 
+			 <forward name="print_success" path="/pages/application/surveys/jsp/printer_version.jsp"/>
    	    </action>
 
 
@@ -1182,6 +1183,15 @@
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
              <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+        </action>
+        
+        <action path="/surveyInstanceAction"
+          type="org.mifos.application.surveys.struts.action.SurveyInstanceAction"
+          parameter="method"
+          scope="session"
+          validate="false"
+          name="surveyInstanceActionForm">
+          	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
 
 	</action-mappings>
