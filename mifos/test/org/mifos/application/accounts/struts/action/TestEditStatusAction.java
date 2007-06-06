@@ -397,7 +397,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	}
 
 	private UserContext createUser() throws Exception {
-		this.userContext = TestUtils.makeUser(2);
+		this.userContext = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
 		return userContext;
 	}
 

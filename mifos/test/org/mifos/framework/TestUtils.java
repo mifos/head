@@ -14,15 +14,19 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
 	
-	public static final int ADMIN_ROLE = 1;
+	/* Supplied in a few tests, but not actually in master data. 
+	   The test might set up the role, or more likely the test
+	   doesn't need it to exist in the database. */
+	public static final int DUMMY_ROLE = 2;
 
 	public static UserContext makeUser() {
-		return makeUser(ADMIN_ROLE);
+		return makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
 	}
 
 	/**
@@ -31,7 +35,8 @@ public class TestUtils {
 	 * I haven't tried to see whether that breaks anything.
 	 */
 	public static UserContext makeUserWithLocales() {
-		UserContext user = makeUser(ADMIN_ROLE, ukLocale());
+		UserContext user = makeUser(
+			RolesAndPermissionConstants.ADMIN_ROLE, ukLocale());
 		user.setLocaleId(TestObjectFactory.TEST_LOCALE);
 
 		user.setMfiLocale(ukLocale());

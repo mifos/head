@@ -14,7 +14,6 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -542,7 +541,7 @@ public class ClientBO extends CustomerBO {
 	
 	private void validateForActiveAccounts() throws CustomerException {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
-			ConfigurationIntf labelConfig = MifosConfiguration.getInstance();
+			MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 			try {
 				throw new CustomerException(
 					ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, 
@@ -593,7 +592,7 @@ public class ClientBO extends CustomerBO {
 	private void validateForGroupStatus(CustomerStatus groupStatus)
 			throws CustomerException {
 		if (isGroupStatusLower(getStatus(), groupStatus)) {
-			ConfigurationIntf labelConfig = MifosConfiguration.getInstance();
+			MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 			try {
 				throw new CustomerException(
 					ClientConstants.ERRORS_LOWER_GROUP_STATUS, 

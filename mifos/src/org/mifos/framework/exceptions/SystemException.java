@@ -46,7 +46,7 @@ package org.mifos.framework.exceptions;
 public class SystemException extends RuntimeException {
 
 	/** Generic message, along the lines of "something has failed".  */
-	private static final String DEFAULT_KEY = 
+	public static final String DEFAULT_KEY = 
 		"exception.framework.SystemException";
 
 	/**

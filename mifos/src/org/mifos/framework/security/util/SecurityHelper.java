@@ -73,17 +73,16 @@ public class SecurityHelper {
 	 */
 	public static List<ActivityRoles> getActivities() throws SystemException,
 			ApplicationException {
-		List<ActivityRoles> activityRolesList = null;
+		List<ActivityRoles> activityRolesList;
 		Session session = null;
 		Transaction transaction = null;
-		Query quaryActivityRoles = null;
 		try {
 			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			// get the named query
-			quaryActivityRoles = session
+			Query query = session
 					.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
-			activityRolesList = quaryActivityRoles.list();
+			activityRolesList = query.list();
 			transaction.commit();
 
 		} catch (HibernateProcessException e) {

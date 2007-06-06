@@ -7,7 +7,6 @@ import java.util.Locale;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
-import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.framework.exceptions.TableTagParseException;
@@ -29,7 +28,7 @@ public class Column {
 
 	private LinkDetails linkDetails = null;
 
-	private ConfigurationIntf labelConfig = MifosConfiguration.getInstance();
+	private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 
 	public void setLinkDetails(LinkDetails linkDetails) {
 		this.linkDetails = linkDetails;

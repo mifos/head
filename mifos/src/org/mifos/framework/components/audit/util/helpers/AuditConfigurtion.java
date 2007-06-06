@@ -45,7 +45,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
-import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
@@ -73,7 +72,7 @@ public class AuditConfigurtion {
 
 	private PropertyResourceBundle columnNames;
 	private Locale locale;
-	private ConfigurationIntf  labelConfig = MifosConfiguration.getInstance();
+	private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 	
 	private List<Short> locales;
 	

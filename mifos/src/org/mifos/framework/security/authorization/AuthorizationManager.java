@@ -80,11 +80,10 @@ public class AuthorizationManager {
 	public void init() throws SystemException, ApplicationException {
 
 		try {
-			List al = SecurityHelper.getActivities();
+			List<ActivityRoles> al = SecurityHelper.getActivities();
 			activityToRolesCacheMap.clear();
 			List leafs = SecurityHelper.getLeafActivities();
-			for (int i = 0; i < al.size(); i++) {
-				ActivityRoles act = ((ActivityRoles) al.get(i));
+			for (ActivityRoles act : al) {
 				if (leafs.contains(act.getId())) {
 					activityToRolesCacheMap.put(act.getId(), act
 							.getActivityRoles());

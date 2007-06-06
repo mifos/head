@@ -1,12 +1,6 @@
-/**
- * 
- */
 package org.mifos.application.rolesandpermission.util.helpers;
 
 public interface RolesAndPermissionConstants {
-	public final static  int ZERO =0;
-	public final static  int ONE =1;	
-	public final static  int TWO =2;
 	public final static String ROLE="Role";
 	
 	public final static String ROLES="Roles";
@@ -30,5 +24,8 @@ public interface RolesAndPermissionConstants {
 	public final static String KEYROLEASSIGNEDTOPERSONNEL="roleandpermission.error.roleassigned";
 	public final static String KEYROLEDELETEDBYOTHERUSER="roleandpermission.error.roledeleted";
 	public final static String KEYROLENAMENOTSPECIFIED="roleandpermission.rolename.required";
+
+	/* Set up in latest-data.sql */
+	public static final int ADMIN_ROLE = 1;
 	
 }

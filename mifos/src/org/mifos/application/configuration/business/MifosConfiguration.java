@@ -21,7 +21,7 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
  * e.g. Label configuration
  */
 
-public class MifosConfiguration implements ConfigurationIntf {
+public class MifosConfiguration {
 
 	private Map<LabelKey, String> labelCache;
 
