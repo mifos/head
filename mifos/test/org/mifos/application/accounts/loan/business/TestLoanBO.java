@@ -37,7 +37,6 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -106,8 +105,6 @@ public class TestLoanBO extends MifosTestCase {
 	// TODO: probably should be of type LoanBO
 	protected AccountBO accountBO = null;
 	
-	protected SavingsBO savingsBO = null;
-
 	protected AccountBO badAccountBO = null;
 
 	protected CustomerBO center = null;
@@ -4875,6 +4872,12 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 	
+	public void testGetNetOfSaving() throws Exception {
+		accountBO = getLoanAccount();
+		LoanBO loanAccount = (LoanBO) accountBO;
+		assertEquals(loanAccount.getRemainingPrincipalAmount().subtract(loanAccount.getCustomer().getSavingsBalance()), loanAccount.getNetOfSaving());
+	}
+	
 	public void testGetPaymentsInArrears() throws Exception {
 		java.sql.Date lastWeekDate = setDate(
 				new GregorianCalendar().WEEK_OF_MONTH, -1);
@@ -4901,7 +4904,6 @@ public class TestLoanBO extends MifosTestCase {
 		
 	}
 	
-
 	public void testSaveLoanForInvalidConnection() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -5272,6 +5274,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
+	
 
 	private void createInitialCustomers() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory

@@ -607,7 +607,7 @@ current = null;]]></method>
                                         <text id="844">
                                             <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
                                             <property name="contentType">auto</property>
-                                            <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
+                                            <text-property name="content"><![CDATA[Prepared by: <value-of>params["userId"].displayText</value-of>]]></text-property>
                                         </text>
                                     </cell>
                                 </row>

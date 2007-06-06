@@ -7,7 +7,8 @@
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
 
-<FORM name='data_form' method='POST' action='pages\application\reports\jsp\reportsUpload.jsp' ENCTYPE='Multipart/Form-Data'>
+
+<FORM name='data_form' method='POST' action='<c:url value="/pages/application/reports/jsp/reportsUpload.jsp" />' ENCTYPE='Multipart/Form-Data'>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			    <td width="174" height="300" align="left" valign="top" class="bgorangeleft">

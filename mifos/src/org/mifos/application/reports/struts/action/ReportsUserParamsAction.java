@@ -119,6 +119,7 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allowReport(25, ReportSecurityConstants.DAILY_PORTFOLIO_QUALITY_DATA_REPORT);
 		security.allowReport(26, ReportSecurityConstants.CENTER_MEETING_SCHEDULE);
 		security.allowReport(28, ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK);
+		security.allowReport(29, ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER);
 		
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);

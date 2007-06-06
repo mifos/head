@@ -2911,8 +2911,9 @@ public class LoanBO extends AccountBO {
 		float totalPrincipal = getTotalPrincipalAmount().getAmount().floatValue();
 		float numOfInstallments = getNoOfInstallments().floatValue();
 		return principalInArrearsAndOutsideLateness*numOfInstallments/totalPrincipal;
-		
 	}
 	
-	
+	public Money getNetOfSaving(){
+		return getRemainingPrincipalAmount().subtract(getCustomer().getSavingsBalance());
+	}
 }
