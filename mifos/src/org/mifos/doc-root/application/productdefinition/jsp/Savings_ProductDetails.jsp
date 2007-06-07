@@ -116,7 +116,7 @@
 											<td height="23" class="fontnormalbold">
 												<span class="fontnormal">
 												 <c:choose>
-														<c:when test="${BusinessKey.prdStatus.offeringStatusId == PrdStatus.SAVINGSACTIVE.value}">
+														<c:when test="${BusinessKey.prdStatus.offeringStatusId == PrdStatus.SAVINGS_ACTIVE.value}">
 															<img src="pages/framework/images/status_activegreen.gif" width="8" height="9">&nbsp;
 														</c:when>
 														<c:otherwise>

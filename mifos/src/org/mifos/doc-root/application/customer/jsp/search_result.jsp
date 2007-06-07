@@ -67,11 +67,11 @@
 					</table>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td colspan="2" class="blueline"><img src="images/trans.gif"
+							<td colspan="2" class="blueline"><img src="pages/framework/images/trans.gif"
 								width="5" height="3"></td>
 						</tr>
 						<tr class="fontnormal">
-			                <td colspan="2" valign="top"><img src="images/trans.gif" width="5" height="3"></td>
+			                <td colspan="2" valign="top"><img src="pages/framework/images/trans.gif" width="5" height="3"></td>
 			            </tr>
 						<tr><td>
 						<mifos:mifostabletagdata key="customersearch" name="customersearch" type="multiple" width="100%" border="0" cellspacing="0" cellpadding="3"/>

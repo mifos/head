@@ -275,7 +275,7 @@
 						</span></td>
 					</tr>
 					<tr>
-						<td class="paddingL10"><img src="images/trans.gif" width="10"
+						<td class="paddingL10"><img src="pages/framework/images/trans.gif" width="10"
 							height="2"></td>
 					</tr>
 					<tr>
