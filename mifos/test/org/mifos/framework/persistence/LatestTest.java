@@ -47,12 +47,18 @@ public class LatestTest extends TestCase {
 	public void testRealSchema() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		loadRealLatest(database);
+		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION,
+				version(database));
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
 		DataStore upgraded = applyRealUpgrades();
 		String upgradeDump = new SqlDumper().dump(upgraded);
 		
 		assertEquals(latestDump, upgradeDump);
+	}
+
+	private int version(Database database) throws SQLException {
+		return new DatabaseVersionPersistence(database.openConnection()).read();
 	}
 
 	private DataStore applyRealUpgrades() throws Exception {

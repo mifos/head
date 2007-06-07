@@ -16,7 +16,8 @@
 
 	    <property name="holidayThruDate" column="HOLIDAY_THRU_DATE" type="date" />
 		<property name="holidayName" column="HOLIDAY_NAME" type="string" />
-		<property name="repaymentRuleId" column="REPAYMENT_RULE_ID" type="short"/>       
+		<property name="repaymentRuleId" column="REPAYMENT_RULE_ID" type="short"/>
+		<property name="holidayChangesAppliedFlag" column="HOLIDAY_CHANGES_APPLIED_FLAG"/>        
 	</class>
 
 	<!-- Holiday Specific Queries  -->
@@ -33,6 +34,11 @@
 		               and holidayBO.holidayPK.holidayFromDate >= :START_OF_YEAR
                        and holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR
    	       ]]>
+	</query>
+	<query name="holiday.getHoildaysByFlag">
+			<![CDATA[from org.mifos.application.holiday.business.HolidayBO holidayBO
+	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
+			]]>
 	</query>
 
 </hibernate-mapping>

@@ -20,7 +20,7 @@ public class MifosSchedulerTest extends MifosTestCase {
 		MifosScheduler mifosScheduler = new MifosScheduler();
 		mifosScheduler.registerTasks();
 		List<String> taskNames = mifosScheduler.getTaskNames();
-		assertEquals(11, taskNames.size());
+		assertEquals(12, taskNames.size());
 		assertTrue(taskNames.contains("ProductStatus"));
 		assertTrue(taskNames.contains("CollectionSheetTask"));
 		assertTrue(taskNames.contains("LoanArrearsTask"));
@@ -32,5 +32,6 @@ public class MifosSchedulerTest extends MifosTestCase {
 		assertTrue(taskNames.contains("ApplyCustomerFeeChangesTask"));
 		assertTrue(taskNames.contains("GenerateMeetingsForCustomerAndSavingsTask"));
 		assertTrue(taskNames.contains("LoanArrearsAgingTask"));
+		assertTrue(taskNames.contains("ApplyHolidayChangesTask"));
 	}
 }

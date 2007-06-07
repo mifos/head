@@ -3,8 +3,9 @@ package org.mifos.application.holiday.business;
 import java.util.Date;
 
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -19,9 +20,11 @@ public class HolidayBO extends BusinessObject {
 
 	private Short repaymentRuleId;
 
-	private String repaymentRule; // view property
+	private String repaymentRule;
 
 	private boolean validationEnabled = true;
+	
+	private Short holidayChangesAppliedFlag;   
 	
 	public boolean isValidationEnabled() {
 		return validationEnabled;
@@ -33,6 +36,7 @@ public class HolidayBO extends BusinessObject {
 
 	protected HolidayBO() {
 		this.holidayPK = null;
+		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
 	}
 
 	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate,
@@ -53,6 +57,7 @@ public class HolidayBO extends BusinessObject {
 		this.holidayName = holidayName;
 		this.repaymentRuleId = repaymentRuleId;
 		this.repaymentRule = repaymentRule;
+		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
 	}
 
 	public HolidayPK getHolidayPK() {
@@ -102,6 +107,14 @@ public class HolidayBO extends BusinessObject {
 	private void setHolidayName(String holidayName) {
 		this.holidayName = holidayName;
 	}
+	
+	public Short getHolidayChangesAppliedFlag() {
+		return holidayChangesAppliedFlag;
+	}
+
+	public void setHolidayChangesAppliedFlag(Short flag) {
+		this.holidayChangesAppliedFlag = flag;
+	}
 
 	public void save() throws ApplicationException {
 		if (this.getHolidayThruDate() == null) {
@@ -130,11 +143,15 @@ public class HolidayBO extends BusinessObject {
 			this.validateFromDateAgainstCurrentDate(this.getHolidayFromDate());
 			this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
 		}
-
-		// this block should not be here
+		
+		if(this.getRepaymentRuleId().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
+			this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
+		
 		new HolidayPersistence().createOrUpdate(this);
-		HolidayUtils.rescheduleLoanRepaymentDates(this);
-		HolidayUtils.rescheduleSavingDates(this);
+		
+		//this block should not be here
+		//HolidayUtils.rescheduleLoanRepaymentDates(this);
+		//HolidayUtils.rescheduleSavingDates(this);
 		// end of block
 	}
 

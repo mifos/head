@@ -12,6 +12,7 @@ import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class HolidayPersistence extends MasterPersistence {
@@ -64,6 +65,15 @@ public class HolidayPersistence extends MasterPersistence {
 		
 		return executeNamedQuery( NamedQueryConstants.ALL_LOAN_SCHEDULE,
 									parameters);
+	}
+	
+	public List<HolidayBO> getUnAppliedHolidays() throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("FLAG", YesNoFlag.NO.getValue());
+		List<HolidayBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_HOLIDAYS_BY_FLAG,
+				queryParameters);
+		return queryResult;
 	}
 	
 	public List<SavingsScheduleEntity> getAllSavingSchedules(HolidayBO holiday) throws PersistenceException{
