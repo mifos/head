@@ -68,6 +68,7 @@ public class SurveyActionForm extends BaseActionForm {
 		this.questionNum = questionNum;
 	}
 	
+	/*
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
@@ -83,5 +84,6 @@ public class SurveyActionForm extends BaseActionForm {
 		}
 		return errors;
 	}
+	*/
 
 }

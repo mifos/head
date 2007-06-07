@@ -2,6 +2,7 @@ package org.mifos.application.surveys.struts.action;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,11 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.formulaic.MaxLengthValidator;
+import org.mifos.framework.formulaic.OneOfValidator;
+import org.mifos.framework.formulaic.Schema;
+import org.mifos.framework.formulaic.SchemaValidationError;
+import org.mifos.framework.formulaic.Validator;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -33,6 +39,19 @@ import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysAction extends PersistenceAction {
+	
+	Schema previewValidator;
+	
+	public SurveysAction() {
+		super();
+		previewValidator = new Schema();
+		previewValidator.setValidator("name", new MaxLengthValidator(5));
+		LinkedList<String> choices = new LinkedList<String>();
+		for (SurveyType type : SurveyType.values()) {
+			choices.add(type.getValue());
+		}
+		previewValidator.setValidator("appliesTo", new OneOfValidator(choices));
+	}
 
 	
 	public static ActionSecurity getSecurity() {
@@ -113,6 +132,14 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		try {
+			Map<String, Object> results = previewValidator.validate(request);
+		}
+		catch (SchemaValidationError e) {
+			saveErrors(request, Schema.makeActionErrors(e));
+			return mapping.findForward(ActionForwards.create_entry_success.toString());
+		}
+		
 		SurveyActionForm actionForm = (SurveyActionForm) form;
 		request.getSession().setAttribute(
 				SurveysConstants.KEY_SURVEY_ACTIONFORM, actionForm);

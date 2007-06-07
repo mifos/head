@@ -33,7 +33,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		super.setUp();
 		
 		database = TestDatabase.makeStandard();
-		//PersistenceAction.setDefaultSessionOpener(database);
 		
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
@@ -47,8 +46,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", ac);
 	}
 	
-	
 	public void testCreate() throws Exception {
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
 		String clientId = Integer.toString(sampleInstance.getClient().getCustomerId());
 		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());

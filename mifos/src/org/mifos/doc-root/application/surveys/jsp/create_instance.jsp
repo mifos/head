@@ -28,7 +28,7 @@
                               <img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
                             </td>
 			    <td class="timelineboldorange">
-                              <mifos:mifoslabel name="Surveys.surveyInformation" bundle="SurveysUIResources" />
+                              <mifos:mifoslabel name="Surveys.instanceInformation" bundle="SurveysUIResources" />
                             </td>
 			  </tr>
 			</table>
@@ -59,9 +59,9 @@
                     <tr>
                       <td class="headingorange">
                         <span class="heading"> 
-                          <mifos:mifoslabel name="Surveys.definenewsurvey" bundle="SurveysUIResources" /> - 
+                          <mifos:mifoslabel name="Surveys.Createnewinstance" bundle="SurveysUIResources" /> - 
                         </span> 
-                        <mifos:mifoslabel name="Surveys.enter_survey" bundle="SurveysUIResources" />
+                        <mifos:mifoslabel name="Surveys.enterinstanceinformation" bundle="SurveysUIResources" />
                       </td>
                     </tr>
                     <tr>
@@ -90,20 +90,12 @@
                         <br>
                       </td>
                     </tr>
-                    <tr class="fontnormal">
-                      <td width="27%" align="right">
-                        <mifos:mifoslabel name="Surveys.survey_name" mandatory="yes" bundle="SurveysUIResources" />:
-                      </td>
-                      <td width="73%" valign="top">
-                        <mifos:mifosalphanumtext property="name" maxlength="100" />
-                      </td>
-                    </tr>
-                    <tr class="fontnormal">
+                   <tr class="fontnormal">
                       <td align="right" valign="top">
                         <mifos:mifoslabel name="Surveys.Appliesto" mandatory="yes" bundle="SurveysUIResources" />:
                       </td>
                       <td valign="top">
-                        <mifos:select property="appliesTo" style="width:136px;">
+                        <mifos:select property="appliesTo" size="10" style="width:136px;">
                           <html-el:option value="customers">
                             <mifos:mifoslabel name="Surveys.customers_type" bundle="SurveysUIResources"/>
                           </html-el:option>
@@ -118,40 +110,20 @@
                     </tr>
                     <tr class="fontnormal">
                       <td align="right" valign="top">
-                        <mifos:mifoslabel name="Surveys.select_questions" bundle="SurveysUIResources"/>
+                        <mifos:mifoslabel name="Surveys.officer" bundle="SurveysUIResources"/>
                       </td>
                       <td valign="top">
-                        <html-el:select size="10" style="width:40em" property="newQuestion">
-                          <c:forEach var="question" items="${sessionScope.questionsList}">
-                            <html-el:option value="${question.questionId}">
-                              <c:out value="${question.questionText}"/>
-                            </html-el:option>
-                          </c:forEach>
-                        </html-el:select>
+                        <span>Dummy Name</span> 
+                      </td>
                       <td valign="top">
-                        <input id="AddButton" type="button" class="insidebuttn" value="Add &gt;&gt;" style="width:65px"  onclick="submitSurveyForm('add_new_question')"/>
+                        <html-el:button style="width:65px;" property="button" styleClass="buttn" onclick="submitInstanceForm('choose_officer')">
+                          <mifos:mifoslabel name="Surveys.button.chooseofficer" bundle="SurveysUIResources" />
+                        </html-el:button>
                       </td>
                     </tr>
                   </table>
 
                   <br/>
-
-
-                  <table width="98%" border="0" cellpadding="3" cellspacing="0">
-                     <tr>
-                        <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
-                        <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Delete" bundle="SurveysUIResources"/></td>
-                     </tr>
-                       <c:forEach items="${sessionScope.addedQuestions}" var="question" varStatus="status">
-                         <tr>
-                           <td class="drawtablerow"><c:out value="${question.questionText}" /></td>
-                           <td class="drawtablerow">
-                             <input type="button" onclick="submitSurveyForm('delete_new_question&questionNum=${question.questionId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}')" value="Delete" class="buttn"/>
-                           </td>
-                         </tr>
-                       </c:forEach>
-                     </tr>
-                  </table>
 
                   <table width="93%" border="0" cellpadding="0" cellspacing="0">
                     <tr>

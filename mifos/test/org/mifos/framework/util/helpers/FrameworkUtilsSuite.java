@@ -1,5 +1,7 @@
 package org.mifos.framework.util.helpers;
 
+import org.mifos.framework.formulaic.TestValidators;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -21,6 +23,7 @@ public class FrameworkUtilsSuite extends TestSuite {
         suite.addTestSuite(CacheTest.class);
         suite.addTestSuite(BundleKeyTest.class);
         suite.addTestSuite(MifosSelectHelperTest.class);
+        suite.addTestSuite(TestValidators.class);
         return suite;
     }
 

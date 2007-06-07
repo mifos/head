@@ -37,6 +37,7 @@ public class SurveyInstanceAction extends BaseAction {
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("surveyInstanceAction");
 		security.allow("create_entry", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -44,6 +45,24 @@ public class SurveyInstanceAction extends BaseAction {
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
+	}
+	
+	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
+		SurveysPersistence persistence = new SurveysPersistence();
+		List<Question> questionsList = persistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+		request.getSession().setAttribute(SurveysConstants.KEY_QUESTIONS_LIST,
+				questionsList);
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
+	}
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
+		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
 	public ActionForward create(ActionMapping mapping, ActionForm form,
@@ -53,7 +72,7 @@ public class SurveyInstanceAction extends BaseAction {
 		SurveysPersistence persistence = new SurveysPersistence();
 
 		// these 5 lines should be the only ones that need to be changed
-		// to complete implementation (if using new validation sys)
+		// to change implementation (if using new validation sys)
 		InstanceStatus status = InstanceStatus.fromInt(Integer
 				.parseInt(actionForm.getInstanceStatus()));
 		int clientId = Integer.parseInt(actionForm.getCustomerId());

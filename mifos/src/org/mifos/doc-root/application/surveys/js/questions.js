@@ -26,4 +26,10 @@ function submitSurveyForm(method) {
 	form.action='surveysAction.do?method=' + method;
 	form.submit();
 }
+
+function submitSurveyForm(method) {
+	form = document.forms['surveyInstanceActionForm'];
+	form.action='surveysAction.do?method=' + method;
+	form.submit();
+}
 	
