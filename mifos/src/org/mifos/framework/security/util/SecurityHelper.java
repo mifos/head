@@ -54,6 +54,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
@@ -63,6 +64,12 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
  */
 
 public class SecurityHelper {
+	
+	private final SessionHolder sessionHolder;
+
+	public SecurityHelper(SessionHolder session) {
+		this.sessionHolder = session;
+	}
 
 	/**
 	 * This function is used to retrive the all the activities in the system and
@@ -71,34 +78,33 @@ public class SecurityHelper {
 	 * @return list of ActivityRoles objects
 	 * @throws HibernateProcessException
 	 */
-	public static List<ActivityRoles> getActivities() throws SystemException,
+	public List<ActivityRoles> getActivities() throws SystemException,
 			ApplicationException {
-		List<ActivityRoles> activityRolesList;
-		Session session = null;
+		Session session = sessionHolder.getSession();
 		Transaction transaction = null;
 		try {
-			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
-			// get the named query
 			Query query = session
 					.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
-			activityRolesList = query.list();
+			List<ActivityRoles> activityRolesList = query.list();
 			transaction.commit();
+			return activityRolesList;
 
 		} catch (HibernateProcessException e) {
-			transaction.rollback();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 			throw new SystemException(e);
 		} catch (HibernateException e) {
-			transaction.rollback();
+			if (transaction != null) {
+				transaction.rollback();
+			}
 			throw new SecurityException(SecurityConstants.GENERALERROR, e);
-		} finally {
-			HibernateUtil.closeSession(session);
 		}
-		return activityRolesList;
 	}
 
 	/**
-	 * Thsi function returns the PersonRoles object which contains the person
+	 * This function returns the PersonRoles object which contains the person
 	 * information and the set of all the roles related to that user
 	 * 
 	 * @param uid
@@ -229,7 +235,7 @@ public class SecurityHelper {
 	 * @return List of leafs activity id's
 	 * @throws HibernateProcessException
 	 */
-	public static List<Short> getLeafActivities() throws SystemException,
+	public List<Short> getLeafActivities() throws SystemException,
 			ApplicationException {
 		RolesPermissionsPersistence rolesPermissionsPersistence = 
 			new RolesPermissionsPersistence();

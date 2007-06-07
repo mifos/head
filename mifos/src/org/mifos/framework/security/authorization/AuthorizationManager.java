@@ -47,11 +47,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Session;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityRoles;
 import org.mifos.framework.security.util.SecurityHelper;
@@ -78,11 +81,15 @@ public class AuthorizationManager {
 	}
 
 	public void init() throws SystemException, ApplicationException {
-
+		Session session = null;
 		try {
-			List<ActivityRoles> al = SecurityHelper.getActivities();
+			session = HibernateUtil.openSession();
+			SecurityHelper security = new SecurityHelper(
+				new SessionHolder(session));
+
+			List<ActivityRoles> al = security.getActivities();
 			activityToRolesCacheMap.clear();
-			List leafs = SecurityHelper.getLeafActivities();
+			List leafs = security.getLeafActivities();
 			for (ActivityRoles act : al) {
 				if (leafs.contains(act.getId())) {
 					activityToRolesCacheMap.put(act.getId(), act
@@ -98,7 +105,9 @@ public class AuthorizationManager {
 			throw new SecurityException(
 				SecurityConstants.INITIALIZATIONFAILED, e);
 		}
-
+		finally {
+			HibernateUtil.closeSession(session);
+		}
 	}
 
 	public boolean isActivityAllowed(UserContext userContext,
