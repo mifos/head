@@ -1,5 +1,7 @@
 package org.mifos.application.customer.center.struts.action;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +62,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO savingsOffering;
 
 	private SavingsBO savingsBO;
+	
+	private static final String dateFormat = "dd/MM/yyyy";
 
 	@Override
 	protected void setUp() throws Exception {
@@ -114,9 +118,15 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
+		
 		String currentDate = DateUtils.getCurrentDate(
 			TestUtils.ukLocale());
-		assertEquals(currentDate, actionForm.getMfiJoiningDate());
+		SimpleDateFormat retrievedFormat = new SimpleDateFormat(dateFormat);
+		SimpleDateFormat localFormat = (SimpleDateFormat) DateFormat
+			.getDateInstance(DateFormat.SHORT, TestUtils.ukLocale());
+		Date curDate = localFormat.parse(currentDate);
+		Date retrievedDate = retrievedFormat.parse(actionForm.getMfiJoiningDate());
+		assertEquals(curDate, retrievedDate);
 	}
 
 	public void testFailurePreviewWithAllValuesNull() throws Exception {

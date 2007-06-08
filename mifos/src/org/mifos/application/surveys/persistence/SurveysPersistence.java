@@ -1,5 +1,6 @@
 package org.mifos.application.surveys.persistence;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -34,6 +35,16 @@ public class SurveysPersistence extends SessionPersistence {
 		query.setParameter("SURVEY_TYPE", type.getValue());
 		return query.list();
 	}
+	
+	public List<Survey> retrieveCustomersSurveys() throws PersistenceException {
+		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES);
+		return query.list();		
+	}
+	
+	public List<Survey> retrieveAccountsSurveys() throws PersistenceException {
+		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_BY_ACCOUNTS_TYPES);
+		return query.list();		
+	}	
 	
 	public List<Survey> retrieveSurveysByName(String name) throws PersistenceException {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_BY_TYPE);

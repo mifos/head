@@ -202,7 +202,7 @@
 										:
 									</td>
 									<td>
-										<date:datetag property="mfiJoiningDate" />
+										<date:datetag property="mfiJoiningDate" renderstyle="simple"/>
 									</td>
 								</tr>
 								<tr class="fontnormal">

@@ -104,15 +104,11 @@
                       </td>
                       <td valign="top">
                         <mifos:select property="appliesTo" style="width:136px;">
-                          <html-el:option value="customers">
-                            <mifos:mifoslabel name="Surveys.customers_type" bundle="SurveysUIResources"/>
-                          </html-el:option>
-                          <html-el:option value="accounts">
-                            <mifos:mifoslabel name="Surveys.accounts_type" bundle="SurveysUIResources"/>
-                          </html-el:option>
-                          <html-el:option value="both">
-                            <mifos:mifoslabel name="Surveys.both_type" bundle="SurveysUIResources"/>
-                          </html-el:option>
+                          <c:forEach var="type" items="${sessionScope.surveyTypes}">
+                            <html-el:option value="${type.value}">
+                              <c:out value="${type.localizedName}"/>
+                            </html-el:option>
+                          </c:forEach>
                         </mifos:select>
                       </td>
                     </tr>

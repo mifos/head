@@ -1,9 +1,15 @@
 package org.mifos.application.surveys.helpers;
 
+import org.apache.commons.lang.StringUtils;
+
 public enum SurveyType {
-	CUSTOMERS("customers"),
-	ACCOUNTS("accounts"),
-	BOTH("both");
+	
+	CLIENT("client"),
+	GROUP("group"),
+	CENTER("center"),
+	LOAN("loan"),
+	SAVINGS("savings"),
+	ALL("all");
 	
 	private String type;
 	
@@ -13,6 +19,11 @@ public enum SurveyType {
 	
 	public String getValue() {
 		return type;
+	}
+	
+	// TODO: replace this with locale lookup logic
+	public String getLocalizedName() {
+		return StringUtils.capitalize(type);	
 	}
 	
 	public static SurveyType fromString(String type) {

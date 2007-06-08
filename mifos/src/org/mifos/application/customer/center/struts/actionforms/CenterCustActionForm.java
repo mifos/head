@@ -37,6 +37,9 @@
 */
 package org.mifos.application.customer.center.struts.actionforms;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -49,8 +52,59 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
+import java.util.Locale;
+import java.util.Calendar;;
 
 public class CenterCustActionForm extends CustomerActionForm{
+	
+	private String mfiJoiningDateDD;
+	private String mfiJoiningDateMM;
+	private String mfiJoiningDateYY;
+	
+	@Override
+	public String getMfiJoiningDate() {
+		if (StringUtils.isNullOrEmpty(mfiJoiningDateDD) || StringUtils.isNullOrEmpty(mfiJoiningDateMM)
+			|| StringUtils.isNullOrEmpty(mfiJoiningDateYY))
+			return null;
+			//return super.getMfiJoiningDate();
+		return mfiJoiningDateDD + "/" + mfiJoiningDateMM + "/" + mfiJoiningDateYY;
+	}
+	
+	public void setMfiJoiningDate(int day, int month, int year) {
+		setMfiJoiningDate(Integer.toString(day), Integer.toString(month),
+				Integer.toString(year));
+	}
+	
+	public void setMfiJoiningDate(String day, String month, String year) {
+		setMfiJoiningDateDD(day);
+		setMfiJoiningDateMM(month);
+		setMfiJoiningDateYY(year);
+	}
+	
+	public void setMfiJoiningDateYY(String mfiJoiningDateYY) {
+		this.mfiJoiningDateYY = mfiJoiningDateYY;
+	}
+
+	public String getMfiJoiningDateYY() {
+		return mfiJoiningDateYY;
+	}	
+	
+	public void setMfiJoiningDateMM(String mfiJoiningDateMM) {
+		this.mfiJoiningDateMM = mfiJoiningDateMM;
+	}
+
+	public String getMfiJoiningDateMM() {
+		return mfiJoiningDateMM;
+	}
+
+	public void setMfiJoiningDateDD(String mfiJoiningDateDD) {
+		this.mfiJoiningDateDD = mfiJoiningDateDD;
+	}
+
+	public String getMfiJoiningDateDD() {
+		return mfiJoiningDateDD;
+	}
 
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
@@ -75,5 +129,5 @@ public class CenterCustActionForm extends CustomerActionForm{
 	@Override
 	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{
 		return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);		
-	}	
+	}
 }

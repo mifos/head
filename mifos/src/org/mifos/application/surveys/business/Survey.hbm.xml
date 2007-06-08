@@ -21,12 +21,18 @@
 		<![CDATA[from Survey as survey order by survey.name]]>
 	</query>
 	<query name="surveys.retrieveSurveysByType">
-		<![CDATA[from Survey as survey where survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='both']]>
+		<![CDATA[from Survey as survey where survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all' order by survey.name]]>
 	</query>
 	<query name="surveys.retrieveSurveysByName">
-		<![CDATA[from Survey as survey where survey.name=:SURVEY_NAME]]>
+		<![CDATA[from Survey as survey where survey.name=:SURVEY_NAME order by survey.name]]>
 	</query>
 	<query name="surveys.retrieveSurveysByState">
-		<![CDATA[from Survey as survey where survey.state=:SURVEY_STATE]]>
+		<![CDATA[from Survey as survey where survey.state=:SURVEY_STATE order by survey.name]]>
 	</query>
+	<query name="surveys.retrieveCustomersSurveys">
+		<![CDATA[from Survey as survey where survey.appliesTo='client' or survey.appliesTo='group' or survey.appliesTo='center' or survey.appliesTo='all' order by survey.name]]>
+	</query>	
+	<query name="surveys.retrieveAccountsSurveys">
+		<![CDATA[from Survey as survey where survey.appliesTo='loan' or survey.appliesTo='savings' or survey.appliesTo='all' order by survey.name]]>
+	</query>		
 </hibernate-mapping>

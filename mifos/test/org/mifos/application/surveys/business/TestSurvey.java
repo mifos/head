@@ -51,13 +51,18 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testSurveyType() {
-		assertEquals("customers", SurveyType.CUSTOMERS.getValue());
-		assertEquals("accounts", SurveyType.ACCOUNTS.getValue());
-		assertEquals("both", SurveyType.BOTH.getValue());
+		assertEquals("client", SurveyType.CLIENT.getValue());
+		assertEquals("group", SurveyType.GROUP.getValue());
+		assertEquals("center", SurveyType.CENTER.getValue());
+		assertEquals("loan", SurveyType.LOAN.getValue());
+		assertEquals("savings", SurveyType.SAVINGS.getValue());
+		assertEquals("all", SurveyType.ALL.getValue());
 		
-		assertEquals(SurveyType.CUSTOMERS, SurveyType.fromString("customers"));
-		assertEquals(SurveyType.ACCOUNTS, SurveyType.fromString("accounts"));
-		assertEquals(SurveyType.BOTH, SurveyType.fromString("both"));
+		assertEquals(SurveyType.CLIENT, SurveyType.fromString("client"));
+		assertEquals(SurveyType.GROUP, SurveyType.fromString("group"));
+		assertEquals(SurveyType.CENTER, SurveyType.fromString("center"));
+		assertEquals(SurveyType.LOAN, SurveyType.fromString("loan"));
+		assertEquals(SurveyType.SAVINGS, SurveyType.fromString("savings"));
 	}
 	
 	public void testRetrieveQuestionsByState() throws Exception {
@@ -124,36 +129,45 @@ public class TestSurvey extends MifosTestCase {
 		SessionHolder holder = new SessionHolder(session);
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		Survey survey1 = new Survey(
-			"Survey 1", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+			"Survey 1", SurveyState.ACTIVE, SurveyType.CLIENT);
 		Survey survey2 = new Survey(
-			"Survey 2", SurveyState.ACTIVE, SurveyType.ACCOUNTS);
+				"Survey 2", SurveyState.ACTIVE, SurveyType.GROUP);
 		Survey survey3 = new Survey(
-			"Survey 3", SurveyState.ACTIVE, SurveyType.BOTH);
+				"Survey 3", SurveyState.ACTIVE, SurveyType.CENTER);
+		Survey survey4 = new Survey(
+				"Survey 4", SurveyState.ACTIVE, SurveyType.LOAN);
+		Survey survey5 = new Survey(
+			"Survey 5", SurveyState.ACTIVE, SurveyType.SAVINGS);
+		Survey survey6 = new Survey(
+			"Survey 6", SurveyState.ACTIVE, SurveyType.ALL);
 		
 		surveysPersistence.createOrUpdate(survey1);
 		surveysPersistence.createOrUpdate(survey2);
 		surveysPersistence.createOrUpdate(survey3);
+		surveysPersistence.createOrUpdate(survey4);
+		surveysPersistence.createOrUpdate(survey5);
+		surveysPersistence.createOrUpdate(survey6);
 		
-		List<Survey> bothResults = surveysPersistence.retrieveSurveysByType(SurveyType.BOTH);
-		assertEquals(1, bothResults.size());
-		assertEquals(survey3.getName(), bothResults.get(0).getName());
+		List<Survey> allOnlyResults = surveysPersistence.retrieveSurveysByType(SurveyType.ALL);
+		assertEquals(1, allOnlyResults.size());
+		assertEquals(survey6.getName(), allOnlyResults.get(0).getName());
 		
-		List<Survey> customersResults = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
-		assertEquals(2, customersResults.size());
-		assertEquals(survey1.getName(), customersResults.get(0).getName());
+		List<Survey> clientResults = surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT);
+		assertEquals(2, clientResults.size());
+		assertEquals(survey1.getName(), clientResults.get(0).getName());
 		
-		List<Survey> accountsResults = surveysPersistence.retrieveSurveysByType(SurveyType.ACCOUNTS);
-		assertEquals(2, accountsResults.size());
-		assertEquals(survey2.getName(), accountsResults.get(0).getName());
+		List<Survey> loanResults = surveysPersistence.retrieveSurveysByType(SurveyType.LOAN);
+		assertEquals(2, loanResults.size());
+		assertEquals(survey4.getName(), loanResults.get(0).getName());
 		
 		List<Survey> allResults = surveysPersistence.retrieveAllSurveys();
-		assertEquals(3, allResults.size());
+		assertEquals(6, allResults.size());
 
 	}
 	
 	public void testCreateSurvey() {
 		Survey survey = new Survey(
-			"testsurvey", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+			"testsurvey", SurveyState.ACTIVE, SurveyType.CLIENT);
 		
 		session.save(survey);
 		
@@ -163,7 +177,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey read_survey = (Survey) result.get(0);
 		assertEquals("testsurvey", read_survey.getName());
 		assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
-		assertEquals(SurveyType.CUSTOMERS, read_survey.getAppliesToAsEnum());
+		assertEquals(SurveyType.CLIENT, read_survey.getAppliesToAsEnum());
 	}
 	
 	public void testCreateQuestion() {
@@ -223,7 +237,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey survey = new Survey();
 		survey.setName(surveyName);
 		survey.setState(SurveyState.ACTIVE);
-		survey.setAppliesTo(SurveyType.CUSTOMERS);
+		survey.setAppliesTo(SurveyType.CLIENT);
 
 		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
@@ -371,7 +385,7 @@ public class TestSurvey extends MifosTestCase {
 	
 	public void testSerialize() throws Exception {
 		Survey survey = new Survey(
-			"my survey", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+			"my survey", SurveyState.ACTIVE, SurveyType.CLIENT);
 		Question question = new Question("Can I be written to the session?");
 		survey.addQuestion(question, false);
 		

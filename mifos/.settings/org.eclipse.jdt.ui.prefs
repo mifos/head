@@ -1,7 +1,8 @@
-#Thu Feb 08 15:04:34 EST 2007
+#Tue Jun 05 10:43:58 PDT 2007
 eclipse.preferences.version=1
 formatter_profile=_mifos
 formatter_settings_version=10
+internal.default.compliance=default
 org.eclipse.jdt.ui.ignorelowercasenames=true
 org.eclipse.jdt.ui.importorder=java;javax;org;com;
 org.eclipse.jdt.ui.ondemandthreshold=99

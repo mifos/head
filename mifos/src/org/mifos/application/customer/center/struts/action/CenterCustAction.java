@@ -40,6 +40,7 @@ package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -155,8 +156,10 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
 				request);
 		loadCreateMasterData(actionForm, request);
-		actionForm.setMfiJoiningDate(DateUtils.getCurrentDate(getUserContext(
-		request).getPreferredLocale()));
+		Calendar c = Calendar.getInstance();
+		// note that Calendar retrieves 0-based month, so increment month field
+		actionForm.setMfiJoiningDate(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH) + 1,
+				c.get(Calendar.YEAR));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 

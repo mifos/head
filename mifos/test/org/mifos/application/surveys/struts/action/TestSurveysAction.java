@@ -49,7 +49,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	}
 
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
-		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CLIENT);
 		Question question = new Question(questionText, AnswerType.FREETEXT);
 		survey.addQuestion(question, false);
 		new SurveysPersistence(database.open()).createOrUpdate(survey);
@@ -93,7 +93,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	public void testCreateEntry() throws Exception {
 		//String name = "testCreateEntry test survey name";
 		String name = "g";
-		String appliesTo = "customers";
+		String appliesTo = "client";
 		SurveysPersistence surveysPersistence = new SurveysPersistence(database.open());
 		assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
 		String questionText = "testCreateEntry question 1";

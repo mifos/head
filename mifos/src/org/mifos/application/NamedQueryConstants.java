@@ -626,5 +626,6 @@ public interface NamedQueryConstants {
 	public String QUESTIONS_RETRIEVE_ALL = "questions.retrieveAll";
 	public String QUESTIONS_RETRIEVE_BY_STATE = "questions.retrieveByState";
 	public String QUESTIONS_RETRIEVE_BY_TYPE = "questions.retrieveByAnswerType";
-	
+	public String SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES = "surveys.retrieveCustomersSurveys";
+	public String SURVEYS_RETRIEVE_BY_ACCOUNTS_TYPES = "surveys.retrieveAccountsSurveys";
 }

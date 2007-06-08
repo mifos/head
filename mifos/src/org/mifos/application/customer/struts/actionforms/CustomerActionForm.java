@@ -282,7 +282,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
 	public String getTrainedDate() {
 		return trainedDate;
 	}
-
+	
 	public void setTrainedDate(String trainedDate) {
 		this.trainedDate = trainedDate;
 	}
@@ -509,13 +509,13 @@ public abstract class CustomerActionForm extends BaseActionForm {
 			trained=null;
 		}
 		else if(isCustomerTrained()){
-			if(ValidateMethods.isNullOrBlank(trainedDate)){
+			if(ValidateMethods.isNullOrBlank(getTrainedDate())){
 				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,
 					new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
 			}
 			
 			else { // if marked trained and a date is supplied
-				if (!DateUtils.isValidDate(trainedDate)) {
+				if (!DateUtils.isValidDate(getTrainedDate())) {
 					errors.add(CustomerConstants.INVALID_TRAINED_DATE, 
 						new ActionMessage(CustomerConstants.INVALID_TRAINED_DATE));
 				}
@@ -523,7 +523,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
 
 		}
 		//if training date is entered and trained is not selected, throw an error
-		if(!ValidateMethods.isNullOrBlank(trainedDate)&&ValidateMethods.isNullOrBlank(trained)){
+		if(!ValidateMethods.isNullOrBlank(getTrainedDate())&&ValidateMethods.isNullOrBlank(trained)){
 			errors.add(CustomerConstants.TRAINED_CHECKED,new ActionMessage(CustomerConstants.TRAINED_CHECKED));
 		}
 
@@ -541,7 +541,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
 	}
 
 	public Date getTrainedDateValue(Locale locale) {
-		return getDateFromString(trainedDate, locale);
+		return getDateFromString(getTrainedDate(), locale);
 	}
 
 	protected Locale getUserLocale(HttpServletRequest request) {

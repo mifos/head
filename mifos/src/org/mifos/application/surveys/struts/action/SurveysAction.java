@@ -87,8 +87,10 @@ public class SurveysAction extends PersistenceAction {
 			throws Exception {
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
-		List<Survey> customerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
-		List<Survey> accountsSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.ACCOUNTS);
+		
+		// TODO: change this to aggregate the customers and accounts lists from the subtypes
+		List<Survey> customerSurveys = surveysPersistence.retrieveCustomersSurveys();
+		List<Survey> accountsSurveys = surveysPersistence.retrieveAccountsSurveys();
 		
 		request.getSession().setAttribute(SurveysConstants.KEY_ACCOUNTS_SURVEYS_LIST, accountsSurveys);
 		request.getSession().setAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST, customerSurveys);
@@ -120,6 +122,7 @@ public class SurveysAction extends PersistenceAction {
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				new LinkedList<Question>());
+		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY_TYPES, SurveyType.values());
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	

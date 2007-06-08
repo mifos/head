@@ -326,7 +326,7 @@
 												<mifos:mifoslabel keyhm="Group.TrainedDate" name="Group.grouptrainedon" bundle="GroupUIResources" />
 											</td>
 											<td>
-												<date:datetag keyhm="Group.TrainedDate" property="trainedDate" />
+												<date:datetag keyhm="Group.TrainedDate" property="trainedDate" renderstyle="simple"/>
 											</td>
 										</tr>
 

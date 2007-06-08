@@ -659,7 +659,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "20/03/2006");
+		addRequestDateParameter("trainedDate", "20/03/2006");
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		assertEquals("Group Name not present", 1,
@@ -719,7 +719,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
-		addRequestParameter("trainedDate", "03/20/2006");
+		addRequestDateParameter("trainedDate", "20/03/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
@@ -749,7 +749,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "20/03/2006");
+		addRequestDateParameter("trainedDate", "20/03/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -781,7 +781,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "20/03/2006");
+		addRequestDateParameter("trainedDate", "20/03/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -820,7 +820,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "20/03/2006");
+		addRequestDateParameter("trainedDate", "20/03/2006");
 		addRequestParameter("externalId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
