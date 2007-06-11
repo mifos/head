@@ -126,7 +126,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				.getSavingsProducts(), new MasterDataService().getMasterData(
 				MasterConstants.ATTENDENCETYPES, (short) 1,
 				"org.mifos.application.master.business.CustomerAttendance",
-				"attendanceId").getLookUpMaster(), builder, Methods.get
+				"attendanceId").getCustomValueListElements(), builder, Methods.get
 				.toString(), TestObjectFactory.getContext()
 				.getPreferredLocale(), (short) 1);
 		String result = builder.toString();

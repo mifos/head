@@ -42,14 +42,31 @@ import org.mifos.framework.persistence.Persistence;
 
 public class LookUpValueLocaleEntity extends Persistence {
 
+	/**
+	 * The actual text value that this object represents.
+	 */
 	private String lookUpValue;
 
+	/**
+	 * The locale object representing the locale for which this 
+	 * object is defined.
+	 */
 	private SupportedLocalesEntity locale;
 
+	/**
+	 * The id of the LookUpValueEntity that this object is 
+	 * associated with.
+	 */
 	private Integer lookUpId;
 
+	/**
+	 * The id (primary key) for this object
+	 */
 	private Integer lookUpValueId;
 
+	/**
+	 * The id of the locale for which this object is defined.
+	 */
 	private Short localeId;
 
 	public Integer getLookUpValueId() {

@@ -42,6 +42,11 @@ import java.util.Set;
 
 import org.mifos.framework.business.PersistentObject;
 
+/**
+ * Not sure why {@link LookUpEntity} and {@link MifosLookUpEntity} both exist.
+ * They seem to both represent the same object.
+ */
+
 public class MifosLookUpEntity extends PersistentObject {
 
 	private Short entityId;

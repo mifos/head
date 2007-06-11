@@ -13,8 +13,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.EntityMaster;
-import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -119,13 +119,13 @@ public class TestMasterBusinessService extends MifosTestCase {
 	}
 
 	public void testGetMasterData() throws Exception {
-		EntityMaster paymentTypes = masterService
+		CustomValueList paymentTypes = masterService
 				.getMasterData(
 						MasterConstants.ATTENDENCETYPES,
 						(short)1,
 						"org.mifos.application.master.business.CustomerAttendance",
 						"attendanceId");
-		List<LookUpMaster> paymentValues = paymentTypes.getLookUpMaster();
+		List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
 		assertEquals(4, paymentValues.size());
 
 	}

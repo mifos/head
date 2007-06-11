@@ -48,7 +48,7 @@ import javax.servlet.jsp.PageContext;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.CustomValueList;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
@@ -106,26 +106,17 @@ public class LabelTagUtils {
 		return message;
 	}
 
-	public EntityMaster getEntityMaster(PageContext pageContext, String bundle,
-			Locale locale, String key, String[] args) throws JspException {
-
-		EntityMaster returnVal = null;
-		MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils
-				.getInstance().retrieveMessageResources(pageContext, bundle,
-						false);
-		returnVal = resources.getEntity(locale, key);
-
-		return returnVal;
-	}
-
-	public Collection getLookupValues(PageContext pageContext, String bundle,
+	/**
+	 * Only use is in MifosSelectNew, which doesn't appear to be used.
+	 */
+	public Collection getCustomValueListElements(PageContext pageContext, String bundle,
 			Locale locale, String key, String mappingKey, String[] args)
 			throws JspException {
 		Collection returnVal = null;
 		MifosPropertyMessageResources resources = (MifosPropertyMessageResources) TagUtils
 				.getInstance().retrieveMessageResources(pageContext, bundle,
 						false);
-		returnVal = resources.getLookupValues(locale, key, mappingKey);
+		returnVal = resources.getCustomValueListElements(locale, key, mappingKey);
 
 		return returnVal;
 	}

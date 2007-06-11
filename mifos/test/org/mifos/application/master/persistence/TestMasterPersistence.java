@@ -3,8 +3,8 @@ package org.mifos.application.master.persistence;
 import java.util.List;
 
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.EntityMaster;
-import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -17,7 +17,7 @@ import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestMasterPersistence extends MifosTestCase {
-
+	final private static short DEFAULT_LOCALE = (short)1;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -28,15 +28,16 @@ public class TestMasterPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	
 	public void testEntityMasterRetrieval() throws Exception {
 		MasterPersistence masterPersistence = new MasterPersistence();
-		EntityMaster paymentTypes = masterPersistence
-				.getLookUpEntity(
+		CustomValueList paymentTypes = masterPersistence
+				.getCustomValueList(
 						MasterConstants.ATTENDENCETYPES,
 						(short)1,
 						"org.mifos.application.master.business.CustomerAttendance",
 						"attendanceId");
-		List<LookUpMaster> paymentValues = paymentTypes.getLookUpMaster();
+		List<CustomValueListElement> paymentValues = paymentTypes.getCustomValueListElements();
 		assertEquals(4, paymentValues.size());
 
 	}
@@ -47,7 +48,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			masterPersistence
-					.getLookUpEntity(
+					.getCustomValueList(
 							MasterConstants.ATTENDENCETYPES,
 							(short)1,
 							"org.mifos.application.master.business.CustomerAttendance",
@@ -62,9 +63,9 @@ public class TestMasterPersistence extends MifosTestCase {
 
 	public void testGetLookUpEntity() throws Exception {
 		MasterPersistence masterPersistence = new MasterPersistence();
-		EntityMaster gender = masterPersistence.getLookUpEntity(
+		CustomValueList gender = masterPersistence.getLookUpEntity(
 				MasterConstants.GENDER, Short.valueOf("1"));
-		List<LookUpMaster> genderValues = gender.getLookUpMaster();
+		List<CustomValueListElement> genderValues = gender.getCustomValueListElements();
 		assertEquals(2, genderValues.size());
 
 	}
@@ -170,4 +171,90 @@ public class TestMasterPersistence extends MifosTestCase {
 		}
 	}
 
+	private boolean foundStringInCustomValueList(MasterPersistence masterPersistence, 
+			String CustomValueListName, String searchString, short localId) 
+			throws PersistenceException {
+		List<BusinessActivityEntity> salutations = 
+			masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
+		boolean foundString = false;
+		for (BusinessActivityEntity entity : salutations) {
+			if (entity.getName().compareTo(searchString)== 0) {
+				foundString = true;
+			}
+		}	
+		return foundString;
+	}
+
+	private Integer findValueListElementId(MasterPersistence masterPersistence, 
+			String CustomValueListName, String searchString, short localId) 
+			throws PersistenceException {
+		List<BusinessActivityEntity> salutations = 
+			masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
+		Integer elementId = null;
+		for (BusinessActivityEntity entity : salutations) {
+			if (entity.getName().compareTo(searchString)== 0) {
+				elementId = entity.getId();
+			}
+		}	
+		return elementId;
+	}
+	
+	public void testAddAndDeleteValueListElement() throws Exception {
+		// get the CustomValueList that we want to add to
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomValueList salutationValueList = masterPersistence.getLookUpEntity(
+				MasterConstants.SALUTATION, DEFAULT_LOCALE);
+		
+		// add a CustomValueListElement to the list
+		final String NEW_SALUTATION_STRING = "Sir";
+		masterPersistence.addValueListElementForLocale(salutationValueList.getEntityId(), 
+				NEW_SALUTATION_STRING, DEFAULT_LOCALE);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.flushAndCloseSession();
+		
+		// verify that the new salutation was created
+		Integer newSalutationId = findValueListElementId(masterPersistence,  
+				MasterConstants.SALUTATION, NEW_SALUTATION_STRING, DEFAULT_LOCALE);
+		assertTrue(newSalutationId != null);
+		
+		// remove the new salutation
+		masterPersistence.deleteValueListElement(newSalutationId);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.flushAndCloseSession();
+		
+		// verify that the new salutation was deleted
+		assertFalse(foundStringInCustomValueList(masterPersistence, 
+				MasterConstants.SALUTATION, NEW_SALUTATION_STRING, DEFAULT_LOCALE));		
+	}
+	
+	public void testUpdateValueListElement() throws Exception {
+		// get a CustomValueListElement (as a BusinessActivityEntity)
+		MasterPersistence masterPersistence = new MasterPersistence();
+		List<BusinessActivityEntity> salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
+		BusinessActivityEntity first = salutations.get(0);
+		Integer id = first.getId();
+		String originalName = first.getName();
+		
+		// update it
+		final String UPDATED_NAME = "Mister"; 
+		first.setName(UPDATED_NAME);
+		
+		// save it
+		masterPersistence.updateValueListElementForLocale(id,DEFAULT_LOCALE,UPDATED_NAME);
+		HibernateUtil.commitTransaction();
+		
+		// get the element back
+		// and verify that it has the new value
+		salutations.clear();
+		salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
+		for (BusinessActivityEntity entity : salutations) {
+			if (entity.getId() == id) {
+				assertEquals(entity.getName(), UPDATED_NAME);
+			}
+		}
+		// restore it
+		masterPersistence.updateValueListElementForLocale(id,DEFAULT_LOCALE,originalName);
+		HibernateUtil.commitTransaction();
+
+	}	
 }

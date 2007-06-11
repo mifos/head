@@ -52,7 +52,7 @@ import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
-import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -83,7 +83,7 @@ public class BulkEntryTag extends BodyTagSupport {
 			List<PrdOfferingBO> savingsProducts = bulkEntry
 					.getSavingsProducts();
 			try {
-				List<LookUpMaster> custAttTypes = (List<LookUpMaster>) SessionUtils
+				List<CustomValueListElement> custAttTypes = (List<CustomValueListElement>) SessionUtils
 						.getAttribute(
 								BulkEntryConstants.CUSTOMERATTENDANCETYPES,
 								request);
@@ -107,7 +107,7 @@ public class BulkEntryTag extends BodyTagSupport {
 	private void generateTagData(BulkEntryBO bulkEntry,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
-			List<LookUpMaster> custAttTypes, String method,
+			List<CustomValueListElement> custAttTypes, String method,
 			StringBuilder builder) throws ApplicationException,
 			SystemException, JspException {
 		BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();

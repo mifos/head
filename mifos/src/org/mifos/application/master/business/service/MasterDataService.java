@@ -7,10 +7,11 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -72,10 +73,17 @@ public class MasterDataService extends BusinessService {
 
 	}
 
-	public EntityMaster getMasterData(String entityName, Short localeId,
+	/**
+	 * Only one non-test usage in BulkEntryAction.get for getting
+	 *   (MasterConstants.ATTENDENCETYPES,
+	 *   userContext.getLocaleId(),
+	 *   "org.mifos.application.master.business.CustomerAttendance",
+	 *   "attendanceId")
+	 */
+	public CustomValueList getMasterData(String entityName, Short localeId,
 			String classPath, String column) throws ApplicationException,
 			SystemException {
-		return masterPersistence.getLookUpEntity(entityName,
+		return masterPersistence.getCustomValueList(entityName,
 				localeId, classPath, column);
 	}
 

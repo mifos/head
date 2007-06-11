@@ -10,30 +10,6 @@
     <short-name>customtags</short-name>
     <uri>/mifos/custom-tags</uri>
 
-    <!-- LookUpValue tag -->
-	<tag>
-		<name>lookUpValue</name>
-		<tagclass>
-			org.mifos.framework.struts.tags.LookUpValueTag
-		</tagclass>
-		<bodycontent>JSP</bodycontent>
-		
-		<attribute>
-			<name>id</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>searchResultName</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>mapToSeperateMasterTable</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 	<tag>
 		<name>headerLink</name>
 		<tagclass>

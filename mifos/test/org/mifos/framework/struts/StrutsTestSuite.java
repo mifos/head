@@ -8,7 +8,6 @@ import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.struts.plugin.TestEnumPlugin;
 import org.mifos.framework.struts.plugin.TestInitializerPlugin;
 import org.mifos.framework.struts.tags.DateTagTest;
-import org.mifos.framework.struts.tags.LookUpValueTagTest;
 import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
 
@@ -25,7 +24,6 @@ public class StrutsTestSuite extends TestSuite {
 		suite.addTestSuite(TestInitializerPlugin.class);
 		suite.addTestSuite(TestBaseActionForm.class);
 		suite.addTestSuite(DateTagTest.class);
-		suite.addTestSuite(LookUpValueTagTest.class);
 		suite.addTestSuite(RawButtonTest.class);
 		suite.addTestSuite(RawSelectTest.class);
 		return suite;

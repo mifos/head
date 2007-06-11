@@ -5,6 +5,9 @@ package org.mifos.application.master.business;
 
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * Appears to be unused.
+ */
 public class CustomerAttendance extends Persistence {
 
 	public CustomerAttendance() {

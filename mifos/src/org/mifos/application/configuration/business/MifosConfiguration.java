@@ -55,12 +55,12 @@ public class MifosConfiguration {
 	}
 
 	public void init() {
-		initializeLabelCahe();
+		initializeLabelCache();
 		initializeloacleIdCache();
 
 	}
 
-	private void initializeLabelCahe() {
+	private void initializeLabelCache() {
 		ConfigurationPersistence configurationPersistence = 
 			new ConfigurationPersistence();
 		List<MifosLookUpEntity> entities = 
@@ -79,9 +79,9 @@ public class MifosConfiguration {
 			Set<LookUpValueLocaleEntity> localeValues = value
 					.getLookUpValueLocales();
 			for (LookUpValueLocaleEntity locale : localeValues) {
-
-				labelCache.put(new LabelKey( value
-						.getLookUpName(),locale.getLocaleId()), locale.getLookUpValue());
+				String keyString = value.getLookUpName();
+				if (keyString == null) keyString = " ";
+				labelCache.put(new LabelKey( keyString,locale.getLocaleId()), locale.getLookUpValue());
 
 			}
 		

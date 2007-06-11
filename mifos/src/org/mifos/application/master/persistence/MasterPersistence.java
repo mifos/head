@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -12,9 +13,13 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.EntityMaster;
-import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.TransactionTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -32,7 +37,11 @@ import org.mifos.framework.persistence.Persistence;
  */
 public class MasterPersistence extends Persistence {
 
-	public EntityMaster getLookUpEntity(String entityName, Short localeId)
+	/**
+	 * Only two non-test usages, one that may never be called and one for 
+	 * getting labels. 
+	 */
+	public CustomValueList getLookUpEntity(String entityName, Short localeId)
 			throws ApplicationException, SystemException {
 		try {
 			Session session = HibernateUtil.getSessionTL();
@@ -41,9 +50,9 @@ public class MasterPersistence extends Persistence {
 			queryEntity.setString("entityType", entityName);
 			queryEntity.setShort("localeId", localeId);
 
-			EntityMaster entity = (EntityMaster) queryEntity.uniqueResult();
+			CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
 
-			entity.setLookUpValues(lookUpValue(entityName, localeId, session));
+			entity.setCustomValueListElements(lookUpValue(entityName, localeId, session));
 
 			return entity;
 		} catch (Exception e) {
@@ -51,13 +60,13 @@ public class MasterPersistence extends Persistence {
 		}
 	}
 
-	private List<LookUpMaster> lookUpValue(String entityName, Short localeId,
+	private List<CustomValueListElement> lookUpValue(String entityName, Short localeId,
 			Session session) {
 		Query queryEntity = session
 				.getNamedQuery("masterdata.entitylookupvalue");
 		queryEntity.setString("entityType", entityName);
 		queryEntity.setShort("localeId", localeId);
-		List<LookUpMaster> entityList = queryEntity.list();
+		List<CustomValueListElement> entityList = queryEntity.list();
 		return entityList;
 	}
 
@@ -65,7 +74,12 @@ public class MasterPersistence extends Persistence {
 		return Short.valueOf("1");
 	}
 
-	public EntityMaster getLookUpEntity(String entityName, Short localeId,
+	/**
+	 * Used once in getMasterData, otherwise, test usage and one other 
+	 * method MifosPropertyMessageResources.getCustomValueListElements 
+	 * (and that method may never be called)
+	 */
+	public CustomValueList getCustomValueList(String entityName, Short localeId,
 			String classPath, String column) throws ApplicationException,
 			SystemException {
 		Session session = null;
@@ -76,8 +90,8 @@ public class MasterPersistence extends Persistence {
 			queryEntity.setString("entityType", entityName);
 			queryEntity.setShort("localeId", localeId);
 
-			EntityMaster entity = (EntityMaster) queryEntity.uniqueResult();
-			entity.setLookUpValues(lookUpValue(entityName, localeId, classPath,
+			CustomValueList entity = (CustomValueList) queryEntity.uniqueResult();
+			entity.setCustomValueListElements(getCustomValueListElements(entityName, localeId, classPath,
 					column, session));
 			return entity;
 		} catch (Exception e) {
@@ -85,10 +99,10 @@ public class MasterPersistence extends Persistence {
 		}
 	}
 
-	private List<LookUpMaster> lookUpValue(String entityName, Short localeId,
+	private List<CustomValueListElement> getCustomValueListElements(String entityName, Short localeId,
 			String entityClass, String column, Session session) {
 		Query queryEntity = session.createQuery(
-			"select new org.mifos.application.master.business.LookUpMaster(" +
+			"select new org.mifos.application.master.business.CustomValueListElement(" +
 			"mainTable." + column + " ,lookup.lookUpId,lookupvalue.lookUpValue) " +
 			"from org.mifos.application.master.business.LookUpValueEntity lookup," +
 			"org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue," +
@@ -99,7 +113,7 @@ public class MasterPersistence extends Persistence {
 			" and lookupvalue.localeId = ?");
 		queryEntity.setString(0, entityName);
 		queryEntity.setShort(1, localeId);
-		List<LookUpMaster> entityList = queryEntity.list();
+		List<CustomValueListElement> entityList = queryEntity.list();
 		return entityList;
 	}
 
@@ -179,6 +193,9 @@ public class MasterPersistence extends Persistence {
 		
 	}
 	
+	/**
+	 * This method is used to retrieve both custom and fixed value list elements.
+	 */
 	public List<BusinessActivityEntity> retrieveMasterEntities(
 			String entityName, Short localeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -220,4 +237,62 @@ public class MasterPersistence extends Persistence {
 		return (MasterDataEntity)getPersistentObject(clazz, id);
 	}
 
+	/**
+	 * Update the String value of a LookUpValueLocaleEntity.
+	 * @param id - the database id of the LookUpValueLocaleEntity object representing a ValueListElement
+	 */
+	public void updateValueListElementForLocale(Integer lookupValueEntityId, Short localeId, String newValue) throws PersistenceException {
+		LookUpValueEntity lookupValueEntity = 
+			(LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, lookupValueEntityId);
+		
+		;
+		for (LookUpValueLocaleEntity valueForLocale : lookupValueEntity.getLookUpValueLocales()) {
+			if (valueForLocale.getLocaleId().equals(localeId)) {
+				valueForLocale.setLookUpValue(newValue);
+				createOrUpdate(valueForLocale);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Create a new list element for a single locale.
+	 * 
+	 * It would be nicer for this to operate on objects rather than
+	 * ids, but it is a first step that works.
+	 */
+	public void addValueListElementForLocale(Short lookupEnityId, 
+			String newElementText, short localeId) throws PersistenceException {
+		MifosLookUpEntity lookUpEntity = 
+			(MifosLookUpEntity) getPersistentObject(MifosLookUpEntity.class, lookupEnityId);
+		LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
+		lookUpValueEntity.setLookUpEntity(lookUpEntity);
+		createOrUpdate(lookUpValueEntity);
+		
+		LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
+		lookUpValueLocaleEntity.setLocaleId(localeId);
+		lookUpValueLocaleEntity.setLookUpValue(newElementText);
+		lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
+		createOrUpdate(lookUpValueLocaleEntity);		
+	}
+
+	/**
+	 * This method is intended to delete a single LookUpValueEntity and all
+	 * its associated LookUpValueLocaleEntity objects.  The primary purpose is for 
+	 * test script cleanup, since deletion of LookUpValueEntity elements is 
+	 * not allowed in the main app.
+	 * 
+	 * It would be nicer for this to operate on objects rather than
+	 * ids, but it is a first step that works.
+	 */
+	public void deleteValueListElement(Integer lookupValueEntityId) throws PersistenceException {
+		LookUpValueEntity lookUpValueEntity = 
+			(LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, lookupValueEntityId);
+
+		// the cascade property defined for lookUpValueLocales member of LookUpValueEntity
+		// means that deleting the LookUpValueEntity should delete all the associated 
+		// LookUpValueLocaleEntity objects as well.
+		delete(lookUpValueEntity);
+	}
+	
 }

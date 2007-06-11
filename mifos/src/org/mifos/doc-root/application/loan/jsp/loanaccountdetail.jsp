@@ -311,11 +311,6 @@
 									<mifos:mifoslabel name="loan.no" />
 								</c:otherwise>
 							</c:choose><br>
-							<%--mifos:mifoslabel name="loan.interest_cal_payments" />:&nbsp; <mifoscustom:lookUpValue
-								id="${BusinessKey.loanOffering.interestCalcRule.interestCalcRuleId}"
-								searchResultName="InterestCalcRule"
-								mapToSeperateMasterTable="true">
-							</mifoscustom:lookUpValue><br--%>
 							<br>
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.repaymentRules" /> </span><br>

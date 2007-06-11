@@ -313,7 +313,7 @@ public class BulkEntryAction extends BaseAction {
 										MasterConstants.ATTENDENCETYPES,
 										userContext.getLocaleId(),
 										"org.mifos.application.master.business.CustomerAttendance",
-										"attendanceId").getLookUpMaster(),
+										"attendanceId").getCustomValueListElements(),
 						request);
 
 		return mapping.findForward(BulkEntryConstants.GETSUCCESS);

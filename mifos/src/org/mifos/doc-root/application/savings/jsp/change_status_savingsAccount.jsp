@@ -56,10 +56,6 @@
 								name="savings.currentstatus" bundle="SavingsUIResources" />:<mifoscustom:MifosImage
 								id="${sessionScope.editSavingsStatusActionForm.currentStatusId}"
 								moduleName="accounts.savings" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
-								<%--mifoscustom:lookUpValue
-										id="${sessionScope.editSavingsStatusActionForm.currentStatusId}"
-										searchResultName="AccountStates" mapToSeperateMasterTable="true">
-									</mifoscustom:lookUpValue--%> 
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>

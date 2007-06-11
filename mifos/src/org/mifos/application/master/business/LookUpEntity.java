@@ -42,6 +42,12 @@ import java.util.Set;
 
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * Not sure why {@link LookUpEntity} and {@link MifosLookUpEntity} both exist.
+ * They seem to both represent the same object.
+ * LookUpEntity is used by {@link CustomFieldDefinitionEntity}, {@link FeeTypeEntity}
+ * and {@link AuditConfigurationPersistence}
+ */
 public class LookUpEntity extends Persistence {
 
 	public LookUpEntity() {

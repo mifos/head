@@ -52,7 +52,7 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -142,7 +142,7 @@ public class BulkEntryDisplayHelper {
 	public Double[] buildForGroup(BulkEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
-			List<LookUpMaster> custAttTypes, StringBuilder builder,
+			List<CustomValueListElement> custAttTypes, StringBuilder builder,
 			String method, Locale locale, Short officeId) throws JspException {
 		int rowIndex = 0;
 		int totalProductsSize = (2 * (loanProducts.size() + savingsProducts
@@ -176,7 +176,7 @@ public class BulkEntryDisplayHelper {
 	public Double[] buildForCenter(BulkEntryView parent,
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
-			List<LookUpMaster> custAttTypes, StringBuilder builder,
+			List<CustomValueListElement> custAttTypes, StringBuilder builder,
 			String method, Locale locale, Short officeId) throws JspException {
 
 		int rowIndex = 0;
@@ -405,13 +405,13 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private void generateAttendence(StringBuilder builder,
-			List<LookUpMaster> custAttTypes, int rows,
+			List<CustomValueListElement> custAttTypes, int rows,
 			BulkEntryView bulkEntryView, String method) {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
-			for (LookUpMaster attendence : custAttTypes) {
+			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getId() + "\"");
                 if (bulkEntryView.getAttendence() != null && (attendence.getId().intValue()== bulkEntryView.getAttendence().intValue()))
                 {
@@ -423,7 +423,7 @@ public class BulkEntryDisplayHelper {
 			builder.append("</td>");
 		} else if (method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
-			for (LookUpMaster attendence : custAttTypes) {
+			for (CustomValueListElement attendence : custAttTypes) {
 
 				if (null != bulkEntryView.getAttendence()
 						&& attendence.getId().equals(
@@ -443,7 +443,7 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
-			for (LookUpMaster attendence : custAttTypes) {
+			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getId() + "\"");
 				if (null != bulkEntryView.getAttendence()
 						&& attendence.getId().equals(
