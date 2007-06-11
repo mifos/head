@@ -227,9 +227,9 @@ public class BulkEntryAction extends BaseAction {
 				.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
 						.getCustomerId()));
 		if (meetingDate != null && isBackDatedTrxnAllowed) {
-			actionForm.setTransactionDate(DateUtils.getUserLocaleDate(getUserLocale(request), meetingDate.toString()));
+			actionForm.setTransactionDate(meetingDate);
 		} else {
-			actionForm.setTransactionDate(DateUtils.getCurrentDate(getUserLocale(request)));
+			actionForm.setTransactionDate(DateUtils.getCurrentDateWithoutTimeStamp());
 		}
 		SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
 		SessionUtils.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,

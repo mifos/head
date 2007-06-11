@@ -196,7 +196,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("attendenceSelected[0]", "2");
-		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+		addRequestDateParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 
 		performNoErrors();
@@ -237,7 +237,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("transactionDate", 
+		addRequestDateParameter("transactionDate", 
 				day + "/" + (zeroBasedMonth + 1) + "/" + year);
 
 		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
@@ -276,7 +276,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("transactionDate", 
+		addRequestDateParameter("transactionDate", 
 				day + "/" + (zeroBasedMonth + 1) + "/" + year);
 		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
 			addParametersForEnteredAmount();
@@ -290,7 +290,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("attendenceSelected[0]", "2");
-		addRequestParameter("transactionDate", day + "/" + (zeroBasedMonth + 1) + "/"
+		addRequestDateParameter("transactionDate", day + "/" + (zeroBasedMonth + 1) + "/"
 				+ year);
 
 		
@@ -334,7 +334,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("depositAmountEntered[2][2]", "100.0");
 		addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
 		addRequestParameter("depositAmountEntered[0][0]", "100.0");
-		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+		addRequestDateParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 		performNoErrors();
 		verifyForward("preview_success");
@@ -461,12 +461,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
 					SessionUtils.getAttribute("LastMeetingDate", request)
 							.toString());
-			assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-			getMeetingDates(meeting).getTime()).getTime())
-			.toString()), ((BulkEntryActionForm) request
+			assertEquals(new java.util.Date(DateUtils.getDateWithoutTimeStamp(
+			getMeetingDates(meeting).getTime()).getTime()), DateUtils.getDate(((BulkEntryActionForm) request
 					.getSession().getAttribute(
 							BulkEntryConstants.BULKENTRYACTIONFORM))
-					.getTransactionDate());
+					.getTransactionDate()));
 		} else {
 			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
 					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
@@ -536,10 +535,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
 		SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
 				meetinDateCalendar.getTimeInMillis()), request);
-		addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
+		addRequestDateParameter("transactionDate", (month + 1) + "/" + day + "/"
 				+ year);
 		addRequestParameter("receiptId", "1");
-		addRequestParameter("receiptDate", "03/20/2006");
+		addRequestDateParameter("receiptDate", "20/03/2006");
 		addRequestParameter("customerId", String.valueOf(center.getCustomerId()
 				.intValue()));
 		actionPerform();

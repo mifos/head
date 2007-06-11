@@ -43,7 +43,9 @@ import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -51,6 +53,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import java.util.Locale;
@@ -113,6 +116,7 @@ public class CenterCustActionForm extends CustomerActionForm{
 			validateName(errors);
 			validateLO(errors);
 			validateMeeting(request, errors);
+			validateMfiJoiningDate(request, errors);
 			validateConfigurableMandatoryFields(request,errors,EntityType.CENTER);
 			validateCustomFields(request,errors);
 			validateFees(request, errors);
@@ -125,7 +129,22 @@ public class CenterCustActionForm extends CustomerActionForm{
 		}
 		return errors;
 	}
+	
+	protected void validateMfiJoiningDate(HttpServletRequest request,
+			ActionErrors errors) {
+		if(ValidateMethods.isNullOrBlank(getMfiJoiningDate())){
+			errors.add(CustomerConstants.MFI_JOINING_DATE_MANDATORY,
+				new ActionMessage(CustomerConstants.MFI_JOINING_DATE_MANDATORY));
+		}
 		
+		else {
+			if (!DateUtils.isValidDate(getMfiJoiningDate())) {
+				errors.add(CustomerConstants.INVALID_MFI_JOINING_DATE, 
+					new ActionMessage(CustomerConstants.INVALID_MFI_JOINING_DATE));
+			}
+		}
+	}
+	
 	@Override
 	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{
 		return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);		

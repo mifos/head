@@ -89,6 +89,8 @@ public interface BulkEntryConstants {
 	public String RECEIPTDATE="Receipt date";
 	
 	public String BULKENTRYINVALIDAMOUNT="errors.invalidamount";
+	public String INVALID_RECEIPT_DATE = "errors.invaliddate";
+	public String INVALID_TRANSACTION_DATE = "errors.InvalidTransactionDate";
 	public String ERRORINVALIDAMOUNT="errors.invalidamountvalue";
 	public String MANDATORYFIELDS="errors.mandatoryselect";
 	public String MANDATORYENTER="errors.mandatoryenter";

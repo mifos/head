@@ -39,6 +39,7 @@
 package org.mifos.application.bulkentry.struts.actionforms;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -68,6 +69,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class BulkEntryActionForm extends ActionForm {
     
@@ -84,9 +86,13 @@ public class BulkEntryActionForm extends ActionForm {
 
 	private String receiptId;
 
-	private String receiptDate;
+	private String receiptDateDD;
+	private String receiptDateMM;
+	private String receiptDateYY;
 
-	private String transactionDate;
+	private String transactionDateDD;
+	private String transactionDateMM;
+	private String transactionDateYY;
 
 	private String officeId;
 
@@ -123,11 +129,51 @@ public class BulkEntryActionForm extends ActionForm {
 	}
 
 	public String getReceiptDate() {
-		return receiptDate;
+		if (StringUtils.isNullOrEmpty(getReceiptDateDD()) ||
+				StringUtils.isNullOrEmpty(getReceiptDateMM()) ||
+				StringUtils.isNullOrEmpty(getReceiptDateYY()))
+			return null;
+		return getReceiptDateDD() + "/" + getReceiptDateMM() + "/" + getReceiptDateYY();
 	}
 
-	public void setReceiptDate(String receiptDate) {
-		this.receiptDate = receiptDate;
+	public void setReceiptDate(String s) {
+		setReceiptDate(DateUtils.getDate(s));
+	}
+	
+	public void setReceiptDate(java.util.Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// note that Calendar retrieves 0-based month, so increment month field
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int month = c.get(Calendar.MONTH) + 1;
+		int year = c.get(Calendar.YEAR);
+		setReceiptDateDD(Integer.toString(day));
+		setReceiptDateMM(Integer.toString(month));
+		setReceiptDateYY(Integer.toString(year));
+	}
+
+	public void setReceiptDateDD(String receiptDateDD) {
+		this.receiptDateDD = receiptDateDD;
+	}
+
+	public String getReceiptDateDD() {
+		return receiptDateDD;
+	}
+
+	public void setReceiptDateMM(String receiptDateMM) {
+		this.receiptDateMM = receiptDateMM;
+	}
+
+	public String getReceiptDateMM() {
+		return receiptDateMM;
+	}
+
+	public void setReceiptDateYY(String receiptDateYY) {
+		this.receiptDateYY = receiptDateYY;
+	}
+
+	public String getReceiptDateYY() {
+		return receiptDateYY;
 	}
 
 	public String getReceiptId() {
@@ -139,11 +185,51 @@ public class BulkEntryActionForm extends ActionForm {
 	}
 
 	public String getTransactionDate() {
-		return transactionDate;
+		if (StringUtils.isNullOrEmpty(transactionDateDD) ||
+				StringUtils.isNullOrEmpty(transactionDateMM) 
+				|| StringUtils.isNullOrEmpty(transactionDateYY))
+				return null;
+		return transactionDateDD + "/" + transactionDateMM + "/" + transactionDateYY;
+	}
+	
+	public void setTransactionDate(String s) {
+		setTransactionDate(DateUtils.getDate(s));
+	}
+	
+	public void setTransactionDate(java.util.Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		// note that Calendar retrieves 0-based month, so increment month field
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int month = c.get(Calendar.MONTH) + 1;
+		int year = c.get(Calendar.YEAR);
+		setTransactionDateDD(Integer.toString(day));
+		setTransactionDateMM(Integer.toString(month));
+		setTransactionDateYY(Integer.toString(year));
 	}
 
-	public void setTransactionDate(String transactionDate) {
-		this.transactionDate = transactionDate;
+	public void setTransactionDateDD(String transactionDateDD) {
+		this.transactionDateDD = transactionDateDD;
+	}
+
+	public String getTransactionDateDD() {
+		return transactionDateDD;
+	}
+
+	public void setTransactionDateMM(String transactionDateMM) {
+		this.transactionDateMM = transactionDateMM;
+	}
+
+	public String getTransactionDateMM() {
+		return transactionDateMM;
+	}
+
+	public void setTransactionDateYY(String transactionDateYY) {
+		this.transactionDateYY = transactionDateYY;
+	}
+
+	public String getTransactionDateYY() {
+		return transactionDateYY;
 	}
 
 	@Override
@@ -402,15 +488,23 @@ public class BulkEntryActionForm extends ActionForm {
 		}
 		return errors;
 	}
+	
+	private ActionErrors receiptDateValidate(ActionErrors errors) {
+		if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
+			errors.add(BulkEntryConstants.INVALID_RECEIPT_DATE,
+					new ActionMessage(BulkEntryConstants.INVALID_RECEIPT_DATE));
+		}
+		return errors;
+	}
 
 	private ActionErrors mandatoryCheck(Date meetingDate, Locale userLocale,
 			short isCenterHeirarchyExists) {
-		ActionErrors errors = new ActionErrors();
+		ActionErrors errors = receiptDateValidate(new ActionErrors());
 		java.sql.Date currentDate = DateUtils.getLocaleDate(userLocale, DateUtils.getCurrentDate(userLocale));
 		java.sql.Date trxnDate = null;
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
-		if (transactionDate != null && !transactionDate.equals("")) {
+		if (getTransactionDate() != null && !getTransactionDate().equals("")) {
 			trxnDate = DateUtils.getLocaleDate(userLocale, getTransactionDate());
 		}
 		if (officeId == null || "".equals(officeId.trim())) {
@@ -433,10 +527,13 @@ public class BulkEntryActionForm extends ActionForm {
 					BulkEntryConstants.MANDATORYFIELDS,
 					BulkEntryConstants.MODEOFPAYMENT));
 		}
-		if (transactionDate == null || "".equals(transactionDate.trim())) {
+		if (getTransactionDate() == null || "".equals(getTransactionDate().trim())) {
 			errors.add(BulkEntryConstants.MANDATORYENTER, new ActionMessage(
 					BulkEntryConstants.MANDATORYENTER,
 					BulkEntryConstants.DATEOFTRXN));
+		} else if (!DateUtils.isValidDate(getTransactionDate())) {
+			errors.add(BulkEntryConstants.INVALID_TRANSACTION_DATE,
+					new ActionMessage(BulkEntryConstants.INVALID_TRANSACTION_DATE));
 		}
 		if (currentDate != null
 				&& meetingDate != null
