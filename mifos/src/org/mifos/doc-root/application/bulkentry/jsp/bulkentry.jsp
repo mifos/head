@@ -313,10 +313,10 @@
 											<td>
 												<c:choose>
 													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')==Constants.NO}">
-														<date:datetag property="transactionDate" isDisabled="Yes" />
+														<date:datetag property="transactionDate" isDisabled="Yes" renderstyle="simple"/>
 													</c:when>
 													<c:otherwise>
-														<date:datetag property="transactionDate" />
+														<date:datetag property="transactionDate" renderstyle="simple"/>
 													</c:otherwise>
 												</c:choose>
 											</td>
@@ -348,7 +348,7 @@
 												<mifos:mifoslabel keyhm="BulkEntry.ReceiptDate" isColonRequired="Yes" name="bulkEntry.rcptdate" />
 											</td>
 											<td>
-												<date:datetag keyhm="BulkEntry.ReceiptDate" property="receiptDate" />
+												<date:datetag keyhm="BulkEntry.ReceiptDate" property="receiptDate" renderstyle="simple"/>
 											</td>
 										</tr>
 									</table>
