@@ -32,5 +32,14 @@ public static final short INTEREST_DAYS=360;
 
 public static final String SURVEY="Survey";
 public static final String MEETING="Meeting";
+public static final String SALUTATION="Salutation";
+public static final String MARITAL_STATUS="Marital Status";
+public static final String USER_TITLE="User Title";
+public static final String EDUCATION_LEVEL="Education Level";
+public static final String ATTENDANCE="Attendance";
+public static final String OFFICER_TITLE="Officer Title";
+public static final String PURPOSE_OF_LOAN="Purpose Of Loan";
+public static final String COLLATERAL_TYPE="Collateral Type";
+
 
 }

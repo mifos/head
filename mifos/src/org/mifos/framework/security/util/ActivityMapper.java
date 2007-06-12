@@ -74,6 +74,9 @@ import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.application.configuration.struts.action.LookupOptionsAction;
+
+
 
 public class ActivityMapper {
 
@@ -241,6 +244,7 @@ public class ActivityMapper {
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 		parseActionSecurity(AddGroupMembershipAction.getSecurity());
 		parseActionSecurity(SurveyInstanceAction.getSecurity());
+		parseActionSecurity(LookupOptionsAction.getSecurity());
 
 	}
 

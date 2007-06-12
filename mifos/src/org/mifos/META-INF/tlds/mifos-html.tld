@@ -1869,5 +1869,48 @@
 	<rtexprvalue>true</rtexprvalue>
 	</attribute>
 	</tag>
+	<!-- Mifos Value List tag -->
+	<tag>
+		<name>MifosValueList</name>
+		<tagclass>
+			org.mifos.framework.struts.tags.MifosValueList
+		</tagclass>
+		<bodycontent>JSP</bodycontent>
+
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>property2</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>size</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>userContext</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
 	
 </taglib>

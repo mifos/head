@@ -106,6 +106,7 @@
 		<form-bean name="reverseloandisbactionform" type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"></form-bean>
 		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
 		<form-bean name="hiddenmandatoryconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm"></form-bean>
+		<form-bean name="lookupoptionsactionform" type="org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm"></form-bean>
 
 		<!-- Reports -->
 		<form-bean name="reportsParamsActionForm"
@@ -1108,6 +1109,15 @@
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_failure" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
+		<action path="/lookupOptionsAction" type="org.mifos.application.configuration.struts.action.LookupOptionsAction" name="lookupoptionsactionform" parameter="method" input="/lookupOptionsAction.do?method=validate"
+			validate="false" scope="session">
+			<forward name="load_success" path="/pages/application/configuration/jsp/definelookupoptions.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/configuration/jsp/definelookupoptions.jsp" />
 			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>
