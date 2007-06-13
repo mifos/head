@@ -58,6 +58,18 @@ public class CustomValueList extends View {
 	}
 
 	/**
+	 * Method which returns an array of the customValueListElement Strings	
+	 */
+	public String[] getCustomValueListElementsAsStrings() {
+		String stringArray[] = new String[customValueListElements.size()];
+		int elementIndex = 0;
+		for (CustomValueListElement element : customValueListElements) {
+			stringArray[elementIndex++] = element.getLookUpValue();
+		};
+		return stringArray;
+	}
+
+	/**
 	 * Method which sets the customValueListElements
 	 * @param customValueListElements The customValueListElements to set.
 	 */

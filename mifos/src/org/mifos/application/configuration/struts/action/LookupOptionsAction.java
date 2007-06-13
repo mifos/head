@@ -49,7 +49,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -59,6 +61,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -89,6 +92,8 @@ public class LookupOptionsAction extends BaseAction {
 		//security.allow("create",
 		//		SecurityConstants.DEFINE_LOOKUP_OPTION_FORM_INSTANCE);
 		
+		// more still needs to be set up for CAN_DEFINE_LOOKUP_OPTIONS to work
+		// security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
 		security.allow("load", SecurityConstants.CAN_DEFINE_LABELS);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
@@ -175,11 +180,23 @@ public class LookupOptionsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Inside load method");
+		UserContext userContext = getUserContext(request);
+
+		MasterPersistence masterPersistence = new MasterPersistence();
 		MifosLookUpEntity entity = new MifosLookUpEntity();
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
 		lookupOptionsActionForm.clear();
-		entity.setEntityType(ConfigurationConstants.SALUTATION);
-		lookupOptionsActionForm.setSalutations(getAValueList(entity));
+		
+		CustomValueList valueList = masterPersistence.getLookUpEntity(
+				ConfigurationConstants.SALUTATION, userContext.getLocaleId());
+		// valueListId is the  MifosLookUpEntity/LookUpEntity id to use 
+		// when inserting a new item into the list 
+		Short valueListId = valueList.getEntityId();
+		// valueListLabel is the label to display next to the edit box
+		String valueListLabel = valueList.getEntityLabel();
+		String[] valueListStrings = valueList.getCustomValueListElementsAsStrings();
+		lookupOptionsActionForm.setSalutations(valueListStrings);
+		
 		entity.setEntityType(ConfigurationConstants.USER_TITLE);
 		lookupOptionsActionForm.setUserTitles(getAValueList(entity));
 		entity.setEntityType(ConfigurationConstants.MARITAL_STATUS);
