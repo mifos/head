@@ -12,6 +12,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -116,7 +117,7 @@ public void testGetBulkEntryClientAttendanceActionView() throws PersistenceExcep
         java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
         
         clientAttendance = new ClientAttendanceBO();
-        clientAttendance.setAttendance(new Short("1"));
+        clientAttendance.setAttendance(AttendanceType.PRESENT);
         clientAttendance.setMeetingDate(meetingDate);
         ((ClientBO)client).addClientAttendance(clientAttendance );
         customerPersistence.createOrUpdate(client);

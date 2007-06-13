@@ -351,27 +351,30 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 1);
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.PRESENT,
 				client.getClientAttendanceForMeeting(meetingDate)
-						.getAttendance(), Short.valueOf("1"));
+						.getAttendanceAsEnum());
 	}
 
 	public void testHandleAttendance() throws Exception{
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		client.handleAttendance(meetingDate, Short.valueOf("1"));
+		client.handleAttendance(meetingDate, AttendanceType.PRESENT);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 1);
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.PRESENT,
 				client.getClientAttendanceForMeeting(meetingDate)
-						.getAttendance(), Short.valueOf("1"));
-		client.handleAttendance(meetingDate, Short.valueOf("2"));
+						.getAttendanceAsEnum());
+		client.handleAttendance(meetingDate, AttendanceType.ABSENT);
 		HibernateUtil.commitTransaction();
-		assertEquals("The size of customer attendance is : ", client
-				.getClientAttendances().size(), 1);
+		assertEquals("The size of customer attendance is : ",
+				1, client.getClientAttendances().size());
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.ABSENT,
 				client.getClientAttendanceForMeeting(meetingDate)
-						.getAttendance(), Short.valueOf("2"));
+						.getAttendanceAsEnum());
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
@@ -380,16 +383,17 @@ public class TestClientBO extends MifosTestCase {
 	public void testHandleAttendanceForDifferentDates()	throws Exception {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		client.handleAttendance(meetingDate, Short.valueOf("1"));
+		client.handleAttendance(meetingDate, AttendanceType.PRESENT);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 1);
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.PRESENT,
 				client.getClientAttendanceForMeeting(meetingDate)
-						.getAttendance(), Short.valueOf("1"));
+						.getAttendanceAsEnum());
 		HibernateUtil.closeSession();
 		Date offSetDate = getDateOffset(1);
-		client.handleAttendance(offSetDate, Short.valueOf("2"));
+		client.handleAttendance(offSetDate, AttendanceType.ABSENT);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client
@@ -397,11 +401,13 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals("The size of customer attendance is : ", client
 				.getClientAttendances().size(), 2);
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.PRESENT,
 				client.getClientAttendanceForMeeting(meetingDate)
-						.getAttendance(), Short.valueOf("1"));
+						.getAttendanceAsEnum());
 		assertEquals("The value of customer attendance for the meeting : ",
+				AttendanceType.ABSENT,
 				client.getClientAttendanceForMeeting(offSetDate)
-						.getAttendance(), Short.valueOf("2"));
+						.getAttendanceAsEnum());
 
 	}
 
@@ -1234,7 +1240,7 @@ public class TestClientBO extends MifosTestCase {
 
 	private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
 		ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
-		clientAttendance.setAttendance(Short.valueOf("1"));
+		clientAttendance.setAttendance(AttendanceType.PRESENT);
 		clientAttendance.setMeetingDate(meetingDate);
 		return clientAttendance;
 	}

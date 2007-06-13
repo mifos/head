@@ -66,6 +66,7 @@ import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -223,9 +224,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 
 		assertEquals(client.getClientAttendances().size(), 1);
-		assertEquals("2", client.getClientAttendanceForMeeting(
+		assertEquals(AttendanceType.ABSENT, 
+				client.getClientAttendanceForMeeting(
 				new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
-				.getAttendance().toString());
+				.getAttendanceAsEnum());
 	}
 
 	private void preview(BulkEntryBO bulkEntry, 

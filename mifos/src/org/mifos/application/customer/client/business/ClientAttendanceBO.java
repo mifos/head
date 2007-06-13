@@ -61,6 +61,7 @@ public class ClientAttendanceBO extends BusinessObject {
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	private void setId(Integer id) {
 		this.id = id;
 	}
@@ -68,9 +69,17 @@ public class ClientAttendanceBO extends BusinessObject {
 	public Short getAttendance() {
 		return attendance;
 	}
+	
+	public AttendanceType getAttendanceAsEnum() {
+		return AttendanceType.fromInt(attendance);
+	}
 
 	public void setAttendance(Short attendance) {
 		this.attendance = attendance;
+	}
+	
+	public void setAttendance(AttendanceType type) {
+		setAttendance(type.getValue());
 	}
 
 	public java.util.Date getMeetingDate() {

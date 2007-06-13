@@ -3,10 +3,13 @@
  */
 package org.mifos.application.master.business;
 
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.framework.persistence.Persistence;
 
 /**
  * Appears to be unused.
+ * 
+ * Use {@link AttendanceType} instead.
  */
 public class CustomerAttendance extends Persistence {
 

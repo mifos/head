@@ -16,6 +16,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.AttendanceType;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -269,7 +270,7 @@ public class TestBulkEntryView extends MifosTestCase {
         java.sql.Date sqlMeetingDate = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
          
         ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
-        clientAttendance.setAttendance(new Short("2"));
+        clientAttendance.setAttendance(AttendanceType.ABSENT);
         clientAttendance.setMeetingDate(meetingDate);
         client.addClientAttendance(clientAttendance );
         customerPersistence.createOrUpdate(client);
@@ -305,7 +306,8 @@ public class TestBulkEntryView extends MifosTestCase {
          
         assertEquals(
              "Testing BulkEntryBO.buildBulkEntryView",
-             clientAttendance.getAttendance().toString(), clientBulkEntryView.getAttendence().toString());
+             clientAttendance.getAttendance().toString(), 
+             clientBulkEntryView.getAttendence().toString());
          
          HibernateUtil.closeSession();
      }

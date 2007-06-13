@@ -6,7 +6,8 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.master.business.CustomerAttendance" table="CUSTOMER_ATTENDANCE_TYPES">
+    <class name="org.mifos.application.master.business.CustomerAttendance" 
+    	table="CUSTOMER_ATTENDANCE_TYPES">
         <id name="attendanceId" column="ATTENDANCE_ID" type="short">
             <generator class="native"/>
         </id>

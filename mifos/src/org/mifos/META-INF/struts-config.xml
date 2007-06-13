@@ -894,7 +894,8 @@
 		</action>
 
 		<!-- Client Creation Action -->
-		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction"
+		<action path="/clientCustAction" 
+			type="org.mifos.application.customer.client.struts.action.ClientCustAction"
 			name="clientCustActionForm" parameter="method"
 			input="/clientCustAction.do?method=validate" validate="true"
 			scope="session">

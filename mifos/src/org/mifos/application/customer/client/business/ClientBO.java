@@ -303,6 +303,11 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+	public void handleAttendance(Date meetingDate, AttendanceType attendance) 
+	throws ServiceException, CustomerException {
+		handleAttendance(meetingDate, attendance.getValue());
+	}
+
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
 			throws CustomerException {
