@@ -505,7 +505,7 @@ public class BulkEntryActionForm extends ActionForm {
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
 		if (getTransactionDate() != null && !getTransactionDate().equals("")) {
-			trxnDate = DateUtils.getLocaleDate(userLocale, getTransactionDate());
+			trxnDate = DateUtils.getDateAsSentFromBrowser(getTransactionDate());
 		}
 		if (officeId == null || "".equals(officeId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(

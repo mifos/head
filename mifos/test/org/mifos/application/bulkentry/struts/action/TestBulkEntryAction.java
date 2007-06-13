@@ -535,7 +535,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
 		SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
 				meetinDateCalendar.getTimeInMillis()), request);
-		addRequestDateParameter("transactionDate", (month + 1) + "/" + day + "/"
+		addRequestDateParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 		addRequestParameter("receiptId", "1");
 		addRequestDateParameter("receiptDate", "20/03/2006");
