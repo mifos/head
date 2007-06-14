@@ -88,13 +88,7 @@ public class LookupOptionsAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("lookupOptionsAction");
-		// TODO: define LookupOption specific security
-		//security.allow("create",
-		//		SecurityConstants.DEFINE_LOOKUP_OPTION_FORM_INSTANCE);
-		
-		// more still needs to be set up for CAN_DEFINE_LOOKUP_OPTIONS to work
-		// security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
-		security.allow("load", SecurityConstants.CAN_DEFINE_LABELS);
+		security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
 		security.allow("validate", SecurityConstants.VIEW);

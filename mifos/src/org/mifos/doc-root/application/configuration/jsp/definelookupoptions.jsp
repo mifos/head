@@ -52,11 +52,11 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<html-el:form action="/lookupOptionAction" >
+		<html-el:form action="/lookupOptionsAction" >
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="lookupOptionAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
+						<span class="fontnormal8pt"><html-el:link href="lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="configuration.define" /> <mifos:mifoslabel name="configuration.lookupoptions" /></span>
 					</td>
@@ -95,7 +95,7 @@
 						</html-el:button>
                           </td>
                           <td width="41%">
-							<mifos:MifosValueList name="lookupoptionactionform" property="Salutations" property2="saluationListBox" size="5" style="width:136px;"  >
+							<mifos:MifosValueList name="lookupoptionsactionform" property="Salutations" property2="saluationListBox" size="5" style="width:136px;"  >
 							</mifos:MifosValueList>    
 						</td> 
                       </tr>
@@ -125,7 +125,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="UserTitles" property2="userTitleListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="UserTitles" property2="userTitleListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -155,7 +155,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="MaritalStatuses" property2="maritalStatusListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="MaritalStatuses" property2="maritalStatusListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -185,7 +185,7 @@
 						</html-el:button>
                           </td>
                         <td width="41%">
-                        <mifos:MifosValueList name="lookupoptionactionform" property="Ethnicities" property2="ethnicityListBox" size="5" style="width:136px;"  >
+                        <mifos:MifosValueList name="lookupoptionsactionform" property="Ethnicities" property2="ethnicityListBox" size="5" style="width:136px;"  >
 							</mifos:MifosValueList> 
                         </td>
                       </tr>
@@ -215,7 +215,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="EducationLevels" property2="educationLevelListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="EducationLevels" property2="educationLevelListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -245,7 +245,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="Citizenships" property2="citizenshipListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="Citizenships" property2="citizenshipListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -275,7 +275,7 @@
 						</html-el:button>
                           </td>
                         <td width="41%">
-                        <mifos:MifosValueList name="lookupoptionactionform" property="PurposesOfLoan" property2="purposesOfLoanListBox" size="5" style="width:136px;"  >
+                        <mifos:MifosValueList name="lookupoptionsactionform" property="PurposesOfLoan" property2="purposesOfLoanListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                         </td>
                       </tr>
@@ -305,7 +305,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="Handicappeds" property2="handicappedListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="Handicappeds" property2="handicappedListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -335,7 +335,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="CollateralTypes" property2="collateralTypeListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="CollateralTypes" property2="collateralTypeListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -364,7 +364,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="OfficerTitles" property2="officerTitleListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="OfficerTitles" property2="officerTitleListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -394,7 +394,7 @@
 						</html-el:button>
                     </td>
                     <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionactionform" property="Attendances" property2="attendanceListBox" size="5" style="width:136px;"  >
+                    <mifos:MifosValueList name="lookupoptionsactionform" property="Attendances" property2="attendanceListBox" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                     </td>
                   </tr>
@@ -417,7 +417,7 @@
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='lookupOptionAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+									<html-el:button property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
 										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button>
 								</td>

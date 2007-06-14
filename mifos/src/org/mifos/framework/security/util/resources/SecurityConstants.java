@@ -39,6 +39,9 @@ package org.mifos.framework.security.util.resources;
 
 /**
  * This inteface will hold all the constants used related to the security
+ * 
+ * NOTE: if a new activity is being added, the values in {@link RoleTestUtil}
+ * need to be increased.
  */
 public interface SecurityConstants {
 	public final String NOSUCHALGORITHM = "security.error.noSuchAlgorithm";
@@ -416,5 +419,5 @@ public interface SecurityConstants {
     public final short CAN_DEFINE_PRODUCT_MIX = 210;
     public final short CAN_EDIT_PRODUCT_MIX = 211;
     
-    public final short CAN_DEFINE_LOOKUP_OPTIONS = 212; 
+    public final short CAN_DEFINE_LOOKUP_OPTIONS = 213; 
 }

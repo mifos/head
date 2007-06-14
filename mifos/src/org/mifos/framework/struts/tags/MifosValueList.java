@@ -176,8 +176,8 @@ public class MifosValueList extends BodyTagSupport {
 	        obj = pageContext.findAttribute(getName());
 	        if (null == obj)
 	        {
-	        	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Can't get the bean form from the bean name");
-	        	throw new Exception("Can't get the bean form from the bean name. Please check the bean name defined in the name attribute");
+	        	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Can't get the bean form from the bean name: " + getName());
+	        	throw new Exception("Can't get the bean form from the bean name: " + getName() + ". Please check the bean name defined in the name attribute");
 	        }
 	        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("object is "+obj);
         

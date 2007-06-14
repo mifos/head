@@ -16,7 +16,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(122);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(123);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4674,3 +4674,9 @@ INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
   ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
   VALUES(212,150,586,586);
 INSERT INTO ROLES_ACTIVITY VALUES (212,1);
+
+INSERT INTO LOOKUP_VALUE VALUES(587,87,' ');
+INSERT INTO LOOKUP_VALUE_LOCALE VALUES(932,1,587,'Can Define Lookup Values');
+INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,
+  DESCRIPTION_LOOKUP_ID) VALUES(213,203,587,587);
+INSERT INTO ROLES_ACTIVITY VALUES (213,1);
