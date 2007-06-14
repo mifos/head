@@ -13,6 +13,7 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 	private String dateConducted;
 	
 	private String instanceStatus;
+	
 
 	public String getInstanceStatus() {
 		return instanceStatus;

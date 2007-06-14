@@ -22,6 +22,39 @@ public class TestValidators extends TestCase {
 		
 	}
 	
+	public void testSwitchValidator() throws Exception {
+		SwitchValidator val = new SwitchValidator("switch_field");
+		Schema schemaA = new Schema();
+		schemaA.setValidator("age", new IntValidator());
+		val.addCase("a", schemaA);
+		Schema schemaB = new Schema();
+		schemaB.setValidator("name", new MaxLengthValidator(5));
+		val.addCase("b", schemaB);
+		
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("switch_field", "a");
+		data.put("age", "2");
+		Map<String, Object> results = val.validate(data);
+		assertEquals(2, results.get("age"));
+		
+		data.put("name", "bob");
+		data.put("switch_field", "b");
+		results = val.validate(data);
+		assertEquals("bob", results.get("name"));
+		
+		try {
+			data.put("switch_field", "c");
+			val.validate(data);
+			fail();
+		}
+		catch (ValidationError e) {
+			assertEquals(SwitchValidator.MISSING_EXPECTED_VALUE_ERROR, e.getMsg());
+		}
+		
+		val.setDefaultCase(schemaB);
+		val.validate(data);
+	}
+	
 	public void testIntValidator() throws Exception {
 		Validator val = new IntValidator();
 		assertEquals(42, val.validate("42"));

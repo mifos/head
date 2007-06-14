@@ -68,6 +68,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -75,11 +76,17 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
 
 	public CustomerBusinessService() {
+	}
+	
+	public static CustomerBusinessService getInstance() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+		.getBusinessService(BusinessServiceName.Customer);
 	}
 
 	@Override

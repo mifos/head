@@ -1,9 +1,11 @@
 package org.mifos.framework.formulaic;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 
@@ -26,7 +28,15 @@ public class Schema extends BaseValidator {
 	}
 	
 	public Map<String, Object> validate(ServletRequest request) throws ValidationError {
-		return validate(request.getParameterMap());
+		return validate(convertRequest(request));
+	}
+	
+	public static Map<String, Object> convertRequest(ServletRequest request) {
+		Map<String, Object> input = new HashMap<String, Object>();
+		for (String key : (Set<String>) request.getParameterMap().keySet()) {
+			input.put(key, request.getParameter(key));
+		}
+		return input;
 	}
 	
 	public static ActionErrors makeActionErrors(SchemaValidationError schemaErrors) {
@@ -56,6 +66,7 @@ public class Schema extends BaseValidator {
 		for (String field : fieldValidators.keySet()) {
 			try {
 				// if the field isn't in the input, its value becomes null
+				data.get(field);
 				Object input = data.containsKey(field) ? data.get(field) : null;
 				Validator validator = fieldValidators.get(field);
 				results.put(field, validator.validate(input));

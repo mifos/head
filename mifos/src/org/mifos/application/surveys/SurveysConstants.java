@@ -14,4 +14,6 @@ public class SurveysConstants {
 	// generic var that can be used to hold list lengths
 	public static final String KEY_ITEM_COUNT = "itemCount"; 
 	public static final String KEY_SURVEY_TYPES = "surveyTypes";
+	public static final String KEY_SURVEYS_LIST = "surveysList";
+	public static final String KEY_BUSINESS_OBJECT_NAME = "businessObjectName";
 }
