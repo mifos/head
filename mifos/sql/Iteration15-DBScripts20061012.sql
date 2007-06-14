@@ -108,6 +108,16 @@ UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can edit office membership' WHERE L
 UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can edit group membership' WHERE LOOKUP_VALUE_ID=749;
 UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can edit office membership' WHERE LOOKUP_VALUE_ID=750;
 
+/*
+  Assigning the LOOKUP_VALUE_ID, as in the following, is the right thing
+  when there might be locally customized lookup values.  But LatestTest
+  isn't flexible enough to consider this OK (because 912 and 913 are
+  not the next two values).
+  INSERT INTO LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) 
+    VALUES(1,179,'Voucher');
+  INSERT INTO LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) 
+    VALUES(1,180,'Cheque');
+*/
 INSERT INTO LOOKUP_VALUE_LOCALE VALUES(912,1,179,'Voucher');
 INSERT INTO LOOKUP_VALUE_LOCALE VALUES(913,1,180,'Cheque');
 
