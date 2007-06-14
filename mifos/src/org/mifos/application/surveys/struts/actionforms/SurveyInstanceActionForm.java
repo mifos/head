@@ -2,11 +2,15 @@ package org.mifos.application.surveys.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
+import java.util.List;
+
 public class SurveyInstanceActionForm extends BaseActionForm {
 	
 	private String surveyId;
 	
 	private String officerId;
+	
+	private String officerName;
 	
 	private String customerId;
 	
@@ -14,6 +18,7 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 	
 	private String instanceStatus;
 	
+	private List<String> responses;
 
 	public String getInstanceStatus() {
 		return instanceStatus;
@@ -47,12 +52,28 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 		this.officerId = officerId;
 	}
 
+	public void setOfficerName(String officerName) {
+		this.officerName = officerName;
+	}
+
+	public String getOfficerName() {
+		return officerName;
+	}
+
 	public String getSurveyId() {
 		return surveyId;
 	}
 
 	public void setSurveyId(String surveyId) {
 		this.surveyId = surveyId;
+	}
+
+	public void setResponses(List<String> responses) {
+		this.responses = responses;
+	}
+
+	public List<String> getResponses() {
+		return responses;
 	}
 
 }
