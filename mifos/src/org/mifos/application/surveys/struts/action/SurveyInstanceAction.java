@@ -62,6 +62,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("surveyInstanceAction");
+		security.allow("dummy_create", SecurityConstants.VIEW);
 		security.allow("create_entry", SecurityConstants.VIEW);
 		security.allow("choosesurvey", SecurityConstants.VIEW);
 		return security;
@@ -71,6 +72,15 @@ public class SurveyInstanceAction extends PersistenceAction {
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
+	}
+	
+	public ActionForward dummy_create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
+		Survey survey = persistence.getSurvey(2);
+		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
 	public ActionForward choosesurvey(ActionMapping mapping, ActionForm form,
@@ -105,7 +115,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		request.setAttribute(SurveysConstants.KEY_SURVEYS_LIST, surveys);
 		return mapping.findForward(ActionForwards.choose_survey.toString());
 	}
-	
+
 	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
