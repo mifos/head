@@ -5,7 +5,12 @@ import java.util.List;
 
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.NameType;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -14,9 +19,12 @@ import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -55,10 +63,42 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		PersistenceAction.resetDefaultSessionOpener();
 	}
 	
+	private ClientBO createClient() {
+		ClientBO client = null;
+		try {
+			Short office = TestObjectFactory.SAMPLE_BRANCH_OFFICE;
+			Short formedBy = PersonnelConstants.SYSTEM_USER;
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+					NameType.MAYBE_CLIENT, TestObjectFactory.SAMPLE_SALUTATION, "Test Client ",
+					"middle", "Test Client ", "secondLast");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+					NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION, "Test Client ",
+					"middle", "Test Client ", "secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
+					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+							.valueOf("41"));
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
+					"Test Client ",
+					CustomerStatus.CLIENT_PARTIAL, null, null, null, null,
+					TestObjectFactory.getFees(), null, formedBy, office, null, 
+					new Date(1222333444000L),
+					null, null, null, YesNoFlag.YES.getValue(),
+					clientNameDetailView, spouseNameDetailView,
+					clientDetailView, null);
+			client.save();
+			HibernateUtil.commitTransaction();
+		} catch (CustomerException e) {
+			throw new RuntimeException(e);
+		}
+		catch (SystemException e) {
+			throw new RuntimeException(e);
+		}
+		TestObjectFactory.addObject(client);
+		return client;
+	}
+	
 	public void testChooseSurvey() throws Exception {
-		TestObjectFactory factory = new TestObjectFactory();
-		ClientBO client = factory.createClient(
-				"Test Client ", CustomerStatus.CLIENT_PARTIAL, null);
+		ClientBO client = createClient();
 		String globalCustNum = client.getGlobalCustNum();
 		
 		String nameBase = "testChooseSurvey survey";

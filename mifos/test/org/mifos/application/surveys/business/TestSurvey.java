@@ -237,7 +237,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey survey = new Survey();
 		survey.setName(surveyName);
 		survey.setState(SurveyState.ACTIVE);
-		survey.setAppliesTo(SurveyType.CLIENT);
+		survey.setAppliesTo(SurveyType.CENTER);
 
 		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);

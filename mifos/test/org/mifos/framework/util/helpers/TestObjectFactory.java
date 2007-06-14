@@ -320,7 +320,7 @@ public class TestObjectFactory {
 		return center;
 	}
 
-	private static List<FeeView> getFees() {
+	public static List<FeeView> getFees() {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFee(
 				"Maintenance Fee", FeeCategory.ALLCUSTOMERS, "100",
