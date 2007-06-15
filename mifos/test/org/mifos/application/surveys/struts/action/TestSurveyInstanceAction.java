@@ -9,6 +9,7 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.surveys.SurveysConstants;
@@ -161,11 +162,30 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		int surveyId = sampleInstance.getSurvey().getSurveyId();
 		addRequestParameter("customerId", clientId);
 		addRequestParameter("officerId", officerId);
-		addRequestParameter("dateConducted", dateConducted);
+		addRequestDateParameter("dateSurveyed", dateConducted);
 		addRequestParameter("surveyId", Integer.toString(surveyId));
 		addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();
+	}
+	
+	public void testValidateSuccess() throws Exception {
+		setRequestPathInfo("surveyInstanceAction");
+		addRequestParameter("method","dummy_create");
+				
+		String dateConducted = DateUtils.makeDateAsSentFromBrowser();
+		//InstanceStatus status = InstanceStatus.INCOMPLETE;
+		addRequestParameter("customerId", "4");
+		addRequestParameter("officerName", "Someone's Name");
+		addRequestDateParameter("dateSurveyed", dateConducted);
+		addRequestParameter("response(4)","My name is john!");
+		addRequestParameter("response(14)","2");
+		addRequestParameter("response(1)","134");
+		//addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyNoActionErrors();
 	}

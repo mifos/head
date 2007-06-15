@@ -46,6 +46,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class SurveyInstanceAction extends PersistenceAction {
 	
@@ -65,6 +66,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		security.allow("dummy_create", SecurityConstants.VIEW);
 		security.allow("create_entry", SecurityConstants.VIEW);
 		security.allow("choosesurvey", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -131,7 +133,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
-		return mapping.findForward(ActionForwards.create_success.toString());
+		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
 	public ActionForward create(ActionMapping mapping, ActionForm form,
@@ -148,7 +150,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		int clientId = Integer.parseInt(actionForm.getCustomerId());
 		short officerId = Short.parseShort(actionForm.getOfficerId());
 		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm
-				.getDateConducted());
+				.getDateSurveyed());
 		
 		ClientBO client = (ClientBO) persistence.getPersistentObject(
 				ClientBO.class, clientId);
@@ -164,7 +166,15 @@ public class SurveyInstanceAction extends PersistenceAction {
 		persistence.createOrUpdate(instance);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
-
+	
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse httpservletresponse)
+			throws Exception {
+		
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
+	
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;

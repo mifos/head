@@ -135,13 +135,13 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		try {
+		/*try {
 			Map<String, Object> results = previewValidator.validate(request);
 		}
 		catch (SchemaValidationError e) {
 			saveErrors(request, Schema.makeActionErrors(e));
 			return mapping.findForward(ActionForwards.create_entry_success.toString());
-		}
+		}*/
 		
 		SurveyActionForm actionForm = (SurveyActionForm) form;
 		request.getSession().setAttribute(

@@ -51,13 +51,16 @@
           type="org.mifos.application.surveys.struts.action.SurveyInstanceAction"
           parameter="method"
           scope="session"
-          validate="false"
-          name="surveyInstanceActionForm">
+          validate="true"
+          name="surveyInstanceActionForm"
+          input="/surveyInstanceAction.do?method=validate">
           	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
           	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+          	  <forward name="preview_failure" path="/pages/application/surveys/jsp/create_instance.jsp"/>
           	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
           	  <forward name="get_success" path="/pages/application/surveys/jsp/instance_details.jsp"/>          	  
-        </action> 
+          	  <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>          	            	  
+        </action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />
