@@ -9,7 +9,7 @@
 <tiles:insert definition=".create">
   <tiles:put name="body" type="string">
 		<html-el:form method="post"
-			action="/custSearchAction.do?method=search">
+			action="/birtReportsUploadAction.do?method=preview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -99,14 +99,14 @@
 									    <mifos:mifoslabel
 										name="reports.labelTitle" />:</td>
 									<td><html-el:text styleId="111"
-										property="searchString" maxlength="200"/> </td>
+										property="reportTitle" maxlength="200"/> </td>
 								</tr>
 							    <tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="reports.labelCategory" mandatory="yes"/>
 									</td>
 									<td>
-									    <select style="width:136px;" name = "reportCategoryId">
+									    <select style="width:136px;" name="reportCategoryId">
 									      <option value="-1" selected>--Select--</option>
 									      <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
 									          <option value="${reportCategory.reportCategoryId}">${reportCategory.reportCategoryName}</option>

@@ -6,6 +6,8 @@ import org.mifos.application.reports.business.ReportsCategoryBO;
 
 public class BirtReportsUploadActionForm extends ValidatorActionForm {
 	private String reportCategoryId;
+	private String reportTitle;
+	
 	public BirtReportsUploadActionForm() {
 		super();	
 	}
@@ -19,7 +21,12 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 		this.reportCategoryId = reportCategoryId;
 	}
 	public void populate(ReportsCategoryBO reportsCategoryBO) throws OfficeException {
-
 		this.reportCategoryId = reportsCategoryBO.getReportCategoryId().toString();
+	}
+	public String getReportTitle() {
+		return reportTitle;
+	}
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
 	}
 }

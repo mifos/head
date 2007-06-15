@@ -667,7 +667,8 @@
 		<action path="/birtReportsUploadAction" type="org.mifos.application.reports.struts.action.BirtReportsUploadAction" 
 			name="birtReportsUploadActionForm" parameter="method" scope="session"
 			input="/birtReportsUploadAction.do?method=validate">
-			<forward name="uploadreports_path" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
+			<forward name="load_success" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
+			<forward name="preview_success" path="/pages/application/reports/jsp/birtReportPreview.jsp" />
 		</action>
 		<!-- Birt Reports Action end-->
 	
