@@ -41,7 +41,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 				try {
 					handleHolidayApplication(holiday);
 					HibernateUtil.commitTransaction();
-					System.out.println("\n\nA holiday has been adjusted\n\n");
 				} catch (Exception e) {
 					HibernateUtil.rollbackTransaction();
 					errorList.add(holiday.toString());
