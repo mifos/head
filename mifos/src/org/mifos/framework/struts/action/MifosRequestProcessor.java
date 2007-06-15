@@ -97,6 +97,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 							.shortValue();
 				}
 			}
+			// TODO: we should not reference com.sun.* classes
 			catch (ParseException e) {
 				throw new RuntimeException(e);
 			}
