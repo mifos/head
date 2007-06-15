@@ -36,6 +36,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		ActionSecurity security = new ActionSecurity("birtReportsUploadAction");
 		security.allow("getBirtReportsUploadPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -67,5 +68,11 @@ public class BirtReportsUploadAction extends BaseAction {
 		}
 		request.setAttribute("category", category);
 		return  mapping.findForward(ActionForwards.preview_success.toString());
+	}
+	
+	public ActionForward previous(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 }

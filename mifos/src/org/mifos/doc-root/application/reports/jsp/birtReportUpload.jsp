@@ -109,7 +109,7 @@
 									    <select style="width:136px;" name="reportCategoryId">
 									      <option value="-1" selected>--Select--</option>
 									      <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
-									          <option value="${reportCategory.reportCategoryId}">${reportCategory.reportCategoryName}</option>
+									          <option <c:if test="${birtReportsUploadActionForm.reportCategoryId == reportCategory.reportCategoryId}">selected="true"</c:if>value="${reportCategory.reportCategoryId}">${reportCategory.reportCategoryName}</option>
 									      </c:forEach>
 									    </select>
 									</td>
