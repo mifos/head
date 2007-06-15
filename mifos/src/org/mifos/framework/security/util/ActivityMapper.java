@@ -33,6 +33,7 @@ import org.mifos.application.bulkentry.struts.action.BulkEntryAction;
 import org.mifos.application.checklist.struts.action.ChkListAction;
 import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
+import org.mifos.application.configuration.struts.action.LookupOptionsAction;
 import org.mifos.application.customer.center.struts.action.CenterCustAction;
 import org.mifos.application.customer.client.struts.action.ClientCustAction;
 import org.mifos.application.customer.client.struts.action.ClientTransferAction;
@@ -62,6 +63,7 @@ import org.mifos.application.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.application.productdefinition.struts.action.PrdCategoryAction;
 import org.mifos.application.productdefinition.struts.action.PrdConfAction;
 import org.mifos.application.productdefinition.struts.action.SavingsPrdAction;
+import org.mifos.application.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.application.reports.struts.action.ReportsAction;
 import org.mifos.application.reports.struts.action.ReportsDataSourceAction;
 import org.mifos.application.reports.struts.action.ReportsParamsAction;
@@ -74,7 +76,6 @@ import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.application.configuration.struts.action.LookupOptionsAction;
 
 
 
@@ -244,8 +245,8 @@ public class ActivityMapper {
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 		parseActionSecurity(AddGroupMembershipAction.getSecurity());
 		parseActionSecurity(SurveyInstanceAction.getSecurity());
+		parseActionSecurity(BirtReportsUploadAction.getSecurity());
 		parseActionSecurity(LookupOptionsAction.getSecurity());
-
 	}
 
 	private void addCustomerSearchMappings() {

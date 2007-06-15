@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+<struts-config>
+	<form-beans> 
+		<form-bean name="birtReportsUploadActionForm" type="org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm" />
+    </form-beans>
+    <action-mappings>
+		<action path="/birtReportsUploadAction" type="org.mifos.application.reports.struts.action.BirtReportsUploadAction" 
+			name="birtReportsUploadActionForm" parameter="method" scope="session"
+			input="/birtReportsUploadAction.do?method=validate">
+			<forward name="uploadreports_path" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
+		</action>
+    </action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

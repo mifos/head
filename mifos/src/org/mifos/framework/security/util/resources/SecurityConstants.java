@@ -419,5 +419,7 @@ public interface SecurityConstants {
     public final short CAN_DEFINE_PRODUCT_MIX = 210;
     public final short CAN_EDIT_PRODUCT_MIX = 211;
     
-    public final short CAN_DEFINE_LOOKUP_OPTIONS = 213; 
+    public final short CAN_DEFINE_LOOKUP_OPTIONS = 213;
+
+	public final short UPLOAD_REPORT_TEMPLATE = 214; 
 }

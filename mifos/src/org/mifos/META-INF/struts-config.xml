@@ -63,6 +63,8 @@
 		<form-bean name="applyAdjustmentActionForm" type="org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionForm" />
 		<!-- Reports action form  -->
 		<form-bean name="reportsActionForm" type="org.mifos.application.reports.struts.actionforms.ReportsActionForm" />
+		<!-- Birt Reports action form  -->
+		<form-bean name="birtReportsUploadActionForm" type="org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm" />
 		<!-- LoanActivity action form  -->
 		<form-bean name="loanActivityActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanActivityActionForm" />
 		<!-- Savings Apply Adjustment action form  -->
@@ -660,7 +662,15 @@
 			<forward name="administerreportslist_path" path="/reportsAction.do?method=getAdminReportPage" />
 		</action>
 		<!--  Reports Action End -->
-
+	
+	    <!-- Birt Reports Action -->
+		<action path="/birtReportsUploadAction" type="org.mifos.application.reports.struts.action.BirtReportsUploadAction" 
+			name="birtReportsUploadActionForm" parameter="method" scope="session"
+			input="/birtReportsUploadAction.do?method=validate">
+			<forward name="uploadreports_path" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
+		</action>
+		<!-- Birt Reports Action end-->
+	
 		<!--  Reports Params Action -->
 		<action path="/reportsParamsAction"
 			type="org.mifos.application.reports.struts.action.ReportsParamsAction"

@@ -16,7 +16,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 123;
+	public static final int APPLICATION_VERSION = 124;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	private static Map<Integer, Upgrade> masterRegister =
@@ -225,5 +225,4 @@ public class DatabaseVersionPersistence {
 			version = upgradedVersion;
 		}
 	}
-
 }
