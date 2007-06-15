@@ -727,9 +727,10 @@ public class CustomerAccountBO extends AccountBO {
 	public void generateCustomerAccountSystemId(String officeGlobalNum)
 			throws CustomerException {
 		try {
-			if (getGlobalAccountNum() == null)
+			if (getGlobalAccountNum() == null) {
 				this.setGlobalAccountNum(generateId(userContext
 						.getBranchGlobalNum()));
+			}
 			else {
 				throw new CustomerException(
 						AccountExceptionConstants.IDGenerationException);

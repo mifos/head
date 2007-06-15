@@ -1168,11 +1168,10 @@ public abstract class CustomerBO extends BusinessObject {
 	private CustomerNoteEntity createCustomerNotes(String comment)
 			throws CustomerException {
 		try {
-			CustomerNoteEntity customerNote = new CustomerNoteEntity(comment,
+			return new CustomerNoteEntity(comment,
 					new java.sql.Date(System.currentTimeMillis()),
 					new PersonnelPersistence().getPersonnel(getUserContext()
 							.getId()), this);
-			return customerNote;
 		} catch (PersistenceException ae) {
 			throw new CustomerException(ae);
 		}

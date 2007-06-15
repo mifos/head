@@ -106,7 +106,6 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
-import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -858,8 +857,8 @@ public class TestObjectFactory {
 	 * 
 	 * Changing {@link TestObjectFactory#getUserContext()} to
 	 * {@link TestUtils#makeUserWithLocales()} caused a failure
-	 * in {@link TestClientBO#testUpdateGroupFailure_GroupCancelled}
-	 * (and other tests).
+	 * in {@link TestCustomerAccountBO#testApplyPeriodicFee}
+	 * (and about 163 other tests).
 	 */
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
@@ -1302,7 +1301,7 @@ public class TestObjectFactory {
 	private static void deleteCustomerNotes(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Set<CustomerNoteEntity> customerNotes = customer.getCustomerNotes();
-		if (customerNotes != null && customerNotes.size() > 0) {
+		if (customerNotes != null) {
 			for (CustomerNoteEntity customerNote : customerNotes) {
 				session.delete(customerNote);
 			}

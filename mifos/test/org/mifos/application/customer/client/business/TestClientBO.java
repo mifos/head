@@ -50,6 +50,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -728,6 +729,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateGroupFailure_GroupCancelled()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		refetchGroup();
 		group1.changeStatus(CustomerStatus.GROUP_CANCELLED,
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
 				"Status Changed");
@@ -740,9 +742,15 @@ public class TestClientBO extends MifosTestCase {
 				e.getKey());
 		}
 	}
+
+	private void refetchGroup() throws PersistenceException {
+		group1 = (GroupBO) customerPersistence.getCustomer(group1.getCustomerId());
+		group1.setUserContext(TestUtils.makeUserWithLocales());
+	}
 	
 	public void testUpdateGroupFailure_GroupClosed()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		refetchGroup();
 		group1.changeStatus(CustomerStatus.GROUP_CLOSED,
 				CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED, 
 				"Status Changed");
@@ -769,8 +777,11 @@ public class TestClientBO extends MifosTestCase {
 		}
 	}
 	
-	public void testUpdateGroupFailure_GroupStatusLower_Client_OnHold()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);	
+	public void testUpdateGroupFailure_GroupStatusLower_Client_OnHold()
+	throws Exception {
+		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
+		client = (ClientBO) customerPersistence.getCustomer(client.getCustomerId());
+		client.setUserContext(TestUtils.makeUserWithLocales());
 		client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold");
 		try{
 			client.transferToGroup(group1);
@@ -778,6 +789,8 @@ public class TestClientBO extends MifosTestCase {
 		}catch(CustomerException e){
 			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,e.getKey());
 		}
+		HibernateUtil.closeSession();
+		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
 	
 	public void testUpdateGroupFailure_ClientHasActiveAccounts()throws Exception{
@@ -1256,7 +1269,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 
 	private MeetingBO getMeeting() throws Exception{
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-		return meeting;
+		return new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), 
+			new java.util.Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 	}
 }
