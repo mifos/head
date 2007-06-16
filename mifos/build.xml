@@ -56,7 +56,7 @@
 		<pathelement location="${build.classes}"/>
 	</path>
 
-	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
+	<echo level="debug">CLASSPATH - ${java.class.path}</echo>
   
 	<target name="init">
 		<tstamp>
@@ -167,6 +167,11 @@
 		</copy>
 		<copy todir="${build.classes}/org/mifos/framework">
 			<fileset dir="${src.dir}/org/mifos/framework">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.classes}/org/mifos/config">
+			<fileset dir="${src.dir}/org/mifos/config">
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>

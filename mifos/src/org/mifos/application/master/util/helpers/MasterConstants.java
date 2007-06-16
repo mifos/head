@@ -69,6 +69,7 @@ public interface MasterConstants {
 	public static final String ATTENDENCETYPES = "CustomerAttendance";
 	public static final String PAYMENT_TYPE ="PaymentType";
 	public static final String LOAN_PURPOSES ="Loan Purposes";
+	public static final String OFFICER_TITLES = "Titles";
 	public static final short CUSTOMFIELD_NUMBER = 1;
 	public static final short CUSTOMFIELD_ALPHANUMBER = 2;
 	public static final short CUSTOMFIELD_DATE = 3;

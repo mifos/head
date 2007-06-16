@@ -35,4 +35,7 @@ public enum WeekDay {
 		return getWeekDay(value + 1);
 	}
 
+	public String getPropertiesKey() {
+		return "WeekDay." + toString();
+	}
 }

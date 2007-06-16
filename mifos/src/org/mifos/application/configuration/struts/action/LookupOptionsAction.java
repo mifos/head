@@ -52,6 +52,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -182,35 +183,65 @@ public class LookupOptionsAction extends BaseAction {
 		lookupOptionsActionForm.clear();
 		
 		CustomValueList valueList = masterPersistence.getLookUpEntity(
-				ConfigurationConstants.SALUTATION, userContext.getLocaleId());
+				MasterConstants.SALUTATION, userContext.getLocaleId());
 		// valueListId is the  MifosLookUpEntity/LookUpEntity id to use 
 		// when inserting a new item into the list 
-		Short valueListId = valueList.getEntityId();
+		// Short valueListId = valueList.getEntityId();
 		// valueListLabel is the label to display next to the edit box
-		String valueListLabel = valueList.getEntityLabel();
-		String[] valueListStrings = valueList.getCustomValueListElementsAsStrings();
-		lookupOptionsActionForm.setSalutations(valueListStrings);
+		// String valueListLabel = valueList.getEntityLabel();
+		lookupOptionsActionForm.setSalutations(
+				valueList.getCustomValueListElementsAsStrings());
 		
-		entity.setEntityType(ConfigurationConstants.USER_TITLE);
-		lookupOptionsActionForm.setUserTitles(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.MARITAL_STATUS);
-		lookupOptionsActionForm.setMaritalStatuses(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.ETHINICITY);
-		lookupOptionsActionForm.setEthnicities(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.EDUCATION_LEVEL);
-		lookupOptionsActionForm.setEducationLevels(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.CITIZENSHIP);
-		lookupOptionsActionForm.setCitizenships(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.PURPOSE_OF_LOAN);
-		lookupOptionsActionForm.setPurposesOfLoan(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.COLLATERAL_TYPE);
-		lookupOptionsActionForm.setCollateralTypes(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.HANDICAPPED);
-		lookupOptionsActionForm.setHandicappeds(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.ATTENDANCE);
-		lookupOptionsActionForm.setAttendances(getAValueList(entity));
-		entity.setEntityType(ConfigurationConstants.OFFICER_TITLE);
-		lookupOptionsActionForm.setOfficerTitles(getAValueList(entity));
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.PERSONNEL_TITLE, userContext.getLocaleId());
+		lookupOptionsActionForm.setUserTitles(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.MARITAL_STATUS, userContext.getLocaleId());
+		lookupOptionsActionForm.setMaritalStatuses(
+				valueList.getCustomValueListElementsAsStrings());
+
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.ETHINICITY, userContext.getLocaleId());
+		lookupOptionsActionForm.setEthnicities(
+				valueList.getCustomValueListElementsAsStrings());
+
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.EDUCATION_LEVEL, userContext.getLocaleId());
+		lookupOptionsActionForm.setEducationLevels(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.CITIZENSHIP, userContext.getLocaleId());
+		lookupOptionsActionForm.setCitizenships(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
+		lookupOptionsActionForm.setPurposesOfLoan(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.COLLATERAL_TYPES, userContext.getLocaleId());
+		lookupOptionsActionForm.setCollateralTypes(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.HANDICAPPED, userContext.getLocaleId());
+		lookupOptionsActionForm.setHandicappeds(
+				valueList.getCustomValueListElementsAsStrings());
+		
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.ATTENDENCETYPES, userContext.getLocaleId());
+		lookupOptionsActionForm.setAttendances(
+				valueList.getCustomValueListElementsAsStrings());
+
+		valueList = masterPersistence.getLookUpEntity(
+				MasterConstants.OFFICER_TITLES, userContext.getLocaleId());
+		lookupOptionsActionForm.setOfficerTitles(
+				valueList.getCustomValueListElementsAsStrings());
+		
 		logger.debug("Outside load method");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}

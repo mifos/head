@@ -23,7 +23,7 @@ public class MeetingHelper {
 			args[0]=meeting.getMeetingDetails().getRecurAfter();
 			WeekDay weekDay = meeting.getMeetingDetails()
 				.getMeetingRecurrence().getWeekDayValue();
-			args[1]=MessageLookup.lookup(weekDay, userContext);
+			args[1]=MessageLookup.getInstance().lookup(weekDay, userContext);
 		}
 		else if(meeting.isMonthlyOnDate()){
 			key = MeetingConstants.MONTH_DAY_SCHEDULE;
