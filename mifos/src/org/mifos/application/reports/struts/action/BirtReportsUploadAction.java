@@ -1,13 +1,21 @@
 package org.mifos.application.reports.struts.action;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.upload.FormFile;
+import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
@@ -34,9 +42,11 @@ public class BirtReportsUploadAction extends BaseAction {
 
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("birtReportsUploadAction");
-		security.allow("getBirtReportsUploadPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("getBirtReportsUploadPage",
+				SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -44,7 +54,8 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getBirtReportPage Method: ");
-		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
+		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -52,27 +63,87 @@ public class BirtReportsUploadAction extends BaseAction {
 	protected BusinessService getService() throws ServiceException {
 		return reportsBusinessService;
 	}
-	
-	public ActionForward preview(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		Short reportCategoryId = Short.parseShort(uploadForm.getReportCategoryId());
-		List<ReportsCategoryBO> categories = new ReportsPersistence().getAllReportCategories();
-		ReportsCategoryBO category = null;
-		for (ReportsCategoryBO reportsCategory : categories) {
-			if (reportsCategory.getReportCategoryId().equals(reportCategoryId)) {
-				category = reportsCategory;
-				break;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		request.setAttribute("category", category);
+		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	// TODO: transaction
+	public ActionForward upload(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		FormFile formFile = uploadForm.getFile();
+
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		for (ReportsBO report : category.getReportsSet()) {
+			if(report.getReportName().equals(uploadForm.getReportTitle())){
+				ActionErrors errors = new ActionErrors();
+				errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST, new ActionMessage(
+						ReportsConstants.ERROR_TITLEALREADYEXIST));
+				request.setAttribute(Globals.ERROR_KEY, errors);
+				return mapping.findForward(ActionForwards.preview_failure.toString());
 			}
 		}
-		request.setAttribute("category", category);
-		return  mapping.findForward(ActionForwards.preview_success.toString());
+		ReportsBO report = new ReportsBO();
+		report.setReportName(uploadForm.getReportTitle());
+		report.setReportsCategoryBO(category);
+		new ReportsPersistence().createOrUpdate(report);
+
+		// ReportsJasperMap reportJasperMap = new ReportsJasperMap();
+		// reportJasperMap.setReportId(report.getReportId());
+		// reportJasperMap.setReportJasper(formFile.getFileName());
+		// new ReportsPersistence().createJasperMap(reportJasperMap);
+
+		File dir = new File(getServlet().getServletContext().getRealPath("/")
+				+ "report");
+		File file = new File(dir, formFile.getFileName());
+		InputStream is = formFile.getInputStream();
+		FileOutputStream os = new FileOutputStream(file);
+		byte[] buffer = new byte[4096];
+		int bytesRead = 0;
+		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {
+			os.write(buffer, 0, bytesRead);
+		}
+		os.close();
+		is.close();
+		formFile.destroy();
+
+		return mapping.findForward(ActionForwards.create_success.toString());
 	}
-	
-	public ActionForward previous(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return mapping.findForward(ActionForwards.load_success.toString());
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
+
+	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
+		List<ReportsCategoryBO> categories = new ReportsPersistence()
+				.getAllReportCategories();
+		for (ReportsCategoryBO reportsCategory : categories) {
+			if (reportsCategory.getReportCategoryId().equals(reportCategoryId)) {
+				return reportsCategory;
+			}
+		}
+		return null;
+	}
+
+	private ReportsCategoryBO getReportCategory(String reportCategoryId) {
+		return getReportCategory(Short.valueOf(reportCategoryId));
 	}
 }

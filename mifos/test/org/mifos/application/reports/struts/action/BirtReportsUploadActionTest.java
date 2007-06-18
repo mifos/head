@@ -1,6 +1,7 @@
 package org.mifos.application.reports.struts.action;
 
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
@@ -22,18 +23,16 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 	}
 
-	public void testPreview() {
+	public void testPreviewFailure() {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("reportTitle", "template 1");
-		addRequestParameter("reportCategoryId", "1");
-		// TODO: Form file?
+		addRequestParameter("reportTitle", "");
+		addRequestParameter("reportCategoryId", "");
 		actionPerform();
-		verifyForward("preview_success");
-		verifyNoActionErrors();
-		ReportsCategoryBO category = (ReportsCategoryBO) request
-				.getAttribute("category");
-		assertNotNull(category);
-		assertEquals(1, (int) category.getReportCategoryId());
+		verifyActionErrors(new String[] { ReportsConstants.ERROR_TITLE,
+				ReportsConstants.ERROR_CATEGORYID,
+				ReportsConstants.ERROR_FILEISNULL });
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
 	}
+
 }

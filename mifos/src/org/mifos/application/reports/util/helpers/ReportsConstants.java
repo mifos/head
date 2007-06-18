@@ -66,4 +66,8 @@ public interface ReportsConstants {
 ///ENDED BY MFTECH
 	public String BIRTREPORTPATH = "birtreport_path";
 	
+	public static final String ERROR_TITLE="error.titleName";
+	public static final String ERROR_CATEGORYID="error.categoryId";
+	public static final String ERROR_FILEISNULL="error.fileIsNull";
+	public static final String ERROR_TITLEALREADYEXIST="error.titleAlreadyExist";
 }

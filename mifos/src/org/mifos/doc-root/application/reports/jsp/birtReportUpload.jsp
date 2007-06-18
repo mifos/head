@@ -9,7 +9,8 @@
 <tiles:insert definition=".create">
   <tiles:put name="body" type="string">
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=preview">
+			action="/birtReportsUploadAction.do?method=preview"
+			 enctype="multipart/form-data">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -53,6 +54,7 @@
 						</tr>
 					</table>
 				
+							
 					<table width="90%" border="0" align="center" cellpadding="0"
 						cellspacing="0" class="bluetableborder">
 						<tr>
@@ -86,7 +88,7 @@
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="CustomerSearchUIResources" /> 
+											<html-el:errors	bundle="reportsUIResources" />	
 										</font>
 									</td>
 								</tr>
@@ -120,7 +122,11 @@
 									    <mifos:mifoslabel
 										name="reports.labelSelectTemplate" />:</td>
 								    <td>
+                                   
                                         <input type="file" value="" name="file"/>
+                                        
+                                   
+                                        
                                     </td>
 								</tr>
 						  </table><br>	

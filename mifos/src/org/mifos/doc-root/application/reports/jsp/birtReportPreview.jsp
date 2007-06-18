@@ -15,7 +15,7 @@
 	</script>
   <tiles:put name="body" type="string">
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=preview">
+			action="/birtReportsUploadAction.do?method=upload">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
