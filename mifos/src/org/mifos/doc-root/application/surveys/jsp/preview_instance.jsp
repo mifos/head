@@ -52,7 +52,7 @@ hr {
 </style>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
-<html-el:form action="/surveyInstanceAction.do?method=preview">
+<html-el:form action="/surveyInstanceAction.do?method=create">
 <h1><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client').displayName}"/> - <orange>Enter survey data</orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>

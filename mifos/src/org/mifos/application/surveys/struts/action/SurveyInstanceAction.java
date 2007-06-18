@@ -19,6 +19,7 @@ import org.mifos.application.customer.client.struts.action.ClientCustAction;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.surveys.SurveysConstants;
+import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -63,8 +64,8 @@ public class SurveyInstanceAction extends PersistenceAction {
 
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("surveyInstanceAction");
-		security.allow("dummy_create", SecurityConstants.VIEW);
 		security.allow("create_entry", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
 		security.allow("choosesurvey", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		return security;
@@ -76,11 +77,12 @@ public class SurveyInstanceAction extends PersistenceAction {
 		//		return new SurveysBusinessService();
 	}
 	
-	public ActionForward dummy_create(ActionMapping mapping, ActionForm form,
+	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
-		Survey survey = persistence.getSurvey(2);
+		int surveyId = Integer.parseInt(request.getParameter("survey"));
+		Survey survey = persistence.getSurvey(surveyId);
 		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
@@ -118,7 +120,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		return mapping.findForward(ActionForwards.choose_survey.toString());
 	}
 
-	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
+	public ActionForward create_entry_old(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
@@ -142,15 +144,16 @@ public class SurveyInstanceAction extends PersistenceAction {
 		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
 		SurveysPersistence persistence = new SurveysPersistence();
 		
-		int surveyId = Integer.parseInt(actionForm.getSurveyId());
-		Survey survey = persistence.getSurvey(surveyId);
+		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
+		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 
 		InstanceStatus status = InstanceStatus.fromInt(Integer
 				.parseInt(actionForm.getInstanceStatus()));
 		int clientId = Integer.parseInt(actionForm.getCustomerId());
 		short officerId = Short.parseShort(actionForm.getOfficerId());
-		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm
+		Date dateConducted = DateUtils.getDate(actionForm
 				.getDateSurveyed());
+		List<SurveyResponse> surveyResponses = actionForm.getResponseList();
 		
 		ClientBO client = (ClientBO) persistence.getPersistentObject(
 				ClientBO.class, clientId);
@@ -163,6 +166,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		instance.setCompletedStatus(status);
 		instance.setClient(client);
 		instance.setOfficer(officer);
+		instance.setSurveyResponses(surveyResponses);
 		persistence.createOrUpdate(instance);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}

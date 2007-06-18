@@ -148,6 +148,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testCreate() throws Exception {
+		addRequestParameter("survey", "1");
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create_entry");
 		actionPerform();
@@ -159,11 +160,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		
 		String dateConducted = DateUtils.makeDateAsSentFromBrowser();
 		InstanceStatus status = InstanceStatus.INCOMPLETE;
-		int surveyId = sampleInstance.getSurvey().getSurveyId();
+		Survey survey = sampleInstance.getSurvey();
+		getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
+		
 		addRequestParameter("customerId", clientId);
 		addRequestParameter("officerId", officerId);
 		addRequestDateParameter("dateSurveyed", dateConducted);
-		addRequestParameter("surveyId", Integer.toString(surveyId));
 		addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create");
@@ -172,17 +174,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testValidateSuccess() throws Exception {
-		setRequestPathInfo("surveyInstanceAction");
-		addRequestParameter("method","dummy_create");
-				
+		
 		String dateConducted = DateUtils.makeDateAsSentFromBrowser();
 		//InstanceStatus status = InstanceStatus.INCOMPLETE;
 		addRequestParameter("customerId", "4");
 		addRequestParameter("officerName", "Someone's Name");
 		addRequestDateParameter("dateSurveyed", dateConducted);
-		addRequestParameter("response(4)","My name is john!");
-		addRequestParameter("response(14)","2");
-		addRequestParameter("response(1)","134");
 		//addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "preview");

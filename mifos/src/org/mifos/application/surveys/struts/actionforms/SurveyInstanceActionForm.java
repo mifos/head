@@ -1,6 +1,11 @@
 package org.mifos.application.surveys.struts.actionforms;
 
 import org.mifos.application.surveys.SurveysConstants;
+import org.mifos.application.surveys.business.SurveyResponse;
+import org.mifos.application.surveys.business.Question;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.surveys.helpers.InstanceStatus;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -9,10 +14,13 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.application.surveys.helpers.InstanceStatus;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.List;
+import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,8 +40,8 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 	
 	private String instanceStatus;
 	
-	private final Map<String, String> responses = new TreeMap<String, String>();
-
+	private final Map<String, SurveyResponse> responses = new TreeMap<String, SurveyResponse>();
+	
 	public String getInstanceStatus() {
 		return instanceStatus;
 	}
@@ -83,7 +91,16 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 	}
 
 	public String getOfficerId() {
-		return officerId;
+		if (officerId != null)
+			return officerId;
+		else {
+			try {
+				PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+				return Short.toString(personnelPersistence.getPersonnel(officerName).getPersonnelId());
+			} catch (PersistenceException e) {
+				return "-1";
+			}
+		}
 	}
 
 	public void setOfficerId(String officerId) {
@@ -106,17 +123,34 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 		this.surveyId = surveyId;
 	}
 	
-	public void setResponse(String questionId, String value) {
-		responses.put(questionId, value);
+	public void setResponse(String questionId, String value) throws ApplicationException {
+		if (StringUtils.isNullOrEmpty(value)) {
+			responses.put(questionId, null);
+		} else {
+			SurveysPersistence persistence = new SurveysPersistence();
+			Question question = persistence.getQuestion(Integer.parseInt(questionId));
+			SurveyResponse response = new SurveyResponse();
+			response.setQuestion(question);
+			response.setStringValue(value);
+			
+			responses.put(questionId, response);
+		}
 	}
 	
 	public String getResponse(String questionId) {
-		return responses.get(questionId);
+		SurveyResponse response = responses.get(questionId);
+		return response == null ? null : response.toString();
+	}
+	
+	public List<SurveyResponse> getResponseList() {
+		List<SurveyResponse> list = new LinkedList<SurveyResponse>();
+		list.addAll(responses.values());
+		return list;
 	}
 	
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		Integer.toString(InstanceStatus.COMPLETED.getValue());
+		instanceStatus = Integer.toString(InstanceStatus.COMPLETED.getValue());
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
 		if (method.equals("preview")) {
@@ -147,7 +181,7 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 	
 	private void validateResponses(ActionErrors errors) {
 		for (String fieldName : responses.keySet()) {
-			if (StringUtils.isNullOrEmpty(responses.get(fieldName))) {
+			if (responses.get(fieldName) == null) {
 				//errors.add(SurveysConstants.EMPTY_FIELD,
 				//		new ActionMessage(SurveysConstants.EMPTY_FIELD, fieldName));
 				instanceStatus = Integer.toString(InstanceStatus.INCOMPLETE.getValue());

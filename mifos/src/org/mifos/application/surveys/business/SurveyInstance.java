@@ -1,6 +1,7 @@
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -23,6 +24,8 @@ public class SurveyInstance extends PersistentObject {
 	private Date dateConducted;
 	
 	private InstanceStatus completedStatus;
+	
+	private List<SurveyResponse> surveyResponses;
 	
 	public SurveyInstance() {
 		completedStatus = InstanceStatus.INCOMPLETE;
@@ -88,6 +91,14 @@ public class SurveyInstance extends PersistentObject {
 	public void setClient(ClientBO client) {
 		this.client = client;
 		this.account = null;
+	}
+
+	public void setSurveyResponses(List<SurveyResponse> surveyResponses) {
+		this.surveyResponses = surveyResponses;
+	}
+
+	public List<SurveyResponse> getSurveyResponses() {
+		return surveyResponses;
 	}
 
 	public AccountBO getAccount() {
