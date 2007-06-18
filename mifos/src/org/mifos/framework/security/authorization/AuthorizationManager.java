@@ -84,18 +84,7 @@ public class AuthorizationManager {
 		Session session = null;
 		try {
 			session = HibernateUtil.openSession();
-			SecurityHelper security = new SecurityHelper(
-				new SessionHolder(session));
-
-			List<ActivityRoles> al = security.getActivities();
-			activityToRolesCacheMap.clear();
-			List leafs = security.getLeafActivities();
-			for (ActivityRoles act : al) {
-				if (leafs.contains(act.getId())) {
-					activityToRolesCacheMap.put(act.getId(), act
-							.getActivityRoles());
-				}
-			}
+			init(session);
 
 		} catch (SystemException e) {
 			throw e;
@@ -107,6 +96,21 @@ public class AuthorizationManager {
 		}
 		finally {
 			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public void init(Session session) throws ApplicationException {
+		SecurityHelper security = new SecurityHelper(
+			new SessionHolder(session));
+
+		List<ActivityRoles> al = security.getActivities();
+		activityToRolesCacheMap.clear();
+		List leafs = security.getLeafActivities();
+		for (ActivityRoles act : al) {
+			if (leafs.contains(act.getId())) {
+				activityToRolesCacheMap.put(act.getId(), act
+						.getActivityRoles());
+			}
 		}
 	}
 

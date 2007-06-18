@@ -241,7 +241,8 @@ public class SecurityHelper {
 			new RolesPermissionsPersistence();
 
 		List<ActivityEntity> activityList = 
-			rolesPermissionsPersistence.getActivities();
+			rolesPermissionsPersistence.getActivities(
+				sessionHolder.getSession());
 		List<Short> leafs = new ArrayList<Short>();
 		buildLeafItems(activityList, leafs);
 		return leafs;
