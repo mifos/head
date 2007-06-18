@@ -1,0 +1,1164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+    <property name="units">in</property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">BirtReportDesign/BranchesDataSets.rptlibrary</property>
+            <property name="namespace">BranchesDataSets</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="userId" id="157">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <cascading-parameter-group name="branch_LoanOfficer" id="158">
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="branchId" id="159">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Branch Office</text-property>
+                    <property name="allowNull">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">Branches</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">true</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+                <scalar-parameter name="loanOfficerId" id="160">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Loan Officer</text-property>
+                    <property name="allowNull">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">Loan Officers</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">true</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
+        <scalar-parameter name="loanProductId" id="161">
+            <property name="hidden">false</property>
+            <property name="valueType">dynamic</property>
+            <property name="dataType">integer</property>
+            <text-property name="promptText">Loan Product</text-property>
+            <property name="controlType">list-box</property>
+            <property name="dataSetName">LoanProducts</property>
+            <expression name="valueExpr">dataSetRow["ID"]</expression>
+            <expression name="labelExpr">dataSetRow["Name"]</expression>
+            <property name="mustMatch">true</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <script-data-source name="Scripted Data Source for Report#2" id="153">
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DS-OPEN");
+
+var userId = reportContext.getParameterValue("userId");
+reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
+reportsDataService.initialize(userId);]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;]]></method>
+        </script-data-source>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="LoanProducts" id="154">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source for Report#2</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("LP");
+
+var request = reportContext.getHttpServletRequest();
+Packages.java.util.logging.Logger.getLogger("").info("request:" + request );
+
+loanProducts = reportsDataService.getAllLoanProducts();
+if (loanProducts.size()>1) {
+	reportContext.setParameterValue("loanProductId", loanProducts.get(1).getPrdOfferingId());
+	reportContext.setPersistentGlobalVariable("defaultLoanProductId", loanProducts.get(1).getPrdOfferingId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanProduct as default:" + reportContext.getParameterValue("loanProductId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
+}
+
+iterator = loanProducts.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var loanProduct = iterator.next( );
+
+row["ID"] = loanProduct.getPrdOfferingId();
+row["Name"] = loanProduct.getPrdOfferingName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[loanProducts = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Branches" id="155">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source for Report#2</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("BR");
+branches = reportsDataService.getActiveBranchesUnderUser();
+
+if (branches.size()>1) {
+	reportContext.setParameterValue("branchId", branches.get(1).getOfficeId());
+	reportContext.setPersistentGlobalVariable("defaultBranchId", branches.get(1).getOfficeId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd branch as default:" + reportContext.getParameterValue("branchId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
+}
+
+iterator = branches.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var branch = iterator.next();
+
+row["ID"] = branch.getOfficeId();
+row["Name"] = branch.getOfficeName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[branches = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Loan Officers" id="156">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source for Report#2</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("LO");
+var branchId = reportContext.getParameterValue("branchId");
+Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId:" + branchId);
+Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
+
+loanOfficers = reportsDataService.getActiveLoanOfficers(branchId);
+
+if (loanOfficers.size()>1) {
+	reportContext.setParameterValue("loanOfficerId", loanOfficers.get(1).getPersonnelId());
+	reportContext.setPersistentGlobalVariable("defaultLoanOfficerId", loanOfficers.get(1).getPersonnelId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanOfficer as default:" + reportContext.getParameterValue("loanOfficerId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
+}
+
+
+iterator = loanOfficers.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var loanOfficer = iterator.next( );
+
+row["ID"] = loanOfficer.getPersonnelId();
+row["Name"] = loanOfficer.getDisplayName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[loanOfficers = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Data Set For Active Loans By Loan Officer" id="860">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Number</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">DisbursementAmount</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">DisbursementDate</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">DisbursementTerm</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">NextPaymentAmount</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">NextPaymentDate</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">LoanBalance</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">PaymentInArrears</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">DaysWithoutPayment</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">NetOfSavings</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">PrincipalInArrears</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">InterestInArrears</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">Number</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DisbursementAmount</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DisbursementDate</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DisbursementTerm</property>
+                </structure>
+                <structure>
+                    <property name="columnName">NextPaymentAmount</property>
+                </structure>
+                <structure>
+                    <property name="columnName">NextPaymentDate</property>
+                </structure>
+                <structure>
+                    <property name="columnName">LoanBalance</property>
+                </structure>
+                <structure>
+                    <property name="columnName">PaymentInArrears</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DaysWithoutPayment</property>
+                </structure>
+                <structure>
+                    <property name="columnName">NetOfSavings</property>
+                </structure>
+                <structure>
+                    <property name="columnName">PrincipalInArrears</property>
+                </structure>
+                <structure>
+                    <property name="columnName">InterestInArrears</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Number</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">DisbursementAmount</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">DisbursementDate</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">DisbursementTerm</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">NextPaymentAmount</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">NextPaymentDate</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">LoanBalance</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">PaymentInArrears</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">DaysWithoutPayment</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">NetOfSavings</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">PrincipalInArrears</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">InterestInArrears</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source for Report#2</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB");
+
+var branchId = reportContext.getParameterValue("branchId");
+
+var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
+
+var loanProductId = reportContext.getParameterValue("loanProductId");
+
+loans = reportsDataService.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,loanProductId);
+iterator = loans.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var loan = iterator.next( );
+row["Number"]= loan.getGlobalAccountNum();
+row["Name"] = loan.getCustomer().getDisplayName();
+row["DisbursementAmount"] = loan.getLoanAmount().getAmount();
+row["DisbursementDate"] = loan.getDisbursementDate();
+row["DisbursementTerm"] = loan.getDisbursementTerm();
+
+row["NextPaymentAmount"] = loan.getDetailsOfNextInstallment().getPrincipal().getAmount();
+
+row["NextPaymentDate"] = loan.getDetailsOfNextInstallment().getActionDate();
+row["LoanBalance"] = loan.getRemainingPrincipalAmount().getAmount();
+
+row["PrincipalInArrears"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount();
+row["InterestInArrears"] = loan.getTotalInterestAmountInArrearsAndOutsideLateness().getAmount();
+
+row["DaysWithoutPayment"] = loan.getDaysWithoutPayment();
+row["PaymentInArrears"] = loan.getPaymentsInArrears();
+row["NetOfSavings"] = loan.getNetOfSaving().getAmount();
+return true;]]></method>
+            <method name="close"><![CDATA[loans = null;
+iterator = null;]]></method>
+        </script-data-set>
+    </data-sets>
+    <styles>
+        <style name="TitleStyle" id="1076">
+            <property name="fontSize">small</property>
+            <property name="textAlign">center</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Report2MasterPage" id="2">
+            <page-header>
+                <grid id="178">
+                    <property name="width">100%</property>
+                    <column id="179"/>
+                    <row id="180">
+                        <cell id="181">
+                            <grid id="835">
+                                <property name="height">2in</property>
+                                <property name="width">100%</property>
+                                <column id="836">
+                                    <property name="width">7.375in</property>
+                                </column>
+                                <row id="837">
+                                    <property name="height">100%</property>
+                                    <cell id="838">
+                                        <grid id="839">
+                                            <property name="borderBottomColor">#000000</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">medium</property>
+                                            <property name="height">1.21875in</property>
+                                            <property name="width">6.9583333333in</property>
+                                            <column id="840">
+                                                <property name="width">4.0625in</property>
+                                            </column>
+                                            <column id="841">
+                                                <property name="width">2.8958333333in</property>
+                                            </column>
+                                            <row id="842">
+                                                <cell id="109">
+                                                    <property name="colSpan">2</property>
+                                                    <property name="rowSpan">1</property>
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">medium</property>
+                                                    <grid id="615">
+                                                        <property name="height">0.40625in</property>
+                                                        <property name="width">5.8541666667in</property>
+                                                        <column id="616">
+                                                            <property name="width">4.7604166667in</property>
+                                                        </column>
+                                                        <column id="617">
+                                                            <property name="width">0.46875in</property>
+                                                        </column>
+                                                        <column id="618">
+                                                            <property name="width">0.625in</property>
+                                                        </column>
+                                                        <row id="619">
+                                                            <property name="height">0.40625in</property>
+                                                            <cell id="620">
+                                                                <label id="843">
+                                                                    <property name="fontFamily">"Arial Rounded MT Bold"</property>
+                                                                    <property name="paddingRight">0pt</property>
+                                                                    <text-property name="text">Aspire Microfinance Instituation
+</text-property>
+                                                                </label>
+                                                            </cell>
+                                                            <cell id="621">
+                                                                <property name="textAlign">right</property>
+                                                                <label id="579">
+                                                                    <property name="marginLeft">10pt</property>
+                                                                    <property name="textAlign">right</property>
+                                                                    <text-property name="text">Page</text-property>
+                                                                </label>
+                                                            </cell>
+                                                            <cell id="622">
+                                                                <property name="textAlign">right</property>
+                                                                <auto-text id="844">
+                                                                    <property name="textAlign">right</property>
+                                                                    <property name="type">page-number</property>
+                                                                </auto-text>
+                                                            </cell>
+                                                        </row>
+                                                    </grid>
+                                                </cell>
+                                            </row>
+                                            <row id="845">
+                                                <cell id="846">
+                                                    <label id="847">
+                                                        <text-property name="text">Active Loans By Loan Officer</text-property>
+                                                    </label>
+                                                </cell>
+                                                <cell id="848">
+                                                    <text id="849">
+                                                        <property name="contentType">html</property>
+                                                        <text-property name="content"><![CDATA[Report date: <value-of>params["reportDate"]</value-of>]]></text-property>
+                                                    </text>
+                                                </cell>
+                                            </row>
+                                            <row id="850">
+                                                <cell id="851">
+                                                    <text id="852">
+                                                        <property name="contentType">html</property>
+                                                        <text-property name="content"><![CDATA[Branch office: <value-of>params["branchId"].displayText</value-of>]]></text-property>
+                                                    </text>
+                                                </cell>
+                                                <cell id="853">
+                                                    <text id="854">
+                                                        <property name="contentType">html</property>
+                                                        <text-property name="content"><![CDATA[Printed: <value-of>new Date()</value-of>]]></text-property>
+                                                    </text>
+                                                </cell>
+                                            </row>
+                                            <row id="855">
+                                                <property name="height">0.25in</property>
+                                                <cell id="856">
+                                                    <text id="857">
+                                                        <property name="contentType">html</property>
+                                                        <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
+                                                    </text>
+                                                </cell>
+                                                <cell id="858">
+                                                    <text id="859">
+                                                        <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
+                                                        <property name="contentType">auto</property>
+                                                        <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
+                                                    </text>
+                                                </cell>
+                                            </row>
+                                        </grid>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </grid>
+            </page-header>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="911">
+            <property name="height">2.21875in</property>
+            <property name="width">7.1458333333in</property>
+            <property name="dataSet">Data Set For Active Loans By Loan Officer</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Number</property>
+                    <expression name="expression">dataSetRow["Number"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">Name</property>
+                    <expression name="expression">dataSetRow["Name"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">DisbursementAmount</property>
+                    <expression name="expression">dataSetRow["DisbursementAmount"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">DisbursementDate</property>
+                    <expression name="expression">dataSetRow["DisbursementDate"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">DisbursementTerm</property>
+                    <expression name="expression">dataSetRow["DisbursementTerm"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">NextPaymentAmount</property>
+                    <expression name="expression">dataSetRow["NextPaymentAmount"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">NextPaymentDate</property>
+                    <expression name="expression">dataSetRow["NextPaymentDate"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">LoanBalance</property>
+                    <expression name="expression">dataSetRow["LoanBalance"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">PaymentInArrears</property>
+                    <expression name="expression">dataSetRow["PaymentInArrears"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">DaysWithoutPayment</property>
+                    <expression name="expression">dataSetRow["DaysWithoutPayment"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">NetOfSavings</property>
+                    <expression name="expression">dataSetRow["NetOfSavings"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">PrincipalInArrears</property>
+                    <expression name="expression">dataSetRow["PrincipalInArrears"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">InterestInArrears</property>
+                    <expression name="expression">dataSetRow["InterestInArrears"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <column id="957">
+                <property name="width">0.6145833333in</property>
+            </column>
+            <column id="958">
+                <property name="width">0.6145833333in</property>
+            </column>
+            <column id="959">
+                <property name="width">0.4895833333in</property>
+            </column>
+            <column id="960">
+                <property name="width">0.6354166667in</property>
+            </column>
+            <column id="961">
+                <property name="width">0.4479166667in</property>
+            </column>
+            <column id="962">
+                <property name="width">0.5520833333in</property>
+            </column>
+            <column id="963">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="964">
+                <property name="width">0.5833333333in</property>
+            </column>
+            <column id="965">
+                <property name="width">0.6145833333in</property>
+            </column>
+            <column id="966">
+                <property name="width">0.53125in</property>
+            </column>
+            <column id="967">
+                <property name="width">0.4583333333in</property>
+            </column>
+            <column id="968">
+                <property name="width">0.5729166667in</property>
+            </column>
+            <column id="969">
+                <property name="width">0.5208333333in</property>
+            </column>
+            <header>
+                <row id="912">
+                    <cell id="913">
+                        <grid id="1061">
+                            <property name="width">100%</property>
+                            <column id="1062"/>
+                            <row id="1077">
+                                <cell id="1078">
+                                    <label id="1079"/>
+                                </cell>
+                            </row>
+                            <row id="1063">
+                                <cell id="1064">
+                                    <label id="1067"/>
+                                </cell>
+                            </row>
+                            <row id="1065">
+                                <cell id="1066">
+                                    <label id="1012">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Number</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="914">
+                        <grid id="1068">
+                            <property name="width">100%</property>
+                            <column id="1069"/>
+                            <row id="1080">
+                                <cell id="1081">
+                                    <label id="1082"/>
+                                </cell>
+                            </row>
+                            <row id="1070">
+                                <cell id="1071">
+                                    <label id="1075"/>
+                                </cell>
+                            </row>
+                            <row id="1072">
+                                <cell id="1073">
+                                    <label id="1013">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Name</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="915">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="971">
+                            <property name="width">100%</property>
+                            <column id="972"/>
+                            <column id="973"/>
+                            <column id="974"/>
+                            <row id="1083">
+                                <cell id="1084">
+                                    <property name="colSpan">3</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="1087"/>
+                                </cell>
+                            </row>
+                            <row id="975">
+                                <cell id="976">
+                                    <property name="colSpan">3</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="984">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Disbursement</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="979">
+                                <cell id="980">
+                                    <label id="1056">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Amount</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="981">
+                                    <label id="1057">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Date</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="982">
+                                    <label id="1058">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Term</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="918">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="985">
+                            <property name="width">100%</property>
+                            <column id="986">
+                                <property name="width">0.53125in</property>
+                            </column>
+                            <column id="987">
+                                <property name="width">0.4583333333in</property>
+                            </column>
+                            <row id="1088">
+                                <cell id="1089">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="1092">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Next </text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="988">
+                                <cell id="989">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="995">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Payment</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="991">
+                                <cell id="992">
+                                    <label id="1059">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Amount</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="993">
+                                    <label id="1060">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Date</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="920">
+                        <grid id="1093">
+                            <property name="width">100%</property>
+                            <column id="1094"/>
+                            <row id="1095">
+                                <cell id="1096">
+                                    <label id="1101"/>
+                                </cell>
+                            </row>
+                            <row id="1097">
+                                <cell id="1098">
+                                    <label id="1102">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Loan </text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1099">
+                                <cell id="1100">
+                                    <label id="1103">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Balance</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="921">
+                        <grid id="1026">
+                            <property name="width">100%</property>
+                            <column id="1027"/>
+                            <row id="1028">
+                                <cell id="1029">
+                                    <label id="1034">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Payments</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1030">
+                                <cell id="1031">
+                                    <label id="1035">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">in</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1032">
+                                <cell id="1033">
+                                    <label id="1036">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">arrears</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="922">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="998">
+                            <property name="width">100%</property>
+                            <column id="999">
+                                <property name="width">0.4791666667in</property>
+                            </column>
+                            <column id="1000">
+                                <property name="width">0.4479166667in</property>
+                            </column>
+                            <row id="1104">
+                                <cell id="1105">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="1107"/>
+                                </cell>
+                            </row>
+                            <row id="1001">
+                                <cell id="1002">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="1007">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Arrears</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1004">
+                                <cell id="1005">
+                                    <label id="1008">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Principal</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="1006">
+                                    <label id="1009">
+                                        <property name="style">TitleStyle</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Interest</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="924">
+                        <grid id="1037">
+                            <property name="width">100%</property>
+                            <column id="1038"/>
+                            <row id="1039">
+                                <cell id="1040">
+                                    <label id="1045">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Days</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1041">
+                                <cell id="1042">
+                                    <label id="1046">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">without</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1043">
+                                <cell id="1044">
+                                    <label id="1047">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">payment</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="925">
+                        <grid id="1048">
+                            <property name="width">100%</property>
+                            <column id="1049"/>
+                            <row id="1108">
+                                <cell id="1109">
+                                    <label id="1110"/>
+                                </cell>
+                            </row>
+                            <row id="1050">
+                                <cell id="1051">
+                                    <label id="1054">
+                                        <text-property name="text">Net of</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="1052">
+                                <cell id="1053">
+                                    <label id="1055">
+                                        <text-property name="text">savings</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="927">
+                    <cell id="928">
+                        <data id="1014">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Number</property>
+                        </data>
+                    </cell>
+                    <cell id="929">
+                        <data id="1015">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Name</property>
+                        </data>
+                    </cell>
+                    <cell id="930">
+                        <data id="1016">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DisbursementAmount</property>
+                        </data>
+                    </cell>
+                    <cell id="931">
+                        <data id="1017">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Short Date</property>
+                                <property name="pattern">Short Date</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DisbursementDate</property>
+                        </data>
+                    </cell>
+                    <cell id="932">
+                        <data id="1111">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DisbursementTerm</property>
+                        </data>
+                    </cell>
+                    <cell id="933">
+                        <data id="1018">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">NextPaymentAmount</property>
+                        </data>
+                    </cell>
+                    <cell id="934">
+                        <data id="1019">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Short Date</property>
+                                <property name="pattern">Short Date</property>
+                            </structure>
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">NextPaymentDate</property>
+                        </data>
+                    </cell>
+                    <cell id="935">
+                        <data id="1020">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">LoanBalance</property>
+                        </data>
+                    </cell>
+                    <cell id="936">
+                        <data id="1113">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PaymentInArrears</property>
+                        </data>
+                    </cell>
+                    <cell id="937">
+                        <data id="1024">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PrincipalInArrears</property>
+                        </data>
+                    </cell>
+                    <cell id="938">
+                        <data id="1025">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">InterestInArrears</property>
+                        </data>
+                    </cell>
+                    <cell id="939">
+                        <data id="1112">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">DaysWithoutPayment</property>
+                        </data>
+                    </cell>
+                    <cell id="940">
+                        <data id="1114">
+                            <property name="resultSetColumn">NetOfSavings</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="942">
+                    <property name="height">0.2395833333in</property>
+                    <cell id="943"/>
+                    <cell id="944"/>
+                    <cell id="945"/>
+                    <cell id="946"/>
+                    <cell id="947"/>
+                    <cell id="948"/>
+                    <cell id="949"/>
+                    <cell id="950"/>
+                    <cell id="951"/>
+                    <cell id="952"/>
+                    <cell id="953"/>
+                    <cell id="954"/>
+                    <cell id="955"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>
