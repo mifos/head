@@ -1,5 +1,6 @@
 package org.mifos.application.configuration.struts.action;
 
+import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -8,10 +9,13 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.application.master.business.CustomValueListElement;
+import java.util.List;
 
 public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 	private UserContext userContext;
+	private String flowKey;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -32,13 +36,15 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
+		flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
 		
 	}
 
-	private boolean compareLists(String[] first, String[] second, int expectedLength) {
-		assertEquals(first.length,expectedLength);
+	private boolean compareLists(List<CustomValueListElement> first, String[] second, int expectedLength) {
+		
+		assertEquals(first.size(),expectedLength);
 		for (int index = 0; index < second.length; ++index) {
-			assertEquals(first[index], second[index]);
+			assertEquals(first.get(index).getLookUpValue(), second[index]);
 		}
 		return true;
 	}
@@ -86,4 +92,18 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		assertTrue(compareLists(lookupOptionsActionForm.getOfficerTitles(), EXPECTED_OFFICER_TITLES, 2));
 		
 	}
+	
+	public void testCancel() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/lookupOptionsAction.do");
+		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.cancel_success.toString());
+	}
+	
+	
 }

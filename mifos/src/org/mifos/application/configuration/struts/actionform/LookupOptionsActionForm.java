@@ -47,6 +47,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.application.master.business.CustomValueListElement;
+import java.util.List;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -63,17 +65,40 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String purposeOfLoan;
 	private String collateralType;
 	private String attendance;
-	private String[] salutations;
-	private String[] userTitles;
-	private String[] maritalStatuses;
-	private String[] ethnicities;
-	private String[] educationLevels;
-	private String[] citizenships;
-	private String[] purposesOfLoan;
-	private String[] officerTitles;
-	private String[] handicappeds;
-	private String[] collateralTypes;
-	private String[] attendances;
+
+
+	private List<CustomValueListElement> salutations;
+	private List<CustomValueListElement> userTitles;
+	private List<CustomValueListElement> maritalStatuses;
+	private List<CustomValueListElement> ethnicities;
+	private List<CustomValueListElement> educationLevels;
+	private List<CustomValueListElement> citizenships;
+	private List<CustomValueListElement> purposesOfLoan;
+	private List<CustomValueListElement> officerTitles;
+	private List<CustomValueListElement> handicappeds;
+	private List<CustomValueListElement> collateralTypes;
+	private List<CustomValueListElement> attendances;
+	
+	private String[] salutationList;
+	private String[] userTitleList;
+	private String[] maritalStatusList;
+	private String[] ethnicityList;
+	private String[] educationLevelList;
+	private String[] citizenshipList;
+	private String[] purposeOfLoanList;
+	private String[] officerTitleList;
+	private String[] handicappedList;
+	private String[] collateralTypeList;
+	private String[] attendanceList;
+	
+	public String[] getSalutationList() {
+		return salutationList;
+	}
+
+	public void setSalutationList(String[] salutationList) {
+		this.salutationList = salutationList;
+	}
+	
 	
 	public String getSalutation() {
 		return salutation;
@@ -160,92 +185,96 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.attendance = attendance;
 	}
 	
-	public String[] getSalutations() {
+	public List<CustomValueListElement> getSalutations() {
 		return salutations;
 	}
 
-	public void setSalutations(String[] salutations) {
+	public void setSalutations(List<CustomValueListElement> salutations) {
 		this.salutations = salutations;
 	}
 	
-	public String[] getUserTitles() {
+	public List<CustomValueListElement> getUserTitles() {
 		return userTitles;
 	}
 
-	public void setUserTitles(String[] userTitles) {
+	public void setUserTitles(List<CustomValueListElement> userTitles) {
 		this.userTitles = userTitles;
 	}
 	
-	public String[] getMaritalStatuses() {
+	public List<CustomValueListElement> getMaritalStatuses() {
 		return maritalStatuses;
 	}
 
-	public void setMaritalStatuses(String[] maritalStatuses) {
+	public void setMaritalStatuses(List<CustomValueListElement> maritalStatuses) {
 		this.maritalStatuses = maritalStatuses;
 	}
 	
-	public String[] getEthnicities() {
+	public List<CustomValueListElement> getEthnicities() {
 		return ethnicities;
 	}
 
-	public void setEthnicities(String[] ethnicities) {
+	public void setEthnicities(List<CustomValueListElement> ethnicities) {
 		this.ethnicities = ethnicities;
 	}
 	
-	public String[] getPurposesOfLoan() {
+	public List<CustomValueListElement> getPurposesOfLoan() {
 		return purposesOfLoan;
 	}
 
-	public void setPurposesOfLoan(String[] purposesOfLoan) {
+	public void setPurposesOfLoan(List<CustomValueListElement> purposesOfLoan) {
 		this.purposesOfLoan = purposesOfLoan;
 	}
 	
-	public String[] getEducationLevels() {
+	public List<CustomValueListElement> getEducationLevels() {
 		return educationLevels;
 	}
 
-	public void setEducationLevels(String[] educationLevels) {
+	public void setEducationLevels(List<CustomValueListElement> educationLevels) {
 		this.educationLevels = educationLevels;
 	}
-	public String[] getCitizenships() {
+	public List<CustomValueListElement> getCitizenships() {
 		return citizenships;
 	}
 
-	public void setCitizenships(String[] citizenships) {
+	public void setCitizenships(List<CustomValueListElement> citizenships) {
 		this.citizenships = citizenships;
 	}
 	
-	public String[] getHandicappeds() {
+	public List<CustomValueListElement> getHandicappeds() {
 		return handicappeds;
 	}
 
-	public void setHandicappeds(String[] handicappeds) {
+	public void setHandicappeds(List<CustomValueListElement> handicappeds) {
 		this.handicappeds = handicappeds;
 	}
 	
-	public String[] getOfficerTitles() {
+	public List<CustomValueListElement> getOfficerTitles() {
 		return officerTitles;
 	}
 
-	public void setOfficerTitles(String[] officerTitles) {
+	public void setOfficerTitles(List<CustomValueListElement> officerTitles) {
 		this.officerTitles = officerTitles;
 	}
 	
-	public String[] getCollateralTypes() {
+	public List<CustomValueListElement> getCollateralTypes() {
 		return collateralTypes;
 	}
 
-	public void setCollateralTypes(String[] collateralTypes) {
+	public void setCollateralTypes(List<CustomValueListElement> collateralTypes) {
 		this.collateralTypes = collateralTypes;
 	}
 	
-	public String[] getAttendances() {
+	public List<CustomValueListElement> getAttendances() {
 		return attendances;
 	}
 
-	public void setAttendances(String[] attendances) {
+	public void setAttendances(List<CustomValueListElement> attendances) {
 		this.attendances = attendances;
 	}
+	
+	
+	
+	
 	
 	public LookupOptionsActionForm() {
 		super();
@@ -279,8 +308,120 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	}
 
 	public void clear() {
-
+		this.salutation = null;
+		this.userTitle = null;
+		this.maritalStatus = null;
+		this.educationLevel = null;
+		this.citizenship = null;
+		this.handicapped = null;
+		this.officerTitle = null;
+		this.ethnicity = null;
+		this.purposeOfLoan = null;
+		this.collateralType = null;
+		this.attendance = null;
+		this.salutationList = null;
+		this.userTitleList = null;
+		this.maritalStatusList = null;
+		this.ethnicityList = null;
+		this.educationLevelList = null;
+		this.citizenshipList = null;
+		this.purposeOfLoanList = null;
+		this.officerTitleList = null;
+		this.handicappedList = null;
+		this.collateralTypeList = null;
+		this.attendanceList = null;
+		this.salutations = null;
+		this.userTitles = null;
+		this.maritalStatuses = null;
+		this.ethnicities = null;
+		this.educationLevels = null;
+		this.citizenships = null;
+		this.purposesOfLoan = null;
+		this.officerTitles = null;
+		this.handicappeds = null;
+		this.collateralTypes = null;
+		this.attendances = null;
 		
+	}
+
+	public String[] getAttendanceList() {
+		return attendanceList;
+	}
+
+	public void setAttendanceList(String[] attendanceList) {
+		this.attendanceList = attendanceList;
+	}
+
+	public String[] getCitizenshipList() {
+		return citizenshipList;
+	}
+
+	public void setCitizenshipList(String[] citizenshipList) {
+		this.citizenshipList = citizenshipList;
+	}
+
+	public String[] getCollateralTypeList() {
+		return collateralTypeList;
+	}
+
+	public void setCollateralTypeList(String[] collateralTypeList) {
+		this.collateralTypeList = collateralTypeList;
+	}
+
+	public String[] getEducationLevelList() {
+		return educationLevelList;
+	}
+
+	public void setEducationLevelList(String[] educationLevelList) {
+		this.educationLevelList = educationLevelList;
+	}
+
+	public String[] getEthnicityList() {
+		return ethnicityList;
+	}
+
+	public void setEthnicityList(String[] ethnicityList) {
+		this.ethnicityList = ethnicityList;
+	}
+
+	public String[] getHandicappedList() {
+		return handicappedList;
+	}
+
+	public void setHandicappedList(String[] handicappedList) {
+		this.handicappedList = handicappedList;
+	}
+
+	public String[] getMaritalStatusList() {
+		return maritalStatusList;
+	}
+
+	public void setMaritalStatusList(String[] maritalStatusList) {
+		this.maritalStatusList = maritalStatusList;
+	}
+
+	public String[] getOfficerTitleList() {
+		return officerTitleList;
+	}
+
+	public void setOfficerTitleList(String[] officerTitleList) {
+		this.officerTitleList = officerTitleList;
+	}
+
+	public String[] getPurposeOfLoanList() {
+		return purposeOfLoanList;
+	}
+
+	public void setPurposeOfLoanList(String[] purposeOfLoanList) {
+		this.purposeOfLoanList = purposeOfLoanList;
+	}
+
+	public String[] getUserTitleList() {
+		return userTitleList;
+	}
+
+	public void setUserTitleList(String[] userTitleList) {
+		this.userTitleList = userTitleList;
 	}
 
 }

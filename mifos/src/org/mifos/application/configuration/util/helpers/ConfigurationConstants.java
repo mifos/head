@@ -32,14 +32,18 @@ public static final short INTEREST_DAYS=360;
 
 public static final String SURVEY="Survey";
 public static final String MEETING="Meeting";
-public static final String SALUTATION="Salutation";
-public static final String MARITAL_STATUS="Marital Status";
-public static final String USER_TITLE="User Title";
-public static final String EDUCATION_LEVEL="Education Level";
-public static final String ATTENDANCE="Attendance";
-public static final String OFFICER_TITLE="Officer Title";
-public static final String PURPOSE_OF_LOAN="Purpose Of Loan";
-public static final String COLLATERAL_TYPE="Collateral Type";
+
+public static final String CONFIG_SALUTATION="ConfigSalutation";
+public static final String CONFIG_MARITAL_STATUS="ConfigMaritalStatus";
+public static final String CONFIG_USER_TITLE="ConfigUserTitle";
+public static final String CONFIG_EDUCATION_LEVEL="ConfigEducationLevel";
+public static final String CONFIG_CITIZENSHIP="ConfigCitizenship";
+public static final String CONFIG_HANDICAPPED="ConfigHandicapped";
+public static final String CONFIG_ATTENDANCE="ConfigAttendance";
+public static final String CONFIG_OFFICER_TITLE="ConfigOfficerTitle";
+public static final String CONFIG_PURPOSE_OF_LOAN="ConfigPurposeOfLoan";
+public static final String CONFIG_COLLATERAL_TYPE="ConfigCollateralType";
+public static final String CONFIG_ETHNICITY="ConfigEthnicity";
 
 
 }
