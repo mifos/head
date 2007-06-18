@@ -261,7 +261,7 @@
 
 	<target name="run_test" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,build_test_db" 
-		description="Run tests. Does not initiate clean build">
+		description="Run tests.">
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
 			failureproperty="tests.failure">
