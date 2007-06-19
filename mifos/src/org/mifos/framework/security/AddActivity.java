@@ -28,7 +28,7 @@ public class AddActivity extends Upgrade {
 	 * @param locale Locale in which we want to define a name
 	 * @param activityName Name to give the activity, in that locale.
 	 */
-	protected AddActivity(
+	public AddActivity(
 		int higherVersion, int newActivityId, short parentActivity, 
 		Short locale, String activityName) {
 		super(higherVersion);
@@ -36,11 +36,6 @@ public class AddActivity extends Upgrade {
 		this.parentActivity = parentActivity;
 		this.locale = locale;
 		this.activityName = activityName;
-	}
-
-	@Override
-	public void downgrade(Connection connection) throws IOException, SQLException {
-		throw new RuntimeException("not implemented");
 	}
 
 	@Override
@@ -55,6 +50,8 @@ public class AddActivity extends Upgrade {
 		addActivityEntity(connection, lookupId);
 		allowActivity(connection, newActivityId, 
 			RolesAndPermissionConstants.ADMIN_ROLE);
+		
+		upgradeVersion(connection);
 	}
 
 	private void allowActivity(Connection connection, 
@@ -135,6 +132,72 @@ public class AddActivity extends Upgrade {
 		statement.setInt(4, lookupId);
 		statement.executeUpdate();
 		statement.close(); // should be in finally(?)
+	}
+
+	@Override
+	public void downgrade(Connection connection) throws IOException, SQLException {
+		short lookupId = findLookupId(connection);
+		deleteFromRolesActivity(connection);
+		deleteFromActivity(connection);
+		deleteFromLookupValueLocale(connection, lookupId);
+		deleteFromLookupValue(connection, lookupId);
+		downgradeVersion(connection);
+	}
+
+	private short findLookupId(Connection connection) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"select ACTIVITY_NAME_LOOKUP_ID " +
+			"from ACTIVITY where activity_id = ?");
+		statement.setInt(1, newActivityId);
+		ResultSet results = statement.executeQuery();
+		if (results.next()) {
+			short lookupId = results.getShort("ACTIVITY_NAME_LOOKUP_ID");
+			statement.close();
+			return lookupId;
+		}
+		else {
+			statement.close();
+			throw new RuntimeException(
+				"unable to downgrade: no activity with id " + newActivityId);
+		}
+	}
+
+	private void deleteFromRolesActivity(Connection connection) 
+	throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"delete from ROLES_ACTIVITY where ACTIVITY_ID = ?");
+		statement.setInt(1, newActivityId);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	private void deleteFromActivity(Connection connection) 
+	throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"delete from ACTIVITY where ACTIVITY_ID = ?");
+		statement.setInt(1, newActivityId);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	private void deleteFromLookupValueLocale(
+		Connection connection, short lookupId) 
+	throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"delete from LOOKUP_VALUE_LOCALE where lookup_id = ?");
+		statement.setInt(1, lookupId);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	private void deleteFromLookupValue(
+			Connection connection, short lookupId) 
+	throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"delete from LOOKUP_VALUE where lookup_id = ?");
+		statement.setInt(1, lookupId);
+		statement.executeUpdate();
+		statement.close();
 	}
 
 }

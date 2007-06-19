@@ -3,10 +3,7 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -88,16 +85,7 @@ public class LatestTest extends TestCase {
 	throws SQLException, IOException {
 	    Connection conn = database.openConnection();
 	    DatabaseVersionPersistence persistence = 
-	    	new DatabaseVersionPersistence(conn) {
-		    	@Override
-		    	URL lookup(String name) {
-		    		try {
-						return new URL("file:sql/"+name);
-					} catch (MalformedURLException e) {
-						throw new RuntimeException(e);
-					}
-		    	}
-		    };	    
+	    	new FileReadingPersistence(conn);	    
 	    int version  = persistence.read();
 	    assertEquals(FIRST_NUMBERED_VERSION, version);
 	    List<Upgrade> scripts = persistence.scripts(
@@ -136,12 +124,14 @@ public class LatestTest extends TestCase {
 	throws Exception {
 		Database database = new Database(current);
 		String before = new SqlDumper(false).dump(database.dataStore());
-		new SqlUpgrade(null, nextVersion).execute(
-			new FileInputStream("sql/upgrade_to_" + nextVersion + ".sql"), 
-			database.openConnection());
+
+		DatabaseVersionPersistence persistence =
+			new FileReadingPersistence(database.openConnection());
+		Upgrade upgrade = persistence.findUpgrade(nextVersion);
+
+		upgrade.upgrade(database.openConnection());
 		DataStore upgraded = database.dataStore();
-		new SqlUpgrade(null, nextVersion).downgrade(
-			database.openConnection());
+		upgrade.downgrade(database.openConnection());
 		String after = new SqlDumper(false).dump(database.dataStore());
 		assertEquals(before, after);
 		

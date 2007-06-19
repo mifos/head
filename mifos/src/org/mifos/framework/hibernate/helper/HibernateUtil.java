@@ -37,6 +37,8 @@
  */
 package org.mifos.framework.hibernate.helper;
 
+import java.sql.Connection;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -99,6 +101,10 @@ public class HibernateUtil {
 	 */
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
+	}
+	
+	public static Session openSession(Connection connection) {
+		return getSessionFactory().openSession(connection);
 	}
 
 	/**

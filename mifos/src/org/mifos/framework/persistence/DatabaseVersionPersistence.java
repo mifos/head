@@ -13,15 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.AddActivity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
 	public static final int APPLICATION_VERSION = 125;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
-	private static Map<Integer, Upgrade> masterRegister =
-		new HashMap<Integer, Upgrade>();
-	
 	public static void register(
 		Map<Integer, Upgrade> register, Upgrade upgrade) {
 		int higherVersion = upgrade.higherVersion();
@@ -32,8 +31,16 @@ public class DatabaseVersionPersistence {
 		register.put(higherVersion, upgrade);
 	}
 	
-	public static void register(Upgrade upgrade) {
-		register(masterRegister, upgrade);
+	public static final short ENGLISH_LOCALE = 1;
+
+	public static Map<Integer, Upgrade> masterRegister() {
+		Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
+		register(register, new AddActivity(101, 
+			SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS, 
+			SecurityConstants.ACTIVITY_196, 
+			ENGLISH_LOCALE, 
+			"Can create multiple Loan accounts"));
+		return Collections.unmodifiableMap(register);
 	}
 
 	private final Connection connection;
@@ -44,7 +51,7 @@ public class DatabaseVersionPersistence {
 	}
 
 	public DatabaseVersionPersistence(Connection connection) {
-		this(connection, Collections.unmodifiableMap(masterRegister));
+		this(connection, masterRegister());
 	}
 	
 	public DatabaseVersionPersistence(Connection connection, 
@@ -123,15 +130,13 @@ public class DatabaseVersionPersistence {
 		List<Upgrade> upgrades = new ArrayList<Upgrade>(
 			applicationVersion - databaseVersion);
 		for (int i = databaseVersion; i < applicationVersion; i++){
-			Upgrade upgrade = findUpgrade(i);
+			Upgrade upgrade = findUpgrade(i + 1);
 			upgrades.add(upgrade);
 		}
 		return Collections.unmodifiableList(upgrades);
 	}
 
-	Upgrade findUpgrade(int fromVersion) {
-		int higherVersion = fromVersion + 1;
-
+	Upgrade findUpgrade(int higherVersion) {
 		boolean foundInJava = registeredUpgrades.containsKey(higherVersion);
 
 		String name = "upgrade_to_" + higherVersion + ".sql";
@@ -173,8 +178,10 @@ public class DatabaseVersionPersistence {
 	public List<Upgrade> downgrades(
 		int downgradeTo, int databaseVersion) {
 		List<Upgrade> downgrades = new ArrayList<Upgrade>();
-		for (int i = databaseVersion; i > downgradeTo; --i) {
-			downgrades.add(new SqlUpgrade(null, i));
+		for (int higherVersion = databaseVersion; 
+			higherVersion > downgradeTo; 
+			--higherVersion) {
+			downgrades.add(findUpgrade(higherVersion));
 		}
 		return Collections.unmodifiableList(downgrades);
 	}

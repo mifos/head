@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
@@ -18,6 +20,8 @@ import org.junit.Test;
 
 public class DowngraderTest {
 	
+	private DummyUpgrade dummyUpgrade;
+
 	@Test public void noArguments() throws Exception {
 		String output = run(new String[] { });
 		assertEquals("Too few arguments.\n" +
@@ -131,8 +135,6 @@ public class DowngraderTest {
 		database.execute(
 			"create table DATABASE_VERSION(DATABASE_VERSION integer)");
 		database.execute(
-			"create table CONFIG_KEY_VALUE_INTEGER(foo integer)");
-		database.execute(
 			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(107)");
 		String output = run("106", database.openConnection());
 		assertEquals("Downgrading to 106...done.\n", output);
@@ -142,6 +144,7 @@ public class DowngraderTest {
 			");\n\n" +
 			"INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(106);\n\n",
 			new SqlDumper().dump(database.dataStore()));
+		assertEquals("downgrade from 107\n", dummyUpgrade.getLog());
 	}
 
 	@Test public void nothingToDo() throws Exception {
@@ -186,11 +189,18 @@ public class DowngraderTest {
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		PrintStream printStream = new PrintStream(out);
-		downgrader.run(printStream, connection);
+		downgrader.run(printStream, connection, makeRegister());
 		printStream.flush();
 		return out.toString("UTF-8");
 	}
 	
+	private Map<Integer, Upgrade> makeRegister() {
+		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
+		dummyUpgrade = new DummyUpgrade(107);
+		DatabaseVersionPersistence.register(registrations, dummyUpgrade);
+		return registrations;
+	}
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(DowngraderTest.class);
 	}

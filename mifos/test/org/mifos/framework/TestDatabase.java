@@ -2,6 +2,7 @@ package org.mifos.framework;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
 
@@ -68,6 +69,13 @@ public class TestDatabase implements SessionOpener {
 		Writer writer = new FileWriter("build/database-dump.sql");
 		new SqlDumper().dump(database.dataStore(), writer);
 		writer.flush();
+	}
+
+	public String dumpForComparison() throws IOException {
+		StringWriter writer = new StringWriter();
+		new SqlDumper(false).dump(database.dataStore(), writer);
+		writer.flush();
+		return writer.toString();
 	}
 
 	public SessionHolder open() {

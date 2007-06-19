@@ -7,13 +7,15 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.List;
+import java.util.Map;
 
 public class Downgrader {
 	
 	public static void main(String[] args) throws Exception {
 		Downgrader downgrader = new Downgrader();
 		downgrader.parse(args);
-		downgrader.run(System.out);
+		downgrader.run(System.out, downgrader.openConnection(),
+			DatabaseVersionPersistence.masterRegister());
 	}
 
 	String error;
@@ -50,16 +52,13 @@ public class Downgrader {
 		}
 	}
 
-	private void run(PrintStream out) throws Exception {
-		run(out, openConnection());
-	}
-
 	Connection openConnection() throws Exception {
 		Class.forName(driver);
 		return DriverManager.getConnection(jdbcUrl, username, password);
 	}
 
-	public void run(PrintStream out, Connection connection) 
+	public void run(PrintStream out, Connection connection,
+		Map<Integer, Upgrade> register) 
 	throws Exception {
 		if (error != null) {
 			out.print(error);
@@ -79,7 +78,7 @@ public class Downgrader {
 		}
 
 		DatabaseVersionPersistence persistence = 
-			new DatabaseVersionPersistence(connection);
+			new DatabaseVersionPersistence(connection, register);
 		
 		int currentVersion = persistence.read();
 		if (downgradeTo >= currentVersion) {

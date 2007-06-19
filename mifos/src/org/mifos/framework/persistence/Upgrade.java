@@ -27,11 +27,11 @@ public abstract class Upgrade {
 		return higherVersion - 1;
 	}
 
-	public void upgradeVersion(Connection connection) throws SQLException {
+	protected void upgradeVersion(Connection connection) throws SQLException {
 		changeVersion(connection, higherVersion(), lowerVersion());
 	}
 
-	public void downgradeVersion(Connection connection) throws SQLException {
+	protected void downgradeVersion(Connection connection) throws SQLException {
 		changeVersion(connection, lowerVersion(), higherVersion());
 	}
 

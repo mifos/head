@@ -18,11 +18,17 @@ final class DummyUpgrade extends Upgrade {
 	@Override
 	public void downgrade(Connection connection) throws IOException, SQLException {
 		log.append("downgrade from " + higherVersion() + "\n");
+		if (connection != null) {
+			downgradeVersion(connection);
+		}
 	}
 
 	@Override
 	public void upgrade(Connection connection) throws IOException, SQLException {
 		log.append("upgrade to " + higherVersion() + "\n");
+		if (connection != null) {
+			upgradeVersion(connection);
+		}
 	}
 	
 	String getLog() {
