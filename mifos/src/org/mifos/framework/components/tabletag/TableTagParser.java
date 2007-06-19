@@ -56,8 +56,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
 public class TableTagParser {
 
 	private TableTagParser() {
@@ -89,7 +87,7 @@ public class TableTagParser {
 					"tabletag.xsd");
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			builder.setErrorHandler(new DefaultErrorHandler());
+			builder.setErrorHandler(null);
 			Document document = builder.parse(new File(ResourceLoader
 					.getURI(filename)));
 			/*

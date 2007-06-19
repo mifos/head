@@ -23,10 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
-
-
 public class TableTagParser {
 
   private static TableTagParser instance=new TableTagParser();
@@ -42,7 +38,7 @@ public class TableTagParser {
 
 
 		SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		schfactory.setErrorHandler(new DefaultErrorHandler());
+		schfactory.setErrorHandler(null);
 		Schema schema = schfactory.newSchema(new StreamSource(new File(ResourceLoader.getURI(FilePaths.CUSTOMTABLETAGXSD))));
 		factory.setNamespaceAware(false);
 		factory.setValidating(false);
@@ -50,7 +46,7 @@ public class TableTagParser {
 		
 		
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		builder.setErrorHandler(new DefaultErrorHandler());
+		builder.setErrorHandler(null);
 		Document document = builder.parse(filename);
 
         table=createTable(document);

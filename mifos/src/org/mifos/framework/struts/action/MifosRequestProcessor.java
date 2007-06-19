@@ -67,8 +67,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PreviousRequestValues;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
 public class MifosRequestProcessor extends TilesRequestProcessor {
 
 	private ActivityContext setActivityContextFromRequest(
@@ -96,10 +94,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					recordLoOffId = Short.valueOf(recordLoanOfficerId)
 							.shortValue();
 				}
-			}
-			// TODO: we should not reference com.sun.* classes
-			catch (ParseException e) {
-				throw new RuntimeException(e);
 			}
 			catch (NumberFormatException e) {
 				throw new RuntimeException(e);

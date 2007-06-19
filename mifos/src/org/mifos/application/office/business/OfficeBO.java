@@ -28,8 +28,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
 public class OfficeBO extends BusinessObject {
 
 	private final Short officeId;
@@ -338,8 +336,6 @@ public class OfficeBO extends BusinessObject {
 			}
 
 			return officeGlobelNo = temp.append(officeGlobelNo).toString();
-		} catch (ParseException e) {
-			throw new OfficeException(e);
 		} catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}

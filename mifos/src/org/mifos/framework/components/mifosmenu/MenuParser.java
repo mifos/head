@@ -65,8 +65,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
 /**
  * It parses xml, builds and return crude menu for application
  */
@@ -80,7 +78,7 @@ public class MenuParser {
 		try {
 			 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			 SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			 schfactory.setErrorHandler(new DefaultErrorHandler());
+			 schfactory.setErrorHandler(null);
 			 Schema schema = schfactory.newSchema(new StreamSource(new File(ResourceLoader.getURI(FilePaths.MENUSCHEMA))));
 			 factory.setNamespaceAware(false);
 			 factory.setValidating(false);

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.framework.components.tabletag;
 
 import java.io.File;
@@ -20,14 +17,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
 public class TypeParser {
 
-	public TypeParser() {
+	private TypeParser() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
+
 	private static TypeParser instance = new TypeParser();
 
 	public static TypeParser getInstance() {
@@ -53,7 +48,7 @@ public class TypeParser {
 					"type.xsd");
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			builder.setErrorHandler(new DefaultErrorHandler());
+			builder.setErrorHandler(null);
 			Document document = builder.parse(new File(ResourceLoader
 					.getURI(filename)));
 			Node fileNode = document.getFirstChild();
