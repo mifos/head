@@ -21,6 +21,7 @@ import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
@@ -262,6 +263,29 @@ public class TestSurvey extends MifosTestCase {
 		instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
 		HibernateUtil.getSessionTL().save(instance);
 		return instance;
+	}
+	
+	public static void addQuestionsToSurveyInstance(Survey survey,
+			GenericActionForm actionForm, SurveysPersistence surveysPersistence)
+		throws ApplicationException {
+		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
+		Question question3 = new Question("test question 3", AnswerType.FREETEXT);
+		
+		surveysPersistence.createOrUpdate(question1);
+		surveysPersistence.createOrUpdate(question2);
+		surveysPersistence.createOrUpdate(question3);
+		
+		survey.addQuestion(question1, true);
+		survey.addQuestion(question2, true);
+		survey.addQuestion(question3, true);
+		HibernateUtil.getSessionTL().save(survey);
+		
+		//List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
+		for (SurveyQuestion question : survey.getQuestions()) {
+			actionForm.setValue("response_" + Integer.toString(question.getQuestion().getQuestionId())
+					, "Answer One");
+		}
 	}
 	
 	public void testSurveyResponseWithChoices() throws Exception {

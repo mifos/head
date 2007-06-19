@@ -166,6 +166,8 @@ public class SurveyInstanceAction extends PersistenceAction {
 			throws Exception {
 		// do validation here
 		GenericActionForm actionForm = (GenericActionForm) form;
+		request.setAttribute("dateSurveyed", actionForm.getValue("dateSurveyed"));
+		request.setAttribute("officerName", actionForm.getValue("officerName"));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -176,19 +178,18 @@ public class SurveyInstanceAction extends PersistenceAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence persistence = new SurveysPersistence();
 		
 		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
 		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 
-		InstanceStatus status = InstanceStatus.fromInt(Integer
-				.parseInt(actionForm.getInstanceStatus()));
-		int clientId = Integer.parseInt(actionForm.getCustomerId());
-		short officerId = Short.parseShort(actionForm.getOfficerId());
-		Date dateConducted = DateUtils.getDate(actionForm
-				.getDateSurveyed());
-		List<SurveyResponse> surveyResponses = actionForm.getResponseList();
+		//InstanceStatus status = InstanceStatus.fromInt(Integer
+		//		.parseInt(actionForm.getValue("instanceStatus")));
+		int clientId = Integer.parseInt(actionForm.getValue("customerId"));
+		short officerId = Short.parseShort(actionForm.getValue("officerId"));
+		Date dateConducted = DateUtils.parseBrowserDateFields(actionForm.getValue("dateConductedYY"),
+				actionForm.getValue("dateConductedMM"), actionForm.getValue("dateConductedDD"));
 		
 		ClientBO client = (ClientBO) persistence.getPersistentObject(
 				ClientBO.class, clientId);
@@ -196,12 +197,23 @@ public class SurveyInstanceAction extends PersistenceAction {
 				PersonnelBO.class, officerId);
 
 		SurveyInstance instance = new SurveyInstance();
+		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
-		instance.setCompletedStatus(status);
+		//instance.setCompletedStatus(status);
 		instance.setClient(client);
 		instance.setOfficer(officer); 
+
+		List<SurveyResponse> surveyResponses = new LinkedList<SurveyResponse>();
+		for (Map.Entry<String, String> s : actionForm.getAll("response_").entrySet()) {
+			SurveyResponse r = new SurveyResponse();
+			r.setQuestion(persistence.getQuestion(Integer.parseInt(s.getValue())));
+			r.setStringValue(s.getValue());
+			r.setInstance(instance);
+			persistence.createOrUpdate(r);
+		}
 		instance.setSurveyResponses(surveyResponses);
+		
 		persistence.createOrUpdate(instance);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
