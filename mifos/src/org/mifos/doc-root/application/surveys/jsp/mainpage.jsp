@@ -29,7 +29,7 @@
                   <c:forEach var="survey" items="${sessionScope.customerSurveysList}">
                   	<tr class="fontnormal">
                     	<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
-                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&surveyId=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
+                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
                     		<c:if test="${survey.state == 0}">
                     			<img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
                     		</c:if>
@@ -43,7 +43,7 @@
                   <c:forEach var="survey" items="${sessionScope.accountsSurveysList}">
                   	<tr class="fontnormal">
                     	<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
-                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&surveyId=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
+                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
                     		<c:if test="${survey.state == 0}">
                     			<img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
                     		</c:if>

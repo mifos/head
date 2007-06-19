@@ -67,7 +67,7 @@
                     <tr>
                       <td>
                         <font class="fontnormalRedBold"> 
-                          <html-el:errors bundle="SurveysUIResources" /> 
+                          <html-el:messages bundle="SurveysUIResources" /> 
                         </font>
                       </td>
                     </tr>
@@ -95,7 +95,7 @@
                         <mifos:mifoslabel name="Surveys.survey_name" mandatory="yes" bundle="SurveysUIResources" />:
                       </td>
                       <td width="73%" valign="top">
-                        <mifos:mifosalphanumtext property="name" maxlength="100" />
+                        <mifos:mifosalphanumtext property="value(name)" maxlength="100" />
                       </td>
                     </tr>
                     <tr class="fontnormal">
@@ -103,12 +103,13 @@
                         <mifos:mifoslabel name="Surveys.Appliesto" mandatory="yes" bundle="SurveysUIResources" />:
                       </td>
                       <td valign="top">
-                        <mifos:select property="appliesTo" style="width:136px;">
-                          <c:forEach var="type" items="${sessionScope.surveyTypes}">
-                            <html-el:option value="${type.value}">
-                              <c:out value="${type.localizedName}"/>
-                            </html-el:option>
-                          </c:forEach>
+                        <mifos:select property="value(appliesTo)" style="width:136px;">
+                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                         </mifos:select>
                       </td>
                     </tr>
@@ -117,7 +118,7 @@
                         <mifos:mifoslabel name="Surveys.select_questions" bundle="SurveysUIResources"/>
                       </td>
                       <td valign="top">
-                        <html-el:select size="10" style="width:40em" property="newQuestion">
+                        <html-el:select size="10" style="width:40em" property="value(newQuestion)">
                           <c:forEach var="question" items="${sessionScope.questionsList}">
                             <html-el:option value="${question.questionId}">
                               <c:out value="${question.questionText}"/>

@@ -1,8 +1,12 @@
 package org.mifos.framework.formulaic;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class OneOfValidator extends BaseValidator {
+	
+	LinkedList foo;
 	
 	public static final String NOT_A_CHOICE_ERROR = "errors.formulaic.OneOfValidator.notachoice";
 	private Collection choices;
@@ -11,6 +15,15 @@ public class OneOfValidator extends BaseValidator {
 	public OneOfValidator(Collection choices) {
 		assert choices != null;
 		this.choices = choices;
+	}
+	
+	public OneOfValidator(Object[] choices) {
+		
+		this.choices = new LinkedList();
+		for (Object choice : choices) {
+			System.out.println("choice: " + choice);
+			this.choices.add(choice);
+		}
 	}
 	
 	public OneOfValidator(OneOfValidatorSource source) {

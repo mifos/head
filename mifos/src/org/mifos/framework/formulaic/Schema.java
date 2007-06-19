@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 /*
  * A schema is a special kind of validator intended for forms... its contains a mapping of
  * validators for various input keys, and validates each field of an input map against them
@@ -39,8 +40,8 @@ public class Schema extends BaseValidator {
 		return input;
 	}
 	
-	public static ActionErrors makeActionErrors(SchemaValidationError schemaErrors) {
-		ActionErrors errors = new ActionErrors();
+	public static ActionMessages makeActionMessages(SchemaValidationError schemaErrors) {
+		ActionMessages errors = new ActionMessages();
 		for (String key : schemaErrors.keySet()) {
 			String msg = schemaErrors.getFieldMsg(key);
 			errors.add(key, new ActionMessage(msg));

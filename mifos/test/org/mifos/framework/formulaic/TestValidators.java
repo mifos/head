@@ -22,6 +22,19 @@ public class TestValidators extends TestCase {
 		
 	}
 	
+	
+	private enum TestEnum {
+		VALUE_ONE,
+	}
+	
+	public void testEnumValidator() throws Exception {
+		Validator val = new EnumValidator(TestEnum.class);
+		assertEquals(TestEnum.VALUE_ONE, val.validate("VALUE_ONE"));
+		assertEquals(TestEnum.VALUE_ONE, val.validate("value_one"));
+		checkException(val, null, BaseValidator.MISSING_ERROR);
+		checkException(val, "bad value", EnumValidator.INVALID_ENUM_ERROR);
+	}
+	
 	public void testSwitchValidator() throws Exception {
 		SwitchValidator val = new SwitchValidator("switch_field");
 		Schema schemaA = new Schema();

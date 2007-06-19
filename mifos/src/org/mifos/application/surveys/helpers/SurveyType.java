@@ -21,11 +21,6 @@ public enum SurveyType {
 		return type;
 	}
 	
-	// TODO: replace this with locale lookup logic
-	public String getLocalizedName() {
-		return StringUtils.capitalize(type);	
-	}
-	
 	public static SurveyType fromString(String type) {
 		for (SurveyType candidate : SurveyType.values()) {
 			if (type.equals(candidate.getValue())) {

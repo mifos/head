@@ -22,11 +22,11 @@ import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.MaxLengthValidator;
 import org.mifos.framework.formulaic.OneOfValidator;
 import org.mifos.framework.formulaic.Schema;
@@ -36,6 +36,8 @@ import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysAction extends PersistenceAction {
@@ -45,12 +47,8 @@ public class SurveysAction extends PersistenceAction {
 	public SurveysAction() {
 		super();
 		previewValidator = new Schema();
-		previewValidator.setValidator("name", new MaxLengthValidator(5));
-		LinkedList<String> choices = new LinkedList<String>();
-		for (SurveyType type : SurveyType.values()) {
-			choices.add(type.getValue());
-		}
-		previewValidator.setValidator("appliesTo", new OneOfValidator(choices));
+		previewValidator.setValidator("value(name)", new MaxLengthValidator(5));
+		previewValidator.setValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
 	}
 
 	
@@ -104,8 +102,8 @@ public class SurveysAction extends PersistenceAction {
 			throws Exception {
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
-		SurveyActionForm actionForm = (SurveyActionForm) form;
-		int surveyId = actionForm.getSurveyIdValue();
+		GenericActionForm actionForm = (GenericActionForm) form;
+		int surveyId = BaseActionForm.getIntegerValue(actionForm.getValue("surveyId"));
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
 		request.getSession().setAttribute(SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
@@ -135,17 +133,19 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		/*try {
-			Map<String, Object> results = previewValidator.validate(request);
+		Map<String, Object> results;
+		try {
+			results = previewValidator.validate(request);
 		}
 		catch (SchemaValidationError e) {
-			saveErrors(request, Schema.makeActionErrors(e));
+			saveErrors(request, Schema.makeActionMessages(e));
 			return mapping.findForward(ActionForwards.create_entry_success.toString());
-		}*/
+		}
 		
-		SurveyActionForm actionForm = (SurveyActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
+		
 		request.getSession().setAttribute(
-				SurveysConstants.KEY_SURVEY_ACTIONFORM, actionForm);
+				SurveysConstants.KEY_VALIDATED_VALUES, results);
 		List<Question> addedQuestions = (List<Question>) request.getSession()
 				.getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
 		request.getSession().setAttribute(SurveysConstants.KEY_ITEM_COUNT,
@@ -156,15 +156,15 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward add_new_question(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveyActionForm actionForm = (SurveyActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
 		// TODO: insert code for an error message if the question id is invalid here
 		try {
-			int questionId = Integer.parseInt(actionForm.getNewQuestion());
-			Question newQuestion = surveysPersistence.getQuestion(Integer.parseInt(actionForm.getNewQuestion()));
+			int questionId = Integer.parseInt(actionForm.getValue("newQuestion"));
+			Question newQuestion = surveysPersistence.getQuestion(Integer.parseInt(actionForm.getValue("newQuestion")));
 			if (questionsList.contains(newQuestion)) {
 				addedQuestions.add(newQuestion);
 				questionsList.remove(newQuestion);
@@ -180,10 +180,10 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward delete_new_question(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveyActionForm actionForm = (SurveyActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
-		int questionNum = Integer.parseInt(actionForm.getQuestionNum());
+		int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
 		Question question = surveysPersistence.getQuestion(questionNum);
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
@@ -204,9 +204,9 @@ public class SurveysAction extends PersistenceAction {
 			throws Exception {
 		SessionHolder holder = opener.open();
 		SurveysPersistence persistence = new SurveysPersistence(holder);
-		SurveyActionForm actionForm = (SurveyActionForm) form;
-		SurveyType type = SurveyType.fromString(actionForm.getAppliesTo());
-		Survey newSurvey = new Survey(actionForm.getName(),
+		GenericActionForm actionForm = (GenericActionForm) form;
+		SurveyType type = SurveyType.fromString(actionForm.getValue("appliesTo"));
+		Survey newSurvey = new Survey(actionForm.getValue("name"),
 				SurveyState.ACTIVE, type);
 		// we have to ensure that all new question choices are created during this
 		// transaction, so that they're associated with the same hibernate request
@@ -241,7 +241,7 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward newVersion(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveyActionForm actionForm = (SurveyActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		int surveyId = Integer.parseInt(request.getParameter("surveyId"));
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
@@ -258,8 +258,8 @@ public class SurveysAction extends PersistenceAction {
 			newName = newName + " v2";
 		}
 
-		actionForm.setName(newName);
-		actionForm.setAppliesTo(survey.getAppliesTo());
+		actionForm.setValue("name", newName);
+		actionForm.setValue("appliesTo", survey.getAppliesTo());
 		List<Question> associatedQuestions = new LinkedList<Question>();
 		List<Question> questionsList = getQuestions();
 		for (SurveyQuestion question : survey.getQuestions()) {

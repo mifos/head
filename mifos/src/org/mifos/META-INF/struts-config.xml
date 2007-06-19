@@ -127,7 +127,7 @@
 
 		<form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm" />
 		
-		<form-bean name="surveyActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyActionForm"/>
+		<form-bean name="genericActionForm" type="org.mifos.framework.struts.actionforms.GenericActionForm"/>
 
 		<!-- Add group Membership Form -->
 		<form-bean name="addGroupMembershipForm" type="org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm"/>
@@ -1170,7 +1170,7 @@
    	      parameter="method"
    	      scope="session"
    	      validate="true"
-   	      name="surveyActionForm"
+   	      name="genericActionForm"
    	      input="/surveysAction.do?method=create_entry">
    	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
    	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
@@ -1215,7 +1215,7 @@
           parameter="method"
           scope="session"
           validate="true"
-          name="surveyInstanceActionForm"
+          name="genericActionForm"
           input="/surveyInstanceAction.do?method=validate">
           	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
           	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>

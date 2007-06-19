@@ -48,7 +48,7 @@ public class BaseActionForm extends ValidatorActionForm {
 		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
 	}
 
-	protected Integer getIntegerValue(String str) {
+	public static Integer getIntegerValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Integer.valueOf(str) : null;
 	}
 

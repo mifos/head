@@ -49,7 +49,8 @@
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<html-el:form action="surveyInstanceAction.do?method=create">
+    		<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
+		<html-el:form action="surveyInstanceAction.do?method=create_entry">
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -66,17 +67,20 @@
 					  <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td class="heading">
-                  <c:out value="${requestScope.businessObjectName}" /> - <span class="headingorange">Attach survey</span>
+                  <c:out value="${requestScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
+/span>
                 </td>
               </tr>
 					  </table>
 
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
+
+
               <tr>
-                <td><br>
-                    <span class="fontnormal">Select a survey  from the list below. 
-                    Then click Continue. Click Cancel to return to client details
-                    without submitting information</span>
+                <td><br><html-el:errors bundle="SurveysUIResources"/>
+                    <span class="fontnormal">
+                      <mifos:mifoslabel name="Surveys.choose_page_instructions" bundle="SurveysUIResources" />
+                    </span>
                 </td>
               </tr>
               <tr>
@@ -90,14 +94,15 @@
                 <td colspan="2" align="left" valign="top" class="fontnormal">&nbsp;</td>
               </tr>
               <tr>
-                <td width="24%" align="right" class="fontnormal">Select survey: </td>
+                <td width="24%" align="right" class="fontnormal"><mifos:mifoslabel name="Surveys.select_survey" bundle="SurveysUIResources" />:
+</td>
 
                 <td width="76%" align="left" valign="top" class="fontnormal">
-                  <select name="survey">
+                  <html-el:select property="value(surveyId)">
                     <c:forEach var="survey" items="${requestScope.surveysList}">
                       <option value="${survey.surveyId}"><c:out value="${survey.name}"/></option>
                     </c:forEach>
-                  </select>
+                  </html-el:select>
                 </td>
               </tr>
             </table>
@@ -109,21 +114,25 @@
               </tr>
             </table> 
 
-            <table width="95%" border="0" cellpadding="0" cellspacing="0">
+            <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <input name="Button3" type="button" class="buttn" value="Continue" style="width:65px;" onClick="gotopage();"/>
-                  &nbsp;
-                  <input name="Button32" type="button" class="cancelbuttn" value="Cancel" onClick="location.href='ClientDetailsMeeting.htm';" style="width:65px;"/>
+                  <html-el:submit style="width:65px;" property="button" styleClass="buttn">
+                    <mifos:mifoslabel name="Surveys.button.continue" bundle="SurveysUIResources" />
+                  </html-el:submit>&nbsp; 
+                  <html-el:button property="cancelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load">
+                    <mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
+                  </html-el:button>
                 </td>
               </tr>
-            </table>              
+            </table>
+
             <br/>
             <br/>
           </td>
         </tr>
       </table>
-      <html-el:hidden property="globalAccountNum" value="${BusinessKey.customerAccount.globalAccountNum}" />
+      <html-el:hidden property="value(globalNum)" value="${param.globalNum}"/>
     </html-el:form>
   </tiles:put>
 </tiles:insert>

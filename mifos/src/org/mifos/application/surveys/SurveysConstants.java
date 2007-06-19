@@ -16,6 +16,7 @@ public class SurveysConstants {
 	public static final String KEY_SURVEY_TYPES = "surveyTypes";
 	public static final String KEY_SURVEYS_LIST = "surveysList";
 	public static final String KEY_BUSINESS_OBJECT_NAME = "businessObjectName";
+	public static final String KEY_VALIDATED_VALUES = "validatedValues";
 	
 	// Errors messages
 	public static final String INVALID_DATE_SURVEYED = "errors.invaleddate";

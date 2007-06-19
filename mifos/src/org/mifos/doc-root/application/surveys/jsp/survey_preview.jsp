@@ -6,7 +6,7 @@
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
-<html-el:form action="/surveysAction.do?method=create" focus="name">
+<html-el:form action="/surveysAction.do?method=create">
 
 
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -52,13 +52,16 @@
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td width="100%" height="23" class="fontnormal"><p><span class="fontnormalbold"><mifos:mifoslabel name="Surveys.surveyInformation" bundle="SurveysUIResources" /></span><br>
-                    <mifos:mifoslabel name="Surveys.survey_name" bundle="SurveysUIResources" />: <c:out value="${sessionScope.surveyActionForm.name}"/>   <br>
+                    <mifos:mifoslabel name="Surveys.survey_name" bundle="SurveysUIResources" />: <c:out value="${validatedValues[\"value(name)\"]}"/>   <br>
                     <mifos:mifoslabel name="Surveys.Appliesto" bundle="SurveysUIResources" />: 
 
 <c:choose>
-<c:when test="${sessionScope.surveyActionForm.appliesTo == 'customers'}"><mifos:mifoslabel name="Surveys.customers_type" bundle="SurveysUIResources" /></c:when>
-<c:when test="${sessionScope.surveyActionForm.appliesTo == 'accounts'}"><mifos:mifoslabel name="Surveys.accounts_type" bundle="SurveysUIResources" /></c:when>
-<c:when test="${sessionScope.surveyActionForm.appliesTo == 'both'}"><mifos:mifoslabel name="Surveys.both_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"client\"}"><mifos:mifoslabel name="Surveys.client_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"center\"}"><mifos:mifoslabel name="Surveys.center_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"group\"}"><mifos:mifoslabel name="Surveys.group_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"loan\"}"><mifos:mifoslabel name="Surveys.loan_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"savings\"}"><mifos:mifoslabel name="Surveys.savings_type" bundle="SurveysUIResources" /></c:when>
+<c:when test="${validatedValues[\"value(appliesTo)\"].value == \"all\"}"><mifos:mifoslabel name="Surveys.all_type" bundle="SurveysUIResources" /></c:when>
 </c:choose>
 </p>
 

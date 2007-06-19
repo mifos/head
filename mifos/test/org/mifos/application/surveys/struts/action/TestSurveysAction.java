@@ -75,7 +75,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		Survey survey = makeTestSurvey(testName, questionText);
 		setRequestPathInfo("/surveysAction");
 		addRequestParameter("method", "get");
-		addRequestParameter("surveyId", Integer.toString(survey.getSurveyId()));
+		addRequestParameter("value(surveyId)", Integer.toString(survey.getSurveyId()));
 		actionPerform();
 		verifyNoActionErrors();
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(Constants.BUSINESS_KEY);
@@ -85,14 +85,14 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/surveysAction");
 		addRequestParameter("method", "printVersion");
-		addRequestParameter("surveyId", Integer.toString(survey.getSurveyId()));
+		addRequestParameter("value(surveyId)", Integer.toString(survey.getSurveyId()));
 		actionPerform();
 		verifyNoActionErrors();
 	}
 
 	public void testCreateEntry() throws Exception {
 		//String name = "testCreateEntry test survey name";
-		String name = "g";
+		String name = "test";
 		String appliesTo = "client";
 		SurveysPersistence surveysPersistence = new SurveysPersistence(database.open());
 		assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
@@ -110,7 +110,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		assertEquals(1, questionsList.size());
 		assertEquals(0, addedQuestions.size());
 		
-		addRequestParameter("newQuestion", Integer.toString(question.getQuestionId()));
+		addRequestParameter("value(newQuestion)", Integer.toString(question.getQuestionId()));
 		setRequestPathInfo("/surveysAction");
 		addRequestParameter("method", "add_new_question");
 		actionPerform();
@@ -118,8 +118,8 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		assertEquals(0, questionsList.size());
 		assertEquals(1, addedQuestions.size());
 		
-		addRequestParameter("name", name);
-		addRequestParameter("appliesTo", appliesTo);
+		addRequestParameter("value(name)", name);
+		addRequestParameter("value(appliesTo)", appliesTo);
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyNoActionErrors();

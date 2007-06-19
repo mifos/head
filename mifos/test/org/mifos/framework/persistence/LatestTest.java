@@ -26,7 +26,6 @@ public class LatestTest extends TestCase {
 		database = TestDatabase.makeDatabase();
 		applyUpgrades(database);
 		String upgradeDump = new SqlDumper().dump(database.dataStore());
-		
 		assertEquals(latestDump, upgradeDump);
 	}
 

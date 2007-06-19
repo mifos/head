@@ -177,5 +177,6 @@ public enum ActionForwards {
 	create_entry_success,
 	manage_questions,
 	create_instance_entry_success,
-	choose_survey;
+	choose_survey,
+	newinstance_responses;
 }

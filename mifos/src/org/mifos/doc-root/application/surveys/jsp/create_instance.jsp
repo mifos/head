@@ -53,11 +53,11 @@ hr {
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <html-el:form action="/surveyInstanceAction.do?method=preview">
-<h1><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client').displayName}"/> - 
+<h1><c:out value="${requestScope.businessObjectName}"/> - 
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
-<h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
+<h1><c:out value="${requestScope.retrievedSurvey.name}"/></h1>
 <hr>
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <table width="100%" border="0" cellpadding="3" cellspacing="0">
@@ -66,20 +66,20 @@ hr {
 		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
 		<td width="70%">
-		<date:datetag property="dateSurveyed" renderstyle="simple"/>
+		<date:datetag property="value(dateSurveyed)" renderstyle="simple"/>
 		</td>
 	</tr>
 	<tr>
 		<td height="30" align="right">
 		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
 		<td height="30" class="drawtablerow">
-		<html-el:text property="officerName" />
+		<html-el:text property="value(officerName)" />
 		</td>
 	</tr>
 </table>
 <table width="95%">
 	<c:set var="count" value="1"/>
-	<c:forEach var="question" items="${sessionScope.retrievedSurvey.questions}">
+	<c:forEach var="question" items="${requestScope.retrievedSurvey.questions}">
 		<tr>
 			<td class="entry">
 			<h2><c:out value="${count}"/>. <c:out value="${question.question.questionText}"/></h2>
@@ -90,15 +90,15 @@ hr {
 			<c:choose>
 			<c:when test="${question.question.answerType == 4}">
 			<c:forEach var="choice" items="${question.question.choices}">
-			<html-el:radio property="response(${question.question.questionId})" value="${choice.choiceId}">
+			<html-el:radio property="value(response_${question.question.questionId})" value="${choice.choiceId}">
 			<c:out value="${choice.choiceText}"/></html-el:radio><br>
 			</c:forEach>
-			<html-el:radio property="response(${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
+			<html-el:radio property="value(response_${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
 			</c:when>
 			<c:when test="${question.question.answerType == 2}">
-			<html-el:textarea property="response(${question.question.questionId})" cols="70" rows="10" />
+			<html-el:textarea property="value(response_${question.question.questionId})" cols="70" rows="10" />
 			</c:when>
-			<c:otherwise><html-el:text property="response(${question.question.questionId})"/></c:otherwise>
+			<c:otherwise><html-el:text property="value(response_${question.question.questionId})"/></c:otherwise>
 			</c:choose>
 			</td>
 		</tr>
@@ -122,7 +122,7 @@ hr {
 		<html-el:submit style="width:65px;" property="button" styleClass="buttn">
 		<mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
 		</html-el:submit>&nbsp; 
-		<html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load">
+		<html-el:button property="cancelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load">
 		<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 		</html-el:button>
 		</td>

@@ -31,7 +31,7 @@
                   	</c:choose>
                   	<br>
   <br>
-  <a href="surveysAction.do?method=printVersion&surveyId=<c:out value="${sessionScope.BusinessKey.surveyId}"/>" onClick="javascript:openfile(this.href); return false"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
+  <a href="surveysAction.do?method=printVersion&value(surveyId)=<c:out value="${sessionScope.BusinessKey.surveyId}"/>" onClick="javascript:openfile(this.href); return false"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
                   <p><span class="fontnormalbold"><mifos:mifoslabel name="Surveys.Questions"/></span></p></td>
                 </tr>
 
@@ -70,7 +70,7 @@
               </tr>
 <tr><td align="center" class="blueline">&nbsp;</td></tr>
 
-<tr><td><html-el:button property="calcelButton" onclick="window.location='./surveysAction.do?method=newVersion&surveyId=${sessionScope.BusinessKey.surveyId}'" styleClass="buttn"><mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" /></html-el:button></td></tr>
+<tr><td><html-el:button property="calcelButton" onclick="window.location='./surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}'" styleClass="buttn"><mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" /></html-el:button></td></tr>
             </table>              
             <br></td>
           </tr>

@@ -117,22 +117,29 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "choosesurvey");
 		addRequestParameter("surveyType", SurveyType.CLIENT.getValue());
-		addRequestParameter("globalCustNum", globalCustNum);
+		addRequestParameter("globalNum", globalCustNum);
 		actionPerform();
 		verifyNoActionErrors();
 		assertEquals(client.getDisplayName(), request
 				.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
 		assertEquals(2, surveysList.size());
-
-		// removed until support for associating with accounts is added to db 
-		// for survey_instances
-		/* 
-		List<Survey> surveys = (List<Survey>) request.getSession()
+		
+		List<Survey> surveys = (List<Survey>) request
 				.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
 		assertEquals(2, surveys.size());
 		assertEquals(nameBase + "1", surveys.get(0).getName());
-
+		
+		addRequestParameter("method", "create_entry");
+		addRequestParameter("value(surveyId)", Integer.toString(surveys.get(0).getSurveyId()));
+		addRequestParameter("value(globalNum)", globalCustNum);
+		actionPerform();
+		verifyNoActionMessages();
+		Survey chosenSurvey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
+		assertNotNull(chosenSurvey);
+		assertEquals(survey1.getName(), chosenSurvey.getName());
+		
+		/*
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "choosesurvey");
 		addRequestParameter("surveyType", SurveyType.LOAN.getValue());
@@ -147,6 +154,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		*/
 	}
 	
+	/*
 	public void testCreate() throws Exception {
 		addRequestParameter("survey", "1");
 		setRequestPathInfo("/surveyInstanceAction");
@@ -186,5 +194,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 	}
+	*/
 	
 }
