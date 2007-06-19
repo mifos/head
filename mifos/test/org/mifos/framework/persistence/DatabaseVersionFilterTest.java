@@ -8,11 +8,13 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class DatabaseVersionFilterTest extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
+		DatabaseSetup.configureLogging();
 		ApplicationInitializer.setDatabaseVersionError(null);
 	}
 	

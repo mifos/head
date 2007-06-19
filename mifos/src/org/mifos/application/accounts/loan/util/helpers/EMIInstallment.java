@@ -6,9 +6,17 @@ import org.mifos.framework.util.helpers.Money;
 public class EMIInstallment
 {
 
-	private Money principal = new Money();
-	private Money interest = new Money();
-	
+	private Money principal;
+	private Money interest;
+
+	public EMIInstallment() {
+		this(new Money(), new Money());
+	}
+
+	public EMIInstallment(Money principal, Money interest) {
+		this.principal = principal;
+		this.interest = interest;
+	}
 
 	public void setPrincipal(Money principal)
 	{

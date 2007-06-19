@@ -37,26 +37,17 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.mifos.framework.TestUtils.EURO;
+import static org.mifos.framework.TestUtils.RUPEE;
+
 import java.math.BigDecimal;
 
 import junit.framework.TestCase;
-
-import org.mifos.application.master.business.MifosCurrency;
 
 /**
  * This class is used to test Money class.
  */
 public class MoneyTest extends TestCase {
-
-	public static final MifosCurrency RUPEE = new MifosCurrency((short) 2,
-			"RUPEE", "Rs", (short) 1, 1.0f, (short) 1, (short) 1);
-
-	public static final MifosCurrency EURO = new MifosCurrency((short) 3,
-			"EURO", "", (short) 2, 0.5f, (short) 0, (short) 1);
-
-	public MoneyTest() {
-
-	}
 
 	public void testAdd() {
 		Money money = new Money(RUPEE, "100.0");

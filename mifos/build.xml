@@ -104,7 +104,8 @@
 		<delete dir="${sql.dir}"/>-->
 	</target>
 
-	<target name="compile" depends="init,make_dir" description="Compiles the source files">
+	<target name="compile" depends="init,make_dir" 
+		description="Compiles the source files">
 		<javac srcdir="${src.dir}" 
 		       destdir="${build.classes}" 
 		       debug="${debug.flag}"
@@ -116,7 +117,8 @@
 		</javac>
 	</target>
 
-	<target name="compile_test" depends="compile" description="Compiles the test files">
+	<target name="compile_test" depends="compile" 
+		description="Compiles the test files">
 		<javac srcdir="${test.dir}" 
 		       destdir="${test.classes}" 
 		       debug="${debug.flag}"

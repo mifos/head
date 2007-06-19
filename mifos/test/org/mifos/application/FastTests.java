@@ -68,6 +68,7 @@ import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtilsTest;
+import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
@@ -115,8 +116,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(TableTagTest.class);
 		suite.addTest(MifosSelectTest.suite());
 		suite.addTestSuite(XmlBuilderTest.class);
-		// Slow because it needs logging (and thus extends MifosTestCase)
-//		suite.addTestSuite(MethodInvokerTest.class);
+		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTestSuite(ConvertionUtilTest.class);
 		suite.addTestSuite(TableTagParserTest.class);
 		suite.addTestSuite(DispatcherTest.class);

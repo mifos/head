@@ -51,6 +51,7 @@ import org.mifos.application.bulkentry.BulkEntryTestSuite;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
 import org.mifos.application.configuration.LabelConfigurationTestSuite;
+import org.mifos.application.configuration.LookupOptionsTestSuite;
 import org.mifos.application.customer.CustomerTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
 import org.mifos.application.fund.FundTestSuite;
@@ -78,9 +79,7 @@ import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
-import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
-import org.mifos.application.configuration.LookupOptionsTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 
@@ -134,7 +133,6 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(TestMenuParser.class);
 		suite.addTestSuite(TestHibernateHelper.class);
 		suite.addTestSuite(TestPersistence.class);
-		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTest(FrameworkUtilsSuite.suite());
 		suite.addTest(HolidayTestSuite.suite());
 		suite.addTest(SurveysTestSuite.suite());

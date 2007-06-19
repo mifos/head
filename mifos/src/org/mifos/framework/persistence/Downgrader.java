@@ -18,6 +18,16 @@ public class Downgrader {
 			DatabaseVersionPersistence.masterRegister());
 	}
 
+	private final int firstVersion;
+
+	public Downgrader() {
+		this(FIRST_NUMBERED_VERSION);
+	}
+
+	public Downgrader(int firstVersion) {
+		this.firstVersion = firstVersion;
+	}
+
 	String error;
 	
 	int downgradeTo;
@@ -25,6 +35,7 @@ public class Downgrader {
 	String jdbcUrl;
 	String driver;
 	String username;
+
 	String password;
 	
 	public void parse(String[] args) {
@@ -65,9 +76,9 @@ public class Downgrader {
 			return;
 		}
 		
-		if (downgradeTo < FIRST_NUMBERED_VERSION) {
+		if (downgradeTo < firstVersion) {
 			out.print("Attempt to downgrade to " + downgradeTo + 
-				" which is before " + FIRST_NUMBERED_VERSION + ".\n");
+				" which is before " + firstVersion + ".\n");
 			return;
 		}
 		

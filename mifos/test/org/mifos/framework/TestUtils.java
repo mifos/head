@@ -12,6 +12,7 @@ import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -78,6 +79,12 @@ public class TestUtils {
 	public static Locale ukLocale() {
 		return new Locale("EN", "GB");
 	}
+
+	public static final MifosCurrency RUPEE = new MifosCurrency((short) 2,
+			"RUPEE", "Rs", (short) 1, 1.0f, (short) 1, (short) 1);
+
+	public static final MifosCurrency EURO = new MifosCurrency((short) 3,
+			"EURO", "", (short) 2, 0.5f, (short) 0, (short) 1);
 
 	public static void assertWellFormedFragment(String xml) 
 	throws DocumentException {

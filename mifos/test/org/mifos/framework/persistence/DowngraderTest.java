@@ -20,6 +20,8 @@ import org.junit.Test;
 
 public class DowngraderTest {
 	
+	private static final int FIRST_VERSION_FOR_TEST = 50;
+
 	private DummyUpgrade dummyUpgrade;
 
 	@Test public void noArguments() throws Exception {
@@ -69,14 +71,14 @@ public class DowngraderTest {
 	}
 	
 	@Test public void tooLow() throws Exception {
-		String output = run("99");
-		assertEquals("Attempt to downgrade to 99 which is before 100.\n",
+		String output = run("49");
+		assertEquals("Attempt to downgrade to 49 which is before 50.\n",
 			output);
 	}
 
 	@Test public void negative() throws Exception {
 		String output = run("-102");
-		assertEquals("Attempt to downgrade to -102 which is before 100.\n",
+		assertEquals("Attempt to downgrade to -102 which is before 50.\n",
 			output);
 	}
 	
@@ -135,16 +137,16 @@ public class DowngraderTest {
 		database.execute(
 			"create table DATABASE_VERSION(DATABASE_VERSION integer)");
 		database.execute(
-			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(107)");
-		String output = run("106", database.openConnection());
-		assertEquals("Downgrading to 106...done.\n", output);
+			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(57)");
+		String output = run("56", database.openConnection());
+		assertEquals("Downgrading to 56...done.\n", output);
 		
 		assertEquals("CREATE TABLE DATABASE_VERSION(\n" +
 			"  DATABASE_VERSION INTEGER\n" +
 			");\n\n" +
-			"INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(106);\n\n",
+			"INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(56);\n\n",
 			new SqlDumper().dump(database.dataStore()));
-		assertEquals("downgrade from 107\n", dummyUpgrade.getLog());
+		assertEquals("downgrade from 57\n", dummyUpgrade.getLog());
 	}
 
 	@Test public void nothingToDo() throws Exception {
@@ -184,7 +186,7 @@ public class DowngraderTest {
 
 	private String run(String[] arguments, Connection connection) 
 	throws Exception {
-		Downgrader downgrader = new Downgrader();
+		Downgrader downgrader = new Downgrader(FIRST_VERSION_FOR_TEST);
 		downgrader.parse(arguments);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -196,7 +198,7 @@ public class DowngraderTest {
 	
 	private Map<Integer, Upgrade> makeRegister() {
 		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
-		dummyUpgrade = new DummyUpgrade(107);
+		dummyUpgrade = new DummyUpgrade(57);
 		DatabaseVersionPersistence.register(registrations, dummyUpgrade);
 		return registrations;
 	}
