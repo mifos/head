@@ -11,18 +11,9 @@ import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
-import org.mifos.framework.persistence.SessionPersistence;
+import org.mifos.framework.persistence.Persistence;
 
-public class SurveysPersistence extends SessionPersistence {
-	
-	public SurveysPersistence(SessionHolder sessionHolder) {
-		super(sessionHolder);
-	}
-	
-	public SurveysPersistence() {
-		super();
-	}
+public class SurveysPersistence extends Persistence {
 	
 	public List<Survey> retrieveAllSurveys() throws PersistenceException {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ALL);

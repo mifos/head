@@ -43,6 +43,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.mifos.framework.TestDatabase;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -51,7 +52,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 
 public class HibernateUtil {
-
+	
 	private static final SessionFactory sessionFactory;
 
 	private static final ThreadLocal<SessionHolder> threadLocal = 
@@ -66,6 +67,20 @@ public class HibernateUtil {
 
 			throw new ExceptionInInitializerError(ex);
 		}
+	}
+	
+	public static Session useMayflyDatabase(TestDatabase database) {
+		closeSession();
+		AuditInterceptor interceptor = new AuditInterceptor();
+		Session session = database.openSession(interceptor);
+		SessionHolder holder = new SessionHolder(session);
+		holder.setInterceptor(interceptor);
+		threadLocal.set(holder);
+		return session;
+	}
+	
+	public static void resetDatabase() {
+		closeSession();
 	}
 
 	/**

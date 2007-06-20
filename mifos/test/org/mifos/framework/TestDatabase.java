@@ -9,6 +9,7 @@ import java.sql.Connection;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
+import org.hibernate.Interceptor;
 import org.hibernate.classic.Session;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.SessionOpener;
@@ -58,6 +59,11 @@ public class TestDatabase implements SessionOpener {
 	public Session openSession() {
 		return DatabaseSetup.mayflySessionFactory()
 			.openSession(database.openConnection());
+	}
+	
+	public Session openSession(Interceptor interceptor) {
+		return DatabaseSetup.mayflySessionFactory().openSession(
+				database.openConnection(), interceptor);
 	}
 
 	public void dump() throws IOException {

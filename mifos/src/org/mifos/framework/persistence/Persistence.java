@@ -66,6 +66,10 @@ public abstract class Persistence {
 		}
 		return object;
 	}
+	
+	public Session getSession() {
+		return HibernateUtil.getSessionTL();
+	}
 
 	public void delete(Object object) throws PersistenceException {
 		Session session = HibernateUtil.getSessionTL();

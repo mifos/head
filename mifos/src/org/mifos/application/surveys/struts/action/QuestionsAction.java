@@ -49,7 +49,7 @@ public class QuestionsAction extends PersistenceAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
 		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
 
@@ -103,8 +103,7 @@ public class QuestionsAction extends PersistenceAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		LinkedList<Question> questions = (LinkedList<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
-		SessionHolder holder = opener.open();
-		SurveysPersistence persistence = new SurveysPersistence(holder);
+		SurveysPersistence persistence = new SurveysPersistence();
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);
 		}

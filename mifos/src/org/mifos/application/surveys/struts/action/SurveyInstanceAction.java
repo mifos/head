@@ -35,14 +35,16 @@ import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.action.PersistenceAction;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class SurveyInstanceAction extends PersistenceAction {
+public class SurveyInstanceAction extends BaseAction {
 	
 	private static Schema chooseSurveyValidator;
-	
 	private static Schema createEntryValidator;
+	private static Schema createValidator;
 	
 	static {
 		
@@ -56,6 +58,10 @@ public class SurveyInstanceAction extends PersistenceAction {
 		createEntryValidator.setValidator("value(surveyId)", new IntValidator());
 		createEntryValidator.setValidator("value(globalNum)",
 				new IsInstanceValidator(String.class));
+		
+		createValidator = new Schema();
+		createValidator.setValidator("value(surveyId)", new IntValidator());
+		createValidator.setValidator("value(globalNum)", new IsInstanceValidator(String.class));
 		
 	}
 
@@ -99,7 +105,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
-	private String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
+	public static String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
 		if (surveyType == SurveyType.CLIENT) {
 			ClientBO client = (ClientBO) CustomerBusinessService.getInstance().findBySystemId(
 					globalNum, CustomerLevel.CLIENT.getValue());
@@ -130,7 +136,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 			return mapping.findForward(ActionForwards.choose_survey.toString()); 
 		}
 		
-		SurveysPersistence persistence = new SurveysPersistence(opener.open());
+		SurveysPersistence persistence = new SurveysPersistence();
 		SurveyType surveyType = SurveyType.fromString(request.getParameter("surveyType"));
 		
 		String displayName = getBusinessObjectName(surveyType, (String) results
@@ -158,12 +164,21 @@ public class SurveyInstanceAction extends PersistenceAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveyInstanceActionForm actionForm = (SurveyInstanceActionForm) form;
+		Map<String, Object> results;
+		try {
+			results = createValidator.validate(request);
+		}
+		catch (SchemaValidationError e) {
+			return mapping.findForward(ActionForwards.create_entry_success.toString());
+		}
+		
 		SurveysPersistence persistence = new SurveysPersistence();
 		
-		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
 		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+		return mapping.findForward(ActionForwards.create_success.toString());
+		
 
+		/*
 		InstanceStatus status = InstanceStatus.fromInt(Integer
 				.parseInt(actionForm.getInstanceStatus()));
 		int clientId = Integer.parseInt(actionForm.getCustomerId());
@@ -186,6 +201,7 @@ public class SurveyInstanceAction extends PersistenceAction {
 		instance.setSurveyResponses(surveyResponses);
 		persistence.createOrUpdate(instance);
 		return mapping.findForward(ActionForwards.create_success.toString());
+		*/
 	}
 	
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

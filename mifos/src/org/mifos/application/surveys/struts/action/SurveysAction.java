@@ -33,12 +33,13 @@ import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-public class SurveysAction extends PersistenceAction {
+public class SurveysAction extends BaseAction {
 	
 	Schema previewValidator;
 	
@@ -81,8 +82,7 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
 		// TODO: change this to aggregate the customers and accounts lists from the subtypes
 		List<Survey> customerSurveys = surveysPersistence.retrieveCustomersSurveys();
@@ -98,14 +98,12 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
 		int surveyId = BaseActionForm.getIntegerValue(actionForm.getValue("surveyId"));
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
 		request.getSession().setAttribute(SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
-		holder.close();
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	
@@ -155,8 +153,7 @@ public class SurveysAction extends PersistenceAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
 		// TODO: insert code for an error message if the question id is invalid here
@@ -179,8 +176,7 @@ public class SurveysAction extends PersistenceAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
 		Question question = surveysPersistence.getQuestion(questionNum);
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
@@ -200,8 +196,7 @@ public class SurveysAction extends PersistenceAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SessionHolder holder = opener.open();
-		SurveysPersistence persistence = new SurveysPersistence(holder);
+		SurveysPersistence persistence = new SurveysPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveyType type = SurveyType.fromString(actionForm.getValue("appliesTo"));
 		Survey newSurvey = new Survey(actionForm.getValue("name"),
@@ -231,8 +226,7 @@ public class SurveysAction extends PersistenceAction {
 	}
 	
 	private List<Question> getQuestions() throws PersistenceException {
-			SessionHolder holder = opener.open();
-			SurveysPersistence persistence = new SurveysPersistence(holder);
+			SurveysPersistence persistence = new SurveysPersistence();
 			return persistence.retrieveQuestionsByState(QuestionState.ACTIVE);
 	}
 	
@@ -241,8 +235,7 @@ public class SurveysAction extends PersistenceAction {
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		int surveyId = Integer.parseInt(request.getParameter("surveyId"));
-		SessionHolder holder = opener.open();
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		String newName = survey.getName();
 		Pattern pattern = Pattern.compile("(.*) v([0-9]+)");

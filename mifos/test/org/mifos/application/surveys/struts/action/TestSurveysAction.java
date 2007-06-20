@@ -13,6 +13,7 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -29,7 +30,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		super.setUp();
 		
 		database = TestDatabase.makeStandard();
-		PersistenceAction.setDefaultSessionOpener(database);
+		HibernateUtil.useMayflyDatabase(database);
 		
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
@@ -45,14 +46,14 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		PersistenceAction.resetDefaultSessionOpener();
+		HibernateUtil.resetDatabase();
 	}
 
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
 		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CLIENT);
 		Question question = new Question(questionText, AnswerType.FREETEXT);
 		survey.addQuestion(question, false);
-		new SurveysPersistence(database.open()).createOrUpdate(survey);
+		new SurveysPersistence().createOrUpdate(survey);
 		return survey;
 	}
 	
@@ -94,7 +95,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		//String name = "testCreateEntry test survey name";
 		String name = "test";
 		String appliesTo = "client";
-		SurveysPersistence surveysPersistence = new SurveysPersistence(database.open());
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
 		String questionText = "testCreateEntry question 1";
 		Question question = new Question(questionText, AnswerType.CHOICE);

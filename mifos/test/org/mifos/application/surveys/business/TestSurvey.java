@@ -43,12 +43,13 @@ public class TestSurvey extends MifosTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		session = database.openSession();
+		session = HibernateUtil.useMayflyDatabase(database);
 	}
 	
 	@Override
 	public void tearDown() {
 		session.close();
+		HibernateUtil.resetDatabase();
 	}
 	
 	public void testSurveyType() {
@@ -67,8 +68,7 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testRetrieveQuestionsByState() throws Exception {
-		SessionHolder holder = new SessionHolder(session);
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		String questionText1 = "testGetQuestionsByState question 1";
 		String questionText2 = "testGetQuestionsByState question 2";
 		String questionText3 = "testGetQuestionsByState question 3";
@@ -91,8 +91,7 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testRetrieveQuestionsByAnswerType() throws Exception {
-		SessionHolder holder = new SessionHolder(session);
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		String questionText1 = "testGetQuestionsByState question 1";
 		String questionText2 = "testGetQuestionsByState question 2";
 		String questionText3 = "testGetQuestionsByState question 3";
@@ -127,8 +126,7 @@ public class TestSurvey extends MifosTestCase {
 
 	
 	public void testGetSurveysByType() throws Exception {
-		SessionHolder holder = new SessionHolder(session);
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Survey survey1 = new Survey(
 			"Survey 1", SurveyState.ACTIVE, SurveyType.CLIENT);
 		Survey survey2 = new Survey(
@@ -211,8 +209,7 @@ public class TestSurvey extends MifosTestCase {
 		Question question3 = new Question("test question 3", AnswerType.DATE);
 		question2.setQuestionState(QuestionState.INACTIVE);
 		
-		SessionHolder holder = new SessionHolder(session);
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		surveysPersistence.createOrUpdate(question1);
 		surveysPersistence.createOrUpdate(question2);
 		surveysPersistence.createOrUpdate(question3);
@@ -238,7 +235,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey survey = new Survey();
 		survey.setName(surveyName);
 		survey.setState(SurveyState.ACTIVE);
-		survey.setAppliesTo(SurveyType.CENTER);
+		survey.setAppliesTo(SurveyType.CLIENT);
 
 		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
@@ -373,8 +370,8 @@ public class TestSurvey extends MifosTestCase {
 		response.setQuestion(question);
 		response.setChoiceValue(choice2);
 
-		HibernateUtil.getSessionTL().saveOrUpdate(instance);
-		HibernateUtil.getSessionTL().saveOrUpdate(response);
+		session.saveOrUpdate(instance);
+		session.saveOrUpdate(response);
 		
 		SurveyInstance refreshedInstance = 
 			(SurveyInstance)HibernateUtil.getSessionTL().get(

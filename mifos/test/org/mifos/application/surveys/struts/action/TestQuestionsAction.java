@@ -12,6 +12,7 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -27,7 +28,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		PersistenceAction.setDefaultSessionOpener(database);
+		HibernateUtil.useMayflyDatabase(database);
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/surveys/struts-config.xml").getPath());
@@ -41,7 +42,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		PersistenceAction.resetDefaultSessionOpener();
+		HibernateUtil.resetDatabase();
 	}
 
 	private Question makeTestSelectQuestion(String name, int choiceNumber)
@@ -53,7 +54,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 			choices.add(new QuestionChoice("Test Choice " + i));
 		}
 		question.setChoices(choices);
-		new SurveysPersistence(database.open()).createOrUpdate(question);
+		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 
@@ -63,21 +64,21 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		Question question = new Question(name, type);
 		question.setNumericMin(min);
 		question.setNumericMax(max);
-		new SurveysPersistence(database.open()).createOrUpdate(question);
+		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 
 	private Question makeTestTextQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(3);
 		Question question = new Question(name, type);
-		new SurveysPersistence(database.open()).createOrUpdate(question);
+		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 
 	private Question makeTestDateQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(5);
 		Question question = new Question(name, type);
-		new SurveysPersistence(database.open()).createOrUpdate(question);
+		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 	
@@ -142,7 +143,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "createQuestions");
 		actionPerform();
 		verifyNoActionErrors();
-		SurveysPersistence persistence = new SurveysPersistence(database.open());
+		SurveysPersistence persistence = new SurveysPersistence();
 		List<Question> dbQuestions = persistence.retrieveAllQuestions();
 		assertEquals(2, dbQuestions.size());
 		assertEquals(questionText1, dbQuestions.get(0).getQuestionText());
