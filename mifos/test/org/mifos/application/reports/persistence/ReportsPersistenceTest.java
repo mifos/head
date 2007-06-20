@@ -11,6 +11,7 @@ import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class ReportsPersistenceTest extends MifosTestCase {
 
@@ -153,5 +154,9 @@ public class ReportsPersistenceTest extends MifosTestCase {
 			new ReportsPersistence().oneJasperOfReportId(session2, reportId);
 		assertEquals("report.jrxml", reRead.getReportJasper());
 	}
-
+	 public void testGetReport() {
+		 Short reportId = 1;
+		 ReportsBO report = reportsPersistence.getReport(reportId);
+		 assertEquals(reportId, report.getReportId());
+		 }
 }

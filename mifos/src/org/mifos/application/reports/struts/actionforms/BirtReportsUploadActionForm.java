@@ -46,7 +46,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
 						ReportsConstants.ERROR_TITLE));
 			}
-			if (StringUtils.isNullOrEmpty(reportCategoryId)) {
+			if (this.getReportCategoryId().equals("-1")) {
 				errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(
 						ReportsConstants.ERROR_CATEGORYID));
 			}

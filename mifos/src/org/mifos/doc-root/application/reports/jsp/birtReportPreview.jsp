@@ -12,6 +12,10 @@
 		form.action = 'birtReportsUploadAction.do?method=previous';
 		form.submit();
 	}
+	function goToCancelPage(form){
+		form.action = "AdminAction.do?method=load";
+		form.submit();
+  	}
 	</script>
   <tiles:put name="body" type="string">
 		<html-el:form method="post"
@@ -93,7 +97,7 @@
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="CustomerSearchUIResources" /> 
+											<html-el:errors bundle="ReportsUIResources" /> 
 										</font>
 									</td>
 								</tr>
@@ -133,9 +137,10 @@
 									<td align="center"><html-el:submit styleClass="buttn"
 										style="width:70px;">
 										<mifos:mifoslabel name="reports.submit"></mifos:mifoslabel>
-									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
-										styleClass="cancelbuttn" style="width:70px">
-										<mifos:mifoslabel name="reports.cancel"></mifos:mifoslabel>
+									</html-el:submit> &nbsp; <html-el:button
+										onclick="goToCancelPage(this.form);" property="cancelButton"
+										value="Cancel" styleClass="cancelbuttn" style="width:70px">
+										<mifos:mifoslabel name="reports.cancel"/>
 									</html-el:button></td>
 								</tr>
 						</table><br>

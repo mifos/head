@@ -262,15 +262,15 @@
 				   <span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.reports" /></span><br />
                    <table width="90%" border="0" cellspacing="0" cellpadding="0">
                    <tr class="fontnormal">
-                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                    <td width="97%"><html-el:link
-								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">Upload report template</html-el:link></td>
-
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   <td width="97%"><a
+								href="viewReportsAction.do?method=getPage&viewPath=viewReports_path"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" />
+								</a> | <html-el:link
+								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
                   </tr>
                 </table>
-                
                 <br>
-					</td>
-					</html-el:form>
-					</tiles:put>
-					</tiles:insert>
+			</td>
+		</html-el:form>
+	</tiles:put>
+</tiles:insert>

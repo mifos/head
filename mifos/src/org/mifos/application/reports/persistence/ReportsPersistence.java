@@ -47,6 +47,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsJasperMap;
@@ -467,4 +468,9 @@ public class ReportsPersistence extends Persistence {
 		}
 	}
 
+	public ReportsBO getReport(Short reportId) {
+		Session session = null;
+		session = HibernateUtil.getSessionTL();
+		return (ReportsBO) session.load(ReportsBO.class, reportId);
+	}
 }

@@ -70,6 +70,7 @@ import org.mifos.application.reports.struts.action.ReportsParamsAction;
 import org.mifos.application.reports.struts.action.ReportsParamsMapAction;
 import org.mifos.application.reports.struts.action.ReportsUploadAction;
 import org.mifos.application.reports.struts.action.ReportsUserParamsAction;
+import org.mifos.application.reports.struts.action.ViewReportsAction;
 import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction;
 import org.mifos.application.surveys.struts.action.QuestionsAction;
 import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
@@ -246,6 +247,7 @@ public class ActivityMapper {
 		parseActionSecurity(AddGroupMembershipAction.getSecurity());
 		parseActionSecurity(SurveyInstanceAction.getSecurity());
 		parseActionSecurity(BirtReportsUploadAction.getSecurity());
+		parseActionSecurity(ViewReportsAction.getSecurity());
 		parseActionSecurity(LookupOptionsAction.getSecurity());
 	}
 

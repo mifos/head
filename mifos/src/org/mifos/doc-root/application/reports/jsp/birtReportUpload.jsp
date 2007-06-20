@@ -8,6 +8,13 @@
 
 <tiles:insert definition=".create">
   <tiles:put name="body" type="string">
+  
+  	<script type="text/javascript">
+	function goToCancelPage(form){
+		form.action = "AdminAction.do?method=load";
+		form.submit();
+  	}
+    </script>
 		<html-el:form method="post"
 			action="/birtReportsUploadAction.do?method=preview"
 			 enctype="multipart/form-data">
@@ -142,9 +149,10 @@
 									<td align="center"><html-el:submit styleClass="buttn"
 										style="width:70px;">
 										<mifos:mifoslabel name="reports.preview"></mifos:mifoslabel>
-									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
-										styleClass="cancelbuttn" style="width:70px">
-										<mifos:mifoslabel name="reports.cancel"></mifos:mifoslabel>
+									</html-el:submit> &nbsp; <html-el:button
+										onclick="goToCancelPage(this.form);" property="cancelButton"
+										value="Cancel" styleClass="cancelbuttn" style="width:70px">
+										<mifos:mifoslabel name="reports.cancel"/>
 									</html-el:button></td>
 								</tr>
 						</table><br>

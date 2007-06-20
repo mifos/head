@@ -15,8 +15,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.struts.actionforms.OffActionForm;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
@@ -30,6 +34,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class BirtReportsUploadAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
@@ -47,6 +53,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("edit", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -103,10 +110,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		report.setReportsCategoryBO(category);
 		new ReportsPersistence().createOrUpdate(report);
 
-		// ReportsJasperMap reportJasperMap = new ReportsJasperMap();
-		// reportJasperMap.setReportId(report.getReportId());
-		// reportJasperMap.setReportJasper(formFile.getFileName());
-		// new ReportsPersistence().createJasperMap(reportJasperMap);
+		 ReportsJasperMap reportJasperMap = new ReportsJasperMap();
+		 reportJasperMap.setReportJasper(formFile.getFileName());
+		 new ReportsPersistence().createJasperMap(reportJasperMap);
 
 		File dir = new File(getServlet().getServletContext().getRealPath("/")
 				+ "report");
@@ -130,6 +136,20 @@ public class BirtReportsUploadAction extends BaseAction {
 			throws Exception {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
+	}
+	
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtReportsUploadActionForm birtReportsUploadActionForm = (BirtReportsUploadActionForm) form;
+		ReportsBO report = new ReportsPersistence()
+				.getReport(Short.valueOf(request.getParameter("reportId")));
+		request.setAttribute(Constants.BUSINESS_KEY, report);
+		birtReportsUploadActionForm.setReportTitle(report.getReportName());
+		birtReportsUploadActionForm.setReportCategoryId(report.getReportsCategoryBO().getReportCategoryId().toString());
+		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+				new ReportsPersistence().getAllReportCategories());
+		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {

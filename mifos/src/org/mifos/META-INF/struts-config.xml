@@ -123,6 +123,8 @@
 				type="org.mifos.application.reports.struts.actionforms.ReportsParamsMapActionForm" />
 		<form-bean name="reportsUploadActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm" />
+		<form-bean name="viewReportsActionForm" 
+				type= "org.mifos.application.reports.struts.actionforms.ViewReportsActionForm" />		
 		<!-- End reports -->
 
 		<form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm" />
@@ -674,6 +676,14 @@
 		</action>
 		<!-- Birt Reports Action end-->
 	
+	    <!-- View Reports Action-->
+	    <action path="/viewReportsAction" type="org.mifos.application.reports.struts.action.ViewReportsAction" 
+	    	name="viewReportsActionForm" parameter="method" scope="session"
+	    	input="/viewReportsAction.do?method=validate" validate="false">
+			<forward name="load_success" path="/pages/application/reports/jsp/viewReports.jsp" />
+		</action>
+		<!-- View Reports Action end-->
+		
 		<!--  Reports Params Action -->
 		<action path="/reportsParamsAction"
 			type="org.mifos.application.reports.struts.action.ReportsParamsAction"

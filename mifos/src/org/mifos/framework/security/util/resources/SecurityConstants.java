@@ -429,4 +429,8 @@ public interface SecurityConstants {
     public final short CAN_DEFINE_LOOKUP_OPTIONS = 213;
 
 	public final short UPLOAD_REPORT_TEMPLATE = 214; 
+	
+	public final short VIEW_REPORTS = 215; 
+	
+	public final short EDIT_REPORT_INFORMATION = 216; 
 }
