@@ -19,7 +19,6 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
-//import java.io.*;
 
 public class HolidayUtils {
 //	public static long inHolidayTotalDuration = 0;

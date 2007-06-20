@@ -48,7 +48,6 @@ import javax.servlet.jsp.PageContext;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.CustomValueList;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;

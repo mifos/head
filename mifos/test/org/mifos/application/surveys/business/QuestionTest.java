@@ -1,9 +1,9 @@
 package org.mifos.application.surveys.business;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Test;
 import org.mifos.framework.TestUtils;
-
-import junit.framework.JUnit4TestAdapter;
 
 public class QuestionTest {
 	

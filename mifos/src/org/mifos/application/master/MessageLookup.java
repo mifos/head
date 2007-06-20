@@ -2,16 +2,13 @@ package org.mifos.application.master;
 
 import java.util.Locale;
 
-import org.hibernate.Session;
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;

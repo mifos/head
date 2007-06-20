@@ -64,14 +64,14 @@ hr {
 		<red>*</red><span class="fontnormal8ptbold">Date of survey:</span>
 		</td>
 		<td width="70%">
-		<c:out value="${requestScope.surveyInstanceActionForm.dateSurveyed}"/>
+		<c:out value="${sessionScope.surveyInstanceActionForm.dateSurveyed}"/>
 		</td>
 	</tr>
 	<tr>
 		<td height="30" align="right">
 		<span class="fontnormal8ptbold">Surveyed by:</span></td>
 		<td height="30" class="drawtablerow">
-		<c:out value="${requestScope.surveyInstanceActionForm.officerName}"/>
+		<c:out value="${sessionScope.surveyInstanceActionForm.officerName}"/>
 		</td>
 	</tr>
 </table>
@@ -88,14 +88,14 @@ hr {
 			<c:choose>
 			<c:when test="${question.question.answerType == 4}">
 			<c:forEach var="choice" items="${question.question.choices}">
-			<html-el:radio property="value(response_${question.question.questionId})" value="${choice.choiceId}" disabled="true">
+			<html-el:radio property="response(${question.question.questionId})" value="${choice.choiceId}" disabled="true">
 			<c:out value="${choice.choiceText}"/></html-el:radio><br>
 			</c:forEach>
 			</c:when>
 			<c:when test="${question.question.answerType == 2}">
-			<html-el:textarea property="value(response_${question.question.questionId})" cols="70" rows="10"  disabled="true"/>
+			<html-el:textarea property="response(${question.question.questionId})" cols="70" rows="10"  disabled="true"/>
 			</c:when>
-			<c:otherwise><html-el:text property="value(response_${question.question.questionId})" disabled="true"/></c:otherwise>
+			<c:otherwise><html-el:text property="response(${question.question.questionId})" disabled="true"/></c:otherwise>
 			</c:choose>
 			</td>
 		</tr>

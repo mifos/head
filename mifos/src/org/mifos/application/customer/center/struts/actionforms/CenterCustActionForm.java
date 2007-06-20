@@ -37,9 +37,6 @@
 */
 package org.mifos.application.customer.center.struts.actionforms;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -56,8 +53,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import java.util.Locale;
-import java.util.Calendar;;
 
 public class CenterCustActionForm extends CustomerActionForm{
 	

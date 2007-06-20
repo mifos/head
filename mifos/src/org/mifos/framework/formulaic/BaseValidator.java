@@ -1,6 +1,5 @@
 package org.mifos.framework.formulaic;
 
-import java.util.HashMap;
 
 public abstract class BaseValidator implements Validator {
 	

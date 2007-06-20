@@ -1,6 +1,5 @@
 package org.mifos.application.surveys.persistence;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Query;

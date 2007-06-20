@@ -39,8 +39,8 @@
 package org.mifos.application.customer.center.struts.action;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;

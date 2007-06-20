@@ -1,7 +1,6 @@
 package org.mifos.application.reports.struts.action;
 
 import org.mifos.application.reports.business.ReportsBO;
-import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.util.helpers.Constants;

@@ -3,51 +3,35 @@ package org.mifos.application.surveys.struts.action;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.struts.action.ActionMapping;
-import org.hibernate.Session;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.surveys.SurveysConstants;
-import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.application.surveys.business.Survey;
-import org.mifos.application.surveys.business.SurveyInstance;
-import org.mifos.application.surveys.business.TestSurvey;
-import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import junit.framework.TestCase;
-
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 
-	private TestDatabase database;
-	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
-		database = TestDatabase.makeStandard();
 		
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
@@ -63,8 +47,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		PersistenceAction.resetDefaultSessionOpener();
+		super.tearDown();
 	}
 	
 	private ClientBO createClient() {
@@ -157,44 +141,33 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		*/
 	}
 	
-	
+	/*
 	public void testCreate() throws Exception {
 		addRequestParameter("survey", "1");
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create_entry");
 		actionPerform();
-		//verifyNoActionErrors();
-		
-		SessionHolder holder = new SessionHolder(database.openSession());
-		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		verifyNoActionErrors();
 		
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
-		GenericActionForm actionForm = (GenericActionForm) getActionForm();
-		
-		TestSurvey.addQuestionsToSurveyInstance(sampleInstance.getSurvey(), actionForm, surveysPersistence);
-		
 		String clientId = Integer.toString(sampleInstance.getClient().getCustomerId());
 		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());
 		
 		String dateConducted = DateUtils.makeDateAsSentFromBrowser();
-		String[] dateConductedArray = DateUtils.getDayMonthYear(dateConducted, "dd/MM/yyyy");
 		InstanceStatus status = InstanceStatus.INCOMPLETE;
 		Survey survey = sampleInstance.getSurvey();
-		
 		getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
 		
-		actionForm.setValue("customerId", clientId);
-		actionForm.setValue("officerId", officerId);
-		actionForm.setValue("dateSurveyedDD", dateConductedArray[0]);
-		actionForm.setValue("dateSurveyedMM", dateConductedArray[1]);
-		actionForm.setValue("dateSurveyedYY", dateConductedArray[2]);
+		addRequestParameter("customerId", clientId);
+		addRequestParameter("officerId", officerId);
+		addRequestDateParameter("dateSurveyed", dateConducted);
 		addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create");
 		actionPerform();
-		//verifyNoActionErrors();
+		verifyNoActionErrors();
 	}
-	/*
+	
 	public void testValidateSuccess() throws Exception {
 		
 		String dateConducted = DateUtils.makeDateAsSentFromBrowser();

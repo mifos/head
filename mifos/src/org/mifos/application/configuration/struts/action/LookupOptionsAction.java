@@ -41,6 +41,7 @@ package org.mifos.application.configuration.struts.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,9 +65,6 @@ import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.application.master.business.CustomValueListElement;
-import java.util.List;
-import java.util.ArrayList;
 
 public class LookupOptionsAction extends BaseAction {
 

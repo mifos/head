@@ -2,7 +2,6 @@ package org.mifos.framework.formulaic;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class OneOfValidator extends BaseValidator {
 	

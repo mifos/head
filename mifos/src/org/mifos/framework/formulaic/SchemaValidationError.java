@@ -1,10 +1,7 @@
 package org.mifos.framework.formulaic;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletRequest;
 
 public class SchemaValidationError extends ValidationError {
 	

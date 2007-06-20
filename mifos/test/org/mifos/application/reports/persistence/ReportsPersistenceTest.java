@@ -11,7 +11,6 @@ import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
-import org.mifos.framework.exceptions.ApplicationException;
 
 public class ReportsPersistenceTest extends MifosTestCase {
 

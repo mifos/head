@@ -2,21 +2,16 @@ package org.mifos.framework.components.batchjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.holiday.*;
-import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
-import org.mifos.application.util.helpers.YesNoFlag;
 
 public class ApplyHolidayChangesHelper extends TaskHelper {
 	

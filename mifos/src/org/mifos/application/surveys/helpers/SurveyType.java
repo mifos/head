@@ -1,6 +1,5 @@
 package org.mifos.application.surveys.helpers;
 
-import org.apache.commons.lang.StringUtils;
 
 public enum SurveyType {
 	

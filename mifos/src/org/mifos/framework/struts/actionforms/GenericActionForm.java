@@ -3,14 +3,7 @@ package org.mifos.framework.struts.actionforms;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
-import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class GenericActionForm extends ActionForm {
 	
@@ -26,26 +19,5 @@ public class GenericActionForm extends ActionForm {
 	
 	public boolean containsKey(String key) {
 		return values.containsKey(key);
-	}
-	
-	public String getDateValue(String keyPrefix) {
-		String day = getValue(keyPrefix + "DD");
-		String month = getValue(keyPrefix + "MM");
-		String year = getValue(keyPrefix + "YY");
-		
-		if (StringUtils.isNullOrEmpty(day) ||
-				StringUtils.isNullOrEmpty(month) || StringUtils.isNullOrEmpty(year))
-			return null;
-		
-		return day + "/" + month + "/" + year;
-	}
-	
-	public Map<String, String> getAll(String prefix) {
-		Map<String, String> result = new HashMap<String, String>();
-		for (String key : values.keySet()) {
-			if (key.startsWith(prefix))
-				result.put(key.substring(prefix.length()), values.get(key));
-		}
-		return result;
 	}
 }

@@ -1,9 +1,9 @@
 package org.mifos.framework.util.helpers;
 
-import org.mifos.framework.formulaic.TestValidators;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.mifos.framework.formulaic.TestValidators;
 
 public class FrameworkUtilsSuite extends TestSuite {
 

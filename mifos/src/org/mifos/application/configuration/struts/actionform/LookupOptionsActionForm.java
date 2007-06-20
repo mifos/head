@@ -38,17 +38,18 @@
 
 package org.mifos.application.configuration.struts.actionform;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.application.master.business.CustomValueListElement;
-import java.util.List;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager

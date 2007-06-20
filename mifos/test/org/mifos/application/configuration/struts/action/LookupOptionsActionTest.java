@@ -1,7 +1,10 @@
 package org.mifos.application.configuration.struts.action;
 
+import java.util.List;
+
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -9,8 +12,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.application.master.business.CustomValueListElement;
-import java.util.List;
 
 public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
