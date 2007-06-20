@@ -25,6 +25,28 @@ public class TestValidators extends TestCase {
 		
 	}
 	
+	public void testDateComponentValidator() throws Exception {
+		Validator validator = new DateComponentValidator();
+		Map<String, String> inputMap = new HashMap<String, String>();
+		Date expectedDate = new DateMidnight(2000, 05, 20).toDate();
+		inputMap.put("DD", "20");
+		inputMap.put("MM", "5");
+		inputMap.put("YY", "2000");
+		assertEquals(expectedDate, validator.validate(inputMap));
+		
+		inputMap.put("MM", "20");
+		checkException(validator, inputMap, DateValidator.DATE_FORMAT_ERROR);
+		
+		Schema schema = new Schema();
+		schema.setMapValidator("mydate", validator);
+		inputMap = new HashMap<String, String>();
+		inputMap.put("mydate_DD", "20");
+		inputMap.put("mydate_MM", "5");
+		inputMap.put("mydate_YY", "2000");
+		assertEquals(expectedDate, schema.validate(inputMap).get("mydate"));
+		
+	}
+	
 	public void testDateValidator() throws Exception {
 		Validator validator = new DateValidator();
 		Date expectedDate = new DateMidnight(2005, 04, 03).toDate();

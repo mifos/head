@@ -33,6 +33,11 @@ public class Schema extends BaseValidator {
 		fieldValidators.put(field, info);
 	}
 	
+	public void setMapValidator(String field, Validator validator) {
+		FieldInfo info = new FieldInfo(validator, FieldType.MAP);
+		fieldValidators.put(field, info);
+	}
+	
 	public FieldInfo getValidator(String field) {
 		return fieldValidators.get(field);
 	}
