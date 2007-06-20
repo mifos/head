@@ -46,8 +46,8 @@ public class SurveysAction extends BaseAction {
 	public SurveysAction() {
 		super();
 		previewValidator = new Schema();
-		previewValidator.setValidator("value(name)", new MaxLengthValidator(5));
-		previewValidator.setValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
+		previewValidator.setSimpleValidator("value(name)", new MaxLengthValidator(5));
+		previewValidator.setSimpleValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
 	}
 
 	

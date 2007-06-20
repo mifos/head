@@ -14,7 +14,6 @@ public class IntValidator extends IsInstanceValidator {
 	@Override
 	public Integer validate(Object input) throws ValidationError {
 		input = super.validate(input);
-		checkNull(input);
 		try {
 			String inputString = (String) input;
 			int result = Integer.parseInt(inputString);

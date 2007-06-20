@@ -2,9 +2,13 @@ package org.mifos.framework.formulaic;
 
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import org.joda.time.DateMidnight;
+import org.mifos.framework.util.helpers.DateUtils;
 
 import junit.framework.TestCase;
 
@@ -19,6 +23,27 @@ public class TestValidators extends TestCase {
 			assertEquals(error, e.getMsg());
 		}
 		
+	}
+	
+	public void testDateValidator() throws Exception {
+		Validator validator = new DateValidator();
+		Date expectedDate = new DateMidnight(2005, 04, 03).toDate();
+		assertEquals(expectedDate, validator.validate("3/4/2005"));
+		checkException(validator, "5/13/2000", DateValidator.DATE_FORMAT_ERROR);
+	}
+	
+	public void testSchemaCompoundFunctionality() {
+		Schema schema = new Schema();
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("simple", "a");
+		data.put("map_one", "b");
+		data.put("map_two", "c");
+		assertEquals("a", Schema.parseField("simple", Schema.FieldType.SIMPLE, data));
+		assertNull(Schema.parseField("notafield", Schema.FieldType.SIMPLE, data));
+		Map<String, Object> expectedResults = new HashMap<String, Object>();
+		expectedResults.put("one", "b");
+		expectedResults.put("two", "c");
+		assertEquals(expectedResults, Schema.parseField("map", Schema.FieldType.MAP, data));
 	}
 	
 	
@@ -37,10 +62,10 @@ public class TestValidators extends TestCase {
 	public void testSwitchValidator() throws Exception {
 		SwitchValidator val = new SwitchValidator("switch_field");
 		Schema schemaA = new Schema();
-		schemaA.setValidator("age", new IntValidator());
+		schemaA.setSimpleValidator("age", new IntValidator());
 		val.addCase("a", schemaA);
 		Schema schemaB = new Schema();
-		schemaB.setValidator("name", new MaxLengthValidator(5));
+		schemaB.setSimpleValidator("name", new MaxLengthValidator(5));
 		val.addCase("b", schemaB);
 		
 		Map<String, String> data = new HashMap<String, String>();
@@ -107,8 +132,8 @@ public class TestValidators extends TestCase {
 	
 	public void testSchema() throws Exception {
 		Schema schema = new Schema();
-		schema.setValidator("fieldOne", new IntValidator());
-		schema.setValidator("fieldTwo", new MaxLengthValidator(4));
+		schema.setSimpleValidator("fieldOne", new IntValidator());
+		schema.setSimpleValidator("fieldTwo", new MaxLengthValidator(4));
 		Map<String, String> input = new HashMap<String, String>();
 		input.put("fieldOne", "42");
 		input.put("fieldTwo", "abcd");
@@ -128,7 +153,7 @@ public class TestValidators extends TestCase {
 			assertEquals(BaseValidator.MISSING_ERROR, e.getFieldMsg("fieldOne"));
 		}
 		// now make field one optional
-		schema.setValidator("fieldOne", new NullValidator(new IntValidator()));
+		schema.setSimpleValidator("fieldOne", new NullValidator(new IntValidator()));
 		try {
 			schema.validate(input);
 			fail();

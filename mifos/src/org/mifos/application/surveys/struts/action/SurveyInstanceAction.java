@@ -49,19 +49,19 @@ public class SurveyInstanceAction extends BaseAction {
 	static {
 		
 		chooseSurveyValidator = new Schema();
-		chooseSurveyValidator.setValidator("globalNum",
+		chooseSurveyValidator.setSimpleValidator("globalNum",
 				new IsInstanceValidator(String.class));
-		chooseSurveyValidator.setValidator("surveyType", new EnumValidator(
+		chooseSurveyValidator.setSimpleValidator("surveyType", new EnumValidator(
 				SurveyType.class));
 		
 		createEntryValidator = new Schema();
-		createEntryValidator.setValidator("value(surveyId)", new IntValidator());
-		createEntryValidator.setValidator("value(globalNum)",
+		createEntryValidator.setSimpleValidator("value(surveyId)", new IntValidator());
+		createEntryValidator.setSimpleValidator("value(globalNum)",
 				new IsInstanceValidator(String.class));
 		
 		createValidator = new Schema();
-		createValidator.setValidator("value(surveyId)", new IntValidator());
-		createValidator.setValidator("value(globalNum)", new IsInstanceValidator(String.class));
+		createValidator.setSimpleValidator("value(surveyId)", new IntValidator());
+		createValidator.setSimpleValidator("value(globalNum)", new IsInstanceValidator(String.class));
 		
 	}
 

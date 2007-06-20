@@ -14,13 +14,26 @@ import org.apache.struts.action.ActionMessages;
  */
 public class Schema extends BaseValidator {
 	
-	private Map<String, Validator> fieldValidators = new HashMap<String, Validator>();
+	public enum FieldType {SIMPLE, MAP};
 	
-	public void setValidator(String field, Validator validator) {
-		fieldValidators.put(field, validator);
+	private class FieldInfo {
+		Validator validator;
+		FieldType type;
+		
+		public FieldInfo(Validator validator, FieldType type) {
+			this.validator = validator;
+			this.type = type;
+		}
 	}
 	
-	public Validator getValidator(String field) {
+	private Map<String, FieldInfo> fieldValidators = new HashMap<String, FieldInfo>();
+	
+	public void setSimpleValidator(String field, Validator validator) {
+		FieldInfo info = new FieldInfo(validator, FieldType.SIMPLE);
+		fieldValidators.put(field, info);
+	}
+	
+	public FieldInfo getValidator(String field) {
 		return fieldValidators.get(field);
 	}
 	
@@ -63,9 +76,9 @@ public class Schema extends BaseValidator {
 		for (String field : fieldValidators.keySet()) {
 			try {
 				// if the field isn't in the input, its value becomes null
-				data.get(field);
-				Object input = data.containsKey(field) ? data.get(field) : null;
-				Validator validator = fieldValidators.get(field);
+				FieldInfo fieldInfo = fieldValidators.get(field);
+				Validator validator = fieldInfo.validator;
+				Object input = parseField(field, fieldInfo.type, data);
 				results.put(field, validator.validate(input));
 			}
 			catch (ValidationError e) {
@@ -77,5 +90,24 @@ public class Schema extends BaseValidator {
 			throw new SchemaValidationError(data, fieldErrors);
 		}
 		return results;
+	}
+	
+	public static Object parseField(String field, FieldType type, Map<String, String> data) {
+		if (type == FieldType.SIMPLE) {
+			return data.containsKey(field) ? data.get(field) : null;
+		}
+		else { // map type
+			Map<String, String> parsedContents = new HashMap<String, String>();
+			for (String key : data.keySet()) {
+				int delimPosition = key.lastIndexOf("_");
+				if (delimPosition > 0) {
+					if (key.substring(0, delimPosition).equals(field)) {
+						String subKey = key.substring(delimPosition + 1);
+						parsedContents.put(subKey, data.get(key));
+					}
+				}
+			}
+			return parsedContents;
+		}
 	}
 }
