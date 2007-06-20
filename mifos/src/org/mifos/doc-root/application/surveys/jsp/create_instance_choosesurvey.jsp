@@ -68,7 +68,7 @@
               <tr>
                 <td class="heading">
                   <c:out value="${requestScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
-/span>
+</span>
                 </td>
               </tr>
 					  </table>

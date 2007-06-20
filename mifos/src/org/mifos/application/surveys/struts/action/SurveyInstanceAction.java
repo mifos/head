@@ -26,6 +26,7 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.surveys.struts.actionforms.SurveyInstanceActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.formulaic.EnumValidator;
@@ -38,7 +39,9 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SurveyInstanceAction extends BaseAction {
 	
@@ -122,6 +125,23 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 	}
 	
+	public static BusinessObject getBusinessObject(SurveyType surveyType,
+			String globalNum) throws Exception {
+		if (surveyType == SurveyType.CLIENT) {
+			ClientBO client = (ClientBO) CustomerBusinessService.getInstance()
+					.findBySystemId(globalNum, CustomerLevel.CLIENT.getValue());
+			return client;
+		}
+		else if (surveyType == SurveyType.LOAN) {
+			LoanBusinessService service = new LoanBusinessService();
+			LoanBO loanBO = service.findBySystemId(globalNum);
+			return loanBO;
+		}
+		else {
+			throw new NotImplementedException();
+		}
+	}
+	
 	public ActionForward choosesurvey(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -137,12 +157,13 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		SurveysPersistence persistence = new SurveysPersistence();
+		String globalNum = (String) results.get("globalNum");
 		SurveyType surveyType = SurveyType.fromString(request.getParameter("surveyType"));
 		
-		String displayName = getBusinessObjectName(surveyType, (String) results
-				.get("globalNum"));
+		String displayName = getBusinessObjectName(surveyType, globalNum);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, getBusinessObject(surveyType, globalNum));
 		
 		List<Survey> surveys = persistence.retrieveSurveysByType(surveyType);
 		request.setAttribute(SurveysConstants.KEY_SURVEYS_LIST, surveys);

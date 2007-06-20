@@ -3,6 +3,7 @@ package org.mifos.application.surveys.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
@@ -25,9 +26,11 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -45,8 +48,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		HibernateUtil.useMayflyDatabase(database);
-		
+		HibernateUtil.closeSession();
+		AuditInterceptor interceptor = new AuditInterceptor();
+		Session session = database.openSession(interceptor);
+		SessionHolder holder = new SessionHolder(session);
+		holder.setInterceptor(interceptor);
+		HibernateUtil.setThreadLocal(holder);
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
 		setConfigFile(ResourceLoader.getURI(

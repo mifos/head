@@ -3,6 +3,7 @@ package org.mifos.application.surveys.struts.action;
 import java.util.List;
 
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Session;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
@@ -13,7 +14,9 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -30,8 +33,12 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		super.setUp();
 		
 		database = TestDatabase.makeStandard();
-		HibernateUtil.useMayflyDatabase(database);
-		
+		HibernateUtil.closeSession();
+		AuditInterceptor interceptor = new AuditInterceptor();
+		Session session = database.openSession(interceptor);
+		SessionHolder holder = new SessionHolder(session);
+		holder.setInterceptor(interceptor);
+		HibernateUtil.setThreadLocal(holder);
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
 		setConfigFile(ResourceLoader.getURI(
