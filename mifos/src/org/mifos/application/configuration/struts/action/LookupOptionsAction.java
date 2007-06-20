@@ -60,6 +60,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -206,24 +207,13 @@ public class LookupOptionsAction extends BaseAction {
 		logger.debug("outside validate method");
 		return mapping.findForward(actionForward.toString());
 	}
-	
+		
 	private Boolean ProcessOneConfigurationEntity(String[] updatedList, Short valueListId, Short localeId)
 	{
 		Boolean result = false;
-		CustomValueList customValueList = new CustomValueList(valueListId, localeId, "");
-		List<CustomValueListElement> list = new ArrayList<CustomValueListElement>();
-		for (int i=0; i < updatedList.length; i++)
-		{
-			String value = updatedList[i];
-			String[] splitedValues = value.split(";");
-			Integer lookupId = Integer.parseInt(splitedValues[0].toString());
-			String lookupValue = splitedValues[1];
-			list.add(new CustomValueListElement(lookupId, lookupValue));
-		}
-		customValueList.setCustomValueListElements(list);
+		CustomValueList customValueList = MifosValueList.mapUpdateStringArrayToCustomValueList(updatedList, valueListId, localeId);
 		result = UpdateDatabase(customValueList);
-		return result;
-		
+		return result;		
 	}
 	
 	private Boolean UpdateDatabase(CustomValueList list) 

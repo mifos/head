@@ -38,6 +38,7 @@
 
 package org.mifos.framework.struts.tags;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,6 +47,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 
 
@@ -242,11 +244,8 @@ public class MifosValueList extends BodyTagSupport {
         results.append(">");
         if (inputList!=null)
         {
-	       	 for (Iterator<CustomValueListElement> in = inputList.iterator(); in.hasNext();)
-	        {
-	       		CustomValueListElement element = in.next();
-	            results.append("<OPTION value=\"" + element.getLookUpId() + ";" +
-	            		element.getLookUpValue() + ";original" +
+        	for (CustomValueListElement element : inputList) {
+	            results.append("<OPTION value=\"" + mapCustomValueListElementToString(element) +
 	            		"\">" +	element.getLookUpValue() + "</OPTION>");
 	        }
         }
@@ -256,6 +255,50 @@ public class MifosValueList extends BodyTagSupport {
 
    }
     
+
+	/**
+	 * Map a String array of elements each of the form:
+	 * "CustomValueListId;CustomValueListValue;update/original/add"
+	 * To a CustomValueList.
+	 * 
+	 * For example, a string array might look like:
+	 * "456;Updated String Value;update"
+	 * "0;New Value;add"
+	 * 
+	 * Each new value will have an id of zero while each updated value will
+	 * have a non-zero id, so the trailing "update","original" or "add" string
+	 * can be ignored when constructing the CustomValueListElement objects.
+	 */
+	public static CustomValueList mapUpdateStringArrayToCustomValueList(String[] updatedList, Short valueListId, Short localeId) {
+		CustomValueList customValueList = new CustomValueList(valueListId, localeId, "");
+		List<CustomValueListElement> list = new ArrayList<CustomValueListElement>();
+		for (int i=0; i < updatedList.length; i++)
+		{
+			String value = updatedList[i];
+			String[] splitValues = value.split(";");
+
+			// we should probably throw and exception or otherwise raise an
+			// error if either of these assertions fails
+			assert(splitValues.length == 3);
+			assert(!splitValues[2].equals("original"));
+			
+			Integer lookupId = Integer.parseInt(splitValues[0].toString());
+			String lookupValue = splitValues[1];
+			list.add(new CustomValueListElement(lookupId, lookupValue));
+		}
+		customValueList.setCustomValueListElements(list);
+		return customValueList;
+	}
+    
+	/**
+	 * Map a CustomValueListElement to a String of the form:
+	 * "CustomValueListId;CustomValueListValue;original"
+	 * 
+	 */
+    public static String mapCustomValueListElementToString(CustomValueListElement element) {
+    	return "" + element.getLookUpId() + ";" + element.getLookUpValue() + 
+    		";original";
+    }
     
 
 }
