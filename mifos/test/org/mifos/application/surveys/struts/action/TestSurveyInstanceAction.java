@@ -106,6 +106,54 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		return client;
 	}
 	
+	public void testCreate() throws Exception {
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
+		String clientId = Integer.toString(sampleInstance.getClient().getCustomerId());
+		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());
+		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
+		
+		surveysPersistence.createOrUpdate(question1);
+		surveysPersistence.createOrUpdate(question2);
+		
+		Survey survey = sampleInstance.getSurvey();
+		survey.addQuestion(question1, true);
+		survey.addQuestion(question2, true);
+		
+		surveysPersistence.createOrUpdate(survey);
+		
+		String globalNum = sampleInstance.getClient().getGlobalCustNum();
+		addRequestParameter("value(globalNum)", globalNum);
+		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		Survey retrievedSurvey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
+		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
+		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
+				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
+						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
+		
+		//String dateConducted = DateUtils.makeDateAsSentFromBrowser();
+		//String[] dateConductedArray = DateUtils.getDayMonthYear(dateConducted, "dd/MM/yyyy");
+		InstanceStatus status = InstanceStatus.INCOMPLETE;
+		
+		addRequestParameter("value(customerId)", clientId);
+		addRequestParameter("value(officerId)", officerId);
+		addRequestParameter("value(dateSurveyedDD)", "12");
+		addRequestParameter("value(dateSurveyedMM)", "12");
+		addRequestParameter("value(dateSurveyedYY)", "2007");
+		addRequestParameter("value(instanceStatus)", Integer.toString(status.getValue()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create");
+		actionPerform();
+		//verifyNoActionErrors();
+		 
+	}
+	
 	public void testChooseSurvey() throws Exception {
 		
 		ClientBO client = createClient();
@@ -186,55 +234,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		}
 	}
 	
-	
-	public void testCreate() throws Exception {
-		SurveysPersistence surveysPersistence = new SurveysPersistence();
-		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
-		String clientId = Integer.toString(sampleInstance.getClient().getCustomerId());
-		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());
-		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
-		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
-		
-		surveysPersistence.createOrUpdate(question1);
-		surveysPersistence.createOrUpdate(question2);
-		
-		Survey survey = sampleInstance.getSurvey();
-		survey.addQuestion(question1, true);
-		survey.addQuestion(question2, true);
-		
-		surveysPersistence.createOrUpdate(survey);
-		
-		String globalNum = sampleInstance.getClient().getGlobalCustNum();
-		addRequestParameter("value(globalNum)", globalNum);
-		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
-		setRequestPathInfo("/surveyInstanceAction");
-		addRequestParameter("method", "create_entry");
-		actionPerform();
-		verifyNoActionErrors();
-		
-		Survey retrievedSurvey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
-		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
-		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
-				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
-						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
-		
-		String dateConducted = DateUtils.makeDateAsSentFromBrowser();
-		String[] dateConductedArray = DateUtils.getDayMonthYear(dateConducted, "dd/MM/yyyy");
-		InstanceStatus status = InstanceStatus.INCOMPLETE;
-		
-		/*
-		actionForm.setValue("customerId", clientId);
-		actionForm.setValue("officerId", officerId);
-		actionForm.setValue("dateSurveyedDD", dateConductedArray[0]);
-		actionForm.setValue("dateSurveyedMM", dateConductedArray[1]);
-		actionForm.setValue("dateSurveyedYY", dateConductedArray[2]);
-		addRequestParameter("instanceStatus", Integer.toString(status.getValue()));
-		setRequestPathInfo("/surveyInstanceAction");
-		addRequestParameter("method", "create");
-		//actionPerform();
-		//verifyNoActionErrors();
-		 */
-	}
 	/*
 	public void testValidateSuccess() throws Exception {
 		

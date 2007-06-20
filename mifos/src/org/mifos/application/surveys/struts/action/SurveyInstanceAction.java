@@ -2,6 +2,7 @@ package org.mifos.application.surveys.struts.action;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +22,8 @@ import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyResponse;
-import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.application.surveys.struts.actionforms.SurveyInstanceActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -37,11 +36,9 @@ import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SurveyInstanceAction extends BaseAction {
 	
@@ -185,28 +182,17 @@ public class SurveyInstanceAction extends BaseAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		Map<String, Object> results;
-		try {
-			results = createValidator.validate(request);
-		}
-		catch (SchemaValidationError e) {
-			return mapping.findForward(ActionForwards.create_entry_success.toString());
-		}
-		
+		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence persistence = new SurveysPersistence();
 		
+		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
 		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
-		return mapping.findForward(ActionForwards.create_success.toString());
-		
 
-		/*
-		InstanceStatus status = InstanceStatus.fromInt(Integer
-				.parseInt(actionForm.getInstanceStatus()));
-		int clientId = Integer.parseInt(actionForm.getCustomerId());
-		short officerId = Short.parseShort(actionForm.getOfficerId());
-		Date dateConducted = DateUtils.getDate(actionForm
-				.getDateSurveyed());
-		List<SurveyResponse> surveyResponses = actionForm.getResponseList();
+		//InstanceStatus status = InstanceStatus.fromInt(Integer
+		//		.parseInt(actionForm.getValue("instanceStatus")));
+		int clientId = Integer.parseInt(actionForm.getValue("customerId"));
+		short officerId = Short.parseShort(actionForm.getValue("officerId"));
+		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm.getDateValue("dateSurveyed"));
 		
 		ClientBO client = (ClientBO) persistence.getPersistentObject(
 				ClientBO.class, clientId);
@@ -214,15 +200,26 @@ public class SurveyInstanceAction extends BaseAction {
 				PersonnelBO.class, officerId);
 
 		SurveyInstance instance = new SurveyInstance();
+		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
-		instance.setCompletedStatus(status);
+		//instance.setCompletedStatus(status);
 		instance.setClient(client);
 		instance.setOfficer(officer); 
+
+		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
+		for (Map.Entry<String, String> s : actionForm.getAll("response_").entrySet()) {
+			SurveyResponse r = new SurveyResponse();
+			r.setQuestion(persistence.getQuestion(Integer.parseInt(s.getValue())));
+			r.setStringValue(s.getValue());
+			r.setInstance(instance);
+			surveyResponses.add(r);
+			persistence.createOrUpdate(r);
+		}
 		instance.setSurveyResponses(surveyResponses);
+		
 		persistence.createOrUpdate(instance);
 		return mapping.findForward(ActionForwards.create_success.toString());
-		*/
 	}
 	
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
