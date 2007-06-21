@@ -60,17 +60,17 @@ hr {
 <h1><c:out value="${requestScope.retrievedSurvey.name}"/></h1>
 <hr>
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
-<table width="100%" border="0" cellpadding="3" cellspacing="0">
+<table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
 		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
 		<td width="70%">
-		<date:datetag property="value(dateSurveyed)" renderstyle="simple"/>
+		<date:datetag property="value(dateSurveyed)" renderstyle="simplemapped"/>
 		</td>
 	</tr>
 	<tr>
-		<td height="30" align="right">
+		<td height="30" align="right" class="drawtablerow">
 		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
 		<td height="30" class="drawtablerow">
 		<html-el:text property="value(officerName)" />
@@ -79,7 +79,7 @@ hr {
 </table>
 <table width="95%">
 	<c:set var="count" value="1"/>
-	<c:forEach var="question" items="${requestScope.retrievedSurvey.questions}">
+	<c:forEach var="question" items="${sessionScope.retrievedSurvey.questions}">
 		<tr>
 			<td class="entry">
 			<h2><c:out value="${count}"/>. <c:out value="${question.question.questionText}"/></h2>

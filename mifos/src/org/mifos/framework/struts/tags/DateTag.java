@@ -63,7 +63,7 @@ public class DateTag extends BaseInputTag {
 	private String isDisabled;
 	
 	private String renderstyle="";
-	
+
 	public String getRenderstyle() {
 		return renderstyle;
 	}
@@ -156,8 +156,10 @@ public class DateTag extends BaseInputTag {
 		if (getRenderstyle().equalsIgnoreCase("simple")) {
 			output = "<!-- simple style -->" +
 				makeUserFields(property, ddValue, mmValue, yyValue, "", format);
-		}
-		else {
+		} else if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
+			output = "<!-- simple-mapped style -->" +
+				makeMappedUserFields(property, ddValue, mmValue, yyValue, "", format);
+		} else {
 			output = "<!-- normal style -->" +
 				this.prepareOutputString(format, property,
 					ddValue, mmValue, yyValue, separator, userfmt);
@@ -268,6 +270,76 @@ public class DateTag extends BaseInputTag {
 				+ "YY\" name=\""
 				+ dateName
 				+ "YY\" "
+				+ "maxlength=\"4\" size=\"4\" value=\""
+				+ yyValue
+				+ "\" "
+				+ dateFunction
+				+ " style=\"width:3em\"";
+		if (disabled)
+			yeartext = yeartext + "disabled";
+		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";
+
+		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		while (tokenizer.hasMoreTokens()) {
+			String ch = tokenizer.nextToken();
+			if (ch.equals("D") || ch.equals("d")) {
+				output.append(daytext);
+			} else if (ch.equals("M") || ch.equals("m")) {
+				output.append(monthtext);
+			} else {
+				output.append(yeartext);
+			}
+		}
+		return output.toString();
+	}
+	
+	public String makeMappedUserFields(String dateName, String ddValue,
+			String mmValue, String yyValue, String dateFunction,
+			String format) throws JspException {
+		StringBuilder output = new StringBuilder();
+
+		boolean disabled = getIsDisabled() != null
+				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
+		
+		int openParen = dateName.indexOf('(');
+		int closeParen = dateName.lastIndexOf(')');
+		
+		if (openParen == -1 || closeParen == -1 || closeParen != dateName.length() - 1)
+			throw new JspException("Property not well formed: method(variableName)");
+		
+		dateName = dateName.substring(0, closeParen);
+		
+		String daytext = "<input type=\"text\" id=\""
+				+ dateName
+				+ "_DD)\" name=\""
+				+ dateName
+				+ "_DD)\" "
+				+ "maxlength=\"2\" size=\"2\" value=\""
+				+ ddValue
+				+ "\" "
+				+ dateFunction
+				+ " style=\"width:1.5em\"";
+		if (disabled)
+			daytext = daytext + "disabled";
+		daytext = daytext + "/>&nbsp;DD&nbsp;";
+		String monthtext = "<input type=\"text\" id=\""
+				+ dateName
+				+ "_MM)\" name=\""
+				+ dateName
+				+ "_MM)\" "
+				+ "maxlength=\"2\" size=\"2\" value=\""
+				+ mmValue
+				+ "\" "
+				+ dateFunction
+				+ " style=\"width:1.5em\"";
+		if (disabled)
+			monthtext = monthtext + "disabled";
+		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
+		String yeartext = "<input type=\"text\" id=\""
+				+ dateName
+				+ "_YY)\" name=\""
+				+ dateName
+				+ "_YY)\" "
 				+ "maxlength=\"4\" size=\"4\" value=\""
 				+ yyValue
 				+ "\" "

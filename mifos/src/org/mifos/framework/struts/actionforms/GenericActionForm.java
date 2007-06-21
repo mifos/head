@@ -23,9 +23,9 @@ public class GenericActionForm extends ActionForm {
 	}
 	
 	public String getDateValue(String keyPrefix) {
-		String day = getValue(keyPrefix + "DD");
-		String month = getValue(keyPrefix + "MM");
-		String year = getValue(keyPrefix + "YY");
+		String day = getValue(keyPrefix + "_DD");
+		String month = getValue(keyPrefix + "_MM");
+		String year = getValue(keyPrefix + "_YY");
 		
 		if (StringUtils.isNullOrEmpty(day) ||
 				StringUtils.isNullOrEmpty(month) || StringUtils.isNullOrEmpty(year))

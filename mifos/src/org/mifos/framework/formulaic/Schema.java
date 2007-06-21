@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.jsp.JspException;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -14,7 +15,7 @@ import org.apache.struts.action.ActionMessages;
  */
 public class Schema extends BaseValidator {
 	
-	public enum FieldType {SIMPLE, MAP};
+	public enum FieldType {SIMPLE, MAP, COMPLEX};
 	
 	private class FieldInfo {
 		Validator validator;
@@ -30,6 +31,11 @@ public class Schema extends BaseValidator {
 	
 	public void setSimpleValidator(String field, Validator validator) {
 		FieldInfo info = new FieldInfo(validator, FieldType.SIMPLE);
+		fieldValidators.put(field, info);
+	}
+	
+	public void setComplexValidator(String field, Validator validator) {
+		FieldInfo info = new FieldInfo(validator, FieldType.COMPLEX);
 		fieldValidators.put(field, info);
 	}
 	
@@ -87,6 +93,7 @@ public class Schema extends BaseValidator {
 				results.put(field, validator.validate(input));
 			}
 			catch (ValidationError e) {
+				e.printStackTrace();
 				fieldErrors.put(field, e);
 			}
 		}
@@ -100,8 +107,23 @@ public class Schema extends BaseValidator {
 	public static Object parseField(String field, FieldType type, Map<String, String> data) {
 		if (type == FieldType.SIMPLE) {
 			return data.containsKey(field) ? data.get(field) : null;
-		}
-		else { // map type
+		} else if (type == FieldType.COMPLEX) {
+			Map<String, String> parsedContents = new HashMap<String, String>();
+			for (String key : data.keySet()) {
+				int openParen = key.indexOf('(');
+				int closeParen = key.lastIndexOf(')');
+				if (openParen > -1 && closeParen > -1 && closeParen == key.length() - 1) {
+					if (key.substring(openParen + 1, closeParen).startsWith(field)) {
+						int delimPosition = key.lastIndexOf("_");
+						if (key.substring(openParen + 1, delimPosition).equals(field)) {
+							String subKey = key.substring(delimPosition + 1, closeParen);
+							parsedContents.put(subKey, data.get(key));
+						}
+					}
+				}
+			}
+			return parsedContents;
+		} else { // map type
 			Map<String, String> parsedContents = new HashMap<String, String>();
 			for (String key : data.keySet()) {
 				int delimPosition = key.lastIndexOf("_");

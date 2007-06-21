@@ -64,14 +64,14 @@ hr {
 		<red>*</red><span class="fontnormal8ptbold">Date of survey:</span>
 		</td>
 		<td width="70%">
-		<c:out value="${requestScope.surveyInstanceActionForm.dateSurveyed}"/>
+		<c:out value="${requestScope.dateSurveyed}"/>
 		</td>
 	</tr>
 	<tr>
 		<td height="30" align="right">
 		<span class="fontnormal8ptbold">Surveyed by:</span></td>
 		<td height="30" class="drawtablerow">
-		<c:out value="${requestScope.surveyInstanceActionForm.officerName}"/>
+		<c:out value="${requestScope.officerName}"/>
 		</td>
 	</tr>
 </table>

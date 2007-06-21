@@ -44,6 +44,23 @@ public class DateTagTest extends MifosTestCase {
 			dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y"));
 	}
 	
+	public void testSimpleMappedStyle() throws Exception {
+		dateTag.setRenderstyle("simplemapped");
+		assertEquals(
+			"<input type=\"text\" id=\"value(asd_DD)\" name=\"value(asd_DD)\" "
+				+ "maxlength=\"2\" size=\"2\" value=\"1\"  " 
+				+ "style=\"width:1.5em\""
+				+ "/>&nbsp;DD&nbsp;<input type=\"text\" "
+				+ "id=\"value(asd_MM)\" name=\"value(asd_MM)\" maxlength=\"2\" size=\"2\" value=\"1\"  "
+				+ "style=\"width:1.5em\"/>"
+				+ "&nbsp;MM&nbsp;"
+				+ "<input type=\"text\" id=\"value(asd_YY)\" name=\"value(asd_YY)\" "
+				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  " 
+				+ "style=\"width:3em\""
+				+ "/>&nbsp;YYYY&nbsp;",
+			dateTag.makeMappedUserFields("value(asd)", "1", "1", "2000", "", "d/m/y"));
+	}
+	
 	public void testGetFormat() throws Exception {
 		assertEquals("M/d/yy", dateTag.getUserFormat(TestUtils.makeUser()));
 	}

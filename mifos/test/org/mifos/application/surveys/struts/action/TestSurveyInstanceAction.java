@@ -133,35 +133,44 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		
-		Survey retrievedSurvey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
+		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
 				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
-		//String dateConducted = DateUtils.makeDateAsSentFromBrowser();
-		//String[] dateConductedArray = DateUtils.getDayMonthYear(dateConducted, "dd/MM/yyyy");
 		InstanceStatus status = InstanceStatus.INCOMPLETE;
 		
+		addRequestParameter("value(response_" +
+				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
+				"answer 1");
 		addRequestParameter("value(customerId)", clientId);
 		addRequestParameter("value(officerId)", officerId);
-		addRequestParameter("value(dateSurveyedDD)", "12");
-		addRequestParameter("value(dateSurveyedMM)", "12");
-		addRequestParameter("value(dateSurveyedYY)", "2007");
+		addRequestParameter("value(dateSurveyed_DD)", "13");
+		addRequestParameter("value(dateSurveyed_MM)", "06");
+		addRequestParameter("value(dateSurveyed_YY)", "2007");
 		addRequestParameter("value(instanceStatus)", Integer.toString(status.getValue()));
 		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyForward("preview_success");
+		verifyNoActionErrors();
+		
 		addRequestParameter("method", "create");
 		actionPerform();
 		verifyNoActionErrors();
+		
 		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
 		assertEquals(2, retrievedInstances.size());
-		SurveyInstance newInstance = retrievedInstances.get(1);
+		SurveyInstance newInstance = retrievedInstances.get(0);
 		assertEquals(clientId, Integer.toString(newInstance.getCustomer().getCustomerId()));
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(newInstance.getDateConducted());
-		assertEquals(12, calendar.get(Calendar.DAY_OF_MONTH));
-		assertEquals(Calendar.DECEMBER, calendar.get(Calendar.MONTH));
-		assertEquals(2007, calendar.get(Calendar.YEAR));	 
+		assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
+		assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
+		assertEquals(2007, calendar.get(Calendar.YEAR));
+		assertEquals("answer 1", newInstance.getSurveyResponses().get(0).getFreetextValue());
+
 	}
 	
 	public void testChooseSurvey() throws Exception {
@@ -202,7 +211,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(globalNum)", globalCustNum);
 		actionPerform();
 		verifyNoActionMessages();
-		Survey chosenSurvey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
+		Survey chosenSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 		assertNotNull(chosenSurvey);
 		assertEquals(survey1.getName(), chosenSurvey.getName());
 		
@@ -219,29 +228,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(nameBase + "2", surveys.get(0).getName());
 		PersistenceAction.resetDefaultSessionOpener();
 		*/
-	}
-	
-	private static void addQuestionsToSurveyInstance(Survey survey,
-			GenericActionForm actionForm, SurveysPersistence surveysPersistence)
-		throws ApplicationException {
-		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
-		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
-		Question question3 = new Question("test question 3", AnswerType.FREETEXT);
-		
-		surveysPersistence.createOrUpdate(question1);
-		surveysPersistence.createOrUpdate(question2);
-		surveysPersistence.createOrUpdate(question3);
-		
-		survey.addQuestion(question1, true);
-		survey.addQuestion(question2, true);
-		survey.addQuestion(question3, true);
-		surveysPersistence.createOrUpdate(survey);
-		
-		//List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
-		for (SurveyQuestion question : survey.getQuestions()) {
-			actionForm.setValue("response_" + Integer.toString(question.getQuestion().getQuestionId())
-					, "Answer One");
-		}
 	}
 	
 	/*

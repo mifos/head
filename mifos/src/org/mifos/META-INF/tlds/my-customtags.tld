@@ -41,6 +41,12 @@
 <rtexprvalue>false</rtexprvalue>
 </attribute>
 
+<attribute>
+<name>method</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+
 </tag>
 </taglib>
 
