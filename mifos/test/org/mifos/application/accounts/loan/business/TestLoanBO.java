@@ -347,6 +347,12 @@ public class TestLoanBO extends MifosTestCase {
 				loan.getAccountId()).getTotalNoOfInstallments(), Short
 				.valueOf("5"));
 	}
+	public void testPrdOfferingsCanCoexist() throws PersistenceException {
+		LoanBO loan = (LoanBO) createLoanAccount();
+		assertTrue(loan.prdOfferingsCanCoexist(loan.getLoanOffering().getPrdOfferingId()));
+	}
+	
+	
 
 	public void testLoanPerfObject() throws PersistenceException {
 		java.sql.Date currentDate = new java.sql.Date(System

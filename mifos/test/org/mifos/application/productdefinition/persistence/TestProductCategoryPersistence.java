@@ -59,6 +59,19 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		}
 	}
 	
+
+	public void testGetProductTypesByType() throws Exception {
+		ProductTypeEntity productTypeEntity=
+			productCategoryPersistence.getProductTypes(ProductType.LOAN.getValue());
+		assertNotNull(productTypeEntity);
+			if (productTypeEntity.getType() == ProductType.LOAN) {
+				assertEquals("Loan",productTypeEntity.getName());
+			}
+			else {
+				assertEquals("",productTypeEntity.getName());
+			}
+	}
+	
 	public void testGetPrdCategory() throws Exception {
 		assertEquals(Integer.valueOf("0"),
 			productCategoryPersistence.getProductCategory(

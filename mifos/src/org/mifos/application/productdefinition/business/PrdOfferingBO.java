@@ -39,6 +39,7 @@
 package org.mifos.application.productdefinition.business;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -48,6 +49,7 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -91,6 +93,12 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
 	private String description;
 
+	private Set<PrdOfferingBO> collectionProductMix;
+	
+	private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed products
+	
+	private Short prdMixFlag;  // Tagging products for which mixes were defined
+	
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
@@ -100,6 +108,8 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		prdType = null;
 		office = null;
 		prdApplicableMaster = null;
+		collectionProductMix=null;
+		prdOfferingNotAllowedId=null;
 	}
 
 	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
@@ -107,7 +117,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate)
 			throws ProductDefinitionException {
 		this(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate, null, null);
+				prdApplicableMaster, startDate,null,null);
 	}
 
 	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
@@ -134,6 +144,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		this.description = description;
 		this.globalPrdOfferingNum = generatePrdOfferingGlobalNum();
 		this.prdStatus = getPrdStatus(startDate, prdType);
+		
 		try {
 			this.office = new OfficePersistence().getOffice(userContext
 					.getBranchId());
@@ -236,6 +247,32 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Set<PrdOfferingBO> getCollectionProductMix() {
+		return collectionProductMix;
+	}
+
+	public void setCollectionProductMix(Set<PrdOfferingBO> collectionProductMix) {
+		this.collectionProductMix = collectionProductMix;
+	}
+
+	public Set<PrdOfferingBO> getPrdOfferingNotAllowedId() {
+		return prdOfferingNotAllowedId;
+	}
+
+	public void setPrdOfferingNotAllowedId(
+			Set<PrdOfferingBO> prdOfferingNotAllowedId) {
+		this.prdOfferingNotAllowedId = prdOfferingNotAllowedId;
+	}
+
+
+	public Short getPrdMixFlag() {
+		return prdMixFlag;
+	}
+
+	public void setPrdMixFlag(Short prdMixFlag) {
+		this.prdMixFlag = prdMixFlag;
 	}
 
 	private String generatePrdOfferingGlobalNum()
@@ -416,4 +453,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
 	}
 
+	public void updatePrdOfferingFlag()
+			throws PersistenceException {
+		this.setPrdMixFlag(YesNoFlag.YES.getValue());
+		new PrdOfferingPersistence().createOrUpdate(this);
+	}
 }

@@ -80,6 +80,8 @@ public interface NamedQueryConstants {
 	public String GET_CUSTOMER_MASTER_BY_SEARCH_ID="getCustomerMasterBySearchId";
 	public String GET_ALLSAVINGS_PRODUCTS = "productOffering.getAllSavingsProducts";
 	
+	public String GET_ALL_ACTIVE_SAVINGS_PRODUCTS = "productOffering.getAllActiveSavingsProducts";
+	
 	public String IS_CENTER_ACTIVE="isCenterActive";
 	//for group transfer
 	public String MASTERDATA_CENTERS_FOR_BRANCH="masterdata.centerForBranch";
@@ -171,7 +173,19 @@ public interface NamedQueryConstants {
 	public String PRD_UPDATE_NAME_COUNT="product.updateduplnamecount";
 	public String PRD_CREATE_SHORTNAME_COUNT="product.createduplshortnamecount";
 	public String PRD_UPDATE_SHORTNAME_COUNT="product.updateduplshortnamecount";
+	public String LOAD_PRODUCTS_OFFERING_MIX = "product.retrieveProductOfferingMix";
+
+	public String PRD_BYTYPE="product.bytype";
+	public String ALLOWED_PRD_OFFERING_BYTYPE="product.allowedproductofferingbytype";
+	public String NOT_ALLOWED_PRD_OFFERING_BYTYPE="product.notallowedproductofferingbytype";
+	public String NOT_ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT="product.notallowedproductformixproduct";
+	public String ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT="product.allowedproductformixproduct";
 	
+	
+	public String PRD_BYID="product.byid";
+	public String PRD_MIX_BYID="product.prdmixbyid";
+	
+
 //Loan Products
 	public String PRDLOAN_CATEGORIES="product.getloancategories";
 	public String PRDAPPLFORLOAN="product.getprdapplforloan";
@@ -208,6 +222,7 @@ public interface NamedQueryConstants {
 	public String GETCUSTOMERMEETING = "customer.getCustomerMeeting";
 	public String RECENTACCACTIVITY = "accountTrxn.recentAccountActivity";
 	public String ACCOUNTFLAGFORGIVENACCOUNT ="accounts.getAccountFlag";
+
 	
 	//for account status
 	public String ACCOUNT_FLAGS = "masterdata.accountstatusflag";
@@ -216,6 +231,8 @@ public interface NamedQueryConstants {
 	public String ACCOUNT_CHECKLIST="account.checklist";
 	public String RETRIEVEALLACCOUNTSTATES = "accounts.retrieveAllAccountStates";
 	public String STATUSCHECKLIST = "account.statusChecklist";
+	public String ACCOUNT_GETALLLOANBYCUSTOMER="accounts.GetAllLoanByCustomer";
+
 	
 	//for meeting 
 	public String GETWEEKDAYS="getWeekDays";
@@ -503,6 +520,7 @@ public interface NamedQueryConstants {
 	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
 	public String GETOFFICEINACTIVE="getCountInactiveOffice";
 	public String GET_PRD_TYPES="productdefenition.getProductTypes";
+	public String GET_PRD_TYPES_BY_ID="productmix.getProductTypesByID";	
 	public String GET_PRODUCTCATEGORY="productdefenition.getProductCategory";
 	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
 	public String GET_OFFICES_TILL_BRANCH="office.getOfficesTillBranchOfficeActive";
@@ -539,6 +557,11 @@ public interface NamedQueryConstants {
 	public String PRODUCT_STATUS="product.status";
 	public String ALL_PRD_STATES="product.getAllPrdStates";
 	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
+	public String PRODUCT_NOTMIXED_LOAN_PRODUCTS="product.getLoanOfferingsNotMixed";
+	public String PRODUCT_ALL_ACTIVE_LOAN_PRODUCTS="product.getAllActiveLoanProducts";
+
+	public String PRODUCT_NOTMIXED_SAVING_PRODUCTS="product.getSavingOfferingsNotMixed";
+
 	//m2 search quaries 
 	public String CUSTOMER_SEARCH_COUNT_FIRST_AND_LAST_NAME="Customer.cust_count_search_first_and_last_name";
 	public String CUSTOMER_SEARCH_COUNT="Customer.cust_count_search";
@@ -628,4 +651,11 @@ public interface NamedQueryConstants {
 	public String QUESTIONS_RETRIEVE_BY_TYPE = "questions.retrieveByAnswerType";
 	public String SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES = "surveys.retrieveCustomersSurveys";
 	public String SURVEYS_RETRIEVE_BY_ACCOUNTS_TYPES = "surveys.retrieveAccountsSurveys";
+	
+// products mix
+	public String LOAD_ALL_DEFINED_PRODUCTS_MIX = "productsmix.retrieveAll";
+	public String LOAD_NOT_ALLOWED_PRODUCTS = "productsmix.loadnotallowedproducts";
+	public String LOAD_DEFINED_PRODUCTS_MIX_BY_PRDOFFERING_ID = "productsmix.retrieveByProductID";
+
+
 }

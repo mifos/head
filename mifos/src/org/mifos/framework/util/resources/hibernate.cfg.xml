@@ -17,6 +17,8 @@
 		<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
 		<!-- Product Definition -->
 		<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
+		<!-- Product Mix -->
+		<mapping resource="org/mifos/application/productsmix/business/ProductMixBO.hbm.xml" />	
 
 		<!-- Audit Log -->
 		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/EntityMaster.hbm.xml" />

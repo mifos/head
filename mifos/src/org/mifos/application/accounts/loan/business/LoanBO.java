@@ -112,6 +112,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -2915,5 +2916,16 @@ public class LoanBO extends AccountBO {
 	
 	public Money getNetOfSaving(){
 		return getRemainingPrincipalAmount().subtract(getCustomer().getSavingsBalance());
+	}
+
+	public boolean prdOfferingsCanCoexist(Short idPrdOff_B)
+			throws PersistenceException {
+		try {
+			return new ProductMixPersistence().doesPrdOfferingsCanCoexist(
+					this.getLoanOffering().getPrdOfferingId(), idPrdOff_B);
+		}
+		catch (PersistenceException e) {
+			throw new PersistenceException(e);
+		}
 	}
 }

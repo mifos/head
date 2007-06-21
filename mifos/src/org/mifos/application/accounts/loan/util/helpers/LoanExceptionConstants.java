@@ -55,4 +55,6 @@ public interface LoanExceptionConstants {
 	public final String INVALIDFIELD = "exceptions.application.loan.invalidfield";
 	public final String INVALIDMINMAX = "errors.defMinMax";
 	public final String SELECT_ATLEAST_ONE_RECORD = "errors.alleastonerecord";
+	public final String LOANCOULDNOTCOEXIST = "errors.loancouldnotcoexist";
+	
 }

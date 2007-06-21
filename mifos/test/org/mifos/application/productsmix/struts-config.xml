@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="productMixActionForm" type="org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm"/>	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+	<!-- Products mix -->
+	<action path="/productMixAction" 
+			type="org.mifos.application.productsmix.struts.action.ProductMixAction"
+  			name="productMixActionForm"
+       		parameter="method"
+       		scope="session"
+       		input="/productMixAction.do?method=validate" 
+       		validate="true"
+       		>
+     		<forward name="load_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+      		<forward name="loadParents_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+        	<forward name="preview_success" path="/pages/application/productsmix/jsp/previewProductsMix.jsp"></forward>
+        	<forward name="previous_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+   	    	<forward name="previous_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+        	<forward name="preview_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+	       	<forward name="create_success" path="/pages/application/productsmix/jsp/createProductsMixConfirmation.jsp"></forward>
+        	<forward name="get_success" path="/pages/application/productsmix/jsp/viewProductsMixDetails.jsp"></forward>
+        	<forward name="update_success" path="/productMixAction.do?method=get"></forward>
+        	<forward name="viewAllProductMix_success" path="/pages/application/productsmix/jsp/viewProductsMix.jsp"></forward>
+    		<forward name="manage_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"></forward>
+     		<forward name="editpreview_success" path="/pages/application/productsmix/jsp/editPreviewProductsMix.jsp"></forward>
+     		<forward name="edit_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"></forward>
+ 
+        	<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+       		<forward name="cancel_success" path="/productMixAction.do?method=get"></forward>
+       		<forward name="viewProductMixChangeLog" path="/pages/application/productsmix/jsp/viewChangeLog.jsp" />
+			<forward name="cancelProductMixChangeLog" path="/productMixAction.do?method=get" />
+       		
+      	<!-- adding forward for log-->
+       		
+       		
+    </action>
+	<!-- End Products mix -->
+
+    </action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/meeting/validation.xml,org/mifos/application/meeting/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

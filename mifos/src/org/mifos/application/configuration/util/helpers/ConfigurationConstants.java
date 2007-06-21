@@ -33,6 +33,9 @@ public static final short INTEREST_DAYS=360;
 public static final String SURVEY="Survey";
 public static final String MEETING="Meeting";
 
+public static final String PRODUCTS ="products";
+public static final String PRODUCT ="product";
+public static final String PRO ="pro";
 public static final String CONFIG_SALUTATION="ConfigSalutation";
 public static final String CONFIG_MARITAL_STATUS="ConfigMaritalStatus";
 public static final String CONFIG_USER_TITLE="ConfigUserTitle";
@@ -47,3 +50,5 @@ public static final String CONFIG_ETHNICITY="ConfigEthnicity";
 
 
 }
+
+

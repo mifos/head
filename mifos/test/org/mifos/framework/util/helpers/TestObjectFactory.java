@@ -162,6 +162,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
@@ -1062,6 +1063,7 @@ public class TestObjectFactory {
 			session.close();
 		}
 	}
+
 
 	private static void deleteFee(FeeBO fee) {
 		Session session = HibernateUtil.getSessionTL();
@@ -2124,6 +2126,64 @@ public class TestObjectFactory {
 				meetingIntCalc, meetingIntPost);
 	}
 
-	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
+ 	public static void cleanUp(SavingsOfferingBO savingPrdBO) {
+ 		if (null != savingPrdBO) {
+ 			deleteSavingProduct(savingPrdBO);
+ 			savingPrdBO = null;
+ 		}
+ 	}
+
+ 	public static void cleanUp(MeetingBO meeting) {
+ 		if (null != meeting) {
+ 			deleteMeeting(meeting);
+ 			meeting = null;
+ 		}
+ 	}
+ 	
+ 	public static void cleanUp(ProductMixBO prdmix) {
+ 		if (null != prdmix) {
+ 			deleteProductMix(prdmix);
+ 			prdmix = null;
+ 		}
+ 	}
+ 	
+ 	private static void deleteProductMix(ProductMixBO prdmix) {
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(prdmix, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(prdmix);
+ 		transaction.commit();
+ 	}
+
+ 	private static void deleteSavingProduct(SavingsOfferingBO savingPrdBO) {
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(savingPrdBO, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(savingPrdBO);
+ 		transaction.commit();
+ 	}
+ 	
+ 	private static void deleteMeeting(MeetingBO meeting) {
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(meeting, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(meeting);
+ 		transaction.commit();
+ 	}
+ 	
+ 	public static ProductMixBO createAllowedProductsMix(SavingsOfferingBO saving1,SavingsOfferingBO saving2) {
+ 		ProductMixBO prdmix;
+ 		try {
+ 			prdmix = new ProductMixBO(saving1, saving2);
+ 			addObject(testObjectPersistence.persist(prdmix));
+ 			HibernateUtil.commitTransaction();
+ 		}
+ 		catch (Exception e) {
+ 			throw new RuntimeException(e);
+ 		}
+ 		return prdmix;
+ 	}
+
+ 	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
 	
 }

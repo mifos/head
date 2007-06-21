@@ -18,6 +18,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -215,6 +216,28 @@ public class LoanPersistence extends Persistence {
 		}
 	}
 
+	
+	@SuppressWarnings("cast")
+	public List<LoanBO> getLoanAccountsActiveInGoodBadStanding(
+			Integer customerId)
+			throws PersistenceException {
+		try {
+			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put(LoanConstants.LOANACTIVEINGOODSTAND, AccountStates.LOANACC_ACTIVEINGOODSTANDING);
+			queryParameters.put(LoanConstants.CUSTOMER, customerId);
+			queryParameters.put(LoanConstants.LOANACTIVEINBADSTAND, AccountStates.LOANACC_BADSTANDING);
+			queryParameters.put(LoanConstants.ACCOUNTTYPE_ID, AccountTypes.LOAN_ACCOUNT.getValue());
+
+			return (List<LoanBO>) executeNamedQuery(
+					NamedQueryConstants.ACCOUNT_GETALLLOANBYCUSTOMER,
+					queryParameters);
+
+		}
+		catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+	}
+	
 	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
 			Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException{
 		int totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = 0;

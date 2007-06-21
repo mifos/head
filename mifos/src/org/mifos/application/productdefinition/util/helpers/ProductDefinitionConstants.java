@@ -97,14 +97,27 @@ public interface ProductDefinitionConstants {
 	
 	//product type for business processor
 	public String PRODUCTTYPE="ProductType";
+	public String PRODUCTID="prdOfferingId";
+	public String NOTALLOWEDPRODUCTID="notAllowedPrdOfferingId";
 	public String PRODUCTCATEGORYLIST="ProductCategoryList";
 	public String LOCALEID="localeId";
 	public String STATUS="status";
 	public String PRDCATEGORYSTATUSLIST="PrdCategoryStatusList";
 	
 	//Product Configuration(Lateness Definition)
+	//Product Mix
 	public String GETPATHPRDCONF="ProductConfiguration";
 	public String PRODUCTTYPELIST="ProductTypeList";
+	public String PRODUCTINSTANCELIST="ProductInstanceList";
+	public String ALLOWEDPRODUCTLIST="AllowedProductList";
+	public String NOTALLOWEDPRODUCTLIST="NotAllowedProductList";
+	public String OLDNOTALLOWEDPRODUCTLIST="OldNotAllowedProductList";
+	
+	public String TABALLOWED="tabAllowed";
+	public String SHOWMESSAGE="showMessage";
+	
+	public String PRODUCTMIXLIST="ProductMixList";
+
 	public String PRODUCTTYPEID="productTypeID";
 	public String PRODUCTCATEGORYSTATUSID="prdCategoryStatusId";
 	public String LOANPRODUCTID="loanId";
@@ -113,8 +126,12 @@ public interface ProductDefinitionConstants {
 	//Product Offering
 	public String PRDOFFERINGNAME="prdOfferingName";
 	public String PRDOFFERINGSHORTNAME="prdOfferingShortName";
+	public String PRODUCTOFFERINGLIST="productOfferingList";
+	public String OLDPRODUCTOFFERINGLIST="oldProductOfferingList";
+	public String NOTALLOWEDPRODUCTOFFERINGLIST="notAllowedproductOfferingList";
 	
 	//Loan Product
+
 	public String GETPATHLOANPRODUCT="LoanProduct";
 	public String LOANPRODUCTCATEGORYLIST="LoanProductCategoryList";
 	public String LOANAPPLFORLIST="LoanApplForList";
@@ -142,6 +159,7 @@ public interface ProductDefinitionConstants {
 	public Short LOANCATEGORYIDVALUE=5;
 
 	//Savings Product
+
 	public String GETPATHSAVINGSPRODUCT="SavingsProduct";
 	public String SAVINGSPRODUCTCATEGORYLIST="SavingsProductCategoryList";
 	public String SAVINGSAPPLFORLIST="SavingsApplForList";
@@ -225,9 +243,12 @@ public interface ProductDefinitionConstants {
 	public String DORMANCY_DAYS = "dormancy_days";
 	public String DORMANCYDAYS ="dormancy days";
 	public String LATENESSDAYS = "lateness days";
+
 	public String MAX_DAYS="product.maxDays";
 	public String ERROR_MAX_DAYS="errors.maxValue";
 	
+	public String PRODUCT_TYPE="product type";
+	public String PRODUCT_INSTANCE_NAME = "product instance name";
 	public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE="errors.principallast_invalidgrace";
 }
 

@@ -197,8 +197,36 @@
 						</tr>
 					</table>
 					<br>
+					<!-- Manage products mix  -->
 					<span class="fontnormalbold">
 					<mifos:mifoslabel name="admin.Manage" />
+					<mifos:mifoslabel name="admin.product" />
+					<mifos:mifoslabel name="admin.mix" />
+					</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><html-el:link
+								href="productMixAction.do?method=viewAllProductMix&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.View" />
+								<mifos:mifoslabel name="admin.products" />
+								<mifos:mifoslabel name="admin.mix" />
+								</html-el:link> | <html-el:link
+								href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.define" />
+								<mifos:mifoslabel name="admin.products"/>
+								<mifos:mifoslabel name="admin.mix"/>
+								</html-el:link></td>
+						</tr>
+					</table>
+					<br>
+					
+					<!--  -->
+					<span class="fontnormalbold">
+					<mifos:mifoslabel name="admin.Manage" />
+
 					<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 					<mifos:mifoslabel name="admin.products" />
 					</span><br>

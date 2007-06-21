@@ -11,6 +11,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -38,6 +39,7 @@ public enum BusinessServiceName {
 	Admin(AdminBusinessService.class),
 	AuditLog(AuditBusinessService.class),
 	Configuration(ConfigurationBusinessService.class),
+	PrdMix(ProductMixBusinessService.class),
 	;
 
 	private String name;

@@ -82,6 +82,21 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.retrieveDormancyDays());
 	}
 
+	
+	public void testGetSavingsOfferingsNotMixed() throws Exception {
+		savingsOffering = createSavingsOfferingBO();
+		assertEquals(1, new SavingsPrdPersistence()
+				.getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
+		TestObjectFactory.removeObject(savingsOffering);
+	}
+
+	public void testGetAllActiveSavingsProducts() throws Exception {
+		savingsOffering = createSavingsOfferingBO();
+		assertEquals(1, new SavingsPrdPersistence()
+				.getAllActiveSavingsProducts().size());
+		TestObjectFactory.removeObject(savingsOffering);
+	}	
+	
 	public void testGetSavingsApplicableRecurrenceTypes() throws Exception {
 		assertEquals(2, new SavingsPrdPersistence()
 				.getSavingsApplicableRecurrenceTypes().size());

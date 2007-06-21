@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.productsmix.business.ProductMixBO" table="PRD_OFFERING_MIX">
+		<id name="prdOfferingMixId" column="PRD_OFFERING_MIX_ID" access="field">
+			<generator class="native" />
+		</id>
+		<version name="versionNo" column="VERSION_NO" unsaved-value="null" />
+
+		<property name="createdDate" column="CREATED_DATE" update="false" />
+		<property name="createdBy" column="CREATED_BY" update="false" />
+		<property name="updatedDate" column="UPDATED_DATE" />
+		<property name="updatedBy" column="UPDATED_BY" />
+
+    <!-- Associations -->
+    <!-- bi-directional many-to-one association to PrdOffering -->
+    <many-to-one name="prdOfferingId" class="org.mifos.application.productdefinition.business.PrdOfferingBO" lazy="false" cascade="none" not-null="true">
+        <column name="PRD_OFFERING_ID" />
+    </many-to-one>
+    <!-- bi-directional many-to-one association to PrdOffering -->
+    <many-to-one name="prdOfferingNotAllowedId" class="org.mifos.application.productdefinition.business.PrdOfferingBO" lazy="false" cascade="none"  not-null="true">
+        <column name="PRD_OFFERING_NOT_ALLOWED_ID" />
+    </many-to-one>
+
+	</class>
+
+	<!-- This query obtains all defined products mix -->
+	<query name="productsmix.retrieveAll">
+		<![CDATA[ from org.mifos.application.productsmix.business.ProductMixBO as prdmix order by prdmix.prdOfferingId.prdOfferingId]]>
+	</query>
+
+	<!-- This query obtains all defined products mix for a product instance -->
+	<query name="productsmix.retrieveByProductID">
+		<![CDATA[ from org.mifos.application.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId ]]>
+	</query>
+	
+	<!-- This query obtains all not allowed products mix for a product instance -->
+	<query name="productsmix.loadnotallowedproducts">
+		<![CDATA[ select prdmix.prdOfferingNotAllowedId from  org.mifos.application.productsmix.business.ProductMixBO prdmix where prdmix.prdOfferingId.prdOfferingId=:prdofferingId ]]>
+	</query>
+	<query name="product.prdmixbyid">
+		<![CDATA[from org.mifos.application.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId and prdmix.prdOfferingNotAllowedId.prdOfferingId=:notAllowedPrdOfferingId]]>
+	</query>	 
+	<query name="product.doesprdofferingscancoexist">
+		<![CDATA[from org.mifos.application.productsmix.business.ProductMixBO as prdmix where prdmix.prdOfferingId.prdOfferingId=:prdOfferingId_A and prdmix.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId_B]]>
+	</query>	 
+
+</hibernate-mapping>

@@ -63,6 +63,7 @@ import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
+import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
@@ -95,6 +96,7 @@ public class ApplicationTestSuite extends TestSuite {
 		TestSuite suite = new ApplicationTestSuite();
 
 		// Put fast tests at the top for quick feedback if they fail
+		suite.addTest(ProductMixTestSuite.suite());
 		suite.addTest(FastTests.suite());
 		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());

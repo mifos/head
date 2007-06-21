@@ -4,8 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
+
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -78,6 +82,7 @@ public class PrdOfferingPersistence extends Persistence {
 				+ queryResult);
 		return queryResult;
 	}
+	
 
 	@SuppressWarnings("cast")
 	public List<PrdStatusEntity> getApplicablePrdStatus(
@@ -98,4 +103,112 @@ public class PrdOfferingPersistence extends Persistence {
 				+ prdStatusList);
 		return prdStatusList;
 	}
+
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getAllPrdOffringByType(String prdType)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
+				prdType);
+		if(prdType.equals(ProductType.LOAN.getValue().toString()))
+			queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
+			else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
+				queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+		
+		return  executeNamedQuery(
+				NamedQueryConstants.PRD_BYTYPE, queryParameters);
+			
+	}
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getAllowedPrdOfferingsByType(String prdId,String prdType)
+			throws PersistenceException {
+				
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
+				prdType);
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
+				prdId);	
+		if(prdType.equals(ProductType.LOAN.getValue().toString()))
+			queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
+			else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
+				queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+		
+		return  executeNamedQuery(
+				NamedQueryConstants.ALLOWED_PRD_OFFERING_BYTYPE, queryParameters);
+			
+	}
+	
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getAllowedPrdOfferingsForMixProduct(String prdId,String prdType)
+			throws PersistenceException {
+				
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
+				prdType);
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
+				prdId);	
+		if(prdType.equals(ProductType.LOAN.getValue().toString()))
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
+		else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
+			queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+		return  executeNamedQuery(
+				NamedQueryConstants.ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT, queryParameters);
+			
+	}
+	
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getNotAllowedPrdOfferingsByType(String prdId)
+			throws PersistenceException {
+				
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
+				prdId);	
+		return  executeNamedQuery(
+				NamedQueryConstants.NOT_ALLOWED_PRD_OFFERING_BYTYPE, queryParameters);
+			
+	}	
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getNotAllowedPrdOfferingsForMixProduct(String prdId,String prdType)
+			throws PersistenceException {
+				
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
+				prdId);	
+		return  executeNamedQuery(
+				NamedQueryConstants.NOT_ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT, queryParameters);
+			
+	}	
+	
+	
+	public PrdOfferingBO getPrdOffering(Short prdofferingId)
+			throws PersistenceException {
+		return (PrdOfferingBO) getPersistentObject(PrdOfferingBO.class,
+				prdofferingId);
+	}
+	public PrdOfferingBO getPrdOffringByID(Short prdId)
+			throws PersistenceException {
+		prdLogger.debug("getting the product offering by id :"
+				+ prdId);
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
+				prdId);
+		 	PrdOfferingBO prdOffring = (PrdOfferingBO) execUniqueResultNamedQuery(
+				NamedQueryConstants.PRD_BYID, queryParameters);
+		 	return prdOffring;
+	}
+	
+	
+	@SuppressWarnings("cast")
+	public ProductTypeEntity getProductTypes(Short prdtype)
+			throws PersistenceException {
+		return (ProductTypeEntity) getPersistentObject(ProductTypeEntity.class, prdtype);
+	}
+	
+	@SuppressWarnings("cast")
+	public List<PrdOfferingBO> getPrdOfferingMix() throws PersistenceException {
+		return (List<PrdOfferingBO>) executeNamedQuery(
+				NamedQueryConstants.LOAD_PRODUCTS_OFFERING_MIX, null);
+	}
+
+	
 }

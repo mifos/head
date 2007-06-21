@@ -177,8 +177,15 @@ public interface LoanConstants {
 	public String APPL_RECORDS="applicableRecords";
 	
 	public final String REVERSE_LOAN_DIBURSAL_ACTION_FORM = "reverseloandisbactionform";
+	public final String LOANACTIVEINGOODSTAND = "loanactiveingoodstand";
+	public final String LOANACTIVEINBADSTAND = "loanactiveinbadstand";
+	public final String ACCOUNTTYPE_ID = "accounttype_id";
 	public static final String ERROR_LOAN_ACCOUNT_ID="errors.specifyloanaccountId";
 	public static final String NOTE="Note";
 	public static final String PAYMENTS_LIST="payments";
 	public static final String PAYMENTS_SIZE="paymentssize";
+	public static final String BRANCHID="branchId";
+	public static final String LOANOFFICERID="loanOfficerId";
+	public static final String LOANPRODUCTID="loanProductId";
+	 
 }

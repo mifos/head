@@ -63,6 +63,7 @@ import org.mifos.application.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.application.productdefinition.struts.action.PrdCategoryAction;
 import org.mifos.application.productdefinition.struts.action.PrdConfAction;
 import org.mifos.application.productdefinition.struts.action.SavingsPrdAction;
+import org.mifos.application.productsmix.struts.action.ProductMixAction;
 import org.mifos.application.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.application.reports.struts.action.ReportsAction;
 import org.mifos.application.reports.struts.action.ReportsDataSourceAction;
@@ -245,6 +246,7 @@ public class ActivityMapper {
 		parseActionSecurity(QuestionsAction.getSecurity());
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 		parseActionSecurity(AddGroupMembershipAction.getSecurity());
+		parseActionSecurity(ProductMixAction.getSecurity());
 		parseActionSecurity(SurveyInstanceAction.getSecurity());
 		parseActionSecurity(BirtReportsUploadAction.getSecurity());
 		parseActionSecurity(ViewReportsAction.getSecurity());

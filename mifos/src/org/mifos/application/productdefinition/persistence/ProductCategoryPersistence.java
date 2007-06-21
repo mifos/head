@@ -48,7 +48,12 @@ public class ProductCategoryPersistence extends Persistence {
 		return (List<ProductTypeEntity>) executeNamedQuery(
 				NamedQueryConstants.GET_PRD_TYPES, null);
 	}
-
+	
+	@SuppressWarnings("cast")
+	public ProductTypeEntity getProductTypes(Short prdtype)
+			throws PersistenceException {
+		return (ProductTypeEntity) getPersistentObject(ProductTypeEntity.class, prdtype);
+	}
 	public ProductCategoryBO findByGlobalNum(String globalNum)
 			throws PersistenceException {
 		Map<Object, Object> queryParameters = new HashMap<Object, Object>();
@@ -73,5 +78,10 @@ public class ProductCategoryPersistence extends Persistence {
 				NamedQueryConstants.PRODUCTCATEGORIES_SEARCH, null);
 
 	}
-
+	@SuppressWarnings("cast")
+	public ProductTypeEntity getProductTypesByID()
+			throws PersistenceException {
+		return (ProductTypeEntity) executeNamedQuery(
+				NamedQueryConstants.GET_PRD_TYPES, null);
+	}
 }

@@ -254,6 +254,16 @@
 			and actiondate.paymentStatus=:PAYMENTSTATUS 
 			group by account.accountId]]>
 	</query>
+	<!-- Get all Loan accounts by customer (active in good/Bad Standing)-->
+	<query name="accounts.GetAllLoanByCustomer">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account
+			where 
+			account.accountState.id in (:loanactiveingoodstand,:loanactiveinbadstand)
+			and account.accountType.accountTypeId=:accounttype_id  
+			and account.customer.customerId=:customer
+			group by account.accountId]]>
+	</query>
+	<!--    -->
 	<query name="accounts.GetLoanArrears">
 		<![CDATA[select account.accountId from org.mifos.application.accounts.loan.business.LoanBO account
 			join  account.accountActionDates as actiondate

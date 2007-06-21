@@ -58,6 +58,7 @@ public interface AccountConstants {
 	public final String CUSTOMERID = "customerId";
 	public final String PRDTYPEID="prdTypeId";
 	public final String PRDSTATUS = "prdStatus";
+	public final String PRDOFFERINGID = "prdofferingId";
 	public final String PRODUCT_APPLICABLE_TO="prdApplicableMaster";
 	public final Object GLOBALACCOUNTNUM = "globalAccountNum";
 	

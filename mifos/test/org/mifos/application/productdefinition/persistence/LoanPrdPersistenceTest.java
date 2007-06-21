@@ -40,6 +40,16 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 		assertEquals(Short.valueOf("10"), latenessDays);
 	}
 
+	
+	public void testGetAllActiveLoanOfferings() throws PersistenceException {
+		List <LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getAllActiveLoanOfferings(Short.valueOf("1"));
+		assertNotNull(loanOfferingList);
+	}
+		
+	public void testGetLoanOfferingsNotMixed() throws PersistenceException {
+		List <LoanOfferingBO> loanOfferingList = new LoanPrdPersistence().getLoanOfferingsNotMixed(Short.valueOf("1"));
+		assertNotNull(loanOfferingList);
+	}
 	public void testGetLoanOffering() throws PersistenceException {
 		loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();

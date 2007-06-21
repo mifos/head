@@ -26,11 +26,16 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	protected UserContext userContext = null;
 	
 	protected LoanBO loanBO = null;
+	
+	protected LoanBO secondLoanBO = null;
 
 	protected CustomerBO center = null;
 
 	protected CustomerBO group = null;
-	
+
+	protected CustomerBO center2 = null;
+
+	protected CustomerBO group2 = null;	
 	private Date currentDate = null;
 	
 	private String flowKey;
@@ -56,10 +61,14 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(secondLoanBO);
+		TestObjectFactory.cleanUp(group2);
+		TestObjectFactory.cleanUp(center2);
+		
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-
+	
 	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -73,7 +82,18 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 				disbursalType);
 
 	}
+	private LoanBO getLoanAccountInGoodStanding(AccountState state, Date startDate,
+			int disbursalType) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getTypicalMeeting());
+		center2 = TestObjectFactory.createCenter("Center2", meeting);
+		group2 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center2);
+		
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"888888", group2, state, startDate, loanBO.getLoanOffering(),
+				disbursalType);
 
+	}
 	public void testLoad() throws Exception  {
 		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -191,6 +211,8 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	//	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	//	String date = sdf.format(currentDate);
 		loanBO = getLoanAccount(AccountState.LOANACC_APPROVED,
+				currentDate, disbursalType);
+		secondLoanBO = getLoanAccountInGoodStanding(AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				currentDate, disbursalType);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());

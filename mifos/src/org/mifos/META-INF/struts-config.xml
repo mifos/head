@@ -136,6 +136,9 @@
 		<form-bean name="questionActionForm" type="org.mifos.application.surveys.struts.actionforms.QuestionActionForm"/>
 		<form-bean name="surveyInstanceActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyInstanceActionForm"/>		
 
+		<!-- Products mix -->
+		<form-bean name="productMixActionForm" type="org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm"/>
+		<!-- End Products mix -->
 
 	</form-beans>
 
@@ -170,6 +173,41 @@
 	</global-forwards>
 
 	<action-mappings>
+	<!-- Products mix -->
+	<action path="/productMixAction" 
+			type="org.mifos.application.productsmix.struts.action.ProductMixAction"
+  			name="productMixActionForm"
+       		parameter="method"
+       		scope="session"
+       		input="/productMixAction.do?method=validate" 
+       		validate="true"
+       		>
+     		<forward name="load_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+      		<forward name="loadParents_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+        	<forward name="preview_success" path="/pages/application/productsmix/jsp/previewProductsMix.jsp"></forward>
+        	<forward name="previous_success" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+   	    	<forward name="previous_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+        	<forward name="preview_failure" path="/pages/application/productsmix/jsp/createProductsMix.jsp"></forward>
+	       	<forward name="create_success" path="/pages/application/productsmix/jsp/createProductsMixConfirmation.jsp"></forward>
+        	<forward name="get_success" path="/pages/application/productsmix/jsp/viewProductsMixDetails.jsp"></forward>
+        	<forward name="update_success" path="/productMixAction.do?method=get"></forward>
+        	<forward name="viewAllProductMix_success" path="/pages/application/productsmix/jsp/viewProductsMix.jsp"></forward>
+    		<forward name="manage_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"></forward>
+     		<forward name="editpreview_success" path="/pages/application/productsmix/jsp/editPreviewProductsMix.jsp"></forward>
+     		<forward name="edit_success" path="/pages/application/productsmix/jsp/editProductsMix.jsp"></forward>
+ 
+        	<forward name="cancelCreate_success" path="/AdminAction.do?method=load"></forward>
+       		<forward name="cancel_success" path="/productMixAction.do?method=get"></forward>
+       		<forward name="viewProductMixChangeLog" path="/pages/application/productsmix/jsp/viewChangeLog.jsp" />
+			<forward name="cancelProductMixChangeLog" path="/productMixAction.do?method=get" />
+       		
+      	<!-- adding forward for log-->
+       		
+       		
+    </action>
+	<!-- End Products mix -->
+	
+	
 	<action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction"
   			name="custSearchActionForm"
        		parameter="method"
@@ -551,6 +589,7 @@
 		<action path="/loanDisbursmentAction" type="org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction" parameter="method" scope="session" name="loanDisbursmentActionForm" validate="true"
 			input="/loanDisbursmentAction.do?method=validate">
 			<forward name="load_success" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
+			<forward name="load_failure" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
 			<forward name="preview_success" path="/pages/application/loan/jsp/Review_loanDisbursment.jsp" />
 			<forward name="preview_failure" path="/pages/application/loan/jsp/DisburseLoan.jsp" />
 			<forward name="previous_success" path="/pages/application/loan/jsp/DisburseLoan.jsp" />

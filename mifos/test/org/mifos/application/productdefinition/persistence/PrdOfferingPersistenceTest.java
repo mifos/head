@@ -32,11 +32,35 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 		assertEquals(Short.valueOf("10"), latenessDays);
 	}
 
+	public void testGetAllPrdOffringByType() throws Exception {
+		assertNotNull(new PrdOfferingPersistence().getAllPrdOffringByType(ProductType.LOAN.getValue().toString()));
+	}
+
 	public void testGetMaxPrdOfferingWithouProduct()
 			throws PersistenceException {
 		assertNull(new PrdOfferingPersistence().getMaxPrdOffering());
 	}
 
+	public void testGetAllowedPrdOfferingsByType() throws PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("Eddikhar", "Edkh");
+		assertNotNull(new PrdOfferingPersistence().getAllowedPrdOfferingsByType(
+				savingsOffering.getPrdOfferingId().toString(),
+				ProductType.SAVINGS.getValue().toString()));
+		TestObjectFactory.removeObject(savingsOffering);
+	}
+
+	public void testGetAllowedPrdOfferingsForMixProduct()
+			throws PersistenceException {
+		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
+				.createSavingsOffering("Eddikhar", "Edkh");
+		assertNotNull(new PrdOfferingPersistence()
+				.getAllowedPrdOfferingsForMixProduct(savingsOffering
+						.getPrdOfferingId().toString(), ProductType.SAVINGS
+						.getValue().toString()));
+		TestObjectFactory.removeObject(savingsOffering);
+	}
+	
 	public void testGetMaxPrdOfferingWithProduct() throws PersistenceException {
 		SavingsOfferingBO savingsOffering = new SavingsTestHelper()
 				.createSavingsOffering("fsaf6", "ads6");

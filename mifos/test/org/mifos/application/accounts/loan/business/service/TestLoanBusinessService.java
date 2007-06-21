@@ -69,6 +69,18 @@ public class TestLoanBusinessService extends MifosTestCase {
 		assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
 	}
 
+	public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
+		accountBO = getLoanAccount();
+		loanBusinessService = new LoanBusinessService();
+		List<LoanBO> loanBO = loanBusinessService
+				.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
+						.getCustomerId());
+		assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType()
+				.getAccountTypeId());
+		assertNotNull(loanBO.size());
+
+	}
+
 	public void testGetRecentActivityView() throws SystemException,
 			NumberFormatException, ApplicationException {
 		Date startDate = new Date(System.currentTimeMillis());

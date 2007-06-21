@@ -101,7 +101,7 @@ public class LoanPrdPersistence extends Persistence {
 
 	public List<LoanOfferingBO> getAllLoanOfferings(Short localeId)
 			throws PersistenceException {
-		List<LoanOfferingBO> loanOfferings = executeNamedQuery(
+			List<LoanOfferingBO> loanOfferings = executeNamedQuery(
 				NamedQueryConstants.PRODUCT_ALL_LOAN_PRODUCTS, null);
 		if (null != loanOfferings && loanOfferings.size() > 0) {
 			for (LoanOfferingBO loanOffering : loanOfferings) {
@@ -110,7 +110,37 @@ public class LoanPrdPersistence extends Persistence {
 		}
 		return loanOfferings;
 	}
+	public List<LoanOfferingBO> getAllActiveLoanOfferings(Short localeId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
 
+		List<LoanOfferingBO> loanOfferings = executeNamedQuery(
+				NamedQueryConstants.PRODUCT_ALL_ACTIVE_LOAN_PRODUCTS, queryParameters);
+		if (null != loanOfferings && loanOfferings.size() > 0) {
+			for (LoanOfferingBO loanOffering : loanOfferings) {
+				loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+			}
+		}
+		return loanOfferings;
+	}
+	public List<LoanOfferingBO> getLoanOfferingsNotMixed(Short localeId)
+			throws PersistenceException {
+		
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
+	
+		List<LoanOfferingBO> loanOfferings = executeNamedQuery(
+				NamedQueryConstants.PRODUCT_NOTMIXED_LOAN_PRODUCTS, queryParameters);
+		if (null != loanOfferings && loanOfferings.size() > 0) {
+			for (LoanOfferingBO loanOffering : loanOfferings) {
+				loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+			}
+		}
+		return loanOfferings;
+	}
+
+	
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
 			CustomerLevelEntity customerLevel) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();

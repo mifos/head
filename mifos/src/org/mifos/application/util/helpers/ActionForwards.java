@@ -172,7 +172,7 @@ public enum ActionForwards {
 	loadSearch_failure,
 	welcome,
 	birtreport_path,
-	
+	viewAllProductMix_success,
 	// surveys additions
 	create_entry_success,
 	manage_questions,

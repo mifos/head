@@ -4,18 +4,22 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -62,6 +66,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
 		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
 				.valueOf(loanDisbursmentActionForm.getAccountId()));
+		checkIfProductsOfferingCanCoexist(mapping,form,request,response);
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan
 				.getDisbursementDate(), request);
 		loanDisbursmentActionForm.setTransactionDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), SessionUtils.getAttribute(
@@ -77,6 +82,34 @@ public class LoanDisbursmentAction extends BaseAction {
 				.getAmountTobePaidAtdisburtail(currentDate));
 		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
 		return mapping.findForward(Constants.LOAD_SUCCESS);
+	}
+	
+	
+	private void checkIfProductsOfferingCanCoexist(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
+		
+		LoanBO newloan = ((LoanBusinessService) getService()).getAccount(Integer
+				.valueOf(loanDisbursmentActionForm.getAccountId()));
+		List<LoanBO> loanList = ((LoanBusinessService) getService())
+				.getLoanAccountsActiveInGoodBadStanding(newloan.getCustomer().getCustomerId());
+		// Check if the client has an active loan accounts
+		if(null!=loanList){
+		for (LoanBO oldloan : loanList){
+		// Check if the new loan product to disburse is allowed to the existent active loan product
+			if(!oldloan.prdOfferingsCanCoexist(newloan.getLoanOffering().getPrdOfferingId()))
+			{
+				ActionErrors errors = new ActionErrors();
+				String[] param={oldloan.getLoanOffering().getPrdOfferingName(),newloan.getLoanOffering().getPrdOfferingName()};
+				errors.add(LoanExceptionConstants.LOANCOULDNOTCOEXIST,new ActionMessage(LoanExceptionConstants.LOANCOULDNOTCOEXIST,param));
+		
+				throw new AccountException(LoanExceptionConstants.LOANCOULDNOTCOEXIST);
+			} 
+			
+			
+		}
+		}	
 	}
 
 	@TransactionDemarcate(joinToken = true)

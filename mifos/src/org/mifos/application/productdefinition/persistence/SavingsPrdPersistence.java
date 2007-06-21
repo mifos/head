@@ -43,8 +43,10 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -89,4 +91,29 @@ public class SavingsPrdPersistence extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.GET_ALLSAVINGS_PRODUCTS,
 				queryParameters);
 	}
+
+	public List<SavingsOfferingBO> getAllActiveSavingsProducts()
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+		return executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVE_SAVINGS_PRODUCTS,
+				queryParameters);
+	}
+
+	
+		public List<SavingsOfferingBO> getSavingsOfferingsNotMixed(Short localeId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+
+		List<SavingsOfferingBO> savingsOfferings = executeNamedQuery(
+				NamedQueryConstants.PRODUCT_NOTMIXED_SAVING_PRODUCTS, queryParameters);
+		if (null != savingsOfferings && savingsOfferings.size() > 0) {
+			for (SavingsOfferingBO savingOffering : savingsOfferings) {
+				savingOffering.getPrdStatus().getPrdState().setLocaleId(localeId);
+			}
+		}
+		return savingsOfferings;
+	}	
+
 }

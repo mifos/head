@@ -184,6 +184,11 @@ public class TestLoanPersistence extends MifosTestCase {
 		LoanBO loanBO = loanPersistence.getAccount(loanAccount.getAccountId());
 		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
 	}
+	public void testGetLoanAccountsActiveInGoodBadStanding()
+			throws PersistenceException {
+		List<LoanBO> loanBO1 = loanPersistence.getLoanAccountsActiveInGoodBadStanding(loanAccount.getCustomer().getCustomerId());
+		assertEquals(3, loanBO1.size());
+	}
 
 	public void testGetLastPaymentAction() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
@@ -377,5 +382,5 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(1,badLoanList.size());
 		
 		
-	}
+	}	
 }

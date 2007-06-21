@@ -102,7 +102,15 @@ public class LoanBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-
+	public  List<LoanBO> getLoanAccountsActiveInGoodBadStanding(
+			Integer customerId) throws ServiceException {
+		try {
+			return new LoanPersistence().getLoanAccountsActiveInGoodBadStanding(customerId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
 	public Short getLastPaymentAction(Integer accountId)
 			throws ServiceException {
 		try {

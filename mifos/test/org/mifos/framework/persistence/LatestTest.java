@@ -49,7 +49,6 @@ public class LatestTest extends TestCase {
 
 		DataStore upgraded = applyRealUpgrades();
 		String upgradeDump = new SqlDumper().dump(upgraded);
-		
 		assertEquals(latestDump, upgradeDump);
 	}
 
