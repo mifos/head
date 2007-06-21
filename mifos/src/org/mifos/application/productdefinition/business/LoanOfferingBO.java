@@ -52,6 +52,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -119,6 +120,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+	
+	public static LoanOfferingBO ALL_LOAN_PRD = new LoanOfferingBO();
+	static {
+		ALL_LOAN_PRD.setPrdOfferingName("ALL");
+	}
 
 	public LoanOfferingBO(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,

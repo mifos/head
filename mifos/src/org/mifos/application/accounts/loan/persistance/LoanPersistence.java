@@ -254,11 +254,11 @@ public class LoanPersistence extends Persistence {
 	private StringBuilder loanQueryString(Short branchId, Short loanOfficerId, Short loanProductId,String goodAccountIdQueryString) {
 		
 		StringBuilder queryString = new StringBuilder(goodAccountIdQueryString);
-		if (loanOfficerId != null) {
+		if (loanOfficerId != -1) {
 			queryString.append(" and loan.personnel.personnelId = "
 					+ loanOfficerId);
 		}
-		if (loanProductId != null) {
+		if (loanProductId != -1) {
 			queryString.append(" and loan.loanOffering.prdOfferingId = "
 					+ loanProductId);
 		}
