@@ -48,6 +48,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -57,6 +58,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -206,19 +208,25 @@ public class LookupOptionsAction extends BaseAction {
 		return mapping.findForward(actionForward.toString());
 	}
 		
-	private Boolean ProcessOneConfigurationEntity(String[] updatedList, Short valueListId, Short localeId)
+	private void ProcessOneConfigurationEntity(HttpServletRequest request, String[] updatedList, String valueListName, Short localeId) throws PersistenceException
 	{
-		Boolean result = false;
-		CustomValueList customValueList = MifosValueList.mapUpdateStringArrayToCustomValueList(updatedList, valueListId, localeId);
-		result = UpdateDatabase(customValueList);
-		return result;		
+		Short valueListId = Short.parseShort(request.getParameter(valueListName));	
+		if ((updatedList != null) && (updatedList.length > 0)) {
+			CustomValueList customValueList = MifosValueList.mapUpdateStringArrayToCustomValueList(updatedList, valueListId, localeId);
+			UpdateDatabase(customValueList, localeId);
+		}
 	}
 	
-	private Boolean UpdateDatabase(CustomValueList list) 
+	private void UpdateDatabase(CustomValueList valueList, Short localeId) throws PersistenceException 
 	{
-		Boolean result = false;
-		return result;
-	  
+		MasterPersistence masterPersistence = new MasterPersistence();
+		for (CustomValueListElement element : valueList.getCustomValueListElements()) {
+			if (element.getLookUpId() != 0) {
+				masterPersistence.updateValueListElementForLocale(element.getLookUpId(), localeId, element.getLookUpValue());
+			} else {
+				masterPersistence.addValueListElementForLocale(valueList.getEntityId(), element.getLookUpValue(), localeId);
+			}
+		}
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -228,50 +236,30 @@ public class LookupOptionsAction extends BaseAction {
 		logger.debug("Inside update method");
 		Short localeId = getUserContext(request).getLocaleId();
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
-		String[] updatedList = lookupOptionsActionForm.getSalutationList();
-		Short valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_SALUTATION,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getUserTitleList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_USER_TITLE,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getMaritalStatusList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_MARITAL_STATUS,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getEthnicityList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_ETHNICITY,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getCitizenshipList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getPurposeOfLoanList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getHandicappedList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_HANDICAPPED,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getCollateralTypeList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getOfficerTitleList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getAttendanceList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_ATTENDANCE,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
-		updatedList = lookupOptionsActionForm.getEducationLevelList();
-		valueListId = Short.parseShort(SessionUtils.getAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL,request).toString());	
-		if ((updatedList != null) && (updatedList.length > 0))
-			ProcessOneConfigurationEntity(updatedList, valueListId, localeId);
+		
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getSalutationList(), 
+				ConfigurationConstants.CONFIG_SALUTATION, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getUserTitleList(), 
+				ConfigurationConstants.CONFIG_USER_TITLE, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getMaritalStatusList(), 
+				ConfigurationConstants.CONFIG_MARITAL_STATUS, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getEthnicityList(), 
+				ConfigurationConstants.CONFIG_ETHNICITY, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getEducationLevelList(), 
+				ConfigurationConstants.CONFIG_EDUCATION_LEVEL, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getCitizenshipList(), 
+				ConfigurationConstants.CONFIG_CITIZENSHIP, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getPurposesOfLoanList(), 
+				ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getHandicappedList(), 
+				ConfigurationConstants.CONFIG_HANDICAPPED, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getCollateralTypeList(), 
+				ConfigurationConstants.CONFIG_COLLATERAL_TYPE, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getOfficerTitleList(), 
+				ConfigurationConstants.CONFIG_OFFICER_TITLE, localeId);
+		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getAttendanceList(), 
+				ConfigurationConstants.CONFIG_ATTENDANCE, localeId);
+
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

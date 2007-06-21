@@ -409,11 +409,11 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.officerTitleList = officerTitleList;
 	}
 
-	public String[] getPurposeOfLoanList() {
+	public String[] getPurposesOfLoanList() {
 		return purposeOfLoanList;
 	}
 
-	public void setPurposeOfLoanList(String[] purposeOfLoanList) {
+	public void setPurposesOfLoanList(String[] purposeOfLoanList) {
 		this.purposeOfLoanList = purposeOfLoanList;
 	}
 

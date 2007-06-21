@@ -245,7 +245,7 @@ public class MifosValueList extends BodyTagSupport {
         if (inputList!=null)
         {
         	for (CustomValueListElement element : inputList) {
-	            results.append("<OPTION value=\"" + mapCustomValueListElementToString(element) +
+	            results.append("<OPTION value=\"" + mapOriginalCustomValueListElementToString(element) +
 	            		"\">" +	element.getLookUpValue() + "</OPTION>");
 	        }
         }
@@ -295,11 +295,25 @@ public class MifosValueList extends BodyTagSupport {
 	 * "CustomValueListId;CustomValueListValue;original"
 	 * 
 	 */
-    public static String mapCustomValueListElementToString(CustomValueListElement element) {
-    	return "" + element.getLookUpId() + ";" + element.getLookUpValue() + 
-    		";original";
+    private static String mapCustomValueListElementToString(CustomValueListElement element, String statusLabel) {
+    	Integer id = element.getLookUpId();
+    	if (id == null) id = 0;
+    	return "" + id + ";" + element.getLookUpValue() + ";" +
+    		statusLabel;
     }
     
+    public static String mapAddedCustomValueListElementToString(CustomValueListElement element) {
+    	return mapCustomValueListElementToString(element, "add");
+    }
+
+    public static String mapUpdatedCustomValueListElementToString(CustomValueListElement element) {
+    	return mapCustomValueListElementToString(element, "update");
+    }
+
+    public static String mapOriginalCustomValueListElementToString(CustomValueListElement element) {
+    	return mapCustomValueListElementToString(element, "original");
+    }
+
 
 }
 
