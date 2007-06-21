@@ -186,7 +186,7 @@ public class SurveyInstanceAction extends BaseAction {
 		SurveysPersistence persistence = new SurveysPersistence();
 		
 		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
-		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+		Survey survey = (Survey) request.getAttribute(SurveysConstants.KEY_SURVEY);
 
 		//InstanceStatus status = InstanceStatus.fromInt(Integer
 		//		.parseInt(actionForm.getValue("instanceStatus")));
@@ -204,7 +204,7 @@ public class SurveyInstanceAction extends BaseAction {
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
 		//instance.setCompletedStatus(status);
-		instance.setClient(client);
+		instance.setCustomer(client);
 		instance.setOfficer(officer); 
 
 		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();

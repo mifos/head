@@ -651,11 +651,12 @@ public interface NamedQueryConstants {
 	public String QUESTIONS_RETRIEVE_BY_TYPE = "questions.retrieveByAnswerType";
 	public String SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES = "surveys.retrieveCustomersSurveys";
 	public String SURVEYS_RETRIEVE_BY_ACCOUNTS_TYPES = "surveys.retrieveAccountsSurveys";
+	public String SURVEYINSTANCE_RETRIEVE_BY_CUSTOMER = "surveys.retrieveInstancesByCustomer";
+	public String SURVEYINSTANCE_RETRIEVE_BY_SURVEY = "surveys.retrieveInstancesBySurvey";
 	
 // products mix
 	public String LOAD_ALL_DEFINED_PRODUCTS_MIX = "productsmix.retrieveAll";
 	public String LOAD_NOT_ALLOWED_PRODUCTS = "productsmix.loadnotallowedproducts";
 	public String LOAD_DEFINED_PRODUCTS_MIX_BY_PRDOFFERING_ID = "productsmix.retrieveByProductID";
-
 
 }

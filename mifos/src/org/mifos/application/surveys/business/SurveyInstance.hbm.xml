@@ -9,10 +9,16 @@
 		</id>
 		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="all"/>
 		<many-to-one name="officer" column="OFFICER_ID" access="field" cascade="all"/>
-		<many-to-one name="client" column="CUSTOMER_ID" access="field" cascade="all"/>
+		<many-to-one name="customer" column="CUSTOMER_ID" access="field" cascade="all"/>
 		<many-to-one name="account" column="ACCOUNT_ID" access="field" cascade="all"/>
 		<property name="dateConducted" column="DATE_CONDUCTED" type="date"/>
 		<property name="completedStatus" column="COMPLETED_STATUS" type="integer"/>
 
 	</class>
+	<query name="surveys.retrieveInstancesByCustomer">
+		<![CDATA[from SurveyInstance as instance where instance.customer=:INSTANCE_CUSTOMER order by instance.survey.name]]>
+	</query>
+	<query name="surveys.retrieveInstancesBySurvey">
+		<![CDATA[from SurveyInstance as instance where instance.survey=:INSTANCE_SURVEY order by instance.dateConducted]]>
+	</query>	
 </hibernate-mapping>

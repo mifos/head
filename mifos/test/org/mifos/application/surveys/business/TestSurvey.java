@@ -8,8 +8,10 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.exceptions.PersonnelException;
@@ -96,6 +98,52 @@ public class TestSurvey extends MifosTestCase {
 		results = surveysPersistence.retrieveQuestionsByState(QuestionState.INACTIVE);
 		assertEquals(questionText2, results.get(0).getQuestionText());
 	}
+	
+	
+	public void testRetrieveInstances() throws Exception {
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance instance1 = makeSurveyInstance("survey1");
+		SurveyInstance instance2 = new SurveyInstance();
+		Survey survey2 = new Survey();
+		survey2.setName("survey2");
+		survey2.setState(SurveyState.ACTIVE);
+		survey2.setAppliesTo(SurveyType.CLIENT);
+		instance2.setSurvey(survey2);
+		instance2.setCustomer(instance1.getCustomer());
+		instance2.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
+		instance2.setOfficer(instance1.getOfficer());
+		
+		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
+		CenterBO center = TestObjectFactory.createCenter("centerName", meeting);
+		meeting.setMeetingPlace("somewhere");
+		SurveyInstance instance3 = new SurveyInstance();
+		instance3.setCustomer(center);
+		instance3.setSurvey(survey2);
+		instance3.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
+		instance3.setOfficer(instance1.getOfficer());
+		
+		surveysPersistence.createOrUpdate(instance2);
+		surveysPersistence.createOrUpdate(instance3);
+		
+		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(instance1.getCustomer());
+		assertEquals(2, retrievedInstances.size());
+		assertEquals("survey2", retrievedInstances.get(1).getSurvey().getName());
+		
+		retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(center);
+		assertEquals(1, retrievedInstances.size());
+		assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
+		SurveyInstance retrievedInstance = retrievedInstances.get(0);
+		CenterBO retrievedCenter = (CenterBO) retrievedInstance.getCustomer();
+		assertEquals("somewhere", retrievedCenter.getCustomerMeeting().getMeeting().getMeetingPlace());
+		
+		retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(instance1.getSurvey());
+		assertEquals(1, retrievedInstances.size());
+		assertEquals("survey1", retrievedInstances.get(0).getSurvey().getName());
+		retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey2);
+		assertEquals(2, retrievedInstances.size());
+		assertEquals("survey2", retrievedInstances.get(0).getSurvey().getName());
+	}
+	
 	
 	public void testRetrieveQuestionsByAnswerType() throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
@@ -263,7 +311,7 @@ public class TestSurvey extends MifosTestCase {
 		SurveyInstance instance = new SurveyInstance();
 		instance.setOfficer(officer);
 		instance.setSurvey(survey);
-		instance.setClient(client);
+		instance.setCustomer(client);
 		instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
 		HibernateUtil.getSessionTL().save(instance);
 		return instance;

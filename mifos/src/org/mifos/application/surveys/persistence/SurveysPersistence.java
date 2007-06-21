@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
+import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -72,6 +74,18 @@ public class SurveysPersistence extends Persistence {
     
     public Question getQuestion(int id) {
         return (Question) getSession().get(Question.class, id);
+    }
+    
+    public List<SurveyInstance> retrieveInstancesByCustomer(CustomerBO customer) throws PersistenceException {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYINSTANCE_RETRIEVE_BY_CUSTOMER);
+    	query.setParameter("INSTANCE_CUSTOMER", customer);
+    	return query.list();
+    }
+    
+    public List<SurveyInstance> retrieveInstancesBySurvey(Survey survey) throws PersistenceException {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYINSTANCE_RETRIEVE_BY_SURVEY);
+    	query.setParameter("INSTANCE_SURVEY", survey);
+    	return query.list();
     }
 
 }

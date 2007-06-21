@@ -1,6 +1,8 @@
 package org.mifos.application.surveys.struts.action;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -109,7 +111,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	public void testCreate() throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
-		String clientId = Integer.toString(sampleInstance.getClient().getCustomerId());
+		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
 		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());
 		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
 		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
@@ -123,7 +125,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		
 		surveysPersistence.createOrUpdate(survey);
 		
-		String globalNum = sampleInstance.getClient().getGlobalCustNum();
+		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
 		addRequestParameter("value(globalNum)", globalNum);
 		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
 		setRequestPathInfo("/surveyInstanceAction");
@@ -150,8 +152,16 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create");
 		actionPerform();
-		//verifyNoActionErrors();
-		 
+		verifyNoActionErrors();
+		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
+		assertEquals(2, retrievedInstances.size());
+		SurveyInstance newInstance = retrievedInstances.get(1);
+		assertEquals(clientId, Integer.toString(newInstance.getCustomer().getCustomerId()));
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(newInstance.getDateConducted());
+		assertEquals(12, calendar.get(Calendar.DAY_OF_MONTH));
+		assertEquals(Calendar.DECEMBER, calendar.get(Calendar.MONTH));
+		assertEquals(2007, calendar.get(Calendar.YEAR));	 
 	}
 	
 	public void testChooseSurvey() throws Exception {

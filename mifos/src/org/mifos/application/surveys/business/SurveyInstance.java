@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.surveys.helpers.InstanceStatus;
@@ -15,7 +16,7 @@ public class SurveyInstance extends PersistentObject {
 	
 	private Survey survey;
 	
-	private ClientBO client;
+	private CustomerBO customer;
 	
 	private AccountBO account;
 	
@@ -79,8 +80,8 @@ public class SurveyInstance extends PersistentObject {
 		this.survey = survey;
 	}
 
-	public ClientBO getClient() {
-		return client;
+	public CustomerBO getCustomer() {
+		return customer;
 	}
 	
 	/*note that a survey instance must be associated with either a client
@@ -88,8 +89,8 @@ public class SurveyInstance extends PersistentObject {
 	 * type here, but that would cause needless errors when you set the client/account
 	 * before the survey
 	*/
-	public void setClient(ClientBO client) {
-		this.client = client;
+	public void setCustomer(CustomerBO customer) {
+		this.customer = customer;
 		this.account = null;
 	}
 
@@ -107,7 +108,7 @@ public class SurveyInstance extends PersistentObject {
 
 	public void setAccount(AccountBO account) {
 		this.account = account;
-		this.client = null;
+		this.customer = null;
 	}
 
 }

@@ -168,6 +168,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 					account.getOffice().getOfficeId(), uc.getId());
 		Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
 		Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
+		System.out.println("trxnDate: " + trxnDate);
 
 		if (!account.isTrxnDateValid(trxnDate))
 			throw new AccountException("errors.invalidTxndate");
