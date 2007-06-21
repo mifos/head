@@ -9,7 +9,6 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
-import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -44,7 +43,7 @@ public class ReportsDataService {
 	}
 
 	public List<PersonnelBO> getActiveLoanOfficers(Integer branchId)
-			throws ServiceException, NumberFormatException, PersonnelException {
+			throws ServiceException {
 		List<PersonnelBO> loanOfficers = new ArrayList<PersonnelBO>();
 		if (personnel.isLoanOfficer()) {
 			loanOfficers.add(personnel);
@@ -52,17 +51,13 @@ public class ReportsDataService {
 		else {
 			loanOfficers = personnelBusinessService
 					.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
-			loanOfficers.add(PersonnelBO.ALL_PERSONNEL);
 		}
 		return loanOfficers;
 	}
 
 	public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
-		List<LoanOfferingBO> loanOffering = new ArrayList<LoanOfferingBO>();
-		loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel
+		return loanPrdBusinessService.getAllLoanOfferings(personnel
 				.getLocaleId());
-		loanOffering.add(LoanOfferingBO.ALL_LOAN_PRD); 
-		return loanOffering;
 	}
 
 	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId,
@@ -92,6 +87,7 @@ public class ReportsDataService {
 						convertIntegerToShort(loanOfficerId),
 						convertIntegerToShort(loanProductId));
 	}
+
 
 	void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
 		this.loanPrdBusinessService = loanPrdBusinessService;

@@ -88,11 +88,6 @@ public class PersonnelBO extends BusinessObject {
 	private Set<PersonnelNotesEntity> personnelNotes;
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
-	
-	public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
-	static {
-		ALL_PERSONNEL.setDisplayName("ALL");
-	}
 
 	public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
 			Short preferredLocale, String password, String userName,

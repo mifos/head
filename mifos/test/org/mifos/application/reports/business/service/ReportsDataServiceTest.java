@@ -18,9 +18,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class ReportsDataServiceTest extends TestCase {
 	private LoanPrdBusinessService loanPrdBusinessServiceMock;
@@ -49,8 +47,6 @@ public class ReportsDataServiceTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		MifosLogManager.configure(FilePaths.LOGFILE);
-		
 		loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
 		personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);
 		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
