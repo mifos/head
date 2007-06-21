@@ -72,7 +72,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "mainpage");
 		actionPerform();
 		verifyNoActionErrors();
-		List<Survey> surveys = (List<Survey>) request.getSession().getAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST);
+		List<Survey> surveys = (List<Survey>) request.getAttribute(SurveysConstants.KEY_CLIENT_SURVEYS_LIST);
 		assertEquals(testName, surveys.get(0).getName());
 		assertEquals(1, surveys.get(0).getQuestions().size());
 	}
