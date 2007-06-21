@@ -4,6 +4,13 @@ public class SurveysConstants {
 	
 	public static final String KEY_CUSTOMERS_SURVEYS_LIST="customerSurveysList";
 	public static final String KEY_ACCOUNTS_SURVEYS_LIST="accountsSurveysList";
+	
+	public static final String KEY_CLIENT_SURVEYS_LIST="clientSurveysList";
+	public static final String KEY_CENTER_SURVEYS_LIST="centerSurveysList";
+	public static final String KEY_GROUP_SURVEYS_LIST="groupSurveysList";
+	public static final String KEY_LOAN_SURVEYS_LIST="loanSurveysList";
+	public static final String KEY_SAVINGS_SURVEYS_LIST="savingsSurveysList";
+	
 	public static final String KEY_SURVEY="retrievedSurvey";
 	public static final String KEY_NEW_QUESTION_CHOICES="newQuestionChoices";
 	public static final String KEY_ANSWER_TYPES = "answerTypes";
@@ -22,4 +29,5 @@ public class SurveysConstants {
 	public static final String INVALID_DATE_SURVEYED = "errors.invaleddate";
 	public static final String MANDATORY_DATE_SURVEYED = "errors.mandatorydate";
 	public static final String EMPTY_FIELD = "errors.emptyfield";
+	public static final String KEY_NEW_SURVEY_ID = "newSurveyId";
 }

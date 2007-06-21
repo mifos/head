@@ -111,7 +111,7 @@
 <br>
                     <br>                    
       <span class="fontnormal"></span>
-       <html-el:button property="calcelButton" onclick="submitSurveyForm('edit')" styleClass="buttn"><mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" /></html-el:button>                 </td>
+       <html-el:button property="calcelButton" onclick="submitSurveyForm('edit')" styleClass="insidebuttn"><mifos:mifoslabel name="Surveys.button.editsurvey" bundle="SurveysUIResources" /></html-el:button>                 </td>
                 </tr>
               </table>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">

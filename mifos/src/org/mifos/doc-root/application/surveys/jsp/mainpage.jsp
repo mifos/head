@@ -16,7 +16,7 @@
             <tr>
               <td class="fontnormalbold"><span class="fontnormal">
               <mifos:mifoslabel name="Surveys.mainpage_instructions"/>
-               <a href="http://www.google.com">
+               <a href="surveysAction.do?method=create_entry">
                <mifos:mifoslabel name="Surveys.definesurvey"/>
                 </a><br>
                   <br>
@@ -24,33 +24,125 @@
                 </span></span>
                 <span class="fontnormalbold"> </span>
 
-<mifos:mifoslabel bundle="ClientUIResources" name="client.ClientLabel"/>
+<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Clientlabel"/>
 <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                  <c:forEach var="survey" items="${sessionScope.customerSurveysList}">
-                  	<tr class="fontnormal">
-                    	<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
-                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
-                    		<c:if test="${survey.state == 0}">
-                    			<img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
-                    		</c:if>
-                    	</td>
-                  	</tr>
-                  </c:forEach>
-                </table>
-                <br>
-                Loan
-                <table width="90%" border="0" cellspacing="0" cellpadding="0">
-                  <c:forEach var="survey" items="${sessionScope.accountsSurveysList}">
-                  	<tr class="fontnormal">
-                    	<td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
-                    	<td width="99%"><html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}"><c:out value="${survey.name}"/></html-el:link>
-                    		<c:if test="${survey.state == 0}">
-                    			<img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
-                    		</c:if>
-                    	</td>
-                  	</tr>
-                  </c:forEach>
-                </table></td>
+  <c:if test="${empty requestScope.clientSurveysList}">
+    <tr class="fontnormal">
+      <td><em><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.nosurveysmessage"/></em></td>
+    </tr>
+  </c:if>
+  <c:forEach var="survey" items="${requestScope.clientSurveysList}">
+    <tr class="fontnormal">
+      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+      <td width="99%">
+        <html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}&randomNUm=${sessionScope.randomNUm}">
+          <c:out value="${survey.name}"/>
+        </html-el:link>
+        <c:if test="${survey.state == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
+</table>
+
+<br/>
+
+<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Centerlabel"/>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <c:if test="${empty requestScope.centerSurveysList}">
+    <tr class="fontnormal">
+      <td><em><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.nosurveysmessage"/></em></td>
+    </tr>
+  </c:if>
+  <c:forEach var="survey" items="${requestScope.centerSurveysList}">
+    <tr class="fontnormal">
+      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+      <td width="99%">
+        <html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}">
+          <c:out value="${survey.name}"/>
+        </html-el:link>
+        <c:if test="${survey.state == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
+</table>
+
+<br/>
+
+<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Grouplabel"/>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <c:if test="${empty requestScope.groupSurveysList}">
+    <tr class="fontnormal">
+      <td><em><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.nosurveysmessage"/></em></td>
+    </tr>
+  </c:if>
+  <c:forEach var="survey" items="${requestScope.groupSurveysList}">
+    <tr class="fontnormal">
+      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+      <td width="99%">
+        <html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}">
+          <c:out value="${survey.name}"/>
+        </html-el:link>
+        <c:if test="${survey.state == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
+</table>
+
+<br/>
+
+<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Loanlabel"/>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <c:if test="${empty requestScope.loanSurveysList}">
+    <tr class="fontnormal">
+      <td><em><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.nosurveysmessage"/></em></td>
+    </tr>
+  </c:if>
+  <c:forEach var="survey" items="${requestScope.loanSurveysList}">
+    <tr class="fontnormal">
+      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+      <td width="99%">
+        <html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}">
+          <c:out value="${survey.name}"/>
+        </html-el:link>
+        <c:if test="${survey.state == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
+</table>
+
+<br/>
+
+<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Savingslabel"/>
+<table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <c:if test="${empty requestScope.savingsSurveysList}">
+    <tr class="fontnormal">
+      <td><em><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.nosurveysmessage"/></em></td>
+    </tr>
+  </c:if>
+  <c:forEach var="survey" items="${requestScope.savingsSurveysList}">
+    <tr class="fontnormal">
+      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+      <td width="99%">
+        <html-el:link href="surveysAction.do?method=get&value(surveyId)=${survey.surveyId}">
+          <c:out value="${survey.name}"/>
+        </html-el:link>
+        <c:if test="${survey.state == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
+</table>
+
+</td>
             </tr>
           </table>            <br>
             </td>

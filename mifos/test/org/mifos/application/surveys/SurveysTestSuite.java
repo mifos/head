@@ -18,5 +18,4 @@ public class SurveysTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestSurveyInstanceAction.class);
 		return testSuite;
 	}
-
 }

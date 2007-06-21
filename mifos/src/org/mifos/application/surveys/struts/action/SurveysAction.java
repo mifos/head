@@ -27,6 +27,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.formulaic.EnumValidator;
+import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.MaxLengthValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
@@ -42,12 +43,16 @@ import org.mifos.framework.util.helpers.Constants;
 public class SurveysAction extends BaseAction {
 	
 	Schema previewValidator;
+	Schema newVersionValidator;
 	
 	public SurveysAction() {
 		super();
 		previewValidator = new Schema();
-		previewValidator.setSimpleValidator("value(name)", new MaxLengthValidator(5));
+		previewValidator.setSimpleValidator("value(name)", new MaxLengthValidator(30));
 		previewValidator.setSimpleValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
+		
+		newVersionValidator = new Schema();
+		newVersionValidator.setSimpleValidator("value(surveyId)", new IntValidator());
 	}
 
 	
@@ -85,11 +90,17 @@ public class SurveysAction extends BaseAction {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
 		// TODO: change this to aggregate the customers and accounts lists from the subtypes
-		List<Survey> customerSurveys = surveysPersistence.retrieveCustomersSurveys();
-		List<Survey> accountsSurveys = surveysPersistence.retrieveAccountsSurveys();
+		List<Survey> clientSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT);
+		List<Survey> centerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CENTER);
+		List<Survey> groupSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.GROUP);
+		List<Survey> loanSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.LOAN);
+		List<Survey> savingsSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.SAVINGS);
 		
-		request.getSession().setAttribute(SurveysConstants.KEY_ACCOUNTS_SURVEYS_LIST, accountsSurveys);
-		request.getSession().setAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST, customerSurveys);
+		request.setAttribute(SurveysConstants.KEY_CLIENT_SURVEYS_LIST, clientSurveys);
+		request.setAttribute(SurveysConstants.KEY_CENTER_SURVEYS_LIST, centerSurveys);
+		request.setAttribute(SurveysConstants.KEY_GROUP_SURVEYS_LIST, groupSurveys);
+		request.setAttribute(SurveysConstants.KEY_LOAN_SURVEYS_LIST, loanSurveys);
+		request.setAttribute(SurveysConstants.KEY_SAVINGS_SURVEYS_LIST, savingsSurveys);
 		return mapping.findForward(ActionForwards.load_main_page
 				.toString());
 	}
@@ -177,7 +188,7 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
-		int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
+		int questionNum = Integer.parseInt(actionForm.getValue("value(questionNum)"));
 		Question question = surveysPersistence.getQuestion(questionNum);
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
@@ -216,6 +227,7 @@ public class SurveysAction extends BaseAction {
 			newSurvey.addQuestion(question, true);
 		}
 		persistence.createOrUpdate(newSurvey);
+		request.setAttribute(SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 	
@@ -234,7 +246,7 @@ public class SurveysAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		int surveyId = Integer.parseInt(request.getParameter("surveyId"));
+		int surveyId = Integer.parseInt(request.getParameter("value(surveyId)"));
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		String newName = survey.getName();

@@ -298,6 +298,19 @@
                   </tr>
                 </table>
                 <br>
+
+		<span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.surveys" /></span><br />
+                  <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a href="surveysAction.do?method=mainpage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.surveys" /></a> | <html-el:link href="surveysAction.do?method=create_entry"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.survey" /></html-el:link></td>
+                    </tr>
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a href="questionsAction.do?method=viewQuestions"><mifos:mifoslabel name="admin.viewquestions" /> </a> | <html-el:link href="questionsAction.do?method=defineQuestions"><mifos:mifoslabel name="admin.define" /> <mifos:mifoslabel name="admin.questions" /></html-el:link></td>
+                  </tr>
+
+                </table>
 			</td>
 		</html-el:form>
 	</tiles:put>

@@ -8,6 +8,13 @@ function setDisable() {
        document.getElementById('AddButton').disabled = disabled;
 }
 
+function clickCancel() {
+	form = document.forms['genericActionForm'];
+	form.action='adminAction.do?method=load';
+	form.submit();
+}
+
+
 function submitQuestionForm(method) {
 	form = document.forms['questionActionForm'];
 	form.action='questionsAction.do?method=' + method;
@@ -22,14 +29,14 @@ function submitForm(form, action) {
 
 	
 function submitSurveyForm(method) {
-	form = document.forms['surveyActionForm'];
+	form = document.forms['genericActionForm'];
 	form.action='surveysAction.do?method=' + method;
 	form.submit();
 }
 
 function submitSurveyInstanceForm(method) {
-	form = document.forms['surveyInstanceActionForm'];
-	form.action='surveysAction.do?method=' + method;
+	form = document.forms['genericActionForm'];
+	form.action='surveyInstanceAction.do?method=' + method;
 	form.submit();
 }
 	

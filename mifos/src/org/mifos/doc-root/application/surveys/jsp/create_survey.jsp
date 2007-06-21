@@ -67,7 +67,7 @@
                     <tr>
                       <td>
                         <font class="fontnormalRedBold"> 
-                          <html-el:messages bundle="SurveysUIResources" /> 
+                          <html-el:errors bundle="SurveysUIResources" /> 
                         </font>
                       </td>
                     </tr>
@@ -143,7 +143,7 @@
                          <tr>
                            <td class="drawtablerow"><c:out value="${question.questionText}" /></td>
                            <td class="drawtablerow">
-                             <input type="button" onclick="submitSurveyForm('delete_new_question&questionNum=${question.questionId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}')" value="Delete" class="buttn"/>
+                             <input type="button" onclick="submitSurveyForm('delete_new_question&questionNum=${question.questionId}')" value="Delete" class="buttn"/>
                            </td>
                          </tr>
                        </c:forEach>
@@ -164,7 +164,7 @@
                         <html-el:submit style="width:65px;" property="button" styleClass="buttn">
                           <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
                         </html-el:submit>&nbsp; 
-                        <html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load">
+                        <html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load'">
                           <mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
                         </html-el:button>
                       </td>
