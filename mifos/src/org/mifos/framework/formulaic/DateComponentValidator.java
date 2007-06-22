@@ -8,7 +8,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateComponentValidator extends IsInstanceValidator {
  	
-	DateComponentValidator() {
+	public DateComponentValidator() {
 		super(Map.class);
 	}
 	
