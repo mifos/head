@@ -56,7 +56,7 @@ public class TestValidators extends TestCase {
 	
 	public void testSchemaCompoundFunctionality() {
 		Schema schema = new Schema();
-		Map<String, String> data = new HashMap<String, String>();
+		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("simple", "a");
 		data.put("map_one", "b");
 		data.put("map_two", "c");

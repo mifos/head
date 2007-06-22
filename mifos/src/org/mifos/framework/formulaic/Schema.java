@@ -3,9 +3,11 @@ package org.mifos.framework.formulaic;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Enumeration;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
@@ -59,6 +61,19 @@ public class Schema extends BaseValidator {
 		}
 		return input;
 	}
+
+	public Map<String, Object> validate(HttpSession session) throws ValidationError {
+		return validate(convertSession(session));
+	}
+	
+	public static Map<String, Object> convertSession(HttpSession session) {
+		Map<String, Object> input = new HashMap<String, Object>();
+		for (Enumeration<String> e = session.getAttributeNames(); e.hasMoreElements();) {
+			String key = e.nextElement();
+			input.put(key, session.getAttribute(key));
+		}
+		return input;
+	}
 	
 	public static ActionMessages makeActionMessages(SchemaValidationError schemaErrors) {
 		ActionMessages errors = new ActionMessages();
@@ -72,10 +87,10 @@ public class Schema extends BaseValidator {
 
 	@Override
 	public Map<String, Object> validate(Object objectData) throws ValidationError {
-		Map<String, String> data;
+		Map<String, Object> data;
 		
 		try {
-			data = (Map<String, String>) objectData;
+			data = (Map<String, Object>) objectData;
 		}
 		
 		catch (ClassCastException e) {
@@ -104,11 +119,11 @@ public class Schema extends BaseValidator {
 		return results;
 	}
 	
-	public static Object parseField(String field, FieldType type, Map<String, String> data) {
+	public static Object parseField(String field, FieldType type, Map<String, Object> data) {
 		if (type == FieldType.SIMPLE) {
 			return data.containsKey(field) ? data.get(field) : null;
 		} else if (type == FieldType.COMPLEX) {
-			Map<String, String> parsedContents = new HashMap<String, String>();
+			Map<String, Object> parsedContents = new HashMap<String, Object>();
 			for (String key : data.keySet()) {
 				int openParen = key.indexOf('(');
 				int closeParen = key.lastIndexOf(')');
@@ -124,7 +139,7 @@ public class Schema extends BaseValidator {
 			}
 			return parsedContents;
 		} else { // map type
-			Map<String, String> parsedContents = new HashMap<String, String>();
+			Map<String, Object> parsedContents = new HashMap<String, Object>();
 			for (String key : data.keySet()) {
 				int delimPosition = key.lastIndexOf("_");
 				if (delimPosition > 0) {

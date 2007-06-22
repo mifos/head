@@ -8,7 +8,7 @@ public class SchemaValidationError extends ValidationError {
 	private static final String FORM_MSG = "errors.formulaic.invalidform";
 	private Map<String, ValidationError> fieldErrors;
 	
-	public SchemaValidationError(Map<String, String> data, Map<String, ValidationError> fieldErrors) {
+	public SchemaValidationError(Map<String, Object> data, Map<String, ValidationError> fieldErrors) {
 		super(data, SchemaValidationError.FORM_MSG);
 		this.fieldErrors = fieldErrors;
 	}

@@ -112,7 +112,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
 		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
-		String officerId = Short.toString(sampleInstance.getOfficer().getPersonnelId());
+		String officerName = sampleInstance.getOfficer().getDisplayName();
 		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
 		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
 		
@@ -126,7 +126,13 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		surveysPersistence.createOrUpdate(survey);
 		
 		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
-		addRequestParameter("value(globalNum)", globalNum);
+		addRequestParameter("globalNum", globalNum);
+		addRequestParameter("surveyType", "client");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		actionPerform();
+		verifyNoActionErrors();
+		
 		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create_entry");
@@ -139,13 +145,16 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
-		InstanceStatus status = InstanceStatus.INCOMPLETE;
+		InstanceStatus status = InstanceStatus.COMPLETED;
 		
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
 				"answer 1");
+		addRequestParameter("value(response_" +
+				survey.getQuestions().get(1).getQuestion().getQuestionId() + ")",
+				"answer 2");
 		addRequestParameter("value(customerId)", clientId);
-		addRequestParameter("value(officerId)", officerId);
+		addRequestParameter("value(officerName)", officerName);
 		addRequestParameter("value(dateSurveyed_DD)", "13");
 		addRequestParameter("value(dateSurveyed_MM)", "06");
 		addRequestParameter("value(dateSurveyed_YY)", "2007");
@@ -159,6 +168,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		actionPerform();
 		verifyNoActionErrors();
+		verifyForward("create_success");
 		
 		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
 		assertEquals(2, retrievedInstances.size());
@@ -169,7 +179,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
 		assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
 		assertEquals(2007, calendar.get(Calendar.YEAR));
-		assertEquals("answer 1", newInstance.getSurveyResponses().get(0).getFreetextValue());
+		assertEquals("answer 1", newInstance.getSurveyResponses().get(1).getFreetextValue());
+		assertEquals("answer 2", newInstance.getSurveyResponses().get(0).getFreetextValue());
 
 	}
 	

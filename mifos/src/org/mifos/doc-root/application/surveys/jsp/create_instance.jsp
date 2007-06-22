@@ -57,7 +57,7 @@ hr {
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
-<h1><c:out value="${requestScope.retrievedSurvey.name}"/></h1>
+<h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
 <hr>
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <table width="95%" border="0" cellpadding="3" cellspacing="0">

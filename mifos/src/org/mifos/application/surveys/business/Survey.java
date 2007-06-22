@@ -106,6 +106,15 @@ public class Survey implements Serializable {
 		return getQuestions().get(i).getQuestion();
 	}
 	
+	public Question getQuestionById(int id) {
+		for (SurveyQuestion surveyQuestion : this.getQuestions()) {
+			Question question = surveyQuestion.getQuestion();
+			if (question.getQuestionId() == id)
+				return question;
+		}
+		throw new IllegalArgumentException("Survey does not contain a question with id: " + id);
+	}
+	
 	public String getQuestionText(int i) {
 		return getQuestion(i).getQuestionText();
 	}

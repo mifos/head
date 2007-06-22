@@ -12,9 +12,11 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -47,7 +49,7 @@ public class SurveyInstanceAction extends BaseAction {
 	private static Schema chooseSurveyValidator;
 	private static Schema createEntryValidator;
 	private static Schema previewValidator;
-	private static Schema createValidator;
+	private static Schema sessionValidator;
 	
 	static {
 		
@@ -59,17 +61,13 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		createEntryValidator = new Schema();
 		createEntryValidator.setSimpleValidator("value(surveyId)", new IntValidator());
-		createEntryValidator.setSimpleValidator("value(globalNum)",
-				new IsInstanceValidator(String.class));
 		
 		previewValidator = new Schema();
-		//previewValidator.setSimpleValidator("value(surveyId)", new IntValidator());
-		//previewValidator.setSimpleValidator("value(globalNum)", new IsInstanceValidator(String.class));
 		previewValidator.setComplexValidator("dateSurveyed", new DateComponentValidator());
 		
-		createValidator = new Schema();
-		createValidator.setSimpleValidator("value(surveyId)", new IntValidator());
-		createValidator.setSimpleValidator("value(globalNum)", new IsInstanceValidator(String.class));
+		sessionValidator = new Schema();
+		sessionValidator.setSimpleValidator(SurveysConstants.KEY_SURVEY, new IsInstanceValidator(Survey.class));
+		sessionValidator.setSimpleValidator(Constants.BUSINESS_KEY, new IsInstanceValidator(BusinessObject.class));
 		
 	}
 
@@ -105,14 +103,33 @@ public class SurveyInstanceAction extends BaseAction {
 		int surveyId = (Integer) results.get("value(surveyId)");
 		Survey survey = persistence.getSurvey(surveyId);
 		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
-		String globalNum = (String) results.get("value(globalNum)");
-		String displayName = getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum);
+		
+		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
 		
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
+	public static String getBusinessObjectName(BusinessObject businessObject) throws Exception {
+		if (ClientBO.class.isInstance(businessObject)) {
+			return ((ClientBO)businessObject).getDisplayName();		
+		}
+		else if (LoanBO.class.isInstance(businessObject)){
+			LoanBO loanBO = (LoanBO) businessObject;
+			return loanBO.getLoanOffering().getPrdOfferingName()
+					+ "# " + loanBO.getGlobalAccountNum();
+		}
+		else {
+			throw new NotImplementedException();
+		}
+	}
+	
+	/*
+	* Use a combination of {@link #getBusinessObject(SurveyType surveyType, String globalNum)} and
+	* {@link #getBusinessObjectName(BusinessObject customer)} instead of this method.
+	*/
 	public static String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
 		if (surveyType == SurveyType.CLIENT) {
 			ClientBO client = (ClientBO) CustomerBusinessService.getInstance().findBySystemId(
@@ -165,10 +182,11 @@ public class SurveyInstanceAction extends BaseAction {
 		String globalNum = (String) results.get("globalNum");
 		SurveyType surveyType = SurveyType.fromString(request.getParameter("surveyType"));
 		
-		String displayName = getBusinessObjectName(surveyType, globalNum);
+		BusinessObject businessObject = getBusinessObject(surveyType, globalNum);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
+		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, getBusinessObject(surveyType, globalNum));
 		
 		List<Survey> surveys = persistence.retrieveSurveysByType(surveyType);
 		request.setAttribute(SurveysConstants.KEY_SURVEYS_LIST, surveys);
@@ -180,7 +198,8 @@ public class SurveyInstanceAction extends BaseAction {
 			throws Exception {
 		Map<String, Object> results = null;
 		try {
-		results = previewValidator.validate(request);
+			results = previewValidator.validate(request);
+			sessionValidator.validate(request.getSession());
 		} catch (SchemaValidationError e) {
 			saveErrors(request, Schema.makeActionMessages(e));
 			return mapping.findForward(ActionForwards.create_entry_success.toString());
@@ -197,6 +216,10 @@ public class SurveyInstanceAction extends BaseAction {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		actionForm.setValue("instanceStatus", Integer.toString(status.getValue()));
 		
+		BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
+				displayName);
 		request.setAttribute("dateSurveyed", actionForm.getDateValue("dateSurveyed"));
 		request.setAttribute("officerName", actionForm.getValue("officerName"));
 		
@@ -212,7 +235,7 @@ public class SurveyInstanceAction extends BaseAction {
 			throws Exception {
 		Map<String, Object> results;
 		try {
-			results = createValidator.validate(request);
+			results = sessionValidator.validate(request.getSession());
 		}
 		catch (SchemaValidationError e) {
 			return mapping.findForward(ActionForwards.create_entry_success.toString());
@@ -220,33 +243,34 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence persistence = new SurveysPersistence();
+		org.mifos.application.personnel.persistence.PersonnelPersistence personnelPersistence = new org.mifos.application.personnel.persistence.PersonnelPersistence();
 		
-		//int surveyId = Integer.parseInt(actionForm.getSurveyId());
-		Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+		Survey survey = (Survey) results.get(SurveysConstants.KEY_SURVEY);
+		BusinessObject businessObject = (BusinessObject) results.get(Constants.BUSINESS_KEY);
 		
 		InstanceStatus status = InstanceStatus.fromInt(Integer
 				.parseInt(actionForm.getValue("instanceStatus")));
-		int clientId = Integer.parseInt(actionForm.getValue("customerId"));
-		short officerId = Short.parseShort(actionForm.getValue("officerId"));
+		String officerName = actionForm.getValue("officerName");
 		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm.getDateValue("dateSurveyed"));
 		
-		ClientBO client = (ClientBO) persistence.getPersistentObject(
-				ClientBO.class, clientId);
-		PersonnelBO officer = (PersonnelBO) persistence.getPersistentObject(
-				PersonnelBO.class, officerId);
+		PersonnelBO officer = personnelPersistence.getPersonnel(officerName);
 		
 		SurveyInstance instance = new SurveyInstance();
 		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
 		instance.setCompletedStatus(status);
-		instance.setCustomer(client);
-		instance.setOfficer(officer); 
+		instance.setOfficer(officer);
+		if (CustomerBO.class.isInstance(businessObject)) {
+			instance.setCustomer((CustomerBO)businessObject);
+		} else { // Account
+			instance.setAccount((AccountBO)businessObject);
+		}
 		
 		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
 		for (Map.Entry<String, String> answerSet : actionForm.getAll("response_").entrySet()) {
 			SurveyResponse surveyResponse = new SurveyResponse();
-			surveyResponse.setQuestion(persistence.getQuestion(Integer.parseInt(answerSet.getKey())));
+			surveyResponse.setQuestion(survey.getQuestionById(Integer.parseInt(answerSet.getKey())));
 			surveyResponse.setStringValue(answerSet.getValue());
 			surveyResponse.setInstance(instance);
 			surveyResponses.add(surveyResponse);

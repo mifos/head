@@ -53,12 +53,12 @@ hr {
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <html-el:form action="/surveyInstanceAction.do?method=create">
-<h1><c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client').displayName}"/> - <orange>Enter survey data</orange></h1>
+<h1><c:out value="${requestScope.businessObjectName}"/> - <orange>Enter survey data</orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
 <h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
 <hr>
-<table width="100%" border="0" cellpadding="3" cellspacing="0">
+<table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
 		<red>*</red><span class="fontnormal8ptbold">Date of survey:</span>
@@ -68,7 +68,7 @@ hr {
 		</td>
 	</tr>
 	<tr>
-		<td height="30" align="right">
+		<td height="30" align="right" class="drawtablerow">
 		<span class="fontnormal8ptbold">Surveyed by:</span></td>
 		<td height="30" class="drawtablerow">
 		<c:out value="${requestScope.officerName}"/>
