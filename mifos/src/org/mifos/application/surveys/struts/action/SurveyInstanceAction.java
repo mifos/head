@@ -35,6 +35,8 @@ import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.IsInstanceValidator;
 import org.mifos.framework.formulaic.DateComponentValidator;
+import org.mifos.framework.formulaic.PersonnelValidator;
+import org.mifos.framework.formulaic.NullValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -64,6 +66,7 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		previewValidator = new Schema();
 		previewValidator.setComplexValidator("dateSurveyed", new DateComponentValidator());
+		previewValidator.setSimpleValidator("value(officerName)", new NullValidator(new PersonnelValidator()));
 		
 		sessionValidator = new Schema();
 		sessionValidator.setSimpleValidator(SurveysConstants.KEY_SURVEY, new IsInstanceValidator(Survey.class));
@@ -84,32 +87,6 @@ public class SurveyInstanceAction extends BaseAction {
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
-	}
-	
-	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		Map<String, Object> results;
-		try {
-			results = createEntryValidator.validate(request);
-		}
-		catch (SchemaValidationError e) {
-			// is this the right page to show?
-			saveErrors(request, Schema.makeActionMessages(e));
-			return mapping.findForward(ActionForwards.choose_survey.toString());
-		}
-		
-		SurveysPersistence persistence = new SurveysPersistence();
-		int surveyId = (Integer) results.get("value(surveyId)");
-		Survey survey = persistence.getSurvey(surveyId);
-		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
-		
-		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
-		String displayName = getBusinessObjectName(businessObject);
-		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
-				displayName);
-		
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
 	public static String getBusinessObjectName(BusinessObject businessObject) throws Exception {
@@ -193,9 +170,40 @@ public class SurveyInstanceAction extends BaseAction {
 		return mapping.findForward(ActionForwards.choose_survey.toString());
 	}
 
+	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		Map<String, Object> results;
+		try {
+			results = createEntryValidator.validate(request);
+		}
+		catch (SchemaValidationError e) {
+			// is this the right page to show?
+			saveErrors(request, Schema.makeActionMessages(e));
+			return mapping.findForward(ActionForwards.choose_survey.toString());
+		}
+		
+		SurveysPersistence persistence = new SurveysPersistence();
+		int surveyId = (Integer) results.get("value(surveyId)");
+		Survey survey = persistence.getSurvey(surveyId);
+		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY, survey);
+		
+		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
+				displayName);
+		
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
+	}
+
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
+				displayName);
+		
 		Map<String, Object> results = null;
 		try {
 			results = previewValidator.validate(request);
@@ -205,25 +213,24 @@ public class SurveyInstanceAction extends BaseAction {
 			return mapping.findForward(ActionForwards.create_entry_success.toString());
 		}
 		
-		InstanceStatus status = InstanceStatus.COMPLETED;
-		for (String key : results.keySet()) {
-			Object value = results.get(key);
-			if (value.equals("") || value == null) {
-				status = InstanceStatus.INCOMPLETE;
-				break;
-			}
-		}
-		GenericActionForm actionForm = (GenericActionForm) form;
-		actionForm.setValue("instanceStatus", Integer.toString(status.getValue()));
+		request.setAttribute("dateSurveyed",
+				DateUtils.makeDateAsSentFromBrowser(((Date)results.get("dateSurveyed"))));
 		
-		BusinessObject businessObject = (BusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		PersonnelBO officer = (PersonnelBO) results.get("value(officerName)");
+		request.setAttribute("officerName", officer == null ? "" : officer.getDisplayName());
+		request.getSession().setAttribute("officer", officer);
+		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+	
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
-		request.setAttribute("dateSurveyed", actionForm.getDateValue("dateSurveyed"));
-		request.setAttribute("officerName", actionForm.getValue("officerName"));
 		
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 
 	/*
@@ -243,23 +250,20 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence persistence = new SurveysPersistence();
-		org.mifos.application.personnel.persistence.PersonnelPersistence personnelPersistence = new org.mifos.application.personnel.persistence.PersonnelPersistence();
 		
 		Survey survey = (Survey) results.get(SurveysConstants.KEY_SURVEY);
 		BusinessObject businessObject = (BusinessObject) results.get(Constants.BUSINESS_KEY);
 		
-		InstanceStatus status = InstanceStatus.fromInt(Integer
-				.parseInt(actionForm.getValue("instanceStatus")));
-		String officerName = actionForm.getValue("officerName");
 		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm.getDateValue("dateSurveyed"));
 		
-		PersonnelBO officer = personnelPersistence.getPersonnel(officerName);
+		PersonnelBO officer = (PersonnelBO) request.getSession().getAttribute("officer");
 		
 		SurveyInstance instance = new SurveyInstance();
 		
+		
+		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
-		instance.setCompletedStatus(status);
 		instance.setOfficer(officer);
 		if (CustomerBO.class.isInstance(businessObject)) {
 			instance.setCustomer((CustomerBO)businessObject);
@@ -267,16 +271,24 @@ public class SurveyInstanceAction extends BaseAction {
 			instance.setAccount((AccountBO)businessObject);
 		}
 		
+		InstanceStatus status = InstanceStatus.COMPLETED;
 		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
+		
 		for (Map.Entry<String, String> answerSet : actionForm.getAll("response_").entrySet()) {
 			SurveyResponse surveyResponse = new SurveyResponse();
 			surveyResponse.setQuestion(survey.getQuestionById(Integer.parseInt(answerSet.getKey())));
-			surveyResponse.setStringValue(answerSet.getValue());
+			String value = answerSet.getValue();
+			surveyResponse.setStringValue(value);
 			surveyResponse.setInstance(instance);
 			surveyResponses.add(surveyResponse);
 			persistence.createOrUpdate(surveyResponse);
+			
+			if (value == null || value.trim().equals(""))
+				status = InstanceStatus.INCOMPLETE;
 		}
+		
 		instance.setSurveyResponses(surveyResponses);
+		instance.setCompletedStatus(status);
 		persistence.createOrUpdate(instance);
 		
 		return mapping.findForward(ActionForwards.create_success.toString());

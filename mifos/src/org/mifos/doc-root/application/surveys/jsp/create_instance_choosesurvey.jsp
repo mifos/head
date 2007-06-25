@@ -132,7 +132,6 @@
           </td>
         </tr>
       </table>
-      <html-el:hidden property="value(globalNum)" value="${param.globalNum}"/>
     </html-el:form>
   </tiles:put>
 </tiles:insert>

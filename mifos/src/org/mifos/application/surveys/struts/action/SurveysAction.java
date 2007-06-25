@@ -170,7 +170,7 @@ public class SurveysAction extends BaseAction {
 		// TODO: insert code for an error message if the question id is invalid here
 		try {
 			int questionId = Integer.parseInt(actionForm.getValue("newQuestion"));
-			Question newQuestion = surveysPersistence.getQuestion(Integer.parseInt(actionForm.getValue("newQuestion")));
+			Question newQuestion = surveysPersistence.getQuestion(questionId);
 			if (questionsList.contains(newQuestion)) {
 				addedQuestions.add(newQuestion);
 				questionsList.remove(newQuestion);

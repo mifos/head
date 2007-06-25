@@ -52,6 +52,7 @@ hr {
 </style>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
+<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=create">
 <h1><c:out value="${requestScope.businessObjectName}"/> - <orange>Enter survey data</orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
@@ -104,6 +105,13 @@ hr {
 		</tr>
 	<c:set var="count" value="${count+1}"/>
 	</c:forEach>
+	<tr>
+	<td>
+	<html-el:button property="calcelButton" onclick="submitSurveyInstanceForm('edit')" styleClass="cancelbuttn">
+	<mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" />
+	</html-el:button>
+	</td>
+	</tr>
 </table>
 <br><hr>
 <table width="93%" border="0" cellpadding="0" cellspacing="0">
