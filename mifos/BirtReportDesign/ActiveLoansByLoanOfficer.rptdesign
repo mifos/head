@@ -47,6 +47,7 @@
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
                     <property name="mustMatch">true</property>
+                    <property name="defaultValue">-1</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -63,6 +64,7 @@
             <expression name="valueExpr">dataSetRow["ID"]</expression>
             <expression name="labelExpr">dataSetRow["Name"]</expression>
             <property name="mustMatch">true</property>
+            <property name="defaultValue">-1</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
             </structure>
@@ -137,6 +139,8 @@ var loanProduct = iterator.next( );
 
 row["ID"] = loanProduct.getPrdOfferingId();
 row["Name"] = loanProduct.getPrdOfferingName();
+if(row["ID"] == null)
+   row["ID"] = -1;
 
 return true;]]></method>
             <method name="close"><![CDATA[loanProducts = null;
@@ -262,6 +266,8 @@ var loanOfficer = iterator.next( );
 
 row["ID"] = loanOfficer.getPersonnelId();
 row["Name"] = loanOfficer.getDisplayName();
+if(row["ID"] == null)
+   row["ID"] = -1;
 
 return true;]]></method>
             <method name="close"><![CDATA[loanOfficers = null;

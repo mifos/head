@@ -325,7 +325,7 @@ public class TestLoanPersistence extends MifosTestCase {
 
 	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchId() throws Exception {
 		short branchId = 3;
-		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,null,null);
+		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,(short)-1,(short)-1);
 		assertEquals(1,loanList.size());
 	}
 	
@@ -333,7 +333,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdAndLoanOfficerId() throws Exception {
 		short branchId = 3;
 		short loanOfficerId = 3;
-		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,null);
+		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,(short)-1);
 		assertEquals(1,loanList.size());
 		
 	}
@@ -348,13 +348,13 @@ public class TestLoanPersistence extends MifosTestCase {
 	
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchId() throws Exception {
 		short branchId = 3;
-		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,null,null);
+		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,(short)-1,(short)-1);
 		assertEquals(600,money);
 	}
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdAndLoanOfficerId() throws Exception {
 		short branchId = 3;
 		short loanOfficerId = 3;
-		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,null);
+		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,(short)-1);
 		assertEquals(600,money);
 	}
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdLoanOfficerIdAndLoanProductId() throws Exception {
@@ -367,7 +367,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficer() throws Exception {
 		short branchId = 3;
 		short loanOfficerId = 3;
-		List<LoanBO> loanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,null);
+		List<LoanBO> loanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,(short)-1);
 		assertEquals(3,loanList.size());
 	}
 	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficerAndLoanProduct() throws Exception {

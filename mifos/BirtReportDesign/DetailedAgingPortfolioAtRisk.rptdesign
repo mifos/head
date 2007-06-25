@@ -41,6 +41,7 @@
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
                     <property name="mustMatch">true</property>
+                    <property name="defaultValue">-1</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -58,6 +59,7 @@
             <expression name="labelExpr">dataSetRow["Name"]</expression>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
+            <property name="defaultValue">-1</property>
             <structure name="format">
                 <property name="category">General Number</property>
                 <property name="pattern">General Number</property>
@@ -137,6 +139,8 @@ var loanProduct = iterator.next( );
 
 row["ID"] = loanProduct.getPrdOfferingId();
 row["Name"] = loanProduct.getPrdOfferingName();
+if(row["ID"] == null)
+   row["ID"] = -1;
 
 return true;]]></method>
             <method name="close"><![CDATA[loanProducts = null;
@@ -263,6 +267,9 @@ var loanOfficer = iterator.next( );
 row["ID"] = loanOfficer.getPersonnelId();
 row["Name"] = loanOfficer.getDisplayName();
 
+if(row["ID"] == null)
+   row["ID"] = -1;
+   
 return true;]]></method>
             <method name="close"><![CDATA[loanOfficers = null;
 iterator = null;]]></method>
@@ -607,7 +614,7 @@ current = null;]]></method>
                                         <text id="844">
                                             <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
                                             <property name="contentType">auto</property>
-                                            <text-property name="content"><![CDATA[Prepared by: <value-of>params["userId"].displayText</value-of>]]></text-property>
+                                            <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
                                         </text>
                                     </cell>
                                 </row>

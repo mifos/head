@@ -119,6 +119,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+	
+	public static LoanOfferingBO ALL_LOAN_PRD = new LoanOfferingBO();
+	static {
+		ALL_LOAN_PRD.setPrdOfferingName("ALL");
+	}
 
 	public LoanOfferingBO(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,

@@ -51,13 +51,17 @@ public class ReportsDataService {
 		else {
 			loanOfficers = personnelBusinessService
 					.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
+			loanOfficers.add(PersonnelBO.ALL_PERSONNEL);
 		}
 		return loanOfficers;
 	}
 
 	public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
-		return loanPrdBusinessService.getAllLoanOfferings(personnel
+		List<LoanOfferingBO> loanOffering = new ArrayList<LoanOfferingBO>();
+		loanOffering = loanPrdBusinessService.getAllLoanOfferings(personnel
 				.getLocaleId());
+		loanOffering.add(LoanOfferingBO.ALL_LOAN_PRD); 
+		return loanOffering;
 	}
 
 	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId,
