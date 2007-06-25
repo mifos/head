@@ -107,15 +107,16 @@
 									<td height="23" class="fontnormal"><mifos:mifoslabel
 										name="reports.labelTitle" />:<span class="fontnormal">
 	                                     <c:out value="${birtReportsUploadActionForm.reportTitle}" />
-	                                     <br />
+	                                     <br /><mifos:mifoslabel
+										name="reports.reports" />
 	                                     <mifos:mifoslabel
-										name="reports.labelTitle" />:<span class="fontnormal">
+										name="reports.category" />:<span class="fontnormal">
 									    <c:out value="${category.reportCategoryName}" />
                                     </td>
 								</tr>
 							    <tr class="fontnormal">
 									<td height="23" class="fontnormal">
-										<a href="#"><mifos:mifoslabel name="reports.linkReportTemplate" /></a>
+										<a href="#"><mifos:mifoslabel name="reports.ReportTemplate" /></a>
 									</td>
 								</tr>
 								<tr class="fontnormal">

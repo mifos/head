@@ -19,29 +19,42 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 	private String reportCategoryId;
 	private String reportTitle;
 	protected FormFile file;
-
+	private String reportId;
 	public BirtReportsUploadActionForm() {
 		super();
 	}
 
 	public void clear() {
-		this.reportCategoryId = "";
+		this.reportCategoryId = null;
 		this.reportTitle = null;
 		this.file = null;
+		this.reportId = null;
 	}
 
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
-		String method = request.getParameter("method");
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 		request.getSession().setAttribute(Constants.CURRENTFLOWKEY,
 				request.getParameter(Constants.CURRENTFLOWKEY));
+		String method = request.getParameter("method");
 
+		validateMethod(errors, Methods.preview.toString(), method);
+		validateMethod(errors, Methods.editpreview.toString(), method);
+		
+		
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", method);
+		}
+		
+		return errors;
+	}
 
-		if (method.equals(Methods.preview.toString())) {
+	private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
+		if (methodFromRequest.equals(verifyMethod)) {
 			if (StringUtils.isNullOrEmpty(reportTitle)){
 				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
 						ReportsConstants.ERROR_TITLE));
@@ -55,13 +68,6 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 						ReportsConstants.ERROR_FILEISNULL));
 			}
 		}
-		
-		if (null != errors && !errors.isEmpty()) {
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", method);
-		}
-		
-		return errors;
 	}
 
 	public String getReportCategoryId() {
@@ -92,6 +98,14 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 
 	public FormFile getFile() {
 		return file;
+	}
+
+	public String getReportId() {
+		return reportId;
+	}
+
+	public void setReportId(String reportId) {
+		this.reportId = reportId;
 	}
 
 }

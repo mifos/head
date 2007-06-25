@@ -49,7 +49,11 @@ public class BirtReportsUploadAction extends BaseAction {
 		security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("getViewReportPage",
+				SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("edit", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("editpreview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -57,6 +61,8 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getBirtReportPage Method: ");
+		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		uploadForm.clear();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -89,27 +95,39 @@ public class BirtReportsUploadAction extends BaseAction {
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 		FormFile formFile = uploadForm.getFile();
+		ReportsBO reportBO;
+		ReportsJasperMap reportJasperMap;
 
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
 		for (ReportsBO report : category.getReportsSet()) {
-			if(report.getReportName().equals(uploadForm.getReportTitle())){
+			if (report.getReportName().equals(uploadForm.getReportTitle())) {
 				ActionErrors errors = new ActionErrors();
-				errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST, new ActionMessage(
-						ReportsConstants.ERROR_TITLEALREADYEXIST));
+				errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST,
+						new ActionMessage(
+								ReportsConstants.ERROR_TITLEALREADYEXIST));
 				request.setAttribute(Globals.ERROR_KEY, errors);
-				return mapping.findForward(ActionForwards.preview_failure.toString());
+				return mapping.findForward(ActionForwards.preview_failure
+						.toString());
 			}
 		}
-		ReportsBO report = new ReportsBO();
-		report.setReportName(uploadForm.getReportTitle());
-		report.setReportsCategoryBO(category);
-		new ReportsPersistence().createOrUpdate(report);
+		if (uploadForm.getReportId() != null) {
+			reportBO = new ReportsPersistence().getReport(Short
+					.valueOf(uploadForm.getReportId()));
+			reportJasperMap = new ReportsPersistence().getReport(Short
+					.valueOf(uploadForm.getReportId())).getReportsJasperMap();
+		}
+		else {
+			reportBO = new ReportsBO();
+			reportJasperMap = new ReportsJasperMap();
+		}
+		reportBO.setReportName(uploadForm.getReportTitle());
+		reportBO.setReportsCategoryBO(category);
+		new ReportsPersistence().createOrUpdate(reportBO);
 
-		 ReportsJasperMap reportJasperMap = new ReportsJasperMap();
-		 reportJasperMap.setReportJasper(formFile.getFileName());
-		 new ReportsPersistence().createJasperMap(reportJasperMap);
-
+		reportJasperMap.setReportJasper(formFile.getFileName());
+		new ReportsPersistence().createOrUpdate(reportJasperMap);
+		
 		File dir = new File(getServlet().getServletContext().getRealPath("/")
 				+ "report");
 		File file = new File(dir, formFile.getFileName());
@@ -133,19 +151,51 @@ public class BirtReportsUploadAction extends BaseAction {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
 	}
-	
+
+	public ActionForward getViewReportPage(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("In ReportsAction:getViewReportsPage Method: ");
+		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
+				new ReportsPersistence().getAllReportCategories());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm birtReportsUploadActionForm = (BirtReportsUploadActionForm) form;
-		ReportsBO report = new ReportsPersistence()
-				.getReport(Short.valueOf(request.getParameter("reportId")));
+		ReportsBO report = new ReportsPersistence().getReport(Short
+				.valueOf(request.getParameter("reportId")));
 		request.setAttribute(Constants.BUSINESS_KEY, report);
 		birtReportsUploadActionForm.setReportTitle(report.getReportName());
-		birtReportsUploadActionForm.setReportCategoryId(report.getReportsCategoryBO().getReportCategoryId().toString());
+		birtReportsUploadActionForm.setReportCategoryId(report
+				.getReportsCategoryBO().getReportCategoryId().toString());
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
-		return mapping.findForward(ActionForwards.load_success.toString());
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+
+	public ActionForward editpreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		request.setAttribute("category", category);
+		return mapping.findForward(ActionForwards.editpreview_success
+				.toString());
+	}
+	
+	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		request.setAttribute("category", category);
+		return mapping.findForward(ActionForwards.editprevious_success
+				.toString());
 	}
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {

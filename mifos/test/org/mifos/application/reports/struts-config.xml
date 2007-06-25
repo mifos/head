@@ -13,6 +13,7 @@
 			<forward name="preview_success" path="/pages/application/reports/jsp/birtReportPreview.jsp" />
 			<forward name="create_success" path="/AdminAction.do?method=load"/>
 			<forward name="preview_failure" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
+		    <forward name="edit_success" path="/pages/application/reports/jsp/editReport.jsp" />	
 		</action>
     </action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

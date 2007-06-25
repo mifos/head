@@ -292,7 +292,7 @@
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
-								href="viewReportsAction.do?method=getPage&viewPath=viewReports_path"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" />
+								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" />
 								</a> | <html-el:link
 								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
                   </tr>

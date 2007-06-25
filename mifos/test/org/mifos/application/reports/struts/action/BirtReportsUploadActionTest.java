@@ -41,7 +41,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		ReportsBO report = (ReportsBO) request.getAttribute(Constants.BUSINESS_KEY);
 		assertEquals("1", report.getReportId().toString());
 		verifyNoActionErrors();
-		verifyForward(ActionForwards.load_success.toString());
+		verifyForward(ActionForwards.edit_success.toString());
 	}
 
 }

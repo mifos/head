@@ -14,7 +14,7 @@
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 	        <td class="bluetablehead05"><span class="fontnormal8pt">
-				<html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+				<html-el:link href="AdminAction.do?method=load">
 					<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 				</html-el:link> / </span> <span class="fontnormal8ptbold"> <mifos:mifoslabel name="admin.viewreports"  /></span>
 			</td>
