@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.joda.time.DateMidnight;
-import org.mifos.framework.util.helpers.DateUtils;
-
 import junit.framework.TestCase;
+
+import org.joda.time.DateMidnight;
 
 public class TestValidators extends TestCase {
 	
@@ -55,7 +54,6 @@ public class TestValidators extends TestCase {
 	}
 	
 	public void testSchemaCompoundFunctionality() {
-		Schema schema = new Schema();
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("simple", "a");
 		data.put("map_one", "b");

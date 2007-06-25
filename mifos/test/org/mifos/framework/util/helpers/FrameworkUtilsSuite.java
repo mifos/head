@@ -3,8 +3,6 @@ package org.mifos.framework.util.helpers;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.formulaic.TestValidators;
-
 public class FrameworkUtilsSuite extends TestSuite {
 
 	public FrameworkUtilsSuite() {
@@ -18,12 +16,10 @@ public class FrameworkUtilsSuite extends TestSuite {
         suite.addTestSuite(FlowTest.class);
         suite.addTestSuite(MifosDoubleConverterTest.class);
         suite.addTestSuite(ConvertionUtilTest.class);
-        suite.addTestSuite(MethodInvokerTest.class);
         suite.addTestSuite(MifosNodeTest.class);
         suite.addTestSuite(CacheTest.class);
         suite.addTestSuite(BundleKeyTest.class);
         suite.addTestSuite(MifosSelectHelperTest.class);
-        suite.addTestSuite(TestValidators.class);
         return suite;
     }
 

@@ -1,19 +1,21 @@
 package org.mifos.framework.formulaic;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Enumeration;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-/*
- * A schema is a special kind of validator intended for forms... its contains a mapping of
- * validators for various input keys, and validates each field of an input map against them
+
+/**
+ * A schema is a special kind of validator intended for forms.
+ * It contains a mapping of
+ * validators for various input keys, and validates each field of an 
+ * input map against them.
  */
 public class Schema extends BaseValidator {
 	
@@ -108,7 +110,6 @@ public class Schema extends BaseValidator {
 				results.put(field, validator.validate(input));
 			}
 			catch (ValidationError e) {
-				e.printStackTrace();
 				fieldErrors.put(field, e);
 			}
 		}

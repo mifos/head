@@ -57,6 +57,8 @@ import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
+import org.mifos.framework.formulaic.TestValidators;
+import org.mifos.framework.persistence.CompositeUpgradeTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.DowngraderTest;
@@ -126,6 +128,7 @@ public class FastTests extends TestSuite {
 		suite.addTest(DatabaseVersionPersistenceTest.suite());
 		suite.addTest(DowngraderTest.suite());
 		suite.addTest(UpgradeTest.suite());
+		suite.addTest(CompositeUpgradeTest.suite());
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
 		suite.addTest(ActivityMapperTest.suite());
@@ -138,6 +141,8 @@ public class FastTests extends TestSuite {
 		suite.addTest(QuestionTest.suite());
 		
 		suite.addTestSuite(CustomerStatusFlagTest.class);
+
+		suite.addTestSuite(TestValidators.class);
 		return suite;
 	}
 
