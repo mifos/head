@@ -1,6 +1,5 @@
 package org.mifos.framework.persistence;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -186,17 +185,6 @@ public class DatabaseVersionPersistence {
 		return Collections.unmodifiableList(downgrades);
 	}
 	
-	void execute(Upgrade upgrade, Connection conn) throws IOException, SQLException {
-		upgrade.upgrade(conn);
-	}
-	
-	void execute(List<Upgrade> scripts, Connection conn) 
-	throws IOException, SQLException {
-		for (Upgrade upgrade : scripts) {
-			execute(upgrade, conn);
-		}
-	}
-	
 	public void upgradeDatabase() throws Exception {
 		Connection conn = getConnection();
 		try {
@@ -223,11 +211,12 @@ public class DatabaseVersionPersistence {
 
 		int version = read(connection);
 		for (Upgrade upgrade : scripts(upgradeTo, version)){
-			execute(upgrade, connection);
+			upgrade.upgrade(connection);
 			int upgradedVersion = read(connection);
 			if(upgradedVersion != version + 1) {
 				throw new RuntimeException("upgrade script from " + version +
-					" did not end up at " + (version + 1) + "(was instead " + upgradedVersion + ")");
+					" did not end up at " + (version + 1) + 
+					"(was instead " + upgradedVersion + ")");
 			}
 			version = upgradedVersion;
 		}

@@ -3,10 +3,7 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
-import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
@@ -80,15 +77,11 @@ public class LatestTest extends TestCase {
 	}
 
 	private void runUpgradeScripts(Database database) 
-	throws SQLException, IOException {
-	    Connection conn = database.openConnection();
+	throws Exception {
 	    DatabaseVersionPersistence persistence = 
-	    	new FileReadingPersistence(conn);	    
-	    int version  = persistence.read();
-	    assertEquals(FIRST_NUMBERED_VERSION, version);
-	    List<Upgrade> scripts = persistence.scripts(
-	    	APPLICATION_VERSION, version);
-	    persistence.execute(scripts, conn);
+	    	new FileReadingPersistence(database.openConnection());	    
+	    assertEquals(FIRST_NUMBERED_VERSION, persistence.read());
+	    persistence.upgradeDatabase();
 	}
 
 	/**

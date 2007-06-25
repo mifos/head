@@ -8,6 +8,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.accounts.business.AccountActionEntityTest;
+import org.mifos.application.accounts.business.AddAccountStateFlagTest;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountActionEntity;
 import org.mifos.application.accounts.business.TestAccountBO;
@@ -61,6 +62,8 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestAccountStateMachine.class);
 		testSuite.addTestSuite(TestEditStatusAction.class);
 		testSuite.addTestSuite(TestApplyChargeAction.class);
+		
+		testSuite.addTest(AddAccountStateFlagTest.suite());
 		return testSuite;
 		
 	}
