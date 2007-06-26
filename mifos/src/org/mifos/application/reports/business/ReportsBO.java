@@ -56,6 +56,7 @@ public class ReportsBO extends BusinessObject {
 	private String reportIdentifier;
 	private ReportsCategoryBO reportsCategoryBO;		
 	private ReportsJasperMap reportsJasperMap;
+	private Short activityId;
 
 	
 	
@@ -100,5 +101,14 @@ public class ReportsBO extends BusinessObject {
 	public void setReportsJasperMap(ReportsJasperMap reportsJasperMap) {
 		this.reportsJasperMap = reportsJasperMap;
 	}
+
+	public Short getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(Short activityId) {
+		this.activityId = activityId;
+	}
+
 	
 }

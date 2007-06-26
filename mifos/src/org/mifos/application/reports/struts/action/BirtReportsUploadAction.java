@@ -3,6 +3,7 @@ package org.mifos.application.reports.struts.action;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +23,19 @@ import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.security.AddActivity;
+import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -97,6 +104,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		FormFile formFile = uploadForm.getFile();
 		ReportsBO reportBO;
 		ReportsJasperMap reportJasperMap;
+		String activityNameHead = "Can view ";
+		int activityId = 0;
+		short parentActivity = 150;
 
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
@@ -114,20 +124,37 @@ public class BirtReportsUploadAction extends BaseAction {
 		if (uploadForm.getReportId() != null) {
 			reportBO = new ReportsPersistence().getReport(Short
 					.valueOf(uploadForm.getReportId()));
-			reportJasperMap = new ReportsPersistence().getReport(Short
-					.valueOf(uploadForm.getReportId())).getReportsJasperMap();
+			reportJasperMap = new ReportsPersistence().getReport(
+					Short.valueOf(uploadForm.getReportId()))
+					.getReportsJasperMap();
 		}
 		else {
 			reportBO = new ReportsBO();
 			reportJasperMap = new ReportsJasperMap();
 		}
+		Connection conn = new ReportsPersistence().getConnection();
+		for (ActivityEntity activity : new RolesPermissionsBusinessService()
+				.getActivities()) {
+			if (activity.getId().intValue() > activityId)
+				activityId = activity.getId();
+		}
+		int newActivityId = activityId + 1;
+		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+				newActivityId, parentActivity, (short) 1, activityNameHead
+						+ uploadForm.getReportTitle()).upgrade(conn);
+
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
+		reportBO.setActivityId((short) newActivityId);
 		new ReportsPersistence().createOrUpdate(reportBO);
+		ActivityMapper.getInstance().getActivityMap().put(
+				"/reportsUserParamsAction-loadAddList-"
+						+ reportBO.getReportId(), (short) newActivityId);
 
+		AuthorizationManager.getInstance().init();
 		reportJasperMap.setReportJasper(formFile.getFileName());
 		new ReportsPersistence().createOrUpdate(reportJasperMap);
-		
+
 		File dir = new File(getServlet().getServletContext().getRealPath("/")
 				+ "report");
 		File file = new File(dir, formFile.getFileName());
@@ -186,7 +213,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
 	}
-	
+
 	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -197,6 +224,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
 	}
+
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
 		List<ReportsCategoryBO> categories = new ReportsPersistence()

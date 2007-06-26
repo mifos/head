@@ -38,6 +38,7 @@
 
 package org.mifos.application.reports.struts.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParamsMap;
 import org.mifos.application.reports.business.dao.ReportsParamQueryDAO;
@@ -86,7 +88,7 @@ public class ReportsUserParamsAction extends BaseAction {
 		return reportsBusinessService;
 	}
 
-	public static ActionSecurity getSecurity() {
+	public static ActionSecurity getSecurity(){
 		ReportActionSecurity security = new ReportActionSecurity("reportsUserParamsAction", "loadAddList");
 
 		security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
@@ -120,6 +122,16 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allowReport(26, ReportSecurityConstants.CENTER_MEETING_SCHEDULE);
 		security.allowReport(28, ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK);
 		security.allowReport(29, ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER);
+		
+		try {
+			for(ReportsBO report : getNewUploadedReport())
+			{
+			    security.allowReport(report.getReportId().intValue(),report.getActivityId());
+			}
+		}
+		catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
 		
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
@@ -209,4 +221,14 @@ public class ReportsUserParamsAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 
+	private static List<ReportsBO> getNewUploadedReport() throws ServiceException{
+		List<ReportsBO> newReports = new ArrayList<ReportsBO>();
+	    for(ReportsBO report : new ReportsUserParamsAction().reportsPersistence.getAllReports())
+	    {
+	          if(report.getReportId().intValue()>29){
+	        		newReports.add(report);
+	        }
+	    }
+		return newReports;
+	}
 }

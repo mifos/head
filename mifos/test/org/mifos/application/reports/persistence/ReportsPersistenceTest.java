@@ -158,4 +158,8 @@ public class ReportsPersistenceTest extends MifosTestCase {
 		 ReportsBO report = reportsPersistence.getReport(reportId);
 		 assertEquals(reportId, report.getReportId());
 		 }
+	 
+	 public void testGetAllReports(){
+		 assertEquals(29,reportsPersistence.getAllReports().size());
+	 }
 }

@@ -39,6 +39,7 @@
 package org.mifos.application.reports.persistence;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,14 @@ public class ReportsPersistence extends Persistence {
 		Query query = HibernateUtil.getSessionTL().getNamedQuery(
 				ReportsConstants.GETALLREPORTS);
 		return query.list();
+	}
+	
+	public List<ReportsBO> getAllReports(){
+		List<ReportsBO> allReports = new ArrayList<ReportsBO>();
+		for(ReportsCategoryBO reportCategory : new ReportsPersistence().getAllReportCategories()){
+			allReports.addAll(reportCategory.getReportsSet());
+		}
+		return allReports;		
 	}
 
 	public List<ReportsParams> getAllReportParams() {
