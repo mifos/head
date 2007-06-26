@@ -67,20 +67,20 @@ public class Question implements Serializable {
 		setAnswerType(answerType);
 	}
 
-	public int getNumericMax() {
+	public Integer getNumericMax() {
 		return numericMax;
 	}
 
-	public void setNumericMax(int numericMax) {
+	public void setNumericMax(Integer numericMax) {
 		
 		this.numericMax = numericMax;
 	}
 
-	public int getNumericMin() {
+	public Integer getNumericMin() {
 		return numericMin;
 	}
 
-	public void setNumericMin(int numericMin) {
+	public void setNumericMin(Integer numericMin) {
 		this.numericMin = numericMin;
 	}
 
