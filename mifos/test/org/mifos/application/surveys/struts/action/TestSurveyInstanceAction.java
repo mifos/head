@@ -1,5 +1,6 @@
 package org.mifos.application.surveys.struts.action;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,9 +16,11 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
+import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyQuestion;
+import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.business.TestSurvey;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.InstanceStatus;
@@ -31,6 +34,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.formulaic.ErrorType;
+import org.mifos.framework.formulaic.OneOfValidator;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
@@ -108,20 +113,28 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		return client;
 	}
 	
-	public void testCreate() throws Exception {
+	public void testSurveyValidation() throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
 		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
-		String officerName = sampleInstance.getOfficer().getUserName();
-		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
-		Question question2 = new Question("test question 2", AnswerType.FREETEXT);
-		
-		surveysPersistence.createOrUpdate(question1);
-		surveysPersistence.createOrUpdate(question2);
+		UserContext officer = TestUtils.makeUser();
+		String officerName = officer.getName();
 		
 		Survey survey = sampleInstance.getSurvey();
+		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test question 2", AnswerType.NUMBER);
+		Question question3 = new Question("test question 3", AnswerType.DATE);
+		Question question4 = new Question("test question 4", AnswerType.CHOICE);
+		
+		QuestionChoice choice1 = new QuestionChoice("choice 1");
+		QuestionChoice choice2 = new QuestionChoice("choice 2");
+		question4.addChoice(choice1);
+		question4.addChoice(choice2);
+		
 		survey.addQuestion(question1, true);
 		survey.addQuestion(question2, true);
+		survey.addQuestion(question3, true);
+		survey.addQuestion(question4, true);
 		
 		surveysPersistence.createOrUpdate(survey);
 		
@@ -142,20 +155,101 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
-				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
+				.getAppliesToAsEnum(), globalNum), (String) request.getSession().getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
+		InstanceStatus status = InstanceStatus.COMPLETED;
+		
+		int question3Id = question3.getQuestionId();
+		int question4Id = question4.getQuestionId();
+		addRequestParameter("value(response_" + question3Id + "DD)", "14");
+		addRequestParameter("value(response_" + question3Id + "MM)", "30"); // an invalid month
+		addRequestParameter("value(response_" + question3Id + "YY)", "2006");
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
 				"answer 1");
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(1).getQuestion().getQuestionId() + ")",
-				"");
+				"notanumber"); // this field should be a number
+		addRequestParameter("value(customerId)", clientId);
+		addRequestParameter("value(officerName)", officerName);
+		addRequestParameter("value(dateSurveyed_DD)", "13");
+		addRequestParameter("value(dateSurveyed_MM)", "3"); 
+		addRequestParameter("value(dateSurveyed_YY)", "2007");
+		addRequestParameter("value(instanceStatus)", Integer.toString(status.getValue()));
+		
+		// this field is missing (commented out)
+		//addRequestParameter("value(response_" + question4Id + ")", Integer.toString(choice1.getChoiceId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		String[] expectedErrors = { "errors.OneOfValidator.MISSING",
+				"errors.DateValidator.DATE_FORMAT",
+				"errors.NumberValidator.INVALID_NUMBER" };
+		verifyActionErrors(expectedErrors);
+	}
+	
+	public void testCreate() throws Exception {
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
+		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
+		String officerName = TestUtils.makeUser().getName();
+		
+		Survey survey = sampleInstance.getSurvey();
+		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test question 2", AnswerType.NUMBER);
+		Question question3 = new Question("test question 3", AnswerType.DATE);
+		Question question4 = new Question("test question 4", AnswerType.CHOICE);
+		
+		QuestionChoice choice1 = new QuestionChoice("choice 1");
+		QuestionChoice choice2 = new QuestionChoice("choice 2");
+		question4.addChoice(choice1);
+		question4.addChoice(choice2);
+		
+		survey.addQuestion(question1, true);
+		survey.addQuestion(question2, true);
+		survey.addQuestion(question3, true);
+		survey.addQuestion(question4, true);
+		
+		surveysPersistence.createOrUpdate(survey);
+		
+		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
+		addRequestParameter("globalNum", globalNum);
+		addRequestParameter("surveyType", "client");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
+		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
+				.getAppliesToAsEnum(), globalNum), (String) request.getSession().getAttribute(
+						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
+		
+		int question3Id = question3.getQuestionId();
+		int question4Id = question4.getQuestionId();
+		addRequestParameter("value(response_" + question3Id + "DD)", "14");
+		addRequestParameter("value(response_" + question3Id + "MM)", "3");
+		addRequestParameter("value(response_" + question3Id + "YY)", "2006");
+		addRequestParameter("value(response_" +
+				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
+				"answer 1");
+		addRequestParameter("value(response_" +
+				survey.getQuestions().get(1).getQuestion().getQuestionId() + ")",
+				"2");
 		addRequestParameter("value(customerId)", clientId);
 		addRequestParameter("value(officerName)", officerName);
 		addRequestParameter("value(dateSurveyed_DD)", "13");
 		addRequestParameter("value(dateSurveyed_MM)", "06");
 		addRequestParameter("value(dateSurveyed_YY)", "2007");
+		addRequestParameter("value(response_" + question4Id + ")", Integer.toString(choice1.getChoiceId()));
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "preview");
 		actionPerform();
@@ -165,7 +259,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		actionPerform();
 		verifyNoActionErrors();
-		verifyForward("create_success");
 		
 		List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesBySurvey(survey);
 		assertEquals(2, retrievedInstances.size());
@@ -176,12 +269,16 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
 		assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
 		assertEquals(2007, calendar.get(Calendar.YEAR));
-		assertEquals("answer 1", newInstance.getSurveyResponses().get(1).getFreetextValue());
-		assertEquals("", newInstance.getSurveyResponses().get(0).getFreetextValue());
-		assertEquals(0, newInstance.getCompletedStatus());
-		assertNotNull(newInstance.getOfficer());
-		assertEquals(sampleInstance.getOfficer().getGlobalPersonnelNum(),
-				newInstance.getOfficer().getGlobalPersonnelNum());
+		List<SurveyResponse> responses = newInstance.getSurveyResponses();
+		assertEquals("answer 1", responses.get(0).getFreetextValue());
+		assertEquals(2.0, responses.get(1).getNumberValue());
+		Date retrievedDate = responses.get(2).getDateValue();
+		calendar.setTime(retrievedDate);
+		assertEquals(14, calendar.get(Calendar.DAY_OF_MONTH));
+		assertEquals(Calendar.MARCH, calendar.get(Calendar.MONTH));
+		assertEquals(2006, calendar.get(Calendar.YEAR));
+		assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
+		
 
 	}
 	
@@ -208,7 +305,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("globalNum", globalCustNum);
 		actionPerform();
 		verifyNoActionErrors();
-		assertEquals(client.getDisplayName(), request
+		assertEquals(client.getDisplayName(), request.getSession()
 				.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
 		assertEquals(2, surveysList.size());

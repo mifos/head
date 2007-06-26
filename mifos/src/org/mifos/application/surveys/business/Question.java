@@ -1,11 +1,16 @@
 package org.mifos.application.surveys.business;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
+import org.mifos.framework.formulaic.DateValidator;
+import org.mifos.framework.formulaic.NumberValidator;
+import org.mifos.framework.formulaic.OneOfValidator;
+import org.mifos.framework.formulaic.ValidationError;
 
 public class Question implements Serializable {
 	private int questionId;
@@ -16,11 +21,35 @@ public class Question implements Serializable {
 	
 	private String questionText;
 	
-	private int numericMin;
+	private Integer numericMin;
 	
-	private int numericMax;
+	private Integer numericMax;
 	
 	private List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+	
+	public Object validate(Object objectData) throws ValidationError {
+		String data = (String) objectData;
+		if (answerType == AnswerType.FREETEXT) {
+			return null;
+		}
+		else if (answerType == AnswerType.NUMBER) {
+			BigDecimal min = numericMin == null ? null : new BigDecimal(numericMin);
+			BigDecimal max = numericMax == null ? null : new BigDecimal(numericMax);
+			return new NumberValidator(min, max).validate(data);
+		}
+		else if (answerType == AnswerType.CHOICE) {
+			List<String> choicesStrings = new LinkedList<String>();
+			for (QuestionChoice choice : choices) {
+				choicesStrings.add(Integer.toString(choice.getChoiceId()));
+			}
+			return new OneOfValidator(choicesStrings).validate(objectData);
+		}
+		else if (answerType == AnswerType.DATE) {
+			DateValidator d = new DateValidator();
+			return new DateValidator().validate(objectData);
+		}
+		return data;
+	}
 	
 	public Question() {
 		questionState = QuestionState.ACTIVE;

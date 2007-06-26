@@ -18,7 +18,7 @@ public class IsInstanceValidator extends BaseValidator {
 			return value;
 		}
 		else {
-			throw new ValidationError(value, WRONG_TYPE_ERROR);
+			throw makeError(value, ErrorType.WRONG_TYPE);
 		}
 	}
 

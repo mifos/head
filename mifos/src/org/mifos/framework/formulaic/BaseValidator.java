@@ -1,12 +1,30 @@
 package org.mifos.framework.formulaic;
 
+import org.apache.struts.action.ActionMessage;
+
 
 public abstract class BaseValidator implements Validator {
 	
-	private String errorPrefix = this.getClass().getName();
+	protected enum errors {MISSING};
 	
-	public String getMsg(String errorType) {
+	protected String errorPrefix;
+	
+	public BaseValidator() {
+		errorPrefix = "errors." + this.getClass().getSimpleName();
+	}
+	
+	public String getKey(String errorType) {
 		return errorPrefix + "." + errorType;
+	}
+
+	
+	protected ValidationError makeError(Object value, Enum errorType) {
+		ActionMessage message = new ActionMessage(getKey(errorType.toString()));
+		return new ValidationError(value, message);
+	}
+	
+	public void setErrorPrefix(String prefix) {
+		this.errorPrefix = prefix;
 	}
 	
 //	 thrown when an item is missing, which generally means it was null
@@ -26,7 +44,7 @@ public abstract class BaseValidator implements Validator {
 	
 	protected void checkNull(Object value) throws ValidationError {
 		if (value == null) {
-			throw new ValidationError(value, MISSING_ERROR);
+			throw makeError(value, errors.MISSING);
 		}
 	}
 }

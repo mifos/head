@@ -20,7 +20,6 @@ public class OneOfValidator extends BaseValidator {
 		
 		this.choices = new LinkedList();
 		for (Object choice : choices) {
-			System.out.println("choice: " + choice);
 			this.choices.add(choice);
 		}
 	}
@@ -35,7 +34,7 @@ public class OneOfValidator extends BaseValidator {
 		checkNull(value);
 		Collection items = source == null ? choices : source.getItems();
 		if (!items.contains(value)) {
-			throw new ValidationError(value, NOT_A_CHOICE_ERROR);
+			throw makeError(value, ErrorType.NOT_A_CHOICE);
 		}
 		else {
 			return value;

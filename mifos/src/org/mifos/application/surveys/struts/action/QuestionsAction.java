@@ -48,7 +48,6 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward viewQuestions(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
 		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
@@ -107,7 +106,10 @@ public class QuestionsAction extends PersistenceAction {
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);
 		}
-		return mapping.findForward(ActionForwards.create_success.toString());
+		List<Question> questionList = persistence.retrieveAllQuestions();
+		request.setAttribute(SurveysConstants.KEY_QUESTIONS_LIST, questionList);
+		request.setAttribute(SurveysConstants.KEY_ITEM_COUNT, questions.size());
+		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
 	
 	public ActionForward addQuestion(ActionMapping mapping,

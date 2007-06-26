@@ -733,8 +733,56 @@
 								height="8"></td>
 						</tr>
 					</table>
-					<table width="100%" border="0" cellpadding="2" cellspacing="0"
-						class="bluetableborder">
+
+          <table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+            <tr>
+              <td colspan="2" class="bluetablehead05">
+                <span class="fontnormalbold">
+                  <mifos:mifoslabel name="Surveys.Surveys" bundle="SurveysUIResources"/>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
+            </tr>
+            <c:forEach items="${requestScope.customerSurveys}" var="surveyInstance">
+              <tr>
+                <td width="70%" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <a href="surveyInstanceAction.do?method=get&value(surveyId)=${surveyInstance.instanceId}">
+                      <c:out value="${surveyInstance.survey.name}"/>
+                    </a>
+                  </span>
+                </td>
+                <td width="30%" align="left" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
+                  </span>
+                </td>
+              </tr>
+            </c:forEach>
+            <tr>
+              <td colspan="2" align="right" class="paddingleft05">
+                <span class="fontnormal8pt">
+                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=client">
+                    <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
+                  </a> |
+                  <a href="surveysAction.do?method=mainpage">
+                    <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
+                  </a>
+          </table>
+
+
+
+
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+
+					<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="client.RecentNotes" bundle="ClientUIResources"></mifos:mifoslabel>
@@ -745,40 +793,47 @@
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><c:choose>
-								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
-									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
-										<span class="fontnormal8ptbold"> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
-										<c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
-										</span>
-										<span class="fontnormal8pt"> <c:out value="${note.comment}" />
-										-<em><c:out value="${note.personnelName}" /></em><br>
-										<br>
-										</span>
-									</c:forEach>
-								</c:when>
-								<c:otherwise>
-									<span class="fontnormal"> <mifos:mifoslabel
-										name="Group.nonotesavailable" bundle="GroupUIResources" /> </span>
-								</c:otherwise>
-							</c:choose></td>
+							<td class="paddingL10">
+                <c:choose>
+                  <c:when test="${!empty BusinessKey.recentCustomerNotes}">
+                    <c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
+                      <span class="fontnormal8ptbold"> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
+                        <c:out
+                        value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
+                      </span>
+                      <span class="fontnormal8pt"> 
+                        <c:out value="${note.comment}" /> -<em><c:out value="${note.personnelName}" /></em>
+                        <br>
+                        <br>
+                      </span>
+                    </c:forEach>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="fontnormal"> <mifos:mifoslabel
+                      name="Group.nonotesavailable" bundle="GroupUIResources" /> 
+                    </span>
+                  </c:otherwise>
+							  </c:choose>
+              </td>
 						</tr>
 						<tr>
-							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
-								<html-el:link
-									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-									<mifos:mifoslabel
-									name="client.SeeAllNotesLink" bundle="ClientUIResources"></mifos:mifoslabel>
-								</html-el:link>
-								<br>
-							</c:if> <a
-								href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-							<mifos:mifoslabel name="client.NotesLink"
-								bundle="ClientUIResources"></mifos:mifoslabel> </a> </span></td>
+							<td align="right" class="paddingleft05">
+                <span class="fontnormal8pt"> 
+                  <c:if test="${!empty BusinessKey.customerNotes}">
+                    <html-el:link
+                    href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                      <mifos:mifoslabel name="client.SeeAllNotesLink" bundle="ClientUIResources"/>
+                    </html-el:link>
+								    <br/>
+							    </c:if> 
+                  <a href="customerNotesAction.do?method=load&customerId=<c:out value="${BusinessKey.customerId}"/>&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							      <mifos:mifoslabel name="client.NotesLink" bundle="ClientUIResources"/> 
+                  </a> 
+                </span>
+              </td>
 						</tr>
 					</table>
+
 					</td>
 				</tr>
 			</table>

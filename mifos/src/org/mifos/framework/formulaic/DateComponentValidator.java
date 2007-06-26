@@ -17,7 +17,7 @@ public class DateComponentValidator extends IsInstanceValidator {
 		input = super.validate(input);
 		Map inputMap = (Map) input;
 		if (inputMap.size() == 0) {
-			throw new ValidationError(input, MISSING_ERROR);
+			throw makeError(input, ErrorType.MISSING);
 		}
 		try {
 			String dayValue = (String) inputMap.get("DD");
@@ -26,7 +26,7 @@ public class DateComponentValidator extends IsInstanceValidator {
 			return DateUtils.parseBrowserDateFields(yearValue, monthValue, dayValue);
 		}
 		catch (InvalidDateException e) {
-			throw new ValidationError(input, DateValidator.DATE_FORMAT_ERROR);
+			throw makeError(input, ErrorType.DATE_FORMAT);
 		}
 	}
 

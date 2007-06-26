@@ -10,6 +10,10 @@ public class GenericActionForm extends ActionForm {
 	
 	private Map<String, String> values = new HashMap<String, String>();
 	
+	public Map<String, String> getMap() {
+		return values;
+	}
+	
 	public void setValue(String key, String object) {
 		values.put(key, object);
 	}

@@ -1,7 +1,7 @@
 package org.mifos.framework.formulaic;
 
 import java.util.Date;
-
+ 
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -22,7 +22,7 @@ public class DateValidator extends IsInstanceValidator {
 		}
 		
 		catch (InvalidDateException e) {
-			throw new ValidationError(input, DATE_FORMAT_ERROR);
+			throw makeError(input, ErrorType.DATE_FORMAT);
 		}
 	}
 

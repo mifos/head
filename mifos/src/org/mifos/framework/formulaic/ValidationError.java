@@ -1,30 +1,33 @@
 package org.mifos.framework.formulaic;
 
+import org.apache.struts.action.ActionMessage;
+
 public class ValidationError extends Exception {
 	
 	private Object value; // the original value that failed validation
-	private String msg;
+	private ActionMessage actionMessage;
 	
-	public ValidationError(Object value, String msg) {
+	public ActionMessage getActionMessage() {
+		return actionMessage;
+	}
+	
+	public ValidationError(Object value, ActionMessage actionMessage) {
 		this.value = value;
-		this.msg = msg;
+		this.actionMessage = actionMessage;
 	}
 	
-	public ValidationError(Object value) {
-		this(value, Validator.DEFAULT_ERROR);
-	}
-	
+
 	public Object getValue() {
 		return value;
 	}
 	
 	public String getMsg() {
-		return msg;
+		return actionMessage.getKey();
 	}
 	
 	@Override
 	public String toString() {
-		return "<ValidationError " + msg + ">";
+		return "<ValidationError " + getMsg() + ">";
 	}
 	
 }

@@ -62,20 +62,18 @@
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="70%" align="left" valign="top" class="paddingL15T15">
+					<td align="left" valign="top" class="paddingL15T15">
 
-					  <table width="96%" border="0" cellpadding="3" cellspacing="0">
+					  <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td class="heading">
-                  <c:out value="${requestScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
+                <td width="83%" class="heading">
+                  <c:out value="${sessionScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
 </span>
                 </td>
               </tr>
 					  </table>
 
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
-
-
               <tr>
                 <td><br><html-el:errors bundle="SurveysUIResources"/>
                     <span class="fontnormal">
@@ -114,7 +112,8 @@
               </tr>
             </table> 
 
-            <table width="93%" border="0" cellpadding="0" cellspacing="0">
+            <br/>
+            <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
                   <html-el:submit style="width:65px;" property="button" styleClass="buttn">

@@ -21,7 +21,7 @@ public class SurveyResponse {
 	
 	private QuestionChoice choiceValue;
 	
-	private BigDecimal numberValue;
+	private Double numberValue;
 	
 	public SurveyResponse(SurveyInstance instance, Question question) {
 		setInstance(instance);
@@ -87,11 +87,12 @@ public class SurveyResponse {
 		this.freetextValue = freetextValue;
 	}
 
-	public BigDecimal getNumberValue() {
+	public Double getNumberValue() {
 		return numberValue;
 	}
 
-	public void setNumberValue(BigDecimal numberValue) throws ApplicationException {
+	
+	public void setNumberValue(double numberValue) throws ApplicationException {
 		if (question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
@@ -131,7 +132,7 @@ public class SurveyResponse {
 		}
 		
 		else if (answerType == AnswerType.NUMBER) {
-			return getNumberValue().toString();
+			return Double.toString(numberValue);
 		}
 		
 		else if (answerType == AnswerType.DATE) {
@@ -160,7 +161,10 @@ public class SurveyResponse {
 		//	setDateValue((Date) value);
 		} else if (answerType == AnswerType.NUMBER) {
 			double numberValue = Double.parseDouble(value);
-			setNumberValue(new BigDecimal(numberValue));
+			setNumberValue(numberValue);
+		} else if (answerType == AnswerType.DATE) {
+			Date dateValue = DateUtils.getDateAsSentFromBrowser(value);
+			setDateValue(dateValue);
 		} else if (answerType == AnswerType.CHOICE) {
 			int choiceId = Integer.parseInt(value);
 			QuestionChoice choice = null;
@@ -195,7 +199,7 @@ public class SurveyResponse {
 			}
 			
 			else if (answerType == AnswerType.NUMBER) {
-				setNumberValue((BigDecimal) value);
+				setNumberValue((Double) value);
 			}
 			
 			else if (answerType == AnswerType.CHOICE) {

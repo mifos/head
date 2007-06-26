@@ -81,6 +81,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -569,6 +571,10 @@ public class ClientCustAction extends CustAction {
 		loadMasterDataForDetailsPage(request, clientBO);
 		setSpouseOrFatherName(request, clientBO);
 		setPicture(actionForm, clientBO, request);
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByCustomer(clientBO);
+		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

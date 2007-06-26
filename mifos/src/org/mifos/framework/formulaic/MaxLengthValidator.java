@@ -15,7 +15,7 @@ public class MaxLengthValidator extends IsInstanceValidator {
 	public Object validate(Object input) throws ValidationError {
 		String inputString = (String) super.validate(input);
 		if (inputString.length() > max) {
-			throw new ValidationError(input, TOO_LONG_ERROR);
+			throw makeError(input, ErrorType.STRING_TOO_LONG);
 		}
 		return inputString;
 	}

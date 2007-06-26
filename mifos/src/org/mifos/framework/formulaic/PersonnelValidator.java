@@ -6,7 +6,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 public class PersonnelValidator extends BaseValidator {
 	
 	private PersonnelPersistence persistence;
-	public static final String INVALID_PERSONNEL = "errors.formulaic.DateValidator.invalidpersonnel";
 	
 	public PersonnelValidator() {
 		persistence = new PersonnelPersistence();
@@ -25,7 +24,7 @@ public class PersonnelValidator extends BaseValidator {
 		}
 		
 		if (personnel == null)
-			throw new ValidationError(value, INVALID_PERSONNEL);
+			throw makeError(value, ErrorType.INVALID_PERSONNEL);
 		else
 			return personnel;
 	}

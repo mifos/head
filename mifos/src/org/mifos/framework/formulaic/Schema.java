@@ -10,12 +10,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-
-/**
- * A schema is a special kind of validator intended for forms.
- * It contains a mapping of
- * validators for various input keys, and validates each field of an 
- * input map against them.
+import org.mifos.framework.struts.actionforms.GenericActionForm;
+/*
+ * A schema is a special kind of validator intended for forms... its contains a mapping of
+ * validators for various input keys, and validates each field of an input map against them
  */
 public class Schema extends BaseValidator {
 	
@@ -52,6 +50,10 @@ public class Schema extends BaseValidator {
 		return fieldValidators.get(field);
 	}
 	
+	public Map<String, Object> validate(GenericActionForm actionForm) throws ValidationError {
+		return validate(actionForm.getMap());
+	}
+	
 	public Map<String, Object> validate(ServletRequest request) throws ValidationError {
 		return validate(convertRequest(request));
 	}
@@ -62,6 +64,17 @@ public class Schema extends BaseValidator {
 			input.put(key, request.getParameter(key));
 		}
 		return input;
+	}
+	
+	public ActionMessages getErrors(Object objectData) throws ValidationError {
+		ActionMessages errors = new ActionMessages();
+		try {
+			validate(objectData);
+		}
+		catch (SchemaValidationError e) {
+			errors = makeActionMessages(e);
+		}
+		return errors;
 	}
 
 	public Map<String, Object> validate(HttpSession session) throws ValidationError {
@@ -81,7 +94,7 @@ public class Schema extends BaseValidator {
 		ActionMessages errors = new ActionMessages();
 		for (String key : schemaErrors.keySet()) {
 			String msg = schemaErrors.getFieldMsg(key);
-			errors.add(key, new ActionMessage(msg));
+			errors.add(key, schemaErrors.getFieldError(key).getActionMessage());
 		}
 		
 		return errors;
@@ -96,10 +109,14 @@ public class Schema extends BaseValidator {
 		}
 		
 		catch (ClassCastException e) {
-			throw new ValidationError(objectData, IsInstanceValidator.WRONG_TYPE_ERROR);
+			throw makeError(objectData, ErrorType.WRONG_TYPE);
 		}
 		
 		Map results = new HashMap<String, Object>();
+		// inputs that don't have a validator assigned should just be copied over
+		for (String key : data.keySet()) {
+			results.put(key, data.get(key));
+		}
 		Map fieldErrors = new HashMap<String, ValidationError>();
 		for (String field : fieldValidators.keySet()) {
 			try {

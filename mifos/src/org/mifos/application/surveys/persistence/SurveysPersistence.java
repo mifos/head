@@ -54,6 +54,10 @@ public class SurveysPersistence extends Persistence {
 		return (Survey) getSession().get(Survey.class, id);
 	}
 	
+	public SurveyInstance getInstance(int id) {
+		return (SurveyInstance) getSession().get(SurveyInstance.class, id);
+	}
+	
     public List<Question> retrieveAllQuestions() throws PersistenceException {
         Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_ALL);
         return query.list();

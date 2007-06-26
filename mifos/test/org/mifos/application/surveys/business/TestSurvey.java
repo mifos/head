@@ -318,6 +318,8 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testSurveyResponseWithChoices() throws Exception {
+		SurveyInstance instance = makeSurveyInstance("Test choice type survey response");
+		Survey survey = instance.getSurvey();
 		String questionText = "Why did the chicken cross the road?";
 		Question question = new Question(questionText, AnswerType.CHOICE);
 		QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
@@ -330,6 +332,23 @@ public class TestSurvey extends MifosTestCase {
 		SurveyResponse response = new SurveyResponse();
 		response.setQuestion(question);	
 		response.setChoiceValue(choice1);
+		response.setInstance(instance);
+		session.save(response);
+	}
+	
+	// this test was created because of problems persisting number survey responses
+	// in mayfly
+	public void testNumberSurveyResponse() throws Exception {
+		SurveyInstance instance = makeSurveyInstance("Test number survey response");
+		Survey survey = instance.getSurvey();
+		String questionText = "Sample question with a numeric answer";
+		Question question = new Question(questionText, AnswerType.NUMBER);
+		session.save(question);
+		SurveyResponse response = new SurveyResponse();
+		response.setQuestion(question);
+		response.setNumberValue(5);
+		response.setInstance(instance);
+		session.save(response);
 	}
 	
 	public void testSurveyResponseTypechecks() throws Exception {

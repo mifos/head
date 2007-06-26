@@ -21,7 +21,7 @@ public class IntValidator extends IsInstanceValidator {
 		}
 		
 		catch (NumberFormatException e) {
-			throw new ValidationError(input, IntValidator.PARSE_ERROR);
+			throw makeError(input, ErrorType.INVALID_INT);
 		}
 	}
 

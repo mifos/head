@@ -29,7 +29,7 @@ public class EnumValidator extends IsInstanceValidator {
 			return Enum.valueOf(enumType, inputString);
 		}
 		catch (IllegalArgumentException e) {
-			throw new ValidationError(input, INVALID_ENUM_ERROR);
+			throw makeError(input, ErrorType.INVALID_ENUM);
 		}
 		
 	}

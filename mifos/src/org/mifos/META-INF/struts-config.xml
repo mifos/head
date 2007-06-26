@@ -1255,7 +1255,6 @@
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
-             <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
         
         <action path="/surveyInstanceAction"
@@ -1269,7 +1268,7 @@
           	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
           	  <forward name="preview_failure" path="/pages/application/surveys/jsp/create_instance.jsp"/>
           	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
-          	  <forward name="get_success" path="/pages/application/surveys/jsp/instance_details.jsp"/>          	  
+          	  <forward name="get_success" path="/pages/application/surveys/jsp/viewInstanceDetails.jsp"/>          	  
           	  <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>          	            	  
         </action>
 

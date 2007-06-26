@@ -2,8 +2,6 @@ package org.mifos.framework.formulaic;
 
 public class ConstantValidator extends BaseValidator {
 	
-	public static final String WRONG_VALUE_ERROR = "errors.formulaic.ConstantValidator.wrongvalue";
-	
 	private Object expectedValue;
 	
 	public ConstantValidator(Object expectedValue) {
@@ -17,7 +15,7 @@ public class ConstantValidator extends BaseValidator {
 			return value;
 		}
 		else {
-			throw new ValidationError(value, WRONG_VALUE_ERROR);
+			return makeError(value, ErrorType.WRONG_VALUE);
 		}
 	}
 

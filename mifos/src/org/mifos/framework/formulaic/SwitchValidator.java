@@ -43,7 +43,7 @@ public class SwitchValidator extends BaseValidator {
 		}
 		
 		catch (ClassCastException e) {
-			throw new ValidationError(objectData, IsInstanceValidator.WRONG_TYPE_ERROR);
+			throw makeError(objectData, ErrorType.WRONG_VALUE);
 		}
 		
 		if (data.containsKey(switchField) && cases.containsKey(data.get(switchField))) {
@@ -57,7 +57,7 @@ public class SwitchValidator extends BaseValidator {
 			// if a switch field value matching the available choices is not given, 
 			// and there's no default
 			else {
-				throw new ValidationError(objectData, MISSING_EXPECTED_VALUE_ERROR); // the default, most generic validation error
+				throw makeError(objectData, ErrorType.MISSING_EXPECTED_VALUE); // the default, most generic validation error
 			}
 		}
 	}
