@@ -47,6 +47,12 @@ public static final String CONFIG_OFFICER_TITLE="ConfigOfficerTitle";
 public static final String CONFIG_PURPOSE_OF_LOAN="ConfigPurposeOfLoan";
 public static final String CONFIG_COLLATERAL_TYPE="ConfigCollateralType";
 public static final String CONFIG_ETHNICITY="ConfigEthnicity";
+public static final String NO_VALUE_ERROR="errorNoValueMessage";
+public static final String DUPLICATE_VALUE_ERROR="errorDuplicateValueMessage";
+public static final String SELECT_VALUE_ERROR="errorSelectValueMessage";
+public static final String ENTITY="entity";
+public static final String ADD_OR_EDIT="addOrEdit";
+public static final String LOOKUP_OPTION_DATA="LookupOptionData";
 
 
 }

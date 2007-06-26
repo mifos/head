@@ -80,6 +80,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private List<CustomValueListElement> collateralTypes;
 	private List<CustomValueListElement> attendances;
 	
+
 	private String[] salutationList;
 	private String[] userTitleList;
 	private String[] maritalStatusList;
@@ -91,6 +92,16 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String[] handicappedList;
 	private String[] collateralTypeList;
 	private String[] attendanceList;
+	private String lookupValue;
+	
+
+	public String getLookupValue() {
+		return lookupValue;
+	}
+
+	public void setLookupValue(String lookupValue) {
+		this.lookupValue = lookupValue;
+	}
 	
 	public String[] getSalutationList() {
 		return salutationList;

@@ -178,5 +178,7 @@ public enum ActionForwards {
 	manage_questions,
 	create_instance_entry_success,
 	choose_survey,
-	newinstance_responses;
+	newinstance_responses,
+	addEditLookupOption_success,
+	addEditLookupOption_failure;
 }

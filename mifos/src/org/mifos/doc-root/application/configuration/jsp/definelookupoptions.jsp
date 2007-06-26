@@ -56,12 +56,13 @@
 <script language="javascript">
 
 
-function addAValueToListbox(theSel, textBox)
+function addAValueToListbox(theSel, textBox, errorNoValueMsg, errorDuplicateValueMsg)
 {
-  
+   
    var length = theSel.length;
    if (textBox.value == '')
    {
+       alert(errorNoValueMsg.value);
        textBox.focus();
        return;
    }
@@ -69,6 +70,8 @@ function addAValueToListbox(theSel, textBox)
    {
       if (theSel.options[i].text == textBox.value)
       {
+          alert(errorDuplicateValueMsg.value);
+          textBox.focus();
           return;
       }
    }
@@ -103,11 +106,14 @@ function addAValueToListbox(theSel, textBox)
    textBox.property = null;
 }
 
-function removeAValueFromListbox(theSelFrom, textBox)
+
+
+function removeAValueFromListbox(theSelFrom, textBox, errorSelectValueMessage)
 {
 	var selIndex = theSelFrom.selectedIndex;
 	if (selIndex == -1)
 	{
+		alert(errorSelectValueMessage.value);
 		return;
 	}
 	var selLength = theSelFrom.length;
@@ -157,6 +163,14 @@ function transferOneListData(outSel)
 }				
 
   
+  function setLookupOptionData(entity, addoredit, entityType, op){
+	lookupoptionsactionform.action="lookupOptionsAction.do";
+	lookupoptionsactionform.method.value="addEditLookupOption";
+	entity.value = entityType;
+	addoredit.value = op;
+	lookupoptionsactionform.submit;
+  }
+  
   </script>
   
 		<html-el:form action="/lookupOptionsAction" >
@@ -193,13 +207,13 @@ function transferOneListData(outSel)
                         <mifos:mifosalphanumtext property="salutation" maxlength="300"/>
                         </td>
                         <td width="31%" align="center" valign="top">
-                        <html-el:button property="btnAddSalutation" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.salutationList, this.form.salutation);">
+                        <html-el:submit property="btnAddSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigSalutation.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
+						</html-el:submit>
                           <br>
-                          <html-el:button property="btnEditSalutation" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.salutationList, this.form.salutation);">
+                          <html-el:submit property="btnEditSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit,this.form.ConfigSalutation.value,'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
+						</html-el:submit>
                           </td>
                           <td width="41%">
 							<mifos:MifosValueList name="lookupoptionsactionform" property="salutationList" property2="Salutations" size="5" style="width:136px;"  >
@@ -224,11 +238,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="userTitle" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddUserTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.userTitleList, this.form.userTitle);">
+                    <html-el:button property="btnAddUserTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.userTitleList, this.form.userTitle,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditUserTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.userTitleList, this.form.userTitle);">
+                          <html-el:button property="btnEditUserTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.userTitleList, this.form.userTitle, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -254,11 +268,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="maritalStatus" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.maritalStatusList, this.form.maritalStatus);">
+                    <html-el:button property="btnAddMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.maritalStatusList, this.form.maritalStatus,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.maritalStatusList, this.form.maritalStatus);">
+                          <html-el:button property="btnEditMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.maritalStatusList, this.form.maritalStatus, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -284,11 +298,11 @@ function transferOneListData(outSel)
                         <mifos:mifosalphanumtext property="ethnicity" maxlength="300"/>
                         </td>
                         <td width="31%" align="center" valign="top">
-                        <html-el:button property="btnAddEthnicity" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.ethnicityList, this.form.ethnicity);">
+                        <html-el:button property="btnAddEthnicity" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.ethnicityList, this.form.ethnicity,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditEthnicity" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.ethnicityList, this.form.ethnicity);">
+                          <html-el:button property="btnEditEthnicity" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.ethnicityList, this.form.ethnicity, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                           </td>
@@ -314,11 +328,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="educationLevel" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.educationLevelList, this.form.educationLevel);">
+                    <html-el:button property="btnAddEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.educationLevelList, this.form.educationLevel,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.educationLevelList, this.form.educationLevel);">
+                          <html-el:button property="btnEditEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.educationLevelList, this.form.educationLevel, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -344,11 +358,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="citizenship" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddCitizenship" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.citizenshipList, this.form.citizenship);">
+                    <html-el:button property="btnAddCitizenship" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.citizenshipList, this.form.citizenship,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditCitizenship" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.citizenshipList, this.form.citizenship);">
+                          <html-el:button property="btnEditCitizenship" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.citizenshipList, this.form.citizenship, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -374,11 +388,11 @@ function transferOneListData(outSel)
                         <mifos:mifosalphanumtext property="purposeOfLoan" maxlength="300"/>
                         </td>
                         <td width="31%" align="center" valign="top">
-                        <html-el:button property="btnAddPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan);">
+                        <html-el:button property="btnAddPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan);">
+                          <html-el:button property="btnEditPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                           </td>
@@ -404,11 +418,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="handicapped" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddHandicapped" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.handicappedList, this.form.handicapped);">
+                    <html-el:button property="btnAddHandicapped" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.handicappedList, this.form.handicapped,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditHandicapped" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.handicappedList, this.form.handicapped);">
+                          <html-el:button property="btnEditHandicapped" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.handicappedList, this.form.handicapped, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -434,11 +448,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="collateralType" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddCollateralType" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.collateralTypeList, this.form.collateralType);">
+                    <html-el:button property="btnAddCollateralType" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.collateralTypeList, this.form.collateralType,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditCollateralType" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.collateralTypeList, this.form.collateralType);">
+                          <html-el:button property="btnEditCollateralType" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.collateralTypeList, this.form.collateralType, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -463,11 +477,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="officerTitle" maxlength="300"/>
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.officerTitleList, this.form.officerTitle);">
+                    <html-el:button property="btnAddOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.officerTitleList, this.form.officerTitle,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.officerTitleList, this.form.officerTitle);">
+                          <html-el:button property="btnEditOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.officerTitleList, this.form.officerTitle, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -493,11 +507,11 @@ function transferOneListData(outSel)
                     <mifos:mifosalphanumtext property="attendance" maxlength="300" />
                     </td>
                     <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddAttendance" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.attendanceList, this.form.attendance);">
+                    <html-el:button property="btnAddAttendance" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.attendanceList, this.form.attendance,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:button>
                           <br>
-                          <html-el:button property="btnEditAttendance" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.attendanceList, this.form.attendance);">
+                          <html-el:button property="btnEditAttendance" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.attendanceList, this.form.attendance, this.form.errorSelectValueMessage);">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:button>
                     </td>
@@ -520,14 +534,7 @@ function transferOneListData(outSel)
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitButton" styleClass="buttn" style="width:70px;" onclick="transferData(this.form.salutationList, this.form.userTitleList, this.form.maritalStatusList, this.form.ethnicityList, this.form.educationLevelList, this.form.citizenshipList, this.form.purposesOfLoanList, this.form.handicappedList, this.form.collateralTypeList, this.form.officerTitleList, this.form.attendanceList );">
-										<mifos:mifoslabel name="configuration.submit" />
-									</html-el:submit>
-									&nbsp;
-
-									<html-el:button property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
-										<mifos:mifoslabel name="configuration.cancel" />
-									</html-el:button>
+									
 								</td>
 							</tr>
 						</table>
@@ -536,7 +543,23 @@ function transferOneListData(outSel)
 				</tr>
 			</table>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<html-el:hidden property="method" value="update" />
+			<html-el:hidden property="entity" value="${requestScope.entity}" />
+			<html-el:hidden property="addOrEdit" value="${requestScope.addOrEdit}" />
+			<html-el:hidden property="method" value="addEditLookupOption" />
+			<html-el:hidden property="errorNoValueMessage" value="${requestScope.errorNoValueMessage}" />
+			<html-el:hidden property="errorSelectValueMessage" value="${requestScope.errorSelectValueMessage}" />
+			<html-el:hidden property="errorDuplicateValueMessage" value="${requestScope.errorDuplicateValueMessage}" />
+			<html-el:hidden property="ConfigSalutation" value="${requestScope.ConfigSalutation}" />
+			<html-el:hidden property="ConfigMaritalStatus" value="${requestScope.ConfigMaritalStatus}" />
+			<html-el:hidden property="ConfigUserTitle" value="${requestScope.ConfigUserTitle}" />
+			<html-el:hidden property="ConfigEducationLevel" value="${requestScope.ConfigEducationLevel}" />
+			<html-el:hidden property="ConfigCitizenship" value="${requestScope.ConfigCitizenship}" />
+			<html-el:hidden property="ConfigHandicapped" value="${requestScope.ConfigHandicapped}" />
+			<html-el:hidden property="ConfigAttendance" value="${requestScope.ConfigAttendance}" />
+			<html-el:hidden property="ConfigOfficerTitle" value="${requestScope.ConfigOfficerTitle}" />
+			<html-el:hidden property="ConfigPurposeOfLoan" value="${requestScope.ConfigPurposeOfLoan}" />
+			<html-el:hidden property="ConfigCollateralType" value="${requestScope.ConfigCollateralType}" />
+			<html-el:hidden property="ConfigEthnicity" value="${requestScope.ConfigEthnicity}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -39,16 +39,21 @@
 package org.mifos.application.configuration.struts.action;
 
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.configuration.util.helpers.LookupOptionData;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomValueList;
-import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -61,12 +66,13 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+
 
 public class LookupOptionsAction extends BaseAction {
 
@@ -94,10 +100,75 @@ public class LookupOptionsAction extends BaseAction {
 		security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
-		security.allow("validate", SecurityConstants.VIEW);
+		security.allow("addEditLookupOption", SecurityConstants.VIEW);
 		return security;
 	}
 	
+	
+	private void setLookupOptionData(String configurationEntity, LookupOptionData data, HttpServletRequest request,
+			String addOrEdit, LookupOptionsActionForm lookupOptionsActionForm) throws Exception
+	{
+		assert( (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION) ||
+		   (configurationEntity.equals(ConfigurationConstants.CONFIG_USER_TITLE))));
+		
+		/*	lookupOptionsActionForm.setUserTitles(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.MARITAL_STATUS))
+			lookupOptionsActionForm.setMaritalStatuses(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.ETHINICITY))
+			lookupOptionsActionForm.setEthnicities(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.EDUCATION_LEVEL))
+			lookupOptionsActionForm.setEducationLevels(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.CITIZENSHIP))
+			lookupOptionsActionForm.setCitizenships(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.LOAN_PURPOSES))
+			lookupOptionsActionForm.setPurposesOfLoan(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.COLLATERAL_TYPES))
+			lookupOptionsActionForm.setCollateralTypes(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.HANDICAPPED))
+			lookupOptionsActionForm.setHandicappeds(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.ATTENDENCETYPES))
+			lookupOptionsActionForm.setAttendances(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.OFFICER_TITLES))
+			lookupOptionsActionForm.setOfficerTitles(valueList.getCustomValueListElements());*/
+		data.setValueListId(Short.parseShort(SessionUtils.getAttribute(configurationEntity, request).toString()));
+		if (addOrEdit.equals("add"))
+		{
+			data.setLookupValue("");
+			data.setLookupId(0);
+			lookupOptionsActionForm.setLookupValue("");
+			return;
+		}
+	    // edit
+		String selectedValue = null;
+		String[] spliteStrList = null;
+		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
+            selectedValue = lookupOptionsActionForm.getSalutationList()[0];
+           
+		
+		if (selectedValue != null)
+		{
+			 spliteStrList = selectedValue.split(";");
+		     data.setLookupValue(spliteStrList[1]);
+		     lookupOptionsActionForm.setLookupValue(spliteStrList[1]);
+		     data.setLookupId(Integer.parseInt(spliteStrList[0]));
+		}
+		 
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward addEditLookupOption(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
+		
+		String entity = request.getParameter(ConfigurationConstants.ENTITY);
+		String addOrEdit = request.getParameter(ConfigurationConstants.ADD_OR_EDIT);
+		LookupOptionData data = new LookupOptionData();
+		setLookupOptionData(entity, data, request, addOrEdit, lookupOptionsActionForm);
+		SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+		
+		return mapping.findForward(ActionForwards.addEditLookupOption_success.toString());
+	}
 	
 	@Override
 	protected boolean isNewBizRequired(HttpServletRequest request)
@@ -142,6 +213,52 @@ public class LookupOptionsAction extends BaseAction {
 			throw new Exception("Invalid configuration type in LookupOptionAction. Type is " + configurationEntity);
 	}
 	
+	protected Locale getUserLocale(HttpServletRequest request) {
+		Locale locale = null;
+		HttpSession session = request.getSession();
+		if (session != null) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
+				locale = userContext.getPreferredLocale();
+				if (null == locale) {
+					locale = userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
+	}
+	
+	private void setErrorMessages(LookupOptionsActionForm form, HttpServletRequest request)
+	{
+		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+																getUserLocale(request));
+	    String errorMsg = resources.getString("errors.novalue");
+	    request.setAttribute(ConfigurationConstants.NO_VALUE_ERROR, errorMsg);
+	    errorMsg = resources.getString("errors.duplicatevalue");
+	    request.setAttribute(ConfigurationConstants.DUPLICATE_VALUE_ERROR, errorMsg);
+	    errorMsg = resources.getString("errors.selectvalue");
+	    request.setAttribute(ConfigurationConstants.SELECT_VALUE_ERROR, errorMsg);
+	}
+	
+	private void setHiddenFields(HttpServletRequest request)
+	{
+		//if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+		//	request.setAttribute(Constants.CURRENTFLOWKEY, request
+		//			.getParameter(Constants.CURRENTFLOWKEY));
+	    request.setAttribute(ConfigurationConstants.CONFIG_SALUTATION, ConfigurationConstants.CONFIG_SALUTATION);
+	    request.setAttribute(ConfigurationConstants.CONFIG_MARITAL_STATUS, ConfigurationConstants.CONFIG_MARITAL_STATUS);
+	    request.setAttribute(ConfigurationConstants.CONFIG_USER_TITLE, ConfigurationConstants.CONFIG_USER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
+	    request.setAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP, ConfigurationConstants.CONFIG_CITIZENSHIP);
+	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
+	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN);
+	    request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
+	   
+	}
 
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
@@ -150,6 +267,10 @@ public class LookupOptionsAction extends BaseAction {
 		logger.debug("Inside load method");
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
 		lookupOptionsActionForm.clear();
+		setHiddenFields(request);
+		// set error messages (hidden fields on jsp page)
+		setErrorMessages(lookupOptionsActionForm, request);
+		
 		Short localeId = getUserContext(request).getLocaleId();
 		MasterPersistence masterPersistence = new MasterPersistence();
 		PopulateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence,
@@ -194,6 +315,9 @@ public class LookupOptionsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Inside validate method");
+		ActionForwards actionForward = ActionForwards.addEditLookupOption_failure;
+		
+		/*
 		ActionForwards actionForward = ActionForwards.load_failure;
 		String method = (String) request.getAttribute("methodCalled");
 		if (method != null) {
@@ -204,20 +328,23 @@ public class LookupOptionsAction extends BaseAction {
 				actionForward = ActionForwards.update_failure;
 			}
 		}
+		*/
 		logger.debug("outside validate method");
 		return mapping.findForward(actionForward.toString());
 	}
 		
-	private void ProcessOneConfigurationEntity(HttpServletRequest request, String[] updatedList, String valueListName, Short localeId) throws PersistenceException
+	/*private void ProcessOneConfigurationEntity(HttpServletRequest request, String[] updatedList, String valueListName, Short localeId) 
+				throws PersistenceException, PageExpiredException
 	{
-		Short valueListId = Short.parseShort(request.getParameter(valueListName));	
+			
 		if ((updatedList != null) && (updatedList.length > 0)) {
+			Short valueListId = Short.parseShort(SessionUtils.getAttribute(valueListName,request).toString());
 			CustomValueList customValueList = MifosValueList.mapUpdateStringArrayToCustomValueList(updatedList, valueListId, localeId);
 			UpdateDatabase(customValueList, localeId);
 		}
-	}
+	}*/
 	
-	private void UpdateDatabase(CustomValueList valueList, Short localeId) throws PersistenceException 
+	/*private void UpdateDatabase(CustomValueList valueList, Short localeId) throws PersistenceException 
 	{
 		MasterPersistence masterPersistence = new MasterPersistence();
 		for (CustomValueListElement element : valueList.getCustomValueListElements()) {
@@ -227,6 +354,15 @@ public class LookupOptionsAction extends BaseAction {
 				masterPersistence.addValueListElementForLocale(valueList.getEntityId(), element.getLookUpValue(), localeId);
 			}
 		}
+	}*/
+	
+	private void UpdateDatabase(LookupOptionData data, Short localeId) throws PersistenceException 
+	{
+		MasterPersistence masterPersistence = new MasterPersistence();
+		if (data.getLookupId() > 0)
+			masterPersistence.updateValueListElementForLocale(data.getLookupId(), localeId, data.getLookupValue());
+		else
+			masterPersistence.addValueListElementForLocale(data.getValueListId(), data.getLookupValue(), localeId);
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -234,10 +370,15 @@ public class LookupOptionsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Inside update method");
+		//setHiddenFields(request);
 		Short localeId = getUserContext(request).getLocaleId();
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
-		
-		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getSalutationList(), 
+		LookupOptionData data = (LookupOptionData)SessionUtils.getAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, request);
+		data.setLookupValue(lookupOptionsActionForm.getLookupValue());
+		UpdateDatabase(data, localeId);		
+		//if (lookupOptionsActionForm.)
+		//
+		/*ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getSalutationList(), 
 				ConfigurationConstants.CONFIG_SALUTATION, localeId);
 		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getUserTitleList(), 
 				ConfigurationConstants.CONFIG_USER_TITLE, localeId);
@@ -258,7 +399,7 @@ public class LookupOptionsAction extends BaseAction {
 		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getOfficerTitleList(), 
 				ConfigurationConstants.CONFIG_OFFICER_TITLE, localeId);
 		ProcessOneConfigurationEntity(request, lookupOptionsActionForm.getAttendanceList(), 
-				ConfigurationConstants.CONFIG_ATTENDANCE, localeId);
+				ConfigurationConstants.CONFIG_ATTENDANCE, localeId);*/
 
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

@@ -6,7 +6,7 @@
 
 <form-validation>
 	<global></global>
-	<formset>
+    <formset>
 		<!-- Login  form -->
 		<form name="/loginAction">
 			<field property="userName" depends="required">
@@ -1324,5 +1324,16 @@
 				<arg key="configuration.bulkentry" />
 			</field>
 		</form>
+        <form name="/lookupOptionsAction">
+            <field property="lookupValue" depends="required,maxlength">
+                <msg name="required" key="errors.novalue" bundle="configurationUIResources" />
+                <msg name="maxlength" key="errors.toolong" bundle="configurationUIResources" />
+                <arg0 name="maxlength" key="${var:maxlength}" resource="false" />
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>300</var-value>
+                </var>
+            </field>
+        </form>
 	</formset>
 </form-validation>
