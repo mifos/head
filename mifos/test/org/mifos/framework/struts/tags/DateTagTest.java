@@ -58,7 +58,7 @@ public class DateTagTest extends MifosTestCase {
 				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  " 
 				+ "style=\"width:3em\""
 				+ "/>&nbsp;YYYY&nbsp;",
-			dateTag.makeMappedUserFields("value(asd)", "1", "1", "2000", "", "d/m/y"));
+			dateTag.makeMappedUserFields("asd", "1", "1", "2000", "", "d/m/y"));
 	}
 	
 	public void testGetFormat() throws Exception {

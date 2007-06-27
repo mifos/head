@@ -67,7 +67,7 @@
 					  <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="83%" class="heading">
-                  <c:out value="${sessionScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
+                  <c:out value="${requestScope.businessObjectName}" /> - <span class="headingorange"><mifos:mifoslabel name="Surveys.attach_survey" bundle="SurveysUIResources" />
 </span>
                 </td>
               </tr>

@@ -161,8 +161,8 @@ public class SurveyResponse {
 		if (answerType == AnswerType.FREETEXT) {
 			setFreetextValue(value);
 		// TODO: implement date AnswerType handling
-		//} else if (answerType == AnswerType.DATE) {
-		//	setDateValue((Date) value);
+		} else if (answerType == AnswerType.DATE) {
+			setDateValue(DateUtils.getDate(value));
 		} else if (answerType == AnswerType.NUMBER) {
 			double numberValue = Double.parseDouble(value);
 			setNumberValue(numberValue);

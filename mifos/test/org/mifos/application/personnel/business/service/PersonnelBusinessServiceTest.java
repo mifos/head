@@ -213,5 +213,13 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		return createPersonnel(office,PersonnelLevel.LOAN_OFFICER);
 	}
 	
+	public PersonnelBO beginCreatePublicPersonnel() throws Exception {
+		setUp();
+		return createPersonnel();
+	}
+	
+	public void endCreatePublicPersonnel() throws Exception {
+		tearDown();
+	}
 	
 }

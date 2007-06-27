@@ -220,7 +220,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "preview");
 		actionPerform();
-		String[] expectedErrors = { "errors.OneOfValidator.MISSING",
+		String[] expectedErrors = { "errors.SurveyValidator.MISSING",
 				"errors.DateValidator.DATE_FORMAT",
 				"errors.NumberValidator.INVALID_NUMBER" };
 		verifyActionErrors(expectedErrors);
@@ -343,8 +343,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("globalNum", globalCustNum);
 		actionPerform();
 		verifyNoActionErrors();
-		assertEquals(client.getDisplayName(), request.getSession()
-				.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
+		assertEquals(client.getDisplayName(), 
+				request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
 		assertEquals(2, surveysList.size());
 		

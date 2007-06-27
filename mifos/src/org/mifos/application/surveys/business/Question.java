@@ -46,7 +46,7 @@ public class Question implements Serializable {
 		}
 		else if (answerType == AnswerType.DATE) {
 			DateValidator d = new DateValidator();
-			return new DateValidator().validate(objectData);
+			return d.validate(objectData);
 		}
 		return data;
 	}

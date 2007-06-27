@@ -96,37 +96,39 @@ public class SurveyInstanceAction extends BaseAction {
 				String formName = "response_"
 						+ Integer.toString(question.getQuestion()
 								.getQuestionId());
-				String input = (String) data.get(formName);
 
-				String formInput;
+				String formInput = null;
 				if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.DATE) {
 					String dayValue = (String) data.get(formName + "DD");
 					String monthValue = (String) data.get(formName + "MM");
 					String yearValue = (String) data.get(formName + "YY");
-					formInput = dayValue + "/" + monthValue + "/" + yearValue;
+					if (StringUtils.isNullAndEmptySafe(dayValue) &&
+							StringUtils.isNullAndEmptySafe(dayValue) &&
+							StringUtils.isNullAndEmptySafe(dayValue))
+						formInput = dayValue + "/" + monthValue + "/" + yearValue;
 				}
 				else {
 					formInput = (String) data.get(formName);
 				}
 
-				if (question.getMandatory() == 1
-						&& StringUtils.isNullOrEmpty(formInput)) {
-					int questionNum = survey.getQuestions().indexOf(question) + 1;
-					ActionMessage newMessage = new ActionMessage(getKey(ErrorType.MISSING.toString()), Integer.toString(questionNum));
-					fieldErrors.put(formName, new ValidationError(formInput, newMessage));
-				}
-
-				try {
-					question.getQuestion().validate(formInput);
-					results.put(formName, formInput);
-				}
-				catch (ValidationError e) {
-					// find the number of the question in the survey, so we can
-					// give a helpful error message
-					int questionNum = survey.getQuestions().indexOf(question) + 1;
-					ActionMessage newMessage = new ActionMessage(e.getMsg(),
-							Integer.toString(questionNum));
-					fieldErrors.put(formName, new ValidationError(formInput, newMessage));
+				if (StringUtils.isNullOrEmpty(formInput)) {
+					if (question.getMandatory() == 1) {
+						int questionNum = survey.getQuestions().indexOf(question) + 1;
+						ActionMessage newMessage = new ActionMessage(getKey(ErrorType.MISSING.toString()), Integer.toString(questionNum));
+						fieldErrors.put(formName, new ValidationError(formInput, newMessage));
+					}
+				} else {
+					try {
+						question.getQuestion().validate(formInput);
+						results.put(formName, formInput);
+					} catch (ValidationError e) {
+						// find the number of the question in the survey, so we can
+						// give a helpful error message
+						int questionNum = survey.getQuestions().indexOf(question) + 1;
+						ActionMessage newMessage = new ActionMessage(e.getMsg(),
+								Integer.toString(questionNum));
+						fieldErrors.put(formName, new ValidationError(formInput, newMessage));
+					}
 				}
 			}
 
@@ -169,6 +171,7 @@ public class SurveyInstanceAction extends BaseAction {
 		security.allow("choosesurvey", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("get", SecurityConstants.VIEW);
+		security.allow("edit", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -335,7 +338,7 @@ public class SurveyInstanceAction extends BaseAction {
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,
 				businessObject);
 		String displayName = getBusinessObjectName(businessObject);
-		request.getSession().setAttribute(
+		request.setAttribute(
 				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
 		List<Survey> surveys = persistence.retrieveSurveysByType(surveyType);
@@ -396,6 +399,16 @@ public class SurveyInstanceAction extends BaseAction {
 
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
+	
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
+				displayName);
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
+	}
 
 	/*
 	 * This page is the page where we actually create a new survey instance, after
@@ -425,10 +438,6 @@ public class SurveyInstanceAction extends BaseAction {
 		BusinessObject businessObject = (BusinessObject) results
 				.get(Constants.BUSINESS_KEY);
 
-		/*
-		InstanceStatus status = InstanceStatus.fromInt(Integer
-				.parseInt(actionForm.getValue("instanceStatus")));
-		*/
 		// partially completed instances not supported yet
 		InstanceStatus status = InstanceStatus.COMPLETED; 
 		String officerName = actionForm.getValue("officerName");

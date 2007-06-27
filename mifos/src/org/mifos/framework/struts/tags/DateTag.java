@@ -178,7 +178,13 @@ public class DateTag extends BaseInputTag {
 	}
 
 	protected String returnValue() throws JspException {
-		Object value = TagUtils.getInstance().lookup(pageContext, name,
+		Object value;
+		if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
+			String dateProperty = "dateValue(" + property + ")";
+			value = TagUtils.getInstance().lookup(pageContext, name,
+				dateProperty, null);
+		} else
+			value = TagUtils.getInstance().lookup(pageContext, name,
 				property, null);
 		if (value == null) {
 			return "";
@@ -301,17 +307,9 @@ public class DateTag extends BaseInputTag {
 		boolean disabled = getIsDisabled() != null
 				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
 		
-		int openParen = dateName.indexOf('(');
-		int closeParen = dateName.lastIndexOf(')');
-		
-		if (openParen == -1 || closeParen == -1 || closeParen != dateName.length() - 1)
-			throw new JspException("Property not well formed: method(variableName)");
-		
-		dateName = dateName.substring(0, closeParen);
-		
-		String daytext = "<input type=\"text\" id=\""
+		String daytext = "<input type=\"text\" id=\"value("
 				+ dateName
-				+ "_DD)\" name=\""
+				+ "_DD)\" name=\"value("
 				+ dateName
 				+ "_DD)\" "
 				+ "maxlength=\"2\" size=\"2\" value=\""
@@ -322,9 +320,9 @@ public class DateTag extends BaseInputTag {
 		if (disabled)
 			daytext = daytext + "disabled";
 		daytext = daytext + "/>&nbsp;DD&nbsp;";
-		String monthtext = "<input type=\"text\" id=\""
+		String monthtext = "<input type=\"text\" id=\"value("
 				+ dateName
-				+ "_MM)\" name=\""
+				+ "_MM)\" name=\"value("
 				+ dateName
 				+ "_MM)\" "
 				+ "maxlength=\"2\" size=\"2\" value=\""
@@ -335,9 +333,9 @@ public class DateTag extends BaseInputTag {
 		if (disabled)
 			monthtext = monthtext + "disabled";
 		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
-		String yeartext = "<input type=\"text\" id=\""
+		String yeartext = "<input type=\"text\" id=\"value("
 				+ dateName
-				+ "_YY)\" name=\""
+				+ "_YY)\" name=\"value("
 				+ dateName
 				+ "_YY)\" "
 				+ "maxlength=\"4\" size=\"4\" value=\""
