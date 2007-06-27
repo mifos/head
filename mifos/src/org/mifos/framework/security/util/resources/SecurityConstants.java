@@ -432,5 +432,8 @@ public interface SecurityConstants {
 	
 	public final short VIEW_REPORTS = 215; 
 	
-	public final short EDIT_REPORT_INFORMATION = 216; 
+	public final short EDIT_REPORT_INFORMATION = 216;
+	
+	public final short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET= 217; 
+	
 }
