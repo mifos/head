@@ -242,7 +242,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		
 		String[][] listData = {
 				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-/*				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
 				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
 				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
 				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
@@ -252,7 +252,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
 				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
 				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
-*/
+
 				};
 			
 		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
@@ -293,7 +293,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		
 		String[][] listData = {
 				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-/*				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
 				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
 				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
 				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
@@ -303,7 +303,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
 				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
 				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
-*/
+
 				};
 			
 		String[] operations = {ADD, EDIT};

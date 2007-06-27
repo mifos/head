@@ -93,7 +93,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String[] collateralTypeList;
 	private String[] attendanceList;
 	private String lookupValue;
-	
 
 	public String getLookupValue() {
 		return lookupValue;

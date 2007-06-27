@@ -295,23 +295,22 @@ public class MifosValueList extends BodyTagSupport {
 	 * "CustomValueListId;CustomValueListValue;original"
 	 * 
 	 */
-    private static String mapCustomValueListElementToString(CustomValueListElement element, String statusLabel) {
+    private static String mapCustomValueListElementToString(CustomValueListElement element) {
     	Integer id = element.getLookUpId();
     	if (id == null) id = 0;
-    	return "" + id + ";" + element.getLookUpValue() + ";" +
-    		statusLabel;
+    	return "" + id + ";" + element.getLookUpValue();
     }
     
     public static String mapAddedCustomValueListElementToString(CustomValueListElement element) {
-    	return mapCustomValueListElementToString(element, "add");
+    	return mapCustomValueListElementToString(element);
     }
 
     public static String mapUpdatedCustomValueListElementToString(CustomValueListElement element) {
-    	return mapCustomValueListElementToString(element, "update");
+    	return mapCustomValueListElementToString(element);
     }
 
     public static String mapOriginalCustomValueListElementToString(CustomValueListElement element) {
-    	return mapCustomValueListElementToString(element, "original");
+    	return mapCustomValueListElementToString(element);
     }
 
 
