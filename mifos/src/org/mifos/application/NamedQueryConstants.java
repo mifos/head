@@ -643,6 +643,7 @@ public interface NamedQueryConstants {
 	
 //	surveys
 	public String SURVEYS_RETRIEVE_ALL = "surveys.retrieveAllSurveys";
+	public String RESPONSES_RETRIEVE_ALL = "surveys.retrieveAllResponses";
 	public String SURVEYS_RETRIEVE_BY_TYPE = "surveys.retrieveSurveysByType";
 	public String SURVEYS_RETRIEVE_BY_NAME = "surveys.retrieveSurveysByName";
 	public String SURVEYS_RETRIEVE_BY_STATUS = "surveys.retrieveSurveysByStatus";
@@ -653,6 +654,7 @@ public interface NamedQueryConstants {
 	public String SURVEYS_RETRIEVE_BY_ACCOUNTS_TYPES = "surveys.retrieveAccountsSurveys";
 	public String SURVEYINSTANCE_RETRIEVE_BY_CUSTOMER = "surveys.retrieveInstancesByCustomer";
 	public String SURVEYINSTANCE_RETRIEVE_BY_SURVEY = "surveys.retrieveInstancesBySurvey";
+	public String RESPONSES_RETRIEVE_BY_INSTANCE = "surveys.retrieveResponsesByInstance";
 	
 // products mix
 	public String LOAD_ALL_DEFINED_PRODUCTS_MIX = "productsmix.retrieveAll";

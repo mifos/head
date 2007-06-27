@@ -1,8 +1,11 @@
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.collection.PersistentSet;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -25,8 +28,6 @@ public class SurveyInstance extends PersistentObject {
 	private Date dateConducted;
 	
 	private InstanceStatus completedStatus;
-	
-	private List<SurveyResponse> surveyResponses;
 	
 	public SurveyInstance() {
 		completedStatus = InstanceStatus.INCOMPLETE;
@@ -94,14 +95,6 @@ public class SurveyInstance extends PersistentObject {
 		this.account = null;
 	}
 
-	public void setSurveyResponses(List<SurveyResponse> surveyResponses) {
-		this.surveyResponses = surveyResponses;
-	}
-
-	public List<SurveyResponse> getSurveyResponses() {
-		return surveyResponses;
-	}
-
 	public AccountBO getAccount() {
 		return account;
 	}
@@ -110,5 +103,4 @@ public class SurveyInstance extends PersistentObject {
 		this.account = account;
 		this.customer = null;
 	}
-
 }

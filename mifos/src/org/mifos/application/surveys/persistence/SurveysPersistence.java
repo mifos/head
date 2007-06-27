@@ -8,6 +8,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -19,6 +20,17 @@ public class SurveysPersistence extends Persistence {
 	
 	public List<Survey> retrieveAllSurveys() throws PersistenceException {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ALL);
+		return query.list();
+	}
+	
+	public List<SurveyResponse> retrieveAllResponses() throws PersistenceException {
+		Query query = getSession().getNamedQuery(NamedQueryConstants.RESPONSES_RETRIEVE_ALL);
+		return query.list();
+	}
+	
+	public List<SurveyResponse> retrieveResponsesByInstance(SurveyInstance instance) throws PersistenceException {
+		Query query = getSession().getNamedQuery(NamedQueryConstants.RESPONSES_RETRIEVE_BY_INSTANCE);
+		query.setParameter("INSTANCE", instance);
 		return query.list();
 	}
 	

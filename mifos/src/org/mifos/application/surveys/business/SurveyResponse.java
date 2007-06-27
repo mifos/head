@@ -2,6 +2,8 @@ package org.mifos.application.surveys.business;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
@@ -23,12 +25,14 @@ public class SurveyResponse {
 	
 	private Double numberValue;
 	
+	
 	public SurveyResponse(SurveyInstance instance, Question question) {
 		setInstance(instance);
 		setQuestion(question);
 	}
 	
 	public SurveyResponse() {}
+
 
 	public Question getQuestion() {
 		return question;
@@ -209,6 +213,25 @@ public class SurveyResponse {
 		catch (ClassCastException e) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
+	}
+	
+	@Override
+	public final boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		}
+		
+		if (!(o instanceof SurveyResponse)) {
+			return false;
+		}
+		
+		SurveyResponse response = (SurveyResponse) o;
+		return response.getResponseId() == responseId;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new Integer(responseId).hashCode();
 	}
 
 }

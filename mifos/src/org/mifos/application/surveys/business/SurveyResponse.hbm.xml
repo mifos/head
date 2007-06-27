@@ -16,4 +16,10 @@
 		<property name="numberValue" column="NUMBER_VALUE"/>
 		<many-to-one name="choiceValue" column="CHOICE_VALUE" cascade="all" access="field"/>
 	</class>
+	<query name="surveys.retrieveAllResponses">
+		<![CDATA[from SurveyResponse as response]]>
+	</query>
+	<query name="surveys.retrieveResponsesByInstance">
+		<![CDATA[from SurveyResponse as response where response.instance =:INSTANCE order by response.instance.survey.surveyId, response.question.questionId]]>
+	</query>
 </hibernate-mapping>

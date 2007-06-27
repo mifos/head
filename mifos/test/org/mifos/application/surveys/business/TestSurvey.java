@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -318,6 +319,7 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testSurveyResponseWithChoices() throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
 		SurveyInstance instance = makeSurveyInstance("Test choice type survey response");
 		Survey survey = instance.getSurvey();
 		String questionText = "Why did the chicken cross the road?";
@@ -334,6 +336,9 @@ public class TestSurvey extends MifosTestCase {
 		response.setChoiceValue(choice1);
 		response.setInstance(instance);
 		session.save(response);
+		List<SurveyResponse> responses = persistence.retrieveAllResponses();
+		assertEquals(1, responses.size());
+		assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
 	}
 	
 	// this test was created because of problems persisting number survey responses
@@ -349,6 +354,10 @@ public class TestSurvey extends MifosTestCase {
 		response.setNumberValue(5);
 		response.setInstance(instance);
 		session.save(response);
+		
+		List<SurveyResponse> responses = new SurveysPersistence().retrieveAllResponses();
+		assertEquals(1, responses.size());
+		assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
 	}
 	
 	public void testSurveyResponseTypechecks() throws Exception {
@@ -419,40 +428,67 @@ public class TestSurvey extends MifosTestCase {
 		
 	}
 	
-	public void testCreateSurveyResponse() throws Exception {
-		String surveyName = "Test survey create response";
-		SurveyInstance instance = makeSurveyInstance(surveyName);
-		Survey survey = instance.getSurvey();
+	public void testCreateRetrieveSurveyResponse() throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
+		String surveyName = "Test survey create response1";
+		SurveyInstance instance1 = makeSurveyInstance(surveyName);
+		Survey survey = instance1.getSurvey();
 		
-		String questionText = "What is the answer to life, the universe and everything?";
-		Question question = new Question(questionText, AnswerType.CHOICE);
-		SurveyQuestion surveyQuestion = new SurveyQuestion();
-		surveyQuestion.setQuestion(question);
-		List<SurveyQuestion> surveyQuestions = new LinkedList<SurveyQuestion>();
-		surveyQuestions.add(surveyQuestion);
-		survey.setQuestions(surveyQuestions);
+		String questionText = "Text for testCreateSurveyResponse question";
+		Question question = new Question(questionText, AnswerType.FREETEXT);
+		survey.addQuestion(question, true);
 		
-		QuestionChoice choice1 = new QuestionChoice("Pizza");
-		QuestionChoice choice2 = new QuestionChoice("42");
-		List<QuestionChoice> questionChoices = new LinkedList<QuestionChoice>();
-		questionChoices.add(choice1);
-		questionChoices.add(choice2);
-		question.setChoices(questionChoices);
+		SurveyResponse response1 = new SurveyResponse();
+		response1.setQuestion(question);
+		String response1Value = "response 1 value";
+		response1.setStringValue(response1Value);
+		response1.setInstance(instance1);
 		
-		SurveyResponse response = new SurveyResponse();
-		response.setInstance(instance);
-		response.setQuestion(question);
-		response.setChoiceValue(choice2);
-
-		session.saveOrUpdate(instance);
-		session.saveOrUpdate(response);
+		persistence.createOrUpdate(response1);
+		List<SurveyResponse> allResponses = persistence.retrieveAllResponses();
+		assertEquals(1, allResponses.size());
 		
-		SurveyInstance refreshedInstance = 
-			(SurveyInstance)HibernateUtil.getSessionTL().get(
-				SurveyInstance.class, instance.getInstanceId());
-		assertEquals(AnswerType.CHOICE,
-			refreshedInstance.getSurvey().getQuestion(0).getAnswerTypeAsEnum());
-		assertEquals(refreshedInstance.getSurvey().getName(), surveyName);
+		questionText = "text for second testCreateSurveyResponse question";
+		Question question2 = new Question(questionText, AnswerType.NUMBER);
+		SurveyResponse response2 = new SurveyResponse();
+		response2.setQuestion(question2);
+		response2.setNumberValue(5);
+		response2.setInstance(instance1);
+		
+		persistence.createOrUpdate(response2);
+		allResponses = persistence.retrieveAllResponses();
+		assertEquals(2, allResponses.size());
+		
+		String survey2Name = "Test survey create response1";
+		SurveyInstance instance2 = makeSurveyInstance(survey2Name);
+		SurveyResponse response3 = new SurveyResponse();
+		response3.setInstance(instance2);
+		response3.setQuestion(question2);
+		response3.setStringValue("42");
+		
+		persistence.createOrUpdate(response3);
+		allResponses = persistence.retrieveAllResponses();
+		assertEquals(3, allResponses.size());
+		
+		
+		List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance1);
+		assertEquals(2, responses.size());
+		assertTrue(responses.contains(response1));
+		assertTrue(responses.contains(response2));
+		assertEquals(AnswerType.NUMBER, responses.get(1).getQuestion().getAnswerTypeAsEnum());
+		assertEquals(5.0, responses.get(1).getNumberValue());
+		assertEquals(response1Value, responses.get(0).getFreetextValue());
+		
+		responses = persistence.retrieveResponsesByInstance(instance2);
+		assertEquals(1, responses.size());
+		assertTrue(responses.contains(response3));
+		assertEquals(AnswerType.NUMBER, responses.get(0).getQuestion().getAnswerTypeAsEnum());
+		assertEquals(42.0, responses.get(0).getNumberValue());
+		assertNull(responses.get(0).getFreetextValue());
+		
+		SurveyInstance retrievedInstance = persistence.getInstance(instance1.getInstanceId());
+		responses = persistence.retrieveResponsesByInstance(retrievedInstance);
+		assertEquals(2, responses.size());
 	}
 	
 	public void testSerialize() throws Exception {

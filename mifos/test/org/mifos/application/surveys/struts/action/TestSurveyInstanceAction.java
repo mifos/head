@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -50,6 +51,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 
 	private TestDatabase database; 
+	private Session session;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -57,7 +59,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		database = TestDatabase.makeStandard();
 		HibernateUtil.closeSession();
 		AuditInterceptor interceptor = new AuditInterceptor();
-		Session session = database.openSession(interceptor);
+		session = database.openSession(interceptor);
 		SessionHolder holder = new SessionHolder(session);
 		holder.setInterceptor(interceptor);
 		HibernateUtil.setThreadLocal(holder);
@@ -111,6 +113,42 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		}
 		TestObjectFactory.addObject(client);
 		return client;
+	}
+	
+	public void testGet() throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
+		String testName = "testGet survey name";
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance(testName);
+		Question question1 = new Question("testGet question1 text", AnswerType.NUMBER);
+		Question question2 = new Question("testGet question1 text", AnswerType.FREETEXT);
+		
+		Survey sampleSurvey = sampleInstance.getSurvey();
+		sampleSurvey.addQuestion(question1, true);
+		sampleSurvey.addQuestion(question2, true);
+		
+		SurveyResponse response1 = new SurveyResponse();
+		response1.setQuestion(question1);
+		response1.setStringValue("3");
+		response1.setInstance(sampleInstance);
+		SurveyResponse response2 = new SurveyResponse();
+		response2.setQuestion(question2);
+		response2.setStringValue("question2 answer");
+		response2.setInstance(sampleInstance);
+		persistence.createOrUpdate(response1);
+		persistence.createOrUpdate(response2);
+		persistence.createOrUpdate(sampleInstance);
+		sampleInstance = (SurveyInstance) persistence.getPersistentObject(SurveyInstance.class, sampleInstance.getInstanceId());
+		
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "get");
+		addRequestParameter("value(instanceId)", Integer.toString(sampleInstance.getInstanceId()));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward("get_success");
+		SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
+		assertEquals(sampleInstance.getInstanceId(), retrievedInstance.getInstanceId());
+		assertEquals(testName, retrievedInstance.getSurvey().getName());
+		
 	}
 	
 	public void testSurveyValidation() throws Exception {
@@ -269,7 +307,9 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(13, calendar.get(Calendar.DAY_OF_MONTH));
 		assertEquals(Calendar.JUNE, calendar.get(Calendar.MONTH));
 		assertEquals(2007, calendar.get(Calendar.YEAR));
-		List<SurveyResponse> responses = newInstance.getSurveyResponses();
+		List<SurveyResponse> responses = surveysPersistence
+				.retrieveResponsesByInstance(newInstance);
+		assertEquals(4, responses.size());
 		assertEquals("answer 1", responses.get(0).getFreetextValue());
 		assertEquals(2.0, responses.get(1).getNumberValue());
 		Date retrievedDate = responses.get(2).getDateValue();
@@ -279,7 +319,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(2006, calendar.get(Calendar.YEAR));
 		assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
 		
-
 	}
 	
 	public void testChooseSurvey() throws Exception {

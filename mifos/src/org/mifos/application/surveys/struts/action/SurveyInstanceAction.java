@@ -168,6 +168,7 @@ public class SurveyInstanceAction extends BaseAction {
 		security.allow("create", SecurityConstants.VIEW);
 		security.allow("choosesurvey", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -178,7 +179,9 @@ public class SurveyInstanceAction extends BaseAction {
 	}
 	
 
-	/*
+	// set the business key to the business object for the header link
+	// set the survey instance
+	// set the business object name, type and global id
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -187,19 +190,29 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		int instanceId = Integer.parseInt(actionForm.getValue("instanceId"));
 		SurveyInstance instance = persistence.getInstance(instanceId);
+		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
+		BusinessObject businessObject;
+		String businessObjectName;
+		String businessObjectType;
+		
+		if (surveyType == SurveyType.CLIENT) {
+			String globalNum = instance.getCustomer().getGlobalCustNum();
+			businessObject = getBusinessObject(surveyType, globalNum);
+			businessObjectName = getBusinessObjectName(surveyType, globalNum);
+			businessObjectType = surveyType.toString(); 
+		}
+		else {
+			throw new NotImplementedException();
+		}
+		
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
-		instance.getSurveyResponses().get(0).getQuestion().getq
-		
-		SurveyType type = instance.getSurvey().getAppliesToAsEnum();
-		String globalNum = instance.getCustomer().getGlobalCustNum();
-		String objectName = getBusinessObjectName(type, globalNum);
-		
-		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, objectName);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, businessObjectName);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, businessObjectType);
 		
 		return mapping.findForward(ActionForwards.get_success
 				.toString());
 	}
-	*/
 
 	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -445,7 +458,7 @@ public class SurveyInstanceAction extends BaseAction {
 			surveyResponses.add(surveyResponse);
 			persistence.createOrUpdate(surveyResponse);
 		}
-		instance.setSurveyResponses(surveyResponses);
+		
 		persistence.createOrUpdate(instance);
 
 		String redirectUrl;
