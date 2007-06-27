@@ -25,6 +25,8 @@ public class SurveyInstance extends PersistentObject {
 	
 	private PersonnelBO officer;
 	
+	private PersonnelBO creator;
+	
 	private Date dateConducted;
 	
 	private InstanceStatus completedStatus;
@@ -102,5 +104,13 @@ public class SurveyInstance extends PersistentObject {
 	public void setAccount(AccountBO account) {
 		this.account = account;
 		this.customer = null;
+	}
+
+	public PersonnelBO getCreator() {
+		return creator;
+	}
+
+	public void setCreator(PersonnelBO creator) {
+		this.creator = creator;
 	}
 }

@@ -148,7 +148,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
 		assertEquals(sampleInstance.getInstanceId(), retrievedInstance.getInstanceId());
 		assertEquals(testName, retrievedInstance.getSurvey().getName());
-		
 	}
 	
 	public void testSurveyValidation() throws Exception {

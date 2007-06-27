@@ -113,6 +113,7 @@ public class TestSurvey extends MifosTestCase {
 		instance2.setCustomer(instance1.getCustomer());
 		instance2.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
 		instance2.setOfficer(instance1.getOfficer());
+		instance2.setCreator(instance1.getCreator());
 		
 		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
 		CenterBO center = TestObjectFactory.createCenter("centerName", meeting);
@@ -122,7 +123,7 @@ public class TestSurvey extends MifosTestCase {
 		instance3.setSurvey(survey2);
 		instance3.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
 		instance3.setOfficer(instance1.getOfficer());
-		
+		instance3.setCreator(instance1.getCreator());
 		surveysPersistence.createOrUpdate(instance2);
 		surveysPersistence.createOrUpdate(instance3);
 		
@@ -311,6 +312,7 @@ public class TestSurvey extends MifosTestCase {
 		
 		SurveyInstance instance = new SurveyInstance();
 		instance.setOfficer(officer);
+		instance.setCreator(officer);
 		instance.setSurvey(survey);
 		instance.setCustomer(client);
 		instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());

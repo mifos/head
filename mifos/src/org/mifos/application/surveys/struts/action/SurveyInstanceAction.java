@@ -194,9 +194,18 @@ public class SurveyInstanceAction extends BaseAction {
 		BusinessObject businessObject;
 		String businessObjectName;
 		String businessObjectType;
+		String globalNum;
+		
+		// determining if an instance is associated with a client/group/center
+		// or a loan/savings account could be awkward if the surveytype is ALL
+		// this is kinda a hack... pass it in from the referring page... but 
+		// probably better than trying to retrieve each from from the db
+		if (surveyType == SurveyType.ALL) {
+			surveyType = SurveyType.fromString(actionForm.getValue("surveyType"));
+		}
 		
 		if (surveyType == SurveyType.CLIENT) {
-			String globalNum = instance.getCustomer().getGlobalCustNum();
+			globalNum = instance.getCustomer().getGlobalCustNum();
 			businessObject = getBusinessObject(surveyType, globalNum);
 			businessObjectName = getBusinessObjectName(surveyType, globalNum);
 			businessObjectType = surveyType.toString(); 
@@ -204,7 +213,7 @@ public class SurveyInstanceAction extends BaseAction {
 		else {
 			throw new NotImplementedException();
 		}
-		
+		request.setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, businessObjectName);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
@@ -300,6 +309,9 @@ public class SurveyInstanceAction extends BaseAction {
 	public ActionForward choosesurvey(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
+		UserContext userContext = getUserContext(request);
+		
 		Map<String, Object> results;
 		GenericActionForm actionForm = (GenericActionForm) form;
 		try {
@@ -312,7 +324,6 @@ public class SurveyInstanceAction extends BaseAction {
 			return mapping.findForward(ActionForwards.choose_survey.toString());
 		}
 		
-		UserContext userContext = getUserContext(request);
 		actionForm.setValue("officerName", userContext.getName());
 
 		SurveysPersistence persistence = new SurveysPersistence();
@@ -432,6 +443,12 @@ public class SurveyInstanceAction extends BaseAction {
 		instance.setDateConducted(dateConducted);
 		instance.setCompletedStatus(status);
 		instance.setOfficer(officer);
+		
+		
+		UserContext userContext = getUserContext(request);
+		PersonnelBO currentUser = personnelPersistence.getPersonnel(userContext.getName());
+		instance.setCreator(currentUser);
+		
 		if (CustomerBO.class.isInstance(businessObject)) {
 			instance.setCustomer((CustomerBO) businessObject);
 		}

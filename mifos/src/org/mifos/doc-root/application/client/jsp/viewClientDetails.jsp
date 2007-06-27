@@ -749,7 +749,7 @@
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a href="surveyInstanceAction.do?method=get&value(surveyId)=${surveyInstance.instanceId}">
+                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
                       <c:out value="${surveyInstance.survey.name}"/>
                     </a>
                   </span>

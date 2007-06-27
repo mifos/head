@@ -78,27 +78,39 @@
                 <td><br>
                   <table width="590" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td class="fontnormalbold">Date of Survey: 12/12/2006 </td>
+                      <td class="fontnormalbold">Date of Survey: 
+							          <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.retrievedInstance.dateConducted)}" />
+                      </td>
                     </tr>
                     <tr>
 
-                      <td class="fontnormalbold">Surveyed by: Steve Gentle </td>
+                      <td class="fontnormalbold">Surveyed by: 
+                        <c:out value="${requestScope.retrievedInstance.officer.displayName}"/>
+                      </td>
                     </tr>
                     <tr>
-                      <td class="fontnormalbold">Entered into the system by: Greg Jones </td>
+                      <td class="fontnormalbold">Entered into the system by: 
+                        <c:out value="${requestScope.retrievedInstance.creator.displayName}"/> 
+                      </td>
                     </tr>
                     <tr>
                       <td class="fontnormal">&nbsp;</td>
                     </tr>
 
                     <tr>
-                      <td class="fontnormal"><p>Client: John D. Anderson <br>
-                        System ID #: ID5648 </p></td>
+                      <td class="fontnormal">
+                        <p>
+                          <mifos:mifoslabel name="Surveys.${requestScope.businessObjectType}" bundle="SurveysUIResources"/>
+                          <c:out value="${requestScope.businessObjectName}"/>:
+                          <br>
+                          System ID #: <c:out value="${requestScope.globalNum}"/> 
+                        </p>
+                      </td>
                     </tr>
                   </table></td>
               </tr>
               <tr>
-                <td class="blueline"><img src="images/trans.gif" width="10" height="12"></td>
+                <td class="blueline"><img src="pages/framework/images/trans.gif" width="10" height="12"></td>
 
               </tr>
             </table>

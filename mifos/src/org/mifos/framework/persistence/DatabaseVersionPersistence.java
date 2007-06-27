@@ -17,7 +17,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 130;
+	public static final int APPLICATION_VERSION = 131;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(
