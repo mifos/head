@@ -1,7 +1,9 @@
 package org.mifos.application.reports.struts.action;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.List;
@@ -30,6 +32,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
@@ -106,7 +109,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		ReportsJasperMap reportJasperMap;
 		String activityNameHead = "Can view ";
 		int activityId = 0;
-		short parentActivity = 150;
+		short parentActivity = 0;
 
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
@@ -138,23 +141,39 @@ public class BirtReportsUploadAction extends BaseAction {
 			if (activity.getId().intValue() > activityId)
 				activityId = activity.getId();
 		}
+		
 		int newActivityId = activityId + 1;
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				newActivityId, parentActivity, (short) 1, activityNameHead
-						+ uploadForm.getReportTitle()).upgrade(conn);
 
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
 		new ReportsPersistence().createOrUpdate(reportBO);
+		
+		reportJasperMap.setReportJasper(formFile.getFileName());
+		new ReportsPersistence().createOrUpdate(reportJasperMap);
+		
+        parentActivity = reportBO.getReportsCategoryBO().getActivityId();
+
+		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+				newActivityId, parentActivity, (short) 1, activityNameHead
+						+ uploadForm.getReportTitle()).upgrade(conn);
+		
+		allowActivityPermission(reportBO, newActivityId);
+
+		uploadFile(formFile);
+
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+	private void allowActivityPermission(ReportsBO reportBO, int newActivityId) throws ApplicationException {
 		ActivityMapper.getInstance().getActivityMap().put(
 				"/reportsUserParamsAction-loadAddList-"
 						+ reportBO.getReportId(), (short) newActivityId);
 
 		AuthorizationManager.getInstance().init();
-		reportJasperMap.setReportJasper(formFile.getFileName());
-		new ReportsPersistence().createOrUpdate(reportJasperMap);
+	}
 
+	private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
 		File dir = new File(getServlet().getServletContext().getRealPath("/")
 				+ "report");
 		File file = new File(dir, formFile.getFileName());
@@ -168,8 +187,6 @@ public class BirtReportsUploadAction extends BaseAction {
 		os.close();
 		is.close();
 		formFile.destroy();
-
-		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

@@ -14,6 +14,7 @@ public class ReportsCategoryBO extends BusinessObject {
 	private Short reportCategoryId;
 	private String reportCategoryName;	
 	private Set<ReportsBO> reportsSet;
+	private Short activityId;
 	
 	public Short getReportCategoryId() {
 		return reportCategoryId;
@@ -47,4 +48,12 @@ public class ReportsCategoryBO extends BusinessObject {
 		return null;
 	}	
 	
+	public void setActivityId(Short activityId){
+		this.activityId = activityId;
+	}
+	
+	public Short getActivityId(){
+		return activityId;
+	}
+
 }
