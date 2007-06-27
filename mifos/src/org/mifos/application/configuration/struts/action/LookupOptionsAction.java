@@ -104,8 +104,10 @@ public class LookupOptionsAction extends BaseAction {
 		return security;
 	}
 	
-	
-	private void setLookupOptionData(String configurationEntity, LookupOptionData data, HttpServletRequest request,
+	/**
+	 * @return boolean -- Return true if we found the expected data to use, otherwise return false
+	 */
+	private boolean setLookupOptionData(String configurationEntity, LookupOptionData data, HttpServletRequest request,
 			String addOrEdit, LookupOptionsActionForm lookupOptionsActionForm) throws Exception
 	{
 		assert( (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION) ||
@@ -136,7 +138,7 @@ public class LookupOptionsAction extends BaseAction {
 			data.setLookupValue("");
 			data.setLookupId(0);
 			lookupOptionsActionForm.setLookupValue("");
-			return;
+			return true;
 		}
 	    // edit
 		String selectedValue = null;
@@ -145,14 +147,15 @@ public class LookupOptionsAction extends BaseAction {
             selectedValue = lookupOptionsActionForm.getSalutationList()[0];
            
 		
-		if (selectedValue != null)
-		{
+		if (selectedValue != null) {
 			 spliteStrList = selectedValue.split(";");
 		     data.setLookupValue(spliteStrList[1]);
 		     lookupOptionsActionForm.setLookupValue(spliteStrList[1]);
 		     data.setLookupId(Integer.parseInt(spliteStrList[0]));
-		}
-		 
+		     return true;
+		} else {
+			return false;
+		}		 
 	}
 	
 	@TransactionDemarcate(joinToken = true)
@@ -164,10 +167,13 @@ public class LookupOptionsAction extends BaseAction {
 		String entity = request.getParameter(ConfigurationConstants.ENTITY);
 		String addOrEdit = request.getParameter(ConfigurationConstants.ADD_OR_EDIT);
 		LookupOptionData data = new LookupOptionData();
-		setLookupOptionData(entity, data, request, addOrEdit, lookupOptionsActionForm);
-		SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
 		
-		return mapping.findForward(ActionForwards.addEditLookupOption_success.toString());
+		if (setLookupOptionData(entity, data, request, addOrEdit, lookupOptionsActionForm)) {
+			SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+			return mapping.findForward(ActionForwards.addEditLookupOption_success.toString());
+		} else {
+			return mapping.findForward(ActionForwards.addEditLookupOption_failure.toString());			
+		}
 	}
 	
 	@Override

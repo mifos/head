@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -56,9 +57,9 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 	private boolean compareLists(List<CustomValueListElement> first, String[] second, int expectedLength) {
 		
-		assertEquals(first.size(),expectedLength);
+		assertEquals(expectedLength, first.size());
 		for (int index = 0; index < second.length; ++index) {
-			assertEquals(first.get(index).getLookUpValue(), second[index]);
+			assertEquals(second[index], first.get(index).getLookUpValue());
 		}
 		return true;
 	}
@@ -165,8 +166,186 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		// remove the added element from the list
 		masterPersistence.deleteValueListElement(Integer.valueOf(valueListElement.getLookUpId()));				
 	}
+
+	private final String ADD = "add";
+	private final String EDIT = "edit";
+	
+	private String doOneList(String masterConstant, String configurationConstant, 
+			String listName, String addOrEdit) throws SystemException, ApplicationException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+		Short valueListId = valueList.getEntityId();
+		CustomValueListElement valueListElement = valueList.getCustomValueListElements().get(0);
+
+		addRequestParameter(ConfigurationConstants.ENTITY,configurationConstant);
+		addRequestParameter(ConfigurationConstants.ADD_OR_EDIT, addOrEdit);
+		SessionUtils.setAttribute(configurationConstant, valueListId, request);
+
+		String originalName = "";
+		
+		if (addOrEdit.equals(ADD)) {
+			CustomValueListElement newValueListElement = new CustomValueListElement();
+			newValueListElement.setLookupValue(NEW_ELEMENT_NAME);
+			String[] changesList = { 
+					MifosValueList.mapAddedCustomValueListElementToString(newValueListElement)};
+			addRequestParameter(listName, changesList);
+		} else { // edit
+			originalName = valueListElement.getLookUpValue();
+			valueListElement.setLookupValue(UPDATE_NAME);
+			String[] changesList = { 
+					MifosValueList.mapUpdatedCustomValueListElementToString(valueListElement)};
+			addRequestParameter(listName, changesList);
+		}
+		
+		return originalName;
+	}
+
+	private String prepareForUpdate(String masterConstant, String configurationConstant, 
+			String listName, String addOrEdit, LookupOptionData data) throws SystemException, ApplicationException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+		Short valueListId = valueList.getEntityId();
+		CustomValueListElement valueListElement = valueList.getCustomValueListElements().get(0);
+
+		data.setValueListId(valueListId);			
+		
+		String originalName = "";
+		String nameToReturn = "";
+		
+		if (addOrEdit.equals(ADD)) {
+			data.setLookupId(0);
+			nameToReturn = NEW_ELEMENT_NAME;
+		} else { // edit
+			data.setLookupId(valueListElement.getLookUpId());
+			nameToReturn = UPDATE_NAME;
+
+			originalName = valueListElement.getLookUpValue();
+		}
+
+		LookupOptionsActionForm form = new LookupOptionsActionForm();
+		form.setLookupValue(nameToReturn);
+		setActionForm(form);
+		
+		return originalName;
+	}
+	
+	
+	public void testAddEditLookupOption() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/lookupOptionsAction.do");
+		addRequestParameter("method", "addEditLookupOption");
+
+		// indexes into the listData below
+		final int MASTER_CONSTANT = 0;
+		final int CONFIG_CONSTANT = 1;
+		final int LIST_NAME = 2;
+		
+		String[][] listData = {
+				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
+/*				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
+				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
+				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
+				,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
+				,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
+				,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
+				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
+				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
+				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
+*/
+				};
+			
+		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
+			doOneList(
+					listData[listIndex][MASTER_CONSTANT], 
+					listData[listIndex][CONFIG_CONSTANT], 
+					listData[listIndex][LIST_NAME],
+					ADD);
+
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.addEditLookupOption_success.toString());
+
+			doOneList(
+					listData[listIndex][MASTER_CONSTANT], 
+					listData[listIndex][CONFIG_CONSTANT], 
+					listData[listIndex][LIST_NAME],
+					EDIT);
+
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.addEditLookupOption_success.toString());
+		}		
+		
+	}
 	
 	public void testUpdate() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/lookupOptionsAction.do");
+		addRequestParameter("method", "update");
+
+		// indexes into the listData below
+		final int MASTER_CONSTANT = 0;
+		final int CONFIG_CONSTANT = 1;
+		final int LIST_NAME = 2;
+		
+		String[][] listData = {
+				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
+/*				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
+				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
+				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
+				,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
+				,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
+				,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
+				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
+				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
+				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
+*/
+				};
+			
+		String[] operations = {ADD, EDIT};
+		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
+			String originalValue = "";
+			HibernateUtil.getSessionTL();
+			
+			for (String operation : operations) {
+				flowKey = createFlow(request, LookupOptionsAction.class);
+				request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+				LookupOptionData data = new LookupOptionData();
+				originalValue = prepareForUpdate(
+						listData[listIndex][MASTER_CONSTANT], 
+						listData[listIndex][CONFIG_CONSTANT], 
+						listData[listIndex][LIST_NAME],
+						operation,
+						data);
+
+				SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+
+				actionPerform();
+				verifyNoActionErrors();
+				verifyNoActionMessages();
+				verifyForward(ActionForwards.update_success.toString());
+			}
+			HibernateUtil.flushAndCloseSession();
+			HibernateUtil.getSessionTL();
+			
+			HibernateUtil.startTransaction();
+			
+			verifyOneListAndRestoreOriginalValues(
+					listData[listIndex][MASTER_CONSTANT], 
+					listData[listIndex][CONFIG_CONSTANT], 
+					listData[listIndex][LIST_NAME],
+					originalValue);
+			HibernateUtil.commitTransaction();
+		}
+		
+	}
+	
+	public void testUpdateOriginal() throws Exception {
 		/*
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/lookupOptionsAction.do");

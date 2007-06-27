@@ -33,13 +33,15 @@
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>
 		<action path="/lookupOptionsAction" type="org.mifos.application.configuration.struts.action.LookupOptionsAction" name="lookupoptionsactionform" parameter="method" input="/lookupOptionsAction.do?method=validate"
-			validate="false" scope="session">
+			validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/configuration/jsp/definelookupoptions.jsp" />
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="update_failure" path="/pages/application/configuration/jsp/definelookupoptions.jsp" />
-			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="addEditLookupOption_success" path="/pages/application/configuration/jsp/defineonelookupoption.jsp" />
+			<forward name="addEditLookupOption_failure" path="/lookupOptionsAction.do?method=load" />
+			<forward name="update_success" path="/lookupOptionsAction.do?method=load" />
+			<forward name="update_failure" path="/lookupOptionsAction.do?method=load" />
+			<forward name="cancel_success" path="/lookupOptionsAction.do?method=load" />
+			<forward name="cancel_failure" path="/lookupOptionsAction.do?method=load" />
 		</action>
 	</action-mappings>
 	<!-- Configuration -->

@@ -1177,7 +1177,7 @@
 			<forward name="load_success" path="/pages/application/configuration/jsp/definelookupoptions.jsp" />
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="addEditLookupOption_success" path="/pages/application/configuration/jsp/defineonelookupoption.jsp" />
-			<forward name="addEditLookupOption_failure" path="/pages/application/configuration/jsp/defineonelookupoption.jsp" />
+			<forward name="addEditLookupOption_failure" path="/lookupOptionsAction.do?method=load" />
 			<forward name="update_success" path="/lookupOptionsAction.do?method=load" />
 			<forward name="update_failure" path="/lookupOptionsAction.do?method=load" />
 			<forward name="cancel_success" path="/lookupOptionsAction.do?method=load" />
