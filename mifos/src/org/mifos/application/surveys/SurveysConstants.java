@@ -23,6 +23,7 @@ public class SurveysConstants {
 	public static final String KEY_ITEM_COUNT = "itemCount"; 
 	public static final String KEY_SURVEY_TYPES = "surveyTypes";
 	public static final String KEY_SURVEYS_LIST = "surveysList";
+	public static final String KEY_MANDATORY_MAP = "mandatoryMap";
 	public static final String KEY_BUSINESS_OBJECT_NAME = "businessObjectName";
 	public static final String KEY_VALIDATED_VALUES = "validatedValues";
 	public static final String KEY_NEW_SURVEY_ID = "newSurveyId";

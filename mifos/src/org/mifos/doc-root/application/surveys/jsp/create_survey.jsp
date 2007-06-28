@@ -136,12 +136,18 @@
 
                   <table width="98%" border="0" cellpadding="3" cellspacing="0">
                      <tr>
+                        <td class="drawtablehd"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources"/></td>
                         <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
+                        <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Mandatory" bundle="SurveysUIResources"/></td>
                         <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Delete" bundle="SurveysUIResources"/></td>
                      </tr>
                        <c:forEach items="${sessionScope.addedQuestions}" var="question" varStatus="status">
                          <tr>
+                           <td class="drawtablerow"><c:out value="name" /></td>
                            <td class="drawtablerow"><c:out value="${question.questionText}" /></td>
+                           <td class="drawtablerow">
+                           <html-el:checkbox property="value(mandatory_${question.questionId})" value="1"/>
+                           </td>
                            <td class="drawtablerow">
                              <input type="button" onclick="submitSurveyForm('delete_new_question&questionNum=${question.questionId}')" value="Delete" class="buttn"/>
                            </td>

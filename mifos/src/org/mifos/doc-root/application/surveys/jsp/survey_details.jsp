@@ -38,15 +38,18 @@
               <tr>
                 <td height="23" class="fontnormal"><table width="98%" border="0" cellpadding="3" cellspacing="0">
                   <tr>
+                  	<td width="39%" class="drawtablehd"><mifos:mifoslabel name="Surveys.QuestionName"/></td>
                     <td width="39%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Questiontitle"/></td>
                     <td width="14%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Answertype"/></td>
                     <td width="44%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Answer"/></td>
+                    <td width="44%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Mandatory"/></td>
                   </tr>
 
                   <c:choose>
                   <c:when test="${sessionScope.itemCount !=0}">
 		  <c:forEach var="question" items="${sessionScope.BusinessKey.questions}">
                   <tr>
+                  	<td class="drawtablerow">name</td>
                     <td width="39%" class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="14%" class="drawtablerow">
                     <c:choose>
@@ -58,6 +61,12 @@
                     </c:choose>
                     </td>
                     <td width="44%" class="drawtablerow">&nbsp;</td>
+                    <td class="drawtablerow">
+                    <c:choose>
+                    <c:when test="${question.mandatory == 1}"><mifos:mifoslabel name="Surveys.Yes"/></c:when>
+                    <c:when test="${question.mandatory == 0}"><mifos:mifoslabel name="Surveys.No"/></c:when>
+                    </c:choose>
+                    </td>
                   </tr>
 		  </c:forEach>
                   </c:when>

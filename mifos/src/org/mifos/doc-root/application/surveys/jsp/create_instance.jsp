@@ -53,7 +53,7 @@ hr {
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <html-el:form action="/surveyInstanceAction.do?method=preview">
-<h1><c:out value="${sessionScope.businessObjectName}"/> - 
+<h1><c:out value="${requestScope.businessObjectName}"/> - 
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <br/>

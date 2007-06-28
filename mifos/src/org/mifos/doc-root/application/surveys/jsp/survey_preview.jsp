@@ -73,33 +73,17 @@
                     <table width="98%" border="0" cellpadding="3" cellspacing="0">
   <tr>
 
-    <td width="39%" class="drawtablehd"> <mifos:mifoslabel name="Surveys.Questiontitle" bundle="SurveysUIResources" /></td>
-    <td width="14%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources" /></td>
-    <td width="44%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Answer" bundle="SurveysUIResources" /></td>
+    <td width="39%" class="drawtablehd"> <mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources" /></td>
+    <td width="39%" class="drawtablehd"> <mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources" /></td>
+    <td width="14%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Mandatory" bundle="SurveysUIResources" /></td>
   </tr>
 <c:choose>
 <c:when test="${sessionScope.itemCount > 0}">
 <c:forEach items="${sessionScope.addedQuestions}" var="question">
   <tr>
-    <td width="39%" class="drawtablerow"><c:out value="${question.questionText}"/></td>
-    <td width="14%" class="drawtablerow">
-                  <c:choose>
-                    	<c:when test="${question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext"/></c:when>
-                    	<c:when test="${question.answerType == 3}"><mifos:mifoslabel name="Surveys.Number"/></c:when>
-                    	<c:when test="${question.answerType == 4}"><mifos:mifoslabel name="Surveys.Choice"/></c:when>
-                    	<c:when test="${question.answerType == 5}"><mifos:mifoslabel name="Surveys.Date"/></c:when>
-                  </c:choose>
-
-
-</td>
-    <td width="44%" class="drawtablerow">
-<c:choose>
-                               <c:when test="${question.answerType == 3}">Between <c:out value="${question.numericMin}"/> and <c:out value="${question.numericMax}"/></c:when>
-                               <c:when test="${question.answerType == 4}"><c:forEach var="choice" items="${question.choices}" varStatus="ptr"><c:out value="${choice.choiceText}"/><c:if test="${not ptr.last}">, </c:if></c:forEach></c:when>
-
-                               <c:otherwise>&nbsp;</c:otherwise></c:choose>
-
-</td>
+    <td width="39%" class="drawtablerow">name</td>
+    <td width="14%" class="drawtablerow"><c:out value="${question.questionText}"/></td>
+    <td width="44%" class="drawtablerow"><html-el:checkbox property="value(mandatory_${question.questionId})" disabled="true" value="1"/></td>
   </tr>
 </c:forEach>
 </c:when>

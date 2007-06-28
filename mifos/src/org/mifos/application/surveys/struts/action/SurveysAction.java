@@ -222,7 +222,8 @@ public class SurveysAction extends BaseAction {
 				}
 			}
 			question.setChoices(choices);
-			newSurvey.addQuestion(question, true);
+			boolean mandatory = actionForm.getValue("mandatory_" + question.getQuestionId()) != null;
+			newSurvey.addQuestion(question, mandatory);
 		}
 		persistence.createOrUpdate(newSurvey);
 		request.setAttribute(SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
