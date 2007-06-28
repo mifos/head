@@ -34,12 +34,14 @@ public class XmlBuilder {
     }
 
     private void attribute(String attributeName, String attributeValue) {
-        out.append(" ");
-        out.append(attributeName);
-        out.append("=\"");
-        out.append(attributeValue.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-            .replaceAll("\"", "&quot;"));
-        out.append("\"");
+    	if (attributeName != null) { // useful for dealing with optional attributes
+			out.append(" ");
+			out.append(attributeName);
+			out.append("=\"");
+			out.append(attributeValue.replaceAll("&", "&amp;").replaceAll("<",
+					"&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;"));
+			out.append("\"");
+		}
     }
 
     private void attributes(String[] attributes) {
