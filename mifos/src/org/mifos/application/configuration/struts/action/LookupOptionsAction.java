@@ -57,6 +57,7 @@ import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -359,6 +360,15 @@ public class LookupOptionsAction extends BaseAction {
 		return mapping.findForward(ActionForwards.cancel_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward addEditLookupOption_cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("addEditLookupOption_cancel method called");
+		return mapping.findForward(ActionForwards.addEditLookupOption_cancel_success.toString());
+	}
+
+	
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -366,8 +376,7 @@ public class LookupOptionsAction extends BaseAction {
 		logger.debug("Inside validate method");
 		ActionForwards actionForward = ActionForwards.addEditLookupOption_failure;
 		
-		/*
-		ActionForwards actionForward = ActionForwards.load_failure;
+		
 		String method = (String) request.getAttribute("methodCalled");
 		if (method != null) {
 			if (method.equals(Methods.load.toString())) {
@@ -377,7 +386,7 @@ public class LookupOptionsAction extends BaseAction {
 				actionForward = ActionForwards.update_failure;
 			}
 		}
-		*/
+		
 		logger.debug("outside validate method");
 		return mapping.findForward(actionForward.toString());
 	}

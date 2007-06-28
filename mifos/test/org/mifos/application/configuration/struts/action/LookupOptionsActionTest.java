@@ -1,10 +1,7 @@
 package org.mifos.application.configuration.struts.action;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LookupOptionData;
@@ -121,31 +118,6 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	}
 
 	/**
-	 * Change the name of the first element in the list and add a new element to 
-	 * the end of the list.
-	 */
-	private String updateOneList(String masterConstant, String configurationConstant, 
-			String listName) throws SystemException, ApplicationException {
-		MasterPersistence masterPersistence = new MasterPersistence();
-		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
-		Short valueListId = valueList.getEntityId();
-		addRequestParameter(configurationConstant,"" + valueListId);
-		CustomValueListElement valueListElement = valueList.getCustomValueListElements().get(0);
-
-		String originalName = valueListElement.getLookUpValue();
-		valueListElement.setLookupValue(UPDATE_NAME);
-		CustomValueListElement newValueListElement = new CustomValueListElement();
-		newValueListElement.setLookupValue(NEW_ELEMENT_NAME);
-		String[] changesList = { 
-				MifosValueList.mapUpdatedCustomValueListElementToString(valueListElement),  
-				MifosValueList.mapAddedCustomValueListElementToString(newValueListElement)};
-
-		addRequestParameter(listName, changesList);
-		
-		return originalName;
-	}
-
-	/**
 	 * Verify that the name of the first element has been changed, restore the original name,
 	 * then verify that an element was added to the list, then remove it to leave the list
 	 * in its original state.
@@ -254,31 +226,23 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
 
 				};
-			
+
+		String[] operations = {ADD, EDIT};		
 		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
-			doOneList(
-					listData[listIndex][MASTER_CONSTANT], 
-					listData[listIndex][CONFIG_CONSTANT], 
-					listData[listIndex][LIST_NAME],
-					ADD);
+			for (String operation : operations) {
+				doOneList(
+						listData[listIndex][MASTER_CONSTANT], 
+						listData[listIndex][CONFIG_CONSTANT], 
+						listData[listIndex][LIST_NAME],
+						operation);
 
-			actionPerform();
-			verifyNoActionErrors();
-			verifyNoActionMessages();
-			verifyForward(ActionForwards.addEditLookupOption_success.toString());
+				actionPerform();
+				verifyNoActionErrors();
+				verifyNoActionMessages();
+				verifyForward(ActionForwards.addEditLookupOption_success.toString());
 
-			doOneList(
-					listData[listIndex][MASTER_CONSTANT], 
-					listData[listIndex][CONFIG_CONSTANT], 
-					listData[listIndex][LIST_NAME],
-					EDIT);
-
-			actionPerform();
-			verifyNoActionErrors();
-			verifyNoActionMessages();
-			verifyForward(ActionForwards.addEditLookupOption_success.toString());
-		}		
-		
+			}
+		}				
 	}
 	
 	public void testUpdate() throws Exception {
@@ -344,59 +308,4 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		}
 		
 	}
-	
-	public void testUpdateOriginal() throws Exception {
-		/*
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		setRequestPathInfo("/lookupOptionsAction.do");
-		addRequestParameter("method", "update");
-		
-		// list of the original list element names to use when restoring data
-		ArrayList<String> originalValues = new ArrayList();
-
-		// indexes into the listData below
-		final int MASTER_CONSTANT = 0;
-		final int CONFIG_CONSTANT = 1;
-		final int LIST_NAME = 2;
-		
-		String[][] listData = {
-			{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
-			,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
-			,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
-			,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
-			,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
-			,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
-			,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
-			,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
-			,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
-			,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
-			};
-		
-		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
-			originalValues.add(updateOneList(
-					listData[listIndex][MASTER_CONSTANT], 
-					listData[listIndex][CONFIG_CONSTANT], 
-					listData[listIndex][LIST_NAME]));
-		}
-		
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward(ActionForwards.update_success.toString());
-		HibernateUtil.flushAndCloseSession();
-		HibernateUtil.getSessionTL();
-		
-		HibernateUtil.startTransaction();
-		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
-			verifyOneListAndRestoreOriginalValues(
-					listData[listIndex][MASTER_CONSTANT], 
-					listData[listIndex][CONFIG_CONSTANT], 
-					listData[listIndex][LIST_NAME],
-					originalValues.get(listIndex));
-		}
-		HibernateUtil.getTransaction().commit();
-		*/
-	}
-	
 }

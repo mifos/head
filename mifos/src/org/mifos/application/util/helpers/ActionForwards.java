@@ -180,5 +180,7 @@ public enum ActionForwards {
 	choose_survey,
 	newinstance_responses,
 	addEditLookupOption_success,
-	addEditLookupOption_failure;
+	addEditLookupOption_failure,
+	addEditLookupOption_cancel_success,
+	addEditLookupOption_cancel_failure;
 }

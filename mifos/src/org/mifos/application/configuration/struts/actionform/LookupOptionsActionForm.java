@@ -301,10 +301,12 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		super.reset(mapping, request);
 	}
 
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		logger.debug("Inside validate method");
+		
 		String method = request.getParameter(Methods.method.toString());
 		ActionErrors errors = new ActionErrors();
 		if (method.equals(Methods.update.toString())) {
@@ -313,11 +315,13 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);
 		}
+
 		logger.debug("outside validate method");
 		return errors;
 
 	}
 
+	
 	public void clear() {
 		this.salutation = null;
 		this.userTitle = null;

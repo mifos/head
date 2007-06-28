@@ -68,7 +68,7 @@ function goToLookupOptionPage(){
 							<html-el:link href="lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / 
-							<html-el:link href="lookupOptionsAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link href="lookupOptionsAction.do?method=addEditLookupOption_cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.define" />  <mifos:mifoslabel name="configuration.lookupoptions" />
 							</html-el:link> / 
 							
