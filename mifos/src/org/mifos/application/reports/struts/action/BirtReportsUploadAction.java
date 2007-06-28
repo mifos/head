@@ -144,6 +144,13 @@ public class BirtReportsUploadAction extends BaseAction {
 		
 		int newActivityId = activityId + 1;
 
+		parentActivity = category.getActivityId();
+		
+		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+				newActivityId, parentActivity, (short) 1, activityNameHead
+				+ uploadForm.getReportTitle()).upgrade(conn);
+		
+		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
@@ -152,15 +159,8 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportJasperMap.setReportJasper(formFile.getFileName());
 		new ReportsPersistence().createOrUpdate(reportJasperMap);
 		
-        parentActivity = reportBO.getReportsCategoryBO().getActivityId();
-
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				newActivityId, parentActivity, (short) 1, activityNameHead
-						+ uploadForm.getReportTitle()).upgrade(conn);
-		
-		allowActivityPermission(reportBO, newActivityId);
-
 		uploadFile(formFile);
+		allowActivityPermission(reportBO, newActivityId);
 
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}

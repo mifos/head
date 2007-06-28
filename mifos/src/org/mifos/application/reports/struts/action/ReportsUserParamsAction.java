@@ -123,14 +123,10 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allowReport(28, ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK);
 		security.allowReport(29, ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER);
 		
-		try {
-			for(ReportsBO report : getNewUploadedReport())
-			{
+		if(getLargestReportId().intValue() > 29){
+			for(ReportsBO report : getNewUploadedReport()){
 			    security.allowReport(report.getReportId().intValue(),report.getActivityId());
 			}
-		}
-		catch (ServiceException e) {
-			throw new RuntimeException(e);
 		}
 		
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
@@ -221,14 +217,22 @@ public class ReportsUserParamsAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 
-	private static List<ReportsBO> getNewUploadedReport() throws ServiceException{
+	private static List<ReportsBO> getNewUploadedReport(){
 		List<ReportsBO> newReports = new ArrayList<ReportsBO>();
-	    for(ReportsBO report : new ReportsUserParamsAction().reportsPersistence.getAllReports())
+	    for(ReportsBO report : new ReportsPersistence().getAllReports())
 	    {
 	          if(report.getReportId().intValue()>29){
 	        		newReports.add(report);
 	        }
 	    }
 		return newReports;
+	}
+	private static Short getLargestReportId(){
+		Short reportId = 0;
+		for(ReportsBO report : new ReportsPersistence().getAllReports()){
+			if(report.getReportId() > reportId)
+				reportId = report.getReportId();
+		}
+		return reportId;
 	}
 }
