@@ -3,67 +3,62 @@ package org.mifos.application.office.struts.tag;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
-import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class OfficeListTagTest extends MifosTestCase {
+public class OfficeListTagTest extends TestCase {
 
 	private XmlBuilder result;
 
 	private UserContext userContext;
 
+	private OfficeBO head;
+
+	private OfficeBO regional;
+
+	private OfficeBO branch;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		DatabaseSetup.configureLogging();
 		result = new XmlBuilder();
 		userContext = TestUtils.makeUser();
 	}
 
 	public void testNoBranches() throws Exception {
 		new OfficeListTag().getBranchOffices(result, null, userContext,
+				null,
 				"Branch");
 		assertWellFormedFragment(result.toString());
 	}
 
 	public void testBranches() throws Exception {
-		OfficeBO regional = makeOffice("East&West Indies", OfficeLevel.REGIONALOFFICE);
-		regional.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		regional = TestObjectFactory.getOffice(regional.getOfficeId());
-		OfficeBO branch = OfficeBO.makeForTest(userContext,
-				OfficeLevel.BRANCHOFFICE, regional, null, "Trinidad&Tobago",
-				"Trin", null, OperationMode.LOCAL_SERVER,
-				OfficeStatus.ACTIVE);
-		branch.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		branch = TestObjectFactory.getOffice(branch.getOfficeId());
-		regional = TestObjectFactory.getOffice(regional.getOfficeId());
+		createSomeOffices();
 		assertEquals(1, regional.getBranchOnlyChildren().size());
 		List<OfficeBO> officeList = new ArrayList<OfficeBO>();
 		officeList.add(regional);
 		new OfficeListTag().getBranchOffices(result, officeList, userContext,
+				branch,
 				"Branch");
 		String html = result.toString();
 		assertWellFormedFragment(html);
 		StringAssert.assertContains("Trinidad&amp;Tobago", html);
-		TestObjectFactory.cleanUp(branch);
-		TestObjectFactory.cleanUp(regional);
 	}
 
 	public void testNothingAboveBranches() throws Exception {
@@ -89,13 +84,6 @@ public class OfficeListTagTest extends MifosTestCase {
 		StringAssert.assertContains("Toronto&amp;Ottawa", html);
 	}
 
-	private OfficeBO makeOffice(String name, OfficeLevel level)
-			throws OfficeException {
-		String shortName = name.substring(0,3); 
-		return OfficeBO.makeForTest(userContext, level, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), null, name, shortName,
-				null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
-	}
-
 	public void testAssertWellFormed() throws Exception {
 		assertWellFormedFragment("<foo />");
 		assertWellFormedFragment("x y z");
@@ -118,20 +106,79 @@ public class OfficeListTagTest extends MifosTestCase {
 	}
 
 	public void testGetOfficeListOnlyBranchs() throws Exception {
+		createSomeOffices();
 		OfficeListTag tag = new OfficeListTag("action", "method", "flow");
 		tag.setOnlyBranchOffices("onlybranchOffices");
-		String html = tag.getOfficeList(userContext);
-		assertTrue(html.contains("TestBranchOffice"));
-
+		String html = tag.getOfficeList(userContext,
+			headRegionalBranch(),
+			branch,
+			Collections.singletonList(regional),
+			headRegional()
+			);
+		StringAssert.assertNotContains("East&amp;West Indies", html);
+		StringAssert.assertContains("West Indies Only", html); // is this right?
+		StringAssert.assertContains("Trinidad&amp;Tobago", html);
 	}
 
 	public void testGetOfficeListAllOffices() throws Exception {
+		createSomeOffices();
 		OfficeListTag tag = new OfficeListTag("action", "method", "flow");
 		tag.setOnlyBranchOffices(null);
-		String html = tag.getOfficeList(userContext);
-		assertTrue(html.contains("Mifos HO"));
-		assertTrue(html.contains("TestAreaOffice"));
-		assertTrue(html.contains("TestBranchOffice"));
-
+		String html = tag.getOfficeList(userContext,
+				headRegionalBranch(),
+				branch,
+				Collections.singletonList(regional),
+				headRegional()
+				);
+		StringAssert.assertContains("East&amp;West Indies", html);
+		StringAssert.assertContains("West Indies Only", html);
+		StringAssert.assertContains("Trinidad&amp;Tobago", html);
 	}
+
+	private List<OfficeView> headRegionalBranch() {
+		List<OfficeView> levels = new ArrayList<OfficeView>();
+		levels.add(new OfficeView(null, null, OfficeLevel.HEADOFFICE,
+			"Head", 0));
+		levels.add(new OfficeView(null, null, OfficeLevel.REGIONALOFFICE,
+			"Regional", 0));
+		levels.add(new OfficeView(null, null, OfficeLevel.BRANCHOFFICE,
+			"Branch", 0));
+		return Collections.unmodifiableList(levels);
+	}
+
+	private List<OfficeBO> headRegional() {
+		List<OfficeBO> offices = new ArrayList<OfficeBO>();
+		offices.add(head);
+		offices.add(regional);
+		return Collections.unmodifiableList(offices);
+	}
+
+	private void createSomeOffices() throws OfficeException {
+		head = makeOffice("East&West Indies", OfficeLevel.HEADOFFICE);
+		regional = makeOffice("West Indies Only", 
+					OfficeLevel.REGIONALOFFICE, head);
+		head.setChildren(Collections.singleton(regional));
+		branch = OfficeBO.makeForTest(userContext,
+						OfficeLevel.BRANCHOFFICE, regional, "1.1.1.1", 
+						null, "Trinidad&Tobago",
+						"Trin", null, OperationMode.LOCAL_SERVER,
+						OfficeStatus.ACTIVE);
+		regional.setChildren(Collections.singleton(branch));
+	}
+
+	private OfficeBO makeOffice(String name, OfficeLevel level) 
+	throws OfficeException {
+		return makeOffice(name, level, null);
+	}
+
+	private OfficeBO makeOffice(String name, OfficeLevel level, OfficeBO parent)
+			throws OfficeException {
+		String shortName = name.substring(0,3); 
+		return OfficeBO.makeForTest(userContext, level, 
+				parent, 
+				"1.1",
+				null, name, shortName,
+				null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
+	}
+
 }

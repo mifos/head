@@ -14,8 +14,6 @@ import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
-import org.mifos.application.office.util.helpers.OfficeStatus;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -90,8 +88,40 @@ public class OfficeListTag extends BodyTagSupport {
 
 		List<OfficeView> levels = officePersistence.getActiveLevels(userContext
 				.getLocaleId());
+		OfficeBO loggedInOffice = 
+			officePersistence.getOffice(userContext.getBranchId()); 
+
+		List<OfficeBO> branchParents = 
+			officePersistence.getBranchParents(officeBO.getSearchId());
+		List<OfficeBO> officesTillBranchOffice = officePersistence
+			.getOfficesTillBranchOffice(officeBO.getSearchId());
 
 		
+		return getOfficeList(userContext, levels, loggedInOffice, 
+			branchParents, officesTillBranchOffice);
+	}
+
+	 @Deprecated
+	 String getOfficeList(UserContext userContext, List<OfficeView> levels,
+			 OfficeBO loggedInOffice, List<OfficeBO> branchParents) 
+	 throws Exception {
+
+			OfficePersistence officePersistence = new OfficePersistence();
+			OfficeBO officeBO = officePersistence.getOffice(userContext
+					.getBranchId());
+
+			List<OfficeBO> officesTillBranchOffice = officePersistence
+				.getOfficesTillBranchOffice(officeBO.getSearchId());
+
+			
+			return getOfficeList(userContext, levels, loggedInOffice, 
+				branchParents, officesTillBranchOffice);
+		}
+
+	String getOfficeList(UserContext userContext, 
+			List<OfficeView> levels, OfficeBO loggedInOffice, 
+			List<OfficeBO> branchParents, 
+			List<OfficeBO> officesTillBranchOffice) throws OfficeException {
 		String termForBranch = "";
 		String regional = "";
 		String subregional = "";
@@ -109,17 +139,15 @@ public class OfficeListTag extends BodyTagSupport {
 				subregional = MifosTagUtils.xmlEscape(level.getLevelName());
 		}
 
-		List<OfficeBO> branchParents = 
-			officePersistence.getBranchParents(officeBO.getSearchId());
-
 		XmlBuilder result = new XmlBuilder();
 		if (onlyBranchOffices != null) {
-			getBranchOffices(result, branchParents, userContext, termForBranch);
+			getBranchOffices(result, branchParents, userContext,  
+				loggedInOffice, termForBranch);
 		} else {
-			getAboveBranches(result, officePersistence
-					.getOfficesTillBranchOffice(officeBO.getSearchId()),
+			getAboveBranches(result, officesTillBranchOffice,
 					regional, subregional, area);
-			getBranchOffices(result, branchParents, userContext, termForBranch);
+			getBranchOffices(result, branchParents, userContext, 
+				loggedInOffice, termForBranch);
 		}
 
 		return result.getOutput();
@@ -127,6 +155,7 @@ public class OfficeListTag extends BodyTagSupport {
 
 	void getBranchOffices(XmlBuilder html,
 			List<OfficeBO> officeList, UserContext userContext,
+			OfficeBO loggedInOffice,
 			String branchName) throws OfficeException {
 		html.singleTag("br");
 
@@ -151,7 +180,8 @@ public class OfficeListTag extends BodyTagSupport {
 			for (int i = 0; i < officeList.size(); i++) {
 				OfficeBO officeParent = officeList.get(i);
 				//Set<OfficeBO> branchList = officeParent.getBranchOnlyChildren();
-				Set<OfficeBO> branchList = retrieveDataScopeBranches(officeParent.getBranchOnlyChildren() , userContext);
+				Set<OfficeBO> branchList = retrieveDataScopeBranches(
+					officeParent.getBranchOnlyChildren(), loggedInOffice);
 				if (branchList.size() > 0) {
 					if (i > 0) {
 						html.singleTag("br");
@@ -183,21 +213,19 @@ public class OfficeListTag extends BodyTagSupport {
 		}
 	}
 
-	private Set<OfficeBO> retrieveDataScopeBranches(Set<OfficeBO> branchOnlyChildren, UserContext userContext) throws OfficeException{
-		OfficePersistence officePersistence = new OfficePersistence();
+	private Set<OfficeBO> retrieveDataScopeBranches(
+		Set<OfficeBO> branchOnlyChildren, OfficeBO loggedInOffice) 
+	throws OfficeException {
 		Set<OfficeBO> dataScopeBranches = new HashSet<OfficeBO>();
 		
-		try{
-			OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId()); 
-			if(branchOnlyChildren.size()>0){
-				for(OfficeBO dataScopeBranch : branchOnlyChildren){
-					if(dataScopeBranch.getSearchId().startsWith(loggedInOffice.getSearchId())&&dataScopeBranch.getOfficeStatus().equals(OfficeStatus.ACTIVE)){
-						dataScopeBranches.add(dataScopeBranch);
-					}
+		if (branchOnlyChildren.size() > 0) {
+			for (OfficeBO dataScopeBranch : branchOnlyChildren) {
+				if (dataScopeBranch.getSearchId().startsWith(
+						loggedInOffice.getSearchId())
+						&& dataScopeBranch.isActive()) {
+					dataScopeBranches.add(dataScopeBranch);
 				}
 			}
-		}catch(PersistenceException pe){
-			throw new OfficeException(pe);
 		}
 		return dataScopeBranches;
 	}

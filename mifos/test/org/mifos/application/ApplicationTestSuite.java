@@ -60,7 +60,6 @@ import org.mifos.application.login.LoginTestSuite;
 import org.mifos.application.master.MasterTestSuite;
 import org.mifos.application.meeting.MeetingTestSuite;
 import org.mifos.application.office.OfficeTestSuite;
-import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.productsmix.ProductMixTestSuite;
@@ -105,7 +104,6 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(MasterTestSuite.suite());
 		suite.addTest(AccountTestSuite.suite());
 		suite.addTest(FinancialTestSuite.suite());
-		suite.addTestSuite(OfficeListTagTest.class);
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());
 		suite.addTest(BatchJobTestSuite.suite());

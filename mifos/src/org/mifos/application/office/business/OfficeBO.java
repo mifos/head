@@ -73,11 +73,12 @@ public class OfficeBO extends BusinessObject {
 	 */
 	public static OfficeBO makeForTest(UserContext userContext,
 			OfficeLevel level, OfficeBO parentOffice,
+			String searchId,
 			List<CustomFieldView> customFields, String officeName,
 			String shortName, Address address, OperationMode operationMode,
 			OfficeStatus status) 
 	throws OfficeException {
-		return new OfficeBO(userContext, null, level, parentOffice,
+		return new OfficeBO(userContext, null, level, parentOffice, searchId,
 				customFields, officeName, shortName, address, 
 				operationMode, status);
 	}
@@ -88,6 +89,7 @@ public class OfficeBO extends BusinessObject {
 	throws OfficeException {
 		return new OfficeBO(userContext, 
 				officeId, OfficeLevel.AREAOFFICE, null,
+				null,
 				null, officeName, shortName, null, 
 				OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
 	}
@@ -97,6 +99,7 @@ public class OfficeBO extends BusinessObject {
 	 */
 	private OfficeBO(UserContext userContext, Short officeId,
 			OfficeLevel level, OfficeBO parentOffice,
+			String searchId,
 			List<CustomFieldView> customFields, String officeName, String shortName,
 			Address address, OperationMode operationMode, OfficeStatus status)
 			throws OfficeException {
@@ -108,7 +111,7 @@ public class OfficeBO extends BusinessObject {
 		this.globalOfficeNum = null;
 		this.operationMode = operationMode.getValue();
 		this.maxChildCount = 0;
-		this.searchId = null;
+		this.searchId = searchId;
 		this.officeId = officeId;
 		this.level = new OfficeLevelEntity(level);
 		this.status = new OfficeStatusEntity(status);
@@ -130,7 +133,7 @@ public class OfficeBO extends BusinessObject {
 			OfficeBO parentOffice, List<CustomFieldView> customFields,
 			String officeName, String shortName, Address address,
 			OperationMode operationMode) throws OfficeException {
-		this(userContext, null, level, parentOffice, customFields,
+		this(userContext, null, level, parentOffice, null, customFields,
 				officeName, shortName, address, operationMode, 
 				OfficeStatus.ACTIVE);
 		verifyFields(officeName, shortName, level, operationMode, parentOffice);
@@ -223,7 +226,7 @@ public class OfficeBO extends BusinessObject {
 		this.address = address;
 	}
 
-	void setChildren(Set<OfficeBO> children) {
+	public void setChildren(Set<OfficeBO> children) {
 		this.children = children;
 	}
 

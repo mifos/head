@@ -1,5 +1,6 @@
 package org.mifos.application.office.business;
 
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.View;
 
 public class OfficeView extends View {
@@ -20,6 +21,11 @@ public class OfficeView extends View {
 		this.officeName = officeName;
 		this.levelId = levelId;
 		this.versionNo = versionNo;
+	}
+	
+	public OfficeView(Short officeId, String officeName,
+			OfficeLevel level, String levelName, Integer versionNo) {
+		this(officeId, officeName, level.getValue(), levelName, versionNo);
 	}
 
 	public OfficeView(Short officeId, String officeName, Short levelId,
