@@ -53,20 +53,21 @@ hr {
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 <html-el:form action="/surveyInstanceAction.do?method=preview">
-<h1><c:out value="${requestScope.businessObjectName}"/> - 
+<h1><c:out value="${sessionScope.businessObjectName}"/> - 
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
+<font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
+<br/>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
 <h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
 <hr>
-<font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
 		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
-		<td width="70%">
-		<date:datetag property="dateSurveyed" renderstyle="simplemapped"/>
+		<td width="70%" class="drawtablerow">
+		<span class="fontnormal8pt"><date:datetag property="dateSurveyed" renderstyle="simplemapped"/></span>
 		</td>
 	</tr>
 	<tr>
@@ -88,20 +89,25 @@ hr {
 			</td>
 		</tr>
 		<tr>
-			<td class="entry">
-			<c:choose>
-			<c:when test="${question.question.answerType == 4}">
-			<c:forEach var="choice" items="${question.question.choices}">
-			<html-el:radio property="value(response_${question.question.questionId})" value="${choice.choiceId}">
-			<c:out value="${choice.choiceText}"/></html-el:radio><br>
-			</c:forEach>
-			<html-el:radio property="value(response_${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
-			</c:when>
-			<c:when test="${question.question.answerType == 2}">
-			<html-el:textarea property="value(response_${question.question.questionId})" cols="70" rows="10" />
-			</c:when>
-			<c:otherwise><html-el:text property="value(response_${question.question.questionId})"/></c:otherwise>
-			</c:choose>
+			<td colspan="2" class="fontnormal8pt drawtablerow">
+        <c:choose>
+          <c:when test="${question.question.answerType == 4}">
+            <c:forEach var="choice" items="${question.question.choices}">
+              <html-el:radio property="value(response_${question.question.questionId})" value="${choice.choiceId}">
+                <c:out value="${choice.choiceText}"/>
+              </html-el:radio>
+              <br>
+            </c:forEach>
+            <html-el:radio property="value(response_${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
+          </c:when>
+          <c:when test="${question.question.answerType == 2}">
+            <html-el:textarea property="value(response_${question.question.questionId})" cols="70" rows="10" />
+          </c:when>
+          <c:when test="${question.question.answerType == 5}">
+		        <span class="fontnormal8pt"><date:datetag property="response_${question.question.questionId}" renderstyle="simplemapped"/></span>
+          </c:when>
+          <c:otherwise><html-el:text property="value(response_${question.question.questionId})"/></c:otherwise>
+        </c:choose>
 			</td>
 		</tr>
 		<tr>

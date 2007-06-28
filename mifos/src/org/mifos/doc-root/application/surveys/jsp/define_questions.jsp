@@ -51,7 +51,6 @@
                   <html-el:option value="4"><mifos:mifoslabel name="Surveys.Singleselect"/></html-el:option>
                   <html-el:option value="5"><mifos:mifoslabel name="Surveys.Date"/></html-el:option>
                 </html-el:select></td>
-<script type="text/javascript">setDisable()</script>
               </tr>
               <tr id="choiceInputsElement1" class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answerchoice" bundle="SurveysUIResources"/></td>
@@ -74,7 +73,6 @@
               </tr>
 	      </c:forEach>
             </table>
-
                     </td>
                   </tr>
             <tr>
@@ -152,5 +150,6 @@
 <!-- end actual form content -->
             </table>
 
+<script type="text/javascript">setDisable()</script>
 </tiles:put>
 </tiles:insert>

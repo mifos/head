@@ -51,6 +51,7 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
+		<html-el:form action="surveyInstanceAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -100,7 +101,7 @@
                     <tr>
                       <td class="fontnormal">
                         <p>
-                          <mifos:mifoslabel name="Surveys.${requestScope.businessObjectType}" bundle="SurveysUIResources"/>
+                          <mifos:mifoslabel name="Surveys.${sessionScope.businessObjectType.value}" bundle="SurveysUIResources"/>
                           <c:out value="${requestScope.businessObjectName}"/>:
                           <br>
                           System ID #: <c:out value="${requestScope.globalNum}"/> 
@@ -116,75 +117,68 @@
             </table>
             <br>
             <table width="95%" border="0" cellpadding="3" cellspacing="0">
-              <tr>
-                <td width="21%" height="30" class="drawtablerow"><span class="fontnormal8ptbold">1. What is your annual family income?</span></td>
-              </tr>
-              <tr>
 
-                <td height="30" class="drawtablerow"><input name="radiobutton" type="radio" value="radiobutton" disabled="disabled">
-                  Less than 10000<br>
-                  <input name="radiobutton" type="radio" disabled="disabled" value="radiobutton" checked>
-                  <strong>10000 to 20000</strong><br>
-                  <input name="radiobutton" type="radio" value="radiobutton" disabled="disabled">
-                  Above 20000 </td>
-              </tr>
 
-              <tr>
-                <td height="30" class="drawtablerow">&nbsp;</td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow"><span class="fontnormal8ptbold">2. Was the training provided effective?</span></td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow"><input name="radiobutton2" type="radio" value="radiobutton" disabled="disabled">
+              <c:forEach varStatus="status" var="question" items="${requestScope.retrievedInstance.survey.questions}">
+                <tr>
+                  <td width="21%" height="30" class="drawtablerow">
+                    <span class="fontnormal8ptbold">  
+                      <c:out value="${status.index + 1}"/>. <c:out value="${question.question.questionText}"/>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
 
-                  Yes<br>
-                  <input name="radiobutton2" type="radio" disabled="disabled" value="radiobutton" checked>
-                  <strong>No</strong></td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow">&nbsp;</td>
-              </tr>
-              <tr>
+                  <td height="30" colspan="2" class="drawtablerow fontnormal8pt">
+                    <c:choose>
+                      <c:when test="${question.question.answerType == 4}">
+                        <c:forEach var="choice" items="${question.question.choices}">
+                          <html-el:radio disabled="true" property="value(response_${question.question.questionId})" value="${choice.choiceId}">
+                            <c:out value="${choice.choiceText}"/>
+                          </html-el:radio>
+                          <br>
+                        </c:forEach>
+                        <html-el:radio disabled="true" property="value(response_${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
+                      </c:when>
+                      <c:when test="${question.question.answerType == 2}">
+                        <html-el:textarea disabled="true" property="value(response_${question.question.questionId})" cols="70" rows="10" />
+                      </c:when>
+                      <c:when test="${question.question.answerType == 5}">
+		                    <span class="fontnormal8pt">
+                          <date:datetag isDisabled="yes" property="response_${question.question.questionId}" renderstyle="simplemapped"/>
+                        </span>
+                      </c:when>
+                      <c:otherwise><html-el:text disabled="true" property="value(response_${question.question.questionId})"/></c:otherwise>
+                    </c:choose>
+                  </td>
 
-                <td height="30" class="drawtablerow"><span class="fontnormal8ptbold">3. How was the quality of service?</span></td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow"><textarea name="textarea" cols="70" rows="10" style=" font-weight:bold; font-family: Arial, Helvetica, sans-serif; overflow:hidden;" disabled="disabled">The service was satisfactory</textarea></td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow">&nbsp;</td>
-              </tr>
+                </tr>
+                <tr>
+                  <td height="30" class="drawtablerow">&nbsp;</td>
+                </tr>
+              </c:forEach>
 
-              <tr>
-                <td height="30" class="drawtablerow"><span class="fontnormal8ptbold">4. What kind of relationship do you have with our bank?</span></td>
-              </tr>
-              <tr>
-                <td height="30" class="drawtablerow"><input name="checkbox2" type="checkbox"  disabled="disabled" value="checkbox" checked>
-                    <strong>Loan</strong><br>
-                    <input name="checkbox22" type="checkbox" disabled="disabled" value="checkbox" checked >
-                    <strong>Savings</strong><br>
-
-                    <input type="checkbox" name="checkbox23" value="checkbox" disabled="disabled" >
-                  Insurance</td>
-              </tr>
-              <tr>
-                <td height="30" class="blueline">&nbsp;</td>
-              </tr>
             </table>
             <br>
 
-              <table width="95%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center"><input name="Button" type="button" class="buttn" value="Back to details page" onClick="location.href='ClientDetailsMeeting.htm';" style="width:135px;">
-                    &nbsp;
-                    <input name="Button2" type="button" class="buttn" value="Remove survey" onClick="location.href='ClientDetailsMeeting.htm';" style="width:135px;"></td>
-                </tr>
-              </table>              <br>
-              <br>
+
+
+                  <table width="93%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td align="center">
+                        <html-el:button property="calcelButton" style="width:135px;" styleClass="buttn" onclick="window.location='${requestScope.returnUrl}'">
+                          <mifos:mifoslabel name="Surveys.button.backtodetailspage" bundle="SurveysUIResources" />
+                        </html-el:button>&nbsp; 
+                        <html-el:button property="cancel" style="width:135px;" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
+                          <mifos:mifoslabel name="Surveys.button.delete" bundle="SurveysUIResources" />
+                        </html-el:button>
+                      </td>
+                    </tr>
+                  </table>
 
           </td>
         </tr>
       </table>
+    </html-el:form>
   </tiles:put>
 </tiles:insert>

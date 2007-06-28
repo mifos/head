@@ -1,14 +1,11 @@
 package org.mifos.application.surveys.struts.action;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +20,8 @@ import org.apache.struts.action.ActionMessages;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -36,25 +32,21 @@ import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.helpers.InstanceStatus;
+import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.formulaic.BaseValidator;
+import org.mifos.framework.formulaic.DateComponentValidator;
 import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.ErrorType;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.IsInstanceValidator;
-import org.mifos.framework.formulaic.DateComponentValidator;
-import org.mifos.framework.formulaic.PersonnelValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.formulaic.ValidationError;
-import org.mifos.framework.formulaic.Validator;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -99,9 +91,9 @@ public class SurveyInstanceAction extends BaseAction {
 
 				String formInput = null;
 				if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.DATE) {
-					String dayValue = (String) data.get(formName + "DD");
-					String monthValue = (String) data.get(formName + "MM");
-					String yearValue = (String) data.get(formName + "YY");
+					String dayValue = (String) data.get(formName + "_DD");
+					String monthValue = (String) data.get(formName + "_MM");
+					String yearValue = (String) data.get(formName + "_YY");
 					if (StringUtils.isNullAndEmptySafe(dayValue) &&
 							StringUtils.isNullAndEmptySafe(dayValue) &&
 							StringUtils.isNullAndEmptySafe(dayValue))
@@ -172,6 +164,7 @@ public class SurveyInstanceAction extends BaseAction {
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("get", SecurityConstants.VIEW);
 		security.allow("edit", SecurityConstants.VIEW);
+		security.allow("delete", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -179,6 +172,43 @@ public class SurveyInstanceAction extends BaseAction {
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
+	}
+	
+	public static String getGlobalNum(SurveyInstance instance) {
+		SurveyType type = instance.getSurvey().getAppliesToAsEnum();
+		if (type == SurveyType.ALL) {
+			String globalNum = instance.getCustomer().getGlobalCustNum();
+			if (globalNum == null) {
+				globalNum = instance.getAccount().getGlobalAccountNum();
+			}
+			return globalNum;
+		}
+		else if (type == SurveyType.CLIENT || type == SurveyType.CENTER || type == SurveyType.GROUP) {
+			return instance.getCustomer().getGlobalCustNum();
+		}
+		else {
+			return instance.getAccount().getGlobalAccountNum();
+		}
+	}
+	
+	public ActionForward delete(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
+		GenericActionForm actionForm = (GenericActionForm) form;
+		int instanceId = Integer.parseInt(actionForm.getValue("instanceId"));
+		SurveyInstance instance = persistence.getInstance(instanceId);
+		if (instance != null) { // if a valid instanceId was provided
+			SurveyType type = SurveyType.fromString(actionForm.getValue("surveyType"));
+			String redirectUrl = getRedirectUrl(type, getGlobalNum(instance));
+			persistence.delete(instance);
+			response.sendRedirect(redirectUrl);
+			return null;
+		}
+		else {
+			response.sendRedirect("adminAction.do?method=load");
+			return null;
+		}
 	}
 	
 
@@ -196,7 +226,6 @@ public class SurveyInstanceAction extends BaseAction {
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
 		BusinessObject businessObject;
 		String businessObjectName;
-		String businessObjectType;
 		String globalNum;
 		
 		// determining if an instance is associated with a client/group/center
@@ -207,20 +236,22 @@ public class SurveyInstanceAction extends BaseAction {
 			surveyType = SurveyType.fromString(actionForm.getValue("surveyType"));
 		}
 		
+		globalNum = getGlobalNum(instance);
+		businessObjectName = getBusinessObjectName(surveyType, globalNum);
+		
 		if (surveyType == SurveyType.CLIENT) {
-			globalNum = instance.getCustomer().getGlobalCustNum();
 			businessObject = getBusinessObject(surveyType, globalNum);
-			businessObjectName = getBusinessObjectName(surveyType, globalNum);
-			businessObjectType = surveyType.toString(); 
 		}
 		else {
 			throw new NotImplementedException();
 		}
+		
 		request.setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, businessObjectName);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
-		request.setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, businessObjectType);
+		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
+		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL, getRedirectUrl(surveyType, globalNum));
 		
 		return mapping.findForward(ActionForwards.get_success
 				.toString());
@@ -333,6 +364,7 @@ public class SurveyInstanceAction extends BaseAction {
 		String globalNum = (String) results.get("globalNum");
 		SurveyType surveyType = SurveyType.fromString(request
 				.getParameter("surveyType"));
+		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 
 		BusinessObject businessObject = getBusinessObject(surveyType, globalNum);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,
@@ -486,22 +518,28 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		persistence.createOrUpdate(instance);
-
-		String redirectUrl;
-		if (survey.getAppliesToAsEnum() == SurveyType.CLIENT) {
-			redirectUrl = "clientCustAction.do?method=get&globalCustNum=" + instance.getCustomer().getGlobalCustNum();
-		}
-		else if (survey.getAppliesToAsEnum() == SurveyType.GROUP) {
-			redirectUrl = "groupCustAction.do?method=get&globalCustNum=" + instance.getCustomer().getGlobalCustNum();
-		}
-		else if (survey.getAppliesToAsEnum() == SurveyType.CENTER) {
-			redirectUrl = "centerCustAction.do?method=get&globalCustNum=" + instance.getCustomer().getGlobalCustNum();
-		}
-		else { // account instances not implemented yet
-			throw new NotImplementedException();
-		}
+		
+		SurveyType businessType = (SurveyType) request.getSession()
+				.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
+		String redirectUrl = getRedirectUrl(businessType, getGlobalNum(instance));
 		response.sendRedirect(redirectUrl);
 		return null;
+	}
+	
+	public static String getRedirectUrl(SurveyType type, String globalNum) {
+		if (type == SurveyType.CLIENT) {
+			return "clientCustAction.do?method=get&globalCustNum=" + globalNum;
+		}
+		else if (type == SurveyType.GROUP) {
+			return "groupCustAction.do?method=get&globalCustNum=" + globalNum;
+		}
+		
+		else if (type == SurveyType.CENTER) {
+			return "centerCustAction.do?method=get&globalCustNum=" + globalNum;
+		}
+		else {
+			throw new NotImplementedException();
+		}
 	}
 
 	@Override

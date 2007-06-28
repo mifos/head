@@ -7,11 +7,11 @@
 		<id name="instanceId" column="INSTANCE_ID" type="integer" unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
-		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="all"/>
-		<many-to-one name="officer" column="OFFICER_ID" access="field" cascade="all"/>
-		<many-to-one name="creator" column="CREATING_OFFICER_ID" access="field" cascade="all"/>
-		<many-to-one name="customer" column="CUSTOMER_ID" access="field" cascade="all"/>
-		<many-to-one name="account" column="ACCOUNT_ID" access="field" cascade="all"/>
+		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="save-update"/>
+		<many-to-one name="officer" column="OFFICER_ID" access="field" cascade="save-update"/>
+		<many-to-one name="creator" column="CREATING_OFFICER_ID" access="field" cascade="save-update"/>
+		<many-to-one name="customer" column="CUSTOMER_ID" access="field" cascade="save-update"/>
+		<many-to-one name="account" column="ACCOUNT_ID" access="field" cascade="save-update"/>
 		<property name="dateConducted" column="DATE_CONDUCTED" type="date"/>
 		<property name="completedStatus" column="COMPLETED_STATUS" type="integer"/>
 		

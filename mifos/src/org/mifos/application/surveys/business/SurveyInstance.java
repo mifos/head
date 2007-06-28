@@ -1,14 +1,9 @@
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.hibernate.collection.PersistentSet;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.framework.business.PersistentObject;

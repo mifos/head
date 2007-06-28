@@ -1,7 +1,7 @@
 package org.mifos.framework.formulaic;
 
 import java.util.Date;
- 
+
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.helpers.DateUtils;
 

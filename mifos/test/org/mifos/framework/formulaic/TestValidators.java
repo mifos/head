@@ -10,9 +10,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
-
-import org.mifos.application.personnel.business.service.PersonnelBusinessServiceTest;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.service.PersonnelBusinessServiceTest;
 
 public class TestValidators extends TestCase {
 	

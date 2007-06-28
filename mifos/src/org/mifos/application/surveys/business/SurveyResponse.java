@@ -1,9 +1,6 @@
 package org.mifos.application.surveys.business;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;

@@ -18,7 +18,6 @@ import org.mifos.application.surveys.struts.actionforms.QuestionActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -128,6 +127,7 @@ public class QuestionsAction extends PersistenceAction {
 		LinkedList<Question> newQuestions = (LinkedList<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		newQuestions.add(question);
 		actionForm.clear();
+		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, new LinkedList<Question>());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 

@@ -1,10 +1,8 @@
 package org.mifos.application.surveys.struts.action;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -20,7 +18,6 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
-import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.business.TestSurvey;
 import org.mifos.application.surveys.helpers.AnswerType;
@@ -33,18 +30,12 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.formulaic.ErrorType;
-import org.mifos.framework.formulaic.OneOfValidator;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.action.PersistenceAction;
-import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -148,6 +139,23 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
 		assertEquals(sampleInstance.getInstanceId(), retrievedInstance.getInstanceId());
 		assertEquals(testName, retrievedInstance.getSurvey().getName());
+		String expectedUrl = "clientCustAction.do?method=get&globalCustNum="
+				+ sampleInstance.getCustomer().getGlobalCustNum();
+		assertEquals(expectedUrl, request.getAttribute(SurveysConstants.KEY_REDIRECT_URL));
+	}
+	
+	public void testDeleteInstance() throws Exception {
+		
+		SurveyInstance instance = TestSurvey.makeSurveyInstance("testDeleteInstance survey name");
+		SurveysPersistence persistence = new SurveysPersistence();
+		assertTrue(persistence.getInstance(instance.getInstanceId()) != null);
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "delete");
+		addRequestParameter("value(surveyType)", "client");
+		addRequestParameter("value(instanceId)", Integer.toString(instance.getInstanceId()));
+		actionPerform();
+		verifyNoActionErrors();
+		assertNull(persistence.getInstance(instance.getInstanceId()));
 	}
 	
 	public void testSurveyValidation() throws Exception {
@@ -199,9 +207,9 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		
 		int question3Id = question3.getQuestionId();
 		int question4Id = question4.getQuestionId();
-		addRequestParameter("value(response_" + question3Id + "DD)", "14");
-		addRequestParameter("value(response_" + question3Id + "MM)", "30"); // an invalid month
-		addRequestParameter("value(response_" + question3Id + "YY)", "2006");
+		addRequestParameter("value(response_" + question3Id + "_DD)", "14");
+		addRequestParameter("value(response_" + question3Id + "_MM)", "30"); // an invalid month
+		addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
 				"answer 1");
@@ -272,9 +280,9 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		
 		int question3Id = question3.getQuestionId();
 		int question4Id = question4.getQuestionId();
-		addRequestParameter("value(response_" + question3Id + "DD)", "14");
-		addRequestParameter("value(response_" + question3Id + "MM)", "3");
-		addRequestParameter("value(response_" + question3Id + "YY)", "2006");
+		addRequestParameter("value(response_" + question3Id + "_DD)", "14");
+		addRequestParameter("value(response_" + question3Id + "_MM)", "3");
+		addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
 				"answer 1");

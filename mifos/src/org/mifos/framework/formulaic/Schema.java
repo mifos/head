@@ -1,14 +1,16 @@
 package org.mifos.framework.formulaic;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 /*
@@ -92,7 +94,9 @@ public class Schema extends BaseValidator {
 	
 	public static ActionMessages makeActionMessages(SchemaValidationError schemaErrors) {
 		ActionMessages errors = new ActionMessages();
-		for (String key : schemaErrors.keySet()) {
+		List<String> keys = new LinkedList<String>(schemaErrors.keySet());
+		Collections.sort(keys);
+		for (String key : keys) {
 			String msg = schemaErrors.getFieldMsg(key);
 			errors.add(key, schemaErrors.getFieldError(key).getActionMessage());
 		}

@@ -22,7 +22,7 @@ public enum SurveyType {
 	
 	public static SurveyType fromString(String type) {
 		for (SurveyType candidate : SurveyType.values()) {
-			if (type.equals(candidate.getValue())) {
+			if (type.toLowerCase().equals(candidate.getValue())) {
 				return candidate;
 			}
 		}

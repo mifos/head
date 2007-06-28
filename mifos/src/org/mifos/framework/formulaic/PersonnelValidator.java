@@ -1,8 +1,8 @@
 package org.mifos.framework.formulaic;
 
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.application.personnel.business.PersonnelBO;
 
 public class PersonnelValidator extends BaseValidator {
 	

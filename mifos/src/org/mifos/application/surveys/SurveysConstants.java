@@ -28,6 +28,8 @@ public class SurveysConstants {
 	public static final String KEY_NEW_SURVEY_ID = "newSurveyId";
 	public static final String KEY_BUSINESS_TYPE = "businessObjectType";
 	public static final String KEY_GLOBAL_NUM = "globalNum";
+	public static final String KEY_INSTANCE_RESPONSES = "instanceResponses";
+	public static final String KEY_REDIRECT_URL = "returnUrl";
 	
 	// Errors messages
 	public static final String INVALID_DATE_SURVEYED = "errors.invaleddate";
