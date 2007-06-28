@@ -10,8 +10,6 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessServiceTest;
 
 public class TestValidators extends TestCase {
 	
@@ -24,21 +22,6 @@ public class TestValidators extends TestCase {
 			assertTrue(e.getMsg().endsWith(error));
 		}
 		
-	}
-	
-	public void testPersonnelValidator() throws Exception {
-		PersonnelBusinessServiceTest service = new PersonnelBusinessServiceTest();
-		PersonnelBO testPersonnel = service.beginCreatePublicPersonnel();
-		PersonnelValidator validator = new PersonnelValidator();
-		PersonnelBO resultPersonnel = validator.validate(testPersonnel.getUserName());
-		assertEquals(resultPersonnel.getGlobalPersonnelNum(),
-				testPersonnel.getGlobalPersonnelNum());
-		
-		resultPersonnel = validator.validate(testPersonnel.getGlobalPersonnelNum());
-		assertEquals(resultPersonnel.getDisplayName(),
-				testPersonnel.getDisplayName());
-		
-		service.endCreatePublicPersonnel();
 	}
 	
 	public void testDateComponentValidator() throws Exception {

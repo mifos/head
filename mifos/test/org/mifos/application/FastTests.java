@@ -64,7 +64,6 @@ import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.DowngraderTest;
 import org.mifos.framework.persistence.UpgradeTest;
-import org.mifos.framework.security.util.ActivityMapperTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
@@ -131,7 +130,6 @@ public class FastTests extends TestSuite {
 		suite.addTest(CompositeUpgradeTest.suite());
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
-		suite.addTest(ActivityMapperTest.suite());
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TestKey.class);
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);

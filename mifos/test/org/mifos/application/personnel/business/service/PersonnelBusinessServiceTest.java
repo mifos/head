@@ -208,18 +208,10 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}
+
 	private PersonnelBO createPersonnel() throws Exception {
 		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		return createPersonnel(office,PersonnelLevel.LOAN_OFFICER);
-	}
-	
-	public PersonnelBO beginCreatePublicPersonnel() throws Exception {
-		setUp();
-		return createPersonnel();
-	}
-	
-	public void endCreatePublicPersonnel() throws Exception {
-		tearDown();
 	}
 	
 }

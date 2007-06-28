@@ -18,6 +18,7 @@ public class ActivityMapperTest {
 	
 	@Before public void setUp() {
 		DatabaseSetup.configureLogging();
+		DatabaseSetup.initializeHibernate();
 	}
 
 	@Test public void namesAcceptable() {
