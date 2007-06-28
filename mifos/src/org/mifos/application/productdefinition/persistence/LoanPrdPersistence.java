@@ -50,18 +50,30 @@ import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class LoanPrdPersistence extends Persistence {
+	
+	private static Map cache = new HashMap();
 
 	public Short retrieveLatenessForPrd() throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT
 				.getValue());
+		
+		if (HibernateUtil.isSessionOpen()) {
+			Short cachedValue = (Short) cache.get(AccountTypes.LOAN_ACCOUNT.getValue());
+			if (cachedValue != null) {
+				return cachedValue;
+			}
+		}
+		
 		List<Short> queryResult = executeNamedQuery(
 				NamedQueryConstants.GET_LATENESS_FOR_LOANS, queryParameters);
 
 		if (null != queryResult && null != queryResult.get(0)) {
+			cache.put(AccountTypes.LOAN_ACCOUNT.getValue(), queryResult.get(0));
 			return queryResult.get(0);
 		}
 		return Short.valueOf("10");

@@ -203,6 +203,11 @@ public class HibernateUtil {
 	public static boolean isSessionOpen() {
 		if (getSessionHolder() == null)
 			return false;
+		
+		Session session = getSessionHolder().getSession();
+		if (session == null || !session.isOpen()) {
+			return false;
+		}
 
 		return true;
 	}
