@@ -52,7 +52,9 @@
 		              			<br>
 					  			</span>
 								<c:forEach var="report" items="${reportCategory.reportsSet}" >	
-							  	<table width="90%" border="0" cellspacing="0" cellpadding="0">
+								<c:choose>
+				  			    <c:when test="${report.isActive == 1}">
+							  	 <table width="90%" border="0" cellspacing="0" cellpadding="0">
 								  	<tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
@@ -69,12 +71,13 @@
 					                  </td>
 					                </tr>
 				                </table>
-				                </c:forEach>	
+				                </c:when>
+				                </c:choose>
+				               </c:forEach>	
 			                </td>
-			                
 					  	</c:when>
+					  	
 		                <c:otherwise>
-		                	
 		                   	<td width="52%" align="left" valign="top" class="paddingleft">
 		                   	<span class="fontnormalbold">              
 	              				<span class="fontnormalbold">
@@ -83,6 +86,8 @@
 	              			<br>
 				  			</span>
 				  			<c:forEach var="report" items="${reportCategory.reportsSet}" >
+				  			  <c:choose>
+				  			   <c:when test="${report.isActive == 1}">
 					  			<table width="98%" border="0" cellspacing="0" cellpadding="0">
 					                <tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
@@ -93,13 +98,15 @@
 						                  	<c:out value="${report.reportName}"/>
 						                  </a>
 					                    </c:when>
-					                    <c:otherwise>
-					                      	<c:out value="${report.reportName}"/>
-						                  </c:otherwise>
+					                     <c:otherwise>
+					                       <c:out value="${report.reportName}"/>
+						                 </c:otherwise>
 					                    </c:choose>
 					                  </td>
 					                </tr>
 				                </table>
+				               </c:when>
+				              </c:choose>  
 			                </c:forEach>	
 			                </td>	
 			                </tr>

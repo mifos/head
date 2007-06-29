@@ -21,7 +21,7 @@
     </script>
     
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=upload"
+			action="/birtReportsUploadAction.do?method=editThenUpload"
 			 enctype="multipart/form-data">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -53,6 +53,13 @@
 					</table>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<font class="fontnormalRedBold">
+						<html-el:errors bundle="ReportsUIResources" /> 
+						</font>
+					</td>
+				</tr>
 			</table></br>
 
           	<table width="95%" border="0" cellspacing="0" cellpadding="3">
@@ -65,6 +72,12 @@
 	                                     <mifos:mifoslabel
 										name="reports.category" />:<span class="fontnormal">
 									    <c:out value="${category.reportCategoryName}" />
+	                                     <br /><mifos:mifoslabel
+										name="reports.reports" />
+	                                     <mifos:mifoslabel
+										name="reports.status" />:<span class="fontnormal">
+										<c:if test="${birtReportsUploadActionForm.isActive == 1}">Active</c:if>
+										<c:if test="${birtReportsUploadActionForm.isActive == 0}">Inactive</c:if>
                                     </td>
 								</tr>
 							    <tr class="fontnormal">

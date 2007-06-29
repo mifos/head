@@ -92,6 +92,20 @@
 									    </select>
 									</td>
 								</tr>
+								
+								 <tr class="fontnormal">
+									<td align="right"><mifos:mifoslabel
+										name="reports.labelReportStatus" mandatory="yes"/>
+									</td>
+									<td>
+									    <select style="width:136px;" name="isActive">
+									      <option value="-1" selected>--Select--</option>
+									        <option <c:if test="${birtReportsUploadActionForm.isActive == 1}">selected="true"</c:if> value="1">Active</option>  
+									          <option <c:if test="${birtReportsUploadActionForm.isActive == 0}">selected="true"</c:if> value="0">Inactive</option>  
+									    </select>
+									</td>
+								</tr>
+								
 								<tr class="fontnormal">
 								    <td align="right">
 									    <font color="#ff0000">*</font>
@@ -138,6 +152,7 @@
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
+
 
 
 

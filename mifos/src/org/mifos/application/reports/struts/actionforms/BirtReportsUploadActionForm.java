@@ -20,6 +20,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 	private String reportTitle;
 	protected FormFile file;
 	private String reportId;
+	private String isActive;
 	public BirtReportsUploadActionForm() {
 		super();
 	}
@@ -29,6 +30,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 		this.reportTitle = null;
 		this.file = null;
 		this.reportId = null;
+		this.isActive = null;
 	}
 
 	@Override
@@ -108,4 +110,12 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 		this.reportId = reportId;
 	}
 
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+	
 }

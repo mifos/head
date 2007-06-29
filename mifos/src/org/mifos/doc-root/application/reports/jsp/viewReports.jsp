@@ -37,18 +37,27 @@
                   <br>
               </span><span class="fontnormalbold"> </span><span class="fontnormalbold"> </span>
               <table width="75%" border="0" cellpadding="3" cellspacing="0">
+                 
+                  <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
                   <tr>
                     <td height="30" colspan="2" class="blueline"><strong>
-  					<mifos:mifoslabel name="reports.category" bundle="reportsUIResources"/> , 
-               		 <mifos:mifoslabel name="reports.title" bundle="reportsUIResources"/>
+  					<c:out value="${reportCategory.reportCategoryName}" />
 					</strong></td>
                   </tr>
-                  <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
+                  
 					<c:forEach var="report" items="${reportCategory.reportsSet}">
 	                  <tr>
-	                    <td width="59%" height="30" class="blueline"><span class="fontnormal"><c:out value="${report.reportsCategoryBO.reportCategoryName}" />, 
-	                    	<c:out value="${report.reportName}"/></span></td>
-	                    <td width="41%" class="blueline"><a href=""><mifos:mifoslabel name = "reports.linkviewtemplate" bundle="reportsUIResources" /></a> |  
+	                    <td width="70%" height="30" class="blueline"><span class="fontnormal"> 
+	                    	<c:out value="${report.reportName}"/>
+	                    	<c:if test="${report.isActive == '1'}">&nbsp;&nbsp;
+								</c:if>
+								<c:if test="${report.isActive == '0'}">&nbsp;&nbsp;<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">
+                                       inactive	
+                                </c:if>
+	                    	
+	                    	</span></td>
+	                    <td width="30%" class="blueline"> 
+
 									     <a href="birtReportsUploadAction.do?method=edit&reportId=<c:out value="${report.reportId}" />">
 								            <mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" /></a></td>
 	                  </tr>

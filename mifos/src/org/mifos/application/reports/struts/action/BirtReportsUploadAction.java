@@ -64,6 +64,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		security.allow("edit", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("editpreview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("editThenUpload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -124,17 +125,9 @@ public class BirtReportsUploadAction extends BaseAction {
 						.toString());
 			}
 		}
-		if (uploadForm.getReportId() != null) {
-			reportBO = new ReportsPersistence().getReport(Short
-					.valueOf(uploadForm.getReportId()));
-			reportJasperMap = new ReportsPersistence().getReport(
-					Short.valueOf(uploadForm.getReportId()))
-					.getReportsJasperMap();
-		}
-		else {
-			reportBO = new ReportsBO();
-			reportJasperMap = new ReportsJasperMap();
-		}
+		reportBO = new ReportsBO();
+		reportJasperMap = new ReportsJasperMap();	
+			
 		Connection conn = new ReportsPersistence().getConnection();
 		for (ActivityEntity activity : new RolesPermissionsBusinessService()
 				.getActivities()) {
@@ -143,17 +136,16 @@ public class BirtReportsUploadAction extends BaseAction {
 		}
 		
 		int newActivityId = activityId + 1;
-
 		parentActivity = category.getActivityId();
 		
 		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
 				newActivityId, parentActivity, (short) 1, activityNameHead
 				+ uploadForm.getReportTitle()).upgrade(conn);
 		
-		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
+		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		new ReportsPersistence().createOrUpdate(reportBO);
 		
 		reportJasperMap.setReportJasper(formFile.getFileName());
@@ -215,6 +207,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		birtReportsUploadActionForm.setReportTitle(report.getReportName());
 		birtReportsUploadActionForm.setReportCategoryId(report
 				.getReportsCategoryBO().getReportCategoryId().toString());
+		birtReportsUploadActionForm.setIsActive(report.getIsActive().toString());
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.edit_success.toString());
@@ -242,6 +235,58 @@ public class BirtReportsUploadAction extends BaseAction {
 				.toString());
 	}
 
+	public ActionForward editThenUpload(ActionMapping mapping, ActionForm form,
+	HttpServletRequest request, HttpServletResponse response)
+	throws Exception {
+		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		FormFile formFile = uploadForm.getFile();
+		ReportsBO reportBO;
+		ReportsJasperMap reportJasperMap;
+		String filename = null;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		
+		ReportsPersistence reportPersistence = new ReportsPersistence();
+
+		List<ReportsJasperMap> reports = reportPersistence.findJasperOfReportId(Short
+		.valueOf(uploadForm.getReportId()));
+		if (reports.size() > 0) {
+			ReportsJasperMap reportFile = reports.get(0);
+		    filename = reportFile.getReportJasper();
+		}
+		
+		for (ReportsBO report : category.getReportsSet()) {
+			if(report.getReportName().equals(uploadForm.getReportTitle())&&
+					report.getReportsCategoryBO().getReportCategoryId().toString().equals(uploadForm.getReportCategoryId())&&
+					report.getIsActive().toString().equals(uploadForm.getIsActive())&&
+					filename.equals(uploadForm.getFile().getFileName())){
+				ActionErrors errors = new ActionErrors();
+				errors.add(ReportsConstants.ERROR_NOCHANGE,
+						new ActionMessage(
+								ReportsConstants.ERROR_NOCHANGE));
+				request.setAttribute(Globals.ERROR_KEY, errors);
+				return mapping.findForward(ActionForwards.editpreview_failure
+						.toString());
+			}
+		}
+		reportBO = new ReportsPersistence().getReport(Short
+				.valueOf(uploadForm.getReportId()));
+		reportJasperMap = new ReportsPersistence().getReport(
+				Short.valueOf(uploadForm.getReportId()))
+				.getReportsJasperMap();
+		
+		reportBO.setReportName(uploadForm.getReportTitle());
+		reportBO.setReportsCategoryBO(category);
+		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
+		new ReportsPersistence().createOrUpdate(reportBO);
+		
+		reportJasperMap.setReportJasper(formFile.getFileName());
+		new ReportsPersistence().createOrUpdate(reportJasperMap);
+		
+		uploadFile(formFile);
+
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
 		List<ReportsCategoryBO> categories = new ReportsPersistence()
