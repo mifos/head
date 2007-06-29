@@ -22,7 +22,6 @@
     	        </td>
 	    	  </tr>
 			</table>
-
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" align="left" valign="middle" class="paddingL15T15"><table width="98%" border="0" cellspacing="0" cellpadding="3">
@@ -33,10 +32,14 @@
           </table>     
           <br>
 
-
+<font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <!-- actual form content -->
             <html-el:form action="/questionsAction.do?method=defineQuestions" focus="questionText">
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
+              <tr class="fontnormal">
+                <td width="24%" align="right"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources"/></td>
+                <td width="76%"><html-el:text property="shortName"/></td>
+              </tr>
               <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
                 <td width="76%"><html-el:text property="questionText"/></td>
@@ -92,6 +95,7 @@
             </table>
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
               <tr>
+                <td class="drawtablehd"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources"/></td>
                 <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
                 <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources"/> </td>
                 <td class="drawtablehd"><mifos:mifoslabel name="Surveys.Choices" bundle="SurveysUIResources"/></td>
@@ -100,6 +104,7 @@
               </tr>
               <c:forEach var="question" items="${newQuestions}" varStatus="status">
               <tr>
+              	<td class="drawtablerow"><c:out value="${question.shortName}"/></td>
                 <td class="drawtablerow"><c:out value="${question.questionText}"/></td>
                 <td class="drawtablerow">
 
@@ -119,11 +124,12 @@
 <c:otherwise><em><mifos:mifoslabel name="Surveys.notapplicable" bundle="SurveysUIResources"/></em></c:otherwise>
 </c:choose>
 </td>
-                <td><html-el:link action="questionsAction?method=deleteNewQuestion&newQuestionNum=${status.index}&randomNUm=${sessionScope.randomNUm}">[remove]</html-el:link></td>
+                <td class="drawtablerow"><html-el:link action="questionsAction?method=deleteNewQuestion&newQuestionNum=${status.index}&randomNUm=${sessionScope.randomNUm}">[remove]</html-el:link></td>
               </tr>
               </c:forEach>
               <tr>
 
+                <td class="drawtablerow">&nbsp;</td>
                 <td class="drawtablerow">&nbsp;</td>
                 <td class="drawtablerow">&nbsp;</td>
                 <td class="drawtablerow">&nbsp;</td>

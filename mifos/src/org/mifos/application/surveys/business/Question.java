@@ -12,12 +12,14 @@ import org.mifos.framework.formulaic.NumberValidator;
 import org.mifos.framework.formulaic.OneOfValidator;
 import org.mifos.framework.formulaic.ValidationError;
 
-public class Question implements Serializable {
+public class Question implements Serializable, Comparable<Question> {
 	private int questionId;
 	
 	private AnswerType answerType;
 	
 	private QuestionState questionState;
+	
+	private String shortName;
 	
 	private String questionText;
 	
@@ -52,19 +54,30 @@ public class Question implements Serializable {
 	}
 	
 	public Question() {
-		questionState = QuestionState.ACTIVE;
-		answerType = AnswerType.FREETEXT;
+		this(null);
 	}
 	
 	public Question(String questionText) {
-		this();
-		setQuestionText(questionText);
+		this(questionText, AnswerType.FREETEXT);
 	}
 	
 	public Question(String questionText, AnswerType answerType) {
-		this();
+		this(null, questionText, answerType);
+	}
+	
+	public Question(String shortName, String questionText, AnswerType answerType) {
+		setShortName(shortName);
 		setQuestionText(questionText);
 		setAnswerType(answerType);
+		questionState = QuestionState.ACTIVE;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public String getShortName() {
+		return shortName;
 	}
 
 	public Integer getNumericMax() {
@@ -166,6 +179,10 @@ public class Question implements Serializable {
 	@Override
 	public int hashCode() {
 		return new Integer(questionId).hashCode();
+	}
+	
+	public int compareTo(Question other) {
+		return getShortName().compareTo(other.getShortName());
 	}
 	
 

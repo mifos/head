@@ -81,7 +81,7 @@
 <c:when test="${sessionScope.itemCount > 0}">
 <c:forEach items="${sessionScope.addedQuestions}" var="question">
   <tr>
-    <td width="39%" class="drawtablerow">name</td>
+    <td width="39%" class="drawtablerow"><c:out value="${question.shortName}"/></td>
     <td width="14%" class="drawtablerow"><c:out value="${question.questionText}"/></td>
     <td width="44%" class="drawtablerow"><html-el:checkbox property="value(mandatory_${question.questionId})" disabled="true" value="1"/></td>
   </tr>

@@ -7,6 +7,7 @@
 		<id name="questionId" column="QUESTION_ID" type="integer" unsaved-value="0" access="field">
 			<generator class="native"/>
 		</id>
+		<property name="shortName" column="SHORT_NAME"/>
 		<property name="questionText" column="QUESTION_TEXT"/>
 		<property name="answerType" column="ANSWER_TYPE" />
 		<property name="questionState" column="QUESTION_STATE"/>
@@ -19,12 +20,15 @@
 		</list>
 	</class>
 	<query name="questions.retrieveAll">
-       <![CDATA[from Question]]>
+       <![CDATA[from Question as question order by question.shortName]]>
     </query>
  	<query name="questions.retrieveByState">
        <![CDATA[from Question as question where question.questionState=:QUESTION_STATE]]>
+    </query>
+    <query name="questions.retrieveByName">
+       <![CDATA[from Question as question where question.shortName=:SHORT_NAME]]>
     </query>    
-     	<query name="questions.retrieveByAnswerType">
+     <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
     </query>    
 </hibernate-mapping>

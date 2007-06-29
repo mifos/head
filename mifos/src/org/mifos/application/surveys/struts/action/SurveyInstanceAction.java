@@ -278,7 +278,7 @@ public class SurveyInstanceAction extends BaseAction {
 		BusinessObject businessObject = (BusinessObject) request.getSession()
 				.getAttribute(Constants.BUSINESS_KEY);
 		String displayName = getBusinessObjectName(businessObject);
-		request.getSession().setAttribute(
+		request.setAttribute(
 				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
 		return mapping.findForward(ActionForwards.create_entry_success

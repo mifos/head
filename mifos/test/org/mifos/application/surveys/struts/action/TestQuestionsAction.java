@@ -2,6 +2,7 @@ package org.mifos.application.surveys.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Session;
@@ -55,7 +56,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	private Question makeTestSelectQuestion(String name, int choiceNumber)
 			throws Exception {
 		AnswerType type = AnswerType.fromInt(4);
-		Question question = new Question(name, type);
+		Question question = new Question(name, name, type);
 		List<QuestionChoice> choices = new ArrayList<QuestionChoice>();
 		for (int i = 1; i <= choiceNumber; i++) {
 			choices.add(new QuestionChoice("Test Choice " + i));
@@ -68,7 +69,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 	private Question makeTestNumberQuestion(String name, int min, int max)
 			throws Exception {
 		AnswerType type = AnswerType.fromInt(3);
-		Question question = new Question(name, type);
+		Question question = new Question(name, name, type);
 		question.setNumericMin(min);
 		question.setNumericMax(max);
 		new SurveysPersistence().createOrUpdate(question);
@@ -77,25 +78,27 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 
 	private Question makeTestTextQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(3);
-		Question question = new Question(name, type);
+		Question question = new Question(name, name, type);
 		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 
 	private Question makeTestDateQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(5);
-		Question question = new Question(name, type);
+		Question question = new Question(name, name, type);
 		new SurveysPersistence().createOrUpdate(question);
 		return question;
 	}
 	
 	public void testDefineQuestion() throws Exception {
 		String questionText1 = "testDefineQuestion sample text one";
+		String shortName1 = "testDefineQuestion 1";
 		setRequestPathInfo("/questionsAction");
 		addRequestParameter("method", "defineQuestions");
 		actionPerform();
 		verifyNoActionErrors();
 		
+		addRequestParameter("shortName", shortName1);
 		addRequestParameter("questionText", questionText1);
 		addRequestParameter("answerType", Integer.toString(AnswerType.FREETEXT.getValue()));
 		addRequestParameter("method", "addQuestion");
@@ -107,6 +110,8 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		assertEquals(AnswerType.FREETEXT, newQuestions.get(0).getAnswerTypeAsEnum());
 		
 		String questionText2 = "testDefineQuestion sample text two";
+		String shortName2 = "testDefineQuestion 2";
+		addRequestParameter("shortName", shortName2);
 		addRequestParameter("questionText", questionText2);
 		addRequestParameter("answerType", Integer.toString(AnswerType.CHOICE.getValue()));
 		String choice = "testDefineQuestion sample choice";
@@ -122,6 +127,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		assertEquals(2, newQuestions.size());
+		assertEquals(shortName2, newQuestions.get(1).getShortName());
 		assertEquals(questionText2, newQuestions.get(1).getQuestionText());
 		assertEquals(AnswerType.CHOICE, newQuestions.get(1).getAnswerTypeAsEnum());
 		assertEquals(1, newQuestions.get(1).getChoices().size());
@@ -129,6 +135,8 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		
 		
 		String questionText3 = "testDefineQuestions question text 3";
+		String shortName3 = "testDefineQuestions 3";
+		addRequestParameter("shortName", shortName3);
 		addRequestParameter("questionText", questionText3);
 		addRequestParameter("method", "addQuestion");
 		actionPerform();
@@ -136,6 +144,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		assertEquals(3, newQuestions.size());
 		assertEquals(questionText3, newQuestions.get(2).getQuestionText());
+		assertEquals(shortName3, newQuestions.get(2).getShortName());
 //		int badQuestionId = newQuestions.get(2).getQuestionId();
 //		System.out.println("badQuestionId: " + badQuestionId);
 		addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
@@ -176,6 +185,8 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		List<Question> retrievedQuestionList = (List<Question>) request
 				.getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		// Tests
+		Collections.sort(retrievedQuestionList);
+		Collections.sort(testQuestionList);
 		for (int i = 0; i < testQuestionList.size(); i++) {
 			Question tempQuestion = retrievedQuestionList.get(i);
 			assertEquals(testQuestionList.get(i).getQuestionText(),

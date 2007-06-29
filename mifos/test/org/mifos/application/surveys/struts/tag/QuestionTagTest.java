@@ -42,7 +42,8 @@ public class QuestionTagTest extends MifosTestCase {
 	public void testFreetext() throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
 		String questionText = "QuestionTagTest testFreetext question";
-		Question question = new Question(questionText,
+		String shortName = "QuestionTagTest Name";
+		Question question = new Question(shortName, questionText,
 				AnswerType.FREETEXT);
 		persistence.createOrUpdate(question);
 		QuestionTag tag = new QuestionTag(question.getQuestionId(), "freetext answer", false);
@@ -55,7 +56,8 @@ public class QuestionTagTest extends MifosTestCase {
 	public void testNumber() throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
 		String questionText = "QuestionTagTest testNumber question";
-		Question question = new Question(questionText, AnswerType.NUMBER);
+		String shortName = "QuestionTagTest Name";
+		Question question = new Question(shortName, questionText, AnswerType.NUMBER);
 		persistence.createOrUpdate(question);
 		QuestionTag tag = new QuestionTag(question.getQuestionId(), "42", false);
 		String expectedMarkup = "<input type=\"text\" class=\"surveyform number fontnormal8t\" " +
@@ -67,7 +69,8 @@ public class QuestionTagTest extends MifosTestCase {
 	public void testDate() throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
 		String questionText = "QuestionTagTest testDate question";
-		Question question = new Question(questionText, AnswerType.DATE);
+		String shortName = "QuestionTagTest Name";
+		Question question = new Question(shortName, questionText, AnswerType.DATE);
 		persistence.createOrUpdate(question);
 		QuestionTag tag = new QuestionTag(question.getQuestionId(), "20/3/2000", false);
 	}

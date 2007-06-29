@@ -110,8 +110,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		SurveysPersistence persistence = new SurveysPersistence();
 		String testName = "testGet survey name";
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance(testName);
-		Question question1 = new Question("testGet question1 text", AnswerType.NUMBER);
-		Question question2 = new Question("testGet question1 text", AnswerType.FREETEXT);
+		Question question1 = new Question("test name 1", "testGet question1 text", AnswerType.NUMBER);
+		Question question2 = new Question("test name 2", "testGet question1 text", AnswerType.FREETEXT);
 		
 		Survey sampleSurvey = sampleInstance.getSurvey();
 		sampleSurvey.addQuestion(question1, true);
@@ -166,10 +166,10 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		String officerName = officer.getName();
 		
 		Survey survey = sampleInstance.getSurvey();
-		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
-		Question question2 = new Question("test question 2", AnswerType.NUMBER);
-		Question question3 = new Question("test question 3", AnswerType.DATE);
-		Question question4 = new Question("test question 4", AnswerType.CHOICE);
+		Question question1 = new Question("test name 1", "test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test name 2", "test question 2", AnswerType.NUMBER);
+		Question question3 = new Question("test name 3", "test question 3", AnswerType.DATE);
+		Question question4 = new Question("test name 4", "test question 4", AnswerType.CHOICE);
 		
 		QuestionChoice choice1 = new QuestionChoice("choice 1");
 		QuestionChoice choice2 = new QuestionChoice("choice 2");
@@ -200,7 +200,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
-				.getAppliesToAsEnum(), globalNum), (String) request.getSession().getAttribute(
+				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
 		InstanceStatus status = InstanceStatus.COMPLETED;
@@ -241,10 +241,10 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		String officerName = TestUtils.makeUser().getName();
 		
 		Survey survey = sampleInstance.getSurvey();
-		Question question1 = new Question("test question 1", AnswerType.FREETEXT);
-		Question question2 = new Question("test question 2", AnswerType.NUMBER);
-		Question question3 = new Question("test question 3", AnswerType.DATE);
-		Question question4 = new Question("test question 4", AnswerType.CHOICE);
+		Question question1 = new Question("test name 1", "test question 1", AnswerType.FREETEXT);
+		Question question2 = new Question("test name 2", "test question 2", AnswerType.NUMBER);
+		Question question3 = new Question("test name 3", "test question 3", AnswerType.DATE);
+		Question question4 = new Question("test name 4", "test question 4", AnswerType.CHOICE);
 		
 		QuestionChoice choice1 = new QuestionChoice("choice 1");
 		QuestionChoice choice2 = new QuestionChoice("choice 2");
@@ -275,7 +275,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
-				.getAppliesToAsEnum(), globalNum), (String) request.getSession().getAttribute(
+				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
 		int question3Id = question3.getQuestionId();

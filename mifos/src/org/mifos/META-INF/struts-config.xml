@@ -1257,6 +1257,7 @@
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+             <forward name="get_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
         </action>
         
         <action path="/surveyInstanceAction"

@@ -20,6 +20,8 @@ public class SurveyResponse {
 	
 	private QuestionChoice choiceValue;
 	
+	private String multiSelectValue;
+	
 	private Double numberValue;
 	
 	
@@ -64,6 +66,14 @@ public class SurveyResponse {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.choiceValue = choice;
+	}
+
+	public void setMultiSelectValue(String multiSelectValue) {
+		this.multiSelectValue = multiSelectValue;
+	}
+
+	public String getMultiSelectValue() {
+		return multiSelectValue;
 	}
 
 	public Date getDateValue() {

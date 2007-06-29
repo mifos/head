@@ -15,9 +15,7 @@
         </html-el:link> /
       </span>
       <span class="fontnormal8pt">
-        <html-el:link action="surveysAction.do?method=viewQuestions">
           <mifos:mifoslabel name="Surveys.viewquestions" bundle="SurveysUIResources"/>
-        </html-el:link> 
       </span>
     </td>
   </tr>
@@ -26,8 +24,11 @@
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="70%" align="left" valign="middle" class="paddingL15T15"> <!-- this td represents the entire central content area -->
-			<div style="padding:3px" class="headingorange"><mifos:mifoslabel name="Surveys.viewquestions"/></div>
-
+			<div style="padding:3px" class="headingorange"><mifos:mifoslabel name="Surveys.viewquestions"/>
+	<br><span class="fontnormal">
+              <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
+               <a href="questionsAction.do?method=defineQuestions">
+               <mifos:mifoslabel name="Surveys.definequestion"/></div>
       <c:if test="${requestScope.itemCount > 0}">
         <br/>
         <span class="fontnormal" style="color:orange; font-weight:bold">
@@ -38,40 +39,20 @@
       <br/>
       <br/>
       <!-- the question list table -->
-      <table width="98%" border="0" cellpadding="3" cellspacing="0">
-        <tr>
-          <td width="28%" class="drawtablehd"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Question"/> </td>
-          <td width="19%" class="drawtablehd"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answertype"/></td>
-          <td width="53%" class="drawtablehd"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer"/></td>
-        </tr>
-        <c:forEach var="question" items="${requestScope.questionsList}">
-          <tr>
-            <td width="28%" class="drawtablerow"><c:out value="${question.questionText}"/></td>
-            <td width="19%" class="drawtablerow">
-              <c:choose>
-               <c:when test="${question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext"/></c:when>
-               <c:when test="${question.answerType == 3}"><mifos:mifoslabel name="Surveys.Number"/></c:when>
-               <c:when test="${question.answerType == 4}"><mifos:mifoslabel name="Surveys.Choice"/></c:when>
-               <c:when test="${question.answerType == 5}"><mifos:mifoslabel name="Surveys.Date"/></c:when>
-              </c:choose>
-            </td>
-            <td width="53%" class="drawtablerow">
-              <c:choose>
-                <c:when test="${question.answerType == 3}"> 
-                  <mifos:mifoslabel name="Surveys.between"/><c:out value="${question.numericMin}"/> 
-                  <mifos:mifoslabel name="Surveys.and"/> <c:out value="${question.numericMax}"/>
-                </c:when>
-                <c:when test="${question.answerType == 4}">
-                  <c:forEach var="choice" items="${question.choices}" varStatus="ptr"><c:out value="${choice.choiceText}"/>
-                    <c:if test="${not ptr.last}">, </c:if>
-                  </c:forEach>
-                </c:when>
-                <c:otherwise>&nbsp;</c:otherwise>
-              </c:choose>
-            </td>
-          </tr>
-        </c:forEach>
-      </table>
+      <table width="90%" border="0" cellspacing="0" cellpadding="0">
+	  <c:forEach var="question" items="${requestScope.questionsList}">
+    	<tr class="fontnormal">
+	      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
+    	  <td width="99%">
+        <html-el:link href="questionsAction.do?method=get&questionId=${question.questionId}&randomNUm=${sessionScope.randomNUm}">
+          <c:out value="${question.shortName}"/>
+        </html-el:link>
+        <c:if test="${question.questionState == 0}">
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/></span>
+        </c:if>
+      </td>
+    </tr>
+  </c:forEach>
     </td>
   </tr>
 </table>

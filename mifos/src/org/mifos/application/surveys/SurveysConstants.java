@@ -11,6 +11,7 @@ public class SurveysConstants {
 	public static final String KEY_LOAN_SURVEYS_LIST="loanSurveysList";
 	public static final String KEY_SAVINGS_SURVEYS_LIST="savingsSurveysList";
 	
+	public static final String KEY_QUESTION="question";
 	public static final String KEY_SURVEY="retrievedSurvey";
 	public static final String KEY_INSTANCE="retrievedInstance";
 	public static final String KEY_NEW_QUESTION_CHOICES="newQuestionChoices";
@@ -37,4 +38,5 @@ public class SurveysConstants {
 	public static final String MANDATORY_DATE_SURVEYED = "errors.mandatorydate";
 	public static final String EMPTY_FIELD = "errors.emptyfield";
 	public static final String INVALID_OFFICER="errors.invalidofficer";
+	public static final String NAME_EXISTS="errors.nameexists";
 }

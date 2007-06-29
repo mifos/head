@@ -6,10 +6,12 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 public class QuestionActionForm extends BaseActionForm {
 
        private String questionText;
+       private String shortName;
        private String answerType;
        private String choice;
 
        public void clear() {
+    	   setShortName("");
     	   setQuestionText("");
     	   setAnswerType(Integer.toString(AnswerType.FREETEXT.getValue()));
     	   setChoice("");
@@ -36,5 +38,12 @@ public class QuestionActionForm extends BaseActionForm {
 
        public void setChoice(String choice) {
                this.choice = choice;
+       }
+       
+       public void setShortName(String shortName) {
+    	   this.shortName = shortName;
+       }
+       public String getShortName() {
+    	   return shortName;
        }
 }

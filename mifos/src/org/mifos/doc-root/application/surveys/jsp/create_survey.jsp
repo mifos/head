@@ -121,7 +121,7 @@
                         <html-el:select size="10" style="width:40em" property="value(newQuestion)">
                           <c:forEach var="question" items="${sessionScope.questionsList}">
                             <html-el:option value="${question.questionId}">
-                              <c:out value="${question.questionText}"/>
+                              <c:out value="${question.shortName}"/>
                             </html-el:option>
                           </c:forEach>
                         </html-el:select>
@@ -143,7 +143,7 @@
                      </tr>
                        <c:forEach items="${sessionScope.addedQuestions}" var="question" varStatus="status">
                          <tr>
-                           <td class="drawtablerow"><c:out value="name" /></td>
+                           <td class="drawtablerow"><c:out value="${question.shortName}"/></td>
                            <td class="drawtablerow"><c:out value="${question.questionText}" /></td>
                            <td class="drawtablerow">
                            <html-el:checkbox property="value(mandatory_${question.questionId})" value="1"/>

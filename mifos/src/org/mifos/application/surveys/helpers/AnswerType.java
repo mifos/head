@@ -1,6 +1,7 @@
 package org.mifos.application.surveys.helpers;
 
 public enum AnswerType {
+	MULTISELECT(1),
 	FREETEXT(2),
 	NUMBER(3),
 	CHOICE(4),

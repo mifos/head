@@ -92,6 +92,12 @@ public class SurveysPersistence extends Persistence {
         return (Question) getSession().get(Question.class, id);
     }
     
+    public List<Question> retrieveQuestionsByName(String name) {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_NAME);
+    	query.setParameter("SHORT_NAME", name);
+    	return query.list();
+    }
+    
     public List<SurveyInstance> retrieveInstancesByCustomer(CustomerBO customer) throws PersistenceException {
     	Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYINSTANCE_RETRIEVE_BY_CUSTOMER);
     	query.setParameter("INSTANCE_CUSTOMER", customer);

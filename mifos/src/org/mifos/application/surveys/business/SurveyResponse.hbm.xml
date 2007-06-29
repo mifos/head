@@ -14,6 +14,7 @@
 		<property name="freetextValue" column="FREETEXT_VALUE"/>
 		<property name="dateValue" column="DATE_VALUE"/>
 		<property name="numberValue" column="NUMBER_VALUE"/>
+		<property name="multiSelectValue" column="MULTI_SELECT_VALUE"/>
 		<many-to-one name="choiceValue" column="CHOICE_VALUE" cascade="all" access="field"/>
 	</class>
 	<query name="surveys.retrieveAllResponses">
