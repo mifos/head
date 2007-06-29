@@ -26,9 +26,35 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	private UserContext userContext;
 	private String flowKey;
 
-	final Short DEFAULT_LOCALE = 1;
-	final String UPDATE_NAME = "updated";
-	final String NEW_ELEMENT_NAME = "new";
+	private final Short DEFAULT_LOCALE = 1;
+	private final String UPDATE_NAME = "updated";
+	private final String NEW_ELEMENT_NAME = "new";
+
+	private final String ADD = "add";
+	private final String EDIT = "edit";
+	
+	private final String[] operations = {ADD, EDIT};
+	private final String[] names = {NEW_ELEMENT_NAME, UPDATE_NAME};
+	
+	// indexes into the configurationNameSet below
+	private final int MASTER_CONSTANT = 0;
+	private final int CONFIG_CONSTANT = 1;
+	private final int LIST_NAME = 2;
+	
+	private final String[][] configurationNameSet = {
+			{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
+			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+			,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
+			,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
+			,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
+			,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
+			,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
+			,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
+			,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
+			,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
+			,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
+
+			};
 	
 	@Override
 	protected void tearDown() throws Exception {
@@ -139,8 +165,6 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		masterPersistence.deleteValueListElement(Integer.valueOf(valueListElement.getLookUpId()));				
 	}
 
-	private final String ADD = "add";
-	private final String EDIT = "edit";
 	
 	private String doOneList(String masterConstant, String configurationConstant, 
 			String listName, String addOrEdit) throws SystemException, ApplicationException {
@@ -173,7 +197,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	}
 
 	private String prepareForUpdate(String masterConstant, String configurationConstant, 
-			String listName, String addOrEdit, LookupOptionData data) throws SystemException, ApplicationException {
+			String listName, String addOrEdit, LookupOptionData data, String nameString) throws SystemException, ApplicationException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
 		Short valueListId = valueList.getEntityId();
@@ -182,20 +206,17 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		data.setValueListId(valueListId);			
 		
 		String originalName = "";
-		String nameToReturn = "";
 		
 		if (addOrEdit.equals(ADD)) {
 			data.setLookupId(0);
-			nameToReturn = NEW_ELEMENT_NAME;
 		} else { // edit
 			data.setLookupId(valueListElement.getLookUpId());
-			nameToReturn = UPDATE_NAME;
 
 			originalName = valueListElement.getLookUpValue();
 		}
 
 		LookupOptionsActionForm form = new LookupOptionsActionForm();
-		form.setLookupValue(nameToReturn);
+		form.setLookupValue(nameString);
 		setActionForm(form);
 		
 		return originalName;
@@ -207,33 +228,12 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		setRequestPathInfo("/lookupOptionsAction.do");
 		addRequestParameter("method", "addEditLookupOption");
 
-		// indexes into the listData below
-		final int MASTER_CONSTANT = 0;
-		final int CONFIG_CONSTANT = 1;
-		final int LIST_NAME = 2;
-		
-		String[][] listData = {
-				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
-				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
-				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
-				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
-				,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
-				,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
-				,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
-				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
-				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
-				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
-
-				};
-
-		String[] operations = {ADD, EDIT};		
-		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
+		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			for (String operation : operations) {
 				doOneList(
-						listData[listIndex][MASTER_CONSTANT], 
-						listData[listIndex][CONFIG_CONSTANT], 
-						listData[listIndex][LIST_NAME],
+						configurationNameSet[listIndex][MASTER_CONSTANT], 
+						configurationNameSet[listIndex][CONFIG_CONSTANT], 
+						configurationNameSet[listIndex][LIST_NAME],
 						operation);
 
 				actionPerform();
@@ -249,43 +249,23 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/lookupOptionsAction.do");
 		addRequestParameter("method", "update");
-
-		// indexes into the listData below
-		final int MASTER_CONSTANT = 0;
-		final int CONFIG_CONSTANT = 1;
-		final int LIST_NAME = 2;
-		
-		String[][] listData = {
-				{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-				,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
-				,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
-				,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
-				,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
-				,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
-				,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
-				,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
-				,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
-				,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
-				,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
-
-				};
 			
-		String[] operations = {ADD, EDIT};
-		for (int listIndex = 0; listIndex < listData.length; ++listIndex) {
+		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			String originalValue = "";
 			HibernateUtil.getSessionTL();
 			
-			for (String operation : operations) {
+			for (int operationIndex = 0; operationIndex < operations.length; ++operationIndex) { 
 				flowKey = createFlow(request, LookupOptionsAction.class);
 				request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
 				LookupOptionData data = new LookupOptionData();
 				originalValue = prepareForUpdate(
-						listData[listIndex][MASTER_CONSTANT], 
-						listData[listIndex][CONFIG_CONSTANT], 
-						listData[listIndex][LIST_NAME],
-						operation,
-						data);
+						configurationNameSet[listIndex][MASTER_CONSTANT], 
+						configurationNameSet[listIndex][CONFIG_CONSTANT], 
+						configurationNameSet[listIndex][LIST_NAME],
+						operations[operationIndex],
+						data,
+						names[operationIndex]);
 
 				SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
 
@@ -300,12 +280,56 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			HibernateUtil.startTransaction();
 			
 			verifyOneListAndRestoreOriginalValues(
-					listData[listIndex][MASTER_CONSTANT], 
-					listData[listIndex][CONFIG_CONSTANT], 
-					listData[listIndex][LIST_NAME],
+					configurationNameSet[listIndex][MASTER_CONSTANT], 
+					configurationNameSet[listIndex][CONFIG_CONSTANT], 
+					configurationNameSet[listIndex][LIST_NAME],
 					originalValue);
 			HibernateUtil.commitTransaction();
 		}
 		
 	}
+	
+	public void testBadStringUpdate() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/lookupOptionsAction.do");
+		addRequestParameter("method", "update");
+			
+		String tooShort = "";
+		String tooLong = 
+			  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+			+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+			+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+			+ "0";
+		
+		// these messages should be read from the properties files rather than being hard coded here
+		String errorTooShort = "Please enter a nonempty value.";
+		String errorTooLong = "Please specify a value of 300 characters or less.";
+		
+		String[] names = 	  {tooShort,      tooShort,      tooLong,      tooLong};
+		String[] operations = {ADD,           EDIT,          ADD,          EDIT};
+		String[] errors = 	  {errorTooShort, errorTooShort, errorTooLong, errorTooLong};
+		
+		for (int operationIndex = 0; operationIndex < operations.length; ++operationIndex) { 
+			flowKey = createFlow(request, LookupOptionsAction.class);
+			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+			LookupOptionData data = new LookupOptionData();
+			prepareForUpdate(
+					configurationNameSet[0][MASTER_CONSTANT], 
+					configurationNameSet[0][CONFIG_CONSTANT], 
+					configurationNameSet[0][LIST_NAME],
+					operations[operationIndex],
+					data,
+					names[operationIndex]);
+
+			SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+
+			actionPerform();
+			String [] errorMessages = {errors[operationIndex]};
+			verifyActionErrors(errorMessages);
+			verifyInputForward();
+		}
+
+	}
+	
 }
