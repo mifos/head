@@ -61,7 +61,10 @@ public class LoanPrdPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT
 				.getValue());
-		
+
+		/* Is the intention here to clear this cache every time we close
+		   the session?  How do we invalidate/update the cache if the
+		   database is updated?  */
 		if (HibernateUtil.isSessionOpen()) {
 			Short cachedValue = (Short) cache.get(AccountTypes.LOAN_ACCOUNT.getValue());
 			if (cachedValue != null) {
