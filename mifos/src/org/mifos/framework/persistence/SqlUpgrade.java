@@ -41,7 +41,8 @@ public class SqlUpgrade extends Upgrade {
 			connection);
 	}
 	
-	void execute(InputStream stream, Connection conn) throws SQLException {
+	public static void execute(InputStream stream, Connection conn) 
+	throws SQLException {
 		String[] sqls = readFile(stream);
 		Statement statement = conn.createStatement();
 		for (String sql : sqls) {
@@ -51,6 +52,7 @@ public class SqlUpgrade extends Upgrade {
 	}
 
 	/**
+	 * Closes the stream when done.
 	 * @return individual statements
 	 * */
 	public static String[] readFile(InputStream stream) {
@@ -79,6 +81,10 @@ public class SqlUpgrade extends Upgrade {
 	        
 	            line = line.trim();
 	            
+	            if ("".equals(line)) {
+	            	continue;
+	            }
+	            
 	            sql.append("\n");
 	            sql.append(line);
 	
@@ -105,6 +111,14 @@ public class SqlUpgrade extends Upgrade {
 		catch (IOException e) {
 	    	throw new RuntimeException(e);
 	    }
+		finally {
+			try {
+				stream.close();
+			}
+			catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 	
 }

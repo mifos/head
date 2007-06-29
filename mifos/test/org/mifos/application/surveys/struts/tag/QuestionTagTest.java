@@ -5,10 +5,10 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.TestDatabase;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class QuestionTagTest extends MifosTestCase {

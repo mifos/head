@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import net.sourceforge.mayfly.Database;
 
-import org.mifos.framework.TestDatabase;
 
 final class DummyUpgrade extends Upgrade {
 	private StringBuilder log = new StringBuilder();

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.CharacterCodingException;
@@ -26,7 +27,6 @@ import net.sourceforge.mayfly.Database;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.framework.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class DatabaseVersionPersistenceTest {
@@ -195,6 +195,57 @@ public class DatabaseVersionPersistenceTest {
 						new ByteArrayInputStream(new byte[0]));
 		assertEquals(0, sqlStatements.length);
 	}
+	
+	@Test public void blankLines() throws Exception {
+		checkSplit(
+			"command\n\n\n\n\n\n\n", 
+			"\ncommand");
+		checkSplit(
+			"command;\n", 
+			"\ncommand");
+		checkSplit(
+			"command;\n\n\n\n\n\n\n", 
+			"\ncommand");
+	}
+	
+	@Test public void slashStarComments() throws Exception {
+		checkSplit("/* foo; bar */", "\n/* foo; bar */");
+		
+		/* Trying to fix this case seems to just descend even
+		   further down the path of the half-assed lexer. */
+		checkSplit("/* foo;\n bar */", "\n/* foo", "\nbar */");
+	}
+	
+	@Test public void comments() throws Exception {
+		/* Many of the details here, like what comments get swallowed
+		   and placement of whitespace, aren't very important.
+		   It just seems better to have tests so we 
+		   know what the code is doing.
+		   */
+		checkSplit("-- ignore me");
+		checkSplit("// ignore me");
+		checkSplit(" // ignore me", "\n// ignore me");
+		checkSplit(" -- ignore me", "\n-- ignore me\n");
+		checkSplit("insert into foo(x) values('x-y')", 
+			"\ninsert into foo(x) values('x-y')");
+		checkSplit("insert into foo(x) values('x--y')", 
+			"\ninsert into foo(x) values('x--y')\n");
+	}
+	
+	@Test public void splitIntoTwo() throws Exception {
+		checkSplit("foo;\nbar\n", "\nfoo", "\nbar");
+		checkSplit("foo;\nbar;\n", "\nfoo", "\nbar");
+	}
+
+	private void checkSplit(String sql, String... expected) 
+	throws UnsupportedEncodingException {
+		String[] statements = SqlUpgrade.readFile(
+			new ByteArrayInputStream(sql.getBytes("UTF-8")));
+		assertEquals(expected.length, statements.length);
+		for (int i = 0; i < expected.length; ++i) {
+			assertEquals(expected[i], statements[i]);
+		}
+	}
 
 	@Test public void badUtf8() throws Exception {
 		try {
@@ -203,7 +254,8 @@ public class DatabaseVersionPersistenceTest {
 			fail();
 		}
 		catch (RuntimeException e) {
-			ObjectAssert.assertInstanceOf(CharacterCodingException.class, e.getCause());
+			ObjectAssert.assertInstanceOf(
+				CharacterCodingException.class, e.getCause());
 		}
 	}
 	

@@ -1,17 +1,24 @@
-package org.mifos.framework;
+package org.mifos.framework.persistence;
 
+import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
+
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.hibernate.Interceptor;
 import org.hibernate.classic.Session;
+import org.junit.Assert;
 import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SessionOpener;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -90,6 +97,33 @@ public class TestDatabase implements SessionOpener {
 
 	public Connection openConnection() {
 		return database.openConnection();
+	}
+
+	public static void runUpgradeScripts(Connection connection)
+	throws Exception {
+		DatabaseVersionPersistence persistence = 
+	    	new FileReadingPersistence(connection);
+	    Assert.assertEquals(FIRST_NUMBERED_VERSION, persistence.read());
+	    persistence.upgradeDatabase();
+	}
+
+	/**
+	 * Create a database and upgrade it to the first database version
+	 * with a number.  Should be run on an empty database (no tables).
+	 */
+	public static void upgradeToFirstNumberedVersion(Connection connection) 
+	throws FileNotFoundException, SQLException {
+		executeScript(connection, "sql/mifosdbcreationscript.sql");
+	    executeScript(connection, "sql/mifosmasterdata.sql");
+	    executeScript(connection, "sql/rmpdbcreationscript.sql");
+	    executeScript(connection, "sql/rmpmasterdata.sql");
+	    executeScript(connection, "sql/Iteration13-DBScripts25092006.sql");
+	    executeScript(connection, "sql/Iteration14-DDL-DBScripts10102006.sql");
+	    executeScript(connection, "sql/Iteration14-DML-DBScripts10102006.sql");
+	    executeScript(connection, "sql/Iteration15-DDL-DBScripts24102006.sql");
+	    executeScript(connection, "sql/Iteration15-DBScripts20061012.sql");
+	    executeScript(connection, "sql/add-version.sql");
+	    executeScript(connection, "sql/Index.sql");
 	}
 
 }

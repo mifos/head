@@ -6,7 +6,7 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
 import org.junit.Test;
-import org.mifos.framework.TestDatabase;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
 

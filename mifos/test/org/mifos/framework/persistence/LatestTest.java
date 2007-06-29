@@ -10,7 +10,6 @@ import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
-import org.mifos.framework.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTest extends TestCase {
@@ -56,32 +55,14 @@ public class LatestTest extends TestCase {
 	private DataStore applyRealUpgrades() throws Exception {
 		Database database = new Database(upgradeToFirstNumberedVersion());
 
-	    runUpgradeScripts(database);
+	    TestDatabase.runUpgradeScripts(database.openConnection());
 	    return database.dataStore();
 	}
 
-	private DataStore upgradeToFirstNumberedVersion() {
+	private DataStore upgradeToFirstNumberedVersion() throws Exception {
 		Database database = TestDatabase.makeDatabase();
-		DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
-	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
-	    DatabaseSetup.executeScript(database, "sql/rmpdbcreationscript.sql");
-	    DatabaseSetup.executeScript(database, "sql/rmpmasterdata.sql");
-	    DatabaseSetup.executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
-	    DatabaseSetup.executeScript(database, "sql/Iteration14-DDL-DBScripts10102006.sql");
-	    DatabaseSetup.executeScript(database, "sql/Iteration14-DML-DBScripts10102006.sql");
-	    DatabaseSetup.executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
-	    DatabaseSetup.executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
-	    DatabaseSetup.executeScript(database, "sql/add-version.sql");
-	    DatabaseSetup.executeScript(database, "sql/Index.sql");
+		TestDatabase.upgradeToFirstNumberedVersion(database.openConnection());
 	    return database.dataStore();
-	}
-
-	private void runUpgradeScripts(Database database) 
-	throws Exception {
-	    DatabaseVersionPersistence persistence = 
-	    	new FileReadingPersistence(database.openConnection());	    
-	    assertEquals(FIRST_NUMBERED_VERSION, persistence.read());
-	    persistence.upgradeDatabase();
 	}
 
 	/**
@@ -100,6 +81,18 @@ public class LatestTest extends TestCase {
 		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");
 		String cleanedDB = new SqlDumper().dump(database.dataStore());
 		assertEquals(blankDB, cleanedDB);
+	}
+	
+	/**
+	 * The idea here is to figure out whether we are dropping tables
+	 * in the right order to deal with foreign keys.  I'm not sure
+	 * we fully succeed, however.
+	 */
+	public void testDropTablesWithData() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
+		DatabaseSetup.executeScript(
+			database.openConnection(), "sql/mifosdroptables.sql");
+		assertEquals("", database.dumpForComparison());
 	}
 	
 	public void testDowngrades() throws Exception {

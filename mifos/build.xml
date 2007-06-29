@@ -375,7 +375,6 @@
 			<transaction src="./sql/mifosdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
-			<!-- <transaction src="./sql/Index.sql" /> -->
 
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>

@@ -1,14 +1,18 @@
 package org.mifos.framework.util.helpers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.JdbcDriver;
 import net.sourceforge.mayfly.MayflyException;
+import net.sourceforge.mayfly.MayflySqlException;
 import net.sourceforge.mayfly.datastore.DataStore;
 
 import org.hibernate.SessionFactory;
@@ -16,6 +20,7 @@ import org.hibernate.cfg.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
 	
@@ -141,6 +146,30 @@ public class DatabaseSetup {
 	    	catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+	    }
+	}
+	
+	public static void executeScript(Connection connection, String name) 
+	throws FileNotFoundException, SQLException {
+		FileInputStream sql = new FileInputStream(name);
+        try {
+        	SqlUpgrade.execute(sql, connection);
+	    }
+	    catch (MayflySqlException e) {
+	    	if (e.startLineNumber() == -1) {
+	    		throw e;
+	    	}
+	    	else {
+		        String failingCommand = e.failingCommand();
+				throw new RuntimeException(
+		            "error at line " + e.startLineNumber() +
+		            " column " + e.startColumn() + " in file " + name +
+		            (failingCommand == null ? "" :
+			            "\ncommand was: " + failingCommand)
+			        ,
+		            e
+		        );
+	    	}
 	    }
 	}
 

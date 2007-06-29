@@ -5,7 +5,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
-import org.mifos.framework.TestDatabase;
+import org.mifos.framework.persistence.TestDatabase;
 
 public class LookUpValueEntityTest extends TestCase {
 	
