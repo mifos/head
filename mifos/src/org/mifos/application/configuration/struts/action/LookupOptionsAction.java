@@ -112,7 +112,7 @@ public class LookupOptionsAction extends BaseAction {
 			assert(lookupOptionsActionForm.getSalutationList().length ==1);
             selectedValue = lookupOptionsActionForm.getSalutationList()[0];
 		}
-		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_USER_TITLE))
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
 		{
 			assert(lookupOptionsActionForm.getUserTitleList().length ==1);
             selectedValue = lookupOptionsActionForm.getUserTitleList()[0];
@@ -137,7 +137,7 @@ public class LookupOptionsAction extends BaseAction {
 			assert(lookupOptionsActionForm.getCitizenshipList().length ==1);
             selectedValue = lookupOptionsActionForm.getCitizenshipList()[0];
 		}
-		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN))
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
 			assert(lookupOptionsActionForm.getPurposesOfLoanList().length ==1);
             selectedValue = lookupOptionsActionForm.getPurposesOfLoanList()[0];
@@ -173,12 +173,12 @@ public class LookupOptionsAction extends BaseAction {
 			String addOrEdit, LookupOptionsActionForm lookupOptionsActionForm) throws Exception
 	{
 		assert( configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION) ||
-				configurationEntity.equals(ConfigurationConstants.CONFIG_USER_TITLE) ||
+				configurationEntity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP) ||
-				configurationEntity.equals(ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN) ||
+				configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE) ||
@@ -281,6 +281,7 @@ public class LookupOptionsAction extends BaseAction {
 		return locale;
 	}
 	
+	/*
 	private void setErrorMessages(LookupOptionsActionForm form, HttpServletRequest request)
 	{
 		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
@@ -292,19 +293,20 @@ public class LookupOptionsAction extends BaseAction {
 	    errorMsg = resources.getString("errors.selectvalue");
 	    request.setAttribute(ConfigurationConstants.SELECT_VALUE_ERROR, errorMsg);
 	}
+	*/
 	
 	private void setHiddenFields(HttpServletRequest request)
 	{
 		
 	    request.setAttribute(ConfigurationConstants.CONFIG_SALUTATION, ConfigurationConstants.CONFIG_SALUTATION);
 	    request.setAttribute(ConfigurationConstants.CONFIG_MARITAL_STATUS, ConfigurationConstants.CONFIG_MARITAL_STATUS);
-	    request.setAttribute(ConfigurationConstants.CONFIG_USER_TITLE, ConfigurationConstants.CONFIG_USER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_PERSONNEL_TITLE, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
 	    request.setAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP, ConfigurationConstants.CONFIG_CITIZENSHIP);
 	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
-	    request.setAttribute(ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN);
+	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
 	   
@@ -319,13 +321,14 @@ public class LookupOptionsAction extends BaseAction {
 		//lookupOptionsActionForm.clear();
 		setHiddenFields(request);
 		// set error messages (hidden fields on jsp page)
-		setErrorMessages(lookupOptionsActionForm, request);
+//		setErrorMessages(lookupOptionsActionForm, request);
+		
 		Short localeId = getUserContext(request).getLocaleId();
 		MasterPersistence masterPersistence = new MasterPersistence();
 		PopulateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_SALUTATION);
 		PopulateConfigurationListBox(MasterConstants.PERSONNEL_TITLE, masterPersistence,
-				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_USER_TITLE);
+				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
 		PopulateConfigurationListBox(MasterConstants.MARITAL_STATUS, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_MARITAL_STATUS);
 		PopulateConfigurationListBox(MasterConstants.ETHINICITY, masterPersistence,
@@ -335,7 +338,7 @@ public class LookupOptionsAction extends BaseAction {
 		PopulateConfigurationListBox(MasterConstants.CITIZENSHIP, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_CITIZENSHIP);
 		PopulateConfigurationListBox(MasterConstants.LOAN_PURPOSES, masterPersistence,
-				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN);
+				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
 		PopulateConfigurationListBox(MasterConstants.COLLATERAL_TYPES, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
 		PopulateConfigurationListBox(MasterConstants.HANDICAPPED, masterPersistence,

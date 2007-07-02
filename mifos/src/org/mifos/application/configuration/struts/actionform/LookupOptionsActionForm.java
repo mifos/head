@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -301,6 +302,61 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		super.reset(mapping, request);
 	}
 
+	private boolean containsOneNonNullElement(String[] strings) {
+		if (strings == null) {
+			return false;
+		} else {
+			return strings.length ==1 && strings[0] != null &&
+				strings[0].length() > 0;
+		}
+	}
+	private boolean itemIsSelectedInList(String listName) {
+		if (listName.equals(ConfigurationConstants.CONFIG_SALUTATION))
+		{
+			return(containsOneNonNullElement(getSalutationList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
+		{
+			return(containsOneNonNullElement(getUserTitleList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS))
+		{
+			return(containsOneNonNullElement(getMaritalStatusList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_ETHNICITY))
+		{
+			return(containsOneNonNullElement(getEthnicityList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
+		{
+			return(containsOneNonNullElement(getEducationLevelList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
+		{
+			return(containsOneNonNullElement(getCitizenshipList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
+		{
+			return(containsOneNonNullElement(getPurposesOfLoanList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE))
+		{
+			return(containsOneNonNullElement(getCollateralTypeList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
+		{
+			return(containsOneNonNullElement(getHandicappedList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
+		{
+			return(containsOneNonNullElement(getAttendanceList()));
+		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
+		{
+			return(containsOneNonNullElement(getOfficerTitleList()));
+		} 
+		throw new RuntimeException("Got unexpected constant: \"" + listName + "\"");
+	}
 
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
@@ -308,9 +364,17 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		logger.debug("Inside validate method");
 		
 		String method = request.getParameter(Methods.method.toString());
+		String methodCalled = (String)request.getAttribute("methodCalled");
 		ActionErrors errors = new ActionErrors();
 		if (method.equals(Methods.update.toString())) {
 			errors = super.validate(mapping, request);
+		} else if (method.equals(Methods.addEditLookupOption.toString()) ||
+			 (methodCalled != null && methodCalled.equals(Methods.addEditLookupOption.toString()))) {
+			String entity = request.getParameter(ConfigurationConstants.ENTITY);
+			String addOrEdit = request.getParameter(ConfigurationConstants.ADD_OR_EDIT);
+			if (addOrEdit.equals("edit") && !itemIsSelectedInList(entity)) {
+				addError(errors, entity, "errors.selectvalue", new String[]{null});
+			}
 		}
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);

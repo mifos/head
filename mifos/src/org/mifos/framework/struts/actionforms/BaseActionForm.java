@@ -79,6 +79,9 @@ public class BaseActionForm extends ValidatorActionForm {
 		return value ? "1" : "0";
 	}
 
+	// TODO: check the usage of this method for hardcoded strings
+	// There appear to be many uses of hardcoded strings being passed as
+	// a message parameter rather than using localized strings 
 	protected void addError(ActionErrors errors, String property, String key,
 			String... arg) {
 		errors.add(property, new ActionMessage(key, arg));

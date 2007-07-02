@@ -127,6 +127,7 @@ public class AccountStatusActionForm extends BaseActionForm {
 	}
 
 	@Override
+	// TODO: use localized strings for error messages rather than hardcoded
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();

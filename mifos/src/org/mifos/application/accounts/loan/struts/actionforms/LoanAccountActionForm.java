@@ -440,6 +440,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		return errors;
 	}
 
+	// TODO: use localized strings for error messages rather than hardcoded
 	private void checkValidationForGetPrdOfferings(ActionErrors errors) {
 		if (StringUtils.isNullOrEmpty(getCustomerId()))
 			addError(errors, LoanConstants.CUSTOMER,
@@ -447,6 +448,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 					ConfigurationConstants.CLIENT, ConfigurationConstants.GROUP);
 	}
 
+	// TODO: use localized strings for error messages rather than hardcoded
 	private void checkValidationForLoad(ActionErrors errors) {
 		checkValidationForGetPrdOfferings(errors);
 		if (StringUtils.isNullOrEmpty(getPrdOfferingId()))

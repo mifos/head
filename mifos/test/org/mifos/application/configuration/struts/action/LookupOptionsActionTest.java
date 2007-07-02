@@ -43,12 +43,12 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	
 	private final String[][] configurationNameSet = {
 			{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_USER_TITLE, 		"userTitleList"}
+			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_PERSONNEL_TITLE, 		"userTitleList"}
 			,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
 			,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
 			,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
 			,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
-			,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_PURPOSE_OF_LOAN, 	"purposesOfLoanList"}
+			,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_LOAN_PURPOSE, 	"purposesOfLoanList"}
 			,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
 			,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
 			,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
@@ -166,7 +166,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	}
 
 	
-	private String doOneList(String masterConstant, String configurationConstant, 
+	private String setupAddOrEditForOneList(String masterConstant, String configurationConstant, 
 			String listName, String addOrEdit) throws SystemException, ApplicationException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
@@ -196,6 +196,21 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		return originalName;
 	}
 
+	private void setupNoSelectionForOneList(String masterConstant, String configurationConstant, 
+			String listName) throws SystemException, ApplicationException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+		Short valueListId = valueList.getEntityId();
+
+		addRequestParameter(ConfigurationConstants.ENTITY,configurationConstant);
+		addRequestParameter(ConfigurationConstants.ADD_OR_EDIT, EDIT);
+		SessionUtils.setAttribute(configurationConstant, valueListId, request);
+
+		addRequestParameter(listName, "");
+		
+	}
+	
+	
 	private String prepareForUpdate(String masterConstant, String configurationConstant, 
 			String listName, String addOrEdit, LookupOptionData data, String nameString) throws SystemException, ApplicationException {
 		MasterPersistence masterPersistence = new MasterPersistence();
@@ -230,7 +245,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			for (String operation : operations) {
-				doOneList(
+				setupAddOrEditForOneList(
 						configurationNameSet[listIndex][MASTER_CONSTANT], 
 						configurationNameSet[listIndex][CONFIG_CONSTANT], 
 						configurationNameSet[listIndex][LIST_NAME],
@@ -326,6 +341,34 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 			actionPerform();
 			String [] errorMessages = {errors[operationIndex]};
+			verifyActionErrors(errorMessages);
+			verifyInputForward();
+		}
+
+	}
+
+	public void testNoSelectionToEdit() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/lookupOptionsAction.do");
+		addRequestParameter("method", "addEditLookupOption");
+					
+		// these messages should be read from the properties files rather than being hard coded here
+		String errorNoSelection = "errors.selectvalue";
+			
+		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
+			flowKey = createFlow(request, LookupOptionsAction.class);
+			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+			LookupOptionData data = new LookupOptionData();
+			setupNoSelectionForOneList(
+					configurationNameSet[listIndex][MASTER_CONSTANT], 
+					configurationNameSet[listIndex][CONFIG_CONSTANT], 
+					configurationNameSet[listIndex][LIST_NAME]);
+
+			SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+
+			actionPerform();
+			String [] errorMessages = {errorNoSelection};
 			verifyActionErrors(errorMessages);
 			verifyInputForward();
 		}
