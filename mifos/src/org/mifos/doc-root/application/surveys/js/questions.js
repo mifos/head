@@ -1,7 +1,7 @@
 function setDisable() {
        var disabled = true;
-       var value = document.questionActionForm.answerType.selectedIndex;
-       if (value == '2') {
+       var value = document.questionActionForm.answerType.value;
+       if (value == '1' || value == '4') {
            disabled = false;
        }
        document.getElementById('choice').disabled = disabled;

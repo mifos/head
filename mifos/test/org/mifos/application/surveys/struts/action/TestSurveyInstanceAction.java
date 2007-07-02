@@ -145,7 +145,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testDeleteInstance() throws Exception {
-		
 		SurveyInstance instance = TestSurvey.makeSurveyInstance("testDeleteInstance survey name");
 		SurveysPersistence persistence = new SurveysPersistence();
 		assertTrue(persistence.getInstance(instance.getInstanceId()) != null);
@@ -156,6 +155,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		assertNull(persistence.getInstance(instance.getInstanceId()));
+		assertEquals(0, persistence.retrieveResponsesByInstance(instance).size());
 	}
 	
 	public void testSurveyValidation() throws Exception {
@@ -245,16 +245,23 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		Question question2 = new Question("test name 2", "test question 2", AnswerType.NUMBER);
 		Question question3 = new Question("test name 3", "test question 3", AnswerType.DATE);
 		Question question4 = new Question("test name 4", "test question 4", AnswerType.CHOICE);
+		Question question5 = new Question("test name 5", "test question 4", AnswerType.MULTISELECT);
 		
 		QuestionChoice choice1 = new QuestionChoice("choice 1");
 		QuestionChoice choice2 = new QuestionChoice("choice 2");
 		question4.addChoice(choice1);
 		question4.addChoice(choice2);
 		
+		QuestionChoice choice3 = new QuestionChoice("choice 3");
+		QuestionChoice choice4 = new QuestionChoice("choice 4");
+		question5.addChoice(choice3);
+		question5.addChoice(choice4);
+		
 		survey.addQuestion(question1, true);
 		survey.addQuestion(question2, true);
 		survey.addQuestion(question3, true);
 		survey.addQuestion(question4, true);
+		survey.addQuestion(question5, true);
 		
 		surveysPersistence.createOrUpdate(survey);
 		
@@ -280,6 +287,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		
 		int question3Id = question3.getQuestionId();
 		int question4Id = question4.getQuestionId();
+		int question5Id = question5.getQuestionId();
 		addRequestParameter("value(response_" + question3Id + "_DD)", "14");
 		addRequestParameter("value(response_" + question3Id + "_MM)", "3");
 		addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
@@ -295,6 +303,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(dateSurveyed_MM)", "06");
 		addRequestParameter("value(dateSurveyed_YY)", "2007");
 		addRequestParameter("value(response_" + question4Id + ")", Integer.toString(choice1.getChoiceId()));
+		addRequestParameter("value(response_" + question5Id + ".1)", "1");
+		addRequestParameter("value(response_" + question5Id + ".2)", "0");
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "preview");
 		actionPerform();
@@ -316,7 +326,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(2007, calendar.get(Calendar.YEAR));
 		List<SurveyResponse> responses = surveysPersistence
 				.retrieveResponsesByInstance(newInstance);
-		assertEquals(4, responses.size());
+		assertEquals(5, responses.size());
 		assertEquals("answer 1", responses.get(0).getFreetextValue());
 		assertEquals(2.0, responses.get(1).getNumberValue());
 		Date retrievedDate = responses.get(2).getDateValue();

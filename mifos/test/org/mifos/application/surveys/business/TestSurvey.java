@@ -373,7 +373,7 @@ public class TestSurvey extends MifosTestCase {
 		session.save(question);
 		SurveyResponse response = new SurveyResponse();
 		response.setQuestion(question);
-		response.setNumberValue(5);
+		response.setNumberValue(new Double(5));
 		response.setInstance(instance);
 		session.save(response);
 		
@@ -477,7 +477,7 @@ public class TestSurvey extends MifosTestCase {
 		Question question2 = new Question(shortName, questionText, AnswerType.NUMBER);
 		SurveyResponse response2 = new SurveyResponse();
 		response2.setQuestion(question2);
-		response2.setNumberValue(5);
+		response2.setNumberValue(new Double(5));
 		response2.setInstance(instance1);
 		
 		persistence.createOrUpdate(response2);

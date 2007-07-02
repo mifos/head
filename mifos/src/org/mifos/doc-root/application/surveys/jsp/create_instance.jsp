@@ -52,6 +52,7 @@ hr {
 </style>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
+<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=preview">
 <h1><c:out value="${requestScope.businessObjectName}"/> - 
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
@@ -66,7 +67,7 @@ hr {
 		<td width="25%" height="30" align="right">
 		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
-		<td width="70%" class="drawtablerow">
+		<td width="70%">
 		<span class="fontnormal8pt"><date:datetag property="dateSurveyed" renderstyle="simplemapped"/></span>
 		</td>
 	</tr>
@@ -91,6 +92,16 @@ hr {
 		<tr>
 			<td colspan="2" class="fontnormal8pt drawtablerow">
         <c:choose>
+          <c:when test="${question.question.answerType == 1}">
+            <c:set var="opt" value="1"/>
+            <c:forEach var="choice" items="${question.question.choices}">
+              <html-el:checkbox property="value(response_${question.question.questionId}.${opt})" value="${choice.choiceId}">
+                <c:out value="${choice.choiceText}"/>
+              </html-el:checkbox><html-el:hidden property="value(response_${question.question.questionId}.${opt})" value="0"/>
+              <br>
+            <c:set var="opt" value="${opt+1}"/> 
+            </c:forEach>
+          </c:when>
           <c:when test="${question.question.answerType == 4}">
             <c:forEach var="choice" items="${question.question.choices}">
               <html-el:radio property="value(response_${question.question.questionId})" value="${choice.choiceId}">
@@ -117,9 +128,9 @@ hr {
 	</c:forEach>
 		<tr>
 		<td>
-		<html-el:reset style="width:65px;" styleClass="cancelbuttn">
+		<html-el:button property="clear" style="width:65px;" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('clear')">
 		<mifos:mifoslabel name="Surveys.button.clearall" bundle="SurveysUIResources" />
-		</html-el:reset>
+		</html-el:button>
 		</td>
 		</tr>
 </table>

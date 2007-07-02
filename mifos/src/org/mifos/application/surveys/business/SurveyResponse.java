@@ -81,7 +81,7 @@ public class SurveyResponse {
 	}
 
 	public void setDateValue(Date dateValue) throws ApplicationException {
-		if (question.getAnswerTypeAsEnum() != AnswerType.DATE) {
+		if (dateValue != null && question.getAnswerTypeAsEnum() != AnswerType.DATE) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.dateValue = dateValue;
@@ -92,7 +92,7 @@ public class SurveyResponse {
 	}
 
 	public void setFreetextValue(String freetextValue) throws ApplicationException {
-		if (question.getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
+		if (freetextValue != null && question.getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.freetextValue = freetextValue;
@@ -103,8 +103,8 @@ public class SurveyResponse {
 	}
 
 	
-	public void setNumberValue(double numberValue) throws ApplicationException {
-		if (question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
+	public void setNumberValue(Double numberValue) throws ApplicationException {
+		if (numberValue != null && question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.numberValue = numberValue;
@@ -154,6 +154,10 @@ public class SurveyResponse {
 			return Integer.toString(getChoiceValue().getChoiceId());
 		}
 		
+		else if (answerType == AnswerType.MULTISELECT) {
+			return multiSelectValue;
+		}
+		
 		else {
 			return null;
 		}
@@ -167,7 +171,9 @@ public class SurveyResponse {
 		AnswerType answerType = question.getAnswerTypeAsEnum();
 		if (answerType == AnswerType.FREETEXT) {
 			setFreetextValue(value);
-		// TODO: implement date AnswerType handling
+		
+		} else if (answerType == AnswerType.MULTISELECT) {
+			setMultiSelectValue(value);
 		} else if (answerType == AnswerType.DATE) {
 			setDateValue(DateUtils.getDate(value));
 		} else if (answerType == AnswerType.NUMBER) {
@@ -215,6 +221,10 @@ public class SurveyResponse {
 			
 			else if (answerType == AnswerType.CHOICE) {
 				setChoiceValue((QuestionChoice) value);
+			}
+			
+			else if (answerType == AnswerType.MULTISELECT) {
+				setMultiSelectValue((String) value);
 			}
 		}
 		catch (ClassCastException e) {

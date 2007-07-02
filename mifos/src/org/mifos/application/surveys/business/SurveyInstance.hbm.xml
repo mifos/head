@@ -15,6 +15,10 @@
 		<property name="dateConducted" column="DATE_CONDUCTED" type="date"/>
 		<property name="completedStatus" column="COMPLETED_STATUS" type="integer"/>
 		
+		<set name="surveyResponses" table="SURVEY_RESPONSE" cascade="all" order-by="RESPONSE_ID asc" inverse="true">
+			<key column="INSTANCE_ID" />
+			<one-to-many class="org.mifos.application.surveys.business.SurveyResponse" />
+		</set>
 
 	</class>
 	<query name="surveys.retrieveInstancesByCustomer">

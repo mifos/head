@@ -45,6 +45,8 @@ public class Question implements Serializable, Comparable<Question> {
 				choicesStrings.add(Integer.toString(choice.getChoiceId()));
 			}
 			return new OneOfValidator(choicesStrings).validate(objectData);
+		} else if (answerType == AnswerType.MULTISELECT) {
+			return objectData;
 		}
 		else if (answerType == AnswerType.DATE) {
 			DateValidator d = new DateValidator();

@@ -53,6 +53,7 @@
                     <td width="39%" class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="14%" class="drawtablerow">
                     <c:choose>
+                    	<c:when test="${question.question.answerType == 1}"><mifos:mifoslabel name="Surveys.Multiselect"/></c:when>
                     	<c:when test="${question.question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext"/></c:when>
                     	<c:when test="${question.question.answerType == 3}"><mifos:mifoslabel name="Surveys.Number"/></c:when>
                     	<c:when test="${question.question.answerType == 4}"><mifos:mifoslabel name="Surveys.Choice"/></c:when>

@@ -79,6 +79,19 @@ public abstract class Persistence {
 		} catch (Exception he) {
 			throw new PersistenceException(he);
 		}
+	}	
+	
+	public void deleteAndCommit(Object object) throws PersistenceException {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction tx = session.beginTransaction();
+		try {
+			HibernateUtil.startTransaction();
+			session.delete(object);
+			tx.commit();
+		} catch (Exception he) {
+			tx.rollback();
+			throw new PersistenceException(he);
+		}
 	}
 
 	/**

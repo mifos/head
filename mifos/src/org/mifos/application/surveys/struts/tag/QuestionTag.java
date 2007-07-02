@@ -98,7 +98,28 @@ public class QuestionTag extends BodyTagSupport {
 		Question question = persistence.getQuestion(questionIdInt);
 	
 		String name = "value(response_" + Integer.toString(question.getQuestionId()) + ")";
-		if (question.getAnswerTypeAsEnum() == AnswerType.FREETEXT) {
+		if (question.getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
+			for (QuestionChoice choice : question.getChoices()) {
+				AttributeList attributes = new AttributeList();
+				attributes.add("type", "checkbox");
+				attributes.add("class", "surveyform singleselect fontnormal8pt");
+				attributes.add("name", name);
+				attributes.add("value", Integer.toString(choice.getChoiceId()));
+				if (getDisabled()) {
+					attributes.add("disabled", "disabled");
+				}
+				
+				if (value.indexOf(Integer.toString(choice.getChoiceId())) != -1) {
+					attributes.add("checked", "checked");
+				}
+				
+				html.startTag("input", attributes.toArray());
+				html.text(choice.getChoiceText());
+				html.endTag("input");
+				html.newline();
+			}
+		}
+		else if (question.getAnswerTypeAsEnum() == AnswerType.FREETEXT) {
 			AttributeList attributes = new AttributeList();
 			attributes.add("class", "surveyform freetext fontnormal8pt");
 			attributes.add("cols", "70");

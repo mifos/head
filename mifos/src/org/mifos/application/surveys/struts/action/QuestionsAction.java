@@ -174,7 +174,7 @@ public class QuestionsAction extends PersistenceAction {
 		AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getAnswerType()));
 		Question question = new Question(actionForm.getShortName(),
 				actionForm.getQuestionText(), type);
-		if (type == AnswerType.CHOICE) {
+		if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
 			List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
 			for (String choiceText : (List<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES)) {
 				choices.add(new QuestionChoice(choiceText));

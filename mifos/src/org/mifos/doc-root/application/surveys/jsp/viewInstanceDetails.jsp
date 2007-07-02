@@ -119,18 +119,18 @@
             <table width="95%" border="0" cellpadding="3" cellspacing="0">
 
 
-              <c:forEach varStatus="status" var="question" items="${requestScope.retrievedInstance.survey.questions}">
+              <c:forEach varStatus="status" var="response" items="${requestScope.instanceResponses}">
                 <tr>
                   <td width="21%" height="30" class="drawtablerow">
                     <span class="fontnormal8ptbold">  
-                      <c:out value="${status.index + 1}"/>. <c:out value="${question.question.questionText}"/>
+                      <c:out value="${status.index + 1}"/>. <c:out value="${response.question.questionText}"/>
                     </span>
                   </td>
                 </tr>
                 <tr>
 
                   <td height="30" colspan="2" class="drawtablerow fontnormal8pt">
-                    <mifoscustom:surveyquestion questionId="${question.question.questionId}" isDisabled="true"/>
+                   <mifoscustom:surveyquestion questionId="${response.question.questionId}" isDisabled="true" value="${response}"/>
                   </td>
 
                 </tr>

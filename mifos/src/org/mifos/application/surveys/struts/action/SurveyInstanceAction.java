@@ -98,8 +98,14 @@ public class SurveyInstanceAction extends BaseAction {
 							StringUtils.isNullAndEmptySafe(dayValue) &&
 							StringUtils.isNullAndEmptySafe(dayValue))
 						formInput = dayValue + "/" + monthValue + "/" + yearValue;
-				}
-				else {
+				} else if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
+					String value = (String) data.get(formName + ".1");
+					formInput = value;
+					for (int i = 2; value != null; i++) {
+						value = (String) data.get(formName + "." + i);
+						formInput += "," + value;
+					}	
+				} else {
 					formInput = (String) data.get(formName);
 				}
 
@@ -165,6 +171,7 @@ public class SurveyInstanceAction extends BaseAction {
 		security.allow("get", SecurityConstants.VIEW);
 		security.allow("edit", SecurityConstants.VIEW);
 		security.allow("delete", SecurityConstants.VIEW);
+		security.allow("clear", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -201,12 +208,12 @@ public class SurveyInstanceAction extends BaseAction {
 		if (instance != null) { // if a valid instanceId was provided
 			SurveyType type = SurveyType.fromString(actionForm.getValue("surveyType"));
 			String redirectUrl = getRedirectUrl(type, getGlobalNum(instance));
-			persistence.delete(instance);
+			persistence.deleteAndCommit(instance);
 			response.sendRedirect(redirectUrl);
 			return null;
 		}
 		else {
-			response.sendRedirect("adminAction.do?method=load");
+			response.sendRedirect("/adminAction.do?method=load");
 			return null;
 		}
 	}
@@ -224,6 +231,7 @@ public class SurveyInstanceAction extends BaseAction {
 		int instanceId = Integer.parseInt(actionForm.getValue("instanceId"));
 		SurveyInstance instance = persistence.getInstance(instanceId);
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
+		List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance);
 		BusinessObject businessObject;
 		String businessObjectName;
 		String globalNum;
@@ -248,6 +256,7 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		request.setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
+		request.setAttribute(SurveysConstants.KEY_INSTANCE_RESPONSES, responses);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, businessObjectName);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
 		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
@@ -381,6 +390,12 @@ public class SurveyInstanceAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		BusinessObject businessObject = (BusinessObject) request.getSession()
+			.getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+			request.setAttribute(
+		SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
+		
 		Map<String, Object> results = null;
 		ActionMessages errors = new ActionMessages();
 		GenericActionForm actionForm = (GenericActionForm) form;
@@ -420,16 +435,24 @@ public class SurveyInstanceAction extends BaseAction {
 		actionForm.setValue("instanceStatus", Integer.toString(status
 				.getValue()));
 
-		BusinessObject businessObject = (BusinessObject) request.getSession()
-				.getAttribute(Constants.BUSINESS_KEY);
-		String displayName = getBusinessObjectName(businessObject);
-		request.setAttribute(
-				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 		request.setAttribute("dateSurveyed", actionForm
 				.getDateValue("dateSurveyed"));
 		request.setAttribute("officerName", actionForm.getValue("officerName"));
 
 		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+	
+	public ActionForward clear(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GenericActionForm actionForm = (GenericActionForm) form;
+		actionForm.clear();
+		actionForm.setValue("officerName", getUserContext(request).getName());
+		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		String displayName = getBusinessObjectName(businessObject);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
+				displayName);
+		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,

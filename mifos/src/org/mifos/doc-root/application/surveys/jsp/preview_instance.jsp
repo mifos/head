@@ -87,6 +87,16 @@ hr {
 		<tr>
 			<td colspan="2" class="fontnormal8pt drawtablerow">
         <c:choose>
+          <c:when test="${question.question.answerType == 1}">
+            <c:set var="opt" value="1"/>
+            <c:forEach var="choice" items="${question.question.choices}">
+              <html-el:checkbox disabled="true" property="value(response_${question.question.questionId}.${opt})" value="${choice.choiceId}">
+                <c:out value="${choice.choiceText}"/>
+              </html-el:checkbox>
+              <br>
+            <c:set var="opt" value="${opt+1}"/> 
+            </c:forEach>
+          </c:when>
           <c:when test="${question.question.answerType == 4}">
             <c:forEach var="choice" items="${question.question.choices}">
               <html-el:radio disabled="true" property="value(response_${question.question.questionId})" value="${choice.choiceId}">

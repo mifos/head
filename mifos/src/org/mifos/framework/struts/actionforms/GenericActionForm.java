@@ -46,4 +46,8 @@ public class GenericActionForm extends ActionForm {
 		}
 		return result;
 	}
+	
+	public void clear() {
+		values.clear();
+	}
 }

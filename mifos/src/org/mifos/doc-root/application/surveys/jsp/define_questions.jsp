@@ -49,6 +49,7 @@
                 <td align="right"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources"/></td>
 
                 <td><html-el:select property="answerType" styleId="answerType" onchange="setDisable();">
+                  <html-el:option value="1"><mifos:mifoslabel name="Surveys.Multiselect"/></html-el:option>
                   <html-el:option value="2"><mifos:mifoslabel name="Surveys.Freetext"/></html-el:option>
                   <html-el:option value="3"><mifos:mifoslabel name="Surveys.Number"/></html-el:option>
                   <html-el:option value="4"><mifos:mifoslabel name="Surveys.Singleselect"/></html-el:option>
@@ -109,6 +110,7 @@
                 <td class="drawtablerow">
 
 <c:choose>
+<c:when test="${question.answerType == 1}"><mifos:mifoslabel name="Surveys.Multiselect" bundle="SurveysUIResources"/></c:when>
 <c:when test="${question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext" bundle="SurveysUIResources"/></c:when>
 <c:when test="${question.answerType == 3}"><mifos:mifoslabel name="Surveys.Number" bundle="SurveysUIResources"/></c:when>
 <c:when test="${question.answerType == 4}"><mifos:mifoslabel name="Surveys.Singleselect" bundle="SurveysUIResources"/></c:when>
@@ -118,7 +120,7 @@
                 <td class="drawtablerow">
 
 <c:choose>
-<c:when test="${question.answerType == 4}">
+<c:when test="${question.answerType == 4 || question.answerType == 1}">
 <c:forEach var="choice" items="${question.choices}" varStatus="ptr"><c:out value="${choice.choiceText}"/><c:if test="${not ptr.last}">, </c:if></c:forEach>
 </c:when>
 <c:otherwise><em><mifos:mifoslabel name="Surveys.notapplicable" bundle="SurveysUIResources"/></em></c:otherwise>

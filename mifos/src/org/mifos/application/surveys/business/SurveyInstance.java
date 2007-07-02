@@ -1,6 +1,7 @@
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -13,6 +14,8 @@ public class SurveyInstance extends PersistentObject {
 	private int instanceId;
 	
 	private Survey survey;
+	
+	private Set<SurveyResponse> surveyResponses;
 	
 	private CustomerBO customer;
 	
@@ -107,5 +110,13 @@ public class SurveyInstance extends PersistentObject {
 
 	public void setCreator(PersonnelBO creator) {
 		this.creator = creator;
+	}
+
+	public void setSurveyResponses(Set<SurveyResponse> surveyResponses) {
+		this.surveyResponses = surveyResponses;
+	}
+
+	public Set<SurveyResponse> getSurveyResponses() {
+		return surveyResponses;
 	}
 }
