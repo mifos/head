@@ -41,7 +41,7 @@
                     <expression name="valueExpr">row["ID"]</expression>
                     <expression name="labelExpr">row["Name"]</expression>
                     <property name="mustMatch">true</property>
-                    <property name="defaultValue">-1</property>
+                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -59,7 +59,7 @@
             <expression name="labelExpr">dataSetRow["Name"]</expression>
             <property name="mustMatch">true</property>
             <property name="fixedOrder">true</property>
-            <property name="defaultValue">-1</property>
+            <property name="defaultValue">-2</property>
             <structure name="format">
                 <property name="category">General Number</property>
                 <property name="pattern">General Number</property>
@@ -135,14 +135,16 @@ iterator = loanProducts.iterator();]]></method>
 	return false;
 }
 
-var loanProduct = iterator.next( );
+if (loanProducts.size()>1) {
+    var loanProduct = iterator.next( );
 
-row["ID"] = loanProduct.getPrdOfferingId();
-row["Name"] = loanProduct.getPrdOfferingName();
-if(row["ID"] == null)
-   row["ID"] = -1;
+    row["ID"] = loanProduct.getPrdOfferingId();
+    row["Name"] = loanProduct.getPrdOfferingName();
+    if(row["ID"] == null)
+       row["ID"] = -1;
 
-return true;]]></method>
+    return true;
+}]]></method>
             <method name="close"><![CDATA[loanProducts = null;
 iterator = null;]]></method>
         </script-data-set>
@@ -262,15 +264,17 @@ iterator = loanOfficers.iterator();]]></method>
 	return false;
 }
 
-var loanOfficer = iterator.next( );
+if (loanOfficers.size()>1) {
+    var loanOfficer = iterator.next( );
 
-row["ID"] = loanOfficer.getPersonnelId();
-row["Name"] = loanOfficer.getDisplayName();
+    row["ID"] = loanOfficer.getPersonnelId();
+    row["Name"] = loanOfficer.getDisplayName();
 
-if(row["ID"] == null)
-   row["ID"] = -1;
+    if(row["ID"] == null)
+       row["ID"] = -1;
    
-return true;]]></method>
+    return true;
+}]]></method>
             <method name="close"><![CDATA[loanOfficers = null;
 iterator = null;]]></method>
         </script-data-set>
@@ -451,8 +455,9 @@ var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
 
 var loanProductId = reportContext.getParameterValue("loanProductId");
 
-current = reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
+Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
 
+current = reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
 loans = reportsDataService.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
 iterator = loans.iterator();]]></method>
             <method name="fetch"><![CDATA[row["Current"] = current;
@@ -488,7 +493,9 @@ row[">180"] =row["Balance"];
 return true;]]></method>
             <method name="close"><![CDATA[loans = null;
 iterator = null;
-current = null;]]></method>
+current = null;
+
+Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
         </script-data-set>
     </data-sets>
     <styles>

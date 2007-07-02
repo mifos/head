@@ -50,12 +50,11 @@ import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class LoanPrdPersistence extends Persistence {
 	
-	private static Map cache = new HashMap();
+	private static ThreadLocal<Map> reportsCacheTL = new ThreadLocal<Map>();
 
 	public Short retrieveLatenessForPrd() throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -65,7 +64,8 @@ public class LoanPrdPersistence extends Persistence {
 		/* Is the intention here to clear this cache every time we close
 		   the session?  How do we invalidate/update the cache if the
 		   database is updated?  */
-		if (HibernateUtil.isSessionOpen()) {
+		if (isCacheEnabledForReports()) {
+			Map cache = reportsCacheTL.get();
 			Short cachedValue = (Short) cache.get(AccountTypes.LOAN_ACCOUNT.getValue());
 			if (cachedValue != null) {
 				return cachedValue;
@@ -76,12 +76,27 @@ public class LoanPrdPersistence extends Persistence {
 				NamedQueryConstants.GET_LATENESS_FOR_LOANS, queryParameters);
 
 		if (null != queryResult && null != queryResult.get(0)) {
-			cache.put(AccountTypes.LOAN_ACCOUNT.getValue(), queryResult.get(0));
+			if (isCacheEnabledForReports()) {
+				Map cache = reportsCacheTL.get();
+				cache.put(AccountTypes.LOAN_ACCOUNT.getValue(), queryResult.get(0));
+			}
 			return queryResult.get(0);
 		}
 		return Short.valueOf("10");
 	}
 
+	public static void enableThreadCacheForReports() {
+		reportsCacheTL.set(new HashMap());
+	}
+	
+	public static void disableThreadCacheForReports() {
+		reportsCacheTL.set(null);
+	}
+	
+	public static boolean isCacheEnabledForReports() {
+		return reportsCacheTL.get() != null;
+	}
+	
 	public LoanOfferingBO getLoanOffering(Short prdofferingId)
 			throws PersistenceException {
 		return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class,

@@ -29,7 +29,6 @@
 %>
 <TR>
 	<TD NOWRAP>
-		<IMG SRC="birt/images/parameter.gif" ALT="<%= parameterBean.getDisplayName( ) %>" TITLE="<%= parameterBean.getToolTip( ) %>"/>
 	</TD>
 	<TD NOWRAP>
 		<FONT TITLE="<%= parameterBean.getToolTip( ) %>"><LABEL FOR="<%= encodedParameterName + "_selection"%>"><%= parameterBean.getDisplayName( ) %>:</LABEL></FONT>
@@ -82,6 +81,7 @@
 			CLASS="birtviewer_parameter_dialog_Select" 
 			<%= ( parameterBean.allowNewValues( ) && ( !parameterBean.isValueInList( ) && parameterBean.getValue( ) != null  || !CHECKED ) )? "DISABLED='true'" : "" %>
 			>
+		<option value="-2" selected>---Select---</option>
 <%
 	if ( parameterBean.getSelectionList( ) != null )
 	{
@@ -94,6 +94,7 @@
 			if (parameterBean.getValue( ) != null && parameterBean.getValue( ).equalsIgnoreCase( value ) )
 			{
 %>
+
 			<OPTION VALUE="<%= ParameterAccessor.htmlEncode( value ) %>" SELECTED><%= label %></OPTION>
 <%
 			}
