@@ -68,7 +68,7 @@ function goToLookupOptionPage(){
 							<html-el:link href="lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / 
-							<html-el:link href="lookupOptionsAction.do?method=addEditLookupOption_cancel&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link href="lookupOptionsAction.do?method=load">
 								<mifos:mifoslabel name="configuration.define" />  <mifos:mifoslabel name="configuration.lookupoptions" />
 							</html-el:link> / 
 							
@@ -90,29 +90,31 @@ function goToLookupOptionPage(){
 						<br>
 						<font class="fontnormalRedBold"><html-el:errors bundle="configurationUIResources" /> </font>
 		                     <table width="93%" border="0" cellpadding="3" cellspacing="0">
-		                     <tr class="fontnormal">
-				                <td align="right" valign="top">
-				                   <mifos:mifoslabel name="configuration.lookupvalue" isColonRequired="Yes"  />
-				                </td>
-				                <td width="28%" valign="top">
-			                        <mifos:mifosalphanumtext property="lookupValue" maxlength="300"/>
-			                        </td>
-		                     </table>
-		                     <br>
+					              <tr class="fontnormal">
+					                <td width="30%" align="right"><mifos:mifoslabel name="configuration.lookupvalue" isColonRequired="Yes"  /></td>
+					                <td width="70%" valign="top"><mifos:mifosalphanumtext property="lookupValue" maxlength="300"/>
+									</td>
+					              </tr>
+							</table>
+						   <table width="98%" border="0" cellpadding="0" cellspacing="0">
+				              <tr>
+				                <td class="blueline">&nbsp;                </td>
+				              </tr>
+				            </table>
+				            <br>
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
-							<tr>
-								<td align="center">
-									<html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="goToLookupOptionPage();">
-										<mifos:mifoslabel name="configuration.submit" />
-									</html-el:button>
+			              <tr>
+			                <td align="center">&nbsp;
+			                    <html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="goToLookupOptionPage();">
+													<mifos:mifoslabel name="configuration.submit" />
+								</html-el:button>
 									&nbsp;
-
-									<html-el:button property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
-										<mifos:mifoslabel name="configuration.cancel" />
-									</html-el:button>
-								</td>
-							</tr>
-						</table>
+						      	<html-el:button property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+																<mifos:mifoslabel name="configuration.cancel" />
+								</html-el:button>
+						           </td>
+						     	</tr>
+						</table> 
 						<br>
               </tr>
 			</table>

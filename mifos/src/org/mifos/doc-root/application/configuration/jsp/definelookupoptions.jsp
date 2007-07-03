@@ -196,333 +196,336 @@ function transferOneListData(outSel)
 						</table>
 						<br>
 						<font class="fontnormalRedBold"><html-el:errors bundle="configurationUIResources" /> </font>
-		                     <table width="93%" border="0" cellpadding="3" cellspacing="0">
-              <tr class="fontnormal">
-                <td align="right" valign="top">
-                   <mifos:mifoslabel name="configuration.salutation" isColonRequired="Yes"  />
-                </td>
-                <td valign="top"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td width="28%" valign="top">
-                        <mifos:mifosalphanumtext property="salutation" maxlength="300"/>
+						<table border="0" cellpadding="5" cellspacing="0" width="93%">
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%"><span class="mandatorytext">
+                <mifos:mifoslabel name="configuration.salutation" isColonRequired="Yes"  /></td>
+            <td valign="top">
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="salutationList" property2="Salutations" size="5" style="width:136px;"  >
+							</mifos:MifosValueList>   
                         </td>
-                        <td width="31%" align="center" valign="top">
-                        <html-el:submit property="btnAddSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigSalutation.value, 'add');">
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigSalutation.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit><br />
+                            <html-el:submit property="btnEditSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit,this.form.ConfigSalutation.value,'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.usertitle" isColonRequired="Yes"  /></td>
+            <td width="82%">
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="userTitleList" property2="UserTitles"  size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddUserTitle" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigUserTitle.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
 						</html-el:submit>
                           <br>
-                          <html-el:submit property="btnEditSalutation" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit,this.form.ConfigSalutation.value,'edit');">
+                          <html-el:submit property="btnEditUserTitle" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigUserTitle.value, 'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
 						</html-el:submit>
-                          </td>
-                          <td width="41%">
-							<mifos:MifosValueList name="lookupoptionsactionform" property="salutationList" property2="Salutations" size="5" style="width:136px;"  >
-							</mifos:MifosValueList>    
-
-						</td> 
-                      </tr>
-                    </table>
-                </td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td width="18%" align="right" valign="top"><span class="mandatorytext">
-					<mifos:mifoslabel name="configuration.usertitle" isColonRequired="Yes"  />
-                </td>
-                <td width="82%"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="userTitle" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddUserTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.userTitleList, this.form.userTitle,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditUserTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.userTitleList, this.form.userTitle, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="userTitleList" property2="UserTitles"  size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table>
-</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top"><span class="mandatorytext">
-					<mifos:mifoslabel name="configuration.maritalstatus" isColonRequired="Yes" />
-                </td>
-                <td><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="maritalStatus" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.maritalStatusList, this.form.maritalStatus,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.maritalStatusList, this.form.maritalStatus, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="maritalStatusList" property2="MaritalStatuses"  size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table>
-</td>
-              </tr>
-			  <tr class="fontnormal">
-			    <td align="right" valign="top">&nbsp;</td>
-			    <td valign="top">&nbsp;</td>
-			    </tr>
-			  <tr class="fontnormal">
-                <td align="right" valign="top">
-					<mifos:mifoslabel name="configuration.ethnicity" isColonRequired="Yes"  />
-                </td>
-                <td valign="top"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td width="28%" valign="top">
-                        <mifos:mifosalphanumtext property="ethnicity" maxlength="300"/>
                         </td>
-                        <td width="31%" align="center" valign="top">
-                        <html-el:button property="btnAddEthnicity" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.ethnicityList, this.form.ethnicity,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.maritalstatus" isColonRequired="Yes" /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="maritalStatusList" property2="MaritalStatuses"  size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigMaritalStatus.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
+						</html-el:submit>
                           <br>
-                          <html-el:button property="btnEditEthnicity" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.ethnicityList, this.form.ethnicity, this.form.errorSelectValueMessage);">
+                          <html-el:submit property="btnEditMaritalStatus" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigMaritalStatus.value, 'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                          </td>
-                        <td width="41%">
-                        <mifos:MifosValueList name="lookupoptionsactionform" property="ethnicityList" property2="Ethnicities"  size="5" style="width:136px;"  >
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td valign="top">
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.ethnicity" isColonRequired="Yes"  /></td>
+            <td valign="top">
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="ethnicityList" property2="Ethnicities"  size="5" style="width:136px;"  >
 							</mifos:MifosValueList> 
                         </td>
-                      </tr>
-                    </table>
-                </td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td width="18%" align="right" valign="top"><span class="mandatorytext"></span>
-                <mifos:mifoslabel name="configuration.educationlevel" isColonRequired="Yes" />
-                </td>
-                <td width="82%"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="educationLevel" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.educationLevelList, this.form.educationLevel,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddEthnicity" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEthnicity.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
+						</html-el:submit>
                           <br>
-                          <html-el:button property="btnEditEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.educationLevelList, this.form.educationLevel, this.form.errorSelectValueMessage);">
+                          <html-el:submit property="btnEditEthnicity" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEthnicity.value, 'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="educationLevelList" property2="EducationLevels" size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table>
-</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top"><span class="mandatorytext"></span>
-					<mifos:mifoslabel name="configuration.citizenship" isColonRequired="Yes" />
-                </td>
-                <td><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="citizenship" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddCitizenship" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.citizenshipList, this.form.citizenship,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditCitizenship" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.citizenshipList, this.form.citizenship, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="citizenshipList" property2="Citizenships"  size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table>
-</td>
-              </tr>
-			  <tr class="fontnormal">
-			    <td align="right" valign="top">&nbsp;</td>
-			    <td valign="top">&nbsp;</td>
-			    </tr>
-			  <tr class="fontnormal">
-                <td align="right" valign="top">
-                <mifos:mifoslabel name="configuration.purposeofloan" isColonRequired="Yes"  />
-                </td>
-                <td valign="top"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td width="28%" valign="top">
-                        <mifos:mifosalphanumtext property="purposeOfLoan" maxlength="300"/>
+						</html-el:submit>
                         </td>
-                        <td width="31%" align="center" valign="top">
-                        <html-el:button property="btnAddPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.purposesOfLoanList, this.form.purposeOfLoan, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                          </td>
-                        <td width="41%">
-                        <mifos:MifosValueList name="lookupoptionsactionform" property="purposesOfLoanList" property2="PurposesOfLoan" size="5" style="width:136px;"  >
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.educationlevel" isColonRequired="Yes" /></td>
+            <td width="82%">
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="educationLevelList" property2="EducationLevels" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
                         </td>
-                      </tr>
-                    </table>
-                </td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td width="18%" align="right" valign="top"><span class="mandatorytext"></span>
-                <mifos:mifoslabel name="configuration.handicapped" isColonRequired="Yes"  />
-                </td>
-                <td width="82%"><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="handicapped" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddHandicapped" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.handicappedList, this.form.handicapped,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEducationLevel.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
+						</html-el:submit>
                           <br>
-                          <html-el:button property="btnEditHandicapped" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.handicappedList, this.form.handicapped, this.form.errorSelectValueMessage);">
+                          <html-el:submit property="btnEditEducationLevel" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEducationLevel.value, 'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="handicappedList" property2="Handicappeds" size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
+						</html-el:submit>
+                        </td>
+                    </tr>
                 </table>
-</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">
-					<mifos:mifoslabel name="configuration.collateraltype" isColonRequired="Yes"  />
-                </td>
-                <td><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="collateralType" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddCollateralType" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.collateralTypeList, this.form.collateralType,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditCollateralType" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.collateralTypeList, this.form.collateralType, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="collateralTypeList" property2="CollateralTypes" size="5" style="width:136px;"  >
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.citizenship" isColonRequired="Yes" /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="citizenshipList" property2="Citizenships"  size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table></td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top"><span class="mandatorytext"></span>
-                <mifos:mifoslabel name="configuration.officertitle" isColonRequired="Yes"  />
-                  </td>
-                <td><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="officerTitle" maxlength="300"/>
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.officerTitleList, this.form.officerTitle,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddCitizenship" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCitizenship.value, 'add');">
 							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
+						</html-el:submit>
                           <br>
-                          <html-el:button property="btnEditOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.officerTitleList, this.form.officerTitle, this.form.errorSelectValueMessage);">
+                          <html-el:submit property="btnEditCitizenship" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCitizenship.value, 'edit');">
 							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="officerTitleList" property2="OfficerTitles" size="5" style="width:136px;"  >
-					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
+						</html-el:submit>
+                        </td>
+                    </tr>
                 </table>
-</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr class="fontnormal">
-                <td align="right" valign="top">
-                <mifos:mifoslabel name="configuration.attendance" isColonRequired="Yes"  />
-                </td>
-                <td><table width="86%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="28%" valign="top">
-                    <mifos:mifosalphanumtext property="attendance" maxlength="300" />
-                    </td>
-                    <td width="31%" align="center" valign="top">
-                    <html-el:button property="btnAddAttendance" styleClass="insidebuttn" style="width:65px" onclick="addAValueToListbox(this.form.attendanceList, this.form.attendance,this.form.errorNoValueMessage,this.form.errorDuplicateValueMessage);">
-							<mifos:mifoslabel name="configuration.add" />
-						</html-el:button>
-                          <br>
-                          <html-el:button property="btnEditAttendance" styleClass="insidebuttn" style="width:65px" onclick="removeAValueFromListbox(this.form.attendanceList, this.form.attendance, this.form.errorSelectValueMessage);">
-							<mifos:mifoslabel name="configuration.edit" />
-						</html-el:button>
-                    </td>
-                    <td width="41%">
-                    <mifos:MifosValueList name="lookupoptionsactionform" property="attendanceList" property2="Attendances" size="5" style="width:136px;"  >
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td valign="top">
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.purposeofloan" isColonRequired="Yes"  /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="purposesOfLoanList" property2="PurposesOfLoan" size="5" style="width:136px;"  >
 					</mifos:MifosValueList> 
-                    </td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table>
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPurposeOfLoan.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit>
+                          <br>
+                          <html-el:submit property="btnEditPurposeOfLoan" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPurposeOfLoan.value, 'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.handicapped" isColonRequired="Yes"  /></td>
+            <td width="82%">
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="handicappedList" property2="Handicappeds" size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddHandicapped" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigHandicapped.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit>
+                          <br>
+                          <html-el:submit property="btnEditHandicapped" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigHandicapped.value, 'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <mifos:mifoslabel name="configuration.collateraltype" isColonRequired="Yes"  /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="collateralTypeList" property2="CollateralTypes" size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddCollateralType" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCollateralType.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit>
+                          <br>
+                          <html-el:submit property="btnEditCollateralType" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCollateralType.value, 'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <span class="mandatorytext"></span><mifos:mifoslabel name="configuration.officertitle" isColonRequired="Yes"  /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="officerTitleList" property2="OfficerTitles" size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                            <br />
+                           
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigOfficerTitle.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit>
+                          <br>
+                          <html-el:submit property="btnEditOfficerTitle" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigOfficerTitle.value, 'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top">
+                &nbsp;</td>
+            <td>
+                &nbsp;</td>
+        </tr>
+        <tr class="fontnormal">
+            <td align="right" valign="top" width="18%">
+                <mifos:mifoslabel name="configuration.attendance" isColonRequired="Yes"  /></td>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="81%">
+                    <tr>
+                        <td width="15%">
+                            <mifos:MifosValueList name="lookupoptionsactionform" property="attendanceList" property2="Attendances" size="5" style="width:136px;"  >
+					</mifos:MifosValueList> 
+                            <br />
+                            
+                        </td>
+                        <td align="left" valign="top" width="31%">
+                            <br />
+                            <html-el:submit property="btnAddAttendance" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'add');">
+							<mifos:mifoslabel name="configuration.add" />
+						</html-el:submit>
+                          <br>
+                          <html-el:submit property="btnEditAttendance" styleClass="insidebuttn" style="width:65px" onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'edit');">
+							<mifos:mifoslabel name="configuration.edit" />
+						</html-el:submit>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+						
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td class="blueline">
