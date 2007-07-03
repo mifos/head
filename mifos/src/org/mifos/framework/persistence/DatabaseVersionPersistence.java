@@ -210,8 +210,16 @@ public class DatabaseVersionPersistence {
 		}
 
 		int version = read(connection);
-		for (Upgrade upgrade : scripts(upgradeTo, version)){
-			upgrade.upgrade(connection);
+		for (Upgrade upgrade : scripts(upgradeTo, version)) {
+			
+			try {
+				upgrade.upgrade(connection);
+			}
+			catch (Exception e) {
+				throw new RuntimeException(
+					"error in upgrading to " + upgrade.higherVersion(), e);
+			}
+
 			int upgradedVersion = read(connection);
 			if(upgradedVersion != version + 1) {
 				throw new RuntimeException("upgrade script from " + version +

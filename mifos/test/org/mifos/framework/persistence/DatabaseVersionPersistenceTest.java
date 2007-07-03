@@ -308,6 +308,37 @@ public class DatabaseVersionPersistenceTest {
 		statement.close();
 	}
 	
+	@Test public void errorWrapping() throws Exception {
+		Database database = new Database();
+		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+		database.execute(
+			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
+		Connection connection = database.openConnection();
+		Upgrade upgrade = new Upgrade(79) {
+
+			@Override
+			public void downgrade(Connection connection) {
+				throw new RuntimeException("not implemented");
+			}
+
+			@Override
+			public void upgrade(Connection connection) {
+				throw new RuntimeException("tried but failed");
+			}
+			
+		};
+		DatabaseVersionPersistence persistence = 
+			javaOnlyPersistence(database, upgrade);
+		try {
+			persistence.upgradeDatabase(connection, 79);
+			fail();
+		}
+		catch (RuntimeException e) {
+			assertEquals("error in upgrading to 79", e.getMessage());
+			assertEquals("tried but failed", e.getCause().getMessage());
+		}
+	}
+
 	@Test public void notJavaOrSql() throws Exception {
 		Database database = new Database();
 		DatabaseVersionPersistence persistence = 
@@ -339,8 +370,13 @@ public class DatabaseVersionPersistenceTest {
 	}
 
 	private DatabaseVersionPersistence javaOnlyPersistence(Database database) {
+		return javaOnlyPersistence(database, new DummyUpgrade(69));
+	}
+
+	private DatabaseVersionPersistence javaOnlyPersistence(
+		Database database, Upgrade upgrade) {
 		Map<Integer, Upgrade> registrations = new HashMap<Integer, Upgrade>();
-		DatabaseVersionPersistence.register(registrations, new DummyUpgrade(69));
+		DatabaseVersionPersistence.register(registrations, upgrade);
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(database.openConnection(),
 				registrations) {
