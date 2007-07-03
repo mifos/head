@@ -1114,7 +1114,10 @@
 			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
 		</action>
 		<!-- role action -->
-		<action path="/rolesPermission" type="org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction" name="rolesPermissionsActionForm" parameter="method" input="/rolesPermissions.do?method=validate"
+		<action path="/rolesPermission" 
+			type="org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction" 
+			name="rolesPermissionsActionForm" parameter="method" 
+			input="/rolesPermissions.do?method=validate"
 			validate="true" scope="session">
 			<forward name="viewRoles_success" path="/pages/application/rolesandpermission/jsp/viewroles.jsp" />
 			<forward name="load_success" path="/pages/application/rolesandpermission/jsp/addrole.jsp" />

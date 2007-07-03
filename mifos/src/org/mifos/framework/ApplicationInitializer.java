@@ -180,12 +180,16 @@ public class ApplicationInitializer implements ServletContextListener {
 		}
 
 	}
+
 	/**
-	 * This method sets the password for admin user. The user name would be
-	 * "mifos" and password would be "mifos". This would expect that a row in
-	 * personnel table already exists where the user name is "mifos". Insertion
-	 * of that row is taken care by master data script.This is a temporary
-	 * method and would be altered when the set module is done.
+	   This method sets the password for admin user. 
+
+       This would expect that a row in
+	   personnel table already exists where the user name is "mifos". Insertion
+	   of that row is taken care by master data script.
+	   
+	   This is a temporary
+	   method and would be altered when the set module is done.
 	 */
 	private void configureAdminUser() throws XMLReaderException,
 			URISyntaxException, HibernateProcessException, SystemException {
