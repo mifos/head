@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
@@ -47,6 +49,7 @@ public class BirtReportsUploadAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	private ReportsBusinessService reportsBusinessService;
+	public static final short ENGLISH_LOCALE = 1;
 
 	public BirtReportsUploadAction() {
 		reportsBusinessService = new ReportsBusinessService();
@@ -63,8 +66,10 @@ public class BirtReportsUploadAction extends BaseAction {
 				SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("edit", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("editpreview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-		security.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-		security.allow("editThenUpload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security
+				.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("editThenUpload",
+				SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -105,17 +110,13 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		FormFile formFile = uploadForm.getFile();
-		ReportsBO reportBO;
-		ReportsJasperMap reportJasperMap;
-		String activityNameHead = "Can view ";
-		int activityId = 0;
-		short parentActivity = 0;
-
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
+
 		for (ReportsBO report : category.getReportsSet()) {
-			if (report.getReportName().equals(uploadForm.getReportTitle())) {
+			boolean isTitleSame = report.getReportName().equals(
+					uploadForm.getReportTitle());
+			if (isTitleSame) {
 				ActionErrors errors = new ActionErrors();
 				errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST,
 						new ActionMessage(
@@ -125,61 +126,19 @@ public class BirtReportsUploadAction extends BaseAction {
 						.toString());
 			}
 		}
-		reportBO = new ReportsBO();
-		reportJasperMap = new ReportsJasperMap();	
-			
-		Connection conn = new ReportsPersistence().getConnection();
-		for (ActivityEntity activity : new RolesPermissionsBusinessService()
-				.getActivities()) {
-			if (activity.getId().intValue() > activityId)
-				activityId = activity.getId();
-		}
-		
-		int newActivityId = activityId + 1;
-		parentActivity = category.getActivityId();
-		
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				newActivityId, parentActivity, (short) 1, activityNameHead
-				+ uploadForm.getReportTitle()).upgrade(conn);
-		
-		reportBO.setReportName(uploadForm.getReportTitle());
-		reportBO.setReportsCategoryBO(category);
-		reportBO.setActivityId((short) newActivityId);
-		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
-		new ReportsPersistence().createOrUpdate(reportBO);
-		
-		reportJasperMap.setReportJasper(formFile.getFileName());
-		new ReportsPersistence().createOrUpdate(reportJasperMap);
-		
-		uploadFile(formFile);
+
+
+		addreportActivity(uploadForm);
+		ReportsBO reportBO = createAReportBOInDB(uploadForm);
+		createAReportsJasperMapInDB(uploadForm);
+		uploadFile(uploadForm.getFile());
+
+		int newActivityId = maxActivityId() + 1;
 		allowActivityPermission(reportBO, newActivityId);
 
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	private void allowActivityPermission(ReportsBO reportBO, int newActivityId) throws ApplicationException {
-		ActivityMapper.getInstance().getActivityMap().put(
-				"/reportsUserParamsAction-loadAddList-"
-						+ reportBO.getReportId(), (short) newActivityId);
-
-		AuthorizationManager.getInstance().init();
-	}
-
-	private void uploadFile(FormFile formFile) throws FileNotFoundException, IOException {
-		File dir = new File(getServlet().getServletContext().getRealPath("/")
-				+ "report");
-		File file = new File(dir, formFile.getFileName());
-		InputStream is = formFile.getInputStream();
-		FileOutputStream os = new FileOutputStream(file);
-		byte[] buffer = new byte[4096];
-		int bytesRead = 0;
-		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {
-			os.write(buffer, 0, bytesRead);
-		}
-		os.close();
-		is.close();
-		formFile.destroy();
-	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -207,7 +166,8 @@ public class BirtReportsUploadAction extends BaseAction {
 		birtReportsUploadActionForm.setReportTitle(report.getReportName());
 		birtReportsUploadActionForm.setReportCategoryId(report
 				.getReportsCategoryBO().getReportCategoryId().toString());
-		birtReportsUploadActionForm.setIsActive(report.getIsActive().toString());
+		birtReportsUploadActionForm
+				.setIsActive(report.getIsActive().toString());
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.edit_success.toString());
@@ -236,57 +196,160 @@ public class BirtReportsUploadAction extends BaseAction {
 	}
 
 	public ActionForward editThenUpload(ActionMapping mapping, ActionForm form,
-	HttpServletRequest request, HttpServletResponse response)
-	throws Exception {
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		FormFile formFile = uploadForm.getFile();
-		ReportsBO reportBO;
-		ReportsJasperMap reportJasperMap;
-		String filename = null;
+
+
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
-		
-		ReportsPersistence reportPersistence = new ReportsPersistence();
 
-		List<ReportsJasperMap> reports = reportPersistence.findJasperOfReportId(Short
-		.valueOf(uploadForm.getReportId()));
-		if (reports.size() > 0) {
-			ReportsJasperMap reportFile = reports.get(0);
-		    filename = reportFile.getReportJasper();
-		}
-		
+		String filename = filename(uploadForm);
+
 		for (ReportsBO report : category.getReportsSet()) {
-			if(report.getReportName().equals(uploadForm.getReportTitle())&&
-					report.getReportsCategoryBO().getReportCategoryId().toString().equals(uploadForm.getReportCategoryId())&&
-					report.getIsActive().toString().equals(uploadForm.getIsActive())&&
-					filename.equals(uploadForm.getFile().getFileName())){
+			boolean isTitleSame = report.getReportName().equals(
+					uploadForm.getReportTitle());
+			boolean isCategorySame = report.getReportsCategoryBO()
+					.getReportCategoryId().toString().equals(
+							uploadForm.getReportCategoryId());
+			boolean isStatusSame = report.getIsActive().toString().equals(
+					uploadForm.getIsActive());
+			boolean isFileSame = filename.equals(uploadForm.getFile()
+					.getFileName());
+
+			if (isTitleSame && isCategorySame && isStatusSame && isFileSame) {
 				ActionErrors errors = new ActionErrors();
-				errors.add(ReportsConstants.ERROR_NOCHANGE,
-						new ActionMessage(
-								ReportsConstants.ERROR_NOCHANGE));
+				errors.add(ReportsConstants.ERROR_NOCHANGE, new ActionMessage(
+						ReportsConstants.ERROR_NOCHANGE));
 				request.setAttribute(Globals.ERROR_KEY, errors);
 				return mapping.findForward(ActionForwards.editpreview_failure
 						.toString());
 			}
 		}
-		reportBO = new ReportsPersistence().getReport(Short
+
+
+		updateAReportBOInDB(uploadForm);
+		updateAReportsJasperMapInDB(uploadForm);
+		uploadFile(uploadForm.getFile());
+
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+	private String filename(BirtReportsUploadActionForm uploadForm)
+			throws PersistenceException {
+		ReportsPersistence reportPersistence = new ReportsPersistence();
+		String filename = null;
+		List<ReportsJasperMap> reports = reportPersistence
+				.findJasperOfReportId(Short.valueOf(uploadForm.getReportId()));
+		if (reports.size() > 0) {
+			ReportsJasperMap reportFile = reports.get(0);
+			filename = reportFile.getReportJasper();
+		}
+		return filename;
+	}
+
+	private void updateAReportsJasperMapInDB(
+			BirtReportsUploadActionForm uploadForm) throws PersistenceException {
+		ReportsJasperMap reportJasperMap = new ReportsPersistence().getReport(
+				Short.valueOf(uploadForm.getReportId())).getReportsJasperMap();
+
+		reportJasperMap.setReportJasper(uploadForm.getFile().getFileName());
+		new ReportsPersistence().createOrUpdate(reportJasperMap);
+	}
+
+	private void updateAReportBOInDB(BirtReportsUploadActionForm uploadForm)
+			throws PersistenceException {
+
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		ReportsBO reportBO = new ReportsPersistence().getReport(Short
 				.valueOf(uploadForm.getReportId()));
-		reportJasperMap = new ReportsPersistence().getReport(
-				Short.valueOf(uploadForm.getReportId()))
-				.getReportsJasperMap();
+
+		
 		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		new ReportsPersistence().createOrUpdate(reportBO);
+	}
+
+	private ReportsBO createAReportBOInDB(BirtReportsUploadActionForm uploadForm)
+			throws ServiceException, PersistenceException {
+		ReportsBO reportBO = new ReportsBO();
+		int newActivityId = maxActivityId() + 1;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
 		
+
+		reportBO.setReportName(uploadForm.getReportTitle());
+		reportBO.setReportsCategoryBO(category);
+		reportBO.setActivityId((short) newActivityId);
+		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
+		new ReportsPersistence().createOrUpdate(reportBO);
+		return reportBO;
+	}
+
+	private void createAReportsJasperMapInDB(
+			BirtReportsUploadActionForm uploadForm) throws ServiceException,
+			PersistenceException {
+		ReportsJasperMap reportJasperMap;
+		reportJasperMap = new ReportsJasperMap();
+		FormFile formFile = uploadForm.getFile();
+
 		reportJasperMap.setReportJasper(formFile.getFileName());
 		new ReportsPersistence().createOrUpdate(reportJasperMap);
-		
-		uploadFile(formFile);
-
-		return mapping.findForward(ActionForwards.create_success.toString());
 	}
+
+
+	private void addreportActivity(BirtReportsUploadActionForm uploadForm)
+			throws ServiceException, IOException, SQLException {
+		int newActivityId = maxActivityId() + 1;
+		Connection conn = new ReportsPersistence().getConnection();
+
+		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+				newActivityId, getReportCategory(
+						uploadForm.getReportCategoryId()).getActivityId(),
+				ENGLISH_LOCALE, "Can view " + uploadForm.getReportTitle())
+				.upgrade(conn);
+
+	}
+
+	private int maxActivityId() throws ServiceException {
+		int activityId = 0;
+		for (ActivityEntity activity : new RolesPermissionsBusinessService()
+				.getActivities()) {
+			if (activity.getId().intValue() > activityId)
+				activityId = activity.getId();
+		}
+		return activityId;
+	}
+
+	private void allowActivityPermission(ReportsBO reportBO, int newActivityId)
+			throws ApplicationException {
+		ActivityMapper.getInstance().getActivityMap().put(
+				"/reportsUserParamsAction-loadAddList-"
+						+ reportBO.getReportId(), (short) newActivityId);
+
+		AuthorizationManager.getInstance().init();
+	}
+
+	private void uploadFile(FormFile formFile) throws FileNotFoundException,
+			IOException {
+		File dir = new File(getServlet().getServletContext().getRealPath("/")
+				+ "report");
+		File file = new File(dir, formFile.getFileName());
+		InputStream is = formFile.getInputStream();
+		FileOutputStream os = new FileOutputStream(file);
+		byte[] buffer = new byte[4096];
+		int bytesRead = 0;
+		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {
+			os.write(buffer, 0, bytesRead);
+		}
+		os.close();
+		is.close();
+		formFile.destroy();
+	}
+
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
 		List<ReportsCategoryBO> categories = new ReportsPersistence()
