@@ -46,25 +46,23 @@
                         <property name="category">Unformatted</property>
                     </structure>
                 </scalar-parameter>
+                <scalar-parameter name="loanProductId" id="1341">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">loan product</text-property>
+                    <property name="allowNull">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">LoanProducts</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">true</property>
+                    <property name="defaultValue">-2</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
             </parameters>
         </cascading-parameter-group>
-        <scalar-parameter name="loanProductId" id="30">
-            <property name="valueType">dynamic</property>
-            <property name="dataType">integer</property>
-            <text-property name="promptText">Loan Product</text-property>
-            <property name="allowNull">false</property>
-            <property name="controlType">list-box</property>
-            <property name="dataSetName">LoanProducts</property>
-            <expression name="valueExpr">dataSetRow["ID"]</expression>
-            <expression name="labelExpr">dataSetRow["Name"]</expression>
-            <property name="mustMatch">true</property>
-            <property name="fixedOrder">true</property>
-            <property name="defaultValue">-2</property>
-            <structure name="format">
-                <property name="category">General Number</property>
-                <property name="pattern">General Number</property>
-            </structure>
-        </scalar-parameter>
     </parameters>
     <data-sources>
         <script-data-source name="Scripted Data Source" id="4">
