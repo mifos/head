@@ -5,6 +5,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <style type="text/css">
 h1 {
@@ -54,6 +55,13 @@ hr {
 <tiles:put name="body" type="string">
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=preview">
+<table width="95%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td class="bluetablehead05">
+		<span class="fontnormal8pt"> <customtags:headerLink selfLink="false" /> </span>
+		</td>
+	</tr>
+</table>
 <h1><c:out value="${requestScope.businessObjectName}"/> - 
 <orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
@@ -95,7 +103,7 @@ hr {
           <c:when test="${question.question.answerType == 1}">
             <c:set var="opt" value="1"/>
             <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:checkbox property="value(response_${question.question.questionId}.${opt})" value="${choice.choiceId}">
+              <html-el:checkbox property="value(response_${question.question.questionId}.${opt})" value="1">
                 <c:out value="${choice.choiceText}"/>
               </html-el:checkbox><html-el:hidden property="value(response_${question.question.questionId}.${opt})" value="0"/>
               <br>

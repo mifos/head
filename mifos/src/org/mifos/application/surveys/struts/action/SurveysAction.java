@@ -116,16 +116,26 @@ public class SurveysAction extends BaseAction {
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	
+	public List<Question> getRemainingQuestions(List<Question> surveyQuestions) 
+		throws PersistenceException {
+		List<Question> allQuestions = getQuestions();
+		for (Question question : surveyQuestions)
+			allQuestions.remove(question);
+		return allQuestions;
+	}
+	
 	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-	
+		GenericActionForm actionForm = (GenericActionForm) form;
+		actionForm.clear();
 			List<Question> questionsList = getQuestions();
 		request.getSession().setAttribute(SurveysConstants.KEY_QUESTIONS_LIST,
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				new LinkedList<Question>());
 		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY_TYPES, SurveyType.values());
+		request.getSession().setAttribute("disable", "false");
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
@@ -169,6 +179,8 @@ public class SurveysAction extends BaseAction {
 		try {
 			int questionId = Integer.parseInt(actionForm.getValue("newQuestion"));
 			Question newQuestion = surveysPersistence.getQuestion(questionId);
+			if (newQuestion == null)
+				throw new PersistenceException("Question does not exists");
 			if (questionsList.contains(newQuestion)) {
 				addedQuestions.add(newQuestion);
 				questionsList.remove(newQuestion);
@@ -186,7 +198,7 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
-		int questionNum = Integer.parseInt(actionForm.getValue("value(questionNum)"));
+		int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
 		Question question = surveysPersistence.getQuestion(questionNum);
 		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
 		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
@@ -272,6 +284,7 @@ public class SurveysAction extends BaseAction {
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				associatedQuestions);
+		request.getSession().setAttribute("disable", true);
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 

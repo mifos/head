@@ -101,8 +101,8 @@
                     <tr>
                       <td class="fontnormal">
                         <p>
-                          <mifos:mifoslabel name="Surveys.${sessionScope.businessObjectType.value}" bundle="SurveysUIResources"/>
-                          <c:out value="${requestScope.businessObjectName}"/>:
+                          <mifos:mifoslabel name="Surveys.${sessionScope.businessObjectType.value}" bundle="SurveysUIResources"/>:
+                          <c:out value="${requestScope.businessObjectName}"/>
                           <br>
                           System ID #: <c:out value="${requestScope.globalNum}"/> 
                         </p>

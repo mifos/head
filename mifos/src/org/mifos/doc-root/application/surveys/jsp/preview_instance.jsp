@@ -54,6 +54,13 @@ hr {
 <tiles:put name="body" type="string">
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=create">
+<table width="95%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td class="bluetablehead05">
+		<span class="fontnormal8pt"> <customtags:headerLink selfLink="false" /> </span>
+		</td>
+	</tr>
+</table>
 <h1><c:out value="${requestScope.businessObjectName}"/> - <orange>Enter survey data</orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
@@ -90,7 +97,7 @@ hr {
           <c:when test="${question.question.answerType == 1}">
             <c:set var="opt" value="1"/>
             <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:checkbox disabled="true" property="value(response_${question.question.questionId}.${opt})" value="${choice.choiceId}">
+              <html-el:checkbox disabled="true" property="value(response_${question.question.questionId}.${opt})" value="1">
                 <c:out value="${choice.choiceText}"/>
               </html-el:checkbox>
               <br>

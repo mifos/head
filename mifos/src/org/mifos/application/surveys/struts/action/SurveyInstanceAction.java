@@ -17,6 +17,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.hibernate.Transaction;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
@@ -67,7 +69,9 @@ public class SurveyInstanceAction extends BaseAction {
 	private class SurveyValidator extends Schema {
 
 		private Survey survey;
-
+		
+		private final String MULTI_SELECT_EMPTY_STRING = "0";
+		
 		public SurveyValidator(Survey survey) {
 			this.survey = survey;
 			DateComponentValidator dateSurveyedValidator = new DateComponentValidator();
@@ -99,12 +103,20 @@ public class SurveyInstanceAction extends BaseAction {
 							StringUtils.isNullAndEmptySafe(dayValue))
 						formInput = dayValue + "/" + monthValue + "/" + yearValue;
 				} else if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
-					String value = (String) data.get(formName + ".1");
-					formInput = value;
-					for (int i = 2; value != null; i++) {
-						value = (String) data.get(formName + "." + i);
+					formInput = "";
+					int size = question.getQuestion().getChoices().size();
+					boolean filled = false;
+					
+					for (int i = 1; i <= size; i++) {
+						String value = (String) data.get(formName + "." + i);
 						formInput += "," + value;
-					}	
+					
+						if (!value.equals(MULTI_SELECT_EMPTY_STRING))
+							filled = true;
+					}
+					
+					if (!filled)
+						formInput = null;
 				} else {
 					formInput = (String) data.get(formName);
 				}
@@ -208,7 +220,14 @@ public class SurveyInstanceAction extends BaseAction {
 		if (instance != null) { // if a valid instanceId was provided
 			SurveyType type = SurveyType.fromString(actionForm.getValue("surveyType"));
 			String redirectUrl = getRedirectUrl(type, getGlobalNum(instance));
-			persistence.deleteAndCommit(instance);
+			Transaction tx = persistence.getSession().beginTransaction();
+			try {
+				persistence.delete(instance);
+				tx.commit();
+			} catch (PersistenceException ex) {
+				tx.rollback();
+				throw ex;
+			}
 			response.sendRedirect(redirectUrl);
 			return null;
 		}

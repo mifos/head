@@ -80,19 +80,6 @@ public abstract class Persistence {
 			throw new PersistenceException(he);
 		}
 	}	
-	
-	public void deleteAndCommit(Object object) throws PersistenceException {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction tx = session.beginTransaction();
-		try {
-			HibernateUtil.startTransaction();
-			session.delete(object);
-			tx.commit();
-		} catch (Exception he) {
-			tx.rollback();
-			throw new PersistenceException(he);
-		}
-	}
 
 	/**
 	 * This method takes the name of a named query to be executed as well as a

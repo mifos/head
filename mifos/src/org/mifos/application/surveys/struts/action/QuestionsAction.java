@@ -56,6 +56,8 @@ public class QuestionsAction extends PersistenceAction {
 		security.allow("addQuestion", SecurityConstants.VIEW);
 		security.allow("createQuestions", SecurityConstants.VIEW);
 		security.allow("get", SecurityConstants.VIEW);
+		security.allow("edit_entry", SecurityConstants.VIEW);
+		security.allow("update_entry", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -77,10 +79,53 @@ public class QuestionsAction extends PersistenceAction {
 		
 		int questionId = Integer.parseInt(request.getParameter("questionId"));
 		Question question = surveysPersistence.getQuestion(questionId);
-		request.setAttribute(SurveysConstants.KEY_QUESTION, question);
+		request.getSession().setAttribute(SurveysConstants.KEY_QUESTION, question);
 		
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
+	
+	public ActionForward edit_entry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
+		List<QuestionChoice> choices = question.getChoices();
+		request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
+		QuestionActionForm actionForm = (QuestionActionForm) form;
+		actionForm.setShortName(question.getShortName());
+		actionForm.setQuestionText(question.getQuestionText());
+		actionForm.setQuestionState(question.getQuestionState());
+		
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	
+	public ActionForward update_entry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ActionMessages errors = new ActionMessages();
+		Map<String, Object> results;
+		try {
+			results = addQuestionValidator.validate(request);
+		}
+		catch (SchemaValidationError e) {
+			errors.add(e.makeActionMessages());
+			saveErrors(request, errors);
+			return mapping.findForward(ActionForwards.edit_success.toString());
+		}
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
+		QuestionActionForm actionForm = (QuestionActionForm) form;
+		question.setShortName(actionForm.getShortName());
+		question.setQuestionText(actionForm.getQuestionText());
+		question.setQuestionState(Integer.parseInt(actionForm.getQuestionState()));
+		
+		surveysPersistence.createOrUpdate(question);
+		
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+	
+	
 
 	public ActionForward defineQuestions(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
@@ -89,10 +134,12 @@ public class QuestionsAction extends PersistenceAction {
 		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
 		LinkedList<Question> newQuestions = new LinkedList<Question>();
 		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTIONS, newQuestions);
-		LinkedList<AnswerType> answerTypes = new LinkedList<AnswerType>();
-		for (AnswerType type : AnswerType.values()) {
-			answerTypes.add(type);
-		}
+		/* This code is seemingly useless. Leaving in for now just in case
+		*LinkedList<AnswerType> answerTypes = new LinkedList<AnswerType>();
+		*for (AnswerType type : AnswerType.values()) {
+		*	answerTypes.add(type);
+		*}
+		**/
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	
@@ -127,7 +174,7 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward createQuestions(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		LinkedList<Question> questions = (LinkedList<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		List<Question> questions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		SurveysPersistence persistence = new SurveysPersistence();
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);

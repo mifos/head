@@ -95,7 +95,10 @@
                         <mifos:mifoslabel name="Surveys.survey_name" mandatory="yes" bundle="SurveysUIResources" />:
                       </td>
                       <td width="73%" valign="top">
-                        <mifos:mifosalphanumtext property="value(name)" maxlength="100" />
+                      <c:choose>
+					  <c:when test="${disable}"><html-el:text property="value(name)" disabled="true"/><html-el:hidden property="value(name)"/></c:when>
+					  <c:otherwise><mifos:mifosalphanumtext property="value(name)" maxlength="100"/></c:otherwise>
+                      </c:choose>
                       </td>
                     </tr>
                     <tr class="fontnormal">
@@ -103,7 +106,17 @@
                         <mifos:mifoslabel name="Surveys.Appliesto" mandatory="yes" bundle="SurveysUIResources" />:
                       </td>
                       <td valign="top">
-                        <mifos:select property="value(appliesTo)" style="width:136px;">
+                      <c:choose>
+					  <c:when test="${disable}"><html-el:hidden property="value(appliesTo)"/>
+					  <mifos:select property="value(appliesTo)" style="width:136px;" disabled="true">
+                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                        </mifos:select></c:when>
+					  <c:otherwise><mifos:select property="value(appliesTo)" style="width:136px;">
                            <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                            <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                            <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
@@ -111,6 +124,8 @@
                            <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                            <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                         </mifos:select>
+                        </c:otherwise>
+                        </c:choose>
                       </td>
                     </tr>
                     <tr class="fontnormal">
@@ -149,7 +164,7 @@
                            <html-el:checkbox property="value(mandatory_${question.questionId})" value="1"/>
                            </td>
                            <td class="drawtablerow">
-                             <input type="button" onclick="submitSurveyForm('delete_new_question&questionNum=${question.questionId}')" value="Delete" class="buttn"/>
+                             <input type="button" onclick="submitSurveyForm('delete_new_question&value(questionNum)=${question.questionId}')" value="Delete" class="buttn"/>
                            </td>
                          </tr>
                        </c:forEach>
@@ -170,7 +185,7 @@
                         <html-el:submit style="width:65px;" property="button" styleClass="buttn">
                           <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
                         </html-el:submit>&nbsp; 
-                        <html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load'">
+                        <html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
                           <mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
                         </html-el:button>
                       </td>

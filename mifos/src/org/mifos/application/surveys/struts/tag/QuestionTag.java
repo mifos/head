@@ -99,24 +99,29 @@ public class QuestionTag extends BodyTagSupport {
 	
 		String name = "value(response_" + Integer.toString(question.getQuestionId()) + ")";
 		if (question.getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
+			String[] valueArray = value.split(",");
+			int i = 0;
 			for (QuestionChoice choice : question.getChoices()) {
 				AttributeList attributes = new AttributeList();
 				attributes.add("type", "checkbox");
 				attributes.add("class", "surveyform singleselect fontnormal8pt");
 				attributes.add("name", name);
-				attributes.add("value", Integer.toString(choice.getChoiceId()));
+				attributes.add("value", "1");
 				if (getDisabled()) {
 					attributes.add("disabled", "disabled");
 				}
 				
-				if (value.indexOf(Integer.toString(choice.getChoiceId())) != -1) {
+				if (i < valueArray.length && valueArray[i].equals("1")) {
 					attributes.add("checked", "checked");
 				}
 				
 				html.startTag("input", attributes.toArray());
 				html.text(choice.getChoiceText());
 				html.endTag("input");
+				html.singleTag("br", new String[] {});
 				html.newline();
+				
+				i++;
 			}
 		}
 		else if (question.getAnswerTypeAsEnum() == AnswerType.FREETEXT) {
@@ -162,6 +167,7 @@ public class QuestionTag extends BodyTagSupport {
 				html.startTag("input", (String[]) attributes.toArray());
 				html.text(choice.getChoiceText());
 				html.endTag("input");
+				html.singleTag("br", new String[] {});
 				html.newline();
 			}
 

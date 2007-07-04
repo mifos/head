@@ -79,10 +79,9 @@
                 </table></td>
               </tr>
 <tr><td align="center" class="blueline">&nbsp;</td></tr>
-
-<tr><td><html-el:button property="calcelButton" onclick="window.location='./surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}'" styleClass="buttn"><mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" /></html-el:button></td></tr>
             </table>              
             <br></td>
+            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}">Edit Survey</html-el:link></td>
           </tr>
         </table>    
 
