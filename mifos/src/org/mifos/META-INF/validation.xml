@@ -1331,7 +1331,7 @@
                 <arg0 name="maxlength" key="${var:maxlength}" resource="false" />
                 <var>
                     <var-name>maxlength</var-name>
-                    <var-value>3</var-value>
+                    <var-value>300</var-value>
                 </var>
             </field>
         </form>

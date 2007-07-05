@@ -1,12 +1,14 @@
 package org.mifos.application.configuration.struts.action;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -29,6 +31,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	private final Short DEFAULT_LOCALE = 1;
 	private final String UPDATE_NAME = "updated";
 	private final String NEW_ELEMENT_NAME = "new";
+	private final String DUPLICATE = "DUPLICATE";
 
 	private final String ADD = "add";
 	private final String EDIT = "edit";
@@ -217,6 +220,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		CustomValueList valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
 		Short valueListId = valueList.getEntityId();
 		CustomValueListElement valueListElement = valueList.getCustomValueListElements().get(0);
+		CustomValueListElement valueListElement1 = valueList.getCustomValueListElements().get(1);
 
 		data.setValueListId(valueListId);			
 		
@@ -231,7 +235,15 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		}
 
 		LookupOptionsActionForm form = new LookupOptionsActionForm();
-		form.setLookupValue(nameString);
+		
+		// if the name string is DUPLACATE, then set the name to the name of the 
+		// second element in the list (if it exists) to generate a duplicate error
+		if (nameString.equals(DUPLICATE) && valueListElement1 != null) {
+			form.setLookupValue(valueListElement1.getLookUpValue());
+		} else {
+			form.setLookupValue(nameString);
+		}
+		form.setOneList(configurationConstant, valueList.getCustomValueListElements());
 		setActionForm(form);
 		
 		return originalName;
@@ -245,6 +257,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			for (String operation : operations) {
+				createFlowAndAddToRequest(LookupOptionsAction.class);
 				setupAddOrEditForOneList(
 						configurationNameSet[listIndex][MASTER_CONSTANT], 
 						configurationNameSet[listIndex][CONFIG_CONSTANT], 
@@ -262,16 +275,16 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	
 	public void testUpdate() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		setRequestPathInfo("/lookupOptionsAction.do");
-		addRequestParameter("method", "update");
 			
 		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {
 			String originalValue = "";
 			HibernateUtil.getSessionTL();
 			
 			for (int operationIndex = 0; operationIndex < operations.length; ++operationIndex) { 
-				flowKey = createFlow(request, LookupOptionsAction.class);
-				request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+				createFlowAndAddToRequest(LookupOptionsAction.class);
+
+				setRequestPathInfo("/lookupOptionsAction.do");
+				addRequestParameter("method", "update");
 
 				LookupOptionData data = new LookupOptionData();
 				originalValue = prepareForUpdate(
@@ -283,6 +296,8 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 						names[operationIndex]);
 
 				SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+				addRequestParameter(ConfigurationConstants.ENTITY, 
+					configurationNameSet[listIndex][CONFIG_CONSTANT]);
 
 				actionPerform();
 				verifyNoActionErrors();
@@ -316,13 +331,17 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
 			+ "0";
 		
-		// these messages should be read from the properties files rather than being hard coded here
-		String errorTooShort = "Please enter a nonempty value.";
-		String errorTooLong = "Please specify a value of 300 characters or less.";
+		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+				request.getLocale());
 		
-		String[] names = 	  {tooShort,      tooShort,      tooLong,      tooLong};
-		String[] operations = {ADD,           EDIT,          ADD,          EDIT};
-		String[] errors = 	  {errorTooShort, errorTooShort, errorTooLong, errorTooLong};
+		String errorTooShort = resources.getString("errors.novalue");
+		String errorTooLong = resources.getString("errors.toolong"); 
+		errorTooLong = errorTooLong.replace("{0}", LookUpValueLocaleEntity.MAX_LOOKUP_VALUE_STRING_LENGTH.toString());	
+		String errorDuplicate = "errors.duplicatevalue";
+		
+		String[] names = 	  {tooShort,      tooShort,      tooLong,      tooLong, 	DUPLICATE, 		DUPLICATE};
+		String[] operations = {ADD,           EDIT,          ADD,          EDIT,		ADD,			EDIT};
+		String[] errors = 	  {errorTooShort, errorTooShort, errorTooLong, errorTooLong,errorDuplicate,	errorDuplicate};
 		
 		for (int operationIndex = 0; operationIndex < operations.length; ++operationIndex) { 
 			flowKey = createFlow(request, LookupOptionsAction.class);
@@ -338,6 +357,8 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 					names[operationIndex]);
 
 			SessionUtils.setAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, data, request);
+			addRequestParameter(ConfigurationConstants.ENTITY, 
+					configurationNameSet[0][CONFIG_CONSTANT]);
 
 			actionPerform();
 			String [] errorMessages = {errors[operationIndex]};
@@ -352,7 +373,6 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		setRequestPathInfo("/lookupOptionsAction.do");
 		addRequestParameter("method", "addEditLookupOption");
 					
-		// these messages should be read from the properties files rather than being hard coded here
 		String errorNoSelection = "errors.selectvalue";
 			
 		for (int listIndex = 0; listIndex < configurationNameSet.length; ++listIndex) {

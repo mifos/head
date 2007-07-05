@@ -56,111 +56,6 @@
 <script language="javascript">
 
 
-function addAValueToListbox(theSel, textBox, errorNoValueMsg, errorDuplicateValueMsg)
-{
-   
-   var length = theSel.length;
-   if (textBox.value == '')
-   {
-       alert(errorNoValueMsg.value);
-       textBox.focus();
-       return;
-   }
-   for (i=0; i < length; i++)
-   {
-      if (theSel.options[i].text == textBox.value)
-      {
-          alert(errorDuplicateValueMsg.value);
-          textBox.focus();
-          return;
-      }
-   }
-   
-   if (textBox.property == null)
-   {
-        var value = '0;' + textBox.value + ';add';
-   		var newOpt1 = new Option(textBox.value, value);
-   		theSel.options[length] = newOpt1;
-   	}
-   	else
-   	{
-   	    for (i=0; i < length; i++)
-        {
-             if (theSel.options[i].value == textBox.property)
-             {
-                  var oldValue = theSel.options[i].value;
-                  var splitResult = oldValue.split(';');
-                  var newValue = null;
-                  var flag = splitResult[2];
-                  if (flag == 'original')
-                  		newValue = splitResult[0] + ';' + textBox.value + ";update";
-                  else
-                        newValue = splitResult[0] + ';' + textBox.value + ';' + splitResult[2];
-                  theSel.options[i].value = newValue;
-                  theSel.options[i].text = textBox.value;
-             }
-        }
-   	}
-   
-   textBox.value = '';
-   textBox.property = null;
-}
-
-
-
-function removeAValueFromListbox(theSelFrom, textBox, errorSelectValueMessage)
-{
-	var selIndex = theSelFrom.selectedIndex;
-	if (selIndex == -1)
-	{
-		alert(errorSelectValueMessage.value);
-		return;
-	}
-	var selLength = theSelFrom.length;
-	for(i=selLength-1; i>=0; i--)
-	{
-		if(theSelFrom.options[i].selected)
-		{
-			textBox.value = theSelFrom.options[i].text;
-			textBox.property = theSelFrom.options[i].value; 
-		}
-	}
-	   
-} 
-
-function transferData(salutationList, userTitleList, maritalStatusList, ethnicityList, educationLevelList, citizenshipList, 
-	purposesOfLoanList, handicappedList, collateralTypeList, officerTitleList, attendanceList )
-{
-	transferOneListData(salutationList);
-	transferOneListData(userTitleList);
-	transferOneListData(maritalStatusList);
-	transferOneListData(ethnicityList);
-	transferOneListData(educationLevelList);
-	transferOneListData(citizenshipList);
-	transferOneListData(purposesOfLoanList);
-	transferOneListData(handicappedList);
-	transferOneListData(collateralTypeList);
-	transferOneListData(officerTitleList);
-	transferOneListData(attendanceList);
- 	
-}
-
-function transferOneListData(outSel)
-{
-
- 	 var selLength =outSel.length;
-     outSel.multiple = true;
-	 for(i=0; i < selLength; i++)
-	 {
-	    var value = outSel.options[i].value;
-		var splitResult = value.split(';');
-		if (splitResult[2] != 'original')
-			outSel.options[i].selected = true;
-		else
-		    outSel.options[i].selected = false;
-	 }
-	
-}				
 
   
   function setLookupOptionData(entity, addoredit, entityType, op){
@@ -549,9 +444,6 @@ function transferOneListData(outSel)
 			<html-el:hidden property="entity" value="${requestScope.entity}" />
 			<html-el:hidden property="addOrEdit" value="${requestScope.addOrEdit}" />
 			<html-el:hidden property="method" value="addEditLookupOption" />
-			<html-el:hidden property="errorNoValueMessage" value="${requestScope.errorNoValueMessage}" />
-			<html-el:hidden property="errorSelectValueMessage" value="${requestScope.errorSelectValueMessage}" />
-			<html-el:hidden property="errorDuplicateValueMessage" value="${requestScope.errorDuplicateValueMessage}" />
 			<html-el:hidden property="ConfigSalutation" value="${requestScope.ConfigSalutation}" />
 			<html-el:hidden property="ConfigMaritalStatus" value="${requestScope.ConfigMaritalStatus}" />
 			<html-el:hidden property="ConfigUserTitle" value="${requestScope.ConfigUserTitle}" />

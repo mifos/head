@@ -53,6 +53,7 @@ public static final String SELECT_VALUE_ERROR="errorSelectValueMessage";
 public static final String ENTITY="entity";
 public static final String ADD_OR_EDIT="addOrEdit";
 public static final String LOOKUP_OPTION_DATA="LookupOptionData";
+public static final String LOOKUP_TYPE="lookupType";
 
 
 }

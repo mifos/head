@@ -41,7 +41,11 @@ package org.mifos.application.master.business;
 import org.mifos.framework.persistence.Persistence;
 
 public class LookUpValueLocaleEntity extends Persistence {
-
+	/*
+	 * The maximum length of lookUpValue as defined in the SQL schema.
+	 * This value should track changes in the schema.
+	 */
+	public static final Integer MAX_LOOKUP_VALUE_STRING_LENGTH = 300;
 	/**
 	 * The actual text value that this object represents.
 	 */

@@ -40,7 +40,6 @@ package org.mifos.application.configuration.struts.action;
 
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +71,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import java.util.ResourceBundle;
 
 
 public class LookupOptionsAction extends BaseAction {
@@ -101,12 +101,75 @@ public class LookupOptionsAction extends BaseAction {
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
 		security.allow("addEditLookupOption", SecurityConstants.VIEW);
+		security.allow("addEditLookupOption_cancel", SecurityConstants.VIEW);
 		return security;
+	}
+	
+	private void setLookupType(String configurationEntity, HttpServletRequest request)
+	{
+		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+				getUserLocale(request));
+		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
+		{
+            request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.salutation"));
+            request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_SALUTATION);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.usertitle"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.maritalstatus"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_MARITAL_STATUS);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.ethnicity"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.educationlevel"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.citizenship"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.purposeofloan"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.collateraltype"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.handicapped"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.attendance"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ATTENDANCE);
+		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.officertitle"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+		}
 	}
 	
 	private String getSelectedValue(String configurationEntity, LookupOptionsActionForm lookupOptionsActionForm)
 	{
 		String selectedValue = null;
+		
 		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
 			assert(lookupOptionsActionForm.getSalutationList().length ==1);
@@ -183,7 +246,7 @@ public class LookupOptionsAction extends BaseAction {
 				configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE));
-		
+		setLookupType(configurationEntity, request);
 		data.setValueListId(Short.parseShort(SessionUtils.getAttribute(configurationEntity, request).toString()));
 		if (addOrEdit.equals("add"))
 		{
@@ -281,19 +344,7 @@ public class LookupOptionsAction extends BaseAction {
 		return locale;
 	}
 	
-	/*
-	private void setErrorMessages(LookupOptionsActionForm form, HttpServletRequest request)
-	{
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
-																getUserLocale(request));
-	    String errorMsg = resources.getString("errors.novalue");
-	    request.setAttribute(ConfigurationConstants.NO_VALUE_ERROR, errorMsg);
-	    errorMsg = resources.getString("errors.duplicatevalue");
-	    request.setAttribute(ConfigurationConstants.DUPLICATE_VALUE_ERROR, errorMsg);
-	    errorMsg = resources.getString("errors.selectvalue");
-	    request.setAttribute(ConfigurationConstants.SELECT_VALUE_ERROR, errorMsg);
-	}
-	*/
+	
 	
 	private void setHiddenFields(HttpServletRequest request)
 	{
@@ -318,10 +369,8 @@ public class LookupOptionsAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside load method");
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
-		//lookupOptionsActionForm.clear();
+		lookupOptionsActionForm.clear();
 		setHiddenFields(request);
-		// set error messages (hidden fields on jsp page)
-//		setErrorMessages(lookupOptionsActionForm, request);
 		
 		Short localeId = getUserContext(request).getLocaleId();
 		MasterPersistence masterPersistence = new MasterPersistence();
@@ -354,7 +403,6 @@ public class LookupOptionsAction extends BaseAction {
 	}
 	
 	
-
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -380,7 +428,7 @@ public class LookupOptionsAction extends BaseAction {
 		ActionForwards actionForward = ActionForwards.addEditLookupOption_failure;
 		
 		
-		String method = (String) request.getAttribute("methodCalled");
+		String method = (String) request.getAttribute("method");
 		if (method != null) {
 			if (method.equals(Methods.load.toString())) {
 				actionForward = ActionForwards.load_failure;

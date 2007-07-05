@@ -51,6 +51,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.Constants;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -357,27 +358,181 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		} 
 		throw new RuntimeException("Got unexpected constant: \"" + listName + "\"");
 	}
+	
+	private void setHiddenFields(HttpServletRequest request)
+	{
+		request.setAttribute(ConfigurationConstants.CONFIG_SALUTATION, ConfigurationConstants.CONFIG_SALUTATION);
+	    request.setAttribute(ConfigurationConstants.CONFIG_MARITAL_STATUS, ConfigurationConstants.CONFIG_MARITAL_STATUS);
+	    request.setAttribute(ConfigurationConstants.CONFIG_PERSONNEL_TITLE, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
+	    request.setAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP, ConfigurationConstants.CONFIG_CITIZENSHIP);
+	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
+	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
+	}
+	
+	private void checkOneList(List<CustomValueListElement> list, ActionErrors errors, String entity)
+	{
 
+		for (CustomValueListElement element : list) 
+		{
+			if (element.getLookUpValue().equals(this.lookupValue))
+			{
+				addError(errors, entity, "errors.duplicatevalue", new String[]{null});
+				return;
+			}
+				
+		}
+	}
+	
+	private void checkForDuplicate(String entity, ActionErrors errors)
+	{
+		if (entity == null) {
+			throw new RuntimeException("Null entity passed to checkForDuplicate.");
+		}
+		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
+		{
+			checkOneList(salutations, errors,entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
+		{
+			checkOneList(attendances, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
+		{
+			checkOneList(citizenships, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE))
+		{
+			checkOneList(collateralTypes, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
+		{
+			checkOneList(educationLevels, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
+		{
+			checkOneList(ethnicities, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
+		{
+			checkOneList(handicappeds, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
+		{
+			checkOneList(purposesOfLoan, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS))
+		{
+			checkOneList(maritalStatuses, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
+		{
+			checkOneList(officerTitles, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
+		{
+			checkOneList(userTitles, errors, entity);
+		}
+		else 
+		{
+			throw new RuntimeException("Unrecognized configuration entity \"" + entity +"\".");
+		}
+	}
+
+	public void setOneList(String entity, List<CustomValueListElement> list)
+	{
+		if (entity == null) {
+			throw new RuntimeException("Null entity passed to checkForDuplicate.");
+		}
+		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
+		{
+			setSalutations(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
+		{
+			setAttendances(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
+		{
+			setCitizenships(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE))
+		{
+			setCollateralTypes(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
+		{
+			setEducationLevels(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
+		{
+			setEthnicities(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
+		{
+			setHandicappeds(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
+		{
+			setPurposesOfLoan(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS))
+		{
+			setMaritalStatuses(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
+		{
+			setOfficerTitles(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
+		{
+			setUserTitles(list);
+		}
+		else 
+		{
+			throw new RuntimeException("Unrecognized configuration entity \"" + entity +"\".");
+		}
+	}
+	
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		logger.debug("Inside validate method");
 		
 		String method = request.getParameter(Methods.method.toString());
-		String methodCalled = (String)request.getAttribute("methodCalled");
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+
 		ActionErrors errors = new ActionErrors();
 		if (method.equals(Methods.update.toString())) {
 			errors = super.validate(mapping, request);
-		} else if (method.equals(Methods.addEditLookupOption.toString()) ||
-			 (methodCalled != null && methodCalled.equals(Methods.addEditLookupOption.toString()))) {
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, request
+					.getParameter(ConfigurationConstants.LOOKUP_TYPE));
+			if (errors.isEmpty()) // check for duplicate
+			{
+				String entity = request.getParameter(ConfigurationConstants.ENTITY);
+				checkForDuplicate(entity, errors);
+			}
+		} else if (method.equals(Methods.addEditLookupOption.toString()))
+		{
 			String entity = request.getParameter(ConfigurationConstants.ENTITY);
 			String addOrEdit = request.getParameter(ConfigurationConstants.ADD_OR_EDIT);
 			if (addOrEdit.equals("edit") && !itemIsSelectedInList(entity)) {
 				addError(errors, entity, "errors.selectvalue", new String[]{null});
+				setHiddenFields(request);
+				
 			}
 		}
+		else if (method.equals(Methods.addEditLookupOption_cancel.toString()))
+		{
+			setHiddenFields(request);
+		}
 		if (!errors.isEmpty()) {
-			request.setAttribute("methodCalled", method);
+			request.setAttribute(Methods.method.toString(), method);
 		}
 
 		logger.debug("outside validate method");
@@ -420,6 +575,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.handicappeds = null;
 		this.collateralTypes = null;
 		this.attendances = null;
+		this.lookupValue = null;
 		
 	}
 

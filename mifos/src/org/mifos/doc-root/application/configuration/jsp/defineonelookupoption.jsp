@@ -51,9 +51,17 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
 <script language="javascript">
-function goToLookupOptionPage(){
+function goToLookupOptionPage(method){
+	method.value = "update";
 	lookupoptionsactionform.action="lookupOptionsAction.do";
 	lookupoptionsactionform.method.value="update";
+	lookupoptionsactionform.submit();
+  }
+  
+  function goToCancelPage(method){
+    method.value = "addEditLookupOption_cancel";
+	lookupoptionsactionform.action="lookupOptionsAction.do";
+	lookupoptionsactionform.method.value="addEditLookupOption_cancel";
 	lookupoptionsactionform.submit();
   }
   </script>
@@ -91,7 +99,7 @@ function goToLookupOptionPage(){
 						<font class="fontnormalRedBold"><html-el:errors bundle="configurationUIResources" /> </font>
 		                     <table width="93%" border="0" cellpadding="3" cellspacing="0">
 					              <tr class="fontnormal">
-					                <td width="30%" align="right"><mifos:mifoslabel name="configuration.lookupvalue" isColonRequired="Yes"  /></td>
+					                <td width="30%" align="right"><c:out value="${requestScope.lookupType}"></c:out>:</td>
 					                <td width="70%" valign="top"><mifos:mifosalphanumtext property="lookupValue" maxlength="300"/>
 									</td>
 					              </tr>
@@ -105,11 +113,11 @@ function goToLookupOptionPage(){
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 			              <tr>
 			                <td align="center">&nbsp;
-			                    <html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="goToLookupOptionPage();">
+			                    <html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="goToLookupOptionPage(this.form.method);">
 													<mifos:mifoslabel name="configuration.submit" />
 								</html-el:button>
 									&nbsp;
-						      	<html-el:button property="cancelButton" onclick="location.href='lookupOptionsAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+						      	<html-el:button property="cancelButton" onclick="goToCancelPage(this.form.method)" styleClass="cancelbuttn" style="width:70px;">
 																<mifos:mifoslabel name="configuration.cancel" />
 								</html-el:button>
 						           </td>
@@ -118,7 +126,9 @@ function goToLookupOptionPage(){
 						<br>
               </tr>
 			</table>
-			<html-el:hidden property="method" value="update" />
+			<html-el:hidden property="method" value="${requestScope.method}" />
+			<html-el:hidden property="entity" value="${requestScope.entity}" />
+			<html-el:hidden property="lookupType" value="${requestScope.lookupType}" />
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
 			
