@@ -2888,11 +2888,12 @@ public class LoanBO extends AccountBO {
 
 	}
 	public int getDisbursementTerm() {
-		List<AccountActionDateEntity> installmentsInDisbursement = getPastInstallments();
-		if (!installmentsInDisbursement.isEmpty()) {
-			for (AccountActionDateEntity accountAction : installmentsInDisbursement) {
+		List<AccountActionDateEntity> pastInstallments = getPastInstallments();
+		List<AccountActionDateEntity> installmentsInDisbursement = new ArrayList<AccountActionDateEntity>();
+		if (!pastInstallments.isEmpty()) {
+			for (AccountActionDateEntity accountAction : pastInstallments) {
 				if (accountAction.isPaid())
-					installmentsInDisbursement.add(accountAction);
+				installmentsInDisbursement.add(accountAction);
 			}
 		}
 		return installmentsInDisbursement.size();

@@ -477,9 +477,13 @@ row["DisbursementAmount"] = loan.getLoanAmount().getAmount();
 row["DisbursementDate"] = loan.getDisbursementDate();
 row["DisbursementTerm"] = loan.getDisbursementTerm();
 
-row["NextPaymentAmount"] = loan.getDetailsOfNextInstallment().getPrincipal().getAmount();
-
-row["NextPaymentDate"] = loan.getDetailsOfNextInstallment().getActionDate();
+if(loan.getDetailsOfNextInstallment() != null) {
+    row["NextPaymentAmount"] = loan.getDetailsOfNextInstallment().getPrincipal().getAmount();
+    row["NextPaymentDate"] = loan.getDetailsOfNextInstallment().getActionDate();
+}else{
+    row["NextPaymentAmount"] = 0;
+    
+}
 row["LoanBalance"] = loan.getRemainingPrincipalAmount().getAmount();
 
 row["PrincipalInArrears"] = loan.getTotalPrincipalAmountInArrearsAndOutsideLateness().getAmount();
@@ -1137,6 +1141,10 @@ Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.
                     </cell>
                     <cell id="938">
                         <data id="1025">
+                            <structure name="numberFormat">
+                                <property name="category">General Number</property>
+                                <property name="pattern">General Number</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">InterestInArrears</property>
                         </data>
