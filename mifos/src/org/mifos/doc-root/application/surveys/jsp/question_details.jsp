@@ -37,6 +37,7 @@
 		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Question"/>: <c:out value="${question.questionText}"/><br/>
 		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answertype"/>: 
 <c:choose>
+<c:when test="${question.answerType == 1}"><mifos:mifoslabel name="Surveys.Multiselect"/></c:when>
 <c:when test="${question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext"/></c:when>
 <c:when test="${question.answerType == 3}"><mifos:mifoslabel name="Surveys.Number"/></c:when>
 <c:when test="${question.answerType == 4}"><mifos:mifoslabel name="Surveys.Choice"/></c:when>
@@ -47,7 +48,7 @@
                   <mifos:mifoslabel name="Surveys.between"/><c:out value="${question.numericMin}"/> 
                   <mifos:mifoslabel name="Surveys.and"/> <c:out value="${question.numericMax}"/>
 </c:when>
-<c:when test="${question.answerType == 4}"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer"/>: 
+<c:when test="${question.answerType == 1 || question.answerType == 4}"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer"/>: 
 <c:forEach var="choice" items="${question.choices}" varStatus="ptr"><c:out value="${choice.choiceText}"/>
                     <c:if test="${not ptr.last}">, </c:if>
 </c:forEach>

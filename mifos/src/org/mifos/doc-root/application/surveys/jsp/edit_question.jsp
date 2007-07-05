@@ -93,8 +93,8 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center">
-<button id="AddQuestionButton" class="buttn" onclick="submitQuestionForm('update_entry')">
-                     <mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources"/>
+<button id="AddQuestionButton" class="buttn" onclick="submitQuestionForm('preview_entry')">
+                     <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources"/>
                    </button>
 
 &nbsp; <html-el:button property="cancelButton" style="width:65px;"

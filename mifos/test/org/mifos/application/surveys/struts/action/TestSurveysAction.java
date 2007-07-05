@@ -11,6 +11,7 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
@@ -137,5 +138,66 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		assertEquals(1, surveysPersistence.retrieveAllSurveys().size());
 		assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
+	}
+	
+	public void testEditEntry() throws Exception {
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		String questionText = "testCreateEntry question 1";
+		String shortName = "testCreateEntry 1";
+		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
+		surveysPersistence.createOrUpdate(question);
+		
+		String name = "test";
+		String appliesTo = "client";
+		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE,SurveyType.fromString(appliesTo));
+		surveysPersistence.createOrUpdate(oldSurvey);
+		/*
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();	
+		
+		addRequestParameter("value(name)", name);
+		addRequestParameter("value(appliesTo)", appliesTo);
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();
+		*/
+		int surveyId = surveysPersistence.retrieveAllSurveys().get(0).getSurveyId();
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "newVersion");
+		addRequestParameter("value(surveyId)", Integer.toString(surveyId));
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "add_new_question");
+		addRequestParameter("value(newQuestion)", Integer.toString(question.getQuestionId()));
+		actionPerform();
+		verifyNoActionErrors();
+		
+		GenericActionForm actionForm = (GenericActionForm) getActionForm();
+		name = actionForm.getValue("name");
+		System.out.println(name);
+		
+		addRequestParameter("value(name)", name);
+		addRequestParameter("value(appliesTo)", appliesTo);
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		List<Survey> listSurvey = surveysPersistence.retrieveAllSurveys();
+		for (Survey survey : listSurvey)
+			System.out.println(survey.getSurveyId() + ": " + survey.getName());
+		assertEquals(listSurvey.size(), 2);
+		assertEquals(name, listSurvey.get(1).getName());
+		assertEquals(1, listSurvey.get(1).getQuestions().size());
 	}
 }

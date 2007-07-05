@@ -200,4 +200,49 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		}
 	}
 	
+	public void testEdit() throws Exception{
+		setRequestPathInfo("/questionsAction");
+		addRequestParameter("method", "defineQuestions");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("shortName", "Short Name 1");
+		addRequestParameter("questionText", "Question Text 1");
+		addRequestParameter("answerType", Integer.toString(AnswerType.FREETEXT.getValue()));
+		addRequestParameter("method", "addQuestion");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "createQuestions");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		SurveysPersistence persistence = new SurveysPersistence();
+		int questionId = persistence.retrieveAllQuestions().get(0).getQuestionId();
+		
+		addRequestParameter("method", "get");
+		addRequestParameter("questionId", Integer.toString(questionId));
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "edit_entry");
+		actionPerform();
+		
+		String shortName = "New Name";
+		String questionText = "New question text";
+		addRequestParameter("shortName", shortName);
+		addRequestParameter("questionText", questionText);
+		addRequestParameter("status", "1");
+		addRequestParameter("method", "preview_entry");
+		
+		addRequestParameter("method", "update_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		Question newQuestion = persistence.getQuestion(questionId);
+		
+		assertEquals(newQuestion.getShortName(), shortName);
+		assertEquals(newQuestion.getQuestionText(), questionText);
+	}
+	
 }

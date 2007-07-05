@@ -1251,7 +1251,7 @@
 			
 		</action>
   	    
-   	    <action path="/questionsAction"
+   	       	    <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
           parameter="method"
           scope="session"
@@ -1261,6 +1261,10 @@
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
              <forward name="get_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
+             <forward name="edit_success" path="/pages/application/surveys/jsp/edit_question.jsp"/>
+             <forward name="update_success" path="/pages/application/surveys/jsp/question_details.jsp"/>
+             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
+             
         </action>
         
         <action path="/surveyInstanceAction"

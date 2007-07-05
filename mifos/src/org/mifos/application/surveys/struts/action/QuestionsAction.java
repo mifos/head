@@ -58,6 +58,7 @@ public class QuestionsAction extends PersistenceAction {
 		security.allow("get", SecurityConstants.VIEW);
 		security.allow("edit_entry", SecurityConstants.VIEW);
 		security.allow("update_entry", SecurityConstants.VIEW);
+		security.allow("preview_entry", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -99,7 +100,7 @@ public class QuestionsAction extends PersistenceAction {
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 	
-	public ActionForward update_entry(ActionMapping mapping, ActionForm form,
+	public ActionForward preview_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ActionMessages errors = new ActionMessages();
@@ -112,6 +113,17 @@ public class QuestionsAction extends PersistenceAction {
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.edit_success.toString());
 		}
+		QuestionActionForm actionForm = (QuestionActionForm) form;
+		request.setAttribute("shortName", actionForm.getShortName());
+		request.setAttribute("questionText", actionForm.getQuestionText());
+		request.setAttribute("status", actionForm.getQuestionState());
+		
+		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+	
+	public ActionForward update_entry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
