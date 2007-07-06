@@ -20,7 +20,9 @@ public class SurveysConstants {
 	public static final String KEY_QUESTIONS_LIST = "questionsList";
 	public static final String KEY_ADDED_QUESTIONS = "addedQuestions";
 	public static final String KEY_SURVEY_ACTIONFORM = "surveyActionForm";
+	
 	// generic var that can be used to hold list lengths
+	public static final String KEY_ITEM_OFFSET = "itemOffset";
 	public static final String KEY_ITEM_COUNT = "itemCount"; 
 	public static final String KEY_SURVEY_TYPES = "surveyTypes";
 	public static final String KEY_SURVEYS_LIST = "surveysList";
@@ -32,6 +34,7 @@ public class SurveysConstants {
 	public static final String KEY_GLOBAL_NUM = "globalNum";
 	public static final String KEY_INSTANCE_RESPONSES = "instanceResponses";
 	public static final String KEY_REDIRECT_URL = "returnUrl";
+	public static final String KEY_CONTINUE = "continue";
 	
 	// Errors messages
 	public static final String INVALID_DATE_SURVEYED = "errors.invaleddate";

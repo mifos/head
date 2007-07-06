@@ -102,6 +102,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		//String name = "testCreateEntry test survey name";
 		String name = "test";
 		String appliesTo = "client";
+		String state = "ACTIVE";
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		assertEquals(0, surveysPersistence.retrieveAllSurveys().size());
 		String questionText = "testCreateEntry question 1";
@@ -129,6 +130,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		addRequestParameter("value(name)", name);
 		addRequestParameter("value(appliesTo)", appliesTo);
+		addRequestParameter("value(state)", state);
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyNoActionErrors();
@@ -147,6 +149,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
 		surveysPersistence.createOrUpdate(question);
 		
+		String state = "ACTIVE";
 		String name = "test";
 		String appliesTo = "client";
 		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE,SurveyType.fromString(appliesTo));
@@ -185,6 +188,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		addRequestParameter("value(name)", name);
 		addRequestParameter("value(appliesTo)", appliesTo);
+		addRequestParameter("value(state)", state);
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyNoActionErrors();

@@ -79,18 +79,18 @@
                 <td><br>
                   <table width="590" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td class="fontnormalbold">Date of Survey: 
+                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.dateofsurvey" bundle="SurveyUIResources"/>: 
 							          <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.retrievedInstance.dateConducted)}" />
                       </td>
                     </tr>
                     <tr>
 
-                      <td class="fontnormalbold">Surveyed by: 
+                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.surveyedby" bundle="SurveyUIResources"/>: 
                         <c:out value="${requestScope.retrievedInstance.officer.displayName}"/>
                       </td>
                     </tr>
                     <tr>
-                      <td class="fontnormalbold">Entered into the system by: 
+                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.enteredintosystemby" bundle="SurveysUIResources"/>: 
                         <c:out value="${requestScope.retrievedInstance.creator.displayName}"/> 
                       </td>
                     </tr>
@@ -150,7 +150,7 @@
                         <html-el:button property="calcelButton" style="width:135px;" styleClass="buttn" onclick="window.location='${requestScope.returnUrl}'">
                           <mifos:mifoslabel name="Surveys.button.backtodetailspage" bundle="SurveysUIResources" />
                         </html-el:button>&nbsp; 
-                        <html-el:button property="cancel" style="width:135px;" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
+                        <html-el:button property="delete" style="width:135px;" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
                           <mifos:mifoslabel name="Surveys.button.delete" bundle="SurveysUIResources" />
                         </html-el:button>
                       </td>

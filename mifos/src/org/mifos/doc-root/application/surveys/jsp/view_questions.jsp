@@ -40,6 +40,7 @@
       <br/>
       <!-- the question list table -->
       <table width="90%" border="0" cellspacing="0" cellpadding="0">
+      <c:set var="count" value="0"/>
 	  <c:forEach var="question" items="${requestScope.questionsList}">
     	<tr class="fontnormal">
 	      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
@@ -52,9 +53,37 @@
         </c:if>
       </td>
     </tr>
+    <c:set var="count" value="${count + 1}" />
   </c:forEach>
     </td>
   </tr>
-</table>
+  </table><br>
+  <table width="95%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+    	<td align="middle" class="blueline">&nbsp;</td>
+  	</tr>
+  </table>
+  <br>
+  <table border="0" align="center" cellpadding="0" cellspacing="0">
+	  <tr>
+		<td width="75" class="fontnormalboldgray">
+		<c:choose>
+		<c:when test="${itemOffset > 1}"><html-el:link action="questionsAction.do?method=viewQuestions&itemOffset=${itemOffset - 20}">
+			Previous</html-el:link></c:when>
+		<c:otherwise>Previous</c:otherwise>
+		</c:choose>
+		</td>
+		<td align="middle" class="fontnormalbold">
+		Questions <c:out value="${itemOffset}"/>-<c:out value="${itemOffset + count - 1}"/>
+		of <c:out value="${length}"/></td>
+		<td width="75" align="right" class="fontnormalboldgray">
+		<c:choose>
+		<c:when test="${itemOffset + 20 < length}"><html-el:link action="questionsAction.do?method=viewQuestions&itemOffset=${itemOffset + 20}">
+			Next</html-el:link></c:when>
+		<c:otherwise>Next</c:otherwise>
+		</c:choose>
+		</td>
+	  </tr>
+  </table>
 </tiles:put>
 </tiles:insert>

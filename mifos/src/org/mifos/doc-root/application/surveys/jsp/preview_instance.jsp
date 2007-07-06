@@ -69,7 +69,7 @@ hr {
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
-		<red>*</red><span class="fontnormal8ptbold">Date of survey:</span>
+		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
 		<td width="70%">
 		<span class="fontnormal8pt"><date:datetag isDisabled="yes" property="dateSurveyed" renderstyle="simplemapped"/></span>
@@ -77,7 +77,7 @@ hr {
 	</tr>
 	<tr>
 		<td height="30" align="right" class="drawtablerow">
-		<span class="fontnormal8ptbold">Surveyed by:</span></td>
+		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
 		<td height="30" class="drawtablerow">
 		<c:out value="${requestScope.officerName}"/>&nbsp;
 		</td>
@@ -143,7 +143,7 @@ hr {
 		<html-el:submit style="width:65px;" property="button" styleClass="buttn">
 		<mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources" />
 		</html-el:submit>&nbsp; 
-		<html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='adminAction.do?method=load">
+		<html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load">
 		<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 		</html-el:button>
 		</td>

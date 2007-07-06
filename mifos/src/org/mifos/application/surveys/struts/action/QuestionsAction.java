@@ -1,6 +1,7 @@
 package org.mifos.application.surveys.struts.action;
 
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.mifos.framework.formulaic.NotNullEmptyValidator;
 
 public class QuestionsAction extends PersistenceAction {
 	
+	private static final int QUESTIONS_PER_PAGE = 20;
 	private static Schema addQuestionValidator;
 	
 	static {
@@ -67,9 +69,16 @@ public class QuestionsAction extends PersistenceAction {
 			throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
-		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
-
+		int length = surveysPersistence.getNumQuestions();
+		String offsetParameter = request.getParameter(SurveysConstants.KEY_ITEM_OFFSET);
+		int offset = offsetParameter != null ?
+				Integer.parseInt(offsetParameter) : 1;
+		List<Question> questionList =
+			surveysPersistence.retrieveSomeQuestions(offset - 1, QUESTIONS_PER_PAGE);
+		
 		request.setAttribute(SurveysConstants.KEY_QUESTIONS_LIST, questionList);
+		request.setAttribute("length", length);
+		request.setAttribute(SurveysConstants.KEY_ITEM_OFFSET, offset);
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
 	

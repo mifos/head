@@ -33,7 +33,7 @@
             </tr>
 			<tr>
               <td class="fontnormal">
-              <mifos:mifoslabel name="Surveys.EditNote" bundle="SurveysUIResources"/><br>
+              <span class="fontnormalRed"><mifos:mifoslabel name="Surveys.EditNote" bundle="SurveysUIResources"/></span><br>
               <mifos:mifoslabel name="Surveys.EditInstructions" bundle="SurveysUIResources"/>
               </td>
             </tr>
@@ -92,13 +92,19 @@
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
+									<td colspan="2" class="drawtablerow">&nbsp;</td>
+									<td class="drawtablerow">&nbsp;</td>
+									<td class="drawtablerow">&nbsp;</td>
+									<td class="drawtablerow">&nbsp;</td>
+								</tr>
+								<tr>
 									<td align="center">
 <button id="AddQuestionButton" class="buttn" onclick="submitQuestionForm('preview_entry')">
                      <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources"/>
                    </button>
 
 &nbsp; <html-el:button property="cancelButton" style="width:65px;"
-										styleClass="cancelbuttn">
+										styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
 										<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 									</html-el:button></td>
 								</tr>

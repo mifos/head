@@ -96,7 +96,7 @@
                       </td>
                       <td width="73%" valign="top">
                       <c:choose>
-					  <c:when test="${disable}"><html-el:text property="value(name)" disabled="true"/><html-el:hidden property="value(name)"/></c:when>
+					  <c:when test="${edit}"><html-el:text property="value(name)" disabled="true"/><html-el:hidden property="value(name)"/></c:when>
 					  <c:otherwise><mifos:mifosalphanumtext property="value(name)" maxlength="100"/></c:otherwise>
                       </c:choose>
                       </td>
@@ -107,7 +107,7 @@
                       </td>
                       <td valign="top">
                       <c:choose>
-					  <c:when test="${disable}"><html-el:hidden property="value(appliesTo)"/>
+					  <c:when test="${edit}"><html-el:hidden property="value(appliesTo)"/>
 					  <mifos:select property="value(appliesTo)" style="width:136px;" disabled="true">
                            <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
                            <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
@@ -128,6 +128,19 @@
                         </c:choose>
                       </td>
                     </tr>
+                    <c:choose>
+                    <c:when test="${edit}">
+                    <tr class="fontnormal">
+                    <td><mifos:mifoslabel name="Surveys.Status" bundle="SurveysUIResources"/>:</td>
+                    <td><mifos:select property="value(state)">
+                    <html-el:option value="INACTIVE"><mifos:mifoslabel name="Surveys.Inactive"/></html-el:option>
+                    <html-el:option value="ACTIVE"><mifos:mifoslabel name="Surveys.Active"/></html-el:option>
+                    </mifos:select>
+                    </td>
+					</tr>
+					</c:when>
+					<c:otherwise><html-el:hidden property="value(state)" value="ACTIVE"/></c:otherwise>
+                    </c:choose>
                     <tr class="fontnormal">
                       <td align="right" valign="top">
                         <mifos:mifoslabel name="Surveys.select_questions" bundle="SurveysUIResources"/>

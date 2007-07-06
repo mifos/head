@@ -48,6 +48,7 @@ public class SurveysAction extends BaseAction {
 		previewValidator = new Schema();
 		previewValidator.setSimpleValidator("value(name)", new MaxLengthValidator(30));
 		previewValidator.setSimpleValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
+		previewValidator.setSimpleValidator("value(state)", new EnumValidator(SurveyState.class));
 		
 		newVersionValidator = new Schema();
 		newVersionValidator.setSimpleValidator("value(surveyId)", new IntValidator());
@@ -219,9 +220,10 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
+		SurveyState state = Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
 		SurveyType type = SurveyType.fromString(actionForm.getValue("appliesTo"));
 		Survey newSurvey = new Survey(actionForm.getValue("name"),
-				SurveyState.ACTIVE, type);
+				state, type);
 		// we have to ensure that all new question choices are created during this
 		// transaction, so that they're associated with the same hibernate request
 		// that the rest of the survey and questions are
@@ -284,7 +286,7 @@ public class SurveysAction extends BaseAction {
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				associatedQuestions);
-		request.getSession().setAttribute("disable", true);
+		request.getSession().setAttribute("edit", true);
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 

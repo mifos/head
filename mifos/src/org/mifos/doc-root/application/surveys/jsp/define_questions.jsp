@@ -59,7 +59,10 @@
               <tr id="choiceInputsElement1" class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answerchoice" bundle="SurveysUIResources"/></td>
                 <td><html-el:text property="choice" styleId="choice" disabled="true"/>
-                  <input id="AddButton" type="button" class="insidebuttn" value="Add &gt;&gt;" style="width:65px"  onclick="submitQuestionForm('addChoice')" disabled="true"></td>
+                  <button id="AddButton" class="insidebuttn" style="width:65px" onclick="submitQuestionForm('addChoice')" disabled="true">
+                  <mifos:mifoslabel name="Surveys.Add" bundle="SurveysUIResources"/> &gt;&gt;
+                  </button>
+                  </td>
               </tr>
                   <tr valign="top" class="fontnormal">
                     <td>&nbsp;</td>
@@ -126,7 +129,9 @@
 <c:otherwise><em><mifos:mifoslabel name="Surveys.notapplicable" bundle="SurveysUIResources"/></em></c:otherwise>
 </c:choose>
 </td>
-                <td class="drawtablerow"><html-el:link action="questionsAction?method=deleteNewQuestion&newQuestionNum=${status.index}&randomNUm=${sessionScope.randomNUm}">[remove]</html-el:link></td>
+                <td class="drawtablerow"><html-el:link action="questionsAction?method=deleteNewQuestion&newQuestionNum=${status.index}&randomNUm=${sessionScope.randomNUm}">
+                [<mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/>]
+                </html-el:link></td>
               </tr>
               </c:forEach>
               <tr>
@@ -148,7 +153,7 @@
                    </button>
 
 &nbsp; <html-el:button property="cancelButton" style="width:65px;"
-										styleClass="cancelbuttn">
+										styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
 										<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 									</html-el:button></td>
 								</tr>

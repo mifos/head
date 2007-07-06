@@ -39,7 +39,7 @@
           <c:out value="${survey.name}"/>
         </html-el:link>
         <c:if test="${survey.state == 0}">
-          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel name="Surveys.Inactive" bundle="SurveysUIResources"/></span>
         </c:if>
       </td>
     </tr>
@@ -111,7 +111,7 @@
           <c:out value="${survey.name}"/>
         </html-el:link>
         <c:if test="${survey.state == 0}">
-          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> Inactive</span>
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel name="Surveys.Inactive" bundle="SurveysUIResources"/></span>
         </c:if>
       </td>
     </tr>

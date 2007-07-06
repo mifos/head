@@ -19,6 +19,9 @@
 			<one-to-many class="org.mifos.application.surveys.business.QuestionChoice"/>
 		</list>
 	</class>
+	<query name="questions.getNum">
+       <![CDATA[select count(*) from Question as question]]>
+    </query>
 	<query name="questions.retrieveAll">
        <![CDATA[from Question as question order by question.shortName]]>
     </query>
@@ -30,5 +33,6 @@
     </query>    
      <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
-    </query>    
+    </query>  
+      
 </hibernate-mapping>

@@ -111,7 +111,7 @@
 										<mifos:mifoslabel name="Surveys.button.submit"
 											bundle="SurveysUIResources" />
 									</html-el:submit>&nbsp; <html-el:button property="calcelButton" style="width:65px;"
-										styleClass="cancelbuttn">
+										styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
 										<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 									</html-el:button></td>
 								</tr>

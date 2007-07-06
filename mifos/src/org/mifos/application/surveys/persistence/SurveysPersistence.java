@@ -70,9 +70,21 @@ public class SurveysPersistence extends Persistence {
 		return (SurveyInstance) getSession().get(SurveyInstance.class, id);
 	}
 	
+	public int getNumQuestions() {
+		Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_GET_NUM);
+		return Integer.parseInt(query.list().get(0).toString());
+	}
+	
     public List<Question> retrieveAllQuestions() throws PersistenceException {
         Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_ALL);
         return query.list();
+    }
+    
+    public List<Question> retrieveSomeQuestions(int offset, int limit) throws PersistenceException {
+    	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_ALL);
+    	query.setFirstResult(offset);
+    	query.setMaxResults(limit);
+    	return query.list();
     }
     
     public List<Question> retrieveQuestionsByState(QuestionState state) throws PersistenceException {

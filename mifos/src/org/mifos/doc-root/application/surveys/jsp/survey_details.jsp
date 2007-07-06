@@ -31,7 +31,7 @@
                   	</c:choose>
                   	<br>
   <br>
-  <a href="surveysAction.do?method=printVersion&value(surveyId)=<c:out value="${sessionScope.BusinessKey.surveyId}"/>" onClick="javascript:openfile(this.href); return false"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
+  <a href="surveysAction.do?method=printVersion&value(surveyId)=<c:out value="${sessionScope.BusinessKey.surveyId}"/>" target="_new"><mifos:mifoslabel name="Surveys.Printerversion"/></a></p>
                   <p><span class="fontnormalbold"><mifos:mifoslabel name="Surveys.Questions"/></span></p></td>
                 </tr>
 
@@ -81,7 +81,10 @@
 <tr><td align="center" class="blueline">&nbsp;</td></tr>
             </table>              
             <br></td>
-            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}">Edit Survey</html-el:link></td>
+            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
+            <mifos:mifoslabel name="Surveys.EditSurvey" bundle="SurveysUIResources"/>
+            </html-el:link>
+            </td>
           </tr>
         </table>    
 
