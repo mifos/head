@@ -10,21 +10,20 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 
 
-public class AddAccountStateFlagTest {
+public class AddAccountActionTest {
 
-	private static final short FLAG_FEET_TOO_BIG = 12;
+	private static final short SEND_TO_ORPHANS = 43;
 
 	@Test
 	public void startFromStandardStore() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
 		String start = database.dumpForComparison();
 		
-		Upgrade upgrade = new AddAccountStateFlag(
+		Upgrade upgrade = new AddAccountAction(
 			72,
-			FLAG_FEET_TOO_BIG,
-			"Feet too big",
+			SEND_TO_ORPHANS,
 			TEST_LOCALE,
-			"Rejected because feet are too big");
+			"Send money to orphans");
 
 		upgradeAndCheck(database, upgrade);
 		upgrade.downgrade(database.openConnection());
@@ -37,20 +36,17 @@ public class AddAccountStateFlagTest {
 	throws Exception {
 		upgrade.upgrade(database.openConnection());
 		Session session = database.openSession();
-		AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(
-			AccountStateFlagEntity.class, FLAG_FEET_TOO_BIG);
-		flag.setLocaleId(TEST_LOCALE);
+		AccountActionEntity action = (AccountActionEntity) session.get(
+				AccountActionEntity.class, SEND_TO_ORPHANS);
+		action.setLocaleId(TEST_LOCALE);
 
-		assertEquals(FLAG_FEET_TOO_BIG, flag.getId());
-		assertEquals(10, flag.getStatusId());
-		assertEquals(false, flag.isFlagRetained());
-		assertEquals("Feet too big", flag.getFlagDescription());
-
-		assertEquals("Rejected because feet are too big", flag.getName());
+		assertEquals(SEND_TO_ORPHANS, action.getId());
+		assertEquals("Send money to orphans", action.getName());
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(AddAccountStateFlagTest.class);
+		return new JUnit4TestAdapter(AddAccountActionTest.class);
 	}
+
 
 }

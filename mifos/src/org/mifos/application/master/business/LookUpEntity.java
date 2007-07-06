@@ -42,16 +42,23 @@ import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.fees.business.FeeTypeEntity;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
-import org.mifos.framework.persistence.Persistence;
 
 /**
  * Not sure why {@link LookUpEntity} and {@link MifosLookUpEntity} both exist.
  * They seem to both represent the same object.
  * LookUpEntity is used by {@link CustomFieldDefinitionEntity}, {@link FeeTypeEntity}
- * and {@link AuditConfigurationPersistence}
+ * and {@link AuditConfigurationPersistence}.
+ * 
+ * Note that these values are not the same as {@link EntityType}.
+ * I'm not sure we have an enum for them yet.
  */
-public class LookUpEntity extends Persistence {
+public class LookUpEntity {
+
+	public static final int ACCOUNT_ACTION = 69;
+	public static final int ACCOUNT_STATE_FLAG = 70;
+	public static final int ACTIVITY = 87;
 
 	public LookUpEntity() {
 		super();
@@ -64,6 +71,7 @@ public class LookUpEntity extends Persistence {
 	private Set lookUpLabelSet;
 
 	private Set lookUpValueSet;
+
 
 	public Short getEntityId() {
 		return entityId;

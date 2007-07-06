@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlag extends Upgrade {
@@ -33,10 +34,7 @@ public class AddAccountStateFlag extends Upgrade {
 
 	@Override
 	public void upgrade(Connection connection) throws IOException, SQLException {
-		/* TODO: enumify.  But existing or new enum type?  There is
-		   LookUpEntity but I don't see an enum which corresponds.
-		   */
-		int lookupEntity = 70;
+		int lookupEntity = LookUpEntity.ACCOUNT_STATE_FLAG;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
 		insertMessage(connection, lookupId, locale, message);
@@ -68,7 +66,7 @@ public class AddAccountStateFlag extends Upgrade {
 		statement.setInt(3, STATUS_10);
 		statement.setString(4, description);
 		boolean retain = false;
-		statement.setInt(5, retain  ? 1 : 0);
+		statement.setInt(5, retain ? 1 : 0);
 		statement.executeUpdate();
 		statement.close();
 	}

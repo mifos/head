@@ -6,10 +6,10 @@ import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -32,8 +32,8 @@ public class AccountActionEntityTest extends TestCase {
 		assertEquals(new Integer(191), lookUpValue.getLookUpId());
 
 		MifosLookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
-		assertEquals(EntityType.ACCOUNT_ACTION.getValue(), 
-			lookUpEntity.getEntityId());
+		assertEquals(LookUpEntity.ACCOUNT_ACTION, 
+			lookUpEntity.getEntityId().shortValue());
 		assertEquals("AccountAction", lookUpEntity.getEntityType());
 
 		Set<LookUpValueLocaleEntity> valueLocales = 

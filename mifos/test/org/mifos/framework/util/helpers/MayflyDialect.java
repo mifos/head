@@ -59,6 +59,16 @@ public class MayflyDialect extends Dialect {
 	public boolean supportsLimit() {
 		return true;
 	}
+	
+	@Override
+	public boolean supportsLimitOffset() {
+		return true;
+	}
+	
+	@Override
+	public boolean supportsVariableLimit() {
+		return true;
+	}
 
 	@Override
 	public String getLimitString(String sql, boolean hasOffset) {

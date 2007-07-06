@@ -3,24 +3,22 @@ package org.mifos.application.util.helpers;
 
 public enum EntityType {
 
-	PERSONNEL(Short.valueOf("17")), 
-	CENTER(Short.valueOf("20")), 
-	CLIENT(Short.valueOf("1")),
-	OFFICE(Short.valueOf("15")), 
-	GROUP(Short.valueOf("12")),
-	LOAN(Short.valueOf("22")),
-	CUSTOMER(Short.valueOf("11")),
-	SAVINGS(Short.valueOf("21")),
-	LOANPRODUCT(Short.valueOf("2")),
-	SAVINGSPRODUCT(Short.valueOf("3")),
-	
-	ACCOUNT_ACTION((short)69),
+	PERSONNEL(17), 
+	CENTER(20), 
+	CLIENT(1),
+	OFFICE(15), 
+	GROUP(12),
+	LOAN(22),
+	CUSTOMER(11),
+	SAVINGS(21),
+	LOANPRODUCT(2),
+	SAVINGSPRODUCT(3),
 	;
 
 	Short value;
 
-	EntityType(Short value) {
-		this.value = value;
+	EntityType(int value) {
+		this.value = (short)value;
 	}
 
 	public Short getValue() {

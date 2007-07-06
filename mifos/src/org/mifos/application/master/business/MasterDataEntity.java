@@ -12,6 +12,8 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
+ * Subclasses of this class provide access to the database tables
+ * which correspond to enum-like classes.  
  * Together with {@link EntityMasterConstants} this class provides the old way
  * of handling entity types. The new way is {@link EntityType}.
  * 

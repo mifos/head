@@ -62,7 +62,8 @@ public abstract class Upgrade {
 		statement.close();
 	}
 
-	protected int insertLookupValue(Connection connection, int lookupEntity) throws SQLException {
+	protected int insertLookupValue(Connection connection, 
+			int lookupEntity) throws SQLException {
 		/* LOOKUP_ID is not AUTO_INCREMENT until database version 121.
 		   Although we perhaps could try to work some magic with the
 		   upgrades, it seems better to just insert in the racy way

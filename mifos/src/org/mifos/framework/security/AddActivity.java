@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -38,10 +39,7 @@ public class AddActivity extends Upgrade {
 
 	@Override
 	public void upgrade(Connection connection) throws IOException, SQLException {
-		/* TODO: enumify.  But existing or new enum type?  There is
-		   LookUpEntity but I don't see an enum which corresponds.
-		   */
-		int lookupEntity = 87;
+		int lookupEntity = LookUpEntity.ACTIVITY;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
 		insertMessage(connection, lookupId, locale, activityName);
