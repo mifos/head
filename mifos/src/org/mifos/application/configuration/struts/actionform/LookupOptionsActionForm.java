@@ -52,6 +52,11 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import javax.servlet.http.HttpSession;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.application.login.util.helpers.LoginConstants;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -522,15 +527,13 @@ public class LookupOptionsActionForm extends BaseActionForm {
 			String entity = request.getParameter(ConfigurationConstants.ENTITY);
 			String addOrEdit = request.getParameter(ConfigurationConstants.ADD_OR_EDIT);
 			if (addOrEdit.equals("edit") && !itemIsSelectedInList(entity)) {
-				addError(errors, entity, "errors.selectvalue", new String[]{null});
+				String entityType = getEntityType(entity, request); 
+				addError(errors, entity, "errors.selectvalue", new String[]{entityType});
 				setHiddenFields(request);
 				
 			}
 		}
-		else if (method.equals(Methods.addEditLookupOption_cancel.toString()))
-		{
-			setHiddenFields(request);
-		}
+
 		if (!errors.isEmpty()) {
 			request.setAttribute(Methods.method.toString(), method);
 		}
@@ -659,5 +662,75 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.userTitleList = userTitleList;
 	}
 
+	protected Locale getUserLocale(HttpServletRequest request) {
+		Locale locale = null;
+		HttpSession session = request.getSession();
+		if (session != null) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
+				locale = userContext.getPreferredLocale();
+				if (null == locale) {
+					locale = userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
+	}
+
+private String getEntityType(String entity,  HttpServletRequest request)
+	{
+		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+				getUserLocale(request));
+		String entityType = null;
+		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
+		{
+			entityType = resources.getString("configuration.salutation");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
+		{
+			entityType = resources.getString("configuration.attendance");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
+		{
+			entityType = resources.getString("configuration.citizenship");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE))
+		{
+			entityType = resources.getString("configuration.collateraltype");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
+		{
+			entityType = resources.getString("configuration.educationlevel");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
+		{
+			entityType = resources.getString("configuration.ethnicity");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
+		{
+			entityType = resources.getString("configuration.handicapped");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
+		{
+			entityType = resources.getString("configuration.purposeofloan");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_MARITAL_STATUS))
+		{
+			entityType = resources.getString("configuration.maritalstatus");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
+		{
+			entityType = resources.getString("configuration.officertitle");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_PERSONNEL_TITLE))
+		{
+			entityType = resources.getString("configuration.usertitle");
+		}
+		else
+			entityType = "";
+		return entityType;
+	}
+	
 }
 
