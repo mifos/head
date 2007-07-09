@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.loan.persistance;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -8,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -238,25 +242,30 @@ public class LoanPersistence extends Persistence {
 		}
 	}
 	
-	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
+	public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
 			Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException{
-		int totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = 0;
-		String goodAccountIdQuery = "select loan.loanBalance from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 5";
-		StringBuilder queryString = loanQueryString(branchId, loanOfficerId, loanProductId,goodAccountIdQuery);
+		BigDecimal loanBalanceAmount = new BigDecimal(0);
 		try {
 			Session session = HibernateUtil.getSessionTL();
-			Query query = session.createQuery(queryString.toString());
-			List<Money> list = query.list();
-			if (list.size() > 0) {
-				for(int i=0,size=list.size();i<size;i++){ 
-					totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding+list.get(i).getAmount().intValue();
-				  }
+			Criteria criteria = session.createCriteria(LoanBO.class)
+					.setProjection(Projections.sum("loanBalance.amount"))
+					.add(Restrictions.eq("accountState.id", (short) 5))
+					.add(Restrictions.eq("office.officeId", branchId));
+			if (loanOfficerId != (short)-1) {
+				criteria.add(Restrictions.eq("personnel.personnelId", loanOfficerId));
 			}
-		}
+			if (loanProductId != (short)-1) {
+				criteria.add(Restrictions.eq("loanOffering.prdOfferingId", loanProductId));
+			}
+			
+			List list = criteria.list();
+			loanBalanceAmount = (BigDecimal) list.get(0);
+			System.out.println("%%%%%"+loanBalanceAmount);
+				}
 		catch (Exception e) {
 			throw new PersistenceException(e);
 		}
-		return totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding;
+		return loanBalanceAmount;
 	}
 
 

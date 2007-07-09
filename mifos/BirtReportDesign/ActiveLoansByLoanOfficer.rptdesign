@@ -76,8 +76,10 @@
 
 var userId = reportContext.getParameterValue("userId");
 reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
-reportsDataService.initialize(userId);]]></method>
-            <method name="close"><![CDATA[reportsDataService = null;]]></method>
+reportsDataService.initialize(userId);
+Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;
+Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
         </script-data-source>
     </data-sources>
     <data-sets>
@@ -457,12 +459,8 @@ iterator = null;]]></method>
             <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB");
 
 var branchId = reportContext.getParameterValue("branchId");
-
 var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
-
 var loanProductId = reportContext.getParameterValue("loanProductId");
-
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
 
 loans = reportsDataService.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,loanProductId);
 iterator = loans.iterator();]]></method>
@@ -494,8 +492,7 @@ row["PaymentInArrears"] = loan.getPaymentsInArrears();
 row["NetOfSavings"] = loan.getNetOfSaving().getAmount();
 return true;]]></method>
             <method name="close"><![CDATA[loans = null;
-iterator = null;
-Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.disableThreadCacheForReports();]]></method>
+iterator = null;]]></method>
         </script-data-set>
     </data-sets>
     <styles>

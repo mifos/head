@@ -4,6 +4,7 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -348,21 +349,21 @@ public class TestLoanPersistence extends MifosTestCase {
 	
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchId() throws Exception {
 		short branchId = 3;
-		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,(short)-1,(short)-1);
-		assertEquals(600,money);
+		BigDecimal money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,(short)-1,(short)-1);
+		assertEquals(0,new BigDecimal(600).compareTo(money));
 	}
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdAndLoanOfficerId() throws Exception {
 		short branchId = 3;
 		short loanOfficerId = 3;
-		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,(short)-1);
-		assertEquals(600,money);
+		BigDecimal money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,(short)-1);
+		assertEquals(0,new BigDecimal(600).compareTo(money));
 	}
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdLoanOfficerIdAndLoanProductId() throws Exception {
 		short branchId = 3;
 		short loanOfficerId = 3;
 		short loanProductId = goodAccount.getLoanOffering().getPrdOfferingId();
-		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
-		assertEquals(300,money);
+		BigDecimal money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
+		assertEquals(0,new BigDecimal(300).compareTo(money));
 	}
 	public void testGetActiveLoansBothInGoodAndBadStandingByLoanOfficer() throws Exception {
 		short branchId = 3;

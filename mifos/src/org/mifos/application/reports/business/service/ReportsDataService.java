@@ -1,5 +1,6 @@
 package org.mifos.application.reports.business.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class ReportsDataService {
 						convertIntegerToShort(loanProductId));
 	}
 
-	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
+	public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
 			Integer branchId, Integer loanOfficerId, Integer loanProductId)
 			throws PersistenceException {
 		return loanPersistence

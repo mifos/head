@@ -5,6 +5,7 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +173,7 @@ public class ReportsDataServiceTest extends TestCase {
 		verify(loanPersistenceMock);
 	}
 	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingShouldReturnSumOfOutstandingPrincipalBalanceForloansInActiveBadStanding() throws Exception {
-		int exceptedSum = 0;
+		BigDecimal exceptedSum = new BigDecimal(0);
 		
 		expect(loanPersistenceMock.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId)).andReturn(exceptedSum);
 		replay(loanPersistenceMock);
