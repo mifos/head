@@ -46,7 +46,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 	
 	private final String[][] configurationNameSet = {
 			{MasterConstants.SALUTATION, 		ConfigurationConstants.CONFIG_SALUTATION, 		"salutationList"}
-			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_PERSONNEL_TITLE, 		"userTitleList"}
+			,{MasterConstants.PERSONNEL_TITLE, 	ConfigurationConstants.CONFIG_PERSONNEL_TITLE, 	"userTitleList"}
 			,{MasterConstants.MARITAL_STATUS, 	ConfigurationConstants.CONFIG_MARITAL_STATUS, 	"maritalStatusList"}
 			,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
 			,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
