@@ -98,9 +98,9 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		
-		addRequestParameter("shortName", shortName1);
-		addRequestParameter("questionText", questionText1);
-		addRequestParameter("answerType", Integer.toString(AnswerType.FREETEXT.getValue()));
+		addRequestParameter("value(shortName)", shortName1);
+		addRequestParameter("value(questionText)", questionText1);
+		addRequestParameter("value(answerType)", Integer.toString(AnswerType.FREETEXT.getValue()));
 		addRequestParameter("method", "addQuestion");
 		actionPerform();
 		verifyNoActionErrors();
@@ -111,11 +111,12 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		
 		String questionText2 = "testDefineQuestion sample text two";
 		String shortName2 = "testDefineQuestion 2";
-		addRequestParameter("shortName", shortName2);
-		addRequestParameter("questionText", questionText2);
-		addRequestParameter("answerType", Integer.toString(AnswerType.CHOICE.getValue()));
+		addRequestParameter("value(shortName)", shortName2);
+		addRequestParameter("value(questionText)", questionText2);
+		addRequestParameter("value(answerType)",
+				Integer.toString(AnswerType.CHOICE.getValue()));
 		String choice = "testDefineQuestion sample choice";
-		addRequestParameter("choice", choice);
+		addRequestParameter("value(choice)", choice);
 		addRequestParameter("method", "addChoice");
 		actionPerform();
 		verifyNoActionErrors();
@@ -136,8 +137,8 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		
 		String questionText3 = "testDefineQuestions question text 3";
 		String shortName3 = "testDefineQuestions 3";
-		addRequestParameter("shortName", shortName3);
-		addRequestParameter("questionText", questionText3);
+		addRequestParameter("value(shortName)", shortName3);
+		addRequestParameter("value(questionText)", questionText3);
 		addRequestParameter("method", "addQuestion");
 		actionPerform();
 		verifyNoActionErrors();
@@ -206,9 +207,9 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		
-		addRequestParameter("shortName", "Short Name 1");
-		addRequestParameter("questionText", "Question Text 1");
-		addRequestParameter("answerType", Integer.toString(AnswerType.FREETEXT.getValue()));
+		addRequestParameter("value(shortName)", "Short Name 1");
+		addRequestParameter("value(questionText)", "Question Text 1");
+		addRequestParameter("value(answerType)", Integer.toString(AnswerType.FREETEXT.getValue()));
 		addRequestParameter("method", "addQuestion");
 		actionPerform();
 		verifyNoActionErrors();
@@ -230,9 +231,9 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		
 		String shortName = "New Name";
 		String questionText = "New question text";
-		addRequestParameter("shortName", shortName);
-		addRequestParameter("questionText", questionText);
-		addRequestParameter("status", "1");
+		addRequestParameter("value(shortName)", shortName);
+		addRequestParameter("value(questionText)", questionText);
+		addRequestParameter("value(status)", "1");
 		addRequestParameter("method", "preview_entry");
 		
 		addRequestParameter("method", "update_entry");

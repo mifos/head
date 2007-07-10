@@ -1,6 +1,6 @@
 function setDisable() {
        var disabled = true;
-       var value = document.questionActionForm.answerType.value;
+       var value = document.genericActionForm.answerType.value;
        if (value == '1' || value == '4') {
            disabled = false;
        }
@@ -16,7 +16,7 @@ function clickCancel() {
 
 
 function submitQuestionForm(method) {
-	form = document.forms['questionActionForm'];
+	form = document.forms['genericActionForm'];
 	form.action='questionsAction.do?method=' + method;
 	form.submit();
 }

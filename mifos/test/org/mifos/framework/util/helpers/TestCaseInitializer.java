@@ -69,6 +69,7 @@ public class TestCaseInitializer {
 			ApplicationInitializer.initializeSpring();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new Error("Failed to start up", e);
 		}
 	}

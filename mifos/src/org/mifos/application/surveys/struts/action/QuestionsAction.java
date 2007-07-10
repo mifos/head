@@ -18,7 +18,7 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.application.surveys.struts.actionforms.QuestionActionForm;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -37,8 +37,8 @@ public class QuestionsAction extends PersistenceAction {
 	
 	static {
 		addQuestionValidator = new Schema();
-		addQuestionValidator.setSimpleValidator("shortName", new NotNullEmptyValidator());
-		addQuestionValidator.setSimpleValidator("questionText", new NotNullEmptyValidator());
+		addQuestionValidator.setSimpleValidator("value(shortName)", new NotNullEmptyValidator());
+		addQuestionValidator.setSimpleValidator("value(questionText)", new NotNullEmptyValidator());
 	}
 	
 	@Override
@@ -101,10 +101,10 @@ public class QuestionsAction extends PersistenceAction {
 		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
 		List<QuestionChoice> choices = question.getChoices();
 		request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
-		QuestionActionForm actionForm = (QuestionActionForm) form;
-		actionForm.setShortName(question.getShortName());
-		actionForm.setQuestionText(question.getQuestionText());
-		actionForm.setQuestionState(question.getQuestionState());
+		GenericActionForm actionForm = (GenericActionForm) form;
+		actionForm.setValue("shortName", question.getShortName());
+		actionForm.setValue("questionText", question.getQuestionText());
+		actionForm.setValue("questionState", Integer.toString(question.getQuestionState()));
 		
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
@@ -122,10 +122,10 @@ public class QuestionsAction extends PersistenceAction {
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.edit_success.toString());
 		}
-		QuestionActionForm actionForm = (QuestionActionForm) form;
-		request.setAttribute("shortName", actionForm.getShortName());
-		request.setAttribute("questionText", actionForm.getQuestionText());
-		request.setAttribute("status", actionForm.getQuestionState());
+		GenericActionForm actionForm = (GenericActionForm) form;
+		request.setAttribute("shortName", actionForm.getValue("shortName"));
+		request.setAttribute("questionText", actionForm.getValue("questionText"));
+		request.setAttribute("status", actionForm.getValue("questionState"));
 		
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
@@ -136,10 +136,10 @@ public class QuestionsAction extends PersistenceAction {
 		
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
-		QuestionActionForm actionForm = (QuestionActionForm) form;
-		question.setShortName(actionForm.getShortName());
-		question.setQuestionText(actionForm.getQuestionText());
-		question.setQuestionState(Integer.parseInt(actionForm.getQuestionState()));
+		GenericActionForm actionForm = (GenericActionForm) form;
+		question.setShortName(actionForm.getValue("shortName"));
+		question.setQuestionText(actionForm.getValue("questionText"));
+		question.setQuestionState(Integer.parseInt(actionForm.getValue("questionState")));
 		
 		surveysPersistence.createOrUpdate(question);
 		
@@ -167,10 +167,10 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward addChoice(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		QuestionActionForm actionForm = (QuestionActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		LinkedList<String> choices = (LinkedList<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES);
-		choices.add(actionForm.getChoice());
-		actionForm.setChoice("");
+		choices.add(actionForm.getValue("choice"));
+		actionForm.setValue("choice", "");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	
@@ -210,7 +210,7 @@ public class QuestionsAction extends PersistenceAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		QuestionActionForm actionForm = (QuestionActionForm) form;
+		GenericActionForm actionForm = (GenericActionForm) form;
 		ActionMessages errors = new ActionMessages();
 		Map<String, Object> results;
 		try {
@@ -226,11 +226,12 @@ public class QuestionsAction extends PersistenceAction {
 		for (Question q : newQuestions) {
 			questionNames.add(q.getShortName());
 		}
-		if (questionNames.contains(actionForm.getShortName()))
+		String shortName = actionForm.getValue("shortName");
+		if (questionNames.contains(shortName))
 			errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
 		else {
 				List<Question> retrievedQuestions = 
-				surveysPersistence.retrieveQuestionsByName(actionForm.getShortName());
+				surveysPersistence.retrieveQuestionsByName(shortName);
 			if (retrievedQuestions.size() > 0)
 				errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
 		}
@@ -239,9 +240,9 @@ public class QuestionsAction extends PersistenceAction {
 			return mapping.findForward(ActionForwards.load_success.toString());
 		}
 				
-		AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getAnswerType()));
-		Question question = new Question(actionForm.getShortName(),
-				actionForm.getQuestionText(), type);
+		AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getValue("answerType")));
+		Question question = new Question(shortName,
+				actionForm.getValue("questionText"), type);
 		if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
 			List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
 			for (String choiceText : (List<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES)) {

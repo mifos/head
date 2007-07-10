@@ -1256,7 +1256,7 @@
           parameter="method"
           scope="session"
           validate="false"
-          name="questionActionForm"
+          name="genericActionForm"
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>

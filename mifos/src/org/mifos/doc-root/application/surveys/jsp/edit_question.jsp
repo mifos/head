@@ -46,16 +46,16 @@
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
               <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources"/></td>
-                <td width="76%"><html-el:text property="shortName"/></td>
+                <td width="76%"><html-el:text property="value(shortName)"/></td>
               </tr>
               <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
-                <td width="76%"><html-el:text property="questionText"/></td>
+                <td width="76%"><html-el:text property="value(questionText)"/></td>
               </tr>
 			  <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Status" bundle="SurveysUIResources"/></td>
                 <td width="76%">
-                <html-el:select property="questionState" styleId="questionState">
+                <html-el:select property="value(questionState)" styleId="questionState">
 				<html-el:option value="0"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/></html-el:option>                
 				<html-el:option value="1"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Active"/></html-el:option>                
 				</html-el:select>
@@ -64,7 +64,7 @@
               <tr class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources"/></td>
 
-                <td><html-el:select property="answerType" value="${sessionScope.question.answerType}" styleId="answerType" disabled="true">
+                <td><html-el:select property="value(answerType)" value="${sessionScope.question.answerType}" styleId="answerType" disabled="true">
                   <html-el:option value="1"><mifos:mifoslabel name="Surveys.Multiselect"/></html-el:option>
                   <html-el:option value="2"><mifos:mifoslabel name="Surveys.Freetext"/></html-el:option>
                   <html-el:option value="3"><mifos:mifoslabel name="Surveys.Number"/></html-el:option>
@@ -74,7 +74,7 @@
               </tr>
               <tr id="choiceInputsElement1" class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answerchoice" bundle="SurveysUIResources"/></td>
-                <td><html-el:text property="choice" styleId="choice" disabled="true"/>
+                <td><html-el:text property="value(choice)" styleId="choice" disabled="true"/>
                   <input id="AddButton" type="button" class="insidebuttn" value="Add &gt;&gt;" style="width:65px"  onclick="submitQuestionForm('addChoice')" disabled="true"></td>
               </tr>
                   <tr valign="top" class="fontnormal">
