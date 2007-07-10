@@ -7,6 +7,7 @@
 		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
 		<form-bean name="hiddenmandatoryconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm"></form-bean>
 		<form-bean name="lookupoptionsactionform" type="org.mifos.application.configuration.struts.actionform.LookupOptionsActionForm"></form-bean>
+        <form-bean name="customfieldsactionform" type="org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -45,6 +46,15 @@
 			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>
+        <action path="/customFieldsAction" type="org.mifos.application.configuration.struts.action.CustomFieldsAction" name="customfieldsactionform" parameter="method" input="/customFieldsAction.do?method=validate"
+            validate="true" scope="session">
+            <forward name="load_success" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
+            <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="update_success" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
+            <forward name="update_failure" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
+            <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+        </action>
 	</action-mappings>
 	<!-- Configuration -->
 	<message-resources key="configurationUIResources" parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"></message-resources>

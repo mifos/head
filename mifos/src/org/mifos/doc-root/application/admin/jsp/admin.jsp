@@ -167,6 +167,18 @@
 								action="hiddenmandatoryconfigurationaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.definehiddenmandfields" /></html-el:link></td>
 							</tr>
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><html-el:link
+								action="lookupOptionsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.definelookupoption" /></html-el:link></td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><html-el:link
+								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></td>
+							</tr>
 						</table>
 
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">

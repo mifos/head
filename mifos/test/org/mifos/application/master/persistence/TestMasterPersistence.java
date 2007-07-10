@@ -1,8 +1,11 @@
 package org.mifos.application.master.persistence;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -257,4 +260,16 @@ public class TestMasterPersistence extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 
 	}	
+	
+	public void testGetCustomFieldCategories() throws Exception {
+		MasterPersistence masterPersistence = new MasterPersistence();
+
+		Set<String> categories = new HashSet<String>(masterPersistence.getCustomFieldCategories());
+
+		for (CustomFieldCategory category : CustomFieldCategory.values()) {
+			assertTrue(categories.contains(category.toString()));
+		}
+	}
+	
+	
 }

@@ -1,9 +1,12 @@
 package org.mifos.application.master.persistence;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -11,6 +14,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
@@ -32,6 +36,8 @@ import org.mifos.framework.persistence.Persistence;
  * This class is mostly used to look up instances of (a subclass of)
  * {@link MasterDataEntity} in the database.  Most of what is here
  * can better be accomplished by enums and by {@link MessageLookup}.
+ * 
+ * Test cases: {@link TestMasterPersistence}
  */
 public class MasterPersistence extends Persistence {
 
@@ -291,6 +297,18 @@ public class MasterPersistence extends Persistence {
 		// means that deleting the LookUpValueEntity should delete all the associated 
 		// LookUpValueLocaleEntity objects as well.
 		delete(lookUpValueEntity);
+	}
+
+	/*
+	 * Return a list of the names of the categories of objects that can
+	 * have custom fields added (as specified in {@link CustomFieldCategory})
+	 */
+	public List<String> getCustomFieldCategories() {	
+		List<String> categories = new ArrayList<String>();
+		for (CustomFieldCategory category : CustomFieldCategory.values()) {
+			categories.add(category.toString());
+		}
+		return categories;
 	}
 	
 }

@@ -31,6 +31,7 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.struts.action.AdminAction;
 import org.mifos.application.bulkentry.struts.action.BulkEntryAction;
 import org.mifos.application.checklist.struts.action.ChkListAction;
+import org.mifos.application.configuration.struts.action.CustomFieldsAction;
 import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.configuration.struts.action.LookupOptionsAction;
@@ -249,6 +250,7 @@ public class ActivityMapper {
 		parseActionSecurity(SurveyInstanceAction.getSecurity());
 		parseActionSecurity(BirtReportsUploadAction.getSecurity());
 		parseActionSecurity(LookupOptionsAction.getSecurity());
+		parseActionSecurity(CustomFieldsAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {
