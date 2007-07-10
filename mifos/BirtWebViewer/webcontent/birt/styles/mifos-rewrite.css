@@ -1,0 +1,68 @@
+
+
+.dialogBackground  {
+	background-color: white;
+	width:500px;
+	height:300px;
+	padding-right: 400px;
+	padding-bottom: 100px;
+	
+}
+
+.birtviewer_dialog_body   {
+	border: none;
+}
+
+.birtviewer_parameter_dialog_Label {
+    font-size:10pt;
+}
+
+.birtviewer_progressbar
+{
+        display: none;
+	
+}
+.dialogCloseBtnContainer
+{		
+	display: none;
+}
+
+.dialogTitleBar
+{
+	display: none;
+}
+
+.dTitleBar
+{
+	display: none;
+}
+
+.birtviewer_parameter_dialog
+{
+	height:100%;
+	overflow:auto;
+	height:240px;
+}
+
+
+.dBtnBarDividerTop
+{
+	height: 1px;
+	width:800px;
+	background-color:#D7DEEE;
+	overflow: hidden;
+}
+.dialogBorder
+{
+    width:800px;
+    height:250px;
+	border-style: outset;
+	border-width: 1px;
+	border-color: #D7DEEE;
+	background-color: #D7DEEE;
+}
+.birtviewer_document_fragment
+{
+ display:none;
+}
+
