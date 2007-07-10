@@ -8,6 +8,9 @@ public class OfficeCustomFieldEntity extends PersistentObject {
 
 	private String fieldValue;
 
+	/*
+	 * Reference to a {@link CustomFieldDefinitionEntity}
+	 */
 	private final Short fieldId;
 
 	private final OfficeBO office;

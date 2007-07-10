@@ -47,6 +47,9 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 
 	private final Integer customFieldId;
 
+	/*
+	 * Reference to a {@link CustomFieldDefinitionEntity}
+	 */
 	private final Short fieldId;
 
 	private String fieldValue;

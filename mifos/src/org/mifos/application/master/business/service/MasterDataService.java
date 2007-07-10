@@ -3,10 +3,10 @@ package org.mifos.application.master.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;

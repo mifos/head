@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;

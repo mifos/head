@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;

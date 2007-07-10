@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldView;
 
 public class AccountAppActionForm extends ValidatorActionForm {
 	private String accountId;

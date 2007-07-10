@@ -8,10 +8,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CountryEntity;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.LanguageEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;

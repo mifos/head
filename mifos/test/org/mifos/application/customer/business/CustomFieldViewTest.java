@@ -1,5 +1,7 @@
 package org.mifos.application.customer.business;
 
+import org.mifos.application.master.business.CustomFieldView;
+
 import junit.framework.TestCase;
 
 public class CustomFieldViewTest extends TestCase {
@@ -9,7 +11,7 @@ public class CustomFieldViewTest extends TestCase {
 		// NullPointerException for these operations.
 
 		CustomFieldView view = new CustomFieldView();
-		assertEquals("org.mifos.application.customer.business.CustomFieldView@0", 
+		assertEquals("org.mifos.application.master.business.CustomFieldView@0", 
 			view.toString());
 		view.hashCode();
 

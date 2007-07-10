@@ -14,7 +14,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;

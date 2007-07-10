@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;

@@ -46,6 +46,9 @@ public class AccountCustomFieldEntity extends PersistentObject {
 
 	private AccountBO account;
 
+	/*
+	 * Reference to a {@link CustomFieldDefinitionEntity}
+	 */
 	private Short fieldId;
 
 	private String fieldValue;

@@ -40,7 +40,6 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.fees.business.FeeTypeEntity;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;

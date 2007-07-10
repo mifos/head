@@ -3,7 +3,7 @@ package org.mifos.application.office.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
