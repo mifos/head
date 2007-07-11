@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.application.accounts.business.AddAccountAction;
+import org.mifos.application.accounts.business.AddAccountStateFlag;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -39,6 +43,33 @@ public class DatabaseVersionPersistence {
 			SecurityConstants.ACTIVITY_196, 
 			ENGLISH_LOCALE, 
 			"Can create multiple Loan accounts"));
+		register(register, new CompositeUpgrade(
+			new AddActivity(
+				102,
+				SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL,
+				SecurityConstants.LOAN_MANAGEMENT,
+				ENGLISH_LOCALE,
+				"Can reverse Loan disbursals"),
+			new AddAccountStateFlag(
+				102,
+				AccountStateFlag.LOAN_REVERSAL.getValue(),
+				"Loan reversal",
+				ENGLISH_LOCALE,
+				"Loan reversal"
+				),
+			new AddAccountAction(
+				102,
+				AccountActionTypes.LOAN_REVERSAL.getValue(),
+				ENGLISH_LOCALE,
+				"Loan Reversal"
+				),
+			new AddAccountAction(
+				102,
+				AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue(),
+				ENGLISH_LOCALE,
+				"Disrbursal amount Reversal"
+				)
+		));
 		return Collections.unmodifiableMap(register);
 	}
 

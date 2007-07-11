@@ -81,6 +81,11 @@ public interface SecurityConstants {
 
 	public final short SEARCH = 0;
 
+	/*
+	 * Constants for activity IDs.
+	 */
+	public final short ORGANIZATION_MANAGEMENT = 1;
+
 	// funds
 	public final short FUNDS_CREATE_FUNDS = 3;
 

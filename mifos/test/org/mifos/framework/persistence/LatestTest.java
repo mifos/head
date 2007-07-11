@@ -3,6 +3,7 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
+import java.io.File;
 import java.sql.SQLException;
 
 import junit.framework.TestCase;
@@ -101,6 +102,19 @@ public class LatestTest extends TestCase {
 			currentVersion < APPLICATION_VERSION;
 			++currentVersion) {
 			current = upAndBack(current, currentVersion + 1);
+		}
+	}
+	
+	public void testNoDowngradeWithoutUpgrade() throws Exception {
+		for (int version = FIRST_NUMBERED_VERSION;
+			version < APPLICATION_VERSION;
+			++version) {
+			String upgrade = "sql/upgrade_to_" + version + ".sql";
+			String downgrade = "sql/downgrade_from_" + version + ".sql";
+			if (new File(downgrade).exists()
+				&& ! new File(upgrade).exists()) {
+				fail("found " + downgrade + " without " + upgrade);
+			}
 		}
 	}
 

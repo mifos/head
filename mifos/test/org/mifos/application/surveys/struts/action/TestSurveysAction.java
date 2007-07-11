@@ -184,7 +184,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		GenericActionForm actionForm = (GenericActionForm) getActionForm();
 		name = actionForm.getValue("name");
-		System.out.println(name);
 		
 		addRequestParameter("value(name)", name);
 		addRequestParameter("value(appliesTo)", appliesTo);
@@ -198,8 +197,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		
 		List<Survey> listSurvey = surveysPersistence.retrieveAllSurveys();
-		for (Survey survey : listSurvey)
-			System.out.println(survey.getSurveyId() + ": " + survey.getName());
 		assertEquals(listSurvey.size(), 2);
 		assertEquals(name, listSurvey.get(1).getName());
 		assertEquals(1, listSurvey.get(1).getQuestions().size());
