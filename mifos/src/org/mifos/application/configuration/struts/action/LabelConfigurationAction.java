@@ -53,7 +53,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelConfigurations;
@@ -566,7 +566,7 @@ public class LabelConfigurationAction extends BaseAction {
 			LabelConfigurationActionForm labelConfigurationActionForm,
 			Short localeId, List<MifosLookUpEntity> lookupEntities)
 			throws Exception {
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
 		for (MifosLookUpEntity entity : lookupEntities) {
 			Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 			for (LookUpLabelEntity label : labels) {
@@ -684,7 +684,7 @@ public class LabelConfigurationAction extends BaseAction {
 	private void updateStatusData(
 			LabelConfigurationActionForm labelConfigurationActionForm,
 			Short localeId, List<LookUpValueEntity> values) throws Exception {
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
 		for (LookUpValueEntity value : values) {
 			String name = null;
 			if (isPartialApplicationLookup(value)) {

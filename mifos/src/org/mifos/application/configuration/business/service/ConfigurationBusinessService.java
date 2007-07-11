@@ -2,7 +2,7 @@ package org.mifos.application.configuration.business.service;
 
 import java.util.List;
 
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.business.BusinessObject;
@@ -21,11 +21,11 @@ public class ConfigurationBusinessService extends BusinessService {
 	}
 
 	public List<MifosLookUpEntity> getLookupEntities() {
-		return new ConfigurationPersistence().getLookupEntities();
+		return new ApplicationConfigurationPersistence().getLookupEntities();
 	}
 
 	public List<LookUpValueEntity> getLookupValues() {
-		return new ConfigurationPersistence().getLookupValues();
+		return new ApplicationConfigurationPersistence().getLookupValues();
 	}
 	
 	public List<FieldConfigurationEntity> getAllConfigurationFieldList() 

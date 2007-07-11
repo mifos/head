@@ -2,7 +2,7 @@ package org.mifos.application.master;
 
 import java.util.Locale;
 
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -24,7 +24,7 @@ import org.springframework.context.MessageSourceAware;
  * Or at least we can centralize where we call the convoluted
  * mechanism.
  * 
- * Also see {@link ConfigurationPersistence}.
+ * Also see {@link ApplicationConfigurationPersistence}.
  * 
  * The word "label" might be better than "message"; at least that's
  * what we call them in places like {@link LabelConfigurationAction}.

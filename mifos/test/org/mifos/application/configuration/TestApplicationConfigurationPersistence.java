@@ -1,17 +1,17 @@
 package org.mifos.application.configuration;
 
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.framework.MifosTestCase;
 
 
 
-public class TestConfigurationPersistence extends MifosTestCase {
+public class TestApplicationConfigurationPersistence extends MifosTestCase {
 	
-	ConfigurationPersistence configurationPersistence ;
+	ApplicationConfigurationPersistence configurationPersistence ;
 	
 	@Override
 	protected void setUp() throws Exception {
-		configurationPersistence= new ConfigurationPersistence();
+		configurationPersistence= new ApplicationConfigurationPersistence();
 	}
 
 	public void testGetLookupEntities(){

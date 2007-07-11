@@ -47,7 +47,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustomFieldActionTest extends MifosMockStrutsTestCase {
+public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
 	private String flowKey;

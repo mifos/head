@@ -47,7 +47,7 @@ import java.util.PropertyResourceBundle;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -76,14 +76,14 @@ public class AuditConfigurtion {
 	
 	private List<Short> locales;
 	
-	private ConfigurationPersistence configurationPersistence; 
+	private ApplicationConfigurationPersistence configurationPersistence; 
 	private MasterPersistence masterPersistence;
 	
 	public static AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
 	
 	private AuditConfigurtion(){
 		masterPersistence=new MasterPersistence();
-		configurationPersistence=new ConfigurationPersistence();
+		configurationPersistence=new ApplicationConfigurationPersistence();
 		locales=new ArrayList<Short>();
 		for(SupportedLocalesEntity supportedLocales : configurationPersistence.getSupportedLocale())
 			locales.add(supportedLocales.getLocaleId());

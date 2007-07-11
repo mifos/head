@@ -53,15 +53,8 @@ import org.mifos.framework.persistence.Persistence;
 
 /**
  * This class is mainly about lookup values.
- * TODO: Figure out how to resolve the confusion between
- * this and 
- * {@link org.mifos.framework.components.configuration.persistence.ConfigurationPersistence}
- * which seems to be about {@link ConfigurationKeyValueInteger} and friends.
- * 
- * I think this one maybe should be called LabelPersistence or some such
- * following the lead of LabelConfigurationTestSuite.
  */
-public class ConfigurationPersistence extends Persistence {
+public class ApplicationConfigurationPersistence extends Persistence {
 	
 	public List<MifosLookUpEntity> getLookupEntities(){
 		

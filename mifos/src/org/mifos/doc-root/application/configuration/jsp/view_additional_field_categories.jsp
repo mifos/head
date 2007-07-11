@@ -80,81 +80,17 @@
 
 							</tr>
 							<tr>
-								<td class="fontnormalbold"> 
-									<span class="fontnormal"><mifos:mifoslabel name="configuration.select_category" />
-									<a href="customFieldsAction.do?method=add&amp;currentFlowKey=${requestScope.currentFlowKey}"><mifos:mifoslabel name="configuration.add_new_field" /></a> <br> </span><span class="fontnormalbold"><span
-										class="fontnormalbold"><br> </span>
+								<td class="fontnormalbold">
+									<span class="fontnormal"><mifos:mifoslabel name="configuration.select_category" /> 
+										<a href="customFieldsAction.do?method=add&amp;currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="configuration.add_new_field" />
+										</a> 
+										<br> 
 									</span>
-									<span class="fontnormalbold"> </span>
-									<table width="90%" border="0" cellspacing="0" cellpadding="0">
-
-										<tr class="fontnormal">
-											<td>
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td>
-												<a href="VIewCustomFields.htm">Personnel</a>
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td>
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td>
-												<a href="VIewCustomFields.htm">Office</a>
-											</td>
-										</tr>
-
-										<tr class="fontnormal">
-											<td width="1%">
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td width="99%">
-												<a href="VIewCustomFields.htm">Client</a>
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td>
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td>
-												<a href="VIewCustomFields.htm">Group</a>
-											</td>
-										</tr>
-
-										<tr class="fontnormal">
-											<td width="1%">
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td width="99%">
-												<a href="VIewCustomFields.htm">Center</a>
-											</td>
-										</tr>
-										<tr class="fontnormal">
-											<td>
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td>
-												<a href="VIewCustomFields.htm">Loan</a>
-											</td>
-										</tr>
-
-										<tr class="fontnormal">
-											<td width="1%">
-												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11"
-													alt="">
-											</td>
-											<td width="99%">
-												<a href="VIewCustomFields.htm">Savings</a>
-											</td>
-										</tr>
-									</table>
+									<br>
+									<mifos:CustomFieldCategoryList actionName="CustomFieldsAction" 
+										methodName="viewCategory" flowKey="${requestScope.currentFlowKey}">
+									</mifos:CustomFieldCategoryList>
 								</td>
 							</tr>
 						</table>

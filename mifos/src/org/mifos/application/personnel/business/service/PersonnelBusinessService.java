@@ -2,7 +2,7 @@ package org.mifos.application.personnel.business.service;
 
 import java.util.List;
 
-import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -65,7 +65,7 @@ public class PersonnelBusinessService extends BusinessService {
 	}
 
 	public List<SupportedLocalesEntity> getAllLocales() throws ServiceException {
-		return new ConfigurationPersistence().getSupportedLocale();
+		return new ApplicationConfigurationPersistence().getSupportedLocale();
 	}
 
 	public QueryResult getAllPersonnelNotes(Short personnelId)

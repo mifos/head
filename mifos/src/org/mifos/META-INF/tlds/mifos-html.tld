@@ -1911,5 +1911,29 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>	
+    <!-- CustomFieldCategoryListTag -->
+    <tag>
+        <name>CustomFieldCategoryList</name>
+        <tagclass>
+            org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTag
+        </tagclass>
+        <bodycontent>JSP</bodycontent>
+
+        <attribute>
+            <name>actionName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>methodName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>flowKey</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>  
 	
 </taglib>

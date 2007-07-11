@@ -50,8 +50,7 @@ import org.mifos.application.admin.AdminTestSuite;
 import org.mifos.application.bulkentry.BulkEntryTestSuite;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
-import org.mifos.application.configuration.LabelConfigurationTestSuite;
-import org.mifos.application.configuration.LookupOptionsTestSuite;
+import org.mifos.application.configuration.ApplicationConfigurationTestSuite;
 import org.mifos.application.customer.CustomerTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
 import org.mifos.application.fund.FundTestSuite;
@@ -107,7 +106,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());
 		suite.addTest(BatchJobTestSuite.suite());
-		suite.addTest(LabelConfigurationTestSuite.suite());
+		suite.addTest(ApplicationConfigurationTestSuite.suite());
 		suite.addTest(LoanTestSuite.suite());
 		suite.addTest(SavingsTestSuite.suite());
 		suite.addTest(ProductDefinitionTestSuite.suite());
@@ -136,7 +135,6 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(FrameworkUtilsSuite.suite());
 		suite.addTest(HolidayTestSuite.suite());
 		suite.addTest(SurveysTestSuite.suite());
-		suite.addTest(LookupOptionsTestSuite.suite());
 		return suite;
 	}
 }
