@@ -260,7 +260,6 @@ public class LoanPersistence extends Persistence {
 			
 			List list = criteria.list();
 			loanBalanceAmount = (BigDecimal) list.get(0);
-			System.out.println("%%%%%"+loanBalanceAmount);
 				}
 		catch (Exception e) {
 			throw new PersistenceException(e);
