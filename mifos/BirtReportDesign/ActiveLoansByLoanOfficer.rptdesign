@@ -708,6 +708,26 @@ iterator = null;]]></method>
                     <expression name="expression">dataSetRow["InterestInArrears"]</expression>
                     <property name="dataType">any</property>
                 </structure>
+                <structure>
+                    <property name="name">data item</property>
+                    <expression name="expression">Total.count()</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">NetOfSavingsSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["NetOfSavings"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">LoanBalanceSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["LoanBalance"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">InterestSum</property>
+                    <expression name="expression">Total.sum(dataSetRow["InterestInArrears"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
             </list-property>
             <column id="957">
                 <property name="width">0.6145833333in</property>
@@ -1162,19 +1182,58 @@ iterator = null;]]></method>
             <footer>
                 <row id="942">
                     <property name="height">0.2395833333in</property>
-                    <cell id="943"/>
-                    <cell id="944"/>
-                    <cell id="945"/>
-                    <cell id="946"/>
+                    <cell id="943">
+                        <label id="1116">
+                            <property name="fontSize">larger</property>
+                            <property name="fontWeight">bold</property>
+                            <property name="fontStyle">italic</property>
+                            <text-property name="text">Totals</text-property>
+                        </label>
+                    </cell>
+                    <cell id="944">
+                        <property name="colSpan">1</property>
+                        <property name="rowSpan">1</property>
+                        <data id="1123">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">data item</property>
+                        </data>
+                    </cell>
+                    <cell id="1125">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <label id="1118">
+                            <text-property name="text">active loans</text-property>
+                        </label>
+                    </cell>
                     <cell id="947"/>
                     <cell id="948"/>
                     <cell id="949"/>
-                    <cell id="950"/>
+                    <cell id="950">
+                        <data id="1119">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">LoanBalanceSum</property>
+                        </data>
+                    </cell>
                     <cell id="951"/>
-                    <cell id="952"/>
-                    <cell id="953"/>
+                    <cell id="952">
+                        <data id="1120">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">PrincipalInArrears</property>
+                        </data>
+                    </cell>
+                    <cell id="953">
+                        <data id="1121">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">InterestSum</property>
+                        </data>
+                    </cell>
                     <cell id="954"/>
-                    <cell id="955"/>
+                    <cell id="955">
+                        <data id="1122">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">NetOfSavingsSum</property>
+                        </data>
+                    </cell>
                 </row>
             </footer>
         </table>
