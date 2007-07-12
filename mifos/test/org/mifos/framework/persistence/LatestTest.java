@@ -1,21 +1,26 @@
 package org.mifos.framework.persistence;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
 import java.io.File;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class LatestTest extends TestCase {
+public class LatestTest {
 	
-	public void testSimple() throws Exception {
+	@Test
+	public void simple() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		loadLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
@@ -36,8 +41,9 @@ public class LatestTest extends TestCase {
 		database.execute("create table foo(x integer, y integer default 7)");
 		database.execute("insert into foo(x, y) values(5,7)");
 	}
-	
-	public void testRealSchema() throws Exception {
+
+	@Test
+	public void realSchema() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		loadRealLatest(database);
 		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION,
@@ -54,15 +60,9 @@ public class LatestTest extends TestCase {
 	}
 
 	private DataStore applyRealUpgrades() throws Exception {
-		Database database = new Database(upgradeToFirstNumberedVersion());
+		Database database = new Database(firstNumberedVersion());
 
 	    TestDatabase.runUpgradeScripts(database.openConnection());
-	    return database.dataStore();
-	}
-
-	private DataStore upgradeToFirstNumberedVersion() throws Exception {
-		Database database = TestDatabase.makeDatabase();
-		TestDatabase.upgradeToFirstNumberedVersion(database.openConnection());
 	    return database.dataStore();
 	}
 
@@ -75,7 +75,8 @@ public class LatestTest extends TestCase {
 	    DatabaseSetup.executeScript(database, "sql/latest-data.sql");
 	}
 
-	public void testDropTables() throws Exception {
+	@Test
+	public void dropTables() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		String blankDB = new SqlDumper().dump(database.dataStore());
 		DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
@@ -89,23 +90,33 @@ public class LatestTest extends TestCase {
 	 * in the right order to deal with foreign keys.  I'm not sure
 	 * we fully succeed, however.
 	 */
-	public void testDropTablesWithData() throws Exception {
+	@Test
+	public void dropTablesWithData() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
 		DatabaseSetup.executeScript(
 			database.openConnection(), "sql/mifosdroptables.sql");
 		assertEquals("", database.dumpForComparison());
 	}
 	
-	public void testDowngrades() throws Exception {
-		DataStore current = this.upgradeToFirstNumberedVersion();
-		for (int currentVersion = FIRST_NUMBERED_VERSION; 
-			currentVersion < APPLICATION_VERSION;
-			++currentVersion) {
-			current = upAndBack(current, currentVersion + 1);
-		}
+	@Test
+	public void downgrades() throws Exception {
+		DataStore current = firstNumberedVersion();
+		current = upAndBack(current);
 	}
-	
-	public void testNoDowngradeWithoutUpgrade() throws Exception {
+
+	private static DataStore firstNumberedVersion;
+
+	private DataStore firstNumberedVersion() throws Exception {
+		if (firstNumberedVersion == null) {
+			Database database = TestDatabase.makeDatabase();
+			TestDatabase.upgradeToFirstNumberedVersion(database.openConnection());
+			firstNumberedVersion = database.dataStore();
+		}
+		return firstNumberedVersion;
+	}
+
+	@Test
+	public void noDowngradeWithoutUpgrade() throws Exception {
 		for (int version = FIRST_NUMBERED_VERSION;
 			version < APPLICATION_VERSION;
 			++version) {
@@ -116,6 +127,39 @@ public class LatestTest extends TestCase {
 				fail("found " + downgrade + " without " + upgrade);
 			}
 		}
+	}
+	
+	@Test
+	@Ignore // not yet passing
+	public void afterLookupValues() throws Exception {
+		Database database = new Database(firstNumberedVersion());
+		
+		/* A customer will typically add records such as these during
+		   customization.  */
+		database.execute("insert into " +
+			"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
+			"VALUES(569,19,' ')");
+		database.execute("insert into " +
+			"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
+			"VALUES(1,569,'Martian')");
+
+		upAndBack(database.dataStore());
+	}
+
+	private DataStore upAndBack(DataStore current) throws Exception {
+		for (int currentVersion = FIRST_NUMBERED_VERSION; 
+			currentVersion < APPLICATION_VERSION;
+			++currentVersion) {
+			int higherVersion = currentVersion + 1;
+			try {
+				current = upAndBack(current, higherVersion);
+			}
+			catch (Exception failure) {
+				throw new Exception("Cannot upgrade to " + higherVersion,
+					failure);
+			}
+		}
+		return current;
 	}
 
 	private DataStore upAndBack(DataStore current, int nextVersion) 
@@ -134,6 +178,10 @@ public class LatestTest extends TestCase {
 		assertEquals(before, after);
 		
 		return upgraded;
+	}
+
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(LatestTest.class);
 	}
 
 }

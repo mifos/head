@@ -55,6 +55,7 @@ import org.mifos.framework.components.audit.persistence.AuditConfigurationPersis
  */
 public class LookUpEntity {
 
+	public static final int ETHNICITY = 19;
 	public static final int ACCOUNT_ACTION = 69;
 	public static final int ACCOUNT_STATE_FLAG = 70;
 	public static final int ACTIVITY = 87;
