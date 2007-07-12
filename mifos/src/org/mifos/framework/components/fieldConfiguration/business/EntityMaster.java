@@ -2,7 +2,7 @@ package org.mifos.framework.components.fieldConfiguration.business;
 
 import org.mifos.framework.persistence.Persistence;
 
-public class EntityMaster extends Persistence{
+public class EntityMaster extends Persistence {
 
 	private Short id;
 

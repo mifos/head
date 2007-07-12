@@ -13,6 +13,7 @@ import org.mifos.application.configuration.business.service.ConfigurationBusines
 import org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm;
 import org.mifos.application.configuration.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -28,7 +29,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -134,14 +134,14 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 			List<FieldConfigurationEntity> confFieldList) throws Exception {
 		if (confFieldList != null && confFieldList.size() > 0) {
 			for (FieldConfigurationEntity fieldConfiguration : confFieldList) {
-				if (fieldConfiguration.getEntityMaster().getId().equals(
-						EntityMasterConstants.Client)
-						|| fieldConfiguration.getEntityMaster().getId().equals(
-								EntityMasterConstants.Personnel)) {
+				if (fieldConfiguration.getEntityType() ==
+						EntityType.CLIENT
+						|| fieldConfiguration.getEntityType() ==
+								EntityType.PERSONNEL) {
 					updateClientDetails(actionForm, fieldConfiguration);
 				}
-				else if (fieldConfiguration.getEntityMaster().getId().equals(
-						EntityMasterConstants.Group)) {
+				else if (fieldConfiguration.getEntityType() ==
+						EntityType.GROUP) {
 					updateGrouptDetails(actionForm, fieldConfiguration);
 				}
 				else {
@@ -462,12 +462,12 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 			List<FieldConfigurationEntity> confFieldList) {
 		if (confFieldList != null && confFieldList.size() > 0) {
 			for (FieldConfigurationEntity fieldConfiguration : confFieldList) {
-				if (fieldConfiguration.getEntityMaster().getId().equals(
-						EntityMasterConstants.Client)) {
+				if (fieldConfiguration.getEntityType()
+						== EntityType.CLIENT) {
 					populateClientDetails(actionForm, fieldConfiguration);
 				}
-				else if (fieldConfiguration.getEntityMaster().getId().equals(
-						EntityMasterConstants.Group)) {
+				else if (fieldConfiguration.getEntityType() ==
+						EntityType.GROUP) {
 					populateGrouptDetails(actionForm, fieldConfiguration);
 				}
 				else {

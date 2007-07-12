@@ -15,6 +15,8 @@ import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.accounts.business.AddAccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -69,6 +71,16 @@ public class DatabaseVersionPersistence {
 				ENGLISH_LOCALE,
 				"Disrbursal amount Reversal"
 				)
+		));
+		register(register, new CompositeUpgrade(
+			new AddActivity(106,
+				SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS,
+				SecurityConstants.CONFIGURATION_MANAGEMENT,
+				ENGLISH_LOCALE,
+				"Can define hidden/mandatory fields"
+				),
+			new AddField(106, 74, "AssignClients", EntityType.CLIENT, 
+				false, false)
 		));
 		return Collections.unmodifiableMap(register);
 	}

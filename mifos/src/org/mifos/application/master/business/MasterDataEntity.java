@@ -6,16 +6,12 @@ package org.mifos.application.master.business;
 import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * Subclasses of this class provide access to the database tables
  * which correspond to enum-like classes.  
- * Together with {@link EntityMasterConstants} this class provides the old way
- * of handling entity types. The new way is {@link EntityType}.
  * 
  * The replacement for a subclass of this class generally will be
  * an enum.

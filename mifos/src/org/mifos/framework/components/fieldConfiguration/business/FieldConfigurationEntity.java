@@ -1,6 +1,8 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.exceptions.PersistenceException;
 
 
@@ -35,18 +37,37 @@ public class FieldConfigurationEntity {
 	public Short getHiddenFlag() {
 		return hiddenFlag;
 	}
+	
+	public boolean isHidden() {
+		// TODO: what about null and other values besides 0 or 1?
+		// should those be an exception (can't happen) or what?
+		return hiddenFlag == FieldConfigurationConstant.YES;
+	}
 
 	public Short getMandatoryFlag() {
 		return mandatoryFlag;
 	}
 	
+	public boolean isMandatory() {
+		// TODO: what about null and other values besides 0 or 1?
+		// should those be an exception (can't happen) or what?
+		return mandatoryFlag == FieldConfigurationConstant.YES;
+	}
+
 	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setMandatoryFlag(Short mandatoryFlag) {
 		this.mandatoryFlag = mandatoryFlag;
 	}
 
-	public EntityMaster getEntityMaster() {
+	/**
+	 * Most callers instead want {@link #getEntityType()}.
+	 */
+	EntityMaster getEntityMaster() {
 		return entityMaster;
+	}
+
+	public EntityType getEntityType() {
+		return EntityType.fromInt(entityMaster.getId());
 	}
 
 	@SuppressWarnings("unused") // see .hbm.xml file
@@ -81,4 +102,5 @@ public class FieldConfigurationEntity {
 		this.hiddenFlag = hiddenFlag;
 		new FieldConfigurationPersistence().createOrUpdate(this);
 	}
+
 }

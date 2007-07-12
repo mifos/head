@@ -3,6 +3,7 @@ package org.mifos.framework.components.fieldConfiguration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.framework.components.fieldConfiguration.business.AddFieldTest;
 import org.mifos.framework.components.fieldConfiguration.business.TestFieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.TestFieldConfigurationPersistence;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigTest;
@@ -17,6 +18,7 @@ public class FieldConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestFieldConfigurationPersistence.class);
 		testSuite.addTestSuite(FieldConfigTest.class);
 		testSuite.addTestSuite(TestFieldConfigurationHelper.class);
+		testSuite.addTest(AddFieldTest.suite());
 		return testSuite;
 	}
 }
