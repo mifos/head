@@ -11,6 +11,15 @@
         </structure>
     </list-property>
     <parameters>
+        <scalar-parameter name="reportName" id="1126">
+            <property name="hidden">false</property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="userId" id="157">
             <property name="hidden">true</property>
             <property name="valueType">static</property>

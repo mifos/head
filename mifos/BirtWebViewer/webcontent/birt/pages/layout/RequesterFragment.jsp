@@ -27,8 +27,9 @@
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8">
 		<LINK REL="stylesheet" HREF="birt/styles/style.css" TYPE="text/css">
 		<LINK HREF="birt/styles/dialogbase.css" media="screen" rel="stylesheet" type="text/css"/>
+		<!-- For Mifos Birt reports -->
 		<link href="birt/styles/mifos-rewrite.css" media="screen" rel="stylesheet" type="text/css"/>				
-
+        <!--End-->
 		<SCRIPT SRC="birt/ajax/utility/Debug.js" type="text/javascript"></script>
 		<script src="birt/ajax/lib/prototype.js" type="text/javascript"></script>
 		

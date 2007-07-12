@@ -27,25 +27,25 @@
 	ScalarParameterBean parameterBean = ( ScalarParameterBean ) attributeBean.getParameterBean( );
 	String encodedParameterName = ParameterAccessor.htmlEncode( parameterBean.getName( ) );
 %>
+<!--For Mifos Birt reports-->
 <TR>
 	<TD NOWRAP>
 	</TD>
-	<TD NOWRAP>
-		<FONT TITLE="<%= parameterBean.getToolTip( ) %>"><LABEL FOR="<%= encodedParameterName + "_selection"%>"><%= parameterBean.getDisplayName( ) %>:</LABEL></FONT>
-		<%-- is required --%>
-		<%
-		if ( parameterBean.isRequired( ) )
+	<TD NOWRAP class = "fontnormal" align="right">
+	<%if ( parameterBean.isRequired( ) )
 		{
 		%>
 			<FONT COLOR="red"><LABEL FOR="<%= encodedParameterName + "_selection"%>">*</LABEL></FONT>
 		<%
 		}
 		%>
+		<FONT TITLE="<%= parameterBean.getToolTip( ) %>"><LABEL FOR="<%= encodedParameterName + "_selection"%>"><%= parameterBean.getDisplayName( ) %>:</LABEL></FONT>
+		<%-- is required --%>
+		
+		
 	</TD>
-</TR>
-<TR>
 	<TD NOWRAP></TD>
-	<TD NOWRAP WIDTH="100%">
+	<TD NOWRAP WIDTH="50%">
 		<INPUT TYPE="HIDDEN"
 			ID="<%= encodedParameterName + "_value" %>"
 			NAME="<%= encodedParameterName %>"
@@ -158,3 +158,4 @@
 	%>
 	</TD>
 </TR>
+<!--End-->

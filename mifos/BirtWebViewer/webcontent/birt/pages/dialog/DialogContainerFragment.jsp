@@ -25,7 +25,8 @@
 <%-----------------------------------------------------------------------------
 	Dialog container fragment, shared by all standard dialogs.
 -----------------------------------------------------------------------------%>
-<div id="<%= fragment.getClientId( ) %>" class="dialogBorder" style="display:none;position:absolute;z-index:220">
+<!-- For Mifos Birt reports change dialogBorder to bluetablehead-->
+<div id="<%= fragment.getClientId( ) %>" class="bluetablehead" style="display:none;position:absolute;z-index:220">
 	<iframe id="<%= fragment.getClientId( ) %>iframe"  name="<%= fragment.getClientId( ) %>iframe" style="z-index:-1; display: none; left:0px; top:0px;
 					 background-color: #ff0000; opacity: .0; filter: alpha(opacity = 0); position: absolute;" frameBorder="0" scrolling="no" src="birt/pages/common/blank.html">
 	</iframe>	
@@ -55,7 +56,8 @@
 		</div>
 	</div>
 	<!-- overflow is set as workaround for Mozilla bug https://bugzilla.mozilla.org/show_bug.cgi?id=167801 -->		
-	<div  class="dialogBackground" style="overflow: auto;"> 
+	<!-- For Mifos Birt reports delete style="overflow: auto;"-->
+	<div  class="dialogBackground"> 
 		<div class="dBackground">
 			<div class="dialogContentContainers" id="<%= fragment.getClientId( ) %>dialogContentContainer">
 				<%
@@ -77,10 +79,12 @@
 						<div id="<%= fragment.getClientId( ) %>okButton">
 							<div id="<%= fragment.getClientId( ) %>okButtonLeft" class="dialogBtnBarButtonLeftBackgroundEnabled"></div>
 							<div id="<%= fragment.getClientId( ) %>okButtonRight" class="dialogBtnBarButtonRightBackgroundEnabled"></div>
-							<input type="button" value='<%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %>' 
+							<!--For Mifos Birt Report change value <%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %> to Generate-->
+							<input type="button" value='Generate' 
 								title='<%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %>'  
-								class="dialogBtnBarButtonText dialogBtnBarButtonEnabled"/>
-						</div>
+								class="dialogBtnBarButtonText dialogOKBtnBarButtonEnabled"/>
+				               <!--For Mifos Birt reports change dialogBtnBarButtonEnabled to dialogOKBtnBarButtonEnabled-->		
+                </div>
 						<div class="dialogBtnBarDivider"></div>
 						<div id="<%= fragment.getClientId( ) %>cancelButton">
 							<div class="dialogBtnBarButtonLeftBackgroundEnabled"></div>

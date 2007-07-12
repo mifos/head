@@ -97,5 +97,10 @@
 	    <put name="search" value="/pages/framework/jsp/nomenureport.jsp" />
     </definition>
     
+      <definition name=".reportRender" extends=".mainLayout">
+        <put name="body" value="" />
+         <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
+    </definition>
+    
 </tiles-definitions>
 

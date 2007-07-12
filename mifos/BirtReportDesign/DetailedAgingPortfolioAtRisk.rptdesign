@@ -5,6 +5,15 @@
     <property name="units">in</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <parameters>
+        <scalar-parameter name="reportName" id="1626">
+            <property name="hidden">false</property>
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
         <scalar-parameter name="userId" id="29">
             <property name="hidden">true</property>
             <property name="valueType">static</property>
@@ -69,6 +78,7 @@
             <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DS-OPEN");
 Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
 var userId = reportContext.getParameterValue("userId");
+
 reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
 reportsDataService.initialize(userId);]]></method>
             <method name="close"><![CDATA[reportsDataService = null;
@@ -810,6 +820,11 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 <structure>
                     <property name="name">MoreThan90</property>
                     <expression name="expression">(Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">ReportName</property>
+                    <expression name="expression">dataSetRow["ReportName"]</expression>
                     <property name="dataType">any</property>
                 </structure>
             </list-property>

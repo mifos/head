@@ -1,16 +1,20 @@
-
+.BirtViewer_Body
+{
+    margin:0px;
+    position:relative; 
+    top:-90px;
+}
 
 .dialogBackground  {
-	background-color: white;
-	width:500px;
-	height:300px;
-	padding-right: 400px;
-	padding-bottom: 100px;
-	
+    background-color: white;
+    width:500px;
+    height:150px;
 }
 
 .birtviewer_dialog_body   {
-	border: none;
+    border: none;
+    position:relative; 
+    top:-20px;
 }
 
 .birtviewer_parameter_dialog_Label {
@@ -19,50 +23,123 @@
 
 .birtviewer_progressbar
 {
-        display: none;
-	
+    display: none;
 }
+
 .dialogCloseBtnContainer
 {		
-	display: none;
+    display: none;
 }
 
 .dialogTitleBar
 {
-	display: none;
+    display: none;
 }
 
 .dTitleBar
 {
-	display: none;
+    display: none;
 }
 
 .birtviewer_parameter_dialog
 {
-	height:100%;
-	overflow:auto;
-	height:240px;
+    height:100%;
+    overflow:auto;
+    height:240px;
 }
-
 
 .dBtnBarDividerTop
 {
-	height: 1px;
-	width:800px;
-	background-color:#D7DEEE;
-	overflow: hidden;
-}
-.dialogBorder
-{
-    width:800px;
-    height:250px;
-	border-style: outset;
-	border-width: 1px;
-	border-color: #D7DEEE;
-	background-color: #D7DEEE;
-}
-.birtviewer_document_fragment
-{
- display:none;
+    height: 1px;
+    width:830px;
+    background-color:#D7DEEE;
+    overflow: hidden;
+    position:relative; 
+    left:20px;
 }
 
+.birtviewer_document_fragment
+{
+    display:none;
+}
+
+.headingorange {
+    color:#CC6601;
+    font-family:Arial,Verdana,Helvetica,sans-serif;
+    font-size:11pt;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.bluetablehead {
+    border:1px solid #D7DEEE;
+    padding:3px 3px 3px 5px;
+    width:500px;
+    height:280px;
+    padding-right: 200px;
+}
+
+.paddingleftCreates {
+    padding-left:30px;
+    padding-top:15px;
+}
+
+.fontnormal {
+    color:#000000;
+    font-family:Arial,Verdana,Helvetica,sans-serif;
+    font-size:9pt;
+    font-weight:normal;
+    text-decoration:none;
+}
+
+.fontnormalbold {
+    color:#000000;
+    font-family:Arial,Verdana,Helvetica,sans-serif;
+    font-size:9pt;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.birtviewer_parameter_dialog_Select
+{
+	font:Verdana;
+	font-size:8pt;
+	width:150px;
+}
+
+/* button */
+.dialogBtnBarButtonText
+{	
+	font-family:Arial,Verdana,Helvetica,sans-serif;
+    font-size:9pt;
+    font-weight:normal;
+    height:20px;
+	text-align: center;
+	vertical-align: middle;
+}
+.dialogOKBtnBarButtonEnabled{
+    background-image: url("../images/buttonbg.jpg");
+    float: left;
+    cursor: pointer;
+    height: 20px;
+    width: 70px;
+    overflow: hidden;
+    color:#000000; 
+    border-width:1px; 
+    border-color:#C29F7C rgb(146, 96, 48) rgb(146, 96, 48) rgb(194, 159, 124);
+    background-repeat:repeat-x;
+
+}
+
+.dialogBtnBarButtonEnabled{
+    background-image: url("../images/buttonbgcancel.jpg");
+    float: left;
+    cursor: pointer;
+    height: 20px;
+    width: 70px;
+    overflow: hidden;
+    background-repeat:repeat-x;
+    color:#000000;
+    border-color:#A2A2A2 rgb(105, 105, 105) rgb(105, 105, 105) rgb(162, 162, 162);
+    border-width:1px;
+}

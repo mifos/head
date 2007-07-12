@@ -155,6 +155,7 @@ public class ReportsUserParamsAction extends BaseAction {
 			strReportId = "0";
 		}
 		int reportId = Integer.parseInt(strReportId);
+		String reportName = reportsPersistence.getReport((short)reportId).getReportName();
 		
 		List<ReportsJasperMap> reports = reportsPersistence.findJasperOfReportId(reportId);
 		if (reports.size() > 0) {
@@ -162,6 +163,7 @@ public class ReportsUserParamsAction extends BaseAction {
 			String filename = reportFile.getReportJasper();
 			if (filename.endsWith(".rptdesign")) {
 				request.setAttribute("reportFile", filename);
+				request.setAttribute("reportName", reportName);
 				return mapping.findForward(ReportsConstants.BIRTREPORTPATH);
 			}
 		}

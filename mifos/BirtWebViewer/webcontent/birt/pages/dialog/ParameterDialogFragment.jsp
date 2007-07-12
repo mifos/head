@@ -23,7 +23,8 @@
 <%-----------------------------------------------------------------------------
 	Parameter dialog fragment
 -----------------------------------------------------------------------------%>
-<DIV CLASS="birtviewer_parameter_dialog">
+<!-- For Mifos Birt reports change birtviewer_parameter_dialog to paddingleftCreates-->
+<DIV CLASS="paddingleftCreates">
 	<TABLE CELLSPACING="2" CELLPADDING="2" ID="parameter_table" CLASS="birtviewer_dialog_body">
 		<TR VALIGN="top">
 			<TD>
@@ -42,7 +43,9 @@
 					else
 					{
 					%>
+					<!-- For Mifos Birt reports hide
 						<TR><TD COLSPAN="2"><%= BirtResources.getMessage( "birt.viewer.required" ) %></TD></TR>
+					-->
 					<%
 						if ( fragments != null )
 						{
