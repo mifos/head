@@ -1261,7 +1261,7 @@
 			
 		</action>
   	    
-   	       	    <action path="/questionsAction"
+   	    <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
           parameter="method"
           scope="session"
@@ -1290,6 +1290,18 @@
           	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
           	  <forward name="get_success" path="/pages/application/surveys/jsp/viewInstanceDetails.jsp"/>          	  
           	  <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>          	            	  
+        </action>
+        
+        <action path="/ppiAction"
+          type="org.mifos.application.ppi.struts.action.PPIAction"
+          parameter="method"
+          scope="session"
+          validate="true"
+          name="genericActionForm"
+          input="/questionsAction.do?method=validate">
+             <forward name="configure" path="/pages/application/ppi/jsp/configure.jsp"/>
+             <forward name="preview_success" path="/pages/application/ppi/jsp/preview.jsp"/>
+             <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
 
 	</action-mappings>

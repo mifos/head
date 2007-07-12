@@ -52,7 +52,7 @@ public class PPICalculator {
 			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
 		}*/
 		
-		return survey.getNonPoorMax() == 100
+		return survey.getNonPoorMax() == 100 && survey.getVeryPoorMin() == 0
 				&& survey.getVeryPoorMax() == survey.getPoorMin() - 1
 				&& survey.getPoorMax() == survey.getAtRiskMin() - 1
 				&& survey.getAtRiskMax() == survey.getNonPoorMin() - 1;

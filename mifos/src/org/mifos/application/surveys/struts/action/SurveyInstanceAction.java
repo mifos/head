@@ -189,6 +189,7 @@ public class SurveyInstanceAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
+		System.out.println("hello world");
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
 	}

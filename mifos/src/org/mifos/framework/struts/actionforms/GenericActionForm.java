@@ -18,6 +18,10 @@ public class GenericActionForm extends ActionForm {
 		values.put(key, object);
 	}
 	
+	public void setValue(String key, int value) {
+		values.put(key, Integer.toString(value));
+	}
+	
 	public String getValue(String key) {
 		return values.get(key);
 	}

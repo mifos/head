@@ -304,7 +304,7 @@ public class BulkEntryActionForm extends ActionForm {
 				bulkEntryDataView.setAttendance(attendance);
 				bulkEntry.setBulkEntryDataView(bulkEntryDataView);
 			} catch (PageExpiredException e) {
-
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -338,6 +338,7 @@ public class BulkEntryActionForm extends ActionForm {
 						"LastMeetingDate", request);
 
 			} catch (PageExpiredException e) {
+				throw new RuntimeException(e);
 			}
 			try {
 				short isCenterHeirarchyExists = (Short) SessionUtils

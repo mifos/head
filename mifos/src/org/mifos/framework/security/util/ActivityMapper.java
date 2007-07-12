@@ -76,6 +76,7 @@ import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAc
 import org.mifos.application.surveys.struts.action.QuestionsAction;
 import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
+import org.mifos.application.ppi.struts.action.PPIAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
@@ -251,6 +252,7 @@ public class ActivityMapper {
 		parseActionSecurity(BirtReportsUploadAction.getSecurity());
 		parseActionSecurity(LookupOptionsAction.getSecurity());
 		parseActionSecurity(CustomFieldsAction.getSecurity());
+		parseActionSecurity(PPIAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {

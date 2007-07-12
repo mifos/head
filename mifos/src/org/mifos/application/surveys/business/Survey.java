@@ -2,7 +2,7 @@ package org.mifos.application.surveys.business;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -26,7 +26,7 @@ public class Survey implements Serializable {
 	public Survey() {
 		dateOfCreation = DateUtils.getCurrentDateWithoutTimeStamp();
 		state = SurveyState.INACTIVE;
-		questions = new LinkedList<SurveyQuestion>();
+		questions = new ArrayList<SurveyQuestion>();
 	}
 	
 	public Survey(String name, SurveyState state, SurveyType appliesTo) {

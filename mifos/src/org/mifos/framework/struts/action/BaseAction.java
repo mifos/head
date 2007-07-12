@@ -187,6 +187,7 @@ public abstract class BaseAction extends DispatchAction {
 				HibernateUtil.commitTransaction();
 				postHandleTransaction(request, annotation);
 			} catch (HibernateException he) {
+				he.printStackTrace();
 				HibernateUtil.rollbackTransaction();
 				throw new ApplicationException(he);
 			}

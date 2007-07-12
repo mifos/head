@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ppi country="INDIA">
+	<question name="children" mandatory="true">
+		<text>How many children aged 0 to 17 are in the household?</text>
+		<choice points="0">4</choice>
+		<choice points="7">3</choice>
+		<choice points="13">2</choice>
+		<choice points="19">1</choice>
+		<choice points="29">0</choice>
+	</question>
+	<question name="children in school" mandatory="true">
+		<text>How many children aged 6 to 17 attend school?</text>
+		<choice points="0">There are no children</choice>
+		<choice points="5">Not all attend</choice>
+		<choice points="6">All attend</choice>
+	</question>
+	<question name="cooking energy" mandatory="true">
+		<text>What is the household's primary energy source for cooking?</text>
+		<choice points="0">Firewood and chips, charcoal, dung cake, or no cooking arrangement</choice>
+		<choice points="4">Electricity, coke, or coal</choice>
+		<choice points="11">LPG, Kerosene, gobar gas, others, or unknown</choice>	
+	</question>
+	<question name="own tv" mandatory="true">
+		<text>Does the household own a television?</text>
+		<choice points="0">No</choice>
+		<choice points="5">Yes</choice>
+	</question>
+	<question name="own land" mandatory="true">
+		<text>How many hectares of land does the household own?</text>
+		<choice points="0">Rural, 0.4 ha.</choice>
+		<choice points="2">Rural, 0.4 and 1</choice>
+		<choice points="3">Rural, 1 ha.</choice>
+		<choice points="8">Urban, any amount</choice>
+	</question>
+	<question name="principle occupation" mandatory="true">
+		<text>What is the principle occupation of the household?</text>
+		<choice points="0">Agricultural labourers</choice>
+		<choice points="5">Operators and labourers, bricklayers, and construction workers</choice>
+		<choice points="8">Cultivators, farmers, fishers, hunters, loggers, or unknown</choice>
+		<choice points="10">Sales workers, service workers, and transportequipment operators</choice>
+		<choice points="12">Professional, technical, clerical, administrative, managerial, executive, and teachers</choice>
+	</question>
+	<question name="dressing tables #" mandatory="true">
+		<text>How many almirah/dressing tables does the household own?</text>
+		<choice points="0">0</choice>
+		<choice points="2">1</choice>
+		<choice points="8">2 or more</choice>
+	</question>
+	<question name="scooter/motorcycle" mandatory="true">
+		<text>Does the household own a scooter or motorcycle?</text>
+		<choice points="0">No</choice>
+		<choice points="11">Yes</choice>
+	</question>
+	<question name="residence" mandatory="true">
+		<text>Is the residence all pucca?</text>
+		<choice points="0">Not all pucca</choice>
+		<choice points="5">All pucca</choice>
+	</question>
+	<question name="own cooker" mandatory="true">
+		<text>Does the household own a pressure cooker or pressure pan?</text>
+		<choice points="0">No</choice>
+		<choice points="7">Yes</choice>
+	</question>
+</ppi>
