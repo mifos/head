@@ -59,6 +59,7 @@ public class LookUpEntity {
 	public static final int ACCOUNT_ACTION = 69;
 	public static final int ACCOUNT_STATE_FLAG = 70;
 	public static final int ACTIVITY = 87;
+	public static final int REPAYMENT_RULE = 91;
 
 	public LookUpEntity() {
 		super();

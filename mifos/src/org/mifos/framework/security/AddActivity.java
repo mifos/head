@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -15,7 +16,7 @@ public class AddActivity extends Upgrade {
 	private final int newActivityId;
 	private final Short locale;
 	private final String activityName;
-	private final short parentActivity;
+	private final Short parentActivity;
 
 	/**
 	 * Define an activity and one name for it.  If you want
@@ -28,7 +29,7 @@ public class AddActivity extends Upgrade {
 	 * @param activityName Name to give the activity, in that locale.
 	 */
 	public AddActivity(
-		int higherVersion, int newActivityId, short parentActivity, 
+		int higherVersion, int newActivityId, Short parentActivity, 
 		Short locale, String activityName) {
 		super(higherVersion);
 		this.newActivityId = newActivityId;
@@ -69,7 +70,7 @@ public class AddActivity extends Upgrade {
 			"ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) " +
 			"VALUES(?,?,?,?)");
 		statement.setInt(1, newActivityId);
-		statement.setInt(2, parentActivity);
+		statement.setObject(2, parentActivity, Types.SMALLINT);
 		statement.setInt(3, lookupId);
 		statement.setInt(4, lookupId);
 		statement.executeUpdate();

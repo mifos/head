@@ -95,6 +95,23 @@ public class AddActivityTest {
 		return upgrade;
 	}
 
+	@Test
+	public void nulls() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
+
+		short newId = 17032;
+		AddActivity upgrade = new AddActivity(
+			DatabaseVersionPersistence.APPLICATION_VERSION + 1,
+			newId,
+			null,
+			TEST_LOCALE,
+			"Can use the executive washroom");
+		upgrade.upgrade(database.openConnection());
+		ActivityEntity fetched = (ActivityEntity) 
+			database.openSession().get(ActivityEntity.class, newId);
+		assertEquals(null, fetched.getParent());
+	}
+
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(AddActivityTest.class);
 	}

@@ -118,4 +118,30 @@ public abstract class Upgrade {
 		statement.close();
 	}
 
+	protected void addLookupEntity(Connection connection, int entityId, String name, String description) 
+	throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)"
+			+ "VALUES(?,?,?)");
+		statement.setInt(1, entityId);
+		statement.setString(2, name);
+		statement.setString(3, description);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	protected void removeLookupEntity(Connection connection, int entityId) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+				"DELETE FROM LOOKUP_ENTITY WHERE ENTITY_ID = ?");
+		statement.setInt(1, entityId);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	protected void execute(Connection connection, String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		statement.close();
+	}
+
 }

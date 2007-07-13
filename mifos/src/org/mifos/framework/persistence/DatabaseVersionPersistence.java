@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.accounts.business.AddAccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -40,11 +41,23 @@ public class DatabaseVersionPersistence {
 
 	public static Map<Integer, Upgrade> masterRegister() {
 		Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();
+		register101(register);
+		register102(register);
+		register103(register);
+		register104(register);
+		register106(register);
+		return Collections.unmodifiableMap(register);
+	}
+
+	private static void register101(Map<Integer, Upgrade> register) {
 		register(register, new AddActivity(101, 
 			SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS, 
-			SecurityConstants.ACTIVITY_196, 
+			SecurityConstants.BULK, 
 			ENGLISH_LOCALE, 
 			"Can create multiple Loan accounts"));
+	}
+
+	private static void register102(Map<Integer, Upgrade> register) {
 		register(register, new CompositeUpgrade(
 			new AddActivity(
 				102,
@@ -72,6 +85,29 @@ public class DatabaseVersionPersistence {
 				"Disrbursal amount Reversal"
 				)
 		));
+	}
+
+	private static void register103(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+			new AddActivity(103, 
+				SecurityConstants.CONFIGURATION_MANAGEMENT, 
+				null, 
+				ENGLISH_LOCALE, 
+				"Configuration Management"),
+			new AddActivity(103, 
+				SecurityConstants.CAN_DEFINE_LABELS, 
+				SecurityConstants.CONFIGURATION_MANAGEMENT, 
+				ENGLISH_LOCALE, 
+				"Can define labels")
+				)
+		);
+	}
+
+	private static void register104(Map<Integer, Upgrade> register) {
+		register(register, new Upgrade104());
+	}
+
+	private static void register106(Map<Integer, Upgrade> register) {
 		register(register, new CompositeUpgrade(
 			new AddActivity(106,
 				SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS,
@@ -82,7 +118,6 @@ public class DatabaseVersionPersistence {
 			new AddField(106, 74, "AssignClients", EntityType.CLIENT, 
 				false, false)
 		));
-		return Collections.unmodifiableMap(register);
 	}
 
 	private final Connection connection;

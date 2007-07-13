@@ -407,7 +407,7 @@ public interface SecurityConstants {
      * {@link #CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS} but I'm not sure
      * why it didn't have its own constant until now.
      */
-    public final short ACTIVITY_196 = 196;
+    public final short BULK = 196;
 
     public final short CLIENT_CAN_APPLY_CHARGES = 198;
     public final short GROUP_CAN_APPLY_CHARGES = 199;
