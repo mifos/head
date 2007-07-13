@@ -115,6 +115,17 @@ public class PPISurvey extends Survey {
 		return nonPoorMax;
 	}
 	
+	public void populateDefaultValues() {
+		setVeryPoorMin(0);
+		setVeryPoorMax(24);
+		setPoorMin(25);
+		setPoorMax(49);
+		setAtRiskMin(50);
+		setAtRiskMax(74);
+		setNonPoorMin(75);
+		setNonPoorMax(100);
+	}
+	
 	@Override
 	public void setAppliesTo(String dummy) {
 		super.setAppliesTo(SurveyType.CLIENT);

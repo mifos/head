@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.helpers.Country;
-import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;

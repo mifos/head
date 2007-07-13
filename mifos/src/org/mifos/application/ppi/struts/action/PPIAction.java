@@ -1,18 +1,20 @@
 package org.mifos.application.ppi.struts.action;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Transaction;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.mifos.framework.components.logger.ResourceBundleFactory;
 import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.Schema;
@@ -22,7 +24,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.PPICalculator;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.application.ppi.helpers.XmlPPISurveyParser;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.persistence.PPIPersistence;
@@ -33,7 +34,6 @@ import org.mifos.application.ppi.helpers.Country;
 
 public class PPIAction extends PersistenceAction {
 	
-	private static Transaction txn;
 	private Schema validator;
 	
 	public PPIAction() {
@@ -70,8 +70,7 @@ public class PPIAction extends PersistenceAction {
 			
 			if (activeSurvey == null) {
 				activeSurvey = new PPISurvey();
-				activeSurvey.setVeryPoorMin(0);
-				activeSurvey.setNonPoorMax(100);
+				activeSurvey.populateDefaultValues();
 			}
 			
 			GenericActionForm actionForm = (GenericActionForm) form;
@@ -85,7 +84,6 @@ public class PPIAction extends PersistenceAction {
 			actionForm.setValue("nonPoorMin", activeSurvey.getNonPoorMin());
 			actionForm.setValue("nonPoorMax", activeSurvey.getNonPoorMax());
 			
-			request.getSession().setAttribute("ppiSurvey", activeSurvey);
 			request.setAttribute("countries", Arrays.asList(Country.values()));
 		
 		return mapping.findForward("configure");
@@ -99,15 +97,18 @@ public class PPIAction extends PersistenceAction {
 		try {
 			results = validator.validate((GenericActionForm)form);
 		} catch (SchemaValidationError e) {
+			System.out.println(e.makeActionMessages());
 			saveErrors(request, e.makeActionMessages());
+			request.setAttribute("countries", Arrays.asList(Country.values()));
 			return mapping.findForward("configure");
 		}
 		
 		PPISurvey survey = new PPISurvey();
 		
 		survey.setAppliesTo(SurveyType.CLIENT);
-		survey.setState(SurveyState.ACTIVE);
 		
+		survey.setCountry((Country)results.get("country"));
+		survey.setState((SurveyState)results.get("state"));
 		survey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
 		survey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
 		survey.setPoorMin((Integer)results.get("poorMin"));
@@ -118,12 +119,13 @@ public class PPIAction extends PersistenceAction {
 		survey.setNonPoorMax((Integer)results.get("nonPoorMax"));
 		
 		if (!PPICalculator.scoreLimitsAreValid(survey))
-			errors.add("limits", new ActionMessage("ppi.invalidlimits"));
+			errors.add("limits", new ActionMessage("errors.ppi.invalidlimits"));
 		if (errors.size() > 0) {
 			saveErrors(request, errors);
 			return mapping.findForward("configure");
 		}
 		
+		request.setAttribute("results", results);
 		
 		return mapping.findForward(ActionForwards.preview_success
 				.toString());
@@ -143,14 +145,27 @@ public class PPIAction extends PersistenceAction {
 		try {
 		PPIPersistence ppiPersistence = new PPIPersistence();
 		
-		PPISurvey ppiSurvey = (PPISurvey)request.getSession().getAttribute("ppiSurvey");
+		PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry(
+				(Country)results.get("country"));
+		
+		ppiSurvey = ppiSurvey == null ?
+				new PPISurvey((Country)results.get("country")) : ppiSurvey;
+		
 		XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
 		ppiSurvey = xmlParser.parseInto(
 				"org/mifos/framework/util/resources/ppi/PPISurvey" + 
 				results.get("country") + ".xml", ppiSurvey);
 		
+		ResourceBundleFactory resource = ResourceBundleFactory.getInstance();
+		ResourceBundle bundle = resource.getResourceBundle(
+				"org.mifos.application.ppi.util.resources.PPIUIResources",
+				getUserContext(request).getPreferredLocale());
+		
+		String name = bundle.getString("PPI.surveyName") + " ";
+		name += bundle.getString("PPI.Country." + results.get("country").toString());
+		ppiSurvey.setName(name);
 		ppiSurvey.setAppliesTo(SurveyType.CLIENT);
-		ppiSurvey.setState(SurveyState.ACTIVE);
+		ppiSurvey.setState((SurveyState)results.get("state"));
 		
 		ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
 		ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
@@ -162,8 +177,16 @@ public class PPIAction extends PersistenceAction {
 		ppiSurvey.setNonPoorMax((Integer)results.get("nonPoorMax"));
 		
 		ppiPersistence.createOrUpdate(ppiSurvey);
+		
+		if (ppiSurvey.getState() == 1) {
+			List<PPISurvey> allSurveys = ppiPersistence.retrieveAllPPISurveys();
+			for (PPISurvey currentSurvey : allSurveys) {
+				if (!currentSurvey.equals(ppiSurvey));
+			}
+		}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

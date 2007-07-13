@@ -1,6 +1,5 @@
 package org.mifos.application.ppi.struts.action;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -115,6 +114,7 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		
 		PPIPersistence ppiPersistence = new PPIPersistence();
+		System.out.println(ppiPersistence.retrieveAllPPISurveys().get(0).getName());
 		assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
 	}
 	
