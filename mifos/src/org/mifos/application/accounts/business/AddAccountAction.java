@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountAction extends Upgrade {
@@ -26,7 +27,7 @@ public class AddAccountAction extends Upgrade {
 	@Override
 	public void upgrade(Connection connection) 
 	throws IOException, SQLException {
-		int lookupEntity = LookUpEntity.ACCOUNT_ACTION;
+		int lookupEntity = MifosLookUpEntity.ACCOUNT_ACTION;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
 		insertMessage(connection, lookupId, locale, message);

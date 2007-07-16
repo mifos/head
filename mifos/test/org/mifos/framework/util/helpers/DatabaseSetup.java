@@ -39,6 +39,10 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
+		initializeHibernate("conf/HibernateTest.properties");
+	}
+
+	public static void initializeHibernate(String hibernatePropertiesFileName) {
 		DatabaseSetup.configureLogging();
 
 		if (HibernateSessionFactory.isConfigured()) {
@@ -47,14 +51,14 @@ public class DatabaseSetup {
 
 		boolean testAgainstMysql = true;
 		if (testAgainstMysql) {
-			setMysql();
+			setMysql(hibernatePropertiesFileName);
 		} else {
 			setMayfly();
 		}
 	}
 
-	public static void setMysql() {
-		HibernateStartUp.initialize("conf/HibernateTest.properties");
+	public static void setMysql(String hibernatePropertiesFileName) {
+		HibernateStartUp.initialize(hibernatePropertiesFileName);
 	}
 
 	public static Configuration getHibernateConfiguration() {

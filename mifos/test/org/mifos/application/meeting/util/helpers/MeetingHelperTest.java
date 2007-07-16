@@ -4,11 +4,16 @@ import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
+import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class MeetingHelperTest extends MifosTestCase{
+	{
+		ApplicationInitializer.initializeSpring();
+	}
+	
 	private MeetingHelper helper = new MeetingHelper();
 	
 	public void testGetWeekMessage() throws Exception {

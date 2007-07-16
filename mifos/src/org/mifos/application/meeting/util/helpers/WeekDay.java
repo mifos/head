@@ -1,6 +1,8 @@
 package org.mifos.application.meeting.util.helpers;
 
-public enum WeekDay {
+import org.mifos.config.LocalizedTextLookup;
+
+public enum WeekDay implements LocalizedTextLookup {
 	SUNDAY((short) 1), 
 	MONDAY((short) 2), 
 	TUESDAY((short) 3), 

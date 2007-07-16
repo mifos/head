@@ -38,6 +38,8 @@
 
 package org.mifos.application.master.business;
 
+import org.mifos.application.util.helpers.EntityType;
+
 /**
  * CustomFieldCategory is the set of object types for which custom 
  * fields are defined.  Each custom field for a given object type 
@@ -63,4 +65,26 @@ public enum CustomFieldCategory {
 	Center,
 	Loan,
 	Savings;
+	
+	public EntityType mapToEntityType() {
+		switch (this) {
+			case Personnel: return EntityType.PERSONNEL;
+			case Office: 	return EntityType.OFFICE;
+			case Client:	return EntityType.CLIENT;
+			case Group:		return EntityType.GROUP;
+			case Center:	return EntityType.CENTER;
+			case Loan:		return EntityType.LOAN;
+			case Savings:	return EntityType.SAVINGS;
+			default:		throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + this + "\"");
+		}
+	}
+	
+	public static CustomFieldCategory getCustomFieldCategoryFromString(String category) {
+		for (CustomFieldCategory customFieldCategory : values()) {
+			if (category.equalsIgnoreCase(customFieldCategory.toString())) {
+				return customFieldCategory;
+			}
+		}
+		throw new RuntimeException("Unrecognized CustomFieldCategory: \"" + category + "\"");
+	}
 }

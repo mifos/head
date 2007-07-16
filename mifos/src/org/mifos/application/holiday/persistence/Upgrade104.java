@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -55,7 +55,7 @@ public class Upgrade104 extends Upgrade {
 						+ "  ON UPDATE NO ACTION)"
 						+ "ENGINE=InnoDB CHARACTER SET utf8");
 		
-		addLookupEntity(connection, LookUpEntity.REPAYMENT_RULE, "Repayment Rule", "Repayment Rule Types");
+		addLookupEntity(connection, MifosLookUpEntity.REPAYMENT_RULE, "Repayment Rule", "Repayment Rule Types");
 		
 		sameDay.upgrade(connection);
 		nextMeetingOrRepayment.upgrade(connection);
@@ -71,7 +71,7 @@ public class Upgrade104 extends Upgrade {
 		nextMeetingOrRepayment.downgrade(connection);
 		sameDay.downgrade(connection);
 		
-		removeLookupEntity(connection, LookUpEntity.REPAYMENT_RULE);
+		removeLookupEntity(connection, MifosLookUpEntity.REPAYMENT_RULE);
 
 		execute(connection, "DROP TABLE HOLIDAY");
 		execute(

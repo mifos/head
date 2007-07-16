@@ -1,5 +1,7 @@
 package org.mifos.application.util.helpers;
 
+import org.mifos.config.LocalizedTextLookup;
+
 /**
 
  * YesNoFlag.java    version: 1.0
@@ -39,7 +41,7 @@ package org.mifos.application.util.helpers;
  */
 
 
-public enum YesNoFlag {
+public enum YesNoFlag implements LocalizedTextLookup {
 	NO((short) 0), YES((short) 1);
 
 	Short value;
@@ -51,4 +53,18 @@ public enum YesNoFlag {
 	public Short getValue() {
 		return value;
 	}
+	
+	public static YesNoFlag fromInt(int value) {
+		for (YesNoFlag candidate : values()) {
+			if (candidate.getValue() == value) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no field type " + value);
+	}
+	
+	public String getPropertiesKey() {
+		return "YesNoFlag." + toString();
+	}
+	
 }

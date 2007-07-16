@@ -32,7 +32,7 @@ public class AccountActionEntityTest extends TestCase {
 		assertEquals(new Integer(191), lookUpValue.getLookUpId());
 
 		MifosLookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
-		assertEquals(LookUpEntity.ACCOUNT_ACTION, 
+		assertEquals(MifosLookUpEntity.ACCOUNT_ACTION, 
 			lookUpEntity.getEntityId().shortValue());
 		assertEquals("AccountAction", lookUpEntity.getEntityType());
 

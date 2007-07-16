@@ -46,7 +46,9 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 	 * {@link ApplicationTestSuite}, not by itself.
 	 * Something seems to be putting in Grameen Koota configuration
 	 * (Kendra/Member instead of Center/Client, etc).  It seems
-	 * to be in ConfigurationTestSuite.
+	 * to be in ConfigurationTestSuite-- TestConfiguration seems to
+	 * be the specific culprit. If this test runs before TestConfiguration
+	 * it fails, if it runs after TestConfiguration, it succeeds.
 	 */
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/labelconfigurationaction.do");

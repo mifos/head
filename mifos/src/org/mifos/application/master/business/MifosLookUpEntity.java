@@ -43,12 +43,18 @@ import java.util.Set;
 import org.mifos.framework.business.PersistentObject;
 
 /**
- * Not sure why {@link LookUpEntity} and {@link MifosLookUpEntity} both exist.
- * They seem to both represent the same object.
+ * {@link MifosLookUpEntity} and {@link LookUpEntity} were redundant
+ * classes. {@link LookUpEntity} usage has now been replaced by this class.
  */
 
 public class MifosLookUpEntity extends PersistentObject {
 
+	public static final int ETHNICITY = 19;
+	public static final int ACCOUNT_ACTION = 69;
+	public static final int ACCOUNT_STATE_FLAG = 70;
+	public static final int ACTIVITY = 87;
+	public static final int REPAYMENT_RULE = 91;
+	
 	private Short entityId;
 
 	private String entityType;
@@ -93,5 +99,13 @@ public class MifosLookUpEntity extends PersistentObject {
 		this.lookUpValues = lookUpValues;
 	}
 
+	public String getLabelForLocale(Short localeId) {
+		for (LookUpLabelEntity lookUpLabel : lookUpLabels) {
+			if (lookUpLabel.getLocaleId().equals(localeId)) {
+				return lookUpLabel.getLabelName();
+			}
+		}
+		throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");
+	}
 
 }

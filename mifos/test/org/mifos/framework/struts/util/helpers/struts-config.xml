@@ -101,7 +101,7 @@
 	<plug-in className="org.mifos.framework.struts.plugin.EnumPlugin">
 		<set-property property="enumFileNames"
 			value="org.mifos.application.fees.util.helpers.FeeFrequencyType,
-		org.mifos.application.util.helpers.CustomFieldType,
+		org.mifos.application.master.business.CustomFieldType,
 		org.mifos.application.fees.util.helpers.FeeCategory,
 		org.mifos.application.fees.util.helpers.FeeLevel,
 		org.mifos.application.fees.util.helpers.FeePayment,

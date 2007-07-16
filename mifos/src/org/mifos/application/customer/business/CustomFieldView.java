@@ -42,7 +42,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.DateUtils;
 

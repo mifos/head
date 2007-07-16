@@ -67,6 +67,7 @@ public class CustomFieldsAction extends BaseAction{
 		ActionSecurity security = new ActionSecurity("customFieldsAction");
 		
 		security.allow("load", SecurityConstants.VIEW);
+		security.allow("viewCategory", SecurityConstants.VIEW);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
 		return security;
@@ -88,6 +89,20 @@ public class CustomFieldsAction extends BaseAction{
 		
 		logger.debug("Outside load method");
 		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward viewCategory(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside viewCategory method");
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		actionForm.clear();
+		
+		request.setAttribute("category", request.getParameter("category"));
+		
+		logger.debug("Outside viewCategory method");
+		return mapping.findForward(ActionForwards.viewCategory_success.toString());
 	}
 	
 	@TransactionDemarcate(validateAndResetToken = true)

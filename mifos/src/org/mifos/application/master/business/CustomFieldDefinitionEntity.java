@@ -38,7 +38,10 @@
 
 package org.mifos.application.master.business;
 
+import java.util.Locale;
+
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Constants;
@@ -51,10 +54,13 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 
 	private final Short fieldId;
 
-	private final LookUpEntity lookUpEntity;
+	private final MifosLookUpEntity lookUpEntity;
 
 	private final Short levelId;
 
+	/*
+	 * The data type {@link CustomFieldType}
+	 */
 	private final Short fieldType;
 
 	private final Short entityType;
@@ -81,7 +87,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		return fieldId;
 	}
 
-	public LookUpEntity getLookUpEntity() {
+	public MifosLookUpEntity getLookUpEntity() {
 		return this.lookUpEntity;
 	}
 
@@ -123,9 +129,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		}
 	}
 
-	public String getMandatoryStringValue() {
-		return (mandatoryFlag.shortValue() == Constants.YES ? CustomerConstants.YES_SMALL
-				: CustomerConstants.NO_SMALL);
+	public String getMandatoryStringValue(Locale locale) {
+		return MessageLookup.getInstance().lookup(
+				YesNoFlag.fromInt(mandatoryFlag), locale);
 	}
 
 	@Override

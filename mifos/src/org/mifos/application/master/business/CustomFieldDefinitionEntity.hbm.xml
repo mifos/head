@@ -15,7 +15,7 @@
         <property name="entityType" column="ENTITY_TYPE" type="short"  not-null="true" access="field"/>
         <property name="defaultValue" column="DEFAULT_VALUE" type="string" access="field"/>
         <property name="mandatoryFlag" column="MANDATORY_FLAG" type="short"  not-null="true" access="field"/>
-        <many-to-one name="lookUpEntity" column="ENTITY_ID" class="org.mifos.application.master.business.LookUpEntity"  not-null="true" lazy="false" access="field"/>
+        <many-to-one name="lookUpEntity" column="ENTITY_ID" class="org.mifos.application.master.business.MifosLookUpEntity"  not-null="true" lazy="false" access="field"/>
     </class>
     <query name="retrieveCustomFields"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.entityType = :entityType order by cfd.fieldId]]></query>
     <query name="retrieveAllCustomFields"><![CDATA[from CustomFieldDefinitionEntity ]]></query>

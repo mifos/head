@@ -40,26 +40,14 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
-import org.mifos.application.fees.business.FeeTypeEntity;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
-
 /**
- * Not sure why {@link LookUpEntity} and {@link MifosLookUpEntity} both exist.
- * They seem to both represent the same object.
- * LookUpEntity is used by {@link CustomFieldDefinitionEntity}, {@link FeeTypeEntity}
- * and {@link AuditConfigurationPersistence}.
+ * {@link LookUpEntity} is now deprecated and should not be used.
+ * Use {@link MifosLookUpEntity} instead which provides the same functionality
+ * and includes the constants previously defined here.
  * 
- * Note that these values are not the same as {@link EntityType}.
- * I'm not sure we have an enum for them yet.
+ * This class can probably be deleted now-- will make sure no issues show up first.
  */
 public class LookUpEntity {
-
-	public static final int ETHNICITY = 19;
-	public static final int ACCOUNT_ACTION = 69;
-	public static final int ACCOUNT_STATE_FLAG = 70;
-	public static final int ACTIVITY = 87;
-	public static final int REPAYMENT_RULE = 91;
 
 	public LookUpEntity() {
 		super();

@@ -133,8 +133,6 @@ public interface CustomerConstants {
 	public static final String SEARCH_FAILURE_TRANSFER = "search_failure_transfer";
 	public static final String CURRENT_CUSTOMER_STATUS = "currentStatus";
 	public static final String CUSTOMER_SEARCH_INPUT = "customerSearchInput";
-	public static final String YES_SMALL = "yes";
-	public static final String NO_SMALL = "no";
 	public static final String CLIENT_HAS_ACTIVE_LOAN = "Client.HasActiveLoan";
 	
 	public static final String LINK_VALUES="linkValues";

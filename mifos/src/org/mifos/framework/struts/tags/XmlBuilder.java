@@ -88,7 +88,9 @@ public class XmlBuilder {
     }
 
     public void text(String text) {
-        out.append(text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+    	if (text != null) {
+    		out.append(text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+    	}
     }
 
     public void newline() {

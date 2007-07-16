@@ -41,13 +41,14 @@ package org.mifos.application.fees.business;
 import java.util.Set;
 
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.business.PersistentObject;
 
 public class FeeTypeEntity extends PersistentObject {
 
 	private Short feeTypeId;
 
-	private LookUpEntity lookUpEntity;
+	private MifosLookUpEntity lookUpEntity;
 
 	private Set<FeePaymentsCategoriesTypeEntity> feePaymentsCategoriesTypes;
 
@@ -67,11 +68,11 @@ public class FeeTypeEntity extends PersistentObject {
 		this.feeTypeId = feeTypeId;
 	}
 
-	public LookUpEntity getLookUpEntity() {
+	public MifosLookUpEntity getLookUpEntity() {
 		return this.lookUpEntity;
 	}
 
-	public void setLookUpEntity(LookUpEntity lookUpEntity) {
+	public void setLookUpEntity(MifosLookUpEntity lookUpEntity) {
 		this.lookUpEntity = lookUpEntity;
 	}
 

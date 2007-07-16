@@ -1,6 +1,6 @@
 /**
 
- * CustomFieldCategoryListTagTest.java
+ * CustomFieldsListTagTest.java
 
  
 
@@ -35,6 +35,7 @@
  *
 
  */
+
 package org.mifos.application.configuration.struts.tag;
 
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
@@ -42,12 +43,16 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.mifos.application.master.business.CustomFieldCategory;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class CustomFieldCategoryListTagTest extends TestCase {
+public class CustomFieldsListTagTest extends TestCase {
 
 	private UserContext userContext;
 
@@ -55,29 +60,65 @@ public class CustomFieldCategoryListTagTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		DatabaseSetup.configureLogging();
+		DatabaseSetup.initializeHibernate();
+		ApplicationInitializer.initializeSpring();
+		
 		userContext = TestUtils.makeUser();
 	}
 
-	public void testGetCategoryRow() throws Exception {
-		CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
+	public void testGetListRow() throws Exception {
 		String categoryName = "Personnel";
-		XmlBuilder link = tag.getCategoryRow(categoryName);
+		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName);
+		MasterPersistence master = new MasterPersistence();
+		CustomFieldDefinitionEntity customField = master.retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
+		XmlBuilder link = tag.getRow(customField, userContext);
+		String sequenceNum = "1";
+		String label = "External Loan Id";
+		String dataType = "Text";
+		String defaultValue = "";
+		String mandatory = "No";
+		String fieldId = "7";
+
+/*		
 		assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">" 
 				+ "<img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\" />"
 				+ "</td><td>"
 				+ "<a href=\"action?method=method&amp;"
 				+ "category=" + categoryName 
 				+ "&amp;currentFlowKey=flow\">" + categoryName + "</a></td></tr>", link.getOutput());
+*/
+
+		assertEquals("<tr>\n"
+				+ "<td width=\"11%\" class=\"drawtablerow\">"
+				+ sequenceNum
+				+ "</td>\n"
+				+ "<td width=\"22%\" class=\"drawtablerow\">"
+				+ label
+				+ "</td>\n"
+				+ "<td width=\"21%\" class=\"drawtablerow\">"
+				+ dataType
+				+ "</td>\n"
+				+ "<td width=\"21%\" class=\"drawtablerow\">"
+				+ defaultValue
+				+ "</td>\n"
+				+ "<td width=\"17%\" class=\"drawtablerow\">"
+				+ mandatory
+				+ "</td>\n"
+				+ "<td width=\"8%\" align=\"right\" class=\"drawtablerow\">"
+				+ "<a href=\"action?method=method&amp;ref=" + fieldId + "\">Edit</a>"
+				+ "</td>\n"
+				+ "</tr>\n",
+				link.getOutput());
 	}
-	
-	public void testGetCustomFieldCategoryList() throws Exception {
-		CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
-		String html = tag.getCustomFieldCategoryList(userContext);
+
+	public void testGetCustomFieldsList() throws Exception {
+		String categoryName = "Personnel";
+		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName);
+		String html = tag.getCustomFieldsList(userContext);
 		assertWellFormedFragment(html);
 		
-		for (CustomFieldCategory category : CustomFieldCategory.values()) {
-			StringAssert.assertContains(category.toString(), html);			
-		}
+		StringAssert.assertContains("External Id", html);			
+		// assertEquals("", html);			
 	}
 
 }

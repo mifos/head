@@ -1193,6 +1193,8 @@
             validate="true" scope="session">
             <forward name="load_success" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
             <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="viewCategory_success" path="/pages/application/configuration/jsp/view_additional_fields.jsp" />
+            <forward name="viewCategory_failure" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
             <forward name="update_success" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
             <forward name="update_failure" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
             <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
@@ -1381,7 +1383,7 @@
 	<plug-in className="org.mifos.framework.struts.plugin.EnumPlugin">
 		<set-property property="enumFileNames"
 			value="org.mifos.application.fees.util.helpers.FeeFrequencyType,
-		org.mifos.application.util.helpers.CustomFieldType,
+		org.mifos.application.master.business.CustomFieldType,
 		org.mifos.application.fees.util.helpers.FeeCategory,
 		org.mifos.application.fees.util.helpers.FeeLevel,
 		org.mifos.application.fees.util.helpers.FeePayment,

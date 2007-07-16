@@ -11,6 +11,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -25,10 +26,10 @@ public class AuditConfigurationPersistence extends Persistence {
 			List<CustomFieldDefinitionEntity> customFields = executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_ALL_CUSTOM_FIELDS, null);
 			for (CustomFieldDefinitionEntity field : customFields) {
-				LookUpEntity lookUpEntity = field
+				MifosLookUpEntity lookUpEntity = field
 						.getLookUpEntity();
 				Set<LookUpLabelEntity> lookUpLabelSet = lookUpEntity
-						.getLookUpLabelSet();
+						.getLookUpLabels();
 				for (LookUpLabelEntity lookUpLabel : lookUpLabelSet) {
 					if (lookUpLabel.getLocaleId().equals(localeId)) {
 						valueMap.put(field.getFieldId()

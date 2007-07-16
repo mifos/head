@@ -5,7 +5,7 @@ import java.util.List;
 import org.mifos.framework.business.View;
 
 /**
- * This class represents a {@link LookUpEntity} and its associated
+ * This class represents a {@link MifosLookUpEntity} and its associated
  * list of {@link LookUpValueEntity} objects for a given locale.
  * 
  * A better name for this class might be ValueListForLocale.

@@ -12,7 +12,7 @@
         dependency-check="default">
         <property name="basenames">
             <list>
-                <value>org/mifos/config/localization/enumerations</value>
+                <value>org/mifos/config/resources/enumerations</value>
             </list>
         </property>
     </bean>

@@ -1935,5 +1935,34 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>  
+    <!-- CustomFieldsListTag -->
+    <tag>
+        <name>CustomFieldsList</name>
+        <tagclass>
+            org.mifos.application.configuration.struts.tag.CustomFieldsListTag
+        </tagclass>
+        <bodycontent>empty</bodycontent>
+
+        <attribute>
+            <name>actionName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>methodName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>flowKey</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>categoryName</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>  
 	
 </taglib>

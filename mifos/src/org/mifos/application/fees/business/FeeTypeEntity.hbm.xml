@@ -11,6 +11,6 @@
 		<property name="flatOrRate" column="FLAT_OR_RATE" type="short" />
 		<property name="formula" column="FORMULA" type="string" />
 
-		<many-to-one name="lookUpEntity" column="FEE_LOOKUP_ID" class="org.mifos.application.master.business.LookUpEntity" />
+		<many-to-one name="lookUpEntity" column="FEE_LOOKUP_ID" class="org.mifos.application.master.business.MifosLookUpEntity" />
 	</class>
 </hibernate-mapping>

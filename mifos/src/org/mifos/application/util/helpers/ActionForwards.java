@@ -182,5 +182,7 @@ public enum ActionForwards {
 	addEditLookupOption_success,
 	addEditLookupOption_failure,
 	addEditLookupOption_cancel_success,
-	addEditLookupOption_cancel_failure;
+	addEditLookupOption_cancel_failure, 
+	viewCategory_success,
+	viewCategory_failure;
 }

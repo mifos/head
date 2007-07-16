@@ -9,6 +9,7 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -35,6 +36,14 @@ import org.springframework.context.MessageSourceAware;
  * the loading and lookup from external resource bundle files.
  * See {@link org.mifos.config.applicationContext.xml}
  * for the Spring configuration. 
+ * 
+ * Enumerated types which implement the {@link LocalizedTextLookup}
+ * interface can be passed to {@link MessageLookup} to look up
+ * a localized text string for each instance of the enumerated type.
+ * 
+ * Text strings for enumerated types can currently be found in
+ * org.mifos.config.resources.enumerations.properties (and 
+ * associated versions for different locales).
  */
 public class MessageLookup implements MessageSourceAware {
 	private static MessageLookup messageLookupInstance = new MessageLookup();
@@ -45,12 +54,12 @@ public class MessageLookup implements MessageSourceAware {
 		return messageLookupInstance;
 	}
 	
-	public String lookup(WeekDay weekDay, Locale locale) {
-		return messageSource.getMessage(weekDay.getPropertiesKey(), null, weekDay.getPropertiesKey(), locale);		
+	public String lookup(LocalizedTextLookup namedObject, Locale locale) {
+		return messageSource.getMessage(namedObject.getPropertiesKey(), null, namedObject.getPropertiesKey(), locale);		
 	}
 	
-	public String lookup(WeekDay weekDay, UserContext user) {
-		return lookup(weekDay, user.getPreferredLocale());
+	public String lookup(LocalizedTextLookup namedObject, UserContext user) {
+		return lookup(namedObject, user.getPreferredLocale());
 
 	}
 

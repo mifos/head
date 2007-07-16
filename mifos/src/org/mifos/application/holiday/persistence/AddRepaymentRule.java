@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddRepaymentRule extends Upgrade {
@@ -25,7 +25,7 @@ public class AddRepaymentRule extends Upgrade {
 
 	@Override
 	public void upgrade(Connection connection) throws IOException, SQLException {
-		int lookupEntity = LookUpEntity.REPAYMENT_RULE;
+		int lookupEntity = MifosLookUpEntity.REPAYMENT_RULE;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
 		insertMessage(connection, lookupId, locale, message);

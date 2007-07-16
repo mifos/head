@@ -88,7 +88,7 @@
 										<br> 
 									</span>
 									<br>
-									<mifos:CustomFieldCategoryList actionName="CustomFieldsAction" 
+									<mifos:CustomFieldCategoryList actionName="customFieldsAction.do" 
 										methodName="viewCategory" flowKey="${requestScope.currentFlowKey}">
 									</mifos:CustomFieldCategoryList>
 								</td>
