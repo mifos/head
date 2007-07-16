@@ -79,13 +79,13 @@
                 <td><br>
                   <table width="590" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.dateofsurvey" bundle="SurveyUIResources"/>: 
+                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.dateofsurvey" bundle="SurveysUIResources"/>: 
 							          <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.retrievedInstance.dateConducted)}" />
                       </td>
                     </tr>
                     <tr>
 
-                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.surveyedby" bundle="SurveyUIResources"/>: 
+                      <td class="fontnormalbold"><mifos:mifoslabel name="Surveys.surveyedby" bundle="SurveysUIResources"/>: 
                         <c:out value="${requestScope.retrievedInstance.officer.displayName}"/>
                       </td>
                     </tr>

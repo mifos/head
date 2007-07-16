@@ -18,6 +18,7 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.business.TestSurvey;
 import org.mifos.application.surveys.helpers.AnswerType;
@@ -114,15 +115,15 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		Question question2 = new Question("test name 2", "testGet question1 text", AnswerType.FREETEXT);
 		
 		Survey sampleSurvey = sampleInstance.getSurvey();
-		sampleSurvey.addQuestion(question1, true);
-		sampleSurvey.addQuestion(question2, true);
+		SurveyQuestion surveyQuestion1 = sampleSurvey.addQuestion(question1, true);
+		SurveyQuestion surveyQuestion2 =sampleSurvey.addQuestion(question2, true);
 		
 		SurveyResponse response1 = new SurveyResponse();
-		response1.setQuestion(question1);
+		response1.setSurveyQuestion(surveyQuestion1);
 		response1.setStringValue("3");
 		response1.setInstance(sampleInstance);
 		SurveyResponse response2 = new SurveyResponse();
-		response2.setQuestion(question2);
+		response2.setSurveyQuestion(surveyQuestion2);
 		response2.setStringValue("question2 answer");
 		response2.setInstance(sampleInstance);
 		persistence.createOrUpdate(response1);
@@ -257,11 +258,11 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		question5.addChoice(choice3);
 		question5.addChoice(choice4);
 		
-		survey.addQuestion(question1, true);
-		survey.addQuestion(question2, true);
-		survey.addQuestion(question3, true);
-		survey.addQuestion(question4, true);
-		survey.addQuestion(question5, true);
+		SurveyQuestion surveyQuestion1 = survey.addQuestion(question1, true);
+		SurveyQuestion surveyQuestion2 = survey.addQuestion(question2, true);
+		SurveyQuestion surveyQuestion3 = survey.addQuestion(question3, true);
+		SurveyQuestion surveyQuestion4 = survey.addQuestion(question4, true);
+		SurveyQuestion surveyQuestion5 = survey.addQuestion(question5, true);
 		
 		surveysPersistence.createOrUpdate(survey);
 		
@@ -285,12 +286,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
 						SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 		
-		int question3Id = question3.getQuestionId();
-		int question4Id = question4.getQuestionId();
-		int question5Id = question5.getQuestionId();
-		addRequestParameter("value(response_" + question3Id + "_DD)", "14");
-		addRequestParameter("value(response_" + question3Id + "_MM)", "3");
-		addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
+		int surveyQuestion3Id = surveyQuestion3.getSurveyQuestionId();
+		int surveyQuestion4Id = surveyQuestion4.getSurveyQuestionId();
+		int surveyQuestion5Id = surveyQuestion5.getSurveyQuestionId();
+		addRequestParameter("value(response_" + surveyQuestion3Id + "_DD)", "14");
+		addRequestParameter("value(response_" + surveyQuestion3Id + "_MM)", "3");
+		addRequestParameter("value(response_" + surveyQuestion3Id + "_YY)", "2006");
 		addRequestParameter("value(response_" +
 				survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
 				"answer 1");
@@ -302,9 +303,9 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(dateSurveyed_DD)", "13");
 		addRequestParameter("value(dateSurveyed_MM)", "06");
 		addRequestParameter("value(dateSurveyed_YY)", "2007");
-		addRequestParameter("value(response_" + question4Id + ")", Integer.toString(choice1.getChoiceId()));
-		addRequestParameter("value(response_" + question5Id + ".1)", "1");
-		addRequestParameter("value(response_" + question5Id + ".2)", "0");
+		addRequestParameter("value(response_" + surveyQuestion4Id + ")", Integer.toString(choice1.getChoiceId()));
+		addRequestParameter("value(response_" + surveyQuestion5Id + ".1)", "1");
+		addRequestParameter("value(response_" + surveyQuestion5Id + ".2)", "0");
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "preview");
 		actionPerform();

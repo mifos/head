@@ -9,6 +9,8 @@ public class SurveyQuestion implements Serializable {
 	
 	private Question question;
 	
+	private int order;
+	
 	public SurveyQuestion() {
 	}
 
@@ -43,5 +45,13 @@ public class SurveyQuestion implements Serializable {
 
 	public void setSurveyQuestionId(int surveyQuestionId) {
 		this.surveyQuestionId = surveyQuestionId;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
+
+	public int getOrder() {
+		return order;
 	}
 }

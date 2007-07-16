@@ -85,8 +85,6 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		
-		//PPISurvey survey = (PPISurvey)request.getSession().getAttribute("ppiSurvey");
-		//assertTrue(PPICalculator.scoreLimitsAreValid(survey));
 	}
 	
 	public void testCreateUpdateNoExistingPPISurvey() throws Exception {

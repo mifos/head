@@ -11,6 +11,7 @@
 		<many-to-one name="question" column="QUESTION_ID" 
 		    class="org.mifos.application.surveys.business.Question"     
 		    cascade="all" access="field" not-null="true"/>
+		<property name="order" column="QUESTION_ORDER" access="field" insert="false" update="false"/>
 	</class>
 </hibernate-mapping>
 

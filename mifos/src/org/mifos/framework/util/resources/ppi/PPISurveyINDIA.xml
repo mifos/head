@@ -2,7 +2,7 @@
 <ppi country="INDIA">
 	<question name="children" mandatory="true">
 		<text>How many children aged 0 to 17 are in the household?</text>
-		<choice points="0">4</choice>
+		<choice points="0">&gt;=4</choice>
 		<choice points="7">3</choice>
 		<choice points="13">2</choice>
 		<choice points="19">1</choice>
@@ -27,9 +27,9 @@
 	</question>
 	<question name="own land" mandatory="true">
 		<text>How many hectares of land does the household own?</text>
-		<choice points="0">Rural, 0.4 ha.</choice>
-		<choice points="2">Rural, 0.4 and 1</choice>
-		<choice points="3">Rural, 1 ha.</choice>
+		<choice points="0">Rural, &lt;=0.4 ha.</choice>
+		<choice points="2">Rural, &gt;0.4 and &lt;=1</choice>
+		<choice points="3">Rural, &gt;1 ha.</choice>
 		<choice points="8">Urban, any amount</choice>
 	</question>
 	<question name="principle occupation" mandatory="true">

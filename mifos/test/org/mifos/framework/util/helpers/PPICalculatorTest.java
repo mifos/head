@@ -56,44 +56,44 @@ public class PPICalculatorTest extends TestCase {
 		
 		List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
 		
-		SurveyQuestion surveyQuestion = new SurveyQuestion();
 		Question question = new Question("Test Question 1", "What is this question?",
 				AnswerType.CHOICE);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
 		question.setChoices(new ArrayList<QuestionChoice>());
 		PPIChoice choice = new PPIChoice("First choice");
 		choice.setChoiceId(1);
 		choice.setPoints(20);
 		question.getChoices().add(choice);
 		surveyQuestion.setQuestion(question);
-		SurveyResponse response = new SurveyResponse(instance, question);
+		SurveyResponse response = new SurveyResponse(instance, surveyQuestion);
 		response.setChoiceValue(choice);
 		response.setResponseId(1);
 		responses.add(response);
 		questions.add(surveyQuestion);
 		
-		surveyQuestion = new SurveyQuestion();
 		question = new Question("Test Question 2", "What is this question?",
 				AnswerType.CHOICE);
+		surveyQuestion = survey.addQuestion(question, true);
 		choice = new PPIChoice("Second choice");
 		choice.setChoiceId(2);
 		choice.setPoints(15);
 		question.getChoices().add(choice);
 		surveyQuestion.setQuestion(question);
-		response = new SurveyResponse(instance, question);
+		response = new SurveyResponse(instance, surveyQuestion);
 		response.setChoiceValue(choice);
 		response.setResponseId(2);
 		responses.add(response);
 		questions.add(surveyQuestion);
 		
-		surveyQuestion = new SurveyQuestion();
 		question = new Question("Test Question 3", "What is this question?",
 				AnswerType.CHOICE);
+		surveyQuestion = survey.addQuestion(question, true);
 		choice = new PPIChoice("Third choice");
 		choice.setChoiceId(3);
 		choice.setPoints(3);
 		question.getChoices().add(choice);
 		surveyQuestion.setQuestion(question);
-		response = new SurveyResponse(instance, question);
+		response = new SurveyResponse(instance, surveyQuestion);
 		response.setChoiceValue(choice);
 		response.setResponseId(3);
 		responses.add(response);

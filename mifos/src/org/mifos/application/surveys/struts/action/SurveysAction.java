@@ -140,12 +140,6 @@ public class SurveysAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
-	public ActionForward create_instance_entry(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) {
-		
-		return mapping.findForward(ActionForwards.create_instance_entry_success.toString());
-	}
-	
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

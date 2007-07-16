@@ -176,7 +176,7 @@ public enum ActionForwards {
 	// surveys additions
 	create_entry_success,
 	manage_questions,
-	create_instance_entry_success,
+	create_entry_success_ppi,
 	choose_survey,
 	newinstance_responses,
 	addEditLookupOption_success,

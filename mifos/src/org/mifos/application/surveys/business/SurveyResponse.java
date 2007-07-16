@@ -7,12 +7,12 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class SurveyResponse {
+public class SurveyResponse implements Comparable<SurveyResponse> {
 	private int responseId;
 	
 	private SurveyInstance instance;
 	
-	private Question question;
+	private SurveyQuestion surveyQuestion;
 	
 	private String freetextValue;
 	
@@ -25,20 +25,22 @@ public class SurveyResponse {
 	private Double numberValue;
 	
 	
-	public SurveyResponse(SurveyInstance instance, Question question) {
+	public SurveyResponse(SurveyInstance instance, SurveyQuestion question) {
 		setInstance(instance);
-		setQuestion(question);
+		setSurveyQuestion(question);
 	}
 	
 	public SurveyResponse() {}
 
 
 	public Question getQuestion() {
-		return question;
+		if (getSurveyQuestion() == null)
+			return null;
+		return getSurveyQuestion().getQuestion();
 	}
 
 	public void setQuestion(Question question) {
-		this.question = question;
+		getSurveyQuestion().setQuestion(question);
 	}
 
 	public SurveyInstance getInstance() {
@@ -62,7 +64,7 @@ public class SurveyResponse {
 	}
 
 	public void setChoiceValue(QuestionChoice choice) throws ApplicationException {
-		if (question.getAnswerTypeAsEnum() != AnswerType.CHOICE) {
+		if (getQuestion().getAnswerTypeAsEnum() != AnswerType.CHOICE) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.choiceValue = choice;
@@ -81,7 +83,7 @@ public class SurveyResponse {
 	}
 
 	public void setDateValue(Date dateValue) throws ApplicationException {
-		if (dateValue != null && question.getAnswerTypeAsEnum() != AnswerType.DATE) {
+		if (dateValue != null && getQuestion().getAnswerTypeAsEnum() != AnswerType.DATE) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.dateValue = dateValue;
@@ -92,7 +94,7 @@ public class SurveyResponse {
 	}
 
 	public void setFreetextValue(String freetextValue) throws ApplicationException {
-		if (freetextValue != null && question.getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
+		if (freetextValue != null && getQuestion().getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.freetextValue = freetextValue;
@@ -104,14 +106,14 @@ public class SurveyResponse {
 
 	
 	public void setNumberValue(Double numberValue) throws ApplicationException {
-		if (numberValue != null && question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
+		if (numberValue != null && getQuestion().getAnswerTypeAsEnum() != AnswerType.NUMBER) {
 			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.numberValue = numberValue;
 	}
 	
 	public Object getValue() {
-		AnswerType answerType = question.getAnswerTypeAsEnum();
+		AnswerType answerType = getQuestion().getAnswerTypeAsEnum();
 		
 		if (answerType == AnswerType.FREETEXT) {
 			return getFreetextValue();
@@ -136,7 +138,7 @@ public class SurveyResponse {
 	
 	@Override
 	public String toString() {
-		AnswerType answerType = question.getAnswerTypeAsEnum();
+		AnswerType answerType = getQuestion().getAnswerTypeAsEnum();
 		
 		if (answerType == AnswerType.FREETEXT) {
 			return getFreetextValue();
@@ -164,11 +166,11 @@ public class SurveyResponse {
 	}
 	
 	public void setStringValue(String value) throws ApplicationException {
-		if (question == null || question.getAnswerTypeAsEnum() == null) {
+		if (getQuestion() == null || getQuestion().getAnswerTypeAsEnum() == null) {
 			throw new ApplicationException(SurveyExceptionConstants.NO_ANSWER_TYPE_YET);
 		}
 		
-		AnswerType answerType = question.getAnswerTypeAsEnum();
+		AnswerType answerType = getQuestion().getAnswerTypeAsEnum();
 		if (answerType == AnswerType.FREETEXT) {
 			setFreetextValue(value);
 		
@@ -185,7 +187,7 @@ public class SurveyResponse {
 		} else if (answerType == AnswerType.CHOICE) {
 			int choiceId = Integer.parseInt(value);
 			QuestionChoice choice = null;
-			for (QuestionChoice qc : question.getChoices()) {
+			for (QuestionChoice qc : getQuestion().getChoices()) {
 				if (qc.getChoiceId() == choiceId) {
 					choice = qc;
 					break;
@@ -200,11 +202,11 @@ public class SurveyResponse {
 	
 	public void setValue(Object value) throws ApplicationException {
 		
-		if (question == null || question.getAnswerTypeAsEnum() == null) {
+		if (getQuestion() == null || getQuestion().getAnswerTypeAsEnum() == null) {
 			throw new ApplicationException(SurveyExceptionConstants.NO_ANSWER_TYPE_YET);
 		}
 		
-		AnswerType answerType = question.getAnswerTypeAsEnum();
+		AnswerType answerType = getQuestion().getAnswerTypeAsEnum();
 	
 		try {
 			if (answerType == AnswerType.FREETEXT) {
@@ -232,6 +234,14 @@ public class SurveyResponse {
 		}
 	}
 	
+	public void setSurveyQuestion(SurveyQuestion surveyQuestion) {
+		this.surveyQuestion = surveyQuestion;
+	}
+
+	public SurveyQuestion getSurveyQuestion() {
+		return surveyQuestion;
+	}
+
 	@Override
 	public final boolean equals(Object o) {
 		if (o == null) {
@@ -249,6 +259,10 @@ public class SurveyResponse {
 	@Override
 	public int hashCode() {
 		return new Integer(responseId).hashCode();
+	}
+	
+	public int compareTo(SurveyResponse o) {
+		return getSurveyQuestion().getOrder() - o.getSurveyQuestion().getOrder();
 	}
 
 }

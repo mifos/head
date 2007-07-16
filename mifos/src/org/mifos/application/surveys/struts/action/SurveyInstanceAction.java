@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +32,8 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.ppi.helpers.PovertyBand;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -56,6 +62,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.PPICalculator;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class SurveyInstanceAction extends BaseAction {
@@ -90,8 +97,7 @@ public class SurveyInstanceAction extends BaseAction {
 			Map fieldErrors = new HashMap<String, ValidationError>();
 			for (SurveyQuestion question : survey.getQuestions()) {
 				String formName = "response_"
-						+ Integer.toString(question.getQuestion()
-								.getQuestionId());
+						+ Integer.toString(question.getSurveyQuestionId());
 
 				String formInput = null;
 				if (question.getQuestion().getAnswerTypeAsEnum() == AnswerType.DATE) {
@@ -189,7 +195,6 @@ public class SurveyInstanceAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		System.out.println("hello world");
 		throw new RuntimeException("not implemented");
 		//		return new SurveysBusinessService();
 	}
@@ -309,8 +314,11 @@ public class SurveyInstanceAction extends BaseAction {
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(
 				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
-
-		return mapping.findForward(ActionForwards.create_entry_success
+		if (PPISurvey.class.isInstance(survey))
+			return mapping.findForward(ActionForwards.create_entry_success_ppi
+					.toString());
+		else
+			return mapping.findForward(ActionForwards.create_entry_success
 				.toString());
 	}
 
@@ -386,7 +394,6 @@ public class SurveyInstanceAction extends BaseAction {
 			// this is mostly for clean testing
 			return mapping.findForward(ActionForwards.choose_survey.toString());
 		}
-		
 		actionForm.setValue("officerName", userContext.getName());
 
 		SurveysPersistence persistence = new SurveysPersistence();
@@ -415,14 +422,17 @@ public class SurveyInstanceAction extends BaseAction {
 		String displayName = getBusinessObjectName(businessObject);
 			request.setAttribute(
 		SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
+		Survey survey = (Survey) request.getSession().getAttribute(
+				SurveysConstants.KEY_SURVEY);
+		String ppi = "";
+		if (PPISurvey.class.isInstance(survey))
+			ppi = "_ppi";
 		
 		Map<String, Object> results = null;
 		ActionMessages errors = new ActionMessages();
 		GenericActionForm actionForm = (GenericActionForm) form;
 		try {
 			sessionValidator.validate(request.getSession());
-			Survey survey = (Survey) request.getSession().getAttribute(
-					SurveysConstants.KEY_SURVEY);
 			results = new SurveyValidator(survey).validate(actionForm);
 		}
 		catch (SchemaValidationError e) {
@@ -440,39 +450,69 @@ public class SurveyInstanceAction extends BaseAction {
 		if (errors.size() > 0) {
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.create_entry_success
-					.toString());
+					.toString() + ppi);
 		}
+		
+		SurveyInstance instance = new SurveyInstance();
 
+		instance.setSurvey(survey);
+		Set<SurveyResponse> surveyResponses = new TreeSet<SurveyResponse>();
+		String prefix = "response_";
 		InstanceStatus status = InstanceStatus.COMPLETED;
+		
 		for (String key : results.keySet()) {
 			Object value = results.get(key);
 			if (value.equals("") || value == null) {
 				status = InstanceStatus.INCOMPLETE;
-				break;
+			} else if (key.startsWith(prefix)){
+				SurveyResponse surveyResponse = new SurveyResponse();
+				surveyResponse.setSurveyQuestion(survey.getSurveyQuestionById(Integer
+						.parseInt(key.substring(prefix.length()))));
+				String stringValue = (String) results.get(key);
+				surveyResponse.setStringValue(stringValue);
+				surveyResponse.setInstance(instance);
+				surveyResponse.setResponseId(surveyResponse.getQuestion().getQuestionId());
+				surveyResponses.add(surveyResponse);
 			}
 		}
-
+		
+		instance.setSurveyResponses(surveyResponses);
+		
+		if (PPISurvey.class.isInstance(survey)) {
+			request.setAttribute("povertyBand",
+					PovertyBand.fromInt(PPICalculator.calculateScore(instance), (PPISurvey)survey));
+		}
+		
 		actionForm.setValue("instanceStatus", Integer.toString(status
 				.getValue()));
-
+		
+		request.setAttribute("surveyInstance", instance);
 		request.setAttribute("dateSurveyed", actionForm
 				.getDateValue("dateSurveyed"));
 		request.setAttribute("officerName", actionForm.getValue("officerName"));
-
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		
+		
+		return mapping.findForward(ActionForwards.preview_success.toString() + ppi);
 	}
 	
 	public ActionForward clear(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
+		
 		actionForm.clear();
 		actionForm.setValue("officerName", getUserContext(request).getName());
 		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		
+		Survey survey = (Survey) request.getSession().getAttribute(
+				SurveysConstants.KEY_SURVEY);
+		if (PPISurvey.class.isInstance(survey))
+			return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
+		else
+			return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
@@ -482,7 +522,13 @@ public class SurveyInstanceAction extends BaseAction {
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
 				displayName);
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		
+		Survey survey = (Survey) request.getSession().getAttribute(
+				SurveysConstants.KEY_SURVEY);
+		if (PPISurvey.class.isInstance(survey))
+			return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
+		else
+			return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 
 	/*
@@ -508,7 +554,7 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 
 		SurveysPersistence persistence = new SurveysPersistence();
-		org.mifos.application.personnel.persistence.PersonnelPersistence personnelPersistence = new org.mifos.application.personnel.persistence.PersonnelPersistence();
+		PersonnelPersistence personnelPersistence = new org.mifos.application.personnel.persistence.PersonnelPersistence();
 
 		BusinessObject businessObject = (BusinessObject) results
 				.get(Constants.BUSINESS_KEY);
@@ -551,7 +597,7 @@ public class SurveyInstanceAction extends BaseAction {
 		Collections.sort(responseKeys);
 		for (String key : responseKeys) {
 			SurveyResponse surveyResponse = new SurveyResponse();
-			surveyResponse.setQuestion(survey.getQuestionById(Integer
+			surveyResponse.setSurveyQuestion(survey.getSurveyQuestionById(Integer
 					.parseInt(key.substring(prefix.length()))));
 			String stringValue = (String) formInputs.get(key);
 			surveyResponse.setStringValue(stringValue);

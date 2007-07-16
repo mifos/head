@@ -16,7 +16,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(134);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(135);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */

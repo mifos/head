@@ -351,9 +351,10 @@ public class TestSurvey extends MifosTestCase {
 		choices.add(choice1);
 		choices.add(choice2);
 		question.setChoices(choices);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
 		session.save(question);
 		SurveyResponse response = new SurveyResponse();
-		response.setQuestion(question);	
+		response.setSurveyQuestion(surveyQuestion);	
 		response.setChoiceValue(choice1);
 		response.setInstance(instance);
 		session.save(response);
@@ -370,9 +371,10 @@ public class TestSurvey extends MifosTestCase {
 		String questionText = "Sample question with a numeric answer";
 		String shortName = "Sample Name";
 		Question question = new Question(shortName, questionText, AnswerType.NUMBER);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
 		session.save(question);
 		SurveyResponse response = new SurveyResponse();
-		response.setQuestion(question);
+		response.setSurveyQuestion(surveyQuestion);
 		response.setNumberValue(new Double(5));
 		response.setInstance(instance);
 		session.save(response);
@@ -397,7 +399,10 @@ public class TestSurvey extends MifosTestCase {
 		QuestionChoice choiceAnswer = new QuestionChoice("Some choice");
 		question.addChoice(choiceAnswer);
 		
-		SurveyResponse response = new SurveyResponse(instance, question);
+		SurveyQuestion surveyQuestion = new SurveyQuestion();
+		surveyQuestion.setQuestion(question);
+		
+		SurveyResponse response = new SurveyResponse(instance, surveyQuestion);
 		try {
 			response.setValue(dateAnswer);
 			fail();
@@ -460,10 +465,10 @@ public class TestSurvey extends MifosTestCase {
 		String questionText = "Text for testCreateSurveyResponse question";
 		String shortName = "Short name uno";
 		Question question = new Question(shortName, questionText, AnswerType.FREETEXT);
-		survey.addQuestion(question, true);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
 		
 		SurveyResponse response1 = new SurveyResponse();
-		response1.setQuestion(question);
+		response1.setSurveyQuestion(surveyQuestion);
 		String response1Value = "response 1 value";
 		response1.setStringValue(response1Value);
 		response1.setInstance(instance1);
@@ -475,8 +480,9 @@ public class TestSurvey extends MifosTestCase {
 		questionText = "text for second testCreateSurveyResponse question";
 		shortName = "Short name two";
 		Question question2 = new Question(shortName, questionText, AnswerType.NUMBER);
+		SurveyQuestion surveyQuestion2 = survey.addQuestion(question2, true);
 		SurveyResponse response2 = new SurveyResponse();
-		response2.setQuestion(question2);
+		response2.setSurveyQuestion(surveyQuestion2);
 		response2.setNumberValue(new Double(5));
 		response2.setInstance(instance1);
 		
@@ -488,7 +494,7 @@ public class TestSurvey extends MifosTestCase {
 		SurveyInstance instance2 = makeSurveyInstance(survey2Name);
 		SurveyResponse response3 = new SurveyResponse();
 		response3.setInstance(instance2);
-		response3.setQuestion(question2);
+		response3.setSurveyQuestion(surveyQuestion2);
 		response3.setStringValue("42");
 		
 		persistence.createOrUpdate(response3);
