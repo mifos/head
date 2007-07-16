@@ -71,6 +71,8 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
@@ -249,6 +251,10 @@ public class GroupCustAction extends CustAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);
 		logger.debug("Exiting GroupCustAction get method " );
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByCustomer(groupBO);
+		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

@@ -73,6 +73,8 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -397,6 +399,10 @@ public class CenterCustAction extends CustAction {
 		loadMasterDataForDetailsPage(request, centerBO, getUserContext(request)
 				.getLocaleId());
 		initCustomerPosition(centerBO, userContext.getLocaleId());
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByCustomer(centerBO);
+		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

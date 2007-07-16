@@ -49,6 +49,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -192,6 +194,10 @@ public class LoanAccountAction extends AccountAppAction {
 		loadLoanDetailPageInfo(loanBO, request);
 		loadMasterData(request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(loanBO);
+		request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

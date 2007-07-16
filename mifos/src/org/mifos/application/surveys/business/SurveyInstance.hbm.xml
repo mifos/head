@@ -24,6 +24,9 @@
 	<query name="surveys.retrieveInstancesByCustomer">
 		<![CDATA[from SurveyInstance as instance where instance.customer=:INSTANCE_CUSTOMER order by instance.survey.name]]>
 	</query>
+	<query name="surveys.retrieveInstancesByAccount">
+		<![CDATA[from SurveyInstance as instance where instance.account=:INSTANCE_ACCOUNT order by instance.survey.name]]>
+	</query>
 	<query name="surveys.retrieveInstancesBySurvey">
 		<![CDATA[from SurveyInstance as instance where instance.survey=:INSTANCE_SURVEY order by instance.dateConducted]]>
 	</query>	

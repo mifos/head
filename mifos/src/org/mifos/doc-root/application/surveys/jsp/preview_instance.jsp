@@ -97,7 +97,7 @@ hr {
           <c:when test="${question.question.answerType == 1}">
             <c:set var="opt" value="1"/>
             <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:checkbox disabled="true" property="value(response_${question.question.questionId}.${opt})" value="1">
+              <html-el:checkbox disabled="true" property="value(response_${question.surveyQuestionId}.${opt})" value="1">
                 <c:out value="${choice.choiceText}"/>
               </html-el:checkbox>
               <br>
@@ -106,20 +106,20 @@ hr {
           </c:when>
           <c:when test="${question.question.answerType == 4}">
             <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:radio disabled="true" property="value(response_${question.question.questionId})" value="${choice.choiceId}">
+              <html-el:radio disabled="true" property="value(response_${question.surveyQuestionId})" value="${choice.choiceId}">
                 <c:out value="${choice.choiceText}"/>
               </html-el:radio>
               <br>
             </c:forEach>
-            <html-el:radio disabled="true" property="value(response_${question.question.questionId})" value="" style="visibility:hidden;checked:true"/>
+            <html-el:radio disabled="true" property="value(response_${question.surveyQuestionId})" value="" style="visibility:hidden;checked:true"/>
           </c:when>
           <c:when test="${question.question.answerType == 2}">
-            <html-el:textarea disabled="true" property="value(response_${question.question.questionId})" cols="70" rows="10" />
+            <html-el:textarea disabled="true" property="value(response_${question.surveyQuestionId})" cols="70" rows="10" />
           </c:when>
           <c:when test="${question.question.answerType == 5}">
-		        <span class="fontnormal8pt"><date:datetag isDisabled="yes" property="response_${question.question.questionId}" renderstyle="simplemapped"/></span>
+		        <span class="fontnormal8pt"><date:datetag isDisabled="yes" property="response_${question.surveyQuestionId}" renderstyle="simplemapped"/></span>
           </c:when>
-          <c:otherwise><html-el:text disabled="true" property="value(response_${question.question.questionId})"/></c:otherwise>
+          <c:otherwise><html-el:text disabled="true" property="value(response_${question.surveyQuestionId})"/></c:otherwise>
         </c:choose>
 			</td>
 		</tr>

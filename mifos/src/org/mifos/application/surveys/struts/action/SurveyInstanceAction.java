@@ -26,9 +26,13 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -272,12 +276,7 @@ public class SurveyInstanceAction extends BaseAction {
 		globalNum = getGlobalNum(instance);
 		businessObjectName = getBusinessObjectName(surveyType, globalNum);
 		
-		if (surveyType == SurveyType.CLIENT) {
-			businessObject = getBusinessObject(surveyType, globalNum);
-		}
-		else {
-			throw new NotImplementedException();
-		}
+		businessObject = getBusinessObject(surveyType, globalNum);
 		
 		request.setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
@@ -344,10 +343,11 @@ public class SurveyInstanceAction extends BaseAction {
 	 */
 	public static String getBusinessObjectName(SurveyType surveyType,
 			String globalNum) throws Exception {
-		if (surveyType == SurveyType.CLIENT) {
-			ClientBO client = (ClientBO) CustomerBusinessService.getInstance()
-					.findBySystemId(globalNum, CustomerLevel.CLIENT.getValue());
-			return client.getDisplayName();
+		if (surveyType == SurveyType.CLIENT || surveyType == SurveyType.CENTER
+				|| surveyType == SurveyType.GROUP) {
+			CustomerBO customer = CustomerBusinessService.getInstance()
+					.findBySystemId(globalNum);
+			return customer.getDisplayName();
 		}
 		else if (surveyType == SurveyType.LOAN) {
 			LoanBusinessService service = new LoanBusinessService();
@@ -366,11 +366,24 @@ public class SurveyInstanceAction extends BaseAction {
 			ClientBO client = (ClientBO) CustomerBusinessService.getInstance()
 					.findBySystemId(globalNum, CustomerLevel.CLIENT.getValue());
 			return client;
+		} else if (surveyType == SurveyType.CENTER) {
+			CenterBO center = (CenterBO) CustomerBusinessService.getInstance()
+			.findBySystemId(globalNum, CustomerLevel.CENTER.getValue());
+			return center;
+		} else if (surveyType == SurveyType.GROUP) {
+			GroupBO group = (GroupBO) CustomerBusinessService.getInstance()
+			.findBySystemId(globalNum, CustomerLevel.GROUP.getValue());
+			return group;
 		}
 		else if (surveyType == SurveyType.LOAN) {
 			LoanBusinessService service = new LoanBusinessService();
 			LoanBO loanBO = service.findBySystemId(globalNum);
 			return loanBO;
+		}
+		else if (surveyType == SurveyType.SAVINGS) {
+			SavingsBusinessService service = new SavingsBusinessService();
+			SavingsBO savingsBO = service.findBySystemId(globalNum);
+			return savingsBO;
 		}
 		else {
 			throw new NotImplementedException();
@@ -625,6 +638,10 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		else if (type == SurveyType.CENTER) {
 			return "centerCustAction.do?method=get&globalCustNum=" + globalNum;
+		}
+		
+		else if (type == SurveyType.LOAN) {
+			return "loanAccountAction.do?method=get&globalCustNum=" + globalNum;
 		}
 		else {
 			throw new NotImplementedException();

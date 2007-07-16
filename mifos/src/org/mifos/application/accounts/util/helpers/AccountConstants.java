@@ -195,5 +195,7 @@ public interface AccountConstants {
 	public String APPLIED=" applied";
 	public String AMNT_ADJUSTED="Amnt Adjusted";
 	public String AMNT_WAIVED="Amnt waived";
+	
+	public String SURVEY_KEY="accountSurveys";
 }
 
