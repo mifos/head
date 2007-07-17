@@ -3,15 +3,18 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="org.mifos.application.surveys.business.SurveyQuestion" table="SURVEY_QUESTIONS">
-		<id name="surveyQuestionId" column="SURVEYQUESTION_ID" type="integer" unsaved-value="0" access="field">
+	<class name="org.mifos.application.surveys.business.SurveyQuestion" 
+		table="SURVEY_QUESTIONS">
+		<id name="surveyQuestionId" column="SURVEYQUESTION_ID" type="integer" 
+			unsaved-value="0" access="field">
 			<generator class="native" />
 		</id>
 		<property name="mandatory" column="mandatory"/>
 		<many-to-one name="question" column="QUESTION_ID" 
 		    class="org.mifos.application.surveys.business.Question"     
 		    cascade="all" access="field" not-null="true"/>
-		<property name="order" column="QUESTION_ORDER" access="field" insert="false" update="false"/>
+		<property name="order" column="QUESTION_ORDER" access="field" 
+			insert="false" update="false"/>
 	</class>
 </hibernate-mapping>
 
