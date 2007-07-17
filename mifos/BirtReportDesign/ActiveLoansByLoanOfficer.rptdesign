@@ -610,7 +610,7 @@ iterator = null;]]></method>
                                                 <cell id="853">
                                                     <text id="854">
                                                         <property name="contentType">html</property>
-                                                        <text-property name="content"><![CDATA[Printed: <value-of>new Date()</value-of>]]></text-property>
+                                                        <text-property name="content"><![CDATA[Printed: <value-of>new Date()11</value-of>]]></text-property>
                                                     </text>
                                                 </cell>
                                             </row>
@@ -641,7 +641,7 @@ iterator = null;]]></method>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
-                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                    <text-property name="content"></text-property>
                 </text>
             </page-footer>
         </simple-master-page>
