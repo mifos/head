@@ -1,6 +1,7 @@
 package org.mifos.application.ppi.helpers;
 
-import java.util.List;
+import java.util.Collections;
+
 import junit.framework.TestCase;
 import org.mifos.application.ppi.business.*;
 import org.mifos.application.surveys.business.*;
@@ -13,6 +14,7 @@ public class TestXmlPPIParser extends TestCase {
 			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
 		System.out.println("Survey name: " + survey.getName()
 				+ ", country: " + survey.getCountryAsEnum().toString());
+		Collections.sort(survey.getQuestions());
 		for (SurveyQuestion sQuestion : survey.getQuestions()) {
 			System.out.println("\t-" + sQuestion.getMandatory() + sQuestion.getQuestion().getShortName());
 			System.out.println("\t " + sQuestion.getQuestion().getQuestionText());

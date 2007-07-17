@@ -2,14 +2,16 @@ package org.mifos.application.surveys.business;
 
 import java.io.Serializable;
 
-public class SurveyQuestion implements Serializable {
+public class SurveyQuestion implements Serializable, Comparable<SurveyQuestion> {
 	private int surveyQuestionId;
 	
 	private int mandatory;
 	
 	private Question question;
 	
-	private int order;
+	private Survey survey;
+	
+	private Integer order;
 	
 	public SurveyQuestion() {
 	}
@@ -27,6 +29,14 @@ public class SurveyQuestion implements Serializable {
 		this.question = question;
 	}
 	
+	public void setSurvey(Survey survey) {
+		this.survey = survey;
+	}
+
+	public Survey getSurvey() {
+		return survey;
+	}
+
 	public int getMandatory() {
 		return mandatory;
 	}
@@ -48,10 +58,14 @@ public class SurveyQuestion implements Serializable {
 	}
 
 	public void setOrder(int order) {
-		this.order = order;
+		this.order = new Integer(order);
 	}
 
-	public int getOrder() {
+	public Integer getOrder() {
 		return order;
+	}
+	
+	public int compareTo(SurveyQuestion o) {
+		return getOrder() - o.getOrder();
 	}
 }

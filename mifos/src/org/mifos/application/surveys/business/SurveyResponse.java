@@ -262,7 +262,7 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
 	}
 	
 	public int compareTo(SurveyResponse o) {
-		return getSurveyQuestion().getOrder() - o.getSurveyQuestion().getOrder();
+		return getSurveyQuestion().compareTo(o.getSurveyQuestion());
 	}
 
 }

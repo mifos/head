@@ -132,6 +132,9 @@ public class Survey implements Serializable {
 		surveyQuestion.setMandatory(mandatory ? 1 : 0);
 		surveyQuestion.setQuestion(question);
 		surveyQuestion.setOrder(getQuestions().size());
+		surveyQuestion.setSurvey(this);
+		if (surveyQuestion.getOrder() == null)
+			surveyQuestion.setOrder(getQuestions().size());
 		getQuestions().add(surveyQuestion);
 		return surveyQuestion;
 	}

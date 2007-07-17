@@ -1,5 +1,6 @@
 package org.mifos.application.ppi.helpers;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,27 +34,30 @@ public class XmlPPISurveyParser {
 		survey.setName(country.toString());
 		
 		List<SurveyQuestion> surveyQuestions = survey.getQuestions();
+		Collections.sort(surveyQuestions);
 		boolean emptyQuestionList = surveyQuestions.size() == 0;
 		NodeList questionNodeList = docElement.getElementsByTagName("question");
 		for (int i = 0; i < questionNodeList.getLength(); i++) {
 			Element questionNode = (Element)questionNodeList.item(i);
 			String name = null;
 			String mandatory = null;
+			Integer order = null;
 			if (questionNode.hasAttributes()) {
 				name = questionNode.getAttributes().getNamedItem("name").getNodeValue();
 				mandatory = questionNode.getAttributes().getNamedItem("mandatory").getNodeValue();
+				order = Integer.parseInt(questionNode.getAttributes().getNamedItem("order").getNodeValue());
 			}
 			
 			Node textNode = questionNode.getElementsByTagName("text").item(0);
 			String questionText = textNode.getTextContent();
 			
-			if (name == null || mandatory == null || questionText == null)
+			if (name == null || mandatory == null || order == null ||questionText == null)
 				throw new IllegalStateException("Malformatted xml file");
 			
 			SurveyQuestion surveyQuestion = new SurveyQuestion();
 			Question question = new Question();
 			if (!emptyQuestionList) {
-				surveyQuestion = surveyQuestions.get(i);
+				surveyQuestion = surveyQuestions.get(order);
 				question = surveyQuestion.getQuestion();
 			} else {
 				surveyQuestions.add(surveyQuestion);
@@ -79,6 +83,7 @@ public class XmlPPISurveyParser {
 			}
 			
 			surveyQuestion.setMandatory(Boolean.parseBoolean(mandatory));
+			surveyQuestion.setOrder(order);
 		}
 		
 		survey.setQuestions(surveyQuestions);
