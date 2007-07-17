@@ -30,6 +30,8 @@
 	<iframe id="<%= fragment.getClientId( ) %>iframe"  name="<%= fragment.getClientId( ) %>iframe" style="z-index:-1; display: none; left:0px; top:0px;
 					 background-color: #ff0000; opacity: .0; filter: alpha(opacity = 0); position: absolute;" frameBorder="0" scrolling="no" src="birt/pages/common/blank.html">
 	</iframe>	
+	
+
 	<div id="<%= fragment.getClientId( ) %>dialogTitleBar" class="dialogTitleBar dTitleBar">
 		<div class="dTitleTextContainer">
 			<table style="width: 100%; height: 100%;">
@@ -79,10 +81,11 @@
 						<div id="<%= fragment.getClientId( ) %>okButton">
 							<div id="<%= fragment.getClientId( ) %>okButtonLeft" class="dialogBtnBarButtonLeftBackgroundEnabled"></div>
 							<div id="<%= fragment.getClientId( ) %>okButtonRight" class="dialogBtnBarButtonRightBackgroundEnabled"></div>
-							<!--For Mifos Birt Report change value <%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %> to Generate-->
+							
 							<input type="button" value='Generate' 
 								title='<%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %>'  
 								class="dialogBtnBarButtonText dialogOKBtnBarButtonEnabled"/>
+							   <!--For Mifos Birt Report change input value <%= BirtResources.getMessage( "birt.viewer.dialog.ok" ) %> to Generate-->
 				               <!--For Mifos Birt reports change dialogBtnBarButtonEnabled to dialogOKBtnBarButtonEnabled-->		
                 </div>
 						<div class="dialogBtnBarDivider"></div>
