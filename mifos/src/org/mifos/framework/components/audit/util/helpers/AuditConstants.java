@@ -40,7 +40,7 @@ package org.mifos.framework.components.audit.util.helpers;
 
 
 /** 
- *   This interface stores contants required for the audit component.
+ *   This interface stores constants required for the audit component.
  */
 public interface AuditConstants {
  
@@ -78,7 +78,8 @@ public interface AuditConstants {
   public String PERSONNELSTATUSPATH= "org.mifos.application.personnel.business.PersonnelStatusEntity";
   public String PERSONNELLEVELPATH= "org.mifos.application.personnel.business.PersonnelLevelEntity";
   public String PRDSTATUSPATH= "org.mifos.application.productdefinition.business.PrdStatusEntity";
-  
+  public static final String HIDDEN_PASSWORD = "********";
+  public static final String Audit_PASSWORD = "Password";
   
  
 }

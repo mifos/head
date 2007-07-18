@@ -8,6 +8,7 @@ import java.util.Set;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -16,9 +17,8 @@ public class TestAuditBusinessService extends MifosTestCase{
 
 	
 	public void testGetAuditLogRecords() throws Exception {
-		AuditLog auditLog = new AuditLog(Integer.valueOf("1"), Short
-				.valueOf("2"), "Mifos", new Date(System.currentTimeMillis()),
-				Short.valueOf("3"));
+		AuditLog auditLog = new AuditLog(1, (short)2, "Mifos", 
+				new Date(System.currentTimeMillis()), (short)3);
 		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
 		AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1",
 				"test_1", "new_test_1", auditLog);
@@ -26,9 +26,28 @@ public class TestAuditBusinessService extends MifosTestCase{
 		auditLog.addAuditLogRecords(auditLogRecords);
 		auditLog.save();
 		AuditBusinessService auditBusinessService = new AuditBusinessService();
-		List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords(Short.valueOf("2"),Integer.valueOf("1"));
+		List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short)2,1);
 		assertEquals(1,auditLogViewList.size());
-		auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
+		auditLog = getAuditLog(1, (short)2);
+		TestObjectFactory.cleanUp(auditLog);
+	}
+	
+	public void testGetAuditLogRecordsPasswordChange() throws Exception {
+		AuditLog auditLog = new AuditLog(1, (short)2, "Mifos", 
+				new Date(System.currentTimeMillis()), (short)3);
+		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+		AuditLogRecord auditLogRecord = new AuditLogRecord("Password",
+				"test_1", "new_test_1", auditLog);
+		auditLogRecords.add(auditLogRecord);
+		auditLog.addAuditLogRecords(auditLogRecords);
+		auditLog.save();
+		AuditBusinessService auditBusinessService = new AuditBusinessService();
+		List<AuditLogView> auditLogViewList = auditBusinessService.getAuditLogRecords((short)2,1);
+		assertEquals(1,auditLogViewList.size());
+		AuditLogView auditLogView = auditLogViewList.get(0);
+		assertEquals(AuditConstants.HIDDEN_PASSWORD,auditLogView.getOldValue());
+		assertEquals(AuditConstants.HIDDEN_PASSWORD,auditLogView.getNewValue());
+		auditLog = getAuditLog(1, (short)2);
 		TestObjectFactory.cleanUp(auditLog);
 	}
 	

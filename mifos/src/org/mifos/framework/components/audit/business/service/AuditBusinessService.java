@@ -8,6 +8,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.persistence.AuditPersistence;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -34,8 +35,14 @@ public class AuditBusinessService extends BusinessService {
 					auditLogView.setDate(auditLog.getUpdatedDate().toString());
 					auditLogView.setUser(auditLog.getModifierName());
 					auditLogView.setField(auditLogRecord.getFieldName());
-					auditLogView.setOldValue(auditLogRecord.getOldValue());
-					auditLogView.setNewValue(auditLogRecord.getNewValue());
+					if(auditLogRecord.getFieldName().equals(AuditConstants.Audit_PASSWORD)){
+						auditLogView.setOldValue(AuditConstants.HIDDEN_PASSWORD);
+						auditLogView.setNewValue(AuditConstants.HIDDEN_PASSWORD);
+					}
+					else{
+						auditLogView.setOldValue(auditLogRecord.getOldValue());
+						auditLogView.setNewValue(auditLogRecord.getNewValue());
+					}
 					auditLogViewList.add(auditLogView);
 				}
 			}
