@@ -16,6 +16,8 @@ import org.mifos.application.accounts.business.AddAccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
+import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.persistence.AddReport;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -44,8 +46,10 @@ public class DatabaseVersionPersistence {
 		register101(register);
 		register102(register);
 		register103(register);
-		register104(register);
+		register(register, new Upgrade104());
 		register106(register);
+		register115(register);
+		register117(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -103,10 +107,6 @@ public class DatabaseVersionPersistence {
 		);
 	}
 
-	private static void register104(Map<Integer, Upgrade> register) {
-		register(register, new Upgrade104());
-	}
-
 	private static void register106(Map<Integer, Upgrade> register) {
 		register(register, new CompositeUpgrade(
 			new AddActivity(106,
@@ -118,6 +118,31 @@ public class DatabaseVersionPersistence {
 			new AddField(106, 74, "AssignClients", EntityType.CLIENT, 
 				false, false)
 		));
+	}
+
+	private static void register115(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(115, 
+			SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS, 
+			SecurityConstants.CLIENTS, 
+			ENGLISH_LOCALE, 
+			"Can remove clients from groups"));
+	}
+
+	private static void register117(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+			new AddReport(117, 
+				(short)28,
+				ReportsCategoryBO.ANALYSIS,
+				"Detailed Aging of Portfolio at Risk",
+				"aging_portfolio_at_risk",
+				"DetailedAgingPortfolioAtRisk.rptdesign"),
+			new AddActivity(117, 
+				SecurityConstants.CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK, 
+				SecurityConstants.ANALYSIS, 
+				ENGLISH_LOCALE, 
+				"Can view Detailed Aging of Portfolio at Risk")
+				)
+		);
 	}
 
 	private final Connection connection;

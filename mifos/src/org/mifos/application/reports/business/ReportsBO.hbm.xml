@@ -6,7 +6,8 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.reports.business.ReportsBO" table="REPORT">
+    <class name="org.mifos.application.reports.business.ReportsBO" 
+    	table="REPORT">
         <id name="reportId" column="report_id" type="short">
             <generator class="native"/>
         </id>
@@ -15,8 +16,14 @@
         <property name="activityId" column="ACTIVITY_ID" type="short" />    
         <property name="reportName" column="report_name" type="string" />    
         <property name="reportIdentifier" column="report_identifier" type="string" />        
-    	<many-to-one name="reportsCategoryBO" column="report_category_id" class="org.mifos.application.reports.business.ReportsCategoryBO" />   
-<one-to-one name="reportsJasperMap"  class="org.mifos.application.reports.business.ReportsJasperMap" />   
+    	<many-to-one name="reportsCategoryBO" 
+    		column="report_category_id" 
+    		class="org.mifos.application.reports.business.ReportsCategoryBO" 
+    		/>   
+		<one-to-one 
+			name="reportsJasperMap"
+			class="org.mifos.application.reports.business.ReportsJasperMap" 
+			/>   
 
     </class>
     

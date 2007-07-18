@@ -79,8 +79,4 @@ public class ReportsJasperMap extends BusinessObject {
 		this.reportJasper = reportJasper;
 	}
 
-	public Short getEntityID() {
-		return null;
-	}
-
 }

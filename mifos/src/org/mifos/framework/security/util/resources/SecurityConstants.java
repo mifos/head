@@ -136,6 +136,9 @@ public interface SecurityConstants {
 	public final short CONFIGURE_HIDE_UNHIDE_DATAFIELDS_FOR_GROUP_CENTER = 32;
 
 	// Client management
+	public final short CLIENT_MANAGEMENT = 33;
+	public final short CLIENTS = 34;
+
 	public final short CLIENT_ADD_NOTE_TO_CLIENT = 48;
 
 	public final short CIENT_CREATE_NEW_CLIENT_IN_SAVE_FOR_LATER_STATE = 35;
@@ -358,6 +361,8 @@ public interface SecurityConstants {
 	public final short SAVINGS_CHANGE_STATUS = 140;
 
 	public final short ADMINISTER_REPORTS = 142;
+	
+	public final short ANALYSIS = 150;
 
 	public final short CLIENTSDETAILVIEW = 152;
 
@@ -377,7 +382,7 @@ public interface SecurityConstants {
 
 	public final short BRANCHWISEREPORT = 161;
 
-	public final short ANALYSIS = 176;
+	public final short CAN_VIEW_DAILY_PORTFOLIO = 176;
 
 	public final short KENDRA_MEETING = 177;
 
@@ -423,6 +428,8 @@ public interface SecurityConstants {
     
     //Remove Group MemberShip
     public final short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
+    
+    public final short CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK = 207;
 
     //Add Group MemberShip
     public final short CAN_ADD_CLIENTS_TO_GROUPS = 208;

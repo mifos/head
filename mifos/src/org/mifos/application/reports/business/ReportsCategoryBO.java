@@ -7,6 +7,8 @@ import org.mifos.framework.business.BusinessObject;
 
 public class ReportsCategoryBO extends BusinessObject {
 	
+	public static short ANALYSIS = 6;
+	
 	public ReportsCategoryBO(){
 		reportsSet = new HashSet<ReportsBO>();
 	}
@@ -36,6 +38,7 @@ public class ReportsCategoryBO extends BusinessObject {
 		return reportsSet;
 	}
 
+	@SuppressWarnings("unused")
 	private void setReportsSet(Set<ReportsBO> reportsSet) {
 		this.reportsSet = reportsSet;
 	}
@@ -43,10 +46,6 @@ public class ReportsCategoryBO extends BusinessObject {
 	public void addReports(ReportsBO reportsBO){		
 		this.reportsSet.add(reportsBO);
 	}
-	
-	public Short getEntityID() {
-		return null;
-	}	
 	
 	public void setActivityId(Short activityId){
 		this.activityId = activityId;

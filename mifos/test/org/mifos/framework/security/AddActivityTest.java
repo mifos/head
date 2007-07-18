@@ -96,7 +96,7 @@ public class AddActivityTest {
 	}
 
 	@Test
-	public void nulls() throws Exception {
+	public void noParent() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
 
 		short newId = 17032;
