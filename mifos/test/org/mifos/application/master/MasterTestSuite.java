@@ -3,6 +3,7 @@ package org.mifos.application.master;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.application.master.business.CustomFieldDefinitionEntityTest;
 import org.mifos.application.master.business.service.TestMasterBusinessService;
 import org.mifos.application.master.persistence.TestMasterPersistence;
 
@@ -12,6 +13,7 @@ public class MasterTestSuite extends TestSuite {
 		MasterTestSuite testSuite = new MasterTestSuite();
 		testSuite.addTestSuite(TestMasterPersistence.class);
 		testSuite.addTestSuite(TestMasterBusinessService.class);
+		testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
 		return testSuite;
 	}
 

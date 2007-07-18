@@ -42,18 +42,23 @@ import java.util.Locale;
 
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
- * This class represent custome field defination entity
+ * Represents a named custom field of a given type {@link CustomFieldType}
+ * defined for a particular entity {@link EntityType}. 
  */
 
 public class CustomFieldDefinitionEntity extends PersistentObject {
 
 	private final Short fieldId;
 
+	/*
+	 * The name of the custom field
+	 */
 	private final MifosLookUpEntity lookUpEntity;
 
 	private final Short levelId;
@@ -63,6 +68,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 	 */
 	private final Short fieldType;
 
+	/*
+	 * see {@link EntityType}
+	 */
 	private final Short entityType;
 
 	private final String defaultValue;
@@ -82,6 +90,19 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		this.defaultValue = null;
 		this.mandatoryFlag = null;
 	}
+	
+	public CustomFieldDefinitionEntity(MifosLookUpEntity name, short fieldIndex, CustomFieldType fieldType, 
+			EntityType entityType, String defaultValue, YesNoFlag mandatory) {
+		this.fieldId = null;       // this should be assigned when persisted to the database 
+		this.lookUpEntity = name;  
+		this.levelId = fieldIndex;
+		this.fieldType = fieldType.value;
+		this.entityType = entityType.getValue();
+		this.defaultValue = defaultValue;
+		this.mandatoryFlag = mandatory.getValue();
+		
+	}
+	
 	
 	public Short getFieldId() {
 		return fieldId;
@@ -134,6 +155,14 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 				YesNoFlag.fromInt(mandatoryFlag), locale);
 	}
 
+	/*
+	 * This method is currently used as a property getter in various JSP pages.
+	 * Access to this value will need to be updated to support localization.
+	 */
+	public String getMandatoryStringValue() {
+		return getMandatoryStringValue(Locale.US).toLowerCase();
+	}
+	
 	@Override
 	public int hashCode() {
 		return entityType.hashCode() * levelId.hashCode()
