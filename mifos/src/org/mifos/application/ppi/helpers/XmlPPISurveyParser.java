@@ -1,5 +1,6 @@
 package org.mifos.application.ppi.helpers;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.business.Question;
+import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPIChoice;
@@ -20,13 +22,25 @@ import org.w3c.dom.Node;
 
 public class XmlPPISurveyParser {
 	
-	
 	public PPISurvey parseInto(String uri, PPISurvey survey) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+		.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(ResourceLoader.getURI(uri).toString());
 		
+		return parseInto(document, survey);
+	}
+	
+	public PPISurvey parseInto(File file, PPISurvey survey) throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory
+		.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(file);
+		
+		return parseInto(document, survey);
+	}
+	
+	public PPISurvey parseInto(Document document, PPISurvey survey) throws Exception {
 		Element docElement = document.getDocumentElement();
 		
 		Country country = Country.valueOf(docElement.getAttribute("country"));
@@ -34,7 +48,6 @@ public class XmlPPISurveyParser {
 		survey.setName(country.toString());
 		
 		List<SurveyQuestion> surveyQuestions = survey.getQuestions();
-		Collections.sort(surveyQuestions);
 		boolean emptyQuestionList = surveyQuestions.size() == 0;
 		NodeList questionNodeList = docElement.getElementsByTagName("question");
 		for (int i = 0; i < questionNodeList.getLength(); i++) {
@@ -55,6 +68,7 @@ public class XmlPPISurveyParser {
 				throw new IllegalStateException("Malformatted xml file");
 			
 			SurveyQuestion surveyQuestion = new SurveyQuestion();
+			surveyQuestion.setSurvey(survey);
 			Question question = new Question();
 			if (!emptyQuestionList) {
 				surveyQuestion = surveyQuestions.get(order);
@@ -93,5 +107,42 @@ public class XmlPPISurveyParser {
 	
 	public PPISurvey parse(String uri) throws Exception {
 		return parseInto(uri, new PPISurvey());
+	}
+	
+	public Document buildXmlFrom(PPISurvey survey) throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory
+		.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		
+		Element docElement = document.createElement("ppi");
+		docElement.setAttribute("country", survey.getCountryAsEnum().toString());
+		
+		List<SurveyQuestion> surveyQuestions = survey.getQuestions();
+		Collections.sort(surveyQuestions);
+		for (SurveyQuestion surveyQuestion : surveyQuestions) {
+			Element questionNode = document.createElement("question");
+			questionNode.setAttribute("name",
+					surveyQuestion.getQuestion().getShortName());
+			questionNode.setAttribute("mandatory",
+					surveyQuestion.getMandatory() == 1 ? "true" : "false");
+			questionNode.setAttribute("order", surveyQuestion.getOrder().toString());
+			
+			Element text = document.createElement("text");
+			text.setTextContent(surveyQuestion.getQuestion().getQuestionText());
+			questionNode.appendChild(text);
+			
+			for (QuestionChoice choice : surveyQuestion.getQuestion().getChoices()) {
+				Element choiceNode = document.createElement("choice");
+				choiceNode.setAttribute("points",
+						Integer.toString(((PPIChoice)choice).getPoints()));
+				choiceNode.setTextContent(choice.getChoiceText());
+				questionNode.appendChild(choiceNode);
+			}
+			
+			docElement.appendChild(questionNode);
+		}
+		document.appendChild(docElement);
+		return document;
 	}
 }

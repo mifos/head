@@ -36,6 +36,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.helpers.PovertyBand;
+import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -252,13 +253,16 @@ public class SurveyInstanceAction extends BaseAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveysPersistence persistence = new SurveysPersistence();
+		PPIPersistence persistence = new PPIPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
 		
 		int instanceId = Integer.parseInt(actionForm.getValue("instanceId"));
 		SurveyInstance instance = persistence.getInstance(instanceId);
+		PPISurvey ppiSurvey = 
+			persistence.getPPISurvey(instance.getSurvey().getSurveyId());
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
 		List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance);
+		instance.setSurveyResponses(new TreeSet<SurveyResponse>(responses));
 		BusinessObject businessObject;
 		String businessObjectName;
 		String globalNum;
@@ -284,7 +288,16 @@ public class SurveyInstanceAction extends BaseAction {
 		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL, getRedirectUrl(surveyType, globalNum));
 		
-		return mapping.findForward(ActionForwards.get_success
+		System.out.println(ppiSurvey != null);
+		if (ppiSurvey != null) {
+			instance.setSurvey(ppiSurvey);
+			request.setAttribute("povertyBand",
+					PovertyBand.fromInt(PPICalculator.calculateScore(instance), ppiSurvey));
+			return mapping.findForward(ActionForwards.get_success_ppi
+					.toString());
+		}
+		else
+			return mapping.findForward(ActionForwards.get_success
 				.toString());
 	}
 
@@ -618,7 +631,7 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		persistence.createOrUpdate(instance);
-		
+		System.out.println(PPISurvey.class.isInstance(instance.getSurvey()));
 		SurveyType businessType = (SurveyType) request.getSession()
 				.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
 		String redirectUrl = getRedirectUrl(businessType, getGlobalNum(instance));

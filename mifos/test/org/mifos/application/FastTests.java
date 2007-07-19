@@ -47,6 +47,7 @@ import org.mifos.application.customer.util.helpers.LoanCycleCounterTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.meeting.util.helpers.WeekDayTest;
 import org.mifos.application.office.struts.tag.OfficeListTagTest;
+import org.mifos.application.ppi.helpers.TestXmlPPIParser;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.surveys.business.QuestionTest;
@@ -141,6 +142,8 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(CustomerStatusFlagTest.class);
 
 		suite.addTestSuite(TestValidators.class);
+		
+		suite.addTestSuite(TestXmlPPIParser.class);
 		return suite;
 	}
 

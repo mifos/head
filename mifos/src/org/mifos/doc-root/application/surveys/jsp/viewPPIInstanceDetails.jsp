@@ -4,6 +4,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
@@ -84,38 +85,36 @@ tr.bg0 {
 	padding-bottom: 0px;
 	padding-left: 0px;
 </style>
-<tiles:insert definition=".create">
-<tiles:put name="body" type="string">
+<tiles:insert definition=".clientsacclayoutsearchmenu">
+	<tiles:put name="body" type="string">
 <script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 <html-el:form action="/surveyInstanceAction.do?method=create">
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td class="bluetablehead05">
-		<span class="fontnormal8pt"> <customtags:headerLink selfLink="false" /> </span>
+		<span class="fontnormal8pt"> <customtags:headerLink selfLink="true" /> </span>
 		</td>
 	</tr>
 </table>
-<h1><c:out value="${businessObjectName}"/> - 
-<orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
-<font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
-<br/>
-<span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
-<hr>
-<h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
+<h1>
+<c:out value="${retrievedInstance.survey.name}"/>
+-
+<span class="headingorange"><mifos:mifoslabel name="Surveys.Details" bundle="SurveysUIResources"/></span>
+</h1>
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
-		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
+		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
 		</td>
 		<td width="70%">
-		<span class="fontnormal8pt"><date:datetag property="dateSurveyed" renderstyle="simplemapped" isDisabled="yes"/></span>
+		<span class="fontnormal8pt"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.retrievedInstance.dateConducted)}" /></span>
 		</td>
 	</tr>
 	<tr>
 		<td height="30" align="right">
 		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
 		<td height="30" class="fontnormal">
-		<c:out value="${requestScope.officerName}"/>&nbsp;
+		<c:out value="${retrievedInstance.officer.displayName}"/>&nbsp;
 		</td>
 	</tr>
 	<tr>
@@ -132,7 +131,7 @@ tr.bg0 {
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="95%">
 	<c:set var="count" value="1"/>
-	<c:forEach var="response" items="${surveyInstance.surveyResponses}">
+	<c:forEach var="response" items="${instanceResponses}">
 	<tr class="bg${count % 2}">
 		<td>
 			<table border="0" width="100%">
@@ -145,11 +144,17 @@ tr.bg0 {
 				<tr class="bg${count % 2}">
             	<c:forEach var="choice" items="${response.question.choices}">
             		<td class="fontnormal8pt" width="3%" align="right" valign="top">
-		            <html-el:radio disabled="true" property="value(response_${response.surveyQuestion.surveyQuestionId})" value="${choice.choiceId}">
+            		<c:choose>
+            		<c:when test="${choice.choiceId == response.choiceValue.choiceId}">
+		            <input type="radio" checked="checked" disabled="true"/>
+		            </c:when>
+		            <c:otherwise>
+		            <input type="radio" disabled="true"/>
+		            </c:otherwise>
+		            </c:choose>
         		    </td>
 		            <td class="fontnormal8pt" width="15%" align="left">
         		    <c:out value="${choice.choiceText}"/>
-		            </html-el:radio>
         		    </td>
 		        </c:forEach>
         		    <td colspan="100"> </td>
@@ -183,25 +188,18 @@ tr.bg0 {
 		</strong>
 		</td>
 	</tr>
-	<tr>
-		<td>
-		<html-el:button property="edit" style="width:65px;" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('edit')">
-		<mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" />
-		</html-el:button>
-		</td>
-	</tr>
 </table>
 <br><hr>
 <table width="93%" border="0" cellpadding="0" cellspacing="0">
-<tr>
-		<td align="center">
-		<html-el:submit style="width:65px;" property="button" styleClass="buttn">
-		<mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources" />
-		</html-el:submit>&nbsp; 
-		<html-el:button property="cancelButton" style="width:65px;" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load">
-		<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
-		</html-el:button>
-		</td>
+	<tr>
+        <td align="center">
+        <html-el:button property="calcelButton" style="width:135px;" styleClass="buttn" onclick="window.location='${requestScope.returnUrl}'">
+        <mifos:mifoslabel name="Surveys.button.backtodetailspage" bundle="SurveysUIResources" />
+        </html-el:button>&nbsp; 
+        <html-el:button property="delete" style="width:135px;" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
+        <mifos:mifoslabel name="Surveys.button.delete" bundle="SurveysUIResources" />
+        </html-el:button>
+    	</td>
 	</tr>
 </table>
 </html-el:form>

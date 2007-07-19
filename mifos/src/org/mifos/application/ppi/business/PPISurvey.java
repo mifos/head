@@ -1,6 +1,10 @@
 package org.mifos.application.ppi.business;
 
+import java.util.Collections;
+
+import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
+import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.ppi.helpers.Country;
@@ -134,6 +138,26 @@ public class PPISurvey extends Survey {
 	@Override
 	public void setAppliesTo(SurveyType dummy) {
 		super.setAppliesTo(SurveyType.CLIENT);
+	}
+	
+	@Override
+	public String toString() {
+		String output = "Survey name: " + getName()
+				+ ", country: " + getCountryAsEnum().toString() + "\n";
+		Collections.sort(getQuestions());
+		for (SurveyQuestion sQuestion : getQuestions()) {
+			output += "\t";
+			output += sQuestion.getMandatory() == 1 ? "*" : "";
+			output += sQuestion.getOrder() + ". "
+					+ sQuestion.getQuestion().getShortName() + "\n";
+			output += "\t " + sQuestion.getQuestion().getQuestionText() + "\n";
+			for (QuestionChoice choice : sQuestion.getQuestion().getChoices()) {
+				PPIChoice ppiChoice = (PPIChoice) choice;
+				output += "\t\t" + ppiChoice.getChoiceText() + " - "
+						+ ppiChoice.getPoints() + "\n";
+			}
+		}
+		return output;
 	}
 	
 }

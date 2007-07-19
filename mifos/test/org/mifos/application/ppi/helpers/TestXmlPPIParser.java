@@ -1,28 +1,55 @@
 package org.mifos.application.ppi.helpers;
 
-import java.util.Collections;
-
 import junit.framework.TestCase;
-import org.mifos.application.ppi.business.*;
-import org.mifos.application.surveys.business.*;
+import org.mifos.application.ppi.business.PPISurvey;
+import org.w3c.dom.Document;
 
 public class TestXmlPPIParser extends TestCase {
 	private static XmlPPISurveyParser parser = new XmlPPISurveyParser();
 	
-	public void testUno() throws Exception {
+	public void parse() throws Exception {
 		PPISurvey survey = 
 			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
-		System.out.println("Survey name: " + survey.getName()
-				+ ", country: " + survey.getCountryAsEnum().toString());
-		Collections.sort(survey.getQuestions());
-		for (SurveyQuestion sQuestion : survey.getQuestions()) {
-			System.out.println("\t-" + sQuestion.getMandatory() + sQuestion.getQuestion().getShortName());
-			System.out.println("\t " + sQuestion.getQuestion().getQuestionText());
-			for (QuestionChoice choice : sQuestion.getQuestion().getChoices()) {
-				PPIChoice ppiChoice = (PPIChoice) choice;
-				System.out.println("\t\t" + ppiChoice.getChoiceText() + " - " + ppiChoice.getPoints());
-			}
-		}
+		System.out.println(survey.toString());
+	}
+	
+	public void testBuildXmlFrom() throws Exception {
+		PPISurvey survey = 
+			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
+		Document document = parser.buildXmlFrom(survey);
+		assertEquals(survey.toString(),
+				parser.parseInto(document, new PPISurvey()).toString());
+	}
+	
+	/* Changing order of questions does *not* work
+	public void testChangeOrder() throws Exception {
+		PPISurvey survey = 
+			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
+		
+		int firstOrder = survey.getQuestions().get(0).getOrder();
+		survey.getQuestions().get(0).setOrder(
+				survey.getQuestions().get(1).getOrder());
+		survey.getQuestions().get(1).setOrder(firstOrder);
+		
+		Document document = parser.buildXmlFrom(survey);
+		PPISurvey surveyNew = parser.parseInto(
+				"org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml", survey);
+		assertEquals(surveyNew.toString(),
+				parser.parseInto(document, new PPISurvey()).toString());
+	}*/
+	
+	public void testChangeName() throws Exception {
+		PPISurvey survey = 
+			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
+		PPISurvey surveyNew = 
+			parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyIndia.xml");
+		
+		surveyNew.getQuestions().get(0).getQuestion()
+				.setShortName("Completely new and unheard of name!");
+		
+		Document document = parser.buildXmlFrom(surveyNew);
+		surveyNew = parser.parseInto(document, new PPISurvey());
+		assertTrue(!survey.toString().equals(surveyNew.toString()));
 	}
 	
 }

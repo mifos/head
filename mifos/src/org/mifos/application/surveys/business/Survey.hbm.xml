@@ -17,17 +17,17 @@
 			<one-to-many class="org.mifos.application.surveys.business.SurveyQuestion"/>
 		</list>
 		
-		<joined-subclass name="org.mifos.application.ppi.business.PPISurvey" table="PPI_SURVEY">
-			<key column="SURVEY_ID"/>
-			<property name="veryPoorMin" column="VERY_POOR_MIN"/>
-			<property name="veryPoorMax" column="VERY_POOR_MAX"/>
-			<property name="poorMin" column="POOR_MIN"/>
-			<property name="poorMax" column="POOR_MAX"/>
-			<property name="atRiskMin" column="AT_RISK_MIN"/>
-			<property name="atRiskMax" column="AT_RISK_MAX"/>
-			<property name="nonPoorMin" column="NON_POOR_MIN"/>
-			<property name="nonPoorMax" column="NON_POOR_MAX"/>
-			<property name="country" column="COUNTRY_ID"/>
+		<joined-subclass table="PPI_SURVEY" name="org.mifos.application.ppi.business.PPISurvey">
+				<key column="SURVEY_ID"/>
+				<property name="veryPoorMin" column="VERY_POOR_MIN"/>
+				<property name="veryPoorMax" column="VERY_POOR_MAX"/>
+				<property name="poorMin" column="POOR_MIN"/>
+				<property name="poorMax" column="POOR_MAX"/>
+				<property name="atRiskMin" column="AT_RISK_MIN"/>
+				<property name="atRiskMax" column="AT_RISK_MAX"/>
+				<property name="nonPoorMin" column="NON_POOR_MIN"/>
+				<property name="nonPoorMax" column="NON_POOR_MAX"/>
+				<property name="country" column="COUNTRY_ID"/>
 		</joined-subclass>
 	</class>
 	<query name="surveys.retrieveAllSurveys">

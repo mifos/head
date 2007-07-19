@@ -13,6 +13,9 @@ import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.ppi.helpers.Country;
+import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -337,6 +340,78 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(2006, calendar.get(Calendar.YEAR));
 		assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
 		
+	}
+	
+	public void testGetPPISurvey() throws Exception {
+		setRequestPathInfo("/ppiAction");
+		addRequestParameter("method","configure");
+		//verifyForward("configure");
+		actionPerform();
+		verifyNoActionMessages();
+		
+		addRequestParameter("value(country)", Country.INDIA.toString());
+		addRequestParameter("value(state)", SurveyState.ACTIVE.toString());
+		addRequestParameter("value(veryPoorMin)", "0");
+		addRequestParameter("value(veryPoorMax)", "24");
+		addRequestParameter("value(poorMin)", "25");
+		addRequestParameter("value(poorMax)", "49");
+		addRequestParameter("value(atRiskMin)", "50");
+		addRequestParameter("value(atRiskMax)", "74");
+		addRequestParameter("value(nonPoorMin)", "75");
+		addRequestParameter("value(nonPoorMax)", "100");
+		addRequestParameter("method","preview");
+		actionPerform();
+		//verifyForward("preview_success");
+		verifyNoActionErrors();
+		
+		addRequestParameter("method","update");
+		actionPerform();
+		//verifyForward("update_success");
+		verifyNoActionErrors();
+		
+		ClientBO client = createClient();
+		String globalCustNum = client.getGlobalCustNum();
+		
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		addRequestParameter("surveyType", SurveyType.CLIENT.getValue());
+		addRequestParameter("globalNum", globalCustNum);
+		actionPerform();
+		verifyNoActionErrors();
+		
+		PPIPersistence ppiPersistence = new PPIPersistence();
+		PPISurvey ppiSurvey = ppiPersistence.retrieveActivePPISurvey();
+		
+		addRequestParameter("value(surveyId)", Integer.toString(ppiSurvey.getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(dateSurveyed_DD)", "01");
+		addRequestParameter("value(dateSurveyed_MM)", "02");
+		addRequestParameter("value(dateSurveyed_YY)", "1987");
+		for (SurveyQuestion question : ppiSurvey.getQuestions()) {
+			addRequestParameter("value(response_" + question.getSurveyQuestionId() + ")",
+					question.getQuestion().getChoices().get(0).getChoiceId() + "");
+		}
+		addRequestParameter("method", "preview");
+		actionPerform();
+//		verifyForward("preview_success_ppi");
+//		verifyForward("preview_success");
+		verifyNoActionErrors();
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "get");
+		addRequestParameter("value(instanceId)", "1");
+		actionPerform();
+		verifyNoActionErrors();
+		SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
+		assertTrue(PPISurvey.class.isInstance(retrievedInstance.getSurvey()));
 	}
 	
 	public void testChooseSurvey() throws Exception {

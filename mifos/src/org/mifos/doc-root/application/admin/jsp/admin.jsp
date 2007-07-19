@@ -150,6 +150,16 @@
 								action="holidayAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewholiday" /></html-el:link></td>
 						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><html-el:link
+								action="ppiAction.do?method=get">
+								<mifos:mifoslabel name="admin.viewPPI" /></html-el:link>
+							| <html-el:link
+								action="ppiAction.do?method=configure">
+								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
+						</tr>
 
 					</table>
 					 <br>

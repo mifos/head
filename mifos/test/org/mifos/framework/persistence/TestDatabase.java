@@ -17,6 +17,8 @@ import net.sourceforge.mayfly.dump.SqlDumper;
 import org.hibernate.Interceptor;
 import org.hibernate.classic.Session;
 import org.junit.Assert;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SessionOpener;
@@ -97,6 +99,23 @@ public class TestDatabase implements SessionOpener {
 
 	public Connection openConnection() {
 		return database.openConnection();
+	}
+
+	/**
+	 * This is for tests where it is difficult to pass around the Session.
+	 * 
+	 * Thus, we install it in a static in HibernateUtil.
+	 * 
+	 * Make sure to call {@link HibernateUtil#resetDatabase()} from tearDown.
+	 */
+	public Session installInThreadLocal() {
+		HibernateUtil.closeSession();
+		AuditInterceptor interceptor = new AuditInterceptor();
+		Session session1 = openSession(interceptor);
+		SessionHolder holder = new SessionHolder(session1);
+		holder.setInterceptor(interceptor);
+		HibernateUtil.setThreadLocal(holder);
+		return session1;
 	}
 
 	public static void runUpgradeScripts(Connection connection)

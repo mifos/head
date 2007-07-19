@@ -59,11 +59,24 @@
           name="genericActionForm"
           input="/surveyInstanceAction.do?method=validate">
           	  <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
+          	  <forward name="create_entry_success_ppi" path="/pages/application/surveys/jsp/create_ppi_instance.jsp"/>
           	  <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_instance.jsp"/>
           	  <forward name="preview_failure" path="/pages/application/surveys/jsp/create_instance.jsp"/>
+          	  <forward name="preview_success_ppi" path="/pages/application/surveys/jsp/preview_ppi_instance.jsp"/>
           	  <forward name="preview_success" path="/pages/application/surveys/jsp/preview_instance.jsp"/>
           	  <forward name="get_success" path="/pages/application/surveys/jsp/viewInstanceDetails.jsp"/>          	  
+          	  <forward name="get_success_ppi" path="/pages/application/surveys/jsp/viewPPIInstanceDetails.jsp"/>          	  
           	  <forward name="choose_survey" path="/pages/application/surveys/jsp/create_instance_choosesurvey.jsp"/>          	            	  
+        </action>
+        <action path="/ppiAction"
+          type="org.mifos.application.ppi.struts.action.PPIAction"
+          parameter="method"
+          scope="session"
+          validate="false"
+          name="genericActionForm">
+             <forward name="configure" path="/pages/application/ppi/jsp/configure.jsp"/>
+             <forward name="preview_success" path="/pages/application/ppi/jsp/preview.jsp"/>
+             <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

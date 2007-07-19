@@ -60,6 +60,7 @@ import org.mifos.application.master.MasterTestSuite;
 import org.mifos.application.meeting.MeetingTestSuite;
 import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
+import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
@@ -135,6 +136,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(FrameworkUtilsSuite.suite());
 		suite.addTest(HolidayTestSuite.suite());
 		suite.addTest(SurveysTestSuite.suite());
+		suite.addTest(PPITestSuite.suite());
 		return suite;
 	}
 }

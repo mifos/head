@@ -28,10 +28,8 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -45,15 +43,9 @@ public class TestSurvey extends MifosTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		database = TestDatabase.makeStandard();
-		HibernateUtil.closeSession();
-		AuditInterceptor interceptor = new AuditInterceptor();
-		Session session1 = database.openSession(interceptor);
-		SessionHolder holder = new SessionHolder(session1);
-		holder.setInterceptor(interceptor);
-		HibernateUtil.setThreadLocal(holder);
-		session = session1;
+		session = database.installInThreadLocal();
 	}
-	
+
 	@Override
 	public void tearDown() {
 		session.close();
