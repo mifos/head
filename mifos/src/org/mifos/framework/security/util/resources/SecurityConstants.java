@@ -242,6 +242,8 @@ public interface SecurityConstants {
 	public final short CENTER_ADD_NOTES_TO_ACCOUNT = 87;
 
 	public final short CENTER_EDIT_FEE_TYPE_ATTACHED_TO_ACCOUNT = 88;
+	
+	public final short PRODUCT_DEFINITION = 89;
 
 	public final short CENTER_EDIT_STATUS = 81;
 

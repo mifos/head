@@ -141,7 +141,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		parentActivity = category.getActivityId();
 
 		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				newActivityId, parentActivity, (short) 1, activityNameHead
+				(short)newActivityId, parentActivity, 
+				DatabaseVersionPersistence.ENGLISH_LOCALE, 
+				activityNameHead
 						+ uploadForm.getReportTitle()).upgrade(conn);
 
 		reportBO.setReportName(uploadForm.getReportTitle());

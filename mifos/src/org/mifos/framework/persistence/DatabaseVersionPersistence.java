@@ -16,6 +16,7 @@ import org.mifos.application.accounts.business.AddAccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
+import org.mifos.application.productsmix.persistence.Upgrade127;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.persistence.AddReport;
 import org.mifos.application.util.helpers.EntityType;
@@ -56,6 +57,7 @@ public class DatabaseVersionPersistence {
 		register123(register);
 		register124(register);
 		register126(register);
+		register(register, new Upgrade127());
 		register136(register);
 		return Collections.unmodifiableMap(register);
 	}

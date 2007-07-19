@@ -50,14 +50,27 @@ public abstract class Upgrade {
 		connection.commit();
 	}
 
-	protected void insertMessage(Connection connection, int lookupId, Short localeToInsert, String nameToInsert) throws SQLException {
+	protected void insertMessage(Connection connection, int lookupId, 
+		Short localeToInsert, String message) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"insert into LOOKUP_VALUE_LOCALE(" +
 			"LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) " +
 			"VALUES(?,?,?)");
 		statement.setInt(1, localeToInsert);
 		statement.setInt(2, lookupId);
-		statement.setString(3, nameToInsert);
+		statement.setString(3, message);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	protected static void updateMessage(Connection connection, int lookupId, 
+		short locale, String newMessage) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"update LOOKUP_VALUE_LOCALE set LOOKUP_VALUE = ? " +
+			"where LOCALE_ID = ? and LOOKUP_ID = ?");
+		statement.setString(1, newMessage);
+		statement.setInt(2, locale);
+		statement.setInt(3, lookupId);
 		statement.executeUpdate();
 		statement.close();
 	}

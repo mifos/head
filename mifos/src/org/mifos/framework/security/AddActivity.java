@@ -7,14 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddActivity extends Upgrade {
 
-	private final int newActivityId;
+	private final short newActivityId;
 	private final Short locale;
 	private final String activityName;
 	private final Short parentActivity;
@@ -30,7 +29,7 @@ public class AddActivity extends Upgrade {
 	 * @param activityName Name to give the activity, in that locale.
 	 */
 	public AddActivity(
-		int higherVersion, int newActivityId, Short parentActivity, 
+		int higherVersion, short newActivityId, Short parentActivity, 
 		Short locale, String activityName) {
 		super(higherVersion);
 		this.newActivityId = newActivityId;
@@ -53,11 +52,11 @@ public class AddActivity extends Upgrade {
 	}
 
 	private void allowActivity(Connection connection, 
-		int activityId, int roleId) 
+		short activityId, int roleId) 
 	throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"insert into ROLES_ACTIVITY(ACTIVITY_ID, ROLE_ID) VALUES(?, ?)");
-		statement.setInt(1, activityId);
+		statement.setShort(1, activityId);
 		statement.setInt(2, roleId);
 		statement.executeUpdate();
 		statement.close();
@@ -70,7 +69,7 @@ public class AddActivity extends Upgrade {
 			"ACTIVITY_ID,PARENT_ID," +
 			"ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) " +
 			"VALUES(?,?,?,?)");
-		statement.setInt(1, newActivityId);
+		statement.setShort(1, newActivityId);
 		statement.setObject(2, parentActivity, Types.SMALLINT);
 		statement.setInt(3, lookupId);
 		statement.setInt(4, lookupId);
@@ -80,7 +79,7 @@ public class AddActivity extends Upgrade {
 
 	@Override
 	public void downgrade(Connection connection) throws IOException, SQLException {
-		short lookupId = findLookupId(connection);
+		short lookupId = findLookupId(connection, newActivityId);
 		deleteFromRolesActivity(connection);
 		deleteFromActivity(connection);
 		deleteFromLookupValueLocale(connection, lookupId);
@@ -88,11 +87,12 @@ public class AddActivity extends Upgrade {
 		downgradeVersion(connection);
 	}
 
-	private short findLookupId(Connection connection) throws SQLException {
+	private static short findLookupId(Connection connection, short activityId) 
+	throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"select ACTIVITY_NAME_LOOKUP_ID " +
 			"from ACTIVITY where activity_id = ?");
-		statement.setInt(1, newActivityId);
+		statement.setShort(1, activityId);
 		ResultSet results = statement.executeQuery();
 		if (results.next()) {
 			short lookupId = results.getShort("ACTIVITY_NAME_LOOKUP_ID");
@@ -102,7 +102,7 @@ public class AddActivity extends Upgrade {
 		else {
 			statement.close();
 			throw new RuntimeException(
-				"unable to downgrade: no activity with id " + newActivityId);
+				"unable to downgrade: no activity with id " + activityId);
 		}
 	}
 
@@ -120,6 +120,23 @@ public class AddActivity extends Upgrade {
 		PreparedStatement statement = connection.prepareStatement(
 			"delete from ACTIVITY where ACTIVITY_ID = ?");
 		statement.setInt(1, newActivityId);
+		statement.executeUpdate();
+		statement.close();
+	}
+
+	public static void changeActivityMessage(Connection connection, 
+		short activity, short locale, String newMessage) 
+	throws SQLException {
+		int lookupId = findLookupId(connection, activity);
+		updateMessage(connection, lookupId, locale, newMessage);
+	}
+
+	public static void reparentActivity(Connection connection, 
+		short activityId, Short newParent) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+			"update ACTIVITY set PARENT_ID = ? where ACTIVITY_ID = ?");
+		statement.setObject(1, newParent, Types.SMALLINT);
+		statement.setShort(2, activityId);
 		statement.executeUpdate();
 		statement.close();
 	}
