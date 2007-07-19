@@ -288,7 +288,6 @@ public class SurveyInstanceAction extends BaseAction {
 		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL, getRedirectUrl(surveyType, globalNum));
 		
-		System.out.println(ppiSurvey != null);
 		if (ppiSurvey != null) {
 			instance.setSurvey(ppiSurvey);
 			request.setAttribute("povertyBand",

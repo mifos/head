@@ -58,6 +58,7 @@ public class DatabaseVersionPersistence {
 		register124(register);
 		register126(register);
 		register(register, new Upgrade127());
+		register130(register);
 		register136(register);
 		return Collections.unmodifiableMap(register);
 	}
@@ -228,6 +229,15 @@ public class DatabaseVersionPersistence {
 				ENGLISH_LOCALE, 
 				"Can edit report information")
 		));
+	}
+
+	private static void register130(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(130, 
+			SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET, 
+			SecurityConstants.REPORTS_MANAGEMENT, // ???
+			ENGLISH_LOCALE, 
+			"Can adjust payment when account status " +
+			"is \"closed-obligation met\""));
 	}
 
 	private static void register136(Map<Integer, Upgrade> register) {

@@ -13,7 +13,6 @@ import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -130,7 +129,6 @@ public class LatestTest {
 	}
 	
 	@Test
-	@Ignore // not yet passing
 	public void afterLookupValues() throws Exception {
 		Database database = new Database(firstNumberedVersion());
 		
