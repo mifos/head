@@ -26,7 +26,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 135;
+	public static final int APPLICATION_VERSION = 136;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(
@@ -50,6 +50,13 @@ public class DatabaseVersionPersistence {
 		register106(register);
 		register115(register);
 		register117(register);
+		register118(register);
+		register119(register);
+		register120(register);
+		register123(register);
+		register124(register);
+		register126(register);
+		register136(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -143,6 +150,90 @@ public class DatabaseVersionPersistence {
 				"Can view Detailed Aging of Portfolio at Risk")
 				)
 		);
+	}
+
+	private static void register118(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(118, 
+			SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS, 
+			SecurityConstants.CLIENTS, 
+			ENGLISH_LOCALE, 
+			"Can add an existing client to a group"));
+	}
+
+	private static void register119(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+			new AddActivity(119, 
+				SecurityConstants.PRODUCT_MIX, 
+				null, 
+				ENGLISH_LOCALE, 
+				"Product mix"),
+			new AddActivity(119, 
+				SecurityConstants.CAN_DEFINE_PRODUCT_MIX, 
+				SecurityConstants.PRODUCT_MIX, 
+				ENGLISH_LOCALE, 
+				"Can Define product mix"),
+			new AddActivity(119, 
+				SecurityConstants.CAN_EDIT_PRODUCT_MIX, 
+				SecurityConstants.PRODUCT_MIX, 
+				ENGLISH_LOCALE, 
+				"Can Edit product mix")
+		));
+	}
+
+	private static void register120(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+			new AddReport(120, 
+				(short)29,
+				ReportsCategoryBO.ANALYSIS,
+				"Active Loans By Loan Officer",
+				"active_loans_by_loan_officer",
+				"ActiveLoansByLoanOfficer.rptdesign"),
+			new AddActivity(120, 
+				SecurityConstants.CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER, 
+				SecurityConstants.ANALYSIS, 
+				ENGLISH_LOCALE, 
+				"Can view Active Loans By Loan Officer")
+				)
+		);
+	}
+
+	private static void register123(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(123, 
+			SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS, 
+			SecurityConstants.CONFIGURATION_MANAGEMENT, 
+			ENGLISH_LOCALE, 
+			"Can Define Lookup Values"));
+	}
+	
+	private static void register124(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(124, 
+			SecurityConstants.UPLOAD_REPORT_TEMPLATE, 
+			SecurityConstants.REPORTS_MANAGEMENT, 
+			ENGLISH_LOCALE, 
+			"Can upload report template"));
+	}
+	
+	private static void register126(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+			new AddActivity(126, 
+				SecurityConstants.VIEW_REPORTS, 
+				SecurityConstants.REPORTS_MANAGEMENT, 
+				ENGLISH_LOCALE, 
+				"Can view reports"),
+			new AddActivity(126, 
+				SecurityConstants.EDIT_REPORT_INFORMATION, 
+				SecurityConstants.REPORTS_MANAGEMENT, 
+				ENGLISH_LOCALE, 
+				"Can edit report information")
+		));
+	}
+
+	private static void register136(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(136, 
+			SecurityConstants.CAN_REDO_LOAN_DISPURSAL, 
+			SecurityConstants.LOAN_MANAGEMENT, 
+			ENGLISH_LOCALE, 
+			"Can redo Loan disbursals"));
 	}
 
 	private final Connection connection;

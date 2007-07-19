@@ -402,6 +402,8 @@ public interface SecurityConstants {
 
 	public final short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
 
+	public final short REPORTS_MANAGEMENT = 141;
+
 	public final short ADMINISTER_REPORTPARAMS = 142;
     public final short ADMINISTER_REPORTDS = 142;
     
@@ -439,6 +441,8 @@ public interface SecurityConstants {
     public final short CAN_DEFINE_PRODUCT_MIX = 210;
     public final short CAN_EDIT_PRODUCT_MIX = 211;
     
+	public final short CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
+
     public final short CAN_DEFINE_LOOKUP_OPTIONS = 213;
 
 	public final short UPLOAD_REPORT_TEMPLATE = 214; 
@@ -447,6 +451,8 @@ public interface SecurityConstants {
 	
 	public final short EDIT_REPORT_INFORMATION = 216;
 	
-	public final short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET= 217; 
+	public final short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET = 217;
 	
+	public final short CAN_REDO_LOAN_DISPURSAL = 218;
+
 }

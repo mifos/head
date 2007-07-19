@@ -175,7 +175,7 @@ public class LatestTest {
 		DataStore upgraded = database.dataStore();
 		upgrade.downgrade(database.openConnection());
 		String after = new SqlDumper(false).dump(database.dataStore());
-		assertEquals(before, after);
+		assertEquals("for higherVersion=" + nextVersion, before, after);
 		
 		return upgraded;
 	}
