@@ -1,14 +1,64 @@
 <?xml version="1.0"?>
-<ppi country="NARNIA" name="Narnia PPI Survey">
-	<question name="Origin" mandatory="true" order="0">
-		<text>Which world are you from?</text>
-		<choice points="0">Born in Narnia</choice>
-		<choice points="7">Came through the wardrobe</choice>
+<ppi country="INDIA" name="PPI Survey India">
+	<question name="children" mandatory="true" order="0">
+		<text>How many children aged 0 to 17 are in the household?</text>
+		<choice points="0">&gt;=4</choice>
+		<choice points="7">3</choice>
+		<choice points="13">2</choice>
+		<choice points="19">1</choice>
+		<choice points="29">0</choice>
 	</question>
 	<question name="children in school" mandatory="true" order="1">
 		<text>How many children aged 6 to 17 attend school?</text>
 		<choice points="0">There are no children</choice>
 		<choice points="5">Not all attend</choice>
 		<choice points="6">All attend</choice>
+	</question>
+	<question name="cooking energy" mandatory="true" order="2">
+		<text>What is the household's primary energy source for cooking?</text>
+		<choice points="0">Firewood and chips, charcoal, dung cake, or no cooking arrangement</choice>
+		<choice points="4">Electricity, coke, or coal</choice>
+		<choice points="11">LPG, Kerosene, gobar gas, others, or unknown</choice>	
+	</question>
+	<question name="own tv" mandatory="true" order="3">
+		<text>Does the household own a television?</text>
+		<choice points="0">No</choice>
+		<choice points="5">Yes</choice>
+	</question>
+	<question name="own land" mandatory="true" order="4">
+		<text>How many hectares of land does the household own?</text>
+		<choice points="0">Rural, &lt;=0.4 ha.</choice>
+		<choice points="2">Rural, &gt;0.4 and &lt;=1</choice>
+		<choice points="3">Rural, &gt;1 ha.</choice>
+		<choice points="8">Urban, any amount</choice>
+	</question>
+	<question name="principle occupation" mandatory="true" order="5">
+		<text>What is the principle occupation of the household?</text>
+		<choice points="0">Agricultural labourers</choice>
+		<choice points="5">Operators and labourers, bricklayers, and construction workers</choice>
+		<choice points="8">Cultivators, farmers, fishers, hunters, loggers, or unknown</choice>
+		<choice points="10">Sales workers, service workers, and transportequipment operators</choice>
+		<choice points="12">Professional, technical, clerical, administrative, managerial, executive, and teachers</choice>
+	</question>
+	<question name="dressing tables #" mandatory="true" order="6">
+		<text>How many almirah/dressing tables does the household own?</text>
+		<choice points="0">0</choice>
+		<choice points="2">1</choice>
+		<choice points="8">2 or more</choice>
+	</question>
+	<question name="scooter/motorcycle" mandatory="true" order="7">
+		<text>Does the household own a scooter or motorcycle?</text>
+		<choice points="0">No</choice>
+		<choice points="11">Yes</choice>
+	</question>
+	<question name="residence" mandatory="true" order="8">
+		<text>Is the residence all pucca?</text>
+		<choice points="0">Not all pucca</choice>
+		<choice points="5">All pucca</choice>
+	</question>
+	<question name="own cooker" mandatory="true" order="9">
+		<text>Does the household own a pressure cooker or pressure pan?</text>
+		<choice points="0">No</choice>
+		<choice points="7">Yes</choice>
 	</question>
 </ppi>
