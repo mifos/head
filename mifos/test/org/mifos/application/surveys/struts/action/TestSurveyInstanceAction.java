@@ -442,13 +442,10 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		List<Survey> surveysList = (List<Survey>) request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
 		assertEquals(2, surveysList.size());
 		
-		List<Survey> surveys = (List<Survey>) request
-				.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
-		assertEquals(2, surveys.size());
-		assertEquals(nameBase + "1", surveys.get(0).getName());
+		assertEquals(nameBase + "1", surveysList.get(0).getName());
 		
 		addRequestParameter("method", "create_entry");
-		addRequestParameter("value(surveyId)", Integer.toString(surveys.get(0).getSurveyId()));
+		addRequestParameter("value(surveyId)", Integer.toString(surveysList.get(0).getSurveyId()));
 		addRequestParameter("value(globalNum)", globalCustNum);
 		actionPerform();
 		verifyNoActionMessages();

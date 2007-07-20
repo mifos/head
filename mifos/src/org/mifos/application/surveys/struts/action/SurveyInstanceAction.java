@@ -44,6 +44,7 @@ import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.InstanceStatus;
+import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -193,6 +194,7 @@ public class SurveyInstanceAction extends BaseAction {
 		security.allow("edit", SecurityConstants.VIEW);
 		security.allow("delete", SecurityConstants.VIEW);
 		security.allow("clear", SecurityConstants.VIEW);
+		security.allow("back", SecurityConstants.VIEW);
 		return security;
 	}
 
@@ -423,6 +425,7 @@ public class SurveyInstanceAction extends BaseAction {
 		String globalNum = (String) results.get("globalNum");
 		SurveyType surveyType = SurveyType.fromString(request
 				.getParameter("surveyType"));
+		request.getSession().setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 
 		BusinessObject businessObject = getBusinessObject(surveyType, globalNum);
@@ -432,7 +435,8 @@ public class SurveyInstanceAction extends BaseAction {
 		request.setAttribute(
 				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
-		List<Survey> surveys = persistence.retrieveSurveysByType(surveyType);
+		List<Survey> surveys = 
+			persistence.retrieveSurveysByTypeAndState(surveyType, SurveyState.ACTIVE);
 		request.setAttribute(SurveysConstants.KEY_SURVEYS_LIST, surveys);
 		return mapping.findForward(ActionForwards.choose_survey.toString());
 	}
@@ -630,10 +634,21 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		persistence.createOrUpdate(instance);
-		System.out.println(PPISurvey.class.isInstance(instance.getSurvey()));
 		SurveyType businessType = (SurveyType) request.getSession()
 				.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
 		String redirectUrl = getRedirectUrl(businessType, getGlobalNum(instance));
+		response.sendRedirect(redirectUrl);
+		return null;
+	}
+	
+	public ActionForward back(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		SurveyType businessType = (SurveyType) request.getSession()
+		.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
+		String globalNum = (String)request.getSession()
+		.getAttribute(SurveysConstants.KEY_GLOBAL_NUM);
+		String redirectUrl = getRedirectUrl(businessType, globalNum);
 		response.sendRedirect(redirectUrl);
 		return null;
 	}

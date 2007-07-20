@@ -41,6 +41,15 @@ public class SurveysPersistence extends Persistence {
 		return query.list();
 	}
 	
+	public List<Survey> retrieveSurveysByTypeAndState(SurveyType type, SurveyState state)
+			throws PersistenceException {
+		Query query = getSession().getNamedQuery(
+					NamedQueryConstants.SURVEYS_RETRIEVE_BY_TYPE_AND_STATE);
+		query.setParameter("SURVEY_TYPE", type.getValue());
+		query.setParameter("SURVEY_STATE", state.getValue());
+		return query.list();
+	}
+	
 	public List<Survey> retrieveCustomersSurveys() throws PersistenceException {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_BY_CUSTOMERS_TYPES);
 		return query.list();		

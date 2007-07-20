@@ -27,6 +27,7 @@ import org.mifos.framework.util.helpers.PPICalculator;
 import org.mifos.application.ppi.helpers.XmlPPISurveyParser;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.persistence.PPIPersistence;
+import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -56,6 +57,7 @@ public class PPIAction extends PersistenceAction {
 		security.allow("configure", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("update", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
 		return security;
 	}
 	
@@ -148,6 +150,12 @@ public class PPIAction extends PersistenceAction {
 		PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry(
 				(Country)results.get("country"));
 		
+		if (((SurveyState)results.get("state")).equals(SurveyState.ACTIVE)) {
+			List<PPISurvey> allPPISurveys = ppiPersistence.retrieveAllPPISurveys();
+			for (PPISurvey curSurvey : allPPISurveys)
+				curSurvey.setState(SurveyState.INACTIVE);
+		}
+		
 		ppiSurvey = ppiSurvey == null ?
 				new PPISurvey((Country)results.get("country")) : ppiSurvey;
 		
@@ -156,14 +164,6 @@ public class PPIAction extends PersistenceAction {
 				"org/mifos/framework/util/resources/ppi/PPISurvey" + 
 				results.get("country") + ".xml", ppiSurvey);
 		
-		ResourceBundleFactory resource = ResourceBundleFactory.getInstance();
-		ResourceBundle bundle = resource.getResourceBundle(
-				"org.mifos.application.ppi.util.resources.PPIUIResources",
-				getUserContext(request).getPreferredLocale());
-		
-		String name = bundle.getString("PPI.surveyName") + " ";
-		name += bundle.getString("PPI.Country." + results.get("country").toString());
-		ppiSurvey.setName(name);
 		ppiSurvey.setAppliesTo(SurveyType.CLIENT);
 		ppiSurvey.setState((SurveyState)results.get("state"));
 		
@@ -189,6 +189,20 @@ public class PPIAction extends PersistenceAction {
 			throw e;
 		}
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+	
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+		PPIPersistence persistence = new PPIPersistence();
+		
+		PPISurvey survey = persistence.retrieveActivePPISurvey();
+		
+		if (survey == null) 
+			return mapping.findForward(ActionForwards.get_success.toString());
+		else {
+			request.setAttribute(SurveysConstants.KEY_SURVEY, survey);
+			return mapping.findForward(ActionForwards.get_success.toString());
+		}
 	}
 	
 	@Override

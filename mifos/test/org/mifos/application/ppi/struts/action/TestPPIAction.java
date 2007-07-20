@@ -3,6 +3,14 @@ package org.mifos.application.ppi.struts.action;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.ppi.business.TestPPISurvey;
+import org.mifos.application.ppi.helpers.Country;
+import org.mifos.application.ppi.persistence.PPIPersistence;
+import org.mifos.application.surveys.SurveysConstants;
+import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -12,14 +20,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.mifos.framework.util.helpers.PPICalculator;
-import org.mifos.framework.MifosMockStrutsTestCase;
-
-import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.ppi.business.PPIChoice;
-import org.mifos.application.ppi.helpers.Country;
-import org.mifos.application.ppi.persistence.PPIPersistence;
-import org.mifos.application.surveys.helpers.SurveyState;
 
 
 public class TestPPIAction extends MifosMockStrutsTestCase {
@@ -53,6 +53,19 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		HibernateUtil.resetDatabase();
 		super.tearDown();
+	}
+	
+	public void testGet() throws Exception {
+		new PPIPersistence().createOrUpdate(TestPPISurvey.makePPISurvey("Test Survey"));
+		
+		setRequestPathInfo("/ppiAction");
+		addRequestParameter("method","get");
+		actionPerform();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.get_success.toString());
+		
+		PPISurvey retrieved = (PPISurvey)request.getAttribute(SurveysConstants.KEY_SURVEY);
+		assertEquals("Test Survey", retrieved.getName());
 	}
 	
 	public void testConfigureNoExistingPPISurvey() throws Exception {

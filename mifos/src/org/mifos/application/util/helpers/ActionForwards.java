@@ -59,6 +59,7 @@ public enum ActionForwards {
 	account_details_page,
 	savings_details_page,
 	get_success,
+	get_failure,
 	search_success,
 	viewAll_success,
 	cancel_success,

@@ -32,6 +32,9 @@
 			<c:if test="${question.questionState == 0}">
           <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/><br/></span>
 	        </c:if>
+		<font class="fontnormalRedBold"> 
+		<html-el:errors bundle="SurveysUIResources" /> 
+		</font>
       <br/>
 <span class="fontnormal">
 		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Question"/>: <c:out value="${question.questionText}"/><br/>

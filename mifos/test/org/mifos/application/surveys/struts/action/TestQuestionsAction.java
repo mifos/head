@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Session;
+import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -244,6 +245,25 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		
 		assertEquals(newQuestion.getShortName(), shortName);
 		assertEquals(newQuestion.getQuestionText(), questionText);
+	}
+	
+	public void testEditPPI() throws Exception {
+		Question question = new Question("New Q", "What's the q?", AnswerType.CHOICE);
+		
+		PPIChoice choice = new PPIChoice("choice 1");
+		choice.setPoints(11);
+		
+		question.addChoice(choice);
+		
+		request.getSession().setAttribute(SurveysConstants.KEY_QUESTION, question);
+		
+		int id = question.getQuestionId();
+		
+		setRequestPathInfo("/questionsAction");
+		addRequestParameter("questionId", Integer.toString(id));
+		addRequestParameter("method", "edit_entry");
+		actionPerform();
+		verifyActionErrors(new String[] {"errors.readonly"});
 	}
 	
 }

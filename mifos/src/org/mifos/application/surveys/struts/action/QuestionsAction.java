@@ -1,9 +1,7 @@
 package org.mifos.application.surveys.struts.action;
 
 import java.util.LinkedList;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,22 +11,22 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.formulaic.NotNullEmptyValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
-
-import org.mifos.framework.formulaic.NotNullEmptyValidator;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 
 public class QuestionsAction extends PersistenceAction {
 	
@@ -97,9 +95,20 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward edit_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
 		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
 		List<QuestionChoice> choices = question.getChoices();
+		
+		// Determine if question belongs to a PPISurvey
+		if (question.getAnswerType() == AnswerType.CHOICE.getValue()
+				&& choices.size() > 0 && choices.get(0) instanceof PPIChoice) {
+			
+			ActionMessages errors = new ActionMessages();
+			errors.add(
+					question.getShortName(), new ActionMessage("errors.readonly", question.getShortName()));
+			saveErrors(request, errors);
+			return mapping.findForward(ActionForwards.get_success.toString());
+		}
+		
 		request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
 		GenericActionForm actionForm = (GenericActionForm) form;
 		actionForm.setValue("shortName", question.getShortName());
@@ -113,9 +122,8 @@ public class QuestionsAction extends PersistenceAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ActionMessages errors = new ActionMessages();
-		Map<String, Object> results;
 		try {
-			results = addQuestionValidator.validate(request);
+			addQuestionValidator.validate(request);
 		}
 		catch (SchemaValidationError e) {
 			errors.add(e.makeActionMessages());
@@ -212,9 +220,8 @@ public class QuestionsAction extends PersistenceAction {
 		
 		GenericActionForm actionForm = (GenericActionForm) form;
 		ActionMessages errors = new ActionMessages();
-		Map<String, Object> results;
 		try {
-			results = addQuestionValidator.validate(request);
+			addQuestionValidator.validate(request);
 		}
 		catch (SchemaValidationError e) {
 			errors.add(e.makeActionMessages());

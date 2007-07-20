@@ -42,6 +42,9 @@
 	<query name="surveys.retrieveSurveysByState">
 		<![CDATA[from Survey as survey where survey.state=:SURVEY_STATE order by survey.name]]>
 	</query>
+	<query name="surveys.retrieveSurveysByTypeAndState">
+		<![CDATA[from Survey as survey where (survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all') and survey.state=:SURVEY_STATE order by survey.name]]>
+	</query>
 	<query name="surveys.retrieveCustomersSurveys">
 		<![CDATA[from Survey as survey where survey.appliesTo='client' or survey.appliesTo='group' or survey.appliesTo='center' or survey.appliesTo='all' order by survey.name]]>
 	</query>	

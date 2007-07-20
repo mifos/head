@@ -52,7 +52,29 @@ public class TestPPISurvey {
 	
 	@Test
 	public void createSurvey() throws Exception {
-		PPISurvey survey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE,
+		PPISurvey survey = makePPISurvey("PPI Test Survey");
+		
+		Survey regularSurvey = new Survey("NON-PPI Test Survey", SurveyState.ACTIVE,
+				SurveyType.CLIENT);
+		
+		PPIPersistence ppiPersistence = new PPIPersistence();
+		ppiPersistence.createOrUpdate(survey);
+		ppiPersistence.createOrUpdate(regularSurvey);
+		
+		
+		assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
+		assertEquals(2, ppiPersistence.retrieveAllSurveys().size());
+		
+		PPISurvey dbPPISurvey =  ppiPersistence.retrieveActivePPISurvey();
+		assertNotNull(dbPPISurvey);
+		assertEquals(survey.getQuestions().size(), dbPPISurvey.getQuestions().size());
+		assertEquals(survey.getNonPoorMin(), dbPPISurvey.getNonPoorMin());
+		assertEquals(survey.getName(), dbPPISurvey.getName());
+		assertEquals(survey.getCountry(), dbPPISurvey.getCountry());
+	}
+
+	public static PPISurvey makePPISurvey(String name) {
+		PPISurvey survey = new PPISurvey(name, SurveyState.ACTIVE,
 				SurveyType.CLIENT, Country.INDIA);
 		
 		survey.setVeryPoorMin(0);
@@ -76,24 +98,7 @@ public class TestPPISurvey {
 		survey.addQuestion(question, true);
 		
 		survey.setQuestions(questions);
-		
-		Survey regularSurvey = new Survey("NON-PPI Test Survey", SurveyState.ACTIVE,
-				SurveyType.CLIENT);
-		
-		PPIPersistence ppiPersistence = new PPIPersistence();
-		ppiPersistence.createOrUpdate(survey);
-		ppiPersistence.createOrUpdate(regularSurvey);
-		
-		
-		assertEquals(1, ppiPersistence.retrieveAllPPISurveys().size());
-		assertEquals(2, ppiPersistence.retrieveAllSurveys().size());
-		
-		PPISurvey dbPPISurvey =  ppiPersistence.retrieveActivePPISurvey();
-		assertNotNull(dbPPISurvey);
-		assertEquals(survey.getQuestions().size(), dbPPISurvey.getQuestions().size());
-		assertEquals(survey.getNonPoorMin(), dbPPISurvey.getNonPoorMin());
-		assertEquals(survey.getName(), dbPPISurvey.getName());
-		assertEquals(survey.getCountry(), dbPPISurvey.getCountry());
+		return survey;
 	}
 	
 	@Test

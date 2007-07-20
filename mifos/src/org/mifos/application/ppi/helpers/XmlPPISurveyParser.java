@@ -1,51 +1,54 @@
 package org.mifos.application.ppi.helpers;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.application.ppi.business.PPIChoice;
+import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyQuestion;
-import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.ppi.business.PPIChoice;
-import org.mifos.application.ppi.helpers.Country;
+import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class XmlPPISurveyParser {
 	
 	public PPISurvey parseInto(String uri, PPISurvey survey) throws Exception {
+		InputStream xml = ResourceLoader.getURI(uri).toURL().openStream();
+		return parseInto(xml, survey);
+	}
+	
+	public PPISurvey parseInto(InputStream stream, PPISurvey survey) 
+	throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory
 		.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(ResourceLoader.getURI(uri).toString());
+		Document document = builder.parse(stream);
 		
 		return parseInto(document, survey);
 	}
-	
+
 	public PPISurvey parseInto(File file, PPISurvey survey) throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory
-		.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(file);
-		
-		return parseInto(document, survey);
+		return parseInto(new FileInputStream(file), survey);
 	}
 	
 	public PPISurvey parseInto(Document document, PPISurvey survey) throws Exception {
 		Element docElement = document.getDocumentElement();
 		
 		Country country = Country.valueOf(docElement.getAttribute("country"));
+		String surveyName = docElement.getAttribute("name");
 		survey.setCountry(country);
-		survey.setName(country.toString());
+		survey.setName(surveyName);
 		
 		List<SurveyQuestion> surveyQuestions = survey.getQuestions();
 		boolean emptyQuestionList = surveyQuestions.size() == 0;
@@ -109,6 +112,14 @@ public class XmlPPISurveyParser {
 		return parseInto(uri, new PPISurvey());
 	}
 	
+	public PPISurvey parse(InputStream stream) throws Exception {
+		return parseInto(stream, new PPISurvey());
+	}
+	
+	public PPISurvey parse(Document document) throws Exception {
+		return parseInto(document, new PPISurvey());
+	}
+	
 	public Document buildXmlFrom(PPISurvey survey) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory
 		.newInstance();
@@ -117,6 +128,7 @@ public class XmlPPISurveyParser {
 		
 		Element docElement = document.createElement("ppi");
 		docElement.setAttribute("country", survey.getCountryAsEnum().toString());
+		docElement.setAttribute("name", survey.getName());
 		
 		List<SurveyQuestion> surveyQuestions = survey.getQuestions();
 		Collections.sort(surveyQuestions);
@@ -145,4 +157,5 @@ public class XmlPPISurveyParser {
 		document.appendChild(docElement);
 		return document;
 	}
+
 }
