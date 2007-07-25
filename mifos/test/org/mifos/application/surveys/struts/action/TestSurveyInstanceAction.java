@@ -1,5 +1,6 @@
 package org.mifos.application.surveys.struts.action;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,7 +13,12 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.persistence.PPIPersistence;
@@ -32,6 +38,8 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -41,6 +49,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
@@ -239,10 +248,14 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testCreate() throws Exception {
+		UserContext userContext = (UserContext)
+			request.getSession().getAttribute(Constants.USERCONTEXT);
+		PersonnelBO personnel = createPersonnel(getBranchOffice(),
+				PersonnelLevel.LOAN_OFFICER, userContext);
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
 		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
-		String officerName = TestUtils.makeUser().getName();
+		String officerName = personnel.getUserName();
 		
 		Survey survey = sampleInstance.getSurvey();
 		Question question1 = new Question("test name 1", "test question 1", AnswerType.FREETEXT);
@@ -340,6 +353,126 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals(2006, calendar.get(Calendar.YEAR));
 		assertEquals(choice1.getChoiceId(), responses.get(3).getChoiceValue().getChoiceId());
 		
+	}
+	
+	public void testCreateWithOfficerDisplayName() throws Exception {
+		UserContext userContext = (UserContext)
+			request.getSession().getAttribute(Constants.USERCONTEXT);
+		PersonnelBO personnel = createPersonnel(getBranchOffice(),
+				PersonnelLevel.LOAN_OFFICER, userContext);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
+		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
+		String officerName = personnel.getDisplayName();
+		
+		Survey survey = sampleInstance.getSurvey();		
+		surveysPersistence.createOrUpdate(survey);
+		
+		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
+		addRequestParameter("globalNum", globalNum);
+		addRequestParameter("surveyType", "client");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(customerId)", clientId);
+		addRequestParameter("value(officerName)", officerName);
+		addRequestParameter("value(dateSurveyed_DD)", "13");
+		addRequestParameter("value(dateSurveyed_MM)", "06");
+		addRequestParameter("value(dateSurveyed_YY)", "2007");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward("preview_success");
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();	
+	}
+	
+	public void testCreateWithOfficerGlobalPersonnelNumber() throws Exception {
+		UserContext userContext = (UserContext)
+			request.getSession().getAttribute(Constants.USERCONTEXT);
+		PersonnelBO personnel = createPersonnel(getBranchOffice(),
+				PersonnelLevel.LOAN_OFFICER, userContext);
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
+		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
+		String officerName = personnel.getGlobalPersonnelNum();
+		
+		Survey survey = sampleInstance.getSurvey();		
+		surveysPersistence.createOrUpdate(survey);
+		
+		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
+		addRequestParameter("globalNum", globalNum);
+		addRequestParameter("surveyType", "client");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(customerId)", clientId);
+		addRequestParameter("value(officerName)", officerName);
+		addRequestParameter("value(dateSurveyed_DD)", "13");
+		addRequestParameter("value(dateSurveyed_MM)", "06");
+		addRequestParameter("value(dateSurveyed_YY)", "2007");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward("preview_success");
+		
+		addRequestParameter("method", "create");
+		actionPerform();
+		verifyNoActionErrors();	
+	}
+	
+	public void testCreateFailureBadOfficerValue() throws Exception {
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		SurveyInstance sampleInstance = TestSurvey.makeSurveyInstance("testCreate survey name");
+		String clientId = Integer.toString(sampleInstance.getCustomer().getCustomerId());
+		String officerName = "If this username exists, this test deserves to fail";
+		
+		Survey survey = sampleInstance.getSurvey();		
+		surveysPersistence.createOrUpdate(survey);
+		
+		String globalNum = sampleInstance.getCustomer().getGlobalCustNum();
+		addRequestParameter("globalNum", globalNum);
+		addRequestParameter("surveyType", "client");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "choosesurvey");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(surveyId)", Integer.toString(sampleInstance.getSurvey().getSurveyId()));
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "create_entry");
+		actionPerform();
+		verifyNoActionErrors();
+		
+		addRequestParameter("value(customerId)", clientId);
+		addRequestParameter("value(officerName)", officerName);
+		addRequestParameter("value(dateSurveyed_DD)", "13");
+		addRequestParameter("value(dateSurveyed_MM)", "06");
+		addRequestParameter("value(dateSurveyed_YY)", "2007");
+		setRequestPathInfo("/surveyInstanceAction");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyActionErrors(new String[] {SurveysConstants.INVALID_OFFICER});
 	}
 	
 	public void testGetPPISurvey() throws Exception {
@@ -483,5 +616,26 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 	}
 	*/
+	
+	private PersonnelBO createPersonnel(OfficeBO office,
+			PersonnelLevel personnelLevel, UserContext userContext) throws Exception{
+		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
+				CustomFieldType.NUMERIC));
+		 Address address = new Address("abcd","abcd","abcd","abcd","abcd","abcd","abcd","abcd");
+		 Name name = new Name("Test", null, null, "User");
+		 Date date =new Date();
+		 PersonnelBO personnel = new PersonnelBO(personnelLevel,
+				 office, Integer.valueOf("1"), Short.valueOf("1"),
+					"ABCD", "testusername", "xyz@yahoo.com", null,
+					customFieldView, name, "111111", date, Integer
+							.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
+		personnel.save();
+		return personnel;
+	}
+
+	private OfficeBO getBranchOffice(){
+		return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+	}
 	
 }

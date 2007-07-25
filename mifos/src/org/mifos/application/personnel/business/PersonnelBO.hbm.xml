@@ -91,6 +91,9 @@
 	<query name="getPersonnelByName">
 		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.userName = :USER_NAME]]>
 	</query>
+	<query name="getPersonnelByDisplayName">
+		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME]]>
+	</query>
 	<query name="getCountByGovernmentId">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.personnelDetails.governmentIdNumber = :GOVT_ID]]>
 	</query>

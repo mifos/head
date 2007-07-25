@@ -1,9 +1,12 @@
 package org.mifos.framework.struts.actionforms;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts.action.ActionForm;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class GenericActionForm extends ActionForm {
@@ -28,6 +31,13 @@ public class GenericActionForm extends ActionForm {
 	
 	public boolean containsKey(String key) {
 		return values.containsKey(key);
+	}
+	
+	public void setDateValue(String keyPrefix, Date date) {
+		Calendar calendar = DateUtils.getCalendar(date);
+		setValue(keyPrefix + "_DD", calendar.get(Calendar.DAY_OF_MONTH));
+		setValue(keyPrefix + "_MM", calendar.get(Calendar.MONTH));
+		setValue(keyPrefix + "_YY", calendar.get(Calendar.YEAR));
 	}
 	
 	public String getDateValue(String keyPrefix) {

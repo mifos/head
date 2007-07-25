@@ -95,7 +95,7 @@ public class SurveyInstanceActionForm extends BaseActionForm {
 		else {
 			try {
 				PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-				return Short.toString(personnelPersistence.getPersonnel(officerName).getPersonnelId());
+				return Short.toString(personnelPersistence.getPersonnelByUserName(officerName).getPersonnelId());
 			} catch (PersistenceException e) {
 				return "-1";
 			}

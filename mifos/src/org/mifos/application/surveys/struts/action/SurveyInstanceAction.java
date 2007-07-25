@@ -314,7 +314,12 @@ public class SurveyInstanceAction extends BaseAction {
 			saveErrors(request, Schema.makeActionMessages(e));
 			return mapping.findForward(ActionForwards.choose_survey.toString());
 		}
-
+		
+		GenericActionForm actionForm = (GenericActionForm) form;
+		actionForm.clear();
+		actionForm.setValue("officerName", getUserContext(request).getName());
+		actionForm.setDateValue("dateSurveyed", new Date());
+		
 		SurveysPersistence persistence = new SurveysPersistence();
 		int surveyId = (Integer) results.get("value(surveyId)");
 		Survey survey = persistence.getSurvey(surveyId);
@@ -347,6 +352,24 @@ public class SurveyInstanceAction extends BaseAction {
 		else {
 			throw new NotImplementedException();
 		}
+	}
+	
+	/**
+	 * Returns a PersonnelBO corresponding to the given value.
+	 * @param input a String representing either of user-name,
+	 *  display name, or global personnel number
+	 * @return PersonnelBO
+	 */
+	private PersonnelBO getOfficerByInputString(String input) throws PersistenceException {
+		PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+		PersonnelBO officer = personnelPersistence.getPersonnelByUserName(input);
+		if (officer == null) {
+			officer = personnelPersistence.getPersonnelByDisplayName(input);
+		}
+		if (officer == null) {
+			officer = personnelPersistence.getPersonnelByGlobalPersonnelNum(input);
+		}
+		return officer;
 	}
 
 	/*
@@ -466,10 +489,10 @@ public class SurveyInstanceAction extends BaseAction {
 			errors.add(e.makeActionMessages());
 		}
 		
-		// verify that a real officer username is provided
+		// verify that a real officer username, display name, or UID is provided
 		String officerName = actionForm.getValue("officerName");
-		PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-		PersonnelBO officer = personnelPersistence.getPersonnel(officerName);
+		
+		PersonnelBO officer = getOfficerByInputString(officerName);
 		if (officer == null) {
 			errors.add("value(officerName)", new ActionMessage(SurveysConstants.INVALID_OFFICER));
 		}
@@ -529,6 +552,7 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		actionForm.clear();
 		actionForm.setValue("officerName", getUserContext(request).getName());
+		actionForm.setDateValue("dateSurveyed", new Date());
 		BusinessObject businessObject = (BusinessObject)request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
@@ -592,7 +616,7 @@ public class SurveyInstanceAction extends BaseAction {
 		Date dateConducted = DateUtils.getDateAsSentFromBrowser(actionForm
 				.getDateValue("dateSurveyed"));
 
-		PersonnelBO officer = personnelPersistence.getPersonnel(officerName);
+		PersonnelBO officer = getOfficerByInputString(officerName);
 
 		SurveyInstance instance = new SurveyInstance();
 
@@ -603,7 +627,8 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		
 		UserContext userContext = getUserContext(request);
-		PersonnelBO currentUser = personnelPersistence.getPersonnel(userContext.getName());
+		PersonnelBO currentUser = 
+			personnelPersistence.getPersonnelById(userContext.getId());
 		instance.setCreator(currentUser);
 		
 		if (CustomerBO.class.isInstance(businessObject)) {

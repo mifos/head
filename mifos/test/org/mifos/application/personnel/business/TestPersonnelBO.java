@@ -841,7 +841,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		return new PersonnelPersistence().getPersonnel(personnel.getUserName());
+		return new PersonnelPersistence().getPersonnelByUserName(personnel.getUserName());
 	}
 
 	private void loginWithWrongPassword()	{

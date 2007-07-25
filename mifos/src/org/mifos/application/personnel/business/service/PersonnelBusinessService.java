@@ -92,7 +92,7 @@ public class PersonnelBusinessService extends BusinessService {
 			throws ServiceException {
 		PersonnelBO personnel = null;
 		try {
-			personnel = new PersonnelPersistence().getPersonnel(personnelName);
+			personnel = new PersonnelPersistence().getPersonnelByUserName(personnelName);
 			if (personnel == null)
 				throw new ServiceException(LoginConstants.KEYINVALIDUSER);
 		} catch (PersistenceException e) {

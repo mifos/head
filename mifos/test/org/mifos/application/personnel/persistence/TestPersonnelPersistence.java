@@ -180,7 +180,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		String oldUserName = personnel.getUserName();
-		personnel = persistence.getPersonnel(personnel.getUserName());
+		personnel = persistence.getPersonnelByUserName(personnel.getUserName());
 		assertEquals(oldUserName,personnel.getUserName());
 	}
 	

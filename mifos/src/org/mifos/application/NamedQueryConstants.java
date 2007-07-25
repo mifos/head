@@ -536,6 +536,7 @@ public interface NamedQueryConstants {
 	//M2 personnel
 	public String GET_PERSONNEL_WITH_NAME="getCountByName";
 	public String GETPERSONNELBYNAME="getPersonnelByName";
+	public String GETPERSONNELBYDISPLAYNAME="getPersonnelByDisplayName";
 	public String GET_PERSONNEL_WITH_GOVERNMENTID="getCountByGovernmentId";
 	public String GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME="getCountByDobAndDisplayName";
 	public String GET_ACTIVE_CUSTOMERS_FOR_LO ="Customer.getActiveCustomersForLO";

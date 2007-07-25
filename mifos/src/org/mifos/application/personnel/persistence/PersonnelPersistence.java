@@ -159,14 +159,27 @@ public class PersonnelPersistence extends Persistence {
 		return count.intValue();
 	}
 
-	public PersonnelBO getPersonnel(String personnelName)
+	public PersonnelBO getPersonnelByUserName(String personnelUserName)
 			throws PersistenceException {
 		PersonnelBO personnelBO = null;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("USER_NAME", personnelName);
+		queryParameters.put("USER_NAME", personnelUserName);
 		personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
 				NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
 		return personnelBO;
+	}
+	
+	public PersonnelBO getPersonnelByDisplayName(String personnelDisplayName)
+		throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("DISPLAY_NAME", personnelDisplayName);
+		PersonnelBO personnelBO = (PersonnelBO) execUniqueResultNamedQuery(
+				NamedQueryConstants.GETPERSONNELBYDISPLAYNAME, queryParameters);
+		return personnelBO;
+	}
+	
+	public PersonnelBO getPersonnelById(Short id) throws PersistenceException{
+		return (PersonnelBO) getSession().get(PersonnelBO.class, id);
 	}
 
 	public void updateWithCommit(PersonnelBO personnelBO)
