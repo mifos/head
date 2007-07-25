@@ -753,7 +753,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 </structure>
                 <structure>
                     <property name="name">PercentageAtRisk</property>
-                    <expression name="expression">dataSetRow["Balance"]/(dataSetRow["Current"]+Total.sum(dataSetRow["Balance"]))*100</expression>
+                    <expression name="expression">Total.sum(dataSetRow["Balance"])/(dataSetRow["Current"]+Total.sum(dataSetRow["Balance"]))*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
@@ -783,42 +783,42 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                 </structure>
                 <structure>
                     <property name="name">1-30Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["1-30"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">Total.sum(dataSetRow["1-30"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">31-60Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["31-60"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">Total.sum(dataSetRow["31-60"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">61-90Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["61-90"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">Total.sum(dataSetRow["61-90"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">91-180Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow["91-180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">Total.sum(dataSetRow["91-180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">>180Percentage</property>
-                    <expression name="expression">Total.sum(dataSetRow[">180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">Total.sum(dataSetRow[">180"])/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan30</property>
-                    <expression name="expression">(Total.sum(dataSetRow["31-60"])+Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">(Total.sum(dataSetRow["31-60"])+Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan60</property>
-                    <expression name="expression">(Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">(Total.sum(dataSetRow["61-90"])+Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="name">MoreThan90</property>
-                    <expression name="expression">(Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])</expression>
+                    <expression name="expression">(Total.sum(dataSetRow["91-180"])+Total.sum(dataSetRow[">180"]))/(Total.sum(dataSetRow["Balance"])+dataSetRow["Current"])*100</expression>
                     <property name="dataType">any</property>
                 </structure>
                 <structure>
