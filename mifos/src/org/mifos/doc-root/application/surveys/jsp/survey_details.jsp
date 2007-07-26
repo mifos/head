@@ -46,7 +46,7 @@
                   </tr>
 
                   <c:choose>
-                  <c:when test="${sessionScope.itemCount !=0}">
+                  <c:when test="${itemCount !=0}">
 		  <c:forEach var="question" items="${sessionScope.BusinessKey.questions}">
                   <tr>
                   	<td class="drawtablerow"><c:out value="${question.question.shortName}"/></td>

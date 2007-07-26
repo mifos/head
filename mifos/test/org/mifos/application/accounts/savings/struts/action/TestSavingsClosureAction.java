@@ -186,6 +186,44 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("preview_success");
 	}
 	
+	public void testSuccessfullPreviewWithBlankPaymentId()throws Exception {
+		AccountPaymentEntity payment = new AccountPaymentEntity(null,
+				new Money(Configuration.getInstance().getSystemConfig()
+						.getCurrency(), "500"), null, null, null);
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
+				request);
+		addRequestParameter("receiptId", "101");		
+		addRequestParameter("receiptDate", "");
+		addRequestParameter("paymentTypeId", "");
+		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "notes");
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward("preview_success");
+	}
+	
+	public void testSuccessfullPreviewWithNullPaymentId()throws Exception {
+		AccountPaymentEntity payment = new AccountPaymentEntity(null,
+				new Money(Configuration.getInstance().getSystemConfig()
+						.getCurrency(), "500"), null, null, null);
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
+				request);
+		addRequestParameter("receiptId", "101");		
+		addRequestParameter("receiptDate", "");
+
+		// paymentTypeId is left null
+		
+		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "notes");
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward("preview_success");
+	}
+	
 	public void testPreviewDateValidation()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
@@ -219,7 +257,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyForward("preview_success");
-	}
+	}	
 	
 	public void testSuccessfullPrevious() {
 		setRequestPathInfo("/savingsClosureAction.do");

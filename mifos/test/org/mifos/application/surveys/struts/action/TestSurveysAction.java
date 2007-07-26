@@ -149,27 +149,12 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
 		surveysPersistence.createOrUpdate(question);
 		
-		String state = "ACTIVE";
+		String state = "INACTIVE";
 		String name = "test";
 		String appliesTo = "client";
 		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE,SurveyType.fromString(appliesTo));
 		surveysPersistence.createOrUpdate(oldSurvey);
-		/*
-		setRequestPathInfo("/surveysAction");
-		addRequestParameter("method", "create_entry");
-		actionPerform();
-		verifyNoActionErrors();	
 		
-		addRequestParameter("value(name)", name);
-		addRequestParameter("value(appliesTo)", appliesTo);
-		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyNoActionErrors();
-		
-		addRequestParameter("method", "create");
-		actionPerform();
-		verifyNoActionErrors();
-		*/
 		int surveyId = surveysPersistence.retrieveAllSurveys().get(0).getSurveyId();
 		setRequestPathInfo("/surveysAction");
 		addRequestParameter("method", "newVersion");
@@ -188,17 +173,18 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(name)", name);
 		addRequestParameter("value(appliesTo)", appliesTo);
 		addRequestParameter("value(state)", state);
-		addRequestParameter("method", "preview");
+		addRequestParameter("method", "preview_update");
 		actionPerform();
 		verifyNoActionErrors();
 		
-		addRequestParameter("method", "create");
+		addRequestParameter("method", "update");
 		actionPerform();
 		verifyNoActionErrors();
 		
 		List<Survey> listSurvey = surveysPersistence.retrieveAllSurveys();
-		assertEquals(listSurvey.size(), 2);
-		assertEquals(name, listSurvey.get(1).getName());
-		assertEquals(1, listSurvey.get(1).getQuestions().size());
+		assertEquals(1, listSurvey.size());
+		assertEquals(oldSurvey.getName(), listSurvey.get(0).getName());
+		assertEquals(surveyId, listSurvey.get(0).getSurveyId());
+		assertEquals(1, listSurvey.get(0).getQuestions().size());
 	}
 }

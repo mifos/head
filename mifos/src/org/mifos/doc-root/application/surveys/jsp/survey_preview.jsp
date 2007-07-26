@@ -78,7 +78,7 @@
     <td width="14%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Mandatory" bundle="SurveysUIResources" /></td>
   </tr>
 <c:choose>
-<c:when test="${sessionScope.itemCount > 0}">
+<c:when test="${itemCount > 0}">
 <c:forEach items="${sessionScope.addedQuestions}" var="question">
   <tr>
     <td width="39%" class="drawtablerow"><c:out value="${question.shortName}"/></td>

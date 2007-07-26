@@ -137,6 +137,10 @@ public class SavingsClosureAction extends BaseAction {
 		initialize(savings.getSavingsOffering().getDepositGLCode());
 		initialize(savings.getSavingsOffering().getInterestGLCode());
 
+		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
+		Money money = savings.getSavingsBalance();
+		actionForm.setAmount(money.getAmount().toString());
+		
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
@@ -187,10 +191,18 @@ public class SavingsClosureAction extends BaseAction {
 					.getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
 					.getTime()), new PaymentTypeEntity(Short.valueOf(actionForm
 					.getPaymentTypeId())));
-		else accountPaymentEntity = new AccountPaymentEntity(payment
-				.getAccount(), payment.getAmount(), actionForm.getReceiptId(),
-				null, new PaymentTypeEntity(Short.valueOf(actionForm
-						.getPaymentTypeId())));
+		else
+		{
+			if(actionForm.getPaymentTypeId() != null && !actionForm.getPaymentTypeId().equals(""))
+			{
+				if(!(actionForm.getPaymentTypeId().equals("")))
+					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())));
+				else
+					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity());
+			}
+			else
+				accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity());
+		}
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,
 				accountPaymentEntity, request);
 		return mapping.findForward("preview_success");

@@ -67,6 +67,8 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 	private String trxnDate;
 
 	private String notes;
+	
+	private String amount;
 
 	public SavingsClosureActionForm() {
 	}
@@ -136,11 +138,19 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 					.getBundle(
 							"org.mifos.application.accounts.savings.util.resources.SavingsUIResources",
 							userContext.getPreferredLocale());
-			if (StringUtils.isNullOrEmpty(getPaymentTypeId()))
-				errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-						AccountConstants.ERROR_MANDATORY, resources
-								.getString("Savings.paymentType")));
-
+			
+			String amount = getAmount();
+			if(!("0.0".equals(amount)))
+			{
+				if(!StringUtils.isNullOrEmpty(amount))
+				{
+					if (StringUtils.isNullOrEmpty(getPaymentTypeId()))
+						errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
+								AccountConstants.ERROR_MANDATORY, resources
+										.getString("Savings.paymentType")));
+				}
+			}
+			
 			if (this.getReceiptDate() != null
 					&& !this.getReceiptDate().equals("")) {
 				ActionErrors dateError = validateDate(this.getReceiptDate(),
@@ -197,5 +207,13 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 					AccountConstants.ERROR_MANDATORY, fieldName));
 		}
 		return errors;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 }
