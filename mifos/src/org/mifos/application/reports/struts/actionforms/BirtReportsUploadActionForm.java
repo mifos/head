@@ -61,13 +61,17 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
 						ReportsConstants.ERROR_TITLE));
 			}
-			if (this.getReportCategoryId().equals("-1")) {
+			if (StringUtils.isNullOrEmpty(reportCategoryId) || this.getReportCategoryId().equals("-1")) {
 				errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(
 						ReportsConstants.ERROR_CATEGORYID));
 			}
+			if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")){
+				errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(
+						ReportsConstants.ERROR_STATUS));
+			}
 			if (file !=null && !StringUtils.isEmpty(file.getFileName()) && !file.getFileName().endsWith(".rptdesign")) {
-				errors.add(ReportsConstants.ERROR_FILEISNULL, new ActionMessage(
-						ReportsConstants.ERROR_FILEISNULL));
+				errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
+						ReportsConstants.ERROR_FILE));
 			}
 		}
 	}

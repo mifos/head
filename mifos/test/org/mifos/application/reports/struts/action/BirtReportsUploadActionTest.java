@@ -24,11 +24,32 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 	}
 
-	public void testPreviewFailure() {
+	public void testPreviewFailureWhenReportTitleIsEmpty() {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("reportTitle", "");
+		addRequestParameter("reportCategoryId", "1");
+		addRequestParameter("isActive", "1");
+		actionPerform();
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	public void testPreviewFailureWhenReportCategoryIdIsEmpty() {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("reportTitle", "existTitle");
 		addRequestParameter("reportCategoryId", "");
+		addRequestParameter("isActive", "1");
+		actionPerform();
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	public void testPreviewFailureWhenIsActiveIsEmpty() {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("reportTitle", "exsitTitle");
+		addRequestParameter("reportCategoryId", "1");
+		addRequestParameter("isActive", "");
 		actionPerform();
 		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
 	}
