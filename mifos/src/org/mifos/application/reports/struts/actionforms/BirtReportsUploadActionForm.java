@@ -65,7 +65,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 				errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(
 						ReportsConstants.ERROR_CATEGORYID));
 			}
-			if (file == null || !file.getFileName().endsWith(".rptdesign")) {
+			if (file !=null && !StringUtils.isEmpty(file.getFileName()) && !file.getFileName().endsWith(".rptdesign")) {
 				errors.add(ReportsConstants.ERROR_FILEISNULL, new ActionMessage(
 						ReportsConstants.ERROR_FILEISNULL));
 			}

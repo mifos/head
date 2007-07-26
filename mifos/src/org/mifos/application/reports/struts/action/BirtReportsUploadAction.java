@@ -42,6 +42,7 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtReportsUploadAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
@@ -141,9 +142,8 @@ public class BirtReportsUploadAction extends BaseAction {
 		parentActivity = category.getActivityId();
 
 		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short)newActivityId, parentActivity, 
-				DatabaseVersionPersistence.ENGLISH_LOCALE, 
-				activityNameHead
+				(short) newActivityId, parentActivity,
+				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
 						+ uploadForm.getReportTitle()).upgrade(conn);
 
 		reportBO.setReportName(uploadForm.getReportTitle());
@@ -288,11 +288,14 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		new ReportsPersistence().createOrUpdate(reportBO);
 
-		reportJasperMap.setReportJasper(formFile.getFileName());
-		new ReportsPersistence().createOrUpdate(reportJasperMap);
-
-		uploadFile(formFile);
-
+		if (StringUtils.isEmpty(formFile.getFileName())) {
+			formFile.destroy();
+		}
+		else {
+			reportJasperMap.setReportJasper(formFile.getFileName());
+			new ReportsPersistence().createOrUpdate(reportJasperMap);
+			uploadFile(formFile);
+		}
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 

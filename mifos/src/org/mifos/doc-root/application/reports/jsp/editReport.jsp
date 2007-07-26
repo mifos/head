@@ -107,7 +107,6 @@
 								
 								<tr class="fontnormal">
 								    <td align="right">
-									    <font color="#ff0000">*</font>
 									    <mifos:mifoslabel
 										name="reports.labelSelectTemplate" />:</td>
 								    <td>
