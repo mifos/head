@@ -4,7 +4,7 @@
 
  * applyadjustment.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -126,7 +126,7 @@
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<c:out value="${BusinessKey.lastPmntAmnt}"/>
+										<c:out value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
 										<br><br>
 									</c:when>
 									<c:otherwise>
@@ -134,7 +134,7 @@
 											<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:<br>
 										</td>
 										<td width="75%" class="fontnormal">	
-											<c:out value="${BusinessKey.lastPmntAmnt}"/>
+											<c:out value="${BusinessKey.lastPmntAmntToBeAdjusted}"/>
 										</td>
 									</tr>	
 									</c:otherwise>
@@ -297,7 +297,6 @@
  			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
  			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
 </html-el:form>
-
 
 
 	</tiles:put>

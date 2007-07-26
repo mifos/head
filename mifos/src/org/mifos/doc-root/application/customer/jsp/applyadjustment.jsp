@@ -124,7 +124,7 @@
 						<c:choose>
 							<c:when test="${requestScope.method=='loadAdjustment'}">
 								<mifos:mifoslabel name="Customer.last_pmnt" />: <c:out
-									value="${BusinessKey.customerAccount.lastPmntAmnt}" />
+									value="${BusinessKey.customerAccount.lastPmntAmntToBeAdjusted}" />
 								<br>
 								<br>
 							</c:when>
@@ -135,7 +135,7 @@
 										name="Customer.amnt_tobe_adjusted" />: <br>
 									</td>
 									<td width="75%" class="fontnormal"><c:out
-										value="${BusinessKey.customerAccount.lastPmntAmnt}" /></td>
+										value="${BusinessKey.customerAccount.lastPmntAmntToBeAdjusted}" /></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>

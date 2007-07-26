@@ -123,6 +123,23 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	public void testLoadAdjustmentWhenObligationMet()throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		loan =(LoanBO)getLoanAccount();
+		applyPayment(loan,700);
+
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		setRequestPathInfo("/applyAdjustment");
+		addRequestParameter("method", "loadAdjustmentWhenObligationMet");
+
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+
+		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
+		verifyForward("loadadjustment_success");
+	}
+
+
 	public void testLoadAdjustment()throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();

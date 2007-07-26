@@ -433,17 +433,23 @@ public class LoanBO extends AccountBO {
 		// adjustment is possible only if account state is
 		// 1. active in good standing.
 		// 2. active in bad standing.
+		// 3. Closed - Obligation Met : Check permisssion first ; Can adjust payment when account status is "closed-obligation met"
+	
 		if (!(getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
-				.getId().equals(AccountStates.LOANACC_BADSTANDING))) {
+				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue()) || getAccountState()
+				.getId().equals(AccountState.LOANACC_BADSTANDING.getValue())
+				|| getAccountState().getId().equals(
+						AccountState.LOANACC_OBLIGATIONSMET.getValue()))) {
+		
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"State is not active hence adjustment is not possible");
 			return false;
 		}
+	
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Total payments on this account is  "
 						+ getAccountPayments().size());
-		AccountPaymentEntity accountPayment = getLastPmnt();
+		AccountPaymentEntity accountPayment = getLastPmntToBeAdjusted();
 		if (accountPayment != null) {
 			for (AccountTrxnEntity accntTrxn : accountPayment.getAccountTrxns()) {
 				LoanTrxnDetailEntity lntrxn = (LoanTrxnDetailEntity) accntTrxn;
@@ -454,7 +460,7 @@ public class LoanBO extends AccountBO {
 				}
 			}
 		}
-		if (null != getLastPmnt() && getLastPmntAmnt() != 0) {
+		if (null != getLastPmntToBeAdjusted() && getLastPmntAmntToBeAdjusted() != 0) {
 			return true;
 		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

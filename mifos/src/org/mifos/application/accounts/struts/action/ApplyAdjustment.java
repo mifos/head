@@ -46,7 +46,6 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionForm;
-import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -77,6 +76,9 @@ public class ApplyAdjustment extends BaseAction {
 		security.allow("previewAdjustment", SecurityConstants.VIEW);
 		security.allow("applyAdjustment", SecurityConstants.VIEW);
 		security.allow("cancelAdjustment", SecurityConstants.VIEW);
+		security.allow("loadAdjustmentWhenObligationMet",
+				SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
+
 		return security;
 	}
 	
@@ -88,11 +90,24 @@ public class ApplyAdjustment extends BaseAction {
 		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
 		request.setAttribute("method", "loadAdjustment");
-		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
-			request.setAttribute("isDisabled", "true");
-			throw new ApplicationException(
-					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
-		}
+		return mapping.findForward("loadadjustment_success");
+
+	}
+	
+	
+	/*  This method do the same thing as loadAdjustment,
+	 but added to allow handling permission : can adjust payment 
+	 when account is closed obligation met
+	 */
+	 
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadAdjustmentWhenObligationMet(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
+		request.setAttribute("method", "loadAdjustmentWhenObligationMet");
 		return mapping.findForward("loadadjustment_success");
 
 	}
@@ -104,11 +119,6 @@ public class ApplyAdjustment extends BaseAction {
 		request.setAttribute("method", "previewAdjustment");
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
 		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
-			request.setAttribute("method", "loadAdjustment");
-			throw new ApplicationException(
-					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
-		}
 		return mapping.findForward("previewadj_success");
 	}
 
@@ -122,11 +132,6 @@ public class ApplyAdjustment extends BaseAction {
 		AccountBO accountBOInSession = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		checkVersionMismatch(accountBOInSession.getVersionNo(),accnt.getVersionNo());
-		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
-			request.setAttribute("method", "previewAdjustment");
-			throw new ApplicationException(
-					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
-		}
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		accnt.setUserContext(uc);
@@ -138,7 +143,7 @@ public class ApplyAdjustment extends BaseAction {
 			getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
 					accnt.getOffice().getOfficeId(), uc.getId());
 		try {
-			accnt.adjustPmnt(appAdjustActionForm.getAdjustmentNote());
+			accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote());
 		} catch (ApplicationException ae) {
 			request.setAttribute("method", "previewAdjustment");
 			throw ae;

@@ -101,7 +101,91 @@ public class TestAccountBO extends TestAccount {
 					.getFeeId(), uc.getId());
 		HibernateUtil.getTransaction().commit();
 	}
+	private void disburseLoan(LoanBO loan,Date startDate) throws Exception {
+		loan.disburseLoan("receiptNum", startDate,
+				Short.valueOf("1"), loan.getPersonnel(),
+				startDate, Short.valueOf("1"));
+		HibernateUtil.commitTransaction();
+	}
 
+	
+	public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
+	
+		LoanBO loan = accountBO;
+		
+		Date currentDate = new Date(System.currentTimeMillis());
+		Date startDate = new Date(System.currentTimeMillis());
+		disburseLoan(loan,startDate);
+		
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		PaymentData firstPaymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(88), null, loan
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		loan.applyPayment(firstPaymentData);
+
+		TestObjectFactory.updateObject(loan);
+		TestObjectFactory.flushandCloseSession();
+		assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted());
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
+				loan.getAccountId());
+	}
+	
+	public void testSuccessAdjustLastPayment() throws Exception {
+		LoanBO loan = accountBO;
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		Date currentDate = new Date(System.currentTimeMillis());
+		PaymentData firstPaymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(700), null, loan
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		loan.applyPayment(firstPaymentData);
+
+		TestObjectFactory.updateObject(loan);
+		TestObjectFactory.flushandCloseSession();
+	
+		PaymentData secondPaymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(100), null, loan
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		loan.applyPayment(secondPaymentData);
+		TestObjectFactory.updateObject(loan);
+		TestObjectFactory.flushandCloseSession();
+		loan.setUserContext(TestUtils.makeUser());
+		try{
+			loan.adjustLastPayment("Payment with amount 100 has been adjusted by test code");
+		}catch (AccountException e) {
+			
+			assertEquals(
+					"exception.accounts.ApplicationException.CannotAdjust", 
+					e.getKey());
+		}
+		TestObjectFactory.updateObject(loan);
+		/*assertEquals("The amount returned should have been 0.0",
+				0.0, loan.getLastPmntAmntToBeAdjusted());*/
+		try{
+			loan.adjustLastPayment("Payment with amount 700 has been adjusted by test code");
+		
+		}catch (AccountException e) {
+			
+			assertEquals(
+					"exception.accounts.ApplicationException.CannotAdjust", 
+					e.getKey());
+		}
+		TestObjectFactory.updateObject(loan);
+		/*assertEquals("The amount returned should have been : 0.0",
+				0.0, loan.getLastPmntAmntToBeAdjusted());*/
+	
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
+				loan.getAccountId());
+	}	
+	
+	
 	public void testSuccessUpdateAccountActionDateEntity() {
 		List<Short> installmentIdList;
 		installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
@@ -140,6 +224,7 @@ public class TestAccountBO extends TestAccount {
 			assertFalse(accountFeesEntity.isActive());
 		}
 	}
+	
 
 	public void testGetLastLoanPmntAmnt() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());

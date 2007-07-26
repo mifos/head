@@ -2370,7 +2370,7 @@ public class TestLoanBO extends MifosTestCase {
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		loan.applyPayment(paymentData);
-
+		
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		assertEquals(

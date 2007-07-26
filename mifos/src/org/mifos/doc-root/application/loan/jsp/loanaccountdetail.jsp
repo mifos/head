@@ -46,6 +46,7 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/loanAccountAction.do">
@@ -443,9 +444,10 @@
 								name="loan.trxn" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><c:choose>
+							<td class="paddingL10">
+							<c:choose>
 								<c:when
-									test="${BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='7' || BusinessKey.accountState.id=='8' || BusinessKey.accountState.id=='9'}">
+									test="${BusinessKey.accountState.id=='5' ||BusinessKey.accountState.id=='6' || BusinessKey.accountState.id=='7' || BusinessKey.accountState.id=='8' || BusinessKey.accountState.id=='9'}">
 									<span class="fontnormal8pt"> 
 										<c:if test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9')}">
 											<html-el:link href="applyPaymentAction.do?method=load&input=loan&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}
@@ -453,18 +455,30 @@
 												<mifos:mifoslabel name="loan.apply_payment" />
 											</html-el:link><br> 
 										</c:if>
-									<c:if test="${BusinessKey.accountState.id!='7'}">
+									<c:if test="${BusinessKey.accountState.id!='6' && BusinessKey.accountState.id!='7'}">
 									 <html-el:link href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.apply_charges" />
 									</html-el:link></c:if><br>
+									
 									<c:choose>
+
 										<c:when
-											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9') }">
+											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9' || BusinessKey.accountState.id=='6') }">
 											<c:if test="${lastPaymentAction != '10'}">
+											
+											<c:if test="${BusinessKey.accountState.id=='6'}">
+							    			    <html-el:link
+													href="applyAdjustment.do?method=loadAdjustmentWhenObligationMet&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+													<mifos:mifoslabel name="loan.apply_adjustment" />
+												</html-el:link>
+											</c:if>
+											<c:if test="${BusinessKey.accountState.id!='6'}">
 												<html-el:link
 													href="applyAdjustment.do?method=loadAdjustment&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 													<mifos:mifoslabel name="loan.apply_adjustment" />
 												</html-el:link>
+											</c:if>								
+												
 											<br>
 											</c:if>
 										</c:when>

@@ -309,7 +309,6 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	//TODO: to be changed to adjustLastPayment
 	public final void adjustPmnt(String adjustmentComment)
 			throws AccountException {
 		if (isAdjustPossibleOnLastTrxn()) {
@@ -324,6 +323,25 @@ public class AccountBO extends BusinessObject {
 			}
 		} else
 			throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+	}
+
+	public final void adjustLastPayment(String adjustmentComment)
+			throws AccountException {
+		if (isAdjustPossibleOnLastTrxn()) {
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"Adjustment is possible hence attempting to adjust.");
+			
+			adjustPayment(getLastPmntToBeAdjusted(), getLoggedInUser(), adjustmentComment);
+			try {
+				(new AccountPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(
+						AccountExceptionConstants.CANNOTADJUST, e);
+			}
+		} else
+			throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
+			
+			
 	}
 
 	protected final void adjustPayment(AccountPaymentEntity accountPayment,
@@ -473,12 +491,19 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public double getLastPmntAmnt() {
-		if (null != accountPayments && accountPayments.size() > 0) {
+		if(null != accountPayments && accountPayments.size() > 0) {
 			return getLastPmnt().getAmount().getAmountDoubleValue();
 		}
 		return 0;
 	}
-
+	
+	public double getLastPmntAmntToBeAdjusted() {
+		if(null!=getLastPmntToBeAdjusted() && null != accountPayments && accountPayments.size() > 0) {
+			return getLastPmntToBeAdjusted().getAmount().getAmountDoubleValue();
+		}
+		return 0;
+	}
+	
 	public AccountPaymentEntity getLastPmnt() {
 		AccountPaymentEntity accntPmnt = null;
 		for (AccountPaymentEntity accntPayment : accountPayments) {
@@ -487,6 +512,25 @@ public class AccountBO extends BusinessObject {
 		}
 		return accntPmnt;
 	}
+	
+	
+	public AccountPaymentEntity getLastPmntToBeAdjusted() {
+		AccountPaymentEntity accntPmnt = null;
+		int i = 0;
+		for (AccountPaymentEntity accntPayment : accountPayments) {
+			i=i+1;
+			if (i == accountPayments.size()) {
+				break;
+			}
+			if (accntPayment.getAmount().getAmountDoubleValue() != 0) {
+				accntPmnt = accntPayment;
+				break;
+			}
+
+		}
+		return accntPmnt;
+	}
+	
 
 	public AccountActionDateEntity getAccountActionDate(Short installmentId) {
 		if (null != accountActionDates && accountActionDates.size() > 0) {
