@@ -28,8 +28,7 @@
 						<mifos:mifoslabel name="reports.linkviewreport"	bundle="reportsUIResources" />
 					</html-el:link> / </span> 
 					 
-					<span class="fontnormal8ptbold"><mifos:mifoslabel name="reports.summaryandreport" bundle="reportsUIResources" />
-					</span></td>
+					<span class="fontnormal8ptbold">${birtReportsUploadActionForm.reportTitle}</span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -37,7 +36,7 @@
 					<td align="left" valign="top" class="paddingL15T15">
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-						  <td class="headingorange"><span class="heading"><mifos:mifoslabel name="reports.summaryandreport" bundle="reportsUIResources" /> - </span><span class="headingorange">
+						  <td class="headingorange"><span class="heading">${birtReportsUploadActionForm.reportTitle} - </span><span class="headingorange">
 							<mifos:mifoslabel name="reports.editinformation" bundle="reportsUIResources" /></span>
 						  </td>
                         </tr>
