@@ -876,13 +876,14 @@
 			<forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
 			<forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
+            <forward name="beginRedoLoanDispersal_success" path="/custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan&amp;perspective=redoLoan" />
 
-			<!--  Audit Log -->
+            <!--  Audit Log -->
 			<forward name="viewLoanChangeLog" path="/pages/application/loan/jsp/viewChangeLog.jsp" />
 			<forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get" />
 
 		</action>
-		<action path="/savingsDepositWithdrawalAction" 
+		<action path="/savingsDepositWithdrawalAction"
 			type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" 
 			name="savingsDepositWithdrawalForm" parameter="method"
 			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
@@ -1144,7 +1145,7 @@
 			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch" />
 			<forward name="cancel_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp" />
 		</action>
-		
+
 		<action path="/reverseloandisbaction" type="org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalAction" name="reverseloandisbactionform" parameter="method" input="/reverseloandisbaction.do?method=validate"
 			validate="true" scope="session">
 			<forward name="search_success" path="/pages/application/loan/jsp/undoloandisbursalsearch.jsp" />

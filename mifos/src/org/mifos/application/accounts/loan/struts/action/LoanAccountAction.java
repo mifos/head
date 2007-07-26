@@ -8,10 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -121,7 +119,8 @@ public class LoanAccountAction extends AccountAppAction {
 		security.allow("waiveChargeDue", SecurityConstants.VIEW);
 		security.allow("forwardWaiveCharge", SecurityConstants.VIEW);
 		security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
-		return security;
+        security.allow("redoLoanBegin", SecurityConstants.CAN_REDO_LOAN_DISPURSAL);
+        return security;
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -256,7 +255,8 @@ public class LoanAccountAction extends AccountAppAction {
 		customer.getOffice().getOfficeId();
 		customer.getPersonnel().getPersonnelId();
 
-		doCleanUp(request.getSession());
+        // See commented out doCleanUp() method
+        //doCleanUp(request.getSession());
 		List<LoanOfferingBO> loanOfferings = ((LoanPrdBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct))
@@ -291,8 +291,13 @@ public class LoanAccountAction extends AccountAppAction {
 				getFunds(loanOffering), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
-	
-	private void loadCreateMasterData(LoanAccountActionForm actionForm, HttpServletRequest request)throws Exception {
+
+    public ActionForward redoLoanBegin(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return mapping.findForward(ActionForwards.beginRedoLoanDispersal_success.toString());
+    }
+
+    private void loadCreateMasterData(LoanAccountActionForm actionForm, HttpServletRequest request) throws Exception {
 		loadMasterData(request);
 		loadCreateCustomFields(actionForm,request);
 	}
@@ -549,9 +554,14 @@ public class LoanAccountAction extends AccountAppAction {
 		return valueToBeChecked % valueToBeCheckedWith == 0;
 	}
 
-	private void doCleanUp(HttpSession session) {
+	// Temporarily commenting this method out because it's preventing
+    // request parameters from propogating to the response page.
+    // Manually tested behavioral changes and found no affects.
+    // Should remove commented out code after a few months which
+    // should be around Sept 2007.
+    /*private void doCleanUp(HttpSession session) {
 		session.setAttribute("loanAccountActionForm", null);
-	}
+	}*/
 
 	private LoanOfferingBO getLoanOffering(Short loanOfferingId, short localeId)
 			throws Exception {

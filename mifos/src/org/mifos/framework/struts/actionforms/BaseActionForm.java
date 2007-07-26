@@ -28,7 +28,9 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class BaseActionForm extends ValidatorActionForm {
 
-	protected void checkForMandatoryFields(Short entityId,ActionErrors errors,HttpServletRequest request){
+    private String perspective;
+
+    protected void checkForMandatoryFields(Short entityId,ActionErrors errors,HttpServletRequest request){
 		Map<Short,List<FieldConfigurationEntity>> entityMandatoryFieldMap=(Map<Short,List<FieldConfigurationEntity>>)request.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
 		List<FieldConfigurationEntity> mandatoryfieldList=entityMandatoryFieldMap.get(entityId);
 		for(FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList){
@@ -125,4 +127,11 @@ public class BaseActionForm extends ValidatorActionForm {
 		return customFields.get(i);
 	}
 
+    public String getPerspective() {
+        return perspective;
+    }
+
+    public void setPerspective(String perspective) {
+        this.perspective = perspective;
+    }
 }

@@ -38,7 +38,7 @@
 		<parameters>
 			<parameter name="method" value="getPrdOfferings" valuetype="string"/>
 			<parameter name="customerId" value="clientId" valuetype="method"/>
-			
+            <parameter name="perspective" value="perspective" valuetype="parameter"/>
 		</parameters>
 		
 	</column>

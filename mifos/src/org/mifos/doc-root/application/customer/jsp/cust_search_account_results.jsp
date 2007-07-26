@@ -231,7 +231,7 @@
 									<td>
 									  <c:choose>
 										<c:when test="${custSearchActionForm.input == 'savings'}">
-											<mifos:mifostabletagdata name="savingsAccount" key="accountsSearch" 
+											<mifos:mifostabletagdata name="savingsAccount" key="accountsSearch"
 											type="single" width="100%" border="0" cellspacing="0" cellpadding="0" />
 										</c:when>
 										<c:otherwise>
@@ -256,7 +256,8 @@
 					</td>
 				</tr>
 			</table>
-			<html:hidden property="method" value="search" />
+            <html:hidden property="perspective" value="${custSearchActionForm.perspective}"/>
+            <html:hidden property="method" value="search" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			
 		</html-el:form>

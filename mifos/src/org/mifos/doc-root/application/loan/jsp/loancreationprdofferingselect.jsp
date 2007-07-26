@@ -212,7 +212,8 @@
 			</table>
 			<html-el:hidden property="method" value="load" />
 			<html-el:hidden property="input" value="loan" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
+            <html-el:hidden property="perspective" value="${loanAccountActionForm.perspective}" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 			<html-el:hidden property="customerId" value="${customer.customerId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>

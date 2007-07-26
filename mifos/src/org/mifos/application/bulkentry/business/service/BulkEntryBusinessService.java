@@ -477,7 +477,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		Double amount = Double.valueOf(loanAccountsProductView
 				.getEnteredAmount());
 		if (amount > 0.0) {
-			Money enteredAmount = new Money();
+			Money enteredAmount;
 			if (loanAccountsProductView.getLoanAccountViews().size() > 1)
 				enteredAmount = new Money(Configuration.getInstance()
 						.getSystemConfig().getCurrency(), String

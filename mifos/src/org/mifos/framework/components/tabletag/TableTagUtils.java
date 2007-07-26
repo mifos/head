@@ -145,6 +145,9 @@ public class TableTagUtils {
 				throw new TableTagException(ite);
 			}
 		}
-		return labelValue;
+        else if ("parameter".equalsIgnoreCase(labelType)) {
+            labelValue = pageContext.getRequest().getParameter(label);
+        }
+        return labelValue;
 	}
 }

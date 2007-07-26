@@ -11,7 +11,8 @@
 			<xs:enumeration value="key" />
 			<xs:enumeration value="method" />
 			<xs:enumeration value="date" />
-		</xs:restriction>
+            <xs:enumeration value="parameter" />
+        </xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="columntype">

@@ -617,7 +617,8 @@
 			<html-el:hidden property="gracePeriodTypeId" value="${LoanOffering.gracePeriodType.id}" />
 			<html-el:hidden property="gracePeriodname" value="${LoanOffering.gracePeriodType.name}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<script>intDedAtDisb();</script>
+            <html-el:hidden property="perspective" value="${loanAccountActionForm.perspective}" />
+            <script>intDedAtDisb();</script>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

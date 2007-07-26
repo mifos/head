@@ -205,7 +205,7 @@
 				</tr>
 			</table>
 			<html:hidden property="method" value="search" />
-			
+			<html:hidden property="perspective" value="${custSearchActionForm.perspective}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
