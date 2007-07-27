@@ -249,35 +249,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		FormFile formFile = uploadForm.getFile();
 		ReportsBO reportBO;
 		ReportsJasperMap reportJasperMap;
-		String filename = null;
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
 
-		ReportsPersistence reportPersistence = new ReportsPersistence();
-
-		List<ReportsJasperMap> reports = reportPersistence
-				.findJasperOfReportId(Short.valueOf(uploadForm.getReportId()));
-		if (reports.size() > 0) {
-			ReportsJasperMap reportFile = reports.get(0);
-			filename = reportFile.getReportJasper();
-		}
-
-		for (ReportsBO report : category.getReportsSet()) {
-			if (report.getReportName().equals(uploadForm.getReportTitle())
-					&& report.getReportsCategoryBO().getReportCategoryId()
-							.toString()
-							.equals(uploadForm.getReportCategoryId())
-					&& report.getIsActive().toString().equals(
-							uploadForm.getIsActive())
-					&& filename.equals(uploadForm.getFile().getFileName())) {
-				ActionErrors errors = new ActionErrors();
-				errors.add(ReportsConstants.ERROR_NOCHANGE, new ActionMessage(
-						ReportsConstants.ERROR_NOCHANGE));
-				request.setAttribute(Globals.ERROR_KEY, errors);
-				return mapping.findForward(ActionForwards.editpreview_failure
-						.toString());
-			}
-		}
 		reportBO = new ReportsPersistence().getReport(Short.valueOf(uploadForm
 				.getReportId()));
 		reportJasperMap = new ReportsPersistence().getReport(

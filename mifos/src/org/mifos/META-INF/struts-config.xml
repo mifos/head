@@ -718,7 +718,6 @@
 			<forward name="get_success" path="/pages/application/reports/jsp/viewReports.jsp" />
 			<forward name="edit_success" path="/pages/application/reports/jsp/editReport.jsp" />
 			<forward name="editpreview_success" path="/pages/application/reports/jsp/edit_preview_report.jsp" />
-		    <forward name="editpreview_failure" path="/pages/application/reports/jsp/editReport.jsp" />
 		    <forward name="editprevious_success" path="/pages/application/reports/jsp/editReport.jsp" />
 		</action>
 		<!-- Birt Reports Action end-->
