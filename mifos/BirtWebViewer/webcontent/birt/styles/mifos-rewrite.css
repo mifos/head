@@ -2,7 +2,6 @@
 {
     margin:0px;
     position:relative; 
-    top:-90px;
 }
 
 .dialogBackground  {
@@ -77,6 +76,7 @@
     width:500px;
     height:280px;
     padding-right: 200px;
+    margin-top: -90px;
 }
 
 .paddingleftCreates {
