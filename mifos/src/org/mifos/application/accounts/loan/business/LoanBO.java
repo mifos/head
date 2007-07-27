@@ -1577,9 +1577,12 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void generateMeetingSchedule() throws AccountException {
-		if (!isDisbursementDateValid())
+	
+		//Allowing loan disbursal dates to become independent of meeting schedules.				
+		
+		/*if (!isDisbursementDateValid())
 			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);*/
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
 		List<InstallmentDate> installmentDates = getInstallmentDates(
@@ -2135,6 +2138,12 @@ public class LoanBO extends AccountBO {
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
 
+	/*
+	 * This method will be never used because we allowed laon
+	 * disbursal dates to become independent of meeting schedules
+	 * TODO removing this method later if unusable  
+	 **/ 
+	@SuppressWarnings("unused")
 	private Boolean isDisbursementDateValid() throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"IsDisbursementDateValid invoked ");

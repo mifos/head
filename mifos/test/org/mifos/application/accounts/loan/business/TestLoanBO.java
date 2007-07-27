@@ -1535,9 +1535,10 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountStatusChangeHistory().size());
 	}
 
-	public void testDisbursalLoanRegeneteRepaymentScheduleFailure()
+	public void testDisbursalLoanRegeneteRepaymentScheduleWithInvalidDisbDate()
 			throws AccountException, SystemException, FinancialException {
-
+	
+		//Allowing loan disbursal dates to become independent of meeting schedules.
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 3);
 
@@ -1551,10 +1552,10 @@ public class TestLoanBO extends MifosTestCase {
 					.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 					.valueOf("1"));
 
-			assertEquals(true, false);
+			assertEquals(true, true);
 		}
 		catch (ApplicationException rse) {
-			assertEquals(true, true);
+			assertEquals(true, false);
 		}
 		finally {
 			Session session = HibernateUtil.getSessionTL();
@@ -2915,7 +2916,10 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.removeObject(loanOffering);
 	}
 
-	public void testBuildLoanWithInvalidDisbDate()
+	// Ability to enter a loan disbursal date wich doesn't occur on a meeting day
+	//TODO : test method to be removed
+	
+	/*public void testBuildLoanWithInvalidDisbDate()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -2937,7 +2941,7 @@ public class TestLoanBO extends MifosTestCase {
 					true);
 		}
 		TestObjectFactory.removeObject(loanOffering);
-	}
+	}*/
 
 	public void testBuildLoanWithDisbDateOlderThanCurrentDate()
 			throws NumberFormatException, AccountException, Exception {
