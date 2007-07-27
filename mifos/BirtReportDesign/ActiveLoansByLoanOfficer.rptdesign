@@ -560,14 +560,7 @@ iterator = null;]]></method>
                                                         </column>
                                                         <row id="619">
                                                             <property name="height">0.40625in</property>
-                                                            <cell id="620">
-                                                                <label id="843">
-                                                                    <property name="fontFamily">"Arial Rounded MT Bold"</property>
-                                                                    <property name="paddingRight">0pt</property>
-                                                                    <text-property name="text">Aspire Microfinance Instituation
-</text-property>
-                                                                </label>
-                                                            </cell>
+                                                            <cell id="620"/>
                                                             <cell id="621">
                                                                 <property name="textAlign">right</property>
                                                                 <label id="579">
@@ -596,7 +589,7 @@ iterator = null;]]></method>
                                                 <cell id="848">
                                                     <text id="849">
                                                         <property name="contentType">html</property>
-                                                        <text-property name="content"><![CDATA[Report date: <value-of>params["reportDate"]</value-of>]]></text-property>
+                                                        <text-property name="content"><![CDATA[Report date: <value-of>new Date()</value-of>]]></text-property>
                                                     </text>
                                                 </cell>
                                             </row>
@@ -608,9 +601,10 @@ iterator = null;]]></method>
                                                     </text>
                                                 </cell>
                                                 <cell id="853">
-                                                    <text id="854">
-                                                        <property name="contentType">html</property>
-                                                        <text-property name="content"><![CDATA[Printed: <value-of>new Date()11</value-of>]]></text-property>
+                                                    <text id="859">
+                                                        <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
+                                                        <property name="contentType">auto</property>
+                                                        <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
                                                     </text>
                                                 </cell>
                                             </row>
@@ -622,13 +616,7 @@ iterator = null;]]></method>
                                                         <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
                                                     </text>
                                                 </cell>
-                                                <cell id="858">
-                                                    <text id="859">
-                                                        <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
-                                                        <property name="contentType">auto</property>
-                                                        <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
-                                                    </text>
-                                                </cell>
+                                                <cell id="858"/>
                                             </row>
                                         </grid>
                                     </cell>
@@ -641,7 +629,6 @@ iterator = null;]]></method>
             <page-footer>
                 <text id="3">
                     <property name="contentType">html</property>
-                    <text-property name="content"></text-property>
                 </text>
             </page-footer>
         </simple-master-page>

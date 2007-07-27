@@ -4,6 +4,7 @@
     <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
     <property name="units">in</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <property name="theme">defaultTheme</property>
     <parameters>
         <scalar-parameter name="reportName" id="4">
             <property name="valueType">static</property>
@@ -1239,12 +1240,6 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                                 <property name="colSpan">1</property>
                                                                 <property name="rowSpan">1</property>
                                                                 <property name="drop">none</property>
-                                                                <label id="36">
-                                                                    <property name="fontFamily">"Arial Rounded MT Bold"</property>
-                                                                    <property name="paddingRight">0pt</property>
-                                                                    <text-property name="text">Aspire Microfinance Instituation
-</text-property>
-                                                                </label>
                                                             </cell>
                                                             <cell id="37">
                                                                 <property name="column">0</property>
@@ -1298,7 +1293,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                     <property name="drop">none</property>
                                                     <text id="45">
                                                         <property name="contentType">html</property>
-                                                        <text-property name="content"><![CDATA[Report date: <value-of>params["reportDate"]</value-of>]]></text-property>
+                                                        <text-property name="content"><![CDATA[Report date: <value-of>new Date()</value-of>]]></text-property>
                                                     </text>
                                                 </cell>
                                             </row>
@@ -1319,9 +1314,10 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                     <property name="colSpan">1</property>
                                                     <property name="rowSpan">1</property>
                                                     <property name="drop">none</property>
-                                                    <text id="50">
-                                                        <property name="contentType">html</property>
-                                                        <text-property name="content"><![CDATA[Printed: <value-of>new Date()</value-of>]]></text-property>
+                                                    <text id="55">
+                                                        <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
+                                                        <property name="contentType">auto</property>
+                                                        <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
                                                     </text>
                                                 </cell>
                                             </row>
@@ -1343,11 +1339,6 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                                     <property name="colSpan">1</property>
                                                     <property name="rowSpan">1</property>
                                                     <property name="drop">none</property>
-                                                    <text id="55">
-                                                        <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
-                                                        <property name="contentType">auto</property>
-                                                        <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
-                                                    </text>
                                                 </cell>
                                             </row>
                                         </grid>

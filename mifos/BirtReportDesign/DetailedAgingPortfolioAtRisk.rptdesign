@@ -564,14 +564,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                             </column>
                                             <row id="619">
                                                 <property name="height">0.2in</property>
-                                                <cell id="620">
-                                                    <label id="120">
-                                                        <property name="fontFamily">"Arial Rounded MT Bold"</property>
-                                                        <property name="paddingRight">0pt</property>
-                                                        <text-property name="text">Aspire Microfinance Instituation
-</text-property>
-                                                    </label>
-                                                </cell>
+                                                <cell id="620"/>
                                                 <cell id="621">
                                                     <property name="textAlign">right</property>
                                                     <label id="579">
@@ -600,7 +593,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                     <cell id="113">
                                         <text id="841">
                                             <property name="contentType">html</property>
-                                            <text-property name="content"><![CDATA[Report date: <value-of>params["reportDate"]</value-of>]]></text-property>
+                                            <text-property name="content"><![CDATA[Report date: <value-of>new Date()</value-of>]]></text-property>
                                         </text>
                                     </cell>
                                 </row>
@@ -612,9 +605,10 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                         </text>
                                     </cell>
                                     <cell id="116">
-                                        <text id="134">
-                                            <property name="contentType">html</property>
-                                            <text-property name="content"><![CDATA[Printed: <value-of>new Date()</value-of>]]></text-property>
+                                        <text id="844">
+                                            <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
+                                            <property name="contentType">auto</property>
+                                            <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
                                         </text>
                                     </cell>
                                 </row>
@@ -625,13 +619,7 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                             <text-property name="content"><![CDATA[Loan officer: <value-of>params["loanOfficerId"].displayText</value-of>]]></text-property>
                                         </text>
                                     </cell>
-                                    <cell id="847">
-                                        <text id="844">
-                                            <method name="onPrepare"><![CDATA[this.content += reportContext.getHttpServletRequest().getSession().getAttribute("UserContext").getName();]]></method>
-                                            <property name="contentType">auto</property>
-                                            <text-property name="content"><![CDATA[Prepared by: ]]></text-property>
-                                        </text>
-                                    </cell>
+                                    <cell id="847"/>
                                 </row>
                                 <row id="117">
                                     <property name="height">0.25in</property>
