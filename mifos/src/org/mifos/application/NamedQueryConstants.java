@@ -668,5 +668,9 @@ public interface NamedQueryConstants {
 	public String LOAD_ALL_DEFINED_PRODUCTS_MIX = "productsmix.retrieveAll";
 	public String LOAD_NOT_ALLOWED_PRODUCTS = "productsmix.loadnotallowedproducts";
 	public String LOAD_DEFINED_PRODUCTS_MIX_BY_PRDOFFERING_ID = "productsmix.retrieveByProductID";
+	
+//	 accepted payment type
+	public String GET_ACCEPTED_PAYMENT_TYPE ="acceptedpaymenttype.getAcceptedPaymentType";
+	public String GET_ACCEPTED_PAYMENT_TYPES_FOR_AN_ACCOUNT_ACTION="acceptedpaymenttype.getAcceptedPaymentTypesForAnAccountAction";
 
 }

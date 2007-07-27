@@ -79,6 +79,7 @@ import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.application.ppi.struts.action.PPIAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
 
 
 
@@ -253,6 +254,7 @@ public class ActivityMapper {
 		parseActionSecurity(LookupOptionsAction.getSecurity());
 		parseActionSecurity(CustomFieldsAction.getSecurity());
 		parseActionSecurity(PPIAction.getSecurity());
+		parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {

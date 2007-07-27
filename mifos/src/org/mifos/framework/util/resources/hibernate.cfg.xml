@@ -208,7 +208,9 @@
     	<mapping resource="org/mifos/application/surveys/business/Question.hbm.xml"/>      	
     	<mapping resource="org/mifos/application/surveys/business/QuestionChoice.hbm.xml"/>      	
      	<mapping resource="org/mifos/application/surveys/business/SurveyResponse.hbm.xml"/>  
-    	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>  
+    	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>
+    	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" /> 
+			 
 	</session-factory>
 
 </hibernate-configuration>

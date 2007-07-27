@@ -1100,6 +1100,26 @@
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>
 </attribute>
+<attribute>
+<name>spacedOut</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
+<name>leftListName</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
+<name>addButtonName</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+<attribute>
+<name>removeButtonName</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
 </tag>
 ---------------------------------------------------------------------
 <!-- Mifos Table Tag-->

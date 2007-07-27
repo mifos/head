@@ -76,5 +76,9 @@ public enum AccountActionTypes {
 		}
 		throw new RuntimeException("no account action " + id);
 	}
+	
+	public String getPropertiesKey() {
+		return "AccountActionTypes." + toString();
+	}
 
 }

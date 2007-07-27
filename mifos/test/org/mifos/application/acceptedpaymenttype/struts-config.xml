@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+<struts-config>
+<form-beans>
+	<!--  Accepted Payment Type Form -->
+	<form-bean name="acceptedpaymenttypeactionform" type="org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"></form-bean>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
+		<exception type="org.mifos.framework.exceptions.ApplicationException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp" />
+	</global-exceptions>
+   <action-mappings>
+	<action path="/acceptedPaymentTypeAction" type="org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction" name="acceptedpaymenttypeactionform" parameter="method" input="/acceptedPaymentTypeAction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/acceptedpaymenttype/jsp/acceptedpaymenttype.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
+	</action-mappings>
+	<!--  Accepted Payment Type resources -->
+    <message-resources key="acceptedPaymentTypeUIResources" parameter="org.mifos.application.acceptedpaymenttype.util.resources.AcceptedPaymentTypeUIResources"  ></message-resources>
+</struts-config>
+	

@@ -140,6 +140,8 @@
 		<!-- Products mix -->
 		<form-bean name="productMixActionForm" type="org.mifos.application.productsmix.struts.actionforms.ProductMixActionForm"/>
 		<!-- End Products mix -->
+		<!--  Accepted Payment Type Form -->
+		<form-bean name="acceptedpaymenttypeactionform" type="org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"></form-bean>
 
 	</form-beans>
 
@@ -1201,6 +1203,15 @@
             <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
         </action>
+        <action path="/acceptedPaymentTypeAction" type="org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction" name="acceptedpaymenttypeactionform" parameter="method" input="/acceptedPaymentTypeAction.do?method=validate"
+           validate="true" scope="session">
+           <forward name="load_success" path="/pages/application/acceptedpaymenttype/jsp/acceptedpaymenttype.jsp" />
+           <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+           <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+           <forward name="update_failure" path="/pages/application/admin/jsp/admin.jsp" />
+           <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+           <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+        </action>
 		<action path="/holidayAction"
    	      type="org.mifos.application.holiday.struts.action.HolidayAction"
    	      parameter="method"
@@ -1360,6 +1371,8 @@
     
     <message-resources key="SurveysUIResources" parameter="org.mifos.application.surveys.util.resources.SurveysUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="PPIUIResources" parameter="org.mifos.application.ppi.util.resources.PPIUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <!--  Accepted Payment Type resources -->
+    <message-resources key="acceptedPaymentTypeUIResources" parameter="org.mifos.application.acceptedpaymenttype.util.resources.AcceptedPaymentTypeUIResources"  ></message-resources>
 
 	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">

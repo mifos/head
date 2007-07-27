@@ -100,7 +100,45 @@ public class MifosSelect extends BodyTagSupport {
 
     /** For holding the name of method for the value */
     private String Property1;
+    
+    private String spacedOut;
+    private String leftListName;
+    private String addButtonName;
+    private String removeButtonName;
 
+
+	
+	public String getAddButtonName() {
+		return addButtonName;
+	}
+
+	public void setAddButtonName(String addButtonName) {
+		this.addButtonName = addButtonName;
+	}
+
+	public String getLeftListName() {
+		return leftListName;
+	}
+
+	public void setLeftListName(String leftListName) {
+		this.leftListName = leftListName;
+	}
+
+	public String getRemoveButtonName() {
+		return removeButtonName;
+	}
+
+	public void setRemoveButtonName(String removeButtonName) {
+		this.removeButtonName = removeButtonName;
+	}
+
+	public String getSpacedOut() {
+		return spacedOut;
+	}
+
+	public void setSpacedOut(String spacedOut) {
+		this.spacedOut = spacedOut;
+	}
 
 	/**
 	 * @return Returns the input.
@@ -356,10 +394,22 @@ public class MifosSelect extends BodyTagSupport {
         if (null != getLabel()) {
             results.append("<tr> <td>" + getLabel() + "</td></tr>");
         }
-        results.append("<tr> <td>");
+        String spacedOut = getSpacedOut();
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        	results.append("<tr> <td width=\"28%\">");
+        else
+        	results.append("<tr> <td>");
         results.append(rawselect[0].toString());
-        results.append("</td><td>");
-        results.append("<table " + "width=\"50%\" border=\"0\" "
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        	results.append("</td><td width=\"31%\" align=\"center\">");
+        else
+        	results.append("</td><td>");
+        if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
+        	results.append("<table " + "width=\"70%\" border=\"0\" "
+                    + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
+                    + "<td align=\"center\">" + rawbutton[0].toString());
+        else
+        	results.append("<table " + "width=\"50%\" border=\"0\" "
                 + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
                 + "<td align=\"center\">" + rawbutton[0].toString());
 
@@ -397,12 +447,22 @@ public class MifosSelect extends BodyTagSupport {
      * Function to Initialize the members of the MifosSelect class
      */
     private void init() {
-        rawbutton[0].setName("MoveRight");
-        if(getProperty1() != null)
-        	rawselect[0].setName(getProperty1());
-        else {
-        	rawselect[0].setName("LeftSelect");
-        }
+    	if (getAddButtonName() == null)
+    		rawbutton[0].setName("MoveRight");
+    	else
+    		rawbutton[0].setName(getAddButtonName());
+    	if (getRemoveButtonName() != null)
+    		rawbutton[1].setName(getRemoveButtonName());
+    	if (getLeftListName() == null)
+    	{
+	        if(getProperty1() != null)
+	        	rawselect[0].setName(getProperty1());
+	        else {
+	        	rawselect[0].setName("LeftSelect");
+	        }
+    	}
+    	else
+    		rawselect[0].setName(getLeftListName());
         rawselect[0].setStyle(getSelectStyle());
         rawselect[1].setStyle(getSelectStyle());
         rawselect[1].setName(getProperty());
