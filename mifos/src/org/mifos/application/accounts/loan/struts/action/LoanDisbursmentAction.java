@@ -100,11 +100,8 @@ public class LoanDisbursmentAction extends BaseAction {
 		// Check if the new loan product to disburse is allowed to the existent active loan product
 			if(!oldloan.prdOfferingsCanCoexist(newloan.getLoanOffering().getPrdOfferingId()))
 			{
-				ActionErrors errors = new ActionErrors();
 				String[] param={oldloan.getLoanOffering().getPrdOfferingName(),newloan.getLoanOffering().getPrdOfferingName()};
-				errors.add(LoanExceptionConstants.LOANCOULDNOTCOEXIST,new ActionMessage(LoanExceptionConstants.LOANCOULDNOTCOEXIST,param));
-		
-				throw new AccountException(LoanExceptionConstants.LOANCOULDNOTCOEXIST);
+				throw new AccountException(LoanExceptionConstants.LOANCOULDNOTCOEXIST,param);
 			} 
 			
 			
