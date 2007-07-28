@@ -98,7 +98,9 @@ public class XmlBuilder {
     }
 
     public void nonBreakingSpace() {
-    	out.append("&nbsp;");
+    	// note: using the usual "&nbsp;" won't pass unit tests as valid XHTML
+    	// so the equivalent "\\u00a0" is being used instead
+    	out.append("\u00a0");
     }
     
     public void indent(int spaces) {

@@ -74,18 +74,9 @@ public class CustomFieldsListTagTest extends TestCase {
 		String sequenceNum = "1";
 		String label = "External Loan Id";
 		String dataType = "Text";
-		String defaultValue = "&nbsp;";
+		String defaultValue = "\u00a0";
 		String mandatory = "No";
 		String fieldId = "7";
-
-/*		
-		assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">" 
-				+ "<img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\" />"
-				+ "</td><td>"
-				+ "<a href=\"action?method=method&amp;"
-				+ "category=" + categoryName 
-				+ "&amp;currentFlowKey=flow\">" + categoryName + "</a></td></tr>", link.getOutput());
-*/
 
 		assertEquals("<tr>\n"
 				+ "<td width=\"11%\" class=\"drawtablerow\">"
@@ -115,8 +106,7 @@ public class CustomFieldsListTagTest extends TestCase {
 		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName);
 		String html = tag.getCustomFieldsList(userContext);
 		
-		// TODO: currently not passing because of &nbsp; why???
-		// assertWellFormedFragment(html);
+		assertWellFormedFragment(html);
 		
 		StringAssert.assertContains("External Id", html);			
 	}

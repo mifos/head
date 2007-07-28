@@ -111,7 +111,7 @@
 								</td>
 							</tr>
 							<mifos:CustomFieldsList actionName="customFieldsAction.do" 
-								methodName="addField" flowKey="${requestScope.currentFlowKey}"
+								methodName="editField" flowKey="${requestScope.currentFlowKey}"
 								categoryName="${requestScope.category}"/>
 							<tr>
 								<td width="11%" class="drawtablerow">
