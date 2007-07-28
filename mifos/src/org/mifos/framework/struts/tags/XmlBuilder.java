@@ -97,6 +97,10 @@ public class XmlBuilder {
         out.append('\n');
     }
 
+    public void nonBreakingSpace() {
+    	out.append("&nbsp;");
+    }
+    
     public void indent(int spaces) {
         for (int i = 0; i < spaces; ++i) {
             out.append(' ');

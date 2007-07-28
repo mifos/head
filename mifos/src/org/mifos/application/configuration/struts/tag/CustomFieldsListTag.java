@@ -39,9 +39,7 @@
 package org.mifos.application.configuration.struts.tag;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
@@ -55,7 +53,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 
-public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
+public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport { 
 	private String actionName;
 
 	private String methodName;
@@ -64,6 +62,9 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 	
 	private String categoryName;
 
+	public CustomFieldsListTag() {
+	}
+	
 	public CustomFieldsListTag(String action, String method, String flow,
 			String category) {
 		actionName = action;
@@ -72,7 +73,7 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 		categoryName = category;
 	}
 
-	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext) {
+	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
 		XmlBuilder html = new XmlBuilder();
 		String url = (actionName + "?method=" + methodName
 						+ "&ref=" + customField.getFieldId());
@@ -80,7 +81,7 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 
 		html.startTag("tr"); html.newline();		
 			html.startTag("td", "width", "11%", "class", "drawtablerow"); 
-				html.text(customField.getLevelId().toString());
+				html.text(Integer.toString(index));
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "22%", "class", "drawtablerow");
 				html.text(customField.getLookUpEntity().getLabelForLocale(userContext.getLocaleId()));
@@ -90,7 +91,11 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 					CustomFieldType.fromInt(customField.getFieldType()), userContext));
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "21%", "class", "drawtablerow");
-				html.text(customField.getDefaultValue());
+				if (customField.getDefaultValue() == null) {
+					html.nonBreakingSpace();
+				} else {
+					html.text(customField.getDefaultValue());
+				}
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "17%", "class", "drawtablerow");
 				html.text(customField.getMandatoryStringValue(userContext.getPreferredLocale()));
@@ -111,20 +116,22 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 
 		XmlBuilder html = new XmlBuilder();
 		
+		int index = 1;
 		for (CustomFieldDefinitionEntity customField : master.retrieveCustomFieldsDefinition(entityType)) {
-			html.append(getRow(customField, userContext));
+			html.append(getRow(customField, userContext, index));
+			++index;
 		}
 		
 		return html.getOutput();
 	}
 
 	@Override
-	public void doTag() throws JspException {
+	public int doEndTag() throws JspException {
 		try {
-			UserContext userContext = (UserContext) ((PageContext)getJspContext()).getSession()
-				.getAttribute(Constants.USERCONTEXT);
-			
-			getJspContext().getOut().write(getCustomFieldsList(userContext));
+			UserContext userContext = (UserContext) pageContext.getSession()
+			.getAttribute(Constants.USERCONTEXT);
+
+			TagUtils.getInstance().write(pageContext, getCustomFieldsList(userContext));
 			
 		} catch (Exception e) {
 			/**
@@ -133,8 +140,22 @@ public class CustomFieldsListTag extends SimpleTagSupport { //BodyTagSupport {
 			 */
 			throw new JspException(e);
 		}
+		return EVAL_PAGE;
 	}
-	
+
+	/*
+	public void doTag() throws JspException {
+		try {
+			UserContext userContext = (UserContext) ((PageContext)getJspContext()).getSession()
+				.getAttribute(Constants.USERCONTEXT);
+			
+			getJspContext().getOut().write(getCustomFieldsList(userContext));
+			
+		} catch (Exception e) {
+			throw new JspException(e);
+		}
+	}
+*/
 	
 	
 /*	

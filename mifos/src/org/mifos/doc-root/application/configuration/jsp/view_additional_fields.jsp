@@ -77,7 +77,7 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<span class="heading">Client -</span> View Additional Fields
+									<span class="heading">${requestScope.category} -</span> View Additional Fields
 								</td>
 							</tr>
 							<tr>
@@ -88,7 +88,7 @@
 							</tr>
 						</table>
 						<br>
-						<table width="80%" border="0" cellpadding="3" cellspacing="0">
+						<table width="80%" border="0" cellpadding="3" cellspacing="0" rules="all">
 							<tr>
 								<td width="11%" class="drawtablehd">
 									Sequence No.
@@ -110,52 +110,10 @@
 									&nbsp;
 								</td>
 							</tr>
+							<mifos:CustomFieldsList actionName="customFieldsAction.do" 
+								methodName="addField" flowKey="${requestScope.currentFlowKey}"
+								categoryName="${requestScope.category}"/>
 							<tr>
-								<td width="11%" class="drawtablerow">
-									1
-								</td>
-								<td width="22%" class="drawtablerow">
-									Custom Field 1
-									<br>
-								</td>
-
-								<td width="21%" class="drawtablerow">
-									Text
-								</td>
-								<td width="21%" class="drawtablerow">
-									XYZ
-								</td>
-								<td width="17%" class="drawtablerow">
-									Y
-								</td>
-								<td width="8%" align="right" class="drawtablerow">
-									<a href="EditCustomFields.htm">Edit</a>
-								</td>
-							</tr>
-							<tr>
-								<td width="11%" class="drawtablerow">
-									2
-								</td>
-
-								<td width="22%" class="drawtablerow">
-									Custom Field 2
-									<br>
-								</td>
-								<td width="21%" class="drawtablerow">
-									Date
-								</td>
-								<td width="21%" class="drawtablerow">
-									&nbsp;
-								</td>
-								<td width="17%" class="drawtablerow">
-									Y
-								</td>
-								<td width="8%" align="right" class="drawtablerow">
-									<a href="EditCustomFields.htm">Edit</a>
-								</td>
-							</tr>
-							<tr>
-
 								<td width="11%" class="drawtablerow">
 									&nbsp;
 								</td>
@@ -177,7 +135,6 @@
 							</tr>
 						</table>
 						<br>
-
 					</td>
 				</tr>
 			</table>
@@ -185,6 +142,7 @@
 			<td></td>
 			<tr></tr>
 			<table></table>
+			
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
 		</html-el:form>
