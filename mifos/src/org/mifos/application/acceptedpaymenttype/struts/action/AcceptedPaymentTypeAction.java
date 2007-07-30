@@ -76,6 +76,11 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 	
 	private MifosLogger logger = MifosLogManager
 	.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+	private AccountActionTypes[] accountActionTypesForAcceptedPaymentType =
+	{AccountActionTypes.FEE_REPAYMENT, AccountActionTypes.LOAN_REPAYMENT, 
+			AccountActionTypes.DISBURSAL, AccountActionTypes.SAVINGS_DEPOSIT, 
+			AccountActionTypes.SAVINGS_WITHDRAWAL};
+	
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("acceptedPaymentTypeAction");
@@ -108,6 +113,15 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 	     return paymentTypeList;
 	}
 	
+	private void RemoveFromInList(List<PaymentTypeData> list, Short paymentTypeId)
+	{
+		for (int i=list.size()-1; i >= 0; i--) 
+		{
+			if (list.get(i).getId().shortValue() == paymentTypeId.shortValue())
+				list.remove(i);
+		}
+	}
+	
 	private void setPaymentTypesForAnAccountAction(List<PaymentTypeData> payments, AccountActionTypes accountAction,
 			AcceptedPaymentTypePersistence paymentTypePersistence, HttpServletRequest request) throws Exception
 	{
@@ -122,10 +136,10 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 		{
 			Short paymentTypeId = paymentType.getPaymentType().getId();
 			data = new PaymentTypeData(paymentTypeId);
-			data.setName(payments.get(paymentTypeId).getName());
+			data.setName(GetPaymentTypeName(paymentTypeId, payments));
 			data.setAcceptedPaymentTypeId(paymentType.getAcceptedPaymentTypeId());
 			outList.add(data);
-			inList.remove(paymentTypeId);
+			RemoveFromInList(inList, paymentTypeId);
 		}
 		if (accountAction == AccountActionTypes.LOAN_REPAYMENT)
 		{		
@@ -162,6 +176,20 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 			SessionUtils.setCollectionAttribute(AcceptedPaymentTypeConstants.OUT_WITHDRAWAL_LIST,
 					outList, request);
 		}
+		else
+			throw new Exception("Unknow account action for accepted payment type " + accountAction.toString());
+	}
+	
+	private String GetPaymentTypeName(Short paymentTypeId, List<PaymentTypeData> paymentTypes)
+	{
+		
+		for (PaymentTypeData paymentTypeData : paymentTypes)
+		{
+			Short paymentId = paymentTypeData.getId();
+			if (paymentId.shortValue() == paymentTypeId.shortValue())
+				 return paymentTypeData.getName();
+		}
+		return "";
 	}
 	
 	@TransactionDemarcate(saveToken = true)
@@ -177,24 +205,13 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 		List<PaymentTypeData> payments = getAllPaymentTypes(locale);
 		acceptedPaymentTypeActionForm.setAllPaymentTypes(payments);
 		AcceptedPaymentTypePersistence paymentTypePersistence = new AcceptedPaymentTypePersistence();
-		
-		for (AccountActionTypes actionType : AccountActionTypes.values()) {
-			 setPaymentTypesForAnAccountAction(payments, actionType, paymentTypePersistence, request);	
-			}
+		for (int i=0; i < accountActionTypesForAcceptedPaymentType.length; i++)
+			setPaymentTypesForAnAccountAction(payments, accountActionTypesForAcceptedPaymentType[i], paymentTypePersistence, request);
 		
 		logger.debug("Outside load method");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	
-	private boolean Find(String paymentType, String[] paymentTypes)
-	{
-		if (paymentTypes == null)
-			return false;
-		for (int i=0; i < paymentTypes.length; i++)
-			if (paymentType.equals(paymentTypes[i]))
-				return true;
-		return false;
-	}
 	
 	private boolean FindDelete(PaymentTypeData paymentType, String[] paymentTypes)
 	{
@@ -204,36 +221,98 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 		for (int i=0; i < paymentTypes.length; i++)
 		{
 			Short paymentId = Short.parseShort(paymentTypes[i]);
-			if (paymentId == paymentTypeId)
+			if (paymentId.shortValue() == paymentTypeId.shortValue())
 				 return false;
 		}
 		return true;
 	}
 	
-	private boolean FindNew(String paymentType, List<PaymentTypeData> paymentTypes)
+	private boolean FindNew(Short paymentTypeId, List<PaymentTypeData> paymentTypes)
 	{
 		
-		Short paymentTypeId = Short.parseShort(paymentType);
 		for (PaymentTypeData paymentTypeData : paymentTypes)
 		{
 			Short paymentId = paymentTypeData.getId();
-			if (paymentId == paymentTypeId)
+			if (paymentId.shortValue() == paymentTypeId.shortValue())
 				 return false;
 		}
 		return true;
 	}
 	
-	private Short FindPaymentTypeId(String paymentType, List<PaymentTypeData> allPaymentTypes)
+	private void Process(String[] selectedPaymentTypes, List<PaymentTypeData> outList, 
+			List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList, 
+			AcceptedPaymentTypePersistence persistence, AccountActionTypes accountActionType)
 	{
-		Short result = 0;
-		for (PaymentTypeData paymentTypeData : allPaymentTypes)
+		AcceptedPaymentType acceptedPaymentType = null;
+		if ((outList != null) && (outList.size() > 0))
 		{
-			if (paymentTypeData.equals(paymentType))
-				return paymentTypeData.getId();
+			for (PaymentTypeData paymentType :  outList)
+			{
+				 if (FindDelete(paymentType, selectedPaymentTypes))
+				 {
+					 acceptedPaymentType = persistence.getAcceptedPaymentType(paymentType.getAcceptedPaymentTypeId());
+					 deletedPaymentTypeList.add(acceptedPaymentType);
+				 }
+			}
 		}
-		return result;
-	
+		if (selectedPaymentTypes != null)
+		{
+			for (int i = 0; i < selectedPaymentTypes.length; i++) 
+			{
+				Short paymentTypeId = Short.parseShort(selectedPaymentTypes[i]);
+				 if (FindNew(paymentTypeId, outList))
+				 {
+					 acceptedPaymentType = new AcceptedPaymentType();
+					 PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity(paymentTypeId);
+					 acceptedPaymentType.setPaymentType(paymentTypeEntity);
+					 AccountActionTypes accountActionEnum = accountActionType;
+					 AccountActionEntity accountAction = new AccountActionEntity(accountActionEnum);
+					 acceptedPaymentType.setAccountAction(accountAction); 
+					 addedPaymentTypeList.add(acceptedPaymentType);
+				 }
+			}
+		}
 	}
+	
+	private void ProcessOneAccountActionAcceptedPaymentTypes(AccountActionTypes accountActionType, AcceptedPaymentTypeActionForm acceptedPaymentTypeActionForm,
+			List<AcceptedPaymentType> deletedPaymentTypeList, List<AcceptedPaymentType> addedPaymentTypeList, 
+			HttpServletRequest request, AcceptedPaymentTypePersistence persistence)
+	                     throws Exception
+	{
+		//	new accepted payments 
+		String[] selectedPaymentTypes = null;
+		//  old accepted payments 
+		List<PaymentTypeData> outList = null;
+		if (accountActionType == AccountActionTypes.FEE_REPAYMENT)
+		{
+			selectedPaymentTypes = acceptedPaymentTypeActionForm.getFees();
+			outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_FEE_LIST, request);
+		}
+		else if (accountActionType == AccountActionTypes.DISBURSAL)
+		{
+			selectedPaymentTypes = acceptedPaymentTypeActionForm.getDisbursements();
+			outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_DISBURSEMENT_LIST, request);
+		}
+		else if (accountActionType == AccountActionTypes.LOAN_REPAYMENT)
+		{
+			selectedPaymentTypes = acceptedPaymentTypeActionForm.getRepayments();
+			outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_REPAYMENT_LIST, request);
+		}
+		else if (accountActionType == AccountActionTypes.SAVINGS_DEPOSIT)
+		{
+			selectedPaymentTypes = acceptedPaymentTypeActionForm.getDeposits();
+			outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_DEPOSIT_LIST, request);
+		}
+		else if (accountActionType == AccountActionTypes.SAVINGS_WITHDRAWAL)
+		{
+			selectedPaymentTypes = acceptedPaymentTypeActionForm.getWithdrawals();
+			outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_WITHDRAWAL_LIST, request);
+		}
+		else
+			throw new Exception("Unknow account action for accepted payment type " + accountActionType.toString());
+		Process(selectedPaymentTypes, outList, deletedPaymentTypeList, addedPaymentTypeList, persistence, accountActionType);
+	}
+	
 	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
@@ -241,44 +320,22 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 			throws Exception {
 		logger.debug("Inside update method");
 		AcceptedPaymentTypeActionForm acceptedPaymentTypeActionForm = (AcceptedPaymentTypeActionForm) form;
-		//		 new accepted payments for fee
-		String[] fees = acceptedPaymentTypeActionForm.getFees(); 
-		//		 old accepted payments for fee
-		List<PaymentTypeData> outList = (List<PaymentTypeData>)SessionUtils.getAttribute(AcceptedPaymentTypeConstants.OUT_FEE_LIST, request);
-		// compare to see which ones will be deleted/added
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+		
 		List<AcceptedPaymentType> deletedPaymentTypeList = new ArrayList();
 		List<AcceptedPaymentType> addedPaymentTypeList = new ArrayList();
-		List<PaymentTypeData> allPaymentTypes = acceptedPaymentTypeActionForm.getAllPaymentTypes();
-		AcceptedPaymentType acceptedPaymentType = null;
-		for (PaymentTypeData paymentType :  outList)
-		{
-			 if (FindDelete(paymentType, fees))
-			 {
-				 acceptedPaymentType = new AcceptedPaymentType();
-				 acceptedPaymentType.setAcceptedPaymentTypeId(paymentType.getAcceptedPaymentTypeId());
-				 deletedPaymentTypeList.add(acceptedPaymentType);
-			 }
-		}
-		if (fees != null)
-		{
-			for (int i = 0; i < fees.length; i++) 
-			{
-				 if (FindNew(fees[i], outList))
-				 {
-					 Short paymentTypeId = FindPaymentTypeId(fees[i], allPaymentTypes);
-					 if (paymentTypeId == 0)
-					 	throw new Exception("Payment Type " + fees[i] + " is not found.");
-					 acceptedPaymentType = new AcceptedPaymentType();
-					 PaymentTypeEntity paymentTypeEntity = new PaymentTypeEntity();
-					 acceptedPaymentType.setPaymentType(paymentTypeEntity);
-					 AccountActionEntity accountAction = new AccountActionEntity();
-					 acceptedPaymentType.setAccountAction(accountAction); 
-					 addedPaymentTypeList.add(acceptedPaymentType);
-				 }
-			}
-		}
+		for (int i=0; i < accountActionTypesForAcceptedPaymentType.length; i++)
+			ProcessOneAccountActionAcceptedPaymentTypes(accountActionTypesForAcceptedPaymentType[i], acceptedPaymentTypeActionForm,
+					deletedPaymentTypeList, addedPaymentTypeList, request, persistence);
+		
+		
+		if (addedPaymentTypeList.size() > 0)
+			persistence.addAcceptedPaymentTypes(addedPaymentTypeList);
+		if (deletedPaymentTypeList.size() > 0)
+			persistence.deleteAcceptedPaymentTypes(deletedPaymentTypeList);
 		
 		return mapping.findForward(ActionForwards.update_success.toString());
+		
 	}
 	
 	@TransactionDemarcate(validateAndResetToken = true)

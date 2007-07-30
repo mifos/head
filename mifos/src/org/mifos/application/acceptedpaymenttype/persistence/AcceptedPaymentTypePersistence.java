@@ -9,8 +9,6 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.application.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
-import org.mifos.application.accounts.business.AccountActionEntity;
 
 	public class AcceptedPaymentTypePersistence extends Persistence {
 
@@ -27,7 +25,17 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 				NamedQueryConstants.GET_ACCEPTED_PAYMENT_TYPES_FOR_AN_ACCOUNT_ACTION, queryParameters);
 		}
 		
-		
+		public void addAcceptedPaymentTypes(List<AcceptedPaymentType> acceptedPaymentTypeList) throws PersistenceException {
+			for (AcceptedPaymentType paymentType : acceptedPaymentTypeList)
+				createOrUpdate(paymentType);
+		}
+
+
+		// delete a list of accepted payment type for account actions
+		public void deleteAcceptedPaymentTypes(List<AcceptedPaymentType> acceptedPaymentTypeList) throws PersistenceException {
+			for (AcceptedPaymentType paymentType : acceptedPaymentTypeList)
+				delete(paymentType);
+		}
 
 		
 	}

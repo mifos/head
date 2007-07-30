@@ -6,19 +6,17 @@
 -->
 <hibernate-mapping>
     <class name="org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType" table="accepted_payment_type" >
-        <id name="acceptedPaymentTypeId" type="java.lang.Short">
+        <id name="acceptedPaymentTypeId" type="java.lang.Short" access="field">
             <column name="ACCEPTED_PAYMENT_TYPE_ID" />
             <generator class="native" />
         </id>
+        <version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"></version>
         <many-to-one name="accountAction" class="org.mifos.application.accounts.business.AccountActionEntity" fetch="select">
             <column name="ACCOUNT_ACTION_ID" not-null="true" />
         </many-to-one>
         <many-to-one name="paymentType" class="org.mifos.application.master.business.PaymentTypeEntity" fetch="select">
             <column name="PAYMENT_TYPE_ID" not-null="true" />
         </many-to-one>
-        <property name="versionNo" type="java.lang.Integer">
-            <column name="VERSION_NO" not-null="true" />
-        </property>
     </class>
     <query name="acceptedpaymenttype.getAcceptedPaymentType"> 
     <![CDATA[ from  AcceptedPaymentType paymentType where paymentType.acceptedPaymentTypeId =:paymentTypeId ]]>

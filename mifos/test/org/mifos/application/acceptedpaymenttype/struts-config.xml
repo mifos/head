@@ -14,7 +14,7 @@
 	</global-exceptions>
    <action-mappings>
 	<action path="/acceptedPaymentTypeAction" type="org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction" name="acceptedpaymenttypeactionform" parameter="method" input="/acceptedPaymentTypeAction.do?method=validate"
-			validate="true" scope="session">
+			validate="false" scope="session">
 			<forward name="load_success" path="/pages/application/acceptedpaymenttype/jsp/acceptedpaymenttype.jsp" />
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
