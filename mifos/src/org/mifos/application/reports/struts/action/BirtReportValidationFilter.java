@@ -15,11 +15,17 @@ public class BirtReportValidationFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		String branchId = request.getParameter("branchId");
-		if (branchId == null || !branchId.equals("-2")) {
-			chain.doFilter(request, response);
+		String report = request.getParameter("__report");
+		if (report.equals("report/ActiveLoansByLoanOfficer.rptdesign") || report.equals("report/DetailedAgingPortfolioAtRisk.rptdesign")) {
+			if (branchId == null || !branchId.equals("-2")) {
+				chain.doFilter(request, response);
+			}
+			else {
+				showError(request, response);
+			}
 		}
 		else {
-			showError(request, response);
+			chain.doFilter(request, response);
 		}
 	}
 
@@ -27,11 +33,13 @@ public class BirtReportValidationFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		String errorMessage = "Please Select the required items";
-		httpServletResponse.sendRedirect("/mifos/run?__report="
-				+ request.getParameter("__report") + "&reportName="
-				+ request.getParameter("reportName") + "&userId="
-				+ request.getParameter("userId") + "&__format="
-				+ request.getParameter("__format") + "&message=" + errorMessage);
+		httpServletResponse
+				.sendRedirect("/mifos/run?__report="
+						+ request.getParameter("__report") + "&reportName="
+						+ request.getParameter("reportName") + "&userId="
+						+ request.getParameter("userId") + "&__format="
+						+ request.getParameter("__format") + "&message="
+						+ errorMessage);
 	}
 
 	public void init(FilterConfig arg0) throws ServletException {
