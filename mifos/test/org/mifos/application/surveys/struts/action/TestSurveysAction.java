@@ -64,6 +64,18 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		return survey;
 	}
 	
+	public void testPreviewFailureNoName() throws Exception {
+		setRequestPathInfo("/surveysAction");
+		addRequestParameter("method", "create_entry");
+		
+		addRequestParameter("value(name)", "");
+		addRequestParameter("value(appliesTo)", "client");
+		addRequestParameter("value(state)", "ACTIVE");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyActionErrors(new String[] {"errors.NotNullEmptyValidator.MISSING"});
+	}
+	
 	public void testMainpage() throws Exception {
 		String testName = "Test Survey 1";
 		String questionText= "A question";

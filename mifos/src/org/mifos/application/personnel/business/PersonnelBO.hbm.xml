@@ -39,7 +39,7 @@
 			type="integer"  />
 		<property name="encriptedPassword" column="PASSWORD"
 			type="binary" access="field" />
-		<property name="userName" column="LOGIN_NAME" type="string" access="field"/>
+		<property name="userName" column="LOGIN_NAME" unique="true" type="string" access="field"/>
 		<property name="emailId" column="EMAIL_ID" type="string" access="field"/>
 		<property name="passwordChanged" column="PASSWORD_CHANGED"
 			type="short" access="field"/>

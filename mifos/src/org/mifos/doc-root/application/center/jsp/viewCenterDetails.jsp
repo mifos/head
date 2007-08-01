@@ -530,6 +530,7 @@
 								height="8"></td>
 						</tr>
 					</table>
+               <c:if test="${surveyCount}">
 		<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
             <tr>
               <td colspan="2" class="bluetablehead05">
@@ -562,12 +563,21 @@
                 <span class="fontnormal8pt">
                   <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalCustNum}&surveyType=center">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
-                  </a> |
+                  </a> <br>
                   <a href="surveysAction.do?method=mainpage">
                     <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
                   </a>
+              </td>
+            </tr>
           </table>
-					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+          <table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+		</table>
+		</c:if>
+          <table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormalbold"><mifos:mifoslabel

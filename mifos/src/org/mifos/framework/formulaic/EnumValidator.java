@@ -9,7 +9,7 @@ package org.mifos.framework.formulaic;
  */
 public class EnumValidator extends IsInstanceValidator {
 	
-	public static final String INVALID_ENUM_ERROR = "errors.formulaic.EnumValidator.invalidenum";
+	public static final String INVALID_ENUM_ERROR = "invalidenum";
 	
 	private Class enumType;
 	

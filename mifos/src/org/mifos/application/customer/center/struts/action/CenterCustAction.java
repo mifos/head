@@ -74,6 +74,8 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -402,7 +404,11 @@ public class CenterCustAction extends CustAction {
 		
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByCustomer(centerBO);
+               boolean activeSurveys =
+                       surveysPersistence.retrieveSurveysByTypeAndState(
+                                       SurveyType.CENTER, SurveyState.ACTIVE).size() > 0;
 		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
+               request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

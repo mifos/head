@@ -278,5 +278,6 @@ public interface CustomerConstants {
 	public static final String CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION = "error.Customer.ClientIsClosedOrCancelled";
 	public static final String CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION = "error.Customer.ClientHaveOpenLoanAccount";
 	public static final String SURVEY_KEY = "customerSurveys";
+	public static final String SURVEY_COUNT = "surveyCount";
 	
 }

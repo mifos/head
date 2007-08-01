@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -27,6 +28,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.MaxLengthValidator;
+import org.mifos.framework.formulaic.NotNullEmptyValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -44,7 +46,8 @@ public class SurveysAction extends BaseAction {
 	public SurveysAction() {
 		super();
 		previewValidator = new Schema();
-		previewValidator.setSimpleValidator("value(name)", new MaxLengthValidator(30));
+		previewValidator.setSimpleValidator("value(name)", new NotNullEmptyValidator(
+				new MaxLengthValidator(30)));
 		previewValidator.setSimpleValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
 		previewValidator.setSimpleValidator("value(state)", new EnumValidator(SurveyState.class));
 		
@@ -254,9 +257,12 @@ public class SurveysAction extends BaseAction {
 		int surveyId = Integer.parseInt(request.getParameter("value(surveyId)"));
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
-
+		if (survey instanceof PPISurvey) {
+			return get(mapping, form, request, response);
+		}
 		actionForm.setValue("name", survey.getName());
 		actionForm.setValue("appliesTo", survey.getAppliesTo());
+               actionForm.setValue("state", SurveyState.fromInt(survey.getState()).toString());
 		List<Question> associatedQuestions = new LinkedList<Question>();
 		List<Question> questionsList = getQuestions();
 		for (SurveyQuestion question : survey.getQuestions()) {

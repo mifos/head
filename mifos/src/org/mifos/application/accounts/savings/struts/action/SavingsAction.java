@@ -78,6 +78,10 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.surveys.business.SurveyInstance;
+import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -381,6 +385,15 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils.setCollectionAttribute(SavingsConstants.NOTES, savings
 				.getRecentAccountNotes(), request);
 		logger.info(" Savings object retrieved successfully");
+		
+		SurveysPersistence surveysPersistence = new SurveysPersistence();
+		List<SurveyInstance> surveys = surveysPersistence.retrieveInstancesByAccount(savings);
+		boolean activeSurveys =
+        	surveysPersistence.retrieveSurveysByTypeAndState(
+        			SurveyType.SAVINGS, SurveyState.ACTIVE).size() > 0;
+		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
+               request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
+		request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
 		return mapping.findForward("get_success");
 	}
 

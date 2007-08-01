@@ -884,7 +884,7 @@ public class CustomerPersistence extends Persistence {
 		}
 	}
 
-	public List<Integer> getCustomerAccountsForFee(Short feeId)
+	public List<AccountBO> getCustomerAccountsForFee(Short feeId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("FEEID", feeId);

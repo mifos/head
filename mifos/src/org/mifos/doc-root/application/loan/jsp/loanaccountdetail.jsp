@@ -556,6 +556,51 @@
 								height="8"></td>
 						</tr>
 					</table>
+		<c:if test="${surveyCount}">
+		<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+            <tr>
+              <td colspan="2" class="bluetablehead05">
+                <span class="fontnormalbold">
+                  <mifos:mifoslabel name="Surveys.Surveys" bundle="SurveysUIResources"/>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" class="paddingL10"><img src="pages/framework/images/trans.gif" width="10" height="2"></td>
+            </tr>
+            <c:forEach items="${requestScope.customerSurveys}" var="surveyInstance">
+              <tr>
+                <td width="70%" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
+                      <c:out value="${surveyInstance.survey.name}"/>
+                    </a>
+                  </span>
+                </td>
+                <td width="30%" align="left" class="paddingL10">
+                  <span class="fontnormal8pt">
+                    <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,surveyInstance.dateConducted)}" />
+                  </span>
+                </td>
+              </tr>
+            </c:forEach>
+            <tr>
+              <td colspan="2" align="right" class="paddingleft05">
+                <span class="fontnormal8pt">
+                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=client">
+                    <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
+                  </a> <br>
+                  <a href="surveysAction.do?method=mainpage">
+                    <mifos:mifoslabel name="Surveys.viewallsurveys" bundle="SurveysUIResources"/>
+                  </a>
+          </table>
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+		</c:if>
 					<table width="100%" border="0" cellpadding="2" cellspacing="0"
 						class="bluetableborder">
 						<tr>

@@ -1085,6 +1085,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getCustomerAccountsForFee(periodicFee.getFeeId());
 		assertNotNull(accountList);
 		assertEquals(1, accountList.size());
+		assertTrue(accountList.get(0) instanceof CustomerAccountBO);
 		// get all objects again
 		groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount
 				.getAccountId());

@@ -9,14 +9,23 @@ package org.mifos.framework.formulaic;
 public class NotNullEmptyValidator extends IsInstanceValidator {
 
 	
+	private Validator other;
+
 	public NotNullEmptyValidator() {
 		super(String.class);
+	}
+	
+	public NotNullEmptyValidator(Validator other) {
+		super(String.class);
+		this.other = other;
 	}
 	
 	@Override
 	public String validate(Object value) throws ValidationError {
 		super.validate(value);
-		if (value.equals("")) {
+		if (other != null)
+			other.validate(value);
+		if (((String)value).trim().equals("")) {
 			throw makeError(value, ErrorType.MISSING);
 		}
 		return (String) value;

@@ -8,7 +8,7 @@
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
     <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>
-            <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
+            <td width="85%" align="left" valign="top" class="paddingL15T15"><table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td height="23" class="headingorange"><c:out value="${sessionScope.BusinessKey.name}"/></td>
                 </tr>
@@ -17,17 +17,20 @@
                 <td height="23" class="fontnormal"><p><span class="fontnormal">                  </span>
                 <span class="fontnormal">
                 <c:choose>
-                  <c:when test="${sessionScope.BusinessKey.state == 1}"><img src="pages/framework/images/status_activegreen.gif" width="8" height="9"><mifos:mifoslabel name="Surveys.Active"/></c:when>
-                  <c:when test="${sessionScope.BusinessKey.state == 0}"><img src="pages/framework/images/status_closedblack.gif" width="8" height="9"><mifos:mifoslabel name="Surveys.Inactive"/></c:when>      
+                  <c:when test="${sessionScope.BusinessKey.state == 1}"><img src="pages/framework/images/status_activegreen.gif" width="8" height="9"> <mifos:mifoslabel name="Surveys.Active"/></c:when>
+                  <c:when test="${sessionScope.BusinessKey.state == 0}"><img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel name="Surveys.Inactive"/></c:when>
                 </c:choose>            
                 </span>
                 <br>                  
                       <br>                  
-                  <mifos:mifoslabel name="Surveys.Appliesto"/>
+                  <mifos:mifoslabel name="Surveys.Appliesto"/>:
                   	<c:choose>
-                  		<c:when test="${sessionScope.BusinessKey.appliesTo == \"customers\"}"><mifos:mifoslabel name="Surveys.Customers"/></c:when>
-                  		<c:when test="${sessionScope.BusinessKey.appliesTo == \"accounts\"}"><mifos:mifoslabel name="Surveys.Loans"/></c:when> 
-                  		<c:when test="${sessionScope.BusinessKey.appliesTo == \"both\"}"><mifos:mifoslabel name="Surveys.Customersandloans"/></c:when>                  		                 		
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"client\"}"><mifos:mifoslabel name="Surveys.client_type"/></c:when>
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"loan\"}"><mifos:mifoslabel name="Surveys.loan_type"/></c:when>
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"center\"}"><mifos:mifoslabel name="Surveys.center_type"/></c:when>
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"group\"}"><mifos:mifoslabel name="Surveys.group_type"/></c:when>
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"savings\"}"><mifos:mifoslabel name="Surveys.savings_type"/></c:when>
+                               <c:when test="${sessionScope.BusinessKey.appliesTo == \"all\"}"><mifos:mifoslabel name="Surveys.all_type"/></c:when>
                   	</c:choose>
                   	<br>
   <br>

@@ -48,9 +48,4 @@ public class SavingsIntPostingHelper extends TaskHelper {
 		if (errorList.size() > 0)
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
 	}
-
-	@Override
-	public boolean isTaskAllowedToRun() {
-		return true;
-	}
 }

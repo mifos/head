@@ -14,8 +14,8 @@ h1 {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 11pt;
 	font-weight: bold;
-	margin-top: 25px;
-	margin-bottom: 25px;
+       margin-top: 10px;
+       margin-bottom: 10px;
 }
 h2{
 	text-decoration:none; 
@@ -61,7 +61,8 @@ hr {
 		</td>
 	</tr>
 </table>
-<h1><c:out value="${requestScope.businessObjectName}"/> - <orange>Enter survey data</orange></h1>
+<h1><c:out value="${requestScope.businessObjectName}"/> -
+<orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
 <span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
 <hr>
 <h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
@@ -122,9 +123,6 @@ hr {
           <c:otherwise><html-el:text disabled="true" property="value(response_${question.surveyQuestionId})"/></c:otherwise>
         </c:choose>
 			</td>
-		</tr>
-		<tr>
-			<td class="entry">&nbsp;</td>
 		</tr>
 	<c:set var="count" value="${count+1}"/>
 	</c:forEach>

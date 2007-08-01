@@ -315,7 +315,7 @@ public class TestSurvey extends MifosTestCase {
 		String officerName = "Test Officer " + surveyName;
 		PersonnelBO officer = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office,
 				Integer.valueOf("1"), TestObjectFactory.TEST_LOCALE, "PASSWORD",
-				officerName, "xyz@yahoo.com", null, customFieldView, name,
+				officerName + System.currentTimeMillis(), "xyz@yahoo.com", null, customFieldView, name,
 				"govId" + surveyName, date, Integer.valueOf("1"), Integer.valueOf("1"),
 				date, date, address, PersonnelConstants.SYSTEM_USER);
 

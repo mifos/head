@@ -3,6 +3,7 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -33,18 +34,16 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 		} catch (Exception e) {
 			throw new BatchJobException(e);
 		}
-		AccountPersistence accountPersistence = new AccountPersistence();
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {
 				try {
 					if (!fee.getFeeChangeType().equals(
 							FeeChangeType.NOT_UPDATED)) {
-						List<Integer> accounts = new CustomerPersistence()
+						List<AccountBO> accounts = new CustomerPersistence()
 								.getCustomerAccountsForFee(fee.getFeeId());
 						if (accounts != null && accounts.size() > 0) {
-							for (Integer accountId : accounts) {
-								updateAccountFee(accountId, fee,
-										accountPersistence);
+							for (AccountBO account : accounts) {
+								updateAccountFee(account, fee);
 							}
 						}
 					}
@@ -64,16 +63,15 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
 	}
 
-	private void updateAccountFee(Integer accountId, FeeBO feesBO,
-			AccountPersistence accountPersistence) throws BatchJobException {
-		try {
-			CustomerAccountBO account = (CustomerAccountBO) accountPersistence
-					.getAccount(accountId);
-			account
-					.updateFee(account.getAccountFees(feesBO.getFeeId()),
-							feesBO);
-		} catch (PersistenceException e) {
-			throw new BatchJobException(e);
-		}
+	private void updateAccountFee(AccountBO account, FeeBO feesBO)
+			throws BatchJobException {
+		CustomerAccountBO customerAccount = (CustomerAccountBO) account;
+		customerAccount.updateFee(
+				account.getAccountFees(feesBO.getFeeId()), feesBO);
+	}
+	
+	@Override
+	public boolean isTaskAllowedToRun() {
+		return true;
 	}
 }
