@@ -1,5 +1,6 @@
 .BirtViewer_Body
 {
+    background-color:white;
     margin:0px;
     position:relative; 
 }
@@ -142,12 +143,4 @@
     color:#000000;
     border-color:#A2A2A2 rgb(105, 105, 105) rgb(105, 105, 105) rgb(162, 162, 162);
     border-width:1px;
-}
-
-.fontnormalRedBold {
-    color:#FF0000;
-    font-family:Arial,Verdana,Helvetica,sans-serif;
-    font-size:9pt;
-    font-weight:bold;
-    text-decoration:none;
 }

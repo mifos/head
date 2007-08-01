@@ -116,12 +116,12 @@
 		    String message = request.getParameter("message");
 		    if (message != null) {
 	    %>
-	    <li class="fontnormalRedBold">
+	    <font class="fontnormalRedBold">
 	    <%
-		    	out.println(message);
+		    	out.println("<li>" + message + "</li>");
 		    }
 	    %>
-	    </li>
+	    </font>
 	    <!-- END -->
 <!-- End -->
 <%
