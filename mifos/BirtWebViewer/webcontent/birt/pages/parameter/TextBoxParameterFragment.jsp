@@ -111,6 +111,18 @@
              </br>
              <LABEL>&nbsp;Generate Report:</LABEL>
          </div>
+         <!-- For Mifos Birt report -->
+	    <%
+		    String message = request.getParameter("message");
+		    if (message != null) {
+	    %>
+	    <li class="fontnormalRedBold">
+	    <%
+		    	out.println(message);
+		    }
+	    %>
+	    </li>
+	    <!-- END -->
 <!-- End -->
 <%
 	if ( parameterBean.allowNull( ) && !parameterBean.allowBlank( ) )
