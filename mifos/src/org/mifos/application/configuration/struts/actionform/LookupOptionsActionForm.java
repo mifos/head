@@ -451,7 +451,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	public void setOneList(String entity, List<CustomValueListElement> list)
 	{
 		if (entity == null) {
-			throw new RuntimeException("Null entity passed to checkForDuplicate.");
+			throw new RuntimeException("Null entity passed to setOneList.");
 		}
 		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{

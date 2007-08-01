@@ -96,7 +96,6 @@ public class LookupOptionsAction extends BaseAction {
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("lookupOptionsAction");
 		
-		// more still needs to be set up for CAN_DEFINE_LOOKUP_OPTIONS to work
 		security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
@@ -433,7 +432,10 @@ public class LookupOptionsAction extends BaseAction {
 			if (method.equals(Methods.load.toString())) {
 				actionForward = ActionForwards.load_failure;
 			}
-			else if (method.equals(Methods.update.toString())) {
+			else if (method.equals(Methods.update.toString())) {		
+				String entity = request.getParameter(ConfigurationConstants.ENTITY);
+				setLookupType(entity, request);
+				
 				actionForward = ActionForwards.update_failure;
 			}
 		}
