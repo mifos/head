@@ -64,7 +64,7 @@
                 <scalar-parameter name="loanProductId" id="1115">
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
-                    <text-property name="promptText">loan Product</text-property>
+                    <text-property name="promptText">Loan Product</text-property>
                     <property name="allowNull">false</property>
                     <property name="controlType">list-box</property>
                     <property name="dataSetName">LoanProducts</property>
