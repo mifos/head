@@ -70,7 +70,6 @@
                     <expression name="labelExpr">row["Name"]</expression>
                     <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
-                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
@@ -100,7 +99,6 @@
                     <expression name="labelExpr">row["Name"]</expression>
                     <property name="mustMatch">true</property>
                     <property name="fixedOrder">true</property>
-                    <property name="defaultValue">-2</property>
                     <structure name="format">
                         <property name="category">Unformatted</property>
                     </structure>
