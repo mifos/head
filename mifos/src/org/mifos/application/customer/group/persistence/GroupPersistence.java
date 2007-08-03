@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -17,14 +22,35 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.security.util.UserContext;
 
 public class GroupPersistence extends Persistence {
+    private CenterPersistence centerPersistence = new CenterPersistence();
 
-	public GroupBO findBySystemId(String globalCustNum) throws PersistenceException{
+    public GroupBO createGroup(UserContext userContext, GroupTemplate template)
+            throws CustomerException, PersistenceException, ValidationException {
+        CenterBO center = null;
+        if (template.getParentCenterId() != null) {
+            center = getCenterPersistence().getCenter(template.getParentCenterId());
+            if (center == null) {
+                throw new ValidationException(GroupConstants.PARENT_OFFICE_ID);
+            }
+        }
+
+        GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(),
+                template.getExternalId(), template.isTrained(), template.getTrainedDate(),
+                template.getAddress(), template.getCustomFieldViews(), template.getFees(),
+                template.getLoanOfficerId(), center);
+        group.save();
+        return group;
+    }
+
+    public GroupBO findBySystemId(String globalCustNum) throws PersistenceException{
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		GroupBO group = null;
 		queryParameters.put("globalCustNum", globalCustNum);
@@ -90,4 +116,8 @@ public class GroupPersistence extends Persistence {
 		}
 		return queryResult;
 	}
+
+    public CenterPersistence getCenterPersistence() {
+        return centerPersistence;
+    }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.hibernate.Session;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CountryEntity;
@@ -33,7 +32,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -94,13 +93,14 @@ public class PersonnelBO extends BusinessObject {
 		ALL_PERSONNEL.setDisplayName("ALL");
 	}
 
-	public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
+    public PersonnelBO(PersonnelLevel level, OfficeBO office, Integer title,
 			Short preferredLocale, String password, String userName,
 			String emailId, List<RoleBO> roles,
 			List<CustomFieldView> customFields, Name name,
 			String governmentIdNumber, Date dob, Integer maritalStatus,
 			Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch,
-			Address address, Short createdBy) throws PersonnelException {
+			Address address, Short createdBy)
+            throws PersistenceException, ValidationException {
 		super();
 		setCreateDetails(createdBy, new Date());
 		logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
@@ -398,46 +398,35 @@ public class PersonnelBO extends BusinessObject {
 		return userGlobalNum;
 	}
 
-	private byte[] getEncryptedPassword(String password)
-			throws PersonnelException {
+	private byte[] getEncryptedPassword(String password) {
 		byte[] encryptedPassword = null;
-		try {
-
-			encryptedPassword = EncryptionService.getInstance()
+		encryptedPassword = EncryptionService.getInstance()
 					.createEncryptedPassword(password);
-		} catch (SystemException e) {
-			throw new PersonnelException(e);
-		}
-
 		return encryptedPassword;
 	}
 
 	private void verifyFields(String userName, String governmentIdNumber,
-			Date dob) throws PersonnelException {
+			Date dob) throws ValidationException, PersistenceException {
 
-		try {
-			PersonnelPersistence persistence = new PersonnelPersistence();
-			if (StringUtils.isNullOrEmpty(userName))
-				throw new PersonnelException(PersonnelConstants.ERRORMANDATORY);
-			if (persistence.isUserExist(userName)) {
-				throw new PersonnelException(PersonnelConstants.DUPLICATE_USER,
-						new Object[] { userName });
+        PersonnelPersistence persistence = new PersonnelPersistence();
+        if (StringUtils.isNullOrEmpty(userName))
+            throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
+        if (persistence.isUserExist(userName)) {
+            throw new ValidationException(PersonnelConstants.DUPLICATE_USER,
+                    new Object[] { userName });
 
-			}
-			if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
-				if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
-					throw new PersonnelException(
-							PersonnelConstants.DUPLICATE_GOVT_ID,
-							new Object[] { governmentIdNumber });
-			} else {
-				if (persistence.isUserExist(displayName, dob))
-					throw new PersonnelException(
-							PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
-							new Object[] { displayName });
-			}
-		} catch (PersistenceException e) {
-			throw new PersonnelException(e);
-		}
+        }
+        if (!StringUtils.isNullOrEmpty(governmentIdNumber)) {
+            if (persistence.isUserExistWithGovernmentId(governmentIdNumber))
+                throw new ValidationException(
+                        PersonnelConstants.DUPLICATE_GOVT_ID,
+                        new Object[] { governmentIdNumber });
+        } else {
+            if (persistence.isUserExist(displayName, dob))
+                throw new ValidationException(
+                        PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
+                        new Object[] { displayName });
+        }
 	}
 
 	public void update(PersonnelStatus newStatus, PersonnelLevel newLevel,
@@ -674,12 +663,8 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public UserContext login(String password) throws PersonnelException {
-		return login(HibernateUtil.getSessionTL(), password);		
-	}
-
-	public UserContext login(Session session, String password) throws PersonnelException {
 		logger.info("Trying to login");
-		UserContext userContext = null;
+        UserContext userContext = null;
 		if(!isActive()) {
 			throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
 		}
@@ -689,8 +674,8 @@ public class PersonnelBO extends BusinessObject {
 			updateNoOfTries();
 			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
 		}
-		resetNoOfTries(session);
-		userContext = setUserContext(session);
+		resetNoOfTries();
+		userContext = setUserContext();
 		logger.info("Login successfull");
 		return userContext;
 	}
@@ -747,12 +732,12 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	private void resetNoOfTries(Session session) throws PersonnelException {
+	private void resetNoOfTries() throws PersonnelException {
 		logger.info("Reseting  no of tries");
 		if(noOfTries.intValue()>0) {
 			this.noOfTries = 0;
 			try {
-				new PersonnelPersistence().createOrUpdate(session, this);
+				new PersonnelPersistence().createOrUpdate(this);
 			} catch (PersistenceException pe) {
 				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 			}
@@ -769,17 +754,17 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	private void updateLastPersonnelLoggedin(Session session) throws PersonnelException {
+	private void updateLastPersonnelLoggedin() throws PersonnelException {
 		logger.info("Updating lastLogin");
 		try{
 			this.lastLogin = new Date();
-			new PersonnelPersistence().createOrUpdate(session, this);
+			new PersonnelPersistence().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
 	}
 
-	private UserContext setUserContext(Session session) throws PersonnelException {
+	private UserContext setUserContext() throws PersonnelException {
 		logger.info("Setting  usercontext");
 		UserContext userContext = new UserContext();
 		userContext.setId(getPersonnelId());
@@ -789,7 +774,7 @@ public class PersonnelBO extends BusinessObject {
 		userContext.setLastLogin(getLastLogin());
 		userContext.setPasswordChanged(getPasswordChanged());
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
-			updateLastPersonnelLoggedin(session);
+			updateLastPersonnelLoggedin();
 		}
 		SupportedLocalesEntity supportedLocales = getPreferredLocale();
 		if (null != supportedLocales) {

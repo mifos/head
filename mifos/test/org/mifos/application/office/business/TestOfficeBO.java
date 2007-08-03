@@ -6,12 +6,14 @@ import java.util.List;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.exceptions.OfficeValidationException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -32,24 +34,26 @@ public class TestOfficeBO extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testCreateFailureDuplicateName() throws Exception {
+	public void testCreateFailureDuplicateName() throws PersistenceException {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
 					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "TestAreaOffice ",
 					"ABCD", null, OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
 		}
 	}
 
-	public void testCreateFailureDuplicateShortName() throws Exception {
+	public void testCreateFailureDuplicateShortName() throws PersistenceException {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
 					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "mif2", null,
 					OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
 		}
 	}
@@ -94,10 +98,9 @@ public class TestOfficeBO extends MifosTestCase {
 					"abcd", null, OperationMode.REMOTE_SERVER);
 			TestObjectFactory.simulateInvalidConnection();
 			officeBO.save();
-			fail();
+			fail("Should not have been able to get here");
 		} catch (OfficeException e) {
-
-			assertTrue(true);
+			// We were expecting this exception
 		}
 	}
 
@@ -107,7 +110,8 @@ public class TestOfficeBO extends MifosTestCase {
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
 					.getOffice(TestObjectFactory.HEAD_OFFICE), null, null, "mif2", null,
 					OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
 		}
 	}
@@ -119,7 +123,8 @@ public class TestOfficeBO extends MifosTestCase {
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
 					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", null, null,
 					OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
 		}
 	}
@@ -130,7 +135,8 @@ public class TestOfficeBO extends MifosTestCase {
 			new OfficeBO(userContext, null, TestObjectFactory.getOffice(Short
 					.valueOf("1")), null, "abcd", "abcd", null,
 					OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
 		}
 	}
@@ -142,7 +148,8 @@ public class TestOfficeBO extends MifosTestCase {
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
 					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "abcd", null,
 					null);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
 		}
 	}
@@ -153,7 +160,8 @@ public class TestOfficeBO extends MifosTestCase {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, null, null,
 					"abcd", "abcd", null, OperationMode.REMOTE_SERVER);
-		} catch (OfficeException e) {
+            fail("Should not have been able to get here");
+        } catch (OfficeValidationException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
 		}
 	}

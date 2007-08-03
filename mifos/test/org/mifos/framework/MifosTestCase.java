@@ -46,6 +46,8 @@ import junit.framework.TestCase;
 
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.hibernate.jmx.StatisticsService;
 
 /**
  * Inheriting from this instead of TestCase is deprecated,
@@ -62,8 +64,10 @@ public class MifosTestCase extends TestCase {
 			throw new Error("Failed to start up", e);
 		}
 	}
-	
-	public void assertEquals(String s , Money one , Money two)
+
+    private StatisticsService statisticsService;
+
+    public void assertEquals(String s , Money one , Money two)
 	{
 		if(one.equals(two))
 			return;
@@ -74,4 +78,17 @@ public class MifosTestCase extends TestCase {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		return format.parse(date);
 	}
+
+    public StatisticsService getStatisticsService() {
+        return this.statisticsService;
+    }
+    public void setStatisticsService(StatisticsService service) {
+        this.statisticsService = service;
+    }
+
+    protected void initializeStatisticsService() {
+        statisticsService = new StatisticsService();
+        statisticsService.setSessionFactory(HibernateUtil.getSessionFactory());
+        statisticsService.setStatisticsEnabled(true);
+    }
 }

@@ -51,6 +51,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.MeetingTemplate;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -111,8 +112,14 @@ public class MeetingBO extends BusinessObject {
 		this.meetingType = null;
 		this.meetingStartDate = null;
 	}
-	
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, 
+
+    public MeetingBO(MeetingTemplate template) throws MeetingException {
+        this(template.getReccurenceType(), template.getDateNumber(), template.getWeekDay(),
+                template.getRankType(), template.getRecurAfter(), template.getStartDate(),
+                template.getMeetingType(), template.getMeetingPlace());
+    }
+
+    private MeetingBO(RecurrenceType recurrenceType, Short dayNumber,
 			WeekDay weekDay, RankType rank, Short recurAfter, 
 			Date startDate, MeetingType meetingType, String meetingPlace)
 	throws MeetingException {

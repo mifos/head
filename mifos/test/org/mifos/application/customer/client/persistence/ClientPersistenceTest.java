@@ -40,17 +40,38 @@ package org.mifos.application.customer.client.persistence;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.customer.center.CenterTemplate;
+import org.mifos.application.customer.center.CenterTemplateImpl;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.ClientTemplate;
+import org.mifos.application.customer.client.ClientTemplateImpl;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
+import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeTemplate;
+import org.mifos.application.office.business.OfficeTemplateImpl;
+import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ClientPersistenceTest extends MifosTestCase {
@@ -61,8 +82,22 @@ public class ClientPersistenceTest extends MifosTestCase {
 	private SavingsOfferingBO savingsOffering3;
 
 	private SavingsOfferingBO savingsOffering4;
+    private OfficePersistence officePersistence;
+    private CenterPersistence centerPersistence;
+    private GroupPersistence groupPersistence;
+    private ClientPersistence clientPersistence;
 
-	@Override
+    @Override
+	protected void setUp() throws Exception {
+        this.officePersistence = new OfficePersistence();
+        this.centerPersistence = new CenterPersistence();
+        this.groupPersistence = new GroupPersistence();
+        this.clientPersistence = new ClientPersistence();
+        initializeStatisticsService();
+        super.setUp();
+    }
+
+    @Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.removeObject(savingsOffering1);
 		TestObjectFactory.removeObject(savingsOffering2);
@@ -72,7 +107,56 @@ public class ClientPersistenceTest extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testRetrieveOfferingsApplicableToClient() throws Exception {
+    public void testCreateClient()
+            throws PersistenceException, OfficeException,
+            MeetingException, CustomerException, ValidationException {
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        try {
+            UserContext userContext = TestUtils.makeUser();
+
+            OfficeTemplate template =
+                    OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+            OfficeBO office = getOfficePersistence().createOffice(userContext, template);
+
+            MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
+
+            CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
+            CenterBO center = getCenterPersistence().createCenter(userContext, centerTemplate);
+
+            GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
+            GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
+
+            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(
+                    office.getOfficeId(), group.getCustomerId());
+            ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
+
+            assertNotNull(client.getCustomerId());
+            assertTrue(client.isActive());
+        }
+        finally {
+            HibernateUtil.rollbackTransaction();
+        }
+        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+    }
+
+    public void testCreateClientInvalidParentCustomer() throws PersistenceException, CustomerException {
+        try {
+            UserContext userContext = TestUtils.makeUser();
+            ClientTemplate clientTemplate = ClientTemplateImpl.createActiveGroupClientTemplate(
+                    (short)1, -11);
+            try {
+                ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
+                fail("should not have gotten here");
+            } catch (ValidationException e) {
+                assertTrue(e.getMessage().equals(CustomerConstants.INVALID_PARENT));
+            }
+        }
+        finally {
+            HibernateUtil.rollbackTransaction();
+        }
+    }
+
+    public void testRetrieveOfferingsApplicableToClient() throws Exception {
 		Date currentTimestamp = new Date(System.currentTimeMillis());
 		savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1",
 				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, currentTimestamp);
@@ -117,4 +201,20 @@ public class ClientPersistenceTest extends MifosTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 	}
+
+    public OfficePersistence getOfficePersistence() {
+        return officePersistence;
+    }
+
+    public CenterPersistence getCenterPersistence() {
+        return centerPersistence;
+    }
+
+    public GroupPersistence getGroupPersistence() {
+        return groupPersistence;
+    }
+
+    public ClientPersistence getClientPersistence() {
+        return clientPersistence;
+    }
 }

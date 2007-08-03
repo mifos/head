@@ -11,6 +11,7 @@ import java.util.Set;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.exceptions.OfficeValidationException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
@@ -102,7 +103,7 @@ public class OfficeBO extends BusinessObject {
 			String searchId,
 			List<CustomFieldView> customFields, String officeName, String shortName,
 			Address address, OperationMode operationMode, OfficeStatus status)
-			throws OfficeException {
+			throws OfficeValidationException {
 		super(userContext);
 		verifyFieldsNoDatabase(level, operationMode, parentOffice);
 
@@ -129,10 +130,15 @@ public class OfficeBO extends BusinessObject {
 			}
 	}
 
-	public OfficeBO(UserContext userContext, OfficeLevel level,
+    /**
+     * @throws OfficeValidationException Thrown when there's a validation error
+     * @throws PersistenceException Thrown when there's a problem with the persistence layer
+     */
+    public OfficeBO(UserContext userContext, OfficeLevel level,
 			OfficeBO parentOffice, List<CustomFieldView> customFields,
 			String officeName, String shortName, Address address,
-			OperationMode operationMode) throws OfficeException {
+			OperationMode operationMode)
+            throws OfficeValidationException, PersistenceException {
 		this(userContext, null, level, parentOffice, null, customFields,
 				officeName, shortName, address, operationMode, 
 				OfficeStatus.ACTIVE);
@@ -271,45 +277,45 @@ public class OfficeBO extends BusinessObject {
 		setChildren(childerns);
 	}
 
-	private void verifyFields(String officeName, String shortName,
+    // Changed this method signature so that it throws the PersistenceExcpetion
+    // instead of wrapping in an OfficeExcpetion.  The idea being that we are
+    // seperating validation exceptions from PersistenceExceptions, which should
+    // ultimately be runtime errors because they occurr, most likely, from
+    // configuration/binding problems which are exceptions that we shouldn't
+    // be catching.
+    private void verifyFields(String officeName, String shortName,
 			OfficeLevel level, OperationMode operationMode,
-			OfficeBO parentOffice) throws OfficeException {
+			OfficeBO parentOffice) throws OfficeValidationException, PersistenceException {
 		OfficePersistence officePersistence = new OfficePersistence();
 		if (StringUtils.isNullOrEmpty(officeName))
-			throw new OfficeException(
+			throw new OfficeValidationException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICE_NAME) });
-		try {
-			if (officePersistence.isOfficeNameExist(officeName))
-				throw new OfficeException(OfficeConstants.OFFICENAMEEXIST);
-		} catch (PersistenceException e) {
-			throw new OfficeException(e);
-		}
-		if (StringUtils.isNullOrEmpty(shortName))
-			throw new OfficeException(
+		if (officePersistence.isOfficeNameExist(officeName))
+				throw new OfficeValidationException(OfficeConstants.OFFICENAMEEXIST);
+
+        if (StringUtils.isNullOrEmpty(shortName))
+			throw new OfficeValidationException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICESHORTNAME) });
-		try {
-			if (officePersistence.isOfficeShortNameExist(shortName))
-				throw new OfficeException(OfficeConstants.OFFICESHORTNAMEEXIST);
-		} catch (PersistenceException e) {
-			throw new OfficeException(e);
-		}
-		if (parentOffice == null)
-			throw new OfficeException(
+		if (officePersistence.isOfficeShortNameExist(shortName))
+				throw new OfficeValidationException(OfficeConstants.OFFICESHORTNAMEEXIST);
+
+        if (parentOffice == null)
+			throw new OfficeValidationException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.PARENTOFFICE) });
 	}
 
 	private void verifyFieldsNoDatabase(OfficeLevel level,
 			OperationMode operationMode, OfficeBO parentOffice)
-			throws OfficeException {
+			throws OfficeValidationException {
 		if (level == null)
-			throw new OfficeException(
+			throw new OfficeValidationException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICELEVEL) });
 		if (operationMode == null)
-			throw new OfficeException(
+			throw new OfficeValidationException(
 					OfficeConstants.ERRORMANDATORYFIELD,
 					new Object[] { getLocaleString(OfficeConstants.OFFICEOPERATIONMODE) });
 	}

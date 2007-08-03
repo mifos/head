@@ -29,6 +29,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -294,7 +296,7 @@ public class TestSurvey extends MifosTestCase {
 		assertEquals(name1, results.get(0).getShortName());
 	}
 	
-	public static SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {
+	public static SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException, PersistenceException, ValidationException {
 		TestObjectFactory factory = new TestObjectFactory();
 		ClientBO client = factory.createClient(
 				"Test Client " + surveyName, CustomerStatus.CLIENT_PARTIAL, null);

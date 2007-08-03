@@ -10,26 +10,36 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.business.PersonnelTemplate;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
+import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelPersistence extends Persistence {
 
-	public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
+    private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+
+    public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
 			Short officeId, Short userId, Short userLevelId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -278,4 +288,37 @@ public class PersonnelPersistence extends Persistence {
 		return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST,
 				null);
 	}
+
+    public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
+            throws PersistenceException, ValidationException, PersonnelException {
+        OfficeBO office = new OfficePersistence().getOffice(template.getOfficeId());
+        if (office == null) {
+            throw new ValidationException(PersonnelConstants.OFFICE);
+        }
+        int numberOfRoles = template.getRoleIds().size();
+        ArrayList<RoleBO> roles = new ArrayList(numberOfRoles);
+        RoleBO role;
+        for (int i=0; i<numberOfRoles; i++) {
+            role = rolesPermissionsPersistence.getRole(template.getRoleIds().get(i));
+            if (role == null) {
+                throw new ValidationException(PersonnelConstants.ROLES_LIST);
+            }
+            roles.add(role);
+        }
+
+        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office,
+                template.getTitleId(), template.getPreferredLocale(), template.getPassword(),
+                template.getUserName(), template.getEmailId(), roles,
+                template.getCustomFields(), template.getName(),
+                template.getGovernmentIdNumber(), template.getDateOfBirth(),
+                template.getMaritalStatusId(), template.getGenderId(),
+                template.getDateOfJoiningMFI(), template.getDateOfJoiningBranch(),
+                template.getAddress(), userContext.getId());
+        personnelBO.save();
+        return personnelBO;
+    }
+
+    private RolesPermissionsPersistence getRolesPermissionsPersistence() {
+        return rolesPermissionsPersistence;
+    }
 }

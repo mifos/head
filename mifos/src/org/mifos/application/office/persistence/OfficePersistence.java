@@ -6,15 +6,19 @@ import java.util.List;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeTemplate;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.OfficeCacheView;
+import org.mifos.framework.security.util.UserContext;
 
 public class OfficePersistence extends Persistence {
 
@@ -22,7 +26,25 @@ public class OfficePersistence extends Persistence {
 		super();
 	}
 
-	public List<OfficeView> getActiveOffices(Short officeId)
+    public OfficeBO createOffice(UserContext userContext, OfficeTemplate office)
+            throws OfficeException, PersistenceException, ValidationException {
+        OfficeBO parentOffice = null;
+        if (office.getParentOfficeId() != null) {
+            parentOffice = this.getOffice(office.getParentOfficeId());
+            if (parentOffice == null) {
+                throw new ValidationException(OfficeConstants.PARENTOFFICE);
+            }
+        }
+
+        OfficeBO officeBO = new OfficeBO(userContext, office.getOfficeLevel(), parentOffice,
+                    office.getCustomFieldViews(), office.getOfficeName(), office.getShortName(),
+                    office.getOfficeAddress(), office.getOperationMode());
+        officeBO.save();
+
+        return officeBO;
+    }
+
+    public List<OfficeView> getActiveOffices(Short officeId)
 			throws PersistenceException {
 		String searchId = HierarchyManager.getInstance().getSearchId(officeId);
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();

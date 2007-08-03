@@ -28,6 +28,8 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -80,19 +82,19 @@ public class TestPersonnelBO extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	public void testCreateFailureWithNullName() {
+	public void testCreateFailureWithNullName() throws PersistenceException {
 		try {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", null, null,
 					null, null, name, null, null, null, null, null, null, null,
 					PersonnelConstants.SYSTEM_USER);
 			fail();
-		} catch (PersonnelException e) {
+		} catch (ValidationException e) {
 			assertEquals(PersonnelConstants.ERRORMANDATORY, e.getKey());
 		}
 	}
 
-	public void testCreateFailureWithDuplicateName() {
+	public void testCreateFailureWithDuplicateName() throws PersistenceException {
 		try {
 
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
@@ -101,12 +103,12 @@ public class TestPersonnelBO extends MifosTestCase {
 					PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
-		} catch (PersonnelException e) {
+		} catch (ValidationException e) {
 			assertEquals(PersonnelConstants.DUPLICATE_USER, e.getKey());
 		}
 	}
 
-	public void testCreateFailureWithDuplicateGovernMentId() {
+	public void testCreateFailureWithDuplicateGovernMentId() throws PersistenceException {
 		try {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", "Raj", null,
@@ -114,7 +116,7 @@ public class TestPersonnelBO extends MifosTestCase {
 					null, PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
-		} catch (PersonnelException e) {
+		} catch (ValidationException e) {
 			assertEquals(PersonnelConstants.DUPLICATE_GOVT_ID, e.getKey());
 		}
 	}
@@ -131,7 +133,7 @@ public class TestPersonnelBO extends MifosTestCase {
 					null, null, null, null, null, PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
-		} catch (PersonnelException e) {
+		} catch (ValidationException e) {
 			assertEquals(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB, e
 					.getKey());
 		}

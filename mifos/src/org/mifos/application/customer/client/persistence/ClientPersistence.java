@@ -49,16 +49,53 @@ import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.ClientTemplate;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.security.util.UserContext;
 
 public class ClientPersistence extends Persistence {
 
-	public ClientBO getClient(Integer customerId) throws PersistenceException{
+    private CustomerPersistence customerPersistence = new CustomerPersistence();
+    private OfficePersistence officePersistence = new OfficePersistence();
+
+    public ClientBO createClient(UserContext userContext, ClientTemplate template)
+            throws CustomerException, PersistenceException, ValidationException {
+        CustomerBO parentCustomer = null;
+        if (template.getParentCustomerId() != null) {
+            parentCustomer = getCustomerPersistence()
+                .getCustomer(template.getParentCustomerId());
+            if (parentCustomer == null) {
+                throw new ValidationException(CustomerConstants.INVALID_PARENT);
+            }
+        }
+        
+        ClientBO client = new ClientBO(userContext, template.getDisplayName(),
+                template.getCustomerStatus(), template.getExternalId(),
+                template.getMfiJoiningDate(), template.getAddress(),
+                template.getCustomFieldViews(), template.getFees(),
+                template.getOfferingsSelected(), template.getFormedById(),
+                template.getOfficeId(), parentCustomer,
+                template.getDateOfBirth(), template.getGovernmentId(),
+                template.getTrained(), template.getTrainedDate(),
+                template.getGroupFlag(), template.getClientNameDetailView(),
+                template.getSpouseNameDetailView(),
+                template.getClientDetailView(), template.getPicture());
+        client.save();
+        return client;
+    }
+
+    public ClientBO getClient(Integer customerId) throws PersistenceException{
 		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
@@ -119,4 +156,12 @@ public class ClientPersistence extends Persistence {
 				queryParameters);
 		return queryResult;
 	}
+
+    public CustomerPersistence getCustomerPersistence() {
+        return customerPersistence;
+    }
+
+    public OfficePersistence getOfficePersistence() {
+        return officePersistence;
+    }
 }

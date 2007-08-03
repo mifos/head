@@ -16,17 +16,25 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeTemplate;
+import org.mifos.application.office.business.OfficeTemplateImpl;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelNotesEntity;
+import org.mifos.application.personnel.business.PersonnelTemplate;
+import org.mifos.application.personnel.business.PersonnelTemplateImpl;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelPersistence extends MifosTestCase {
@@ -50,11 +58,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	Name name;
 
 	PersonnelPersistence persistence;
+    OfficePersistence officePersistence;
 
-	@Override
+    @Override
 	public void setUp() throws Exception{
 		persistence = new PersonnelPersistence();
-	}
+        officePersistence = new OfficePersistence();
+        initializeStatisticsService();
+    }
 
 	@Override
 	public void tearDown() throws Exception {
@@ -70,7 +81,45 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testActiveLoanOfficersInBranch() throws Exception {
+    public void testCreatePersonnel()
+            throws Exception {
+        UserContext userContext = TestUtils.makeUser();
+        OfficeTemplate officeTemplate =
+                OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        try {
+            OfficeBO office = officePersistence.createOffice(userContext, officeTemplate);
+            PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(office.getOfficeId());
+            PersonnelBO personnel = persistence.createPersonnel(userContext, template);
+
+            assertNotNull(personnel.getPersonnelId());
+            assertTrue(personnel.isActive());
+            assertFalse(personnel.isPasswordChanged());
+        }
+        finally {
+            HibernateUtil.rollbackTransaction();
+        }
+        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+    }
+
+    public void testCreatePersonnelValidationFailure()
+            throws Exception {
+        UserContext userContext = TestUtils.makeUser();
+        PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(new Short((short) -1));
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        try {
+            PersonnelBO personnel = persistence.createPersonnel(userContext, template);
+            fail("Should not have been able to create personnel");
+        } catch (ValidationException e) {
+            assertTrue(e.getMessage().equals(PersonnelConstants.OFFICE));
+        }
+        finally {
+            HibernateUtil.rollbackTransaction();
+        }
+        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+    }
+
+    public void testActiveLoanOfficersInBranch() throws Exception {
 		List<PersonnelView> personnels = persistence
 				.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
 						Short.valueOf("3"), Short.valueOf("3"),
@@ -242,11 +291,13 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		name = new Name("XYZ", null, null, null);
 		return create(personnelLevel,name,PersonnelConstants.SYSTEM_USER, office);
 	}
-	private PersonnelBO createPersonnelWithName(OfficeBO office,
+    
+    private PersonnelBO createPersonnelWithName(OfficeBO office,
 			PersonnelLevel personnelLevel,Name personnelName) throws Exception {
 		return create(personnelLevel,personnelName,PersonnelConstants.SYSTEM_USER,office);
 	}
-  private 	PersonnelBO create(PersonnelLevel personnelLevel,Name name,Short createdBy,OfficeBO office)throws Exception{
+
+    private PersonnelBO create(PersonnelLevel personnelLevel,Name name,Short createdBy,OfficeBO office)throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				CustomFieldType.NUMERIC));

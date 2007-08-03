@@ -37,9 +37,6 @@
  */
 package org.mifos.framework.util.helpers;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -135,7 +132,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -1358,10 +1357,6 @@ public class TestObjectFactory {
 	public static void updateObject(PersistentObject obj) {
 		testObjectPersistence.update(obj);
 	}
-	
-	public static void updateObject(Session session, PersistentObject obj) {
-		testObjectPersistence.update(session, obj);
-	}
 
 	private static UserContext userContext;
 
@@ -1417,25 +1412,15 @@ public class TestObjectFactory {
 	 * Also see {@link TestUtils#makeUser()} which should be faster (this
 	 * method involves several database accesses).
 	 */
-	private static UserContext getUserContext(Session session) 
-	throws SystemException, ApplicationException {
-		byte[] password = EncryptionService.getInstance()
-				.createEncryptedPassword("mifos");
-		PersonnelBO personnel = getPersonnel(session, 
-			PersonnelConstants.SYSTEM_USER);
-		personnel.setEncriptedPassword(password);
-		updateObject(session, personnel);
-		return personnel.login(session, "mifos");
-	}
-
-	/**
-	 * Also see {@link TestUtils#makeUser()} which should be faster (this
-	 * method involves several database accesses).
-	 */
 	private static UserContext getUserContext() 
 	throws SystemException, ApplicationException {
-		return getUserContext(HibernateUtil.getSessionTL());
-	}
+        byte[] password = EncryptionService.getInstance()
+				.createEncryptedPassword("mifos");
+		PersonnelBO personnel = getPersonnel(PersonnelConstants.SYSTEM_USER);
+		personnel.setEncriptedPassword(password);
+		updateObject(personnel);
+		return personnel.login("mifos");
+    }
 
 	public static void flushandCloseSession() {
 		testObjectPersistence.flushandCloseSession();

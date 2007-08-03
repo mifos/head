@@ -2,14 +2,31 @@ package org.mifos.application.customer.group.persistence;
 
 
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.CenterTemplate;
+import org.mifos.application.customer.center.CenterTemplateImpl;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
+import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeTemplate;
+import org.mifos.application.office.business.OfficeTemplateImpl;
+import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceTest extends MifosTestCase {
@@ -19,11 +36,17 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 	private GroupBO group;
 
-	private GroupPersistence groupPersistence = new GroupPersistence();
+	private GroupPersistence groupPersistence;
+    private OfficePersistence officePersistence;
+    private CenterPersistence centerPersistence;
 
-	@Override
+    @Override
 	protected void setUp() throws Exception {
-		super.setUp();
+        this.officePersistence = new OfficePersistence();
+        this.centerPersistence = new CenterPersistence();
+        this.groupPersistence = new GroupPersistence();
+        initializeStatisticsService();
+        super.setUp();
 	}
 
 	@Override
@@ -34,7 +57,36 @@ public class GroupPersistenceTest extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testGetGroupBySystemId() throws PersistenceException{
+    public void testCreateGroup()
+            throws PersistenceException, OfficeException,
+            MeetingException, CustomerException, ValidationException {
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        try {
+            UserContext userContext = TestUtils.makeUser();
+
+            OfficeTemplate template =
+                    OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
+            OfficeBO office = getOfficePersistence().createOffice(userContext, template);
+
+            MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
+
+            CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
+            CenterBO center = getCenterPersistence().createCenter(userContext, centerTemplate);
+
+            GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
+            GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
+
+            assertNotNull(group.getCustomerId());
+            assertTrue(group.isActive());
+        }
+        finally {
+            HibernateUtil.rollbackTransaction();
+        }
+        assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
+    }
+    
+
+    public void testGetGroupBySystemId() throws PersistenceException{
 		createGroup();
 		group = groupPersistence.findBySystemId(group.getGlobalCustNum());
 		assertEquals("Group_Active_test", group.getDisplayName());
@@ -65,4 +117,16 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 		
 	}
+
+    public OfficePersistence getOfficePersistence() {
+        return officePersistence;
+    }
+
+    public CenterPersistence getCenterPersistence() {
+        return centerPersistence;
+    }
+
+    public GroupPersistence getGroupPersistence() {
+        return groupPersistence;
+    }
 }
