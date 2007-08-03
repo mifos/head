@@ -81,7 +81,6 @@
 			CLASS="birtviewer_parameter_dialog_Select" 
 			<%= ( parameterBean.allowNewValues( ) && ( !parameterBean.isValueInList( ) && parameterBean.getValue( ) != null  || !CHECKED ) )? "DISABLED='true'" : "" %>
 			>
-		<option value="-2" selected>---Select---</option>
 <%
 	if ( parameterBean.getSelectionList( ) != null )
 	{

@@ -89,7 +89,7 @@
                     <property name="hidden">false</property>
                     <property name="valueType">dynamic</property>
                     <property name="dataType">integer</property>
-                    <text-property name="promptText">loan Product</text-property>
+                    <text-property name="promptText">Loan Product</text-property>
                     <property name="concealValue">false</property>
                     <property name="allowBlank">true</property>
                     <property name="allowNull">false</property>
@@ -182,8 +182,17 @@ if (loanProducts.size()>1) {
 	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
 }
 
-iterator = loanProducts.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+iterator = loanProducts.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
 	return false;
 }
 
@@ -246,8 +255,17 @@ if (branches.size()>1) {
 	Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
 }
 
-iterator = branches.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+iterator = branches.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
 	return false;
 }
 
@@ -311,8 +329,17 @@ if (loanOfficers.size()>1) {
 }
 
 
-iterator = loanOfficers.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+iterator = loanOfficers.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
 	return false;
 }
 

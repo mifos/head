@@ -141,8 +141,17 @@ if (loanProducts.size()>1) {
 	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
 }
 
-iterator = loanProducts.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+iterator = loanProducts.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
 	return false;
 }
 
@@ -205,8 +214,17 @@ if (branches.size()>1) {
 	Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
 }
 
-iterator = branches.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+iterator = branches.iterator();
+
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ){
 	return false;
 }
 
@@ -269,9 +287,17 @@ if (loanOfficers.size()>1) {
 	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
 }
 
+iterator = loanOfficers.iterator();
 
-iterator = loanOfficers.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+flag = 0;]]></method>
+            <method name="fetch"><![CDATA[if(flag == 0) {
+	row["ID"] = -2;
+	row["Name"] = "---Select---";
+	flag = -1;
+	return true;
+}
+
+if(iterator.hasNext() == false ) {
 	return false;
 }
 
