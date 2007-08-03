@@ -50,8 +50,8 @@ public class FundBOTest extends MifosTestCase {
 		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		fundBO = createFund(fundCodeEntity,"Fund-1");
 		try{
-			FundBO fundBO1 = new FundBO(fundCodeEntity,"Fund-1");
-			assertTrue(false);
+			new FundBO(fundCodeEntity,"Fund-1");
+			fail();
 		}catch(FundException fe) {
 			assertTrue(true);
 			assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION,fe.getKey());

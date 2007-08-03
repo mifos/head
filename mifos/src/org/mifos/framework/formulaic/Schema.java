@@ -97,7 +97,7 @@ public class Schema extends BaseValidator {
 		List<String> keys = new LinkedList<String>(schemaErrors.keySet());
 		Collections.sort(keys);
 		for (String key : keys) {
-			String msg = schemaErrors.getFieldMsg(key);
+			schemaErrors.getFieldMsg(key);
 			errors.add(key, schemaErrors.getFieldError(key).getActionMessage());
 		}
 		

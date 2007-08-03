@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;

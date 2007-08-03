@@ -86,7 +86,7 @@
     public static class Factory{
 
 
-        // This is horrible, but the OM implementation of getElementText() does not obey the proper contract.  Specifically, it does
+        /* This is horrible, but the OM implementation of getElementText() does not obey the proper contract.  Specifically, it does
         // does not advance the reader to the END_ELEMENT.  This bug is triggered by calls to getElementText() unpredictably, e.g. it
         // happens with outer (document) elements, but not with inner elements.  The root bug is in OMStAXWrapper.java, which is now part
         // of commons and so cannot just be fixed in axis2.  This method should be removed and the calls to it below replaced with
@@ -97,7 +97,7 @@
             while (!reader.isEndElement())
                 reader.next();
             return value;
-        }
+        }*/
 
         /**
         * static method to create the object
@@ -108,7 +108,6 @@
         */
         public static FindLoanResponse parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
             FindLoanResponse object = new FindLoanResponse();
-            int event;
             try {
                 
                 while (!reader.isStartElement() && !reader.isEndElement())

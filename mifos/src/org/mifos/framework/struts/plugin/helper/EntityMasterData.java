@@ -7,7 +7,6 @@ import java.util.Map;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -36,7 +35,7 @@ public final class EntityMasterData {
 		Session session=null;
 		try{
 			session=HibernateUtil.openSession();
-			Transaction trxn = session.beginTransaction();
+			session.beginTransaction();
 			Query query = session.getNamedQuery("getEntityMaster");
 
 		  	List<EntityMaster> entityMasterData = query.list();

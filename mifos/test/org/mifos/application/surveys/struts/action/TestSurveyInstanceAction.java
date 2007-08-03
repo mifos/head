@@ -49,7 +49,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
@@ -219,7 +218,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		InstanceStatus status = InstanceStatus.COMPLETED;
 		
 		int question3Id = question3.getQuestionId();
-		int question4Id = question4.getQuestionId();
 		addRequestParameter("value(response_" + question3Id + "_DD)", "14");
 		addRequestParameter("value(response_" + question3Id + "_MM)", "30"); // an invalid month
 		addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
@@ -274,8 +272,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		question5.addChoice(choice3);
 		question5.addChoice(choice4);
 		
-		SurveyQuestion surveyQuestion1 = survey.addQuestion(question1, true);
-		SurveyQuestion surveyQuestion2 = survey.addQuestion(question2, true);
+		survey.addQuestion(question1, true);
+		survey.addQuestion(question2, true);
 		SurveyQuestion surveyQuestion3 = survey.addQuestion(question3, true);
 		SurveyQuestion surveyQuestion4 = survey.addQuestion(question4, true);
 		SurveyQuestion surveyQuestion5 = survey.addQuestion(question5, true);

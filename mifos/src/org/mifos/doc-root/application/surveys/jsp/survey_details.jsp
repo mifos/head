@@ -5,6 +5,21 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+	<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<html-el:link href="AdminAction.do?method=load">
+						<mifos:mifoslabel name="admin.shortname" bundle="adminUIResources" />
+					</html-el:link> /
+					<html-el:link href="surveysAction.do?method=mainpage">	
+					<mifos:mifoslabel name="admin.viewsurvey" bundle="adminUIResources" />					
+					</html-el:link> / </span>
+					<span class="fontnormal8ptbold">					
+					<c:out value="${sessionScope.BusinessKey.name}"/>
+					</span>
+					</td>
+				</tr>
+			</table>
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
     <table width="95%" border="0" cellpadding="0" cellspacing="0">
           <tr>

@@ -905,11 +905,6 @@ public class ActivityMapper {
 			activityId = SecurityConstants.MEETING_UPDATE_CLIENT_MEETING;
 		return activityId;
 	}
-	
-	private void addQuestionsMappings() {
-		activityMap.put("/questionsAction-viewQuestions", SecurityConstants.VIEW);
-		activityMap.put("/questionsAction-defineQuestions", SecurityConstants.VIEW);
-	}
  
 	private void parseActionSecurity(ActionSecurity security) {
 		for (String method : security.methods()) {

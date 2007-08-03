@@ -36,7 +36,6 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * This class should prepare all the sub-systems that are required by the app.
@@ -54,8 +53,11 @@ public class ApplicationInitializer implements ServletContextListener {
 	 * initially low impact on other code and with the intent to iterate 
 	 * and evolve the usage.  This usage will be refactored.
 	 */
-	private static ApplicationContext context = new ClassPathXmlApplicationContext(
+	//private static ApplicationContext context =
+	static {
+		new ClassPathXmlApplicationContext(
 			"org/mifos/config/applicationContext.xml");
+	}
 	
 	public void contextInitialized(ServletContextEvent ctx) {
 		init();

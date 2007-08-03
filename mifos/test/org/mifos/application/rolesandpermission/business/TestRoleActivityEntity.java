@@ -6,8 +6,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class TestRoleActivityEntity extends MifosTestCase {
 
-	private RoleActivityEntity roleActivityEntity;
-	
 	public void testGetRoleActivity(){
 		RoleActivityEntity roleActivityEntity = getRoleActivity((short)1,(short)1);
 		assertNull(roleActivityEntity);

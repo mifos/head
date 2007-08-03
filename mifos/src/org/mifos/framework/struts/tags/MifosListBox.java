@@ -178,7 +178,7 @@ public class MifosListBox extends BodyTagSupport {
     /**
      * variable to hold the bean class
      */ 
-    private Class beanClass = null;
+    //private Class beanClass = null;
     
     /**
      * variable to hold the getlist method

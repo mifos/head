@@ -43,6 +43,7 @@ import java.util.List;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -73,6 +74,9 @@ public class LoanArrearsHelper extends TaskHelper {
 			try {
 				LoanBO loanBO = (LoanBO) accountPersistence
 						.getAccount(accountId);
+				if (loanBO.getAccountState().equals(
+						AccountState.LOANACC_PENDINGAPPROVAL))
+					throw new Exception("Loan was peding approval");
 				loanBO.handleArrears();
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {

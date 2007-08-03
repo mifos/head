@@ -6,6 +6,17 @@
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
+<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<html-el:link href="AdminAction.do?method=load">
+						<mifos:mifoslabel name="admin.shortname" bundle="adminUIResources" />
+					</html-el:link> / </span> 
+					<span class="fontnormal8ptbold">					
+					<mifos:mifoslabel name="admin.viewsurvey" bundle="adminUIResources" />					
+					</span></td>
+				</tr>
+			</table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15"><table width="95%" border="0" cellpadding="3" cellspacing="0">

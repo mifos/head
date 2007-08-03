@@ -105,7 +105,6 @@
         */
         public static FindLoanRequest parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
             FindLoanRequest object = new FindLoanRequest();
-            int event;
             try {
                 
                 while (!reader.isStartElement() && !reader.isEndElement())

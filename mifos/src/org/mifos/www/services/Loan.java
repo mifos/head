@@ -209,7 +209,6 @@
         */
         public static Loan parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
             Loan object = new Loan();
-            int event;
             try {
                 
                 while (!reader.isStartElement() && !reader.isEndElement())

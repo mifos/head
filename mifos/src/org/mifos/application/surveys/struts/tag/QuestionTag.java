@@ -12,9 +12,7 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.helpers.Constants;
 
 public class QuestionTag extends BodyTagSupport {
 	
@@ -133,7 +131,7 @@ public class QuestionTag extends BodyTagSupport {
 			if (getDisabled()) {
 				attributes.add("disabled", "disabled");
 			}
-			html.startTag("textarea", (String[]) attributes.toArray());
+			html.startTag("textarea", attributes.toArray());
 			html.text(value);
 			html.endTag("textarea");
 		}
@@ -146,7 +144,7 @@ public class QuestionTag extends BodyTagSupport {
 			if (getDisabled() == true) {
 				attributes.add("disabled", "disabled");
 			}
-			html.singleTag("input", (String []) attributes.toArray());
+			html.singleTag("input", attributes.toArray());
 		}
 		
 		else if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
@@ -164,7 +162,7 @@ public class QuestionTag extends BodyTagSupport {
 					attributes.add("checked", "checked");
 				}
 				
-				html.startTag("input", (String[]) attributes.toArray());
+				html.startTag("input", attributes.toArray());
 				html.text(choice.getChoiceText());
 				html.endTag("input");
 				html.singleTag("br", new String[] {});

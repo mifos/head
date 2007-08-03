@@ -61,8 +61,11 @@ public class QuestionTagTest extends MifosTestCase {
 		persistence.createOrUpdate(question);
 		QuestionTag tag = new QuestionTag(question.getQuestionId(), "42", false);
 		String expectedMarkup = "<input type=\"text\" class=\"surveyform number fontnormal8t\" " +
-				"name=\"value(response_2)\" value=\"42\" />";
+				"name=\"value(response_" + question.getQuestionId() +
+				")\" value=\"42\" />";
 		String markup = tag.getQuestionMarkup(result);
+		
+		assertEquals(expectedMarkup, markup);
 		
 	}
 	
@@ -72,7 +75,23 @@ public class QuestionTagTest extends MifosTestCase {
 		String shortName = "QuestionTagTest Name";
 		Question question = new Question(shortName, questionText, AnswerType.DATE);
 		persistence.createOrUpdate(question);
-		QuestionTag tag = new QuestionTag(question.getQuestionId(), "20/3/2000", false);
+		QuestionTag tag = 
+			new QuestionTag(question.getQuestionId(), "20/3/2000", false);
+		String expectedMarkup = "<input type=\"text\" maxlength=\"2\"" +
+				" size=\"2\" class=\"surveyform dateinput fontnormal8pt\"" +
+				" name=\"value(response_" + question.getQuestionId() + "_DD)\"" +
+				" value=\"20\" /> DD " +
+				"<input type=\"text\" maxlength=\"2\" size=\"2\"" +
+				" class=\"surveyform dateinput fontnormal8pt\"" +
+				" name=\"value(response_" + question.getQuestionId() + "_MM)\"" +
+				" value=\"3\" /> MM " +
+				"<input type=\"text\" maxlength=\"4\" size=\"4\"" +
+				" class=\"surveyform dateinput fontnormal8pt\"" +
+				" name=\"value(response_" + question.getQuestionId() + "_YY)\"" +
+				" value=\"2000\" /> YYYY ";
+		String markup = tag.getQuestionMarkup(result);
+
+		assertEquals(expectedMarkup, markup);
 	}
 
 }

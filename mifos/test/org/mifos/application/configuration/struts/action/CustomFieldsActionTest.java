@@ -38,7 +38,6 @@
 
 package org.mifos.application.configuration.struts.action;
 
-import org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -50,8 +49,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
-	private String flowKey;
-
+	
 	@Override
 	protected void tearDown() throws Exception {
 		HibernateUtil.closeSession();
@@ -71,7 +69,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		flowKey = createFlowAndAddToRequest(CustomFieldsAction.class);
+		createFlowAndAddToRequest(CustomFieldsAction.class);
 
 	}
 
@@ -80,10 +78,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
-		CustomFieldsActionForm customFieldsActionForm = (CustomFieldsActionForm) request.getSession()
-				.getAttribute("customfieldsactionform");
 		/*
 		 * TODO: verify that data loads correctly
+		 * CustomFieldsActionForm customFieldsActionForm = (CustomFieldsActionForm) request.getSession()
+		 * .getAttribute("customfieldsactionform");
+		 * ???
 		 */
 	}
 

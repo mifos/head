@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
@@ -15,7 +14,6 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 

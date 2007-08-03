@@ -90,10 +90,10 @@ public class TestPPIChoice {
 		assertEquals(null, retrieved);
 	}
 	
-	/* @Test
-	 * @Ignore
- 	 * Test throws a SQLException: Attempt to read SQL NULL as an object
- 	 * When trying to retrieve responses from db.
+	 @Test
+	 @Ignore
+ 	/* Test throws a SQLException: Attempt to read SQL NULL as an object
+ 	 * When trying to retrieve responses from db.*/
 	public void viaResponses() throws Exception {
 		Question question = 
 			new Question("question1", "what is your question", AnswerType.CHOICE);
@@ -117,6 +117,7 @@ public class TestPPIChoice {
 		surveyResponse.setChoiceValue(ppiChoice);
 		surveyResponses.add(surveyResponse);
 		instance.setSurveyResponses(surveyResponses);
+		assertEquals(1, instance.getSurveyResponses().size());
 		
 		new SurveysPersistence().createOrUpdate(instance);
 		new SurveysPersistence().createOrUpdate(surveyResponse);
@@ -126,6 +127,7 @@ public class TestPPIChoice {
 		PPIPersistence ppiPersistence = new PPIPersistence();
 		SurveyInstance retrievedInstance = ppiPersistence.getInstance(instanceId);
 		assertFalse(null == retrievedInstance);
+		assertFalse(null == retrievedInstance.getSurveyResponses());
 		assertEquals(1, retrievedInstance.getSurveyResponses().size());
 		//List<SurveyResponse> responseList =
 			//ppiPersistence.retrieveResponsesByInstance(retrievedInstance);
@@ -143,7 +145,7 @@ public class TestPPIChoice {
 			"govId", date, Integer.valueOf("1"), Integer.valueOf("1"),
 			date, date, null, PersonnelConstants.SYSTEM_USER);
 	}
-	*/
+	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestPPIChoice.class);
 	}

@@ -136,9 +136,9 @@ public abstract class TaskHelper {
 			if (timeInMillis == 0) {
 				timeInMillis = System.currentTimeMillis();
 			}
-			System.out.println(mifosTask.name + "started");
+			//System.out.println(mifosTask.name + "started");
 			perform(timeInMillis);
-			System.out.println(mifosTask.name + "finished");
+			//System.out.println(mifosTask.name + "finished");
 		}
 	}
 
