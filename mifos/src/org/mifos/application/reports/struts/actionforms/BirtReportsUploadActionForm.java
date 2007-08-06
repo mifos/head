@@ -21,6 +21,7 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 	protected FormFile file;
 	private String reportId;
 	private String isActive;
+
 	public BirtReportsUploadActionForm() {
 		super();
 	}
@@ -45,33 +46,45 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 
 		validateMethod(errors, Methods.preview.toString(), method);
 		validateMethod(errors, Methods.editpreview.toString(), method);
-		
-		
+
+
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
 		}
-		
+
 		return errors;
 	}
 
-	private void validateMethod(ActionErrors errors, String verifyMethod, String methodFromRequest) {
+	private void validateMethod(ActionErrors errors, String verifyMethod,
+			String methodFromRequest) {
 		if (methodFromRequest.equals(verifyMethod)) {
-			if (StringUtils.isNullOrEmpty(reportTitle)){
+			if (StringUtils.isNullOrEmpty(reportTitle)) {
 				errors.add(ReportsConstants.ERROR_TITLE, new ActionMessage(
 						ReportsConstants.ERROR_TITLE));
 			}
-			if (StringUtils.isNullOrEmpty(reportCategoryId) || this.getReportCategoryId().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_CATEGORYID, new ActionMessage(
-						ReportsConstants.ERROR_CATEGORYID));
+			if (StringUtils.isNullOrEmpty(reportCategoryId)
+					|| this.getReportCategoryId().equals("-1")) {
+				errors.add(ReportsConstants.ERROR_CATEGORYID,
+						new ActionMessage(ReportsConstants.ERROR_CATEGORYID));
 			}
-			if (StringUtils.isNullOrEmpty(isActive) || this.getIsActive().equals("-1")){
+			if (StringUtils.isNullOrEmpty(isActive)
+					|| this.getIsActive().equals("-1")) {
 				errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(
 						ReportsConstants.ERROR_STATUS));
 			}
-			if (file !=null && !StringUtils.isEmpty(file.getFileName()) && !file.getFileName().endsWith(".rptdesign")) {
-				errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
-						ReportsConstants.ERROR_FILE));
+			if (methodFromRequest.equals(Methods.preview.toString())) {
+				if (file == null || !file.getFileName().endsWith(".rptdesign")) {
+					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
+							ReportsConstants.ERROR_FILE));
+				}
+			}
+			if (methodFromRequest.equals(Methods.editpreview.toString())) {
+				if (file != null && !StringUtils.isEmpty(file.getFileName())
+						&& !file.getFileName().endsWith(".rptdesign")) {
+					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
+							ReportsConstants.ERROR_FILE));
+				}
 			}
 		}
 	}
@@ -121,5 +134,5 @@ public class BirtReportsUploadActionForm extends ValidatorActionForm {
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
-	
+
 }
