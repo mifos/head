@@ -624,9 +624,16 @@ Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB-CLOSE");]]></metho
                                 </row>
                                 <row id="111">
                                     <cell id="112">
-                                        <label id="840">
-                                            <text-property name="text">Detailed Aging of Portfolio at Risk</text-property>
-                                        </label>
+                                        <data id="1627">
+                                            <list-property name="boundDataColumns">
+                                                <structure>
+                                                    <property name="name">data item</property>
+                                                    <expression name="expression">params["reportName"]</expression>
+                                                    <property name="dataType">any</property>
+                                                </structure>
+                                            </list-property>
+                                            <property name="resultSetColumn">data item</property>
+                                        </data>
                                     </cell>
                                     <cell id="113">
                                         <text id="841">

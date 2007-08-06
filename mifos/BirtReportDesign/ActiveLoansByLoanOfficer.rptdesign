@@ -619,9 +619,16 @@ iterator = null;]]></method>
                                             </row>
                                             <row id="845">
                                                 <cell id="846">
-                                                    <label id="847">
-                                                        <text-property name="text">Active Loans By Loan Officer</text-property>
-                                                    </label>
+                                                    <data id="1127">
+                                                        <list-property name="boundDataColumns">
+                                                            <structure>
+                                                                <property name="name">data item</property>
+                                                                <expression name="expression">params["reportName"]</expression>
+                                                                <property name="dataType">any</property>
+                                                            </structure>
+                                                        </list-property>
+                                                        <property name="resultSetColumn">data item</property>
+                                                    </data>
                                                 </cell>
                                                 <cell id="848">
                                                     <text id="849">
