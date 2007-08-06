@@ -135,10 +135,17 @@ if (loanProducts.size()>1) {
 
 iterator = loanProducts.iterator();
 
-flag = 0;]]></method>
+flag = 0;
+branchId = reportContext.getParameterValue("branchId");]]></method>
             <method name="fetch"><![CDATA[if(flag == 0) {
-	row["ID"] = -2;
-	row["Name"] = "---Select---";
+	if(branchId == null || branchId == -2){
+	    row["ID"] = -2;
+	    row["Name"] = "---Select---";
+	    
+	}else if(loanProducts.size() == 1) {
+        row["ID"] = -2;
+	    row["Name"] = "---N/A---";
+    }
 	flag = -1;
 	return true;
 }
@@ -266,7 +273,7 @@ iterator = null;]]></method>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
             <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("LO");
-var branchId = reportContext.getParameterValue("branchId");
+branchId = reportContext.getParameterValue("branchId");
 Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId:" + branchId);
 Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
 
@@ -284,8 +291,14 @@ iterator = loanOfficers.iterator();
 
 flag = 0;]]></method>
             <method name="fetch"><![CDATA[if(flag == 0) {
-	row["ID"] = -2;
-	row["Name"] = "---Select---";
+	if(branchId == null || branchId == -2){
+	    row["ID"] = -2;
+	    row["Name"] = "---Select---";
+	    
+	}else if(loanOfficers.size() == 1) {
+        row["ID"] = -2;
+	    row["Name"] = "---N/A---";
+    }
 	flag = -1;
 	return true;
 }

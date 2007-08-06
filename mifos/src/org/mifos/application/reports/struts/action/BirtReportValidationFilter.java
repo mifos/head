@@ -1,6 +1,7 @@
 package org.mifos.application.reports.struts.action;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,14 +13,22 @@ import javax.servlet.http.HttpServletResponse;
 
 public class BirtReportValidationFilter implements Filter {
 	
-	private String errorMessages;
+	private String errorMessage;
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		errorMessages = "";
-		filter(request.getParameter("__report"), "report/ActiveLoansByLoanOfficer.rptdesign", request.getParameter("branchId"), "Please select a Branch Office.");
-		filter(request.getParameter("__report"), "report/DetailedAgingPortfolioAtRisk.rptdesign", request.getParameter("branchId"), "Please select a Branch Office.");
-		if(errorMessages.length() == 0) {
+		errorMessage = "";
+		String currentReport = request.getParameter("__report");
+		
+		HashMap<String, String> errorMessages = new HashMap<String, String>();
+		errorMessages.put("branchId", "Please select a Branch Office.");
+		errorMessages.put("loanOfficerId",  "Please select a Loan Officer.");
+		errorMessages.put("loanProductId", "Please select a Loan Procuct.");
+		
+		reportFilter(currentReport, "report/ActiveLoansByLoanOfficer.rptdesign", errorMessages, request);
+		reportFilter(currentReport, "report/DetailedAgingPortfolioAtRisk.rptdesign", errorMessages, request);
+		
+		if(errorMessage.length() == 0) {
 			chain.doFilter(request, response);
 		}
 		else {
@@ -27,16 +36,18 @@ public class BirtReportValidationFilter implements Filter {
 		}
 	}
 
-	private void filter(String actualReport, String expectedReport, String requireData,String errorMessage) {
-		if(actualReport.equals(expectedReport)) {
-			if(requireData !=null && requireData.equals("-2")){
-				addErrorMessage(errorMessage);
+	private void reportFilter(String currentReport, String expectedReport, HashMap<String, String> parameters, ServletRequest request) {
+		if(currentReport.equals(expectedReport)) {
+			for(String parameter : parameters.keySet()){
+				if(request.getParameter(parameter) != null &&request.getParameter(parameter).equals("-2")) {
+					addErrorMessage(parameters.get(parameter));
+				}
 			}
 		}
 	}
-	
-	private void addErrorMessage(String errorMessage) {
-		errorMessages += errorMessage;
+
+	private void addErrorMessage(String currentErrorMessage) {
+		errorMessage += (currentErrorMessage + "%0A");
 	}
 
 	private void showError(ServletRequest request, ServletResponse response)
@@ -48,7 +59,7 @@ public class BirtReportValidationFilter implements Filter {
 						+ request.getParameter("reportName") + "&userId="
 						+ request.getParameter("userId") + "&__format="
 						+ request.getParameter("__format") + "&message="
-						+ errorMessages);
+						+ errorMessage);
 	}
 
 	public void init(FilterConfig arg0) throws ServletException {

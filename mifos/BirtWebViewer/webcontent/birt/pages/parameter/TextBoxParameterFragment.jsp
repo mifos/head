@@ -112,13 +112,16 @@
              <LABEL>&nbsp;Generate Report:</LABEL>
          </div>
          <!-- For Mifos Birt report -->
+	    <font class="fontnormalRedBold">
 	    <%
 		    String message = request.getParameter("message");
 		    if (message != null) {
+		    	String[] messages = message.split("\n");
+		    	for(String currMessage : messages) {
 	    %>
-	    <font class="fontnormalRedBold">
 	    <%
-		    	out.println("<li>" + message + "</li>");
+		    		out.println("<li>" + currMessage + "</li>");
+		    	}
 		    }
 	    %>
 	    </font>
