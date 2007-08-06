@@ -24,9 +24,6 @@
 		              	<html-el:link action="reportsAction.do?method=getAdminReportPage&viewPath=administerreports_path">  
 		              	<mifos:mifoslabel name="reports.administerreports" bundle="reportsUIResources"/>          			               		              	
 		              	</html-el:link>         			               		              	
-						
-
-
 			          </span>         
 
 		            </td>		            
@@ -51,28 +48,21 @@
 		              			</span>
 		              			<br>
 					  			</span>
+							
 								<c:forEach var="report" items="${reportCategory.reportsSet}" >	
 								<c:choose>
-				  			    <c:when test="${report.isActive == 1}">
+								<c:when test="${report.reportsJasperMap.reportJasper != null && report.isActive == 1}">
 							  	 <table width="90%" border="0" cellspacing="0" cellpadding="0">
 								  	<tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
-					                  	<c:choose>
-					                  	<c:when test="${report.reportsJasperMap.reportJasper != null}">
-						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">
-						                  	<c:out value="${report.reportName}"/>
-						                  </a>
-					                    </c:when>
-					                    <c:otherwise>
-					                      	<c:out value="${report.reportName}"/>
-						                  </c:otherwise>
-					                    </c:choose>
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+						                  <c:out value="${report.reportName}" />
 					                  </td>
 					                </tr>
 				                </table>
-				                </c:when>
-				                </c:choose>
+				             </c:when>
+				             </c:choose>
 				               </c:forEach>	
 			                </td>
 					  	</c:when>
@@ -86,22 +76,14 @@
 	              			<br>
 				  			</span>
 				  			<c:forEach var="report" items="${reportCategory.reportsSet}" >
-				  			  <c:choose>
-				  			   <c:when test="${report.isActive == 1}">
+				  			 <c:choose>
+							 <c:when test="${report.reportsJasperMap.reportJasper != null && report.isActive == 1}">
 					  			<table width="98%" border="0" cellspacing="0" cellpadding="0">
 					                <tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
-						                <c:choose>
-					                  	<c:when test="${report.reportsJasperMap.reportJasper != null}">
-						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">
-						                  	<c:out value="${report.reportName}"/>
-						                  </a>
-					                    </c:when>
-					                     <c:otherwise>
-					                       <c:out value="${report.reportName}"/>
-						                 </c:otherwise>
-					                    </c:choose>
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}" />
+						                  <c:out value="${report.reportName}" />
 					                  </td>
 					                </tr>
 				                </table>
