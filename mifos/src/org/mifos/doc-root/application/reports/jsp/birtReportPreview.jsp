@@ -121,7 +121,7 @@
 								</tr>
 								<tr class="fontnormal">
 									<td>
-										<input class="insidebuttn" type="button" onclick="javascript:goToPreviousPage(this.form)" 
+										<input class="insidebuttn" type="button" onclick="javascript:history.go(-1)" 
 											value="<mifos:mifoslabel name="reports.editReportInformation" />" name="Button222"/>
 									</td>
 								</tr>
