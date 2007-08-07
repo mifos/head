@@ -23,7 +23,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.TransactionTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -138,7 +137,7 @@ public class MasterPersistence extends Persistence {
 		}
 	}
 
-	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
+	/*public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
 			Short transactionTypeId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("TRANSACTION_ID", transactionTypeId);
@@ -149,7 +148,7 @@ public class MasterPersistence extends Persistence {
 			paymentType.setLocaleId(localeId);
 		}
 		return paymentTypes;
-	}
+	}*/
 
 	public List<MasterDataEntity> retrieveMasterEntities(Class clazz,
 			Short localeId) throws PersistenceException {

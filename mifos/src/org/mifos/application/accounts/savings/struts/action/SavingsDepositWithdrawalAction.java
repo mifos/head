@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
@@ -50,6 +51,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+
 
 public class SavingsDepositWithdrawalAction extends BaseAction {
 	private SavingsBusinessService savingsService;
@@ -114,10 +116,12 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request);
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				getMasterDataService().getSupportedPaymentModes(
+				persistence.getAcceptedPaymentTypesForATransaction(
 						uc.getLocaleId(),
 						TrxnTypes.savings_deposit.getValue()), request);
+		
 		SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
 				new Boolean(Configuration.getInstance().getAccountConfig(
 						savings.getCustomer().getOffice().getOfficeId())

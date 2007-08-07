@@ -78,6 +78,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 
 public class SavingsClosureAction extends BaseAction {
 	private SavingsBusinessService savingsService;
@@ -143,9 +144,12 @@ public class SavingsClosureAction extends BaseAction {
 		
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
+				persistence.getAcceptedPaymentTypesForATransaction(
+						uc.getLocaleId(),
 						TrxnTypes.savings_withdrawal.getValue()), request);
+		
 		// client list will be loaded only if it is center savings account,
 		// or group savings account with deposit schedule of per client
 

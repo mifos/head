@@ -80,6 +80,7 @@ import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
+import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 
@@ -137,6 +138,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(HolidayTestSuite.suite());
 		suite.addTest(SurveysTestSuite.suite());
 		suite.addTest(PPITestSuite.suite());
+		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
 		return suite;
 	}
 }

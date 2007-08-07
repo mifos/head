@@ -78,6 +78,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 
 public class AccountApplyPaymentAction extends BaseAction {
 	AccountBusinessService accountBusinessService = null;
@@ -121,10 +122,12 @@ public class AccountApplyPaymentAction extends BaseAction {
 				Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				getMasterDataService().getSupportedPaymentModes(
-						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
-				request);
+				persistence.getAcceptedPaymentTypesForATransaction(
+						uc.getLocaleId(),
+						TrxnTypes.loan_repayment.getValue()), request);
+		
 		actionForm.setAmount(account.getTotalPaymentDue());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}

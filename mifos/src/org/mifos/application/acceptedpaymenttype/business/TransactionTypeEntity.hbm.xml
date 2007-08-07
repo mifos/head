@@ -5,18 +5,14 @@
                             
 <hibernate-mapping>
 
-    <class name="org.mifos.application.master.business.TransactionTypeEntity" table="TRANSACTION_TYPE">
+    <class name="org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity" table="TRANSACTION_TYPE">
         <id name="transactionId" column="TRANSACTION_ID" type="short">
             <generator class="native"/>
         </id>
  		<property name="transactionName" column="TRANSACTION_NAME" type="string" not-null="true" />	  
- 		<set name="supportedModesSet" table="SUPPORTED_MODES" cascade="all" order-by="MODE_ID asc" inverse="true">
-            <key column="TRANSACTION_ID"/>
-            <one-to-many class="org.mifos.application.master.business.SupportedModesEntity"/>
-    	</set>  
     </class>
      <query name="getPaymentTypes">
    	       <![CDATA[ from TransactionTypeEntity as trasaction where trasaction.transactionId=:TRANSACTION_ID ]]>
     </query> 
     
-</hibernate-mapping>
+</hibernate-mapping><!-- web30205.mail.mud.yahoo.com uncompressed/chunked Mon Aug  6 13:27:11 PDT 2007 -->

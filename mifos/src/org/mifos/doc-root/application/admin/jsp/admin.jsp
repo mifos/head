@@ -153,6 +153,14 @@
 						<tr class="fontnormal">
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
+							<td>
+							 <html-el:link
+								action="acceptedPaymentTypeAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.defineacceptedpaymenttype" /></html-el:link></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
 							<td><html-el:link
 								action="ppiAction.do?method=get">
 								<mifos:mifoslabel name="admin.viewPPI" /></html-el:link>

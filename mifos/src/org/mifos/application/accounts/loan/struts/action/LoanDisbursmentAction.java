@@ -38,6 +38,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 
 public class LoanDisbursmentAction extends BaseAction {
 
@@ -74,8 +75,9 @@ public class LoanDisbursmentAction extends BaseAction {
 		.toString()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				getMasterDataService().getSupportedPaymentModes(
+				persistence.getAcceptedPaymentTypesForATransaction(
 						uc.getLocaleId(),
 						TrxnTypes.loan_disbursement.getValue()), request);
 		loanDisbursmentActionForm.setAmount(loan

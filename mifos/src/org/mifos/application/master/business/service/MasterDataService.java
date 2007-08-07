@@ -116,7 +116,7 @@ public class MasterDataService extends BusinessService {
 		}
 	}
 
-	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
+	/*public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
 			Short transactionTypeId) throws ServiceException {
 		try {
 			return masterPersistence.getSupportedPaymentModes(localeId,
@@ -124,7 +124,7 @@ public class MasterDataService extends BusinessService {
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-	}
+	}*/
 
 	public List<MasterDataEntity> retrieveMasterEntities(Class entityName,
 			Short localeId) throws ServiceException {

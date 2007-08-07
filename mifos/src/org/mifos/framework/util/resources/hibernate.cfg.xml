@@ -167,10 +167,6 @@
 
 		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/FieldConfigurationEntity.hbm.xml" />
 
-		<!-- Mapping files of SupportedModes For Transactions -->
-		<mapping resource="org/mifos/application/master/business/SupportedModesEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/TransactionTypeEntity.hbm.xml" />
-
 		<!--Configuration-->
 		<mapping resource="org/mifos/framework/components/configuration/business/ConfigEntity.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/configuration/business/ConfigurationKeyValueInteger.hbm.xml" />
@@ -209,7 +205,8 @@
     	<mapping resource="org/mifos/application/surveys/business/QuestionChoice.hbm.xml"/>      	
      	<mapping resource="org/mifos/application/surveys/business/SurveyResponse.hbm.xml"/>  
     	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>
-    	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" /> 
+    	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
+		<mapping resource="org/mifos/application/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 			 
 	</session-factory>
 

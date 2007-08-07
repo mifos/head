@@ -93,13 +93,13 @@ public class TestMasterPersistence extends MifosTestCase {
 		}
 	}
 
-	public void testGetSupportedPaymentModes() throws Exception {
+	/*public void testGetSupportedPaymentModes() throws Exception {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		List<PaymentTypeEntity> paymentTypeList = masterPersistence
 				.getSupportedPaymentModes(Short.valueOf("1"), Short
 						.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
-	}
+	}*/
 	
 	public void testRetrieveMasterEntities() throws NumberFormatException,
 			PersistenceException {

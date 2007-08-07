@@ -456,5 +456,7 @@ public interface SecurityConstants {
 	public final short CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET = 217;
 	
 	public final short CAN_REDO_LOAN_DISPURSAL = 218;
+	
+	public final short CAN_DEFINE_ACCEPTED_PAYMENT_TYPE = 219;
 
 }

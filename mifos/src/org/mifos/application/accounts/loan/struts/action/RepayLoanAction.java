@@ -36,6 +36,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 
 public class RepayLoanAction extends BaseAction {
 
@@ -82,10 +83,12 @@ public class RepayLoanAction extends BaseAction {
 				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, Money
 						.round(loanBO.getTotalEarlyRepayAmount()), request
 						);
+		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
-						TrxnTypes.loan_repayment.getValue()),
-				request);
+				persistence.getAcceptedPaymentTypesForATransaction(
+						uc.getLocaleId(),
+						TrxnTypes.loan_repayment.getValue()), request);
+		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,loanBO,request);
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}

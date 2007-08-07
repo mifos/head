@@ -209,14 +209,14 @@ public class TestMasterBusinessService extends MifosTestCase {
 		}
 	}
 
-	public void testGetSupportedPaymentModes() throws Exception {
+	/*public void testGetSupportedPaymentModes() throws Exception {
 		List<PaymentTypeEntity> paymentTypeList = masterService
 				.getSupportedPaymentModes(Short.valueOf("1"), Short
 						.valueOf("1"));
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
-	}
+	}*/
 
-	public void testGetSupportedPaymentModesForInvalidConnection()
+	/*public void testGetSupportedPaymentModesForInvalidConnection()
 			throws Exception {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -228,7 +228,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		} finally {
 			HibernateUtil.closeSession();
 		}
-	}
+	}*/
 
 	public void testGetMasterEntityName() throws NumberFormatException,
 			PersistenceException, ServiceException {
