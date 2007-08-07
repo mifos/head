@@ -2,7 +2,7 @@
 
  * ReportsPersistence.java    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -10,7 +10,7 @@
 
  * All rights reserved.
 
- 
+
 
  * Apache License 
  * Copyright (c) 2005-2006 Grameen Foundation USA 
@@ -41,6 +41,7 @@ package org.mifos.application.reports.persistence;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class ReportsPersistence extends Persistence {
 				ReportsConstants.GETALLREPORTS);
 		return query.list();
 	}
-	
+
 	public List<ReportsBO> getAllReports(){
 		List<ReportsBO> allReports = new ArrayList<ReportsBO>();
 		for(ReportsCategoryBO reportCategory : new ReportsPersistence().getAllReportCategories()){
@@ -148,7 +149,7 @@ public class ReportsPersistence extends Persistence {
 			trxn.rollback();
 
 			throw new ReportException(
-				ReportsConstants.CREATE_FAILED_EXCEPTION, e);
+					ReportsConstants.CREATE_FAILED_EXCEPTION, e);
 		}
 		catch (Exception e) {
 			trxn.rollback();
@@ -185,8 +186,8 @@ public class ReportsPersistence extends Persistence {
 			trxn.rollback();
 
 			throw new ReportException(
-				ReportsConstants.CREATE_FAILED_EXCEPTION,
-				e);
+					ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			trxn.rollback();
@@ -217,8 +218,8 @@ public class ReportsPersistence extends Persistence {
 			trxn.rollback();
 
 			throw new ReportException(
-				ReportsConstants.CREATE_FAILED_EXCEPTION,
-				e);
+					ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			trxn.rollback();
@@ -285,8 +286,12 @@ public class ReportsPersistence extends Persistence {
 		queryParameters.put("dataSourceId", dataSourceId + "");
 		queryResult = executeNamedQuery(ReportsConstants.VIEW_DATASOURCE,
 				queryParameters);
+		Iterator itrQueryResult= queryResult.iterator();
+		while(itrQueryResult.hasNext()){
+			ReportsDataSource objReportsDataSource =(ReportsDataSource)itrQueryResult.next();
+			objReportsDataSource.setPassword(ReportsConstants.HIDDEN_PASSWORD);
+		}
 		return queryResult;
-
 	}
 
 	/**
@@ -347,8 +352,8 @@ public class ReportsPersistence extends Persistence {
 			trxn.rollback();
 
 			throw new ReportException(
-				ReportsConstants.CREATE_FAILED_EXCEPTION,
-				e);
+					ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			trxn.rollback();
@@ -405,29 +410,29 @@ public class ReportsPersistence extends Persistence {
 
 		return queryResult;
 	}
-	
+
 	public List<ReportsJasperMap> findJasperOfReportId(
-		Session session, int reportId)
-	throws PersistenceException {
+			Session session, int reportId)
+			throws PersistenceException {
 		Query query = session.getNamedQuery(
-			ReportsConstants.FIND_JASPER_OF_REPORTID);
+				ReportsConstants.FIND_JASPER_OF_REPORTID);
 		query.setParameter("reportId", reportId);
 		return query.list();
 	}
 
-	public ReportsJasperMap oneJasperOfReportId(Session session, short reportId) 
-	throws PersistenceException {
+	public ReportsJasperMap oneJasperOfReportId(Session session, short reportId)
+			throws PersistenceException {
 		List<ReportsJasperMap> all = findJasperOfReportId(session, reportId);
 		if (all.size() != 1) {
 			throw new RuntimeException(
-				"expected one jasper for report ID " + reportId + 
-				" but got " + all.size());
+					"expected one jasper for report ID " + reportId + 
+					" but got " + all.size());
 		}
 		return all.get(0);
 	}
 
-	public ReportsJasperMap oneJasperOfReportId(short reportId) 
-	throws PersistenceException {
+	public ReportsJasperMap oneJasperOfReportId(short reportId)
+			throws PersistenceException {
 		return oneJasperOfReportId(HibernateUtil.getSessionTL(), reportId);
 	}
 

@@ -7,8 +7,10 @@ import java.util.Set;
 import org.hibernate.classic.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
+import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.persistence.TestDatabase;
 
@@ -162,4 +164,14 @@ public class ReportsPersistenceTest extends MifosTestCase {
 	 public void testGetAllReports(){
 		 assertEquals(29,reportsPersistence.getAllReports().size());
 	 }
+	 
+	 public void testViewDataSource() throws Exception {
+			List <ReportsDataSource> queryResult =reportsPersistence.viewDataSource(1);
+			Iterator itrQueryResult= queryResult.iterator();
+			while(itrQueryResult.hasNext()){
+				ReportsDataSource objReportsDataSource =(ReportsDataSource)itrQueryResult.next();
+				assertEquals(ReportsConstants.HIDDEN_PASSWORD, objReportsDataSource.getPassword());
+			}
+		}
+	 
 }
