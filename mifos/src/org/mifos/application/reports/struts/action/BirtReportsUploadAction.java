@@ -251,7 +251,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		ReportsJasperMap reportJasperMap;
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
-
+		Connection conn = new ReportsPersistence().getConnection();
 		reportBO = new ReportsPersistence().getReport(Short.valueOf(uploadForm
 				.getReportId()));
 		reportJasperMap = new ReportsPersistence().getReport(
@@ -261,6 +261,8 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		new ReportsPersistence().createOrUpdate(reportBO);
+		
+		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category.getActivityId());
 
 		if (StringUtils.isEmpty(formFile.getFileName())) {
 			formFile.destroy();
