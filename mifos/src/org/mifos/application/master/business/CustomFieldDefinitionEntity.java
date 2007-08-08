@@ -40,12 +40,10 @@ package org.mifos.application.master.business;
 
 import java.util.Locale;
 
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.util.helpers.Constants;
 
 /**
  * Represents a named custom field of a given type {@link CustomFieldType}

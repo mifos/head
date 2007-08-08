@@ -11,7 +11,6 @@ import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
-import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
@@ -20,6 +19,7 @@ import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
@@ -159,13 +159,18 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String questionText = "testCreateEntry question 1";
 		String shortName = "testCreateEntry 1";
 		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
+		Question question2 = new Question(shortName + 1, questionText + 1, AnswerType.CHOICE);
 		surveysPersistence.createOrUpdate(question);
+		surveysPersistence.createOrUpdate(question2);
 		
 		String state = "INACTIVE";
 		String name = "test";
 		String appliesTo = "client";
 		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE,SurveyType.fromString(appliesTo));
+		oldSurvey.addQuestion(question2, true);
 		surveysPersistence.createOrUpdate(oldSurvey);
+		
+		database.installInThreadLocal();
 		
 		int surveyId = surveysPersistence.retrieveAllSurveys().get(0).getSurveyId();
 		setRequestPathInfo("/surveysAction");
@@ -173,6 +178,10 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(surveyId)", Integer.toString(surveyId));
 		actionPerform();
 		verifyNoActionErrors();
+		assertEquals(1, 
+				((List)getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS)).size());
+		assertEquals(1, 
+				((List)getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST)).size());
 		
 		addRequestParameter("method", "add_new_question");
 		addRequestParameter("value(newQuestion)", Integer.toString(question.getQuestionId()));
@@ -197,6 +206,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		assertEquals(1, listSurvey.size());
 		assertEquals(oldSurvey.getName(), listSurvey.get(0).getName());
 		assertEquals(surveyId, listSurvey.get(0).getSurveyId());
-		assertEquals(1, listSurvey.get(0).getQuestions().size());
+		assertEquals(2, listSurvey.get(0).getQuestions().size());
 	}
 }

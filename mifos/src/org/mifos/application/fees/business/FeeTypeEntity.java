@@ -40,7 +40,6 @@ package org.mifos.application.fees.business;
 
 import java.util.Set;
 
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.business.PersistentObject;
 

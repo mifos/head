@@ -365,13 +365,13 @@ public class RoleTempleteBuilder {
 			Short index = getIndex(lst.get(i).getId());
 			if (li.size() == 0) {
 				// check whether checked or not
-				if (!currentActivites.contains(lst.get(i).getId())) {
+				if (!currentActivites.contains(index)) {
 					checked = false;
 				}
 
-				childMap.put(lst.get(i).getId(), li);
+				childMap.put(index, li);
 			} else {
-				if (!makeCheckTable(l, lst.get(i).getId(), currentDepth)) {
+				if (!makeCheckTable(l, index, currentDepth)) {
 					checked = false;
 				}
 			}

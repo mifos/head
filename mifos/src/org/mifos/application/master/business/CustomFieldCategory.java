@@ -38,6 +38,19 @@
 
 package org.mifos.application.master.business;
 
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeCustomFieldEntity;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.application.util.helpers.EntityType;
 
 /**

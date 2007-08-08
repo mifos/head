@@ -2,8 +2,9 @@ package org.mifos.application.acceptedpaymenttype;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeActionTest;
+
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistenceTest;
+import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeActionTest;
 
 
 

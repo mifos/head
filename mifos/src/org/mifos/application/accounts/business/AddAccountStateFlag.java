@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.Upgrade;
 

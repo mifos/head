@@ -20,8 +20,6 @@ import org.junit.Assert;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.persistence.SessionOpener;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class TestDatabase implements SessionOpener {

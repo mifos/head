@@ -45,7 +45,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.sql.Date;
 import java.util.List;
 
-
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -73,7 +72,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
-
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ProductMixActionTest extends MifosMockStrutsTestCase {

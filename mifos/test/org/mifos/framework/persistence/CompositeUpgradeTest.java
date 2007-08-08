@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import junit.framework.JUnit4TestAdapter;
-
 import net.sourceforge.mayfly.Database;
 
 import org.junit.Test;

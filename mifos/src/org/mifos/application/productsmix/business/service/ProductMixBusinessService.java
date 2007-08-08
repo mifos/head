@@ -42,7 +42,6 @@ package org.mifos.application.productsmix.business.service;
 
 import java.util.List;
 
-
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;

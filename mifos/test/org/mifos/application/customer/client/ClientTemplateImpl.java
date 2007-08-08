@@ -1,16 +1,16 @@
 package org.mifos.application.customer.client;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
-import java.io.InputStream;
 
 import org.mifos.application.customer.CustomerTemplateImpl;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.NameType;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

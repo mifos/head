@@ -1,8 +1,8 @@
 package org.mifos.application.surveys.business;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -120,7 +120,7 @@ public class Survey implements Serializable {
 			if (question.getQuestionId() == id)
 				return question;
 		}
-		throw new IllegalArgumentException("Survey does not contain a question with id: " + id);
+		return null;
 	}
 	
 	public String getQuestionText(int i) {

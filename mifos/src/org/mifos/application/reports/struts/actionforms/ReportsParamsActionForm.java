@@ -172,7 +172,7 @@ public class ReportsParamsActionForm extends BaseActionForm {
 	public ActionErrors customValidate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors=new ActionErrors();
-		String methodCalled= request.getParameter("method");
+		request.getParameter("method");
 		
 		return errors;
 	}

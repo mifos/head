@@ -1,8 +1,8 @@
 package org.mifos.application.customer.business;
 
-import org.mifos.application.master.business.CustomFieldView;
-
 import junit.framework.TestCase;
+
+import org.mifos.application.master.business.CustomFieldView;
 
 public class CustomFieldViewTest extends TestCase {
 	

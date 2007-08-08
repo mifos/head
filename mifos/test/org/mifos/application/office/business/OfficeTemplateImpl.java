@@ -1,11 +1,11 @@
 package org.mifos.application.office.business;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

@@ -39,13 +39,25 @@
 
 package org.mifos.application.acceptedpaymenttype.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
+import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
+import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
+import org.mifos.application.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
+import org.mifos.application.acceptedpaymenttype.util.helpers.PaymentTypeData;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -58,17 +70,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
-import org.mifos.application.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
-import java.util.ArrayList;
-import java.util.List;
-import org.mifos.application.acceptedpaymenttype.util.helpers.PaymentTypeData;
-import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
 
 public class AcceptedPaymentTypeAction extends BaseAction{
 	

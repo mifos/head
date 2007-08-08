@@ -2,12 +2,12 @@ package org.mifos.application.ppi.business;
 
 import java.util.Collections;
 
+import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.application.ppi.helpers.Country;
 
 public class PPISurvey extends Survey {
 	

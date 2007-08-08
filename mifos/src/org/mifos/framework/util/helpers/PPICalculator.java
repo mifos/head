@@ -1,9 +1,9 @@
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.ppi.business.PPIChoice;
+import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyResponse;
-import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.ppi.business.PPIChoice;
 
 public class PPICalculator {
 	

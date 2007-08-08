@@ -1,22 +1,23 @@
 package org.mifos.framework.util.helpers;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
-import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.business.PPIChoice;
+import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.helpers.Country;
-import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
-import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.business.SurveyInstance;
-import org.mifos.application.surveys.helpers.SurveyType;
-import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.business.SurveyQuestion;
+import org.mifos.application.surveys.business.SurveyResponse;
 import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.helpers.SurveyType;
 
 public class PPICalculatorTest extends TestCase {
 

@@ -3,12 +3,12 @@ package org.mifos.application.customer.center.persistence;
 import java.util.GregorianCalendar;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.MeetingTemplateImpl;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeTemplate;

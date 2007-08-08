@@ -42,6 +42,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 import org.mifos.application.accounts.AccountTestSuite;
 import org.mifos.application.accounts.financial.FinancialTestSuite;
 import org.mifos.application.accounts.loan.LoanTestSuite;
@@ -80,7 +81,6 @@ import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
-import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 

@@ -40,6 +40,7 @@ package org.mifos.application.configuration.struts.action;
 
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +72,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import java.util.ResourceBundle;
 
 
 public class LookupOptionsAction extends BaseAction {

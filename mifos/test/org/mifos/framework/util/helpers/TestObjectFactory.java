@@ -37,6 +37,9 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -132,9 +135,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;

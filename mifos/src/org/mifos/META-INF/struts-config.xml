@@ -1250,6 +1250,8 @@
    	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
    	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
    	         <forward name="create_entry_success" path="/pages/application/surveys/jsp/create_survey.jsp"/>   	         
+   	         <forward name="edit_success" path="/pages/application/surveys/jsp/edit_survey.jsp"/>   	         
+   	         <forward name="editpreview_success" path="/pages/application/surveys/jsp/survey_edit_preview.jsp"/>   	         
 			 <forward name="preview_success" path="/pages/application/surveys/jsp/survey_preview.jsp"/>   	            	         
 			 <forward name="create_success" path="/pages/application/surveys/jsp/create_survey_success.jsp"/>		 
 			 <forward name="print_success" path="/pages/application/surveys/jsp/printer_version.jsp"/>

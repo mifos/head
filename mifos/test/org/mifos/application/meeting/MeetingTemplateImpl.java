@@ -2,10 +2,10 @@ package org.mifos.application.meeting;
 
 import java.util.Date;
 
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.meeting.util.helpers.RankType;
-import org.mifos.application.meeting.util.helpers.MeetingType;
 
 /**
  * Copyright (c) 2005-2006 Grameen Foundation USA

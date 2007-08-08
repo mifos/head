@@ -109,7 +109,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         try {
             PersonnelBO personnel = persistence.createPersonnel(userContext, template);
-            fail("Should not have been able to create personnel");
+            fail("Should not have been able to create personnel " + personnel.getDisplayName());
         } catch (ValidationException e) {
             assertTrue(e.getMessage().equals(PersonnelConstants.OFFICE));
         }

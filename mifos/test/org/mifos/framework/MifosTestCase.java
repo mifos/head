@@ -44,10 +44,10 @@ import java.util.Date;
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
+import org.hibernate.jmx.StatisticsService;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.hibernate.jmx.StatisticsService;
 
 /**
  * Inheriting from this instead of TestCase is deprecated,

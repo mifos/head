@@ -44,16 +44,16 @@ import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.ClientTemplate;
 import org.mifos.application.customer.client.ClientTemplateImpl;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -146,7 +146,7 @@ public class ClientPersistenceTest extends MifosTestCase {
                     (short)1, -11);
             try {
                 ClientBO client = getClientPersistence().createClient(userContext, clientTemplate);
-                fail("should not have gotten here");
+                fail("should not have been able to create client " + client.getDisplayName());
             } catch (ValidationException e) {
                 assertTrue(e.getMessage().equals(CustomerConstants.INVALID_PARENT));
             }

@@ -1,16 +1,16 @@
 package org.mifos.application.acceptedpaymenttype.persistence;
 
-import java.util.List;
 import java.util.ArrayList;
-import org.mifos.application.accounts.TestAccount;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import java.util.List;
+
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.business.TransactionTypeEntity;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.application.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
+import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.application.acceptedpaymenttype.persistence.helper.TransactionAcceptedPaymentTypes;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 
 public class AcceptedPaymentTypePersistenceTest extends TestAccount {

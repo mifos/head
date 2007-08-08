@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.CustomerTemplate;
-import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;

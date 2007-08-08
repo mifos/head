@@ -2,11 +2,22 @@ package org.mifos.application.acceptedpaymenttype.struts.action;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm;
-import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
+import org.mifos.application.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
+import org.mifos.application.acceptedpaymenttype.util.helpers.PaymentTypeData;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -18,18 +29,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.application.acceptedpaymenttype.util.helpers.AcceptedPaymentTypeConstants;
-import org.mifos.application.acceptedpaymenttype.util.helpers.PaymentTypeData;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.service.MasterDataService;
-
-
-import javax.servlet.http.HttpServletRequest;
 
 public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 

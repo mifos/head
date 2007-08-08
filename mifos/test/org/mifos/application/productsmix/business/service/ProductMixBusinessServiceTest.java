@@ -11,7 +11,6 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;

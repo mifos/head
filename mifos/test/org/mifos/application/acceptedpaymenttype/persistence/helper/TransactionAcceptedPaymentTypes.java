@@ -1,8 +1,9 @@
 package org.mifos.application.acceptedpaymenttype.persistence.helper;
 
-import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import java.util.List;
+
+import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
+import org.mifos.application.util.helpers.TrxnTypes;
 
 public class TransactionAcceptedPaymentTypes {
 	

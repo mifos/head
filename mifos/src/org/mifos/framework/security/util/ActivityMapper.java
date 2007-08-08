@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
 import org.mifos.application.accounts.loan.struts.action.AccountStatusAction;
 import org.mifos.application.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction;
@@ -60,6 +61,7 @@ import org.mifos.application.meeting.struts.action.MeetingAction;
 import org.mifos.application.personnel.struts.action.PersonAction;
 import org.mifos.application.personnel.struts.action.PersonnelNoteAction;
 import org.mifos.application.personnel.struts.action.PersonnelSettingsAction;
+import org.mifos.application.ppi.struts.action.PPIAction;
 import org.mifos.application.productdefinition.struts.action.LoanPrdAction;
 import org.mifos.application.productdefinition.struts.action.PrdCategoryAction;
 import org.mifos.application.productdefinition.struts.action.PrdConfAction;
@@ -76,10 +78,8 @@ import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAc
 import org.mifos.application.surveys.struts.action.QuestionsAction;
 import org.mifos.application.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
-import org.mifos.application.ppi.struts.action.PPIAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction;
 
 
 

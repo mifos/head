@@ -1,8 +1,8 @@
 package org.mifos.application.surveys.struts.action;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Session;

@@ -66,8 +66,13 @@ public class SurveysAction extends BaseAction {
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("create", SecurityConstants.VIEW);
 		security.allow("newVersion", SecurityConstants.VIEW);
+		security.allow("preview_update", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.VIEW);
 		security.allow("edit", SecurityConstants.VIEW);
+		security.allow("edit_update", SecurityConstants.VIEW);
 		security.allow("printVersion", SecurityConstants.VIEW);
+		security.allow("delete_new_question_edit", SecurityConstants.VIEW);
+		security.allow("add_new_question_edit", SecurityConstants.VIEW);
 		return security;
 	}
 	
@@ -137,7 +142,6 @@ public class SurveysAction extends BaseAction {
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				new LinkedList<Question>());
 		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY_TYPES, SurveyType.values());
-		request.setAttribute("edit", "false");
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
@@ -189,6 +193,13 @@ public class SurveysAction extends BaseAction {
 		}
 	}
 	
+	public ActionForward add_new_question_edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		add_new_question(mapping, form, request, response);
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	
 	public ActionForward delete_new_question(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -203,6 +214,13 @@ public class SurveysAction extends BaseAction {
 			questionsList.add(question);
 		}
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
+	}
+	
+	public ActionForward delete_new_question_edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		delete_new_question(mapping, form, request, response);
+		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 	
 	@Override
@@ -245,6 +263,12 @@ public class SurveysAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_entry_success.toString());
 	}
 	
+	public ActionForward edit_update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	
 	private List<Question> getQuestions() throws PersistenceException {
 			SurveysPersistence persistence = new SurveysPersistence();
 			return persistence.retrieveQuestionsByState(QuestionState.ACTIVE);
@@ -264,10 +288,12 @@ public class SurveysAction extends BaseAction {
 		actionForm.setValue("appliesTo", survey.getAppliesTo());
                actionForm.setValue("state", SurveyState.fromInt(survey.getState()).toString());
 		List<Question> associatedQuestions = new LinkedList<Question>();
-		List<Question> questionsList = getQuestions();
-		for (SurveyQuestion question : survey.getQuestions()) {
-			associatedQuestions.add(question.getQuestion());
-			questionsList.remove(question.getQuestion());
+		List<Question> questionsList = new LinkedList<Question>();
+		for (Question question : getQuestions()) {
+			if (survey.getQuestionById(question.getQuestionId()) != null)
+				associatedQuestions.add(question);
+			else
+				questionsList.add(question);
 		}
 		
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
@@ -275,15 +301,14 @@ public class SurveysAction extends BaseAction {
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				associatedQuestions);
-		request.setAttribute("edit", true);
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 	
 	public ActionForward preview_update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		request.getSession().setAttribute("edit", true);
-		return preview(mapping, form, request, response);
+		preview(mapping, form, request, response);
+		return mapping.findForward(ActionForwards.editpreview_success.toString());
 	}
 	
 	public ActionForward update(ActionMapping mapping, ActionForm form,
@@ -309,7 +334,7 @@ public class SurveysAction extends BaseAction {
 		
 		SurveyState state = Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
 		survey.setState(state);
-
+		survey.setAppliesTo(actionForm.getValue("appliesTo"));
 		new SurveysPersistence().createOrUpdate(survey);
 		
 		actionForm.setValue("surveyId", survey.getSurveyId());

@@ -8,7 +8,6 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;

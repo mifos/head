@@ -1,13 +1,13 @@
 package org.mifos.application.productsmix;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+
 import org.mifos.application.productsmix.business.ProductMixBOTest;
 import org.mifos.application.productsmix.business.service.ProductMixBusinessServiceTest;
 import org.mifos.application.productsmix.persistence.ProductMixPersistenceTest;
 import org.mifos.application.productsmix.struts.action.ProductMixActionTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 public class ProductMixTestSuite extends TestSuite{
 	public ProductMixTestSuite() {

@@ -61,7 +61,8 @@ public class TestOfficePersistence extends MifosTestCase {
         template.setParentOfficeId(new Short((short) -1));
         try {
             OfficeBO office = getOfficePersistence().createOffice(userContext, template);
-            fail("Office should not have been successfully created");
+            fail("Office " + office.getOfficeName()
+            		+ "should not have been successfully created");
         } catch (ValidationException e) {
             // This is what we're expecting here.
             assertTrue(e.getMessage().equals(OfficeConstants.PARENTOFFICE));

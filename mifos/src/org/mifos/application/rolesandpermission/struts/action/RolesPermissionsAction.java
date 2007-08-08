@@ -140,7 +140,6 @@ public class RolesPermissionsAction extends BaseAction {
 	public ActionForward delete(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
 		RoleBO role = (RoleBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		RoleBO roleBO =((RolesPermissionsBusinessService) getService()).getRole(role.getId());
