@@ -121,14 +121,10 @@ public class MifosConfiguration {
 		Short curLocaleId = getLoacleIdFromCache(localeKey);
 		if(curLocaleId==null )
 			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
-		String labelText =getLabelText(key, curLocaleId);
+		String labelText =getLabelValue(key, curLocaleId);
 		//todo pass  properkey
 		//if ( null==labelText) throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
 		return labelText;
-	}
-
-	public String getLabelText(String key, Short localeId) {
-		return getLabelValue(key, localeId);
 	}
 
 	private Short getLoacleIdFromCache(String localeKey) {

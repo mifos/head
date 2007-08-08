@@ -53,6 +53,7 @@ import org.mifos.application.configuration.struts.actionform.LookupOptionsAction
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -72,6 +73,14 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import java.util.List;
+import java.util.Set;
+import org.mifos.application.master.business.LookUpLabelEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 
 
 public class LookupOptionsAction extends BaseAction {
@@ -108,6 +117,8 @@ public class LookupOptionsAction extends BaseAction {
 	{
 		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
 				getUserLocale(request));
+		Short localeId = getUserContext(request).getLocaleId();
+
 		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
             request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.salutation"));
@@ -125,7 +136,8 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
 		{
-			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.ethnicity"));
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, localeId);
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL))
@@ -135,7 +147,8 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
 		{
-			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.citizenship"));
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, localeId);
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
@@ -150,7 +163,8 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
 		{
-			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.handicapped"));
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, localeId);
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
@@ -361,6 +375,14 @@ public class LookupOptionsAction extends BaseAction {
 	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
 	   
 	}
+	
+	private void setSpecialLables(Short localeId, LookupOptionsActionForm lookupOptionsActionForm)
+	{
+		lookupOptionsActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, localeId));
+		lookupOptionsActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, localeId));
+		lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, localeId));
+		
+	}
 
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
@@ -372,6 +394,7 @@ public class LookupOptionsAction extends BaseAction {
 		setHiddenFields(request);
 		
 		Short localeId = getUserContext(request).getLocaleId();
+		setSpecialLables(localeId, lookupOptionsActionForm);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		PopulateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_SALUTATION);

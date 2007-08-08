@@ -2,6 +2,8 @@ package org.mifos.application.master;
 
 import java.util.Locale;
 
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -59,9 +61,29 @@ public class MessageLookup implements MessageSourceAware {
 	
 	public String lookup(LocalizedTextLookup namedObject, UserContext user) {
 		return lookup(namedObject, user.getPreferredLocale());
-
 	}
 
+	/*
+	 * Return a label for given label key.  Label keys are listed in
+	 * {@link ConfigurationConstants}.
+	 */
+	public String lookupLabel(String labelKey, Locale locale) {
+		try {
+			return MifosConfiguration.getInstance().getLabel(labelKey, locale);
+		}
+		catch (ConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/*
+	 * Return a label for given label key.  Label keys are listed in
+	 * {@link ConfigurationConstants}.
+	 */
+	public String lookupLabel(String labelKey, Short localeId) {
+		return MifosConfiguration.getInstance().getLabelValue(labelKey, localeId);
+	}
+	
 	/**
 	 * This is a dependency injection method used by Spring to
 	 * inject a MessageSource for resource bundle based message

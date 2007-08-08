@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(140);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(141);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4731,6 +4731,13 @@ INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,
   DESCRIPTION_LOOKUP_ID) 
   VALUES(218,99,592,592);
 INSERT INTO ROLES_ACTIVITY VALUES (218,1);
+
+INSERT INTO LOOKUP_VALUE VALUES(593,87,' ');
+INSERT INTO LOOKUP_VALUE_LOCALE VALUES(938,1,593,'Can define Accepted Payment Type');
+INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,
+  DESCRIPTION_LOOKUP_ID) 
+  VALUES(219,1,593,593);
+INSERT INTO ROLES_ACTIVITY VALUES (219,1);
 
 
 UPDATE REPORT SET REPORT_ACTIVE = 1;

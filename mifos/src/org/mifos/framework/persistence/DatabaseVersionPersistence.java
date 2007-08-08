@@ -27,7 +27,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 140;
+	public static final int APPLICATION_VERSION = 141;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(
@@ -60,6 +60,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade127());
 		register130(register);
 		register136(register);
+		register141(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -246,6 +247,14 @@ public class DatabaseVersionPersistence {
 			SecurityConstants.LOAN_MANAGEMENT, 
 			ENGLISH_LOCALE, 
 			"Can redo Loan disbursals"));
+	}
+	
+	private static void register141(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(141, 
+			SecurityConstants.CAN_DEFINE_ACCEPTED_PAYMENT_TYPE, 
+			SecurityConstants.ORGANIZATION_MANAGEMENT, 
+			ENGLISH_LOCALE, 
+			"Can define Accepted Payment Type"));
 	}
 
 	private final Connection connection;

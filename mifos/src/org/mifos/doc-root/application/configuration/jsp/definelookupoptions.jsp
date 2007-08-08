@@ -223,7 +223,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top" width="18%">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="configuration.ethnicity"
+									<mifos:mifoslabel name="${ConfigurationConstants.ETHINICITY}"
 										isColonRequired="Yes" />
 								</td>
 								<td valign="top">
@@ -305,7 +305,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top" width="18%">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="configuration.citizenship"
+									<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}"
 										isColonRequired="Yes" />
 								</td>
 								<td>
@@ -387,7 +387,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top" width="18%">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="configuration.handicapped"
+									<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}"
 										isColonRequired="Yes" />
 								</td>
 								<td width="82%">

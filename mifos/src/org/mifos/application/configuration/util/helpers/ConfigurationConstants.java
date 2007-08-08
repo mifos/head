@@ -5,6 +5,7 @@ public interface ConfigurationConstants {
 public static boolean  IS_LSM = false;
 public static boolean DOES_CENTERHIERARCHY_EXIST = true;
 
+// constants for label lookup
 public static final String BULKENTRY="BulkEntry";
 public static final String BRANCHOFFICE="BranchOffice";
 public static final String CENTER="Center";
@@ -25,6 +26,7 @@ public static final String EXTERNALID="ExternalId";
 public static final String SAVINGS="Savings";
 public static final String INTEREST="Interest";
 public static final String LOAN="Loan";
+
 public static final String KEY_NO_MESSAGE_FOR_THIS_KEY=
 	"No message exist for this key";
 public static final String SERVICE_CHARGE="Service Charge";
