@@ -147,16 +147,12 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		assertEquals(3, newQuestions.size());
 		assertEquals(questionText3, newQuestions.get(2).getQuestionText());
 		assertEquals(shortName3, newQuestions.get(2).getShortName());
-//		int badQuestionId = newQuestions.get(2).getQuestionId();
-//		System.out.println("badQuestionId: " + badQuestionId);
 		addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
 		addRequestParameter("method", "deleteNewQuestion");
 		actionPerform();
 		verifyNoActionErrors();
 		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		assertEquals(2, newQuestions.size());
-//		System.out.println(newQuestions.get(0).getQuestionText());
-//		System.out.println(newQuestions.get(1).getQuestionText());
 		
 		addRequestParameter("method", "createQuestions");
 		actionPerform();

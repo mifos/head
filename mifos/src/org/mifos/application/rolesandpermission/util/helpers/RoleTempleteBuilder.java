@@ -360,18 +360,17 @@ public class RoleTempleteBuilder {
 		childMap.put(id, lst);
 		for (int i = 0; i < lst.size(); i++) {
 			// check whether it is leaf
-
 			List<ActivityEntity> li = getChildren(l, lst.get(i).getId());
-			Short index = getIndex(lst.get(i).getId());
+			//Short index = getIndex(lst.get(i).getId());
 			if (li.size() == 0) {
 				// check whether checked or not
-				if (!currentActivites.contains(index)) {
+				if (!currentActivites.contains(lst.get(i).getId())) {
 					checked = false;
 				}
 
-				childMap.put(index, li);
+				childMap.put(lst.get(i).getId(), li);
 			} else {
-				if (!makeCheckTable(l, index, currentDepth)) {
+				if (!makeCheckTable(l, lst.get(i).getId(), currentDepth)) {
 					checked = false;
 				}
 			}

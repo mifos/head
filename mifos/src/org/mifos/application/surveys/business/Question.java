@@ -167,12 +167,10 @@ public class Question implements Serializable, Comparable<Question> {
 	@Override
 	public final boolean equals(Object o) {
 		if (o == null) {
-			System.out.println(false);
 			return false;
 		}
 		
 		if (!(o instanceof Question)) {
-			System.out.println(false);
 			return false;
 		}
 

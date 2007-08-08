@@ -96,7 +96,6 @@ public class PPIAction extends PersistenceAction {
 		try {
 			results = validator.validate((GenericActionForm)form);
 		} catch (SchemaValidationError e) {
-			System.out.println(e.makeActionMessages());
 			saveErrors(request, e.makeActionMessages());
 			request.setAttribute("countries", Arrays.asList(Country.values()));
 			return mapping.findForward("configure");

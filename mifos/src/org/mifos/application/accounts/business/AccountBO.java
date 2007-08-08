@@ -1164,18 +1164,16 @@ public class AccountBO extends BusinessObject {
 			credit = String
 					.valueOf(removeSign(financialTrxn.getPostedAmount()));
 		}
-		if (financialTrxn.getNotes() != null
-				&& !financialTrxn.getNotes().equals(""))
+		Short entityId =
+			financialTrxn.getAccountTrxn().getAccountActionEntity().getId();
+		if (financialTrxn.getNotes() != null &&
+				!financialTrxn.getNotes().equals("") &&
+				!entityId.equals(AccountActionTypes.
+						CUSTOMER_ACCOUNT_REPAYMENT.getValue()) && 
+				!entityId.equals(AccountActionTypes.LOAN_REPAYMENT.getValue())) {
 			notes = financialTrxn.getNotes();
-		if (financialTrxn.getAccountTrxn().getAccountActionEntity().getId()
-				.equals(
-						AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT
-								.getValue()) || 
-					financialTrxn.getAccountTrxn().getAccountActionEntity().getId()
-								.equals(
-										AccountActionTypes.LOAN_REPAYMENT
-												.getValue()))
-			notes = "-";
+		}
+		
 		transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(),
 				financialTrxn.getActionDate(), financialTrxn
 						.getFinancialAction()
