@@ -71,7 +71,7 @@
 								<tr>
 									<td class="headingorange">
 										<span class="heading"> 
-											<mifos:mifoslabel name="reports.upload" /> -
+											<mifos:mifoslabel name="reports.uploadReport" /> -
 										</span>  
 									<mifos:mifoslabel
 												name="reports.enterRInformation" /></td>

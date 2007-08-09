@@ -69,6 +69,7 @@ import org.mifos.application.productdefinition.struts.action.SavingsPrdAction;
 import org.mifos.application.productsmix.struts.action.ProductMixAction;
 import org.mifos.application.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.application.reports.struts.action.ReportsAction;
+import org.mifos.application.reports.struts.action.ReportsCategoryAction;
 import org.mifos.application.reports.struts.action.ReportsDataSourceAction;
 import org.mifos.application.reports.struts.action.ReportsParamsAction;
 import org.mifos.application.reports.struts.action.ReportsParamsMapAction;
@@ -255,6 +256,7 @@ public class ActivityMapper {
 		parseActionSecurity(CustomFieldsAction.getSecurity());
 		parseActionSecurity(PPIAction.getSecurity());
 		parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
+		parseActionSecurity(ReportsCategoryAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {

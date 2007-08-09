@@ -125,7 +125,9 @@
 		<form-bean name="reportsUploadActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm" />
 		<form-bean name="viewReportsActionForm" 
-				type= "org.mifos.application.reports.struts.actionforms.ViewReportsActionForm" />		
+				type= "org.mifos.application.reports.struts.actionforms.ViewReportsActionForm" />
+		<form-bean name="reportsCategoryActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm" />
 		<!-- End reports -->
 
 		<form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm" />
@@ -721,6 +723,14 @@
 		    <forward name="editprevious_success" path="/pages/application/reports/jsp/editReport.jsp" />
 		</action>
 		<!-- Birt Reports Action end-->
+		
+		<!-- Reports Catetory Action-->
+		<action path="/reportsCategoryAction" type="org.mifos.application.reports.struts.action.ReportsCategoryAction" 
+			name="reportsCategoryActionForm" parameter="method" scope="session">
+			<forward name="load_success" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
+		</action>
+		<!-- Reports Catetory Action END-->
+		
 	
 		<!--  Reports Params Action -->
 		<action path="/reportsParamsAction"
@@ -767,7 +777,7 @@
 		</action>
 		<!--  Reports Params Map Action End -->
 
-<!--  ReportsUploadAction -->
+		<!--  ReportsUploadAction -->
 		<action path="/reportsUploadAction"
 			type="org.mifos.application.reports.struts.action.ReportsUploadAction"
 			name="reportsUploadActionForm" parameter="method" scope="session"
@@ -1363,6 +1373,8 @@
 	<message-resources key="bulkEntryUIResources" parameter="org.mifos.application.bulkentry.util.resources.BulkEntryUIResources" />
 	<!-- Reports resources -->
 	<message-resources key="reportsUIResources" parameter="org.mifos.application.reports.util.resources.ReportsUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+	<!-- Reports Category resources -->
+	<message-resources key="reportsCategoryUIResources" parameter="org.mifos.application.reports.util.resources.ReportsCategoryUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<!-- Change Account Status resources -->
 	<message-resources key="accountStatusUIResources" parameter="org.mifos.application.accounts.loan.util.resources.AccountStatusUIResources"></message-resources>
 	<!-- Configuration -->

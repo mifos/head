@@ -46,7 +46,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class BirtReportsUploadAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+			.getLogger(LoggerConstants.REPORTSLOGGER);
 	private ReportsBusinessService reportsBusinessService;
 
 	public BirtReportsUploadAction() {

@@ -320,6 +320,13 @@
 								</a> | <html-el:link
 								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
                   </tr>
+                   <tr class="fontnormal">
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   <td width="97%"><a
+								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.category" />
+								</a> | <html-el:link
+								href="reportsCategoryAction.do?method=loadDefineNewCategoryPage"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
+                  </tr>
                 </table>
                 <br>
 

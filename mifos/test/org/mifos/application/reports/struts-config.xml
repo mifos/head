@@ -16,6 +16,15 @@
 		    <forward name="edit_success" path="/pages/application/reports/jsp/editReport.jsp" />	
 		</action>
     </action-mappings>
+    <form-beans> 
+		<form-bean name="reportsCategoryActionForm" type="org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm" />
+    </form-beans>
+    <action-mappings>
+		<action path="/reportsCategoryAction" type="org.mifos.application.reports.struts.action.ReportsCategoryAction" 
+			name="reportsCategoryActionForm" parameter="method" scope="session">
+			<forward name="load_success" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
+		</action>
+    </action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames" value="/WEB-INF/validation.xml,/WEB-INF/validator-rules.xml" />
 		<set-property property="stopOnFirstError" value="false" />

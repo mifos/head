@@ -459,4 +459,6 @@ public interface SecurityConstants {
 	
 	public final short CAN_DEFINE_ACCEPTED_PAYMENT_TYPE = 219;
 
+	public final short DEFINE_REPORT_CATEGORY = 220;
+
 }
