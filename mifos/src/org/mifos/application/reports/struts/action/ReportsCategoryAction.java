@@ -7,6 +7,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -39,17 +40,27 @@ public class ReportsCategoryAction extends BaseAction {
 		ActionSecurity security = new ActionSecurity("reportsCategoryAction");
 		security.allow("loadDefineNewCategoryPage",
 				SecurityConstants.DEFINE_REPORT_CATEGORY);
+		security.allow("preview", SecurityConstants.DEFINE_REPORT_CATEGORY);
 		return security;
 	}
-	
+
 	public ActionForward loadDefineNewCategoryPage(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		logger.debug("In ReportsAction:loadDefineNewCategoryPage Method: ");
-		//BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		//uploadForm.clear();
-//		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
-//				new ReportsPersistence().getAllReportCategories());
+		logger
+				.debug("In ReportsCategoryAction:loadDefineNewCategoryPage Method: ");
 		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsCategoryAction:preview Method: ");
+		ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
+		defineCategoryForm.clear();
+		String categoryName = defineCategoryForm.getCategoryName();
+		request.setAttribute("categoryName", categoryName);
+		return mapping.findForward(ActionForwards.preview_success.toString());
+
 	}
 }

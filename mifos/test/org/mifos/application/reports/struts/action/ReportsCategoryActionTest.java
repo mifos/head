@@ -19,4 +19,14 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/pages/application/reports/jsp/defineNewReportsCategory.jsp");
 		verifyNoActionErrors();
 	}
+	
+	public void testShouldPreviewSuccessIfCategoryNameIsNotNull() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryName", "hahaCategoryName");
+		actionPerform();
+		verifyForward("preview_success");
+		verifyForwardPath("/pages/application/reports/jsp/defineNewReportsCategoryPreview.jsp");
+		verifyNoActionErrors();
+	}
 }

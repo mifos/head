@@ -728,6 +728,7 @@
 		<action path="/reportsCategoryAction" type="org.mifos.application.reports.struts.action.ReportsCategoryAction" 
 			name="reportsCategoryActionForm" parameter="method" scope="session">
 			<forward name="load_success" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
+			<forward name="preview_success" path="/pages/application/reports/jsp/defineNewReportsCategoryPreview.jsp" />
 		</action>
 		<!-- Reports Catetory Action END-->
 		
