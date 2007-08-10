@@ -8,10 +8,6 @@
 
 <tiles:insert definition=".create">
 	<script type="text/javascript">
-	function goToPreviousPage(form) {
-		form.action = 'birtReportsUploadAction.do?method=previous';
-		form.submit();
-	}
 	function goToCancelPage(form){
 		form.action = "AdminAction.do?method=load";
 		form.submit();
@@ -19,7 +15,7 @@
 	</script>
   <tiles:put name="body" type="string">
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=upload">
+			action="/reportsCategoryAction.do?method=addNewCategory">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -41,7 +37,7 @@
 											<td><img src="pages/framework/images/timeline/tick.gif"
 												width="17" height="17" alt=""></td>
 											<td class="timelineboldgray"><mifos:mifoslabel
-												name="reports.information"/>
+												name="reportsCategory.information"/>
 												</td>
 										</tr>
 									</table>
@@ -53,7 +49,7 @@
 												src="pages/framework/images/timeline/orangearrow.gif"
 												width="17" height="17"></td>
 											<td class="timelineboldorangelight"><mifos:mifoslabel
-												name="reports.review&submit" /></td>
+												name="reportsCategory.review&submit" /></td>
 										</tr>
 									</table>
 									</td>
@@ -72,16 +68,16 @@
 								<tr>
 									<td class="headingorange">
 										<span class="heading"> 
-											<mifos:mifoslabel name="reports.uploadReport" /> -
+											<mifos:mifoslabel name="reportsCategory.defineNewReportCategory" /> -
 										</span>  
 									<mifos:mifoslabel
-												name="reports.review&submit" /></td>
+												name="reportsCategory.review&submit" /></td>
 								</tr>
 								<tr>
 									<td class="fontnormalbold"><span class="fontnormal">
-									    <mifos:mifoslabel name="reports.reviewStatement" />
-										<mifos:mifoslabel name="reports.clickSubmit" />
-										<mifos:mifoslabel name="reports.clickCancel" />
+									    <mifos:mifoslabel name="reportsCategory.reviewStatement" />
+										<mifos:mifoslabel name="reportsCategory.clickSubmit" />
+										<mifos:mifoslabel name="reportsCategory.clickCancel" />
 										</span>
 									</td>
 								</tr>
@@ -91,41 +87,27 @@
 								<tr>
 								    <td class="fontnormalbold"> 
 								    	<br />
-								       <mifos:mifoslabel name="reports.information" />
+								       <mifos:mifoslabel name="reportsCategory.name" />
+								       :
+								       <span class="fontnormal">
+										    <c:out value="${categoryName}" />
+								       </span>
 								    </td>
 								</tr>
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="ReportsUIResources" /> 
+											<html-el:errors bundle="reportsCategoryUIResources" /> 
 										</font>
-									</td>
-								</tr>
-							</table>
-							<table width="90%" border="0" cellspacing="0" cellpadding="3">
-								<tr class="fontnormal">
-									<td height="23" class="fontnormal"><mifos:mifoslabel
-										name="reports.labelTitle" />:<span class="fontnormal">
-	                                     <c:out value="${birtReportsUploadActionForm.reportTitle}" />
-	                                     <br /><mifos:mifoslabel
-										name="reports.reports" />
-	                                     <mifos:mifoslabel
-										name="reports.category" />:<span class="fontnormal">
-									    <c:out value="${category.reportCategoryName}" />
-                                    </td>
-								</tr>
-							    <tr class="fontnormal">
-									<td height="23" class="fontnormal">
-										<a href="#"><mifos:mifoslabel name="reports.ReportTemplate" /></a>
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td>
 										<input class="insidebuttn" type="button" onclick="javascript:history.go(-1)" 
-											value="<mifos:mifoslabel name="reports.editReportInformation" />" name="Button222"/>
+											value="<mifos:mifoslabel name="reportsCategory.editReportInformation" />" name="Button222"/>
 									</td>
 								</tr>
-						  </table><br>	
+							</table>
 						 <table width="90%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center" class="blueline">
@@ -137,11 +119,11 @@
 								<tr>
 									<td align="center"><html-el:submit styleClass="buttn"
 										style="width:70px;">
-										<mifos:mifoslabel name="reports.submit"></mifos:mifoslabel>
+										<mifos:mifoslabel name="reportsCategory.submit"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage(this.form);" property="cancelButton"
 										value="Cancel" styleClass="cancelbuttn" style="width:70px">
-										<mifos:mifoslabel name="reports.cancel"/>
+										<mifos:mifoslabel name="reportsCategory.cancel"/>
 									</html-el:button></td>
 								</tr>
 						</table><br>

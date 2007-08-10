@@ -95,7 +95,7 @@
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors	bundle="reportsUIResources" />	
+											<html-el:errors	bundle="reportsCategoryUIResources" />	
 										</font>
 									</td>
 								</tr>
