@@ -450,7 +450,7 @@ public class SavingsPrdAction extends BaseAction {
 				.debug("Load master data method of Savings Product Action called");
 	}
 
-	private List<GLCodeEntity> getGLCodes(short financialAction,
+	private List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction,
 			Short debitCredit) throws Exception {
 		prdDefLogger
 				.debug("getGLCodes method of Savings Product Action called");

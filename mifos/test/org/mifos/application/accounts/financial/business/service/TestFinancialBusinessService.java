@@ -349,7 +349,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			int roundingTrxns = 0;
 			for (FinancialTransactionBO finTrxn : financialTrxns) {
 				if (finTrxn.getFinancialAction().getId().equals(
-						FinancialActionConstants.ROUNDING))
+						FinancialActionConstants.ROUNDING.getValue()))
 					roundingTrxns++;
 				else
 					withdrawalTrxns++;

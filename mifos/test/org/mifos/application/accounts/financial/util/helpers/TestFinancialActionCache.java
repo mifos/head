@@ -18,26 +18,10 @@ public class TestFinancialActionCache extends MifosTestCase {
 		
 	}
 	
-	public void testFinancialActionCacheException() 
-	{
-	  try
-	  {
-			FinancialActionCache.addToCache(createFinancialAction());
-			
-			FinancialActionCache.getFinancialAction(new Short("55"));
-			assertFalse(true);
-	  }
-	  catch(FinancialException fin)
-	  {
-		  assertTrue(true);
-	  }
-		
-	}
-
 	
 	private FinancialActionBO createFinancialAction()
 	{
-		return (FinancialActionBO)HibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING);
+		return (FinancialActionBO)HibernateUtil.getSessionTL().get(FinancialActionBO.class,FinancialActionConstants.PRINCIPALPOSTING.value);
 
 	}
 

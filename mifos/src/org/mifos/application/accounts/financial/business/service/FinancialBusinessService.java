@@ -61,6 +61,7 @@ import org.mifos.application.accounts.financial.business.service.activity.Saving
 import org.mifos.application.accounts.financial.business.service.activity.WriteOffFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.framework.business.BusinessObject;
@@ -125,7 +126,7 @@ public class FinancialBusinessService extends BusinessService {
 			baseFinancialActivity.buildAccountEntries();
 	}
 
-	public List<GLCodeEntity> getGLCodes(short financialAction,
+	public List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction,
 			Short debitCredit) throws SystemException, ApplicationException {
 		List<GLCodeEntity> glCodeList = new ArrayList<GLCodeEntity>();
 		Set<COABO> applicableCategory = null;

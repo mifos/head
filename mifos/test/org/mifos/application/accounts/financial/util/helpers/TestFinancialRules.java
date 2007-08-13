@@ -8,15 +8,15 @@ public class TestFinancialRules extends MifosTestCase {
 	public void testGetCategoryAssociatedToActionBankbalanceSucess()
 			throws FinancialException {
 		assertEquals(FinancialRules.getCategoryAssociatedToAction(
-				FinancialActionConstants.PRINCIPALPOSTING, "debit"),
+				FinancialActionConstants.PRINCIPALPOSTING, FinancialRules.DEBIT),
 				CategoryConstants.BANKACCOUNTONE);
 	}
 
 	public void testGetCategoryAssociatedToActionException() {
 		try {
-			FinancialRules.getCategoryAssociatedToAction((short) -1, "debit");
-			assertTrue(false);
-		} catch (FinancialException fine) {
+			FinancialRules.getCategoryAssociatedToAction((short) -1, FinancialRules.DEBIT);
+			fail();
+		} catch (Exception fine) {
 
 			assertTrue(true);
 
@@ -26,10 +26,12 @@ public class TestFinancialRules extends MifosTestCase {
 	public void testGetCategoryAssociatedToActionLoanclientSucess()
 			throws FinancialException {
 		assertEquals(FinancialRules.getCategoryAssociatedToAction(
-				FinancialActionConstants.PRINCIPALPOSTING, "credit"),
+				FinancialActionConstants.PRINCIPALPOSTING, FinancialRules.CREDIT),
 				CategoryConstants.LOANSADVANCES);
 	}
 	
-	
+	public void testAllCategories() {
+		String[] transactionTypes = {FinancialRules.DEBIT, FinancialRules.CREDIT};
+	}
 
 }

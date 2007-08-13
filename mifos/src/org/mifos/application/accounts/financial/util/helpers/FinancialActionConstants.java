@@ -38,44 +38,46 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-public interface FinancialActionConstants {
-	public static final short PRINCIPALPOSTING = 1;
 
-	public static final short INTERESTPOSTING = 2;
+public enum FinancialActionConstants {
+	PRINCIPALPOSTING (1),
+	INTERESTPOSTING (2),
+	FEEPOSTING (3),
+	MISCFEEPOSTING (4),
+	PENALTYPOSTING (5),
+	MISCPENALTYPOSTING (6),
+	DISBURSAL (7),
+	ROUNDING (8),
+	MANDATORYDEPOSIT (9),
+	VOLUNTORYDEPOSIT (10),
+	MANDATORYWITHDRAWAL (11),
+	VOLUNTORYWITHDRAWAL (12),
+	REVERSAL_ADJUSTMENT (13),
+	SAVINGS_INTERESTPOSTING (14),
+	CUSTOMERACCOUNTMISCFEESPOSTING (16),
+	MANDATORYDEPOSIT_ADJUSTMENT (18),
+	VOLUNTORYDEPOSIT_ADJUSTMENT (19),
+	MANDATORYWITHDRAWAL_ADJUSTMENT (20),
+	VOLUNTORYWITHDRAWAL_ADJUSTMENT (21),
+	WRITEOFF (22);
+	
+	short value;
+	
+	private FinancialActionConstants(int value) {
+		this.value = (short)value;
+	}
 
-	public static final short FEEPOSTING = 3;
-
-	public static final short MISCFEEPOSTING = 4;
-
-	public static final short PENALTYPOSTING = 5;
-
-	public static final short MISCPENALTYPOSTING = 6;
-
-	public static final short DISBURSAL = 7;
+	public short getValue() {
+		return value;
+	}
 	
-	public static final short ROUNDING = 8;
+	public static FinancialActionConstants getFinancialAction(short value){
+		for (FinancialActionConstants financialActions : FinancialActionConstants.values()) {
+			if (financialActions.getValue() == value) {
+				return financialActions;
+			}
+		}
+		throw new RuntimeException("no financial action for " + value);
+	}
 	
-	public static final short MANDATORYDEPOSIT = 9;
-	
-	public static final short VOLUNTORYDEPOSIT = 10;
-	
-	public static final short MANDATORYWITHDRAWAL = 11;
-	
-	public static final short VOLUNTORYWITHDRAWAL = 12;
-	
-	public static final short REVERSAL_ADJUSTMENT = 13;
-	
-	public static final short SAVINGS_INTERESTPOSTING = 14;
-	
-	public static final short CUSTOMERACCOUNTMISCFEESPOSTING = 16;
-	
-	public static final short MANDATORYDEPOSIT_ADJUSTMENT = 18;
-	
-	public static final short VOLUNTORYDEPOSIT_ADJUSTMENT = 19;
-	
-	public static final short MANDATORYWITHDRAWAL_ADJUSTMENT = 20;
-	
-	public static final short VOLUNTORYWITHDRAWAL_ADJUSTMENT = 21;
-	
-	public static final short WRITEOFF = 22;
 }

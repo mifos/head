@@ -23,18 +23,7 @@ public class TestFinancialInitializer extends MifosTestCase {
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
 		assertEquals(financialActionPrincipal.getId().shortValue(),
-				FinancialActionConstants.PRINCIPALPOSTING);
-	}
-
-	public void testFinancialActionInitializerException() throws Exception {
-		try {
-			FinancialInitializer.initalizeFinancialAction(HibernateUtil
-					.getSessionTL());
-			FinancialActionCache.getFinancialAction(Short.valueOf("-1"));
-			assertTrue(false);
-		} catch (FinancialException e) {
-			assertTrue(true);
-		}
+				FinancialActionConstants.PRINCIPALPOSTING.value);
 	}
 
 	public void testCOAInitializerException() throws Exception {
@@ -55,7 +44,7 @@ public class TestFinancialInitializer extends MifosTestCase {
 		FinancialActionBO financialActionPrincipal = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 		assertEquals(financialActionPrincipal.getId().shortValue(),
-				FinancialActionConstants.PRINCIPALPOSTING);
+				FinancialActionConstants.PRINCIPALPOSTING.value);
 	}
 
 	public void testCOAInitializerForInvalidConnection() {

@@ -486,7 +486,7 @@ public class LoanPrdAction extends BaseAction {
 				.debug("Load Status list method of Loan Product Action called");
 	}
 
-	private List<GLCodeEntity> getGLCodes(short financialAction,
+	private List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction,
 			Short debitCredit) throws Exception {
 		prdDefLogger.debug("getGLCodes method of Loan Product Action called");
 		return new FinancialBusinessService().getGLCodes(financialAction,

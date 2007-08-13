@@ -55,10 +55,10 @@ public class FinancialActionCache {
 			financialCacheRepository.put(financialAction.getId(),financialAction);
 	}
 
-	public static FinancialActionBO getFinancialAction(short financialActionId)
+	public static FinancialActionBO getFinancialAction(FinancialActionConstants financialActionId)
 			throws FinancialException {
 		FinancialActionBO financialAction = financialCacheRepository
-				.get(financialActionId);
+				.get(financialActionId.getValue());
 		if (financialAction == null)
 			throw new FinancialException(
 					FinancialExceptionConstants.ACTIONNOTFOUND);
