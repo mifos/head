@@ -49,6 +49,8 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
+
 
 
 public class CustomFieldsActionForm extends BaseActionForm{
@@ -56,7 +58,62 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	private MifosLogger logger = MifosLogManager
 	.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 	
+	private String categoryType;
+	private String labelName;
+	private boolean mandatoryCheckBox;
+	private String defaultValue;
+	private String dataType;
 	
+	
+	public String getCategoryType() {
+		return categoryType;
+	}
+
+	public void setCategoryType(String categoryType) {
+		this.categoryType = categoryType;
+	}
+
+	public String getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String dataType) {
+		this.dataType = dataType;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public String getLabelName() {
+		return labelName;
+	}
+
+	public void setLabelName(String labelName) {
+		this.labelName = labelName;
+	}
+
+	public boolean isMandatoryCheckBox() {
+		return mandatoryCheckBox;
+	}
+
+	public void setMandatoryCheckBox(boolean mandatoryCheckBox) {
+		this.mandatoryCheckBox = mandatoryCheckBox;
+	}
+	
+	private void validateForPreview(ActionErrors errors) {
+		
+		if (StringUtils.isNullOrEmpty(getCategoryType()))
+			addError(errors, "configuration.category", "errors.mandatory_selectbox", new String[]{null});
+		if (StringUtils.isNullOrEmpty(getDataType()))
+			addError(errors, "configuration.datatype", "errors.mandatory_selectbox", new String[]{null});
+
+	}
+
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
@@ -66,15 +123,15 @@ public class CustomFieldsActionForm extends BaseActionForm{
 				.getParameter(Constants.CURRENTFLOWKEY));
 
 		ActionErrors errors = new ActionErrors();
-		if (method.equals(Methods.update.toString())) {
+		if (method.equals(Methods.preview.toString())) 
+		{
 			errors = super.validate(mapping, request);
-			
-		} 
+		}
+		
+
 		if (!errors.isEmpty()) {
 			request.setAttribute(Methods.method.toString(), method);
 		}
-
-		logger.debug("outside validate method");
 		return errors;
 	}
 	

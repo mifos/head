@@ -54,6 +54,10 @@
             <forward name="update_failure" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
             <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="loadDefineCustomFields_success" path="/pages/application/configuration/jsp/define_additional_fields.jsp" />
+            <forward name="loadDefineCustomFields_failure" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="preview_success" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="preview_failure" path="/pages/application/configuration/jsp/define_additional_fields.jsp"  />
         </action>
 	</action-mappings>
 	<!-- Configuration -->

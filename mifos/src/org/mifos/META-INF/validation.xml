@@ -1335,5 +1335,24 @@
                 </var>
             </field>
         </form>
+        <!-- Custom Fields Action Form -->
+		<form name="/customFieldsAction">
+		<field property="categoryType" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox" bundle="configurationUIResources" />
+				<arg0 key="configuration.category" />
+			</field>
+			<field property="labelName" depends="required">
+				<msg name="required" key="errors.mandatory_textbox" bundle="configurationUIResources" />
+				<arg0 key="configuration.label" />
+			</field>
+			<field property="dataType" depends="required">
+				<msg name="required" key="errors.mandatory_selectbox" bundle="configurationUIResources" />
+				<arg0 key="configuration.data_type" />
+			</field>
+			<field property="defaultValue" depends="required">
+				<msg name="required" key="errors.mandatory_textbox" bundle="configurationUIResources" />
+				<arg0 key="configuration.default_value" />
+			</field>
+		</form>
 	</formset>
 </form-validation>
