@@ -323,7 +323,7 @@
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
-								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.category" />
+								href="reportsCategoryAction.do?method=viewReportsCategory"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.category" />
 								</a> | <html-el:link
 								href="reportsCategoryAction.do?method=loadDefineNewCategoryPage"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
                   </tr>

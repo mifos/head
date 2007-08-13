@@ -55,6 +55,8 @@ public class ReportsCategoryAction extends BaseAction {
 		security.allow("preview", SecurityConstants.DEFINE_REPORT_CATEGORY);
 		security.allow("addNewCategory",
 				SecurityConstants.DEFINE_REPORT_CATEGORY);
+		security.allow("viewReportsCategory",
+				SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
 	}
 
@@ -87,19 +89,22 @@ public class ReportsCategoryAction extends BaseAction {
 		String categoryName = defineNewCategoryForm.getCategoryName();
 		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
 
-		
-		for (ReportsCategoryBO category : new ReportsPersistence().getAllReportCategories()) {
+
+		for (ReportsCategoryBO category : new ReportsPersistence()
+				.getAllReportCategories()) {
 			if (categoryName.equals(category.getReportCategoryName())) {
 				ActionErrors errors = new ActionErrors();
-				errors.add(ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST,
-						new ActionMessage(
-								ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST));
+				errors
+						.add(
+								ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST,
+								new ActionMessage(
+										ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST));
 				request.setAttribute(Globals.ERROR_KEY, errors);
 				return mapping.findForward(ActionForwards.preview_failure
 						.toString());
 			}
 		}
-		
+
 		int activityId = 0;
 		for (ActivityEntity activity : new RolesPermissionsBusinessService()
 				.getActivities()) {
@@ -128,5 +133,14 @@ public class ReportsCategoryAction extends BaseAction {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
 	}
+
+	public ActionForward viewReportsCategory(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		logger.debug("In ReportsCategoryAction:viewReportsCategory Method: ");
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
 
 }
