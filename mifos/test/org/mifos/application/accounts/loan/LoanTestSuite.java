@@ -7,6 +7,7 @@ import junit.textui.TestRunner;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBOForReversal;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBORedoDispersal;
 import org.mifos.application.accounts.loan.business.service.TestLoanBusinessService;
 import org.mifos.application.accounts.loan.persistence.TestLoanPersistence;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationActionTest;
@@ -40,7 +41,8 @@ public class LoanTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestLoanRepayTag.class);
 		testSuite.addTestSuite(MultipleLoanAccountsCreationActionTest.class);
 		testSuite.addTestSuite(TestLoanBOForReversal.class);
-		testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
+        testSuite.addTestSuite(TestLoanBORedoDispersal.class);
+        testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
 		return testSuite;
 	}
 }

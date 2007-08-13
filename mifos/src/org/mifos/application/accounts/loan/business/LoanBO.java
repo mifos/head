@@ -760,9 +760,6 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(e);
 		}
 
-		List<AccountTrxnEntity> loanTrxns = new ArrayList<AccountTrxnEntity>();
-		loanTrxns.add(loanTrxnDetailEntity);
-
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -817,13 +814,14 @@ public class LoanBO extends AccountBO {
 					AccountConstants.PAYMENT_RCVD,
 					AccountActionTypes.LOAN_REPAYMENT);
 
-			if (getPerformanceHistory() != null)
+			if (getPerformanceHistory() != null) {
 				getPerformanceHistory().setNoOfPayments(
 						getPerformanceHistory().getNoOfPayments() + 1);
-			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnel,
-					AccountConstants.LOAN_REPAYMENT, DateUtils
-							.getCurrentDateWithoutTimeStamp()));
+            }
+            LoanActivityEntity loanActivity = buildLoanActivity(accountPaymentEntity
+					.getAccountTrxns(), personnel, AccountConstants.LOAN_REPAYMENT,
+                    DateUtils.getCurrentDateWithoutTimeStamp());
+            addLoanActivity(loanActivity);
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
 			AccountStateEntity newAccountState = (AccountStateEntity) masterPersistence

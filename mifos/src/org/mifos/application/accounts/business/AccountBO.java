@@ -62,7 +62,10 @@ import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -81,6 +84,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -309,7 +313,37 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	public final void adjustPmnt(String adjustmentComment)
+    public PaymentData createPaymentData(Money amount, Date trxnDate,
+			String receiptId, Date receiptDate, Short paymentTypeId,
+			Short userId) throws ValidationException {
+        PersonnelBO personnel;
+        try {
+            personnel = new PersonnelPersistence().getPersonnel(userId);
+        } catch (PersistenceException e) {
+            // Generally this is the UserContext id, which shouldn't ever
+            // be invalid - for now just throw an unexpected validation error
+            throw new ValidationException(AccountConstants.ERROR_INVALID_PERSONNEL);
+        }
+        if (personnel == null) {
+            // see above catch clause
+            throw new ValidationException(AccountConstants.ERROR_INVALID_PERSONNEL);
+        }
+
+        PaymentData paymentData = new PaymentData(
+                amount, personnel, paymentTypeId, trxnDate);
+        paymentData.setRecieptDate(receiptDate);
+		paymentData.setRecieptNum(receiptId);
+		for (AccountActionDateEntity installment : getTotalInstallmentsDue()) {
+			if (this instanceof CustomerAccountBO) {
+				paymentData
+						.addAccountPaymentData(new CustomerAccountPaymentData(
+								installment));
+			}
+		}
+		return paymentData;
+	}
+
+    public final void adjustPmnt(String adjustmentComment)
 			throws AccountException {
 		if (isAdjustPossibleOnLastTrxn()) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

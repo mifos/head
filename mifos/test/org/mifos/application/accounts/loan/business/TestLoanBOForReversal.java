@@ -1,9 +1,5 @@
 package org.mifos.application.accounts.loan.business;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,12 +17,15 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanBOForReversal extends MifosTestCase {
 
@@ -44,7 +43,8 @@ public class TestLoanBOForReversal extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		userContext = TestObjectFactory.getContext();
-	}
+        initializeStatisticsService();
+    }
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -70,27 +70,44 @@ public class TestLoanBOForReversal extends MifosTestCase {
 	}
 
 	private void createInitialCustomers() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
-	}
+        long numberOfTransactions =
+            getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
+        // TODO: numberOfTransactions needs to be 0
+        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 5,
+                numberOfTransactions <= 5);
+    }
 
 	private void createLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		loan = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOANACC_APPROVED, startDate, loanOffering);
-	}
+        long numberOfTransactions =
+            getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
+        // TODO: numberOfTransactions needs to be 0, but is 8
+        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be less than: " + 8,
+                numberOfTransactions <= 8);
+    }
 
 	private void disburseLoan() throws AccountException {
-		loan.setUserContext(userContext);
+        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
+        loan.setUserContext(userContext);
 		loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group
 				.getPersonnel(), new Date(), Short.valueOf("1"));
-		HibernateUtil.commitTransaction();
+        long numberOfTransactions =
+            getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
+        assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0,
+                numberOfTransactions == 0);
+        HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 	}
 
