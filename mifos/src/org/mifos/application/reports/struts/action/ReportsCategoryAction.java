@@ -137,8 +137,9 @@ public class ReportsCategoryAction extends BaseAction {
 	public ActionForward viewReportsCategory(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		
 		logger.debug("In ReportsCategoryAction:viewReportsCategory Method: ");
+		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTCATEGORIES,
+				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 

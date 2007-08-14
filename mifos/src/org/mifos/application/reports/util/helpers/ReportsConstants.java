@@ -42,7 +42,8 @@ public interface ReportsConstants {
 	public String GETPATH_REPORTS="reportsAction";
 	public String GETREPORTPAGE="getReportPage";
 	public String GETALLREPORTS="getAllReports";
-	public String LISTOFREPORTS="listOfReports";	
+	public String LISTOFREPORTS="listOfReports";
+	public String LISTOFREPORTCATEGORIES="listOfReportCategories";
 ///ADDED BY MFTECH
 	public String GETALLREPORTSPARAMS = "getAllReportParams";
 	public String GETALLREPORTSDATASOURCE = "getAllReportDataSource";
