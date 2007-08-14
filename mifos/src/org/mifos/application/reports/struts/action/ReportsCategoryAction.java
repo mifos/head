@@ -159,19 +159,13 @@ public class ReportsCategoryAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In ReportsCategoryAction:edit Method: ");
-		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
-		String categoryName = reportsCategoryActionForm.getCategoryName();
-		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
-		reportsCategoryBO.setReportCategoryName(categoryName);
-		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
+	
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 	throws Exception {
 		logger.debug("In ReportsCategoryAction:editPreview Method: ");
 		return mapping.findForward(ActionForwards.editpreview_success.toString());
 	}
-
-
 }
