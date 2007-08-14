@@ -16,7 +16,7 @@
   	}
     </script>
 		<html-el:form method="post"
-			action="/reportsCategoryAction.do?method=edit"
+			action="/reportsCategoryAction.do?method=editPreview"
 			 enctype="multipart/form-data">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

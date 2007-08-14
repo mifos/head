@@ -60,6 +60,7 @@ public class ReportsCategoryAction extends BaseAction {
 		security.allow("confirmDeleteReportsCategory",
 				SecurityConstants.DELETE_REPORT_CATEGORY);
 		security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
+		security.allow("editPreview", SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
 	}
 
@@ -164,6 +165,12 @@ public class ReportsCategoryAction extends BaseAction {
 		reportsCategoryBO.setReportCategoryName(categoryName);
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
 		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+	throws Exception {
+		logger.debug("In ReportsCategoryAction:editPreview Method: ");
+		return mapping.findForward(ActionForwards.editpreview_success.toString());
 	}
 
 

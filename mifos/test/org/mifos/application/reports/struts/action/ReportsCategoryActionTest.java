@@ -96,7 +96,7 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		assertNull(((ReportsCategoryActionForm) getActionForm())
 				.getCategoryName());
 	}
-	
+
 	public void testShouldForwardToViewReportsCategoryPage() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "viewReportsCategory");
@@ -112,12 +112,33 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
 		verifyNoActionErrors();
 	}
-	
-	public void testShouldHaveReportCategoriesBOWhenViewReportsCategoryPage() throws Exception {
+
+	public void testShouldHaveReportCategoriesBOWhenViewReportsCategoryPage()
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "viewReportsCategory");
 		actionPerform();
-		assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
+		assertNotNull(getSession().getAttribute(
+				ReportsConstants.LISTOFREPORTCATEGORIES));
+	}
+
+	public void testShouldForwardToPreviewCategoryPage() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editPreview");
+		actionPerform();
+		verifyForwardPath("/pages/application/reports/jsp/edit_preview_reports_category.jsp");
+		verifyNoActionErrors();
+	}
+
+	public void testCategoryNameShouldEqualsToInputValueWhenDoEditPreivewAction()
+			throws Exception {
+		String categoryName = "hahaCategoryName";
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryName", categoryName);
+		actionPerform();
+		assertEquals(categoryName,
+				((ReportsCategoryActionForm) getActionForm()).getCategoryName());
 	}
 	
 	public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {
