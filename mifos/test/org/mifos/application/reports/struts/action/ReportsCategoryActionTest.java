@@ -96,7 +96,7 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		assertNull(((ReportsCategoryActionForm) getActionForm())
 				.getCategoryName());
 	}
-
+	
 	public void testShouldForwardToViewReportsCategoryPage() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "viewReportsCategory");
@@ -118,5 +118,13 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "viewReportsCategory");
 		actionPerform();
 		assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
+	}
+	
+	public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method","confirmDeleteReportsCategory");
+		actionPerform();
+		verifyForward("confirm_delete");
+		verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
 	}
 }

@@ -189,5 +189,6 @@ public enum ActionForwards {
 	viewCategory_success,
 	viewCategory_failure,
 	loadDefineCustomFields_success,
-	loadDefineCustomFields_failure;
+	loadDefineCustomFields_failure,
+	confirm_delete;
 }

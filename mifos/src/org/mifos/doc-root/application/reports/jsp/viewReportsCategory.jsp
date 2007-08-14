@@ -50,6 +50,11 @@
 		              		<br />
               			</span>
              		 	<table width="75%" border="0" cellpadding="3" cellspacing="0">
+             		 		<tr width="100%">
+								<td align="left" valign="top" colspan="2">
+									<font class="fontnormalRedBold"><html-el:errors bundle="adminUIResources" /></font>
+								</td>
+			   				</tr>
 	    		              <tr>
     	        		        <td height="30" colspan="2" class="blueline">
         	    		        	<strong>
@@ -69,7 +74,7 @@
 													<mifos:mifoslabel name = "reportsCategory.edit" bundle="reportsCategoryUIResources" />
 												</a>
 												|
-												<a href="reportsCategoryAction.do?method=delete&reportCategoryId=<c:out value="${reportCategory.reportCategoryId}" />">
+												<a href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&reportCategoryId=<c:out value="${reportCategory.reportCategoryId}" />">
 													<mifos:mifoslabel name = "reportsCategory.delete" bundle="reportsCategoryUIResources" />
 												</a>
 											</td>

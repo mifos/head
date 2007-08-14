@@ -57,6 +57,8 @@ public class ReportsCategoryAction extends BaseAction {
 				SecurityConstants.DEFINE_REPORT_CATEGORY);
 		security.allow("viewReportsCategory",
 				SecurityConstants.VIEW_REPORT_CATEGORY);
+		security.allow("confirmDeleteReportsCategory",
+				SecurityConstants.DELETE_REPORT_CATEGORY);
 		security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
 	}
@@ -145,6 +147,13 @@ public class ReportsCategoryAction extends BaseAction {
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
+	public ActionForward confirmDeleteReportsCategory(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
+		return mapping.findForward(ActionForwards.confirm_delete.toString());
+	}
+	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
