@@ -61,6 +61,8 @@ public class ReportsCategoryAction extends BaseAction {
 				SecurityConstants.DELETE_REPORT_CATEGORY);
 		security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		security.allow("editPreview", SecurityConstants.VIEW_REPORT_CATEGORY);
+		security
+				.allow("editThenSubmit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
 	}
 
@@ -151,21 +153,39 @@ public class ReportsCategoryAction extends BaseAction {
 	public ActionForward confirmDeleteReportsCategory(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) {
-		logger.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
+		logger
+				.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
 		return mapping.findForward(ActionForwards.confirm_delete.toString());
 	}
-	
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In ReportsCategoryAction:edit Method: ");
+		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
+		String reportCategoryId = request.getParameter("categoryId");
+		ReportsCategoryBO reportCategory = new ReportsPersistence().getReportCategoryByCategoryId(Short.valueOf(reportCategoryId));
+		reportsCategoryActionForm.setCategoryName(reportCategory.getReportCategoryName());
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
-	
+
 	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-	throws Exception {
+			throws Exception {
 		logger.debug("In ReportsCategoryAction:editPreview Method: ");
-		return mapping.findForward(ActionForwards.editpreview_success.toString());
+		return mapping.findForward(ActionForwards.editpreview_success
+				.toString());
+	}
+
+	public ActionForward editThenSubmit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsCategoryAction:editThenSubmit Method: ");
+		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
+		short reportCategoryId = reportsCategoryActionForm.getCategoryId();
+		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(reportCategoryId);
+		reportsCategoryBO.setReportCategoryName(reportsCategoryActionForm.getCategoryName());
+		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
+		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 }

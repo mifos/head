@@ -161,6 +161,12 @@ public class ReportsPersistenceTest extends MifosTestCase {
 		 assertEquals(reportId, report.getReportId());
 		 }
 	 
+	 public void testGetReportCategoryByCategoryId() {
+		 Short reportCategoryId = 1;
+		 ReportsCategoryBO reportCategory = reportsPersistence.getReportCategoryByCategoryId(reportCategoryId);
+		 assertEquals(reportCategoryId, reportCategory.getReportCategoryId());
+	 }
+	 
 	 public void testGetAllReports(){
 		 assertEquals(29,reportsPersistence.getAllReports().size());
 	 }

@@ -15,12 +15,14 @@ import org.mifos.framework.util.helpers.StringUtils;
 public class ReportsCategoryActionForm extends ValidatorActionForm {
 
 	private String categoryName;
+	private short categoryId;
 
 	public ReportsCategoryActionForm() {
 		super();
 	}
 
 	public void clear() {
+		categoryId = 0;
 		categoryName = null;
 	}
 
@@ -30,6 +32,14 @@ public class ReportsCategoryActionForm extends ValidatorActionForm {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+	
+	public short getCategoryId() {
+		return categoryId;
+	}
+	
+	public void setCategoryId(short categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	@Override

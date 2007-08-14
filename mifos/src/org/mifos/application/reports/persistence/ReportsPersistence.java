@@ -487,4 +487,10 @@ public class ReportsPersistence extends Persistence {
 		session = HibernateUtil.getSessionTL();
 		return (ReportsBO) session.load(ReportsBO.class, reportId);
 	}
+	
+	public ReportsCategoryBO getReportCategoryByCategoryId(Short reportCategoryId) {
+		Session session = null;
+		session = HibernateUtil.getSessionTL();
+		return (ReportsCategoryBO) session.load(ReportsCategoryBO.class, reportCategoryId);
+	}
 }

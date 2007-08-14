@@ -61,7 +61,7 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("categoryName", "Haha");
 		actionPerform();
 		verifyForward("create_success");
-		verifyForwardPath("/AdminAction.do?method=load");
+		verifyForwardPath("/reportsCategoryAction.do?method=viewReportsCategory");
 		verifyNoActionErrors();
 	}
 
@@ -108,7 +108,9 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 	public void testShouldForwardToEditReportsCategoryPages() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "edit");
+		addRequestParameter("categoryId", "1");
 		actionPerform();
+		verifyNoActionErrors();
 		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
 		verifyNoActionErrors();
 	}
@@ -139,6 +141,17 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertEquals(categoryName,
 				((ReportsCategoryActionForm) getActionForm()).getCategoryName());
+	}
+	
+	public void testShouldSubmitSuccessAfterEdit() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editThenSubmit");
+		addRequestParameter("categoryName", "Haha");
+		addRequestParameter("categoryId", "1");
+		actionPerform();
+		verifyForward("create_success");
+		verifyForwardPath("/reportsCategoryAction.do?method=viewReportsCategory");
+		verifyNoActionErrors();
 	}
 	
 	public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {

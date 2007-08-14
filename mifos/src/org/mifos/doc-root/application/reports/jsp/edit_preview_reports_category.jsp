@@ -15,13 +15,13 @@
 		form.submit();
 	}
 	function goToCancelPage(form){
-		form.action = "reportsCategoryAction.do?method=getViewReportsCategoryPage";
+		form.action = "reportsCategoryAction.do?method=viewReportsCategory";
 		form.submit();
   	}
     </script>
     
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=editThenUpload"
+			action="/reportsCategoryAction.do?method=editThenSubmit"
 			 enctype="multipart/form-data">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -30,7 +30,7 @@
 						<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 					</html-el:link> / </span> 
 					<span class="fontnormal8pt"><html-el:link href="reportsCategoryAction.do?method=getViewReportsCategoryPage">
-						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	bundle="reportsCategoryUIResources" />
+						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	/>
 					</html-el:link> / </span> 
 					<span class="fontnormal8ptbold">${reportsCategoryActionForm.categoryName}</span>
 					</td>
@@ -42,11 +42,11 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading">${reportsCategoryActionForm.categoryName} - </span><span class="headingorange">
-								<mifos:mifoslabel name="reportsCategory.editInformation" bundle="reportsCategoryUIResources" /></span>
+								<mifos:mifoslabel name="reportsCategory.editInformation" /></span>
 			  					  </td>
                         </tr>
                         <tr>
-                          <td class="fontnormal"><mifos:mifoslabel name="reportsCategory.previewReportCategory" bundle="reportsCategoryUIResources" /><span class="mandatorytext">
+                          <td class="fontnormal"><mifos:mifoslabel name="reportsCategory.previewReportCategory" /><span class="mandatorytext">
                           </td>
                         </tr>
 					</table>

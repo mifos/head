@@ -11,7 +11,7 @@
   
   	<script type="text/javascript">
 	function goToCancelPage(form){
-		form.action = "reportsCategoryAction.do?method=getViewReportsCategoryPage";
+		form.action = "reportsCategoryAction.do?method=viewReportsCategory";
 		form.submit();
   	}
     </script>

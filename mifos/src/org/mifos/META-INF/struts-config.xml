@@ -730,7 +730,7 @@
 			input="/reportsCategoryAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
 			<forward name="preview_success" path="/pages/application/reports/jsp/defineNewReportsCategoryPreview.jsp" />
-			<forward name="create_success" path="/AdminAction.do?method=load"/>
+			<forward name="create_success" path="/reportsCategoryAction.do?method=viewReportsCategory"/>
 			<forward name="preview_failure" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
 			<forward name="get_success" path="/pages/application/reports/jsp/viewReportsCategory.jsp" />
 			<forward name="confirm_delete" path="/pages/application/reports/jsp/confirmDeleteCategory.jsp" />

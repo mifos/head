@@ -70,7 +70,7 @@
 	                    						</span>
 		                    				</td>
 					                    	<td width="30%" class="blueline"> 
-												<a href="reportsCategoryAction.do?method=edit&categoryName=<c:out value="${reportCategory.reportCategoryName}" />">
+												<a href="reportsCategoryAction.do?method=edit&categoryId=<c:out value="${reportCategory.reportCategoryId}" />">
 													<mifos:mifoslabel name = "reportsCategory.edit" bundle="reportsCategoryUIResources" />
 												</a>
 												|
