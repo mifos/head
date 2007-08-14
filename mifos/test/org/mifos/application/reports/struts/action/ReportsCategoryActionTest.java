@@ -104,4 +104,11 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/pages/application/reports/jsp/viewReportsCategory.jsp");
 		verifyNoActionErrors();
 	}
+	
+	public void testShouldHaveReportCategoriesBOWhenViewReportsCategoryPage() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "viewReportsCategory");
+		actionPerform();
+		assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
+	}
 }
