@@ -15,6 +15,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -27,7 +28,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		boolean twoTables = false;
-		StringBuilder builder = new StringBuilder();
+		XmlBuilder html = new XmlBuilder();
 		Money totalPrincipal = new Money();
 		Money totalInterest = new Money();
 		Money totalFees = new Money();
@@ -50,44 +51,36 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						LoginConstants.USERCONTEXT)).getPreferredLocale();
 				if (list != null && list.size() != 0) {
 					// topmost table
-					builder
-							.append("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
-
+					html.startTag("table", "width","100%","border","0","cellspacing","0","cellpadding","0");
 					// Left side header
-					StringBuilder builderHeader1 = new StringBuilder();
-					builderHeader1
-							.append(
-									"<tr><td width=\"6%\" class=\"drawtablerowbold\">"
-											+ getLabel("loan.no", locale)
-											+ "</td>")
-							.append(
-									"<td width=\"18%\" class=\"drawtablerowbold\">"
-											+ getLabel("loan.due_date", locale)
-											+ "</td>")
-							.append(
-									"<td width=\"18%\" class=\"drawtablerowbold\">"
-											+ getLabel("loan.date_paid", locale)
-											+ "</td>")
-							.append(
-									"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"
-											+ getLabel("loan.principal", locale)
-											+ "</td>");
-
-					builderHeader1
-							.append("<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"
-									+ MifosConfiguration
-											.getInstance()
-											.getLabel(
-													ConfigurationConstants.INTEREST,
-													locale) + "</td>");
-
-					builderHeader1.append(
-							"<td width=\"14%\" align=\"right\" class=\"drawtablerowbold\">"
-									+ getLabel("loan.fees", locale) + "</td>")
-							.append(
-									"<td width=\"15%\" align=\"right\" class=\"drawtablerowbold\">"
-											+ getLabel("loan.total", locale)
-											+ "</td></tr>");
+					XmlBuilder htmlHeader1 =  new XmlBuilder();
+					htmlHeader1.startTag("tr");
+					htmlHeader1.startTag("td", "width" ,"6%","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.no", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"18%","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.due_date", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"18%","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.date_paid", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"15%","align","right","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.principal", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"14%","align","right","class","drawtablerowbold");
+					htmlHeader1.text(MifosConfiguration
+							.getInstance()
+							.getLabel(
+									ConfigurationConstants.INTEREST,
+									locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"14%","align","right","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.fees", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.startTag("td", "width" ,"15%","align","right","class","drawtablerowbold");
+					htmlHeader1.text(getLabel("loan.total", locale));
+					htmlHeader1.endTag("td");
+					htmlHeader1.endTag("tr");
 
 					for (AccountActionDateEntity acctDate : list) {
 						LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
@@ -102,12 +95,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					// check if at least the first installment is paid
 					LoanScheduleEntity firstInstallment = (LoanScheduleEntity) list
 							.get(0);
-
-					StringBuilder builder1 = new StringBuilder();
-					StringBuilder builder2 = new StringBuilder();
-
-					StringBuilder builderHeader2 = new StringBuilder();
-
+					XmlBuilder html1 = new XmlBuilder();
+					XmlBuilder html2 = new XmlBuilder();
+					XmlBuilder htmlHeader2 = new XmlBuilder();
 					if (firstInstallment.getTotalDueWithFees()
 							.getAmountDoubleValue() != firstInstallment
 							.getTotalScheduleAmountWithFees()
@@ -115,47 +105,53 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						twoTables = true;
 						// installments paid and running balance table is
 						// required
-						builderHeader2
-								.append(
-										"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
-												+ getLabel("loan.principal",
-														locale) + "</td>")
-								.append(
-										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
-												+ MifosConfiguration
-														.getInstance()
-														.getLabel(
-																ConfigurationConstants.INTEREST,
-																locale)
-												+ "</td>")
-								.append(
-										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
-												+ getLabel("loan.fees", locale)
-												+ "</td>")
-								.append(
-										"<td width=\"25%\" align=\"right\" class=\"drawtablerowbold\">"
-												+ getLabel("loan.total", locale)
-												+ "</td></tr>");
+						htmlHeader2.startTag("tr");
+						htmlHeader2.startTag("td", "width","25%","align","right","class","drawtablerowbold");
+						htmlHeader2.text(getLabel("loan.principal",
+								locale));
+						htmlHeader2.endTag("td");
+						htmlHeader2.startTag("td", "width" ,"25%","align","right","class","drawtablerowbold");
+						htmlHeader2.text(MifosConfiguration
+								.getInstance()
+								.getLabel(
+										ConfigurationConstants.INTEREST,
+										locale));
+						htmlHeader2.endTag("td");
+						htmlHeader2.startTag("td", "width" ,"25%","align","right","class","drawtablerowbold");
+						htmlHeader2.text(getLabel("loan.fees", locale));
+						htmlHeader2.endTag("td");
+						htmlHeader2.startTag("td", "width" ,"25%","align","right","class","drawtablerowbold");
+						htmlHeader2.text(getLabel("loan.total", locale));
+						htmlHeader2.endTag("td");
+						htmlHeader2.endTag("tr");
 
 					}
 
-					builder1
-							.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">&nbsp;</tr>");
-					builder2
-							.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">"
-									+ getLabel("loan.running_bal", locale)
-									+ "</tr>");
+					html1.startTag("tr");
+					html1.startTag("td", "colspan" ,"7","class","drawtablerowbold");
+					html1.nonBreakingSpace();
+					html1.endTag("td");
+					html1.endTag("tr");
+					html2.startTag("tr");
+					html2.startTag("td", "colspan" ,"4","class","drawtablerowbold");
+					html2.text(getLabel("loan.running_bal", locale));
+					html2.endTag("td");
+					html2.endTag("tr");
 
-					builder1.append(builderHeader1.toString());
-					builder2.append(builderHeader2.toString());
+					html1.append(htmlHeader1);
+					html2.append(htmlHeader2);
 
 					if (twoTables) {
-						builder1
-								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
-										+ getLabel("loan.instt_paid", locale)
-										+ "</tr>");
-						builder2
-								.append("<tr><td colspan=\"4\" class=\"drawtablerowbold\">&nbsp;</tr>");
+						html1.startTag("tr");
+						html1.startTag("td", "colspan" ,"7","class","drawtablerowbold");
+						html1.text(getLabel("loan.instt_paid", locale));
+						html1.endTag("td");
+						html1.endTag("tr");
+						html2.startTag("tr");
+						html2.startTag("td", "colspan" ,"4","class","drawtablerowbold");
+						html2.nonBreakingSpace();
+						html2.endTag("td");
+						html2.endTag("tr");
 					}
 
 					int index = 0;
@@ -169,9 +165,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
 									.getTotalScheduleAmountWithFees()
 									.getAmountDoubleValue()) {
 						
-						builder1.append(createInstallmentRow(installment,
-									true));
-						builder2.append(createRunningBalanceRow(installment,
+						html1.append(createInstallmentRow(installment,
+								true));
+						html2.append(createRunningBalanceRow(installment,
 								totalPrincipal, totalInterest, totalFees));
 						totalPrincipal = totalPrincipal.subtract(installment
 								.getPrincipalPaid());
@@ -196,16 +192,17 @@ public class LoanRepaymentTag extends BodyTagSupport {
 						dueInstallments = true;
 
 					if (dueInstallments) {
-						builder1
-								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
-										+ getLabel("loan.instt_due", locale)
-										+ "</tr>");
+						html1.startTag("tr");
+						html1.startTag("td", "colspan" ,"7","class","drawtablerowbold");
+						html1.text(getLabel("loan.instt_due", locale));
+						html1.endTag("td");
+						html1.endTag("tr");
 						while (index < list.size() - 1
 								&& !installment.isPaid()
 								&& installment.getActionDate().getTime() <= new java.util.Date()
 										.getTime()) {
 							index++;
-							builder1.append(createInstallmentRow(installment,
+							html1.append(createInstallmentRow(installment,
 									false));
 							installment = (LoanScheduleEntity) list.get(index);
 						}
@@ -217,142 +214,137 @@ public class LoanRepaymentTag extends BodyTagSupport {
 									.getTime())
 						futureInstallments = true;
 					if (futureInstallments) {
-						builder1
-								.append("<tr><td colspan=\"7\" class=\"drawtablerowbold\">"
-										+ getLabel("loan.future_install",
-												locale) + "</tr>");
+						html1.startTag("tr");
+						html1.startTag("td", "colspan" ,"7","class","drawtablerowbold");
+						html1.text(getLabel("loan.future_install", locale));
+						html1.endTag("td");
+						html1.endTag("tr");
 						while (index < list.size() - 1) {
 							index++;
-							builder1.append(createInstallmentRow(installment,
+							html1.append(createInstallmentRow(installment,
 									false));
 							installment = (LoanScheduleEntity) list.get(index);
 						}
 					}
 					// append the last transaction
 					if (!installment.isPaid()) {
-						builder1.append(createInstallmentRow(installment, false));
+						html1.append(createInstallmentRow(installment, false));
 					}
 
 					if (twoTables) {
 						// add a tr with 2 td for each of the 2 tables
-						builder
-								.append("<tr>")
-								.append("<td width=\"70%\">")
-								.append(
-										"<table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">")
-								.append(builder1.toString())
-								.append("</table>")
-								.append("</td>")
-								.append("<td width=\"25%\" valign=\"top\">")
-								.append(
-										"<table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">")
-								.append(builder2.toString()).append("</table>")
-								.append("</td>").append("</tr></table>");
+						html.startTag("tr");
+						html.startTag("td", "width" ,"70%");
+						html.startTag("table", "width" ,"95%","border","0","cellspacing","0","cellpadding","5");
+						html.append(html1);
+						html.endTag("table");
+						html.endTag("td");
+						html.startTag("td", "width" ,"25%","valign","top");
+						html.startTag("table", "width" ,"95%","border","0","cellspacing","0","cellpadding","5");
+						html.append(html2);
+						html.endTag("table");
+						html.endTag("td");
+						html.endTag("tr");
+						html.endTag("table");
 					} else {
-						builder
-								.append("<tr>")
-								.append("<td width=\"100%\">")
-								.append(
-										"<table width=\"95%\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">")
-								.append(builder1.toString()).append("</table>")
-								.append("</td>").append("</tr></table>");
+						html.startTag("tr");
+						html.startTag("td", "width" ,"100%");
+						html.startTag("table", "width" ,"95%","border","0","cellspacing","0","cellpadding","5");
+						html.append(html1);
+						html.endTag("table");
+						html.endTag("td");
+						html.endTag("tr");
+						html.endTag("table");
 
 					}
 				}
 			}
 
-			pageContext.getOut().write(builder.toString());
+			pageContext.getOut().write(html.toString());
 		} catch (Exception e) {
 			throw new JspException(e);
 		}
 		return SKIP_BODY;
 	}
 
-	 String createInstallmentRow(LoanScheduleEntity installment,
+	 XmlBuilder createInstallmentRow(LoanScheduleEntity installment,
 			boolean isPaymentMade) {
-		StringBuilder builder = new StringBuilder();
-		builder
-				.append("<tr><td width=\"6%\" class=\"drawtablerow\">")
-				.append(installment.getInstallmentId())
-				.append("</td>")
-				.append("<td width=\"15%\" class=\"drawtablerow\">")
-				.append(
-						DateUtils.getDBtoUserFormatString(installment
-						.getActionDate(), locale))
-				.append("</td>")
-				.append("<td width=\"15%\" class=\"drawtablerow\">")
-				.append(
-						(isPaymentMade && installment.getPaymentDate() != null ? DateUtils.getDBtoUserFormatString(installment
-						.getPaymentDate(), locale)
-								: "-"))
-				.append("</td>")
-				.append(
-						"<td width=\"16%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						isPaymentMade ? installment.getPrincipalPaid()
-								: installment.getPrincipalDue())
-				.append("</td>")
-				.append(
-						"<td width=\"15%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						isPaymentMade ? installment.getInterestPaid()
-								: installment.getInterestDue())
-				.append("</td>")
-				.append(
-						"<td width=\"15%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						isPaymentMade ? installment
-								.getTotalFeeAmountPaidWithMiscFee()
-								: installment.getTotalFeeDueWithMiscFeeDue())
-				.append("</td>")
-				.append(
-						"<td width=\"18%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						isPaymentMade ? installment.getPrincipalPaid().add(
-								installment.getInterestPaid()).add(
-								installment.getTotalFeeAmountPaidWithMiscFee())
-								: installment
-										.getPrincipalDue()
-										.add(installment.getInterestDue())
-										.add(
-												installment
-														.getTotalFeeDueWithMiscFeeDue()))
-				.append("</td></tr>");
-		return builder.toString();
+		 	XmlBuilder html = new XmlBuilder();
+		 	html.startTag("tr");
+			
+		 	html.startTag("td", "width" ,"6%","class","drawtablerow");
+		 	html.text(installment.getInstallmentId().toString());
+		 	html.endTag("td");
+			
+		 	html.startTag("td", "width" ,"15%","class","drawtablerow");
+		 	html.text(DateUtils.getDBtoUserFormatString(installment
+					.getActionDate(), locale).toString());
+		 	html.endTag("td");
+			
+		 	html.startTag("td", "width" ,"15%","class","drawtablerow");
+		 	html.text((isPaymentMade && installment.getPaymentDate() != null ? DateUtils.getDBtoUserFormatString(installment
+					.getPaymentDate(), locale)
+					: "-").toString());
+		 	html.endTag("td");
+
+		 	html.startTag("td", "width" ,"16%","align","right","class","drawtablerow");
+		 	html.text((isPaymentMade ? installment.getPrincipalPaid()
+					: installment.getPrincipalDue()).toString());
+		 	html.endTag("td");
+			
+		 	html.startTag("td", "width" ,"15%","align","right","class","drawtablerow");
+		 	html.text((isPaymentMade ? installment.getInterestPaid()
+					: installment.getInterestDue()).toString());
+		 	html.endTag("td");
+			
+		 	html.startTag("td", "width" ,"15%","align","right","class","drawtablerow");
+		 	html.text((isPaymentMade ? installment
+					.getTotalFeeAmountPaidWithMiscFee()
+					: installment.getTotalFeeDueWithMiscFeeDue()).toString());
+		 	html.endTag("td");
+			
+		 	html.startTag("td", "width" ,"18%","align","right","class","drawtablerow");
+		 	html.text((isPaymentMade ? installment.getPrincipalPaid().add(
+					installment.getInterestPaid()).add(
+							installment.getTotalFeeAmountPaidWithMiscFee())
+							: installment
+									.getPrincipalDue()
+									.add(installment.getInterestDue())
+									.add(
+											installment
+													.getTotalFeeDueWithMiscFeeDue())).toString());
+		 	html.endTag("td");
+			
+		 	html.endTag("tr");
+		return html;
 	}
 
-	 String createRunningBalanceRow(LoanScheduleEntity installment,
+	 XmlBuilder createRunningBalanceRow(LoanScheduleEntity installment,
 			Money totalPrincipal, Money totalInterest, Money totalFees) {
-		StringBuilder builder = new StringBuilder();
-		builder
-				.append(
-						"<tr><td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(totalPrincipal.subtract(installment.getPrincipalPaid()))
-				.append("</td>")
-				.append(
-						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(totalInterest.subtract(installment.getInterestPaid()))
-				.append("</td>")
-				.append(
-						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						totalFees.subtract(installment
-								.getTotalFeeAmountPaidWithMiscFee()))
-				.append("</td>")
-				.append(
-						"<td width=\"25%\" align=\"right\" class=\"drawtablerow\">")
-				.append(
-						totalPrincipal
-								.add(totalInterest)
-								.add(totalFees)
-								.subtract(installment.getPrincipalPaid())
-								.subtract(installment.getInterestPaid())
-								.subtract(
-										installment
-												.getTotalFeeAmountPaidWithMiscFee()))
-				.append("</td></tr>");
-
-		return builder.toString();
+		 	XmlBuilder html = new XmlBuilder();
+		 	html.startTag("tr");
+		 	html.startTag("td", "width" ,"25%","align","right","class","drawtablerow");
+		 	html.text(totalPrincipal.subtract(installment.getPrincipalPaid()).toString());
+		 	html.endTag("td");
+		 	html.startTag("td", "width" ,"25%","align","right","class","drawtablerow");
+		 	html.text(totalInterest.subtract(installment.getInterestPaid()).toString());
+		 	html.endTag("td");
+		 	html.startTag("td", "width" ,"25%","align","right","class","drawtablerow");
+		 	html.text(totalFees.subtract(installment
+					.getTotalFeeAmountPaidWithMiscFee()).toString());
+		 	html.endTag("td");
+		 	html.startTag("td", "width" ,"25%","align","right","class","drawtablerow");
+		 	html.text(totalPrincipal
+					.add(totalInterest)
+					.add(totalFees)
+					.subtract(installment.getPrincipalPaid())
+					.subtract(installment.getInterestPaid())
+					.subtract(
+							installment
+									.getTotalFeeAmountPaidWithMiscFee()).toString());
+		 	html.endTag("td");
+		 	html.endTag("tr");
+			return html;
 
 	}
 

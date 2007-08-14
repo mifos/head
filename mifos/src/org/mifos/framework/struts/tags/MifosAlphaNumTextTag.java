@@ -84,9 +84,7 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 		if(fieldConfig.isFieldHidden(getKeyhm()))
 			return EVAL_PAGE;
 		else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm()) ){
-			StringBuffer inputsForhidden=new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
-		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());
+			TagUtils.getInstance().write(this.pageContext,renderFieldHiddenMandatory());
 		}
 		//get User Preferred Locale
 		String preferredUserLocale=LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
@@ -95,8 +93,7 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 		//set the javascript function to be called on keypress
 		this.setOnkeypress("return FnCheckNumCharsOnPress(event,this);");
 		//load the javascript files required.
-		TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/func.js\"></script>");
-		TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/func_"+preferredUserLocale+".js\"></script>");
+		TagUtils.getInstance().write(this.pageContext,renderDoStartTag(preferredUserLocale));
 		
 		//return by calling the doStart() of the superclass
 		return super.doStartTag();
@@ -111,4 +108,19 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 	public void setKeyhm(String keyhm) {
 		this.keyhm = keyhm;
 	}
+	
+	public String renderFieldHiddenMandatory(){
+		XmlBuilder html = new XmlBuilder();
+		html.singleTag("input", "type","hidden","name",getKeyhm(),"value",getPropertyExpr());
+		return html.toString();
+	}
+	
+	public String renderDoStartTag(String preferredUserLocale){
+    	XmlBuilder html = new XmlBuilder();
+    	html.startTag("script", "src","pages/framework/js/func.js");
+    	html.endTag("script");
+    	html.startTag("script", "src","pages/framework/js/func_"+preferredUserLocale+".js");
+    	html.endTag("script");
+		return html.toString();
+    }
 }

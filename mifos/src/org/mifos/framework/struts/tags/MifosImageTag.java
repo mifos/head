@@ -114,11 +114,7 @@ public class MifosImageTag extends TagSupport
 	    	ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName());
 			path = resource.getString(getId());
 				try {
-					out.println("<html>");
-					out.println("<body>");
-					out.println("<img src="+path+">");
-					out.println("</body>");
-					out.println("</html>");
+					out.println(render());
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -128,6 +124,22 @@ public class MifosImageTag extends TagSupport
 			return(SKIP_BODY);
 			
 		}
+	    
+	    public String render(){
+			ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName());
+			path = resource.getString(getId());
+			XmlBuilder html = new XmlBuilder();
+			html.startTag("html");
+			html.startTag("body");
+			html.singleTag("img", "src",path);
+			html.endTag("body");
+			html.endTag("html");
+			return html.toString();
+		}
 }	
+
+
+
+
 
 

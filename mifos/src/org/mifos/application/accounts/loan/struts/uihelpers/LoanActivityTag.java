@@ -13,6 +13,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -23,7 +24,7 @@ public class LoanActivityTag extends BodyTagSupport{
 	
 	@Override
 	public int doStartTag() throws JspException {
-		StringBuilder builder = new StringBuilder();
+		XmlBuilder xmlBuilder = new XmlBuilder();
 		try {
 			String currentFlowKey = (String) pageContext.getRequest()
 			.getAttribute(Constants.CURRENTFLOWKEY);
@@ -33,39 +34,66 @@ public class LoanActivityTag extends BodyTagSupport{
 			Object object = flowManager.getFromFlow(currentFlowKey, LoanConstants.LOAN_ALL_ACTIVITY_VIEW);
 			if(null != object) {
 				locale = ((UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getPreferredLocale();
-				builder.append("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
-				builder
-						.append("<tr>")
-						.append("<td colspan=\"8\">&nbsp;</td>")
-						.append("<td colspan=\"4\" class=\"drawtablerowboldnoline\">"+getLabel("loan.running_bal",locale)+"</td>")
-						.append("</tr>")
-						.append("<tr class=\"drawtablerowbold\">")
-						.append("<td width=\"9%\" class=\"drawtablerowbold\">"+getLabel("loan.date",locale)+"</td>")
-						.append("<td width=\"19%\" class=\"drawtablerowbold\">"+getLabel("loan.activity",locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.penalty",locale)+"</td>")
-						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td>")
-						.append("<td width=\"4\" align=\"right\" class=\"fontnormalbold\">&nbsp;</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.principal",locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale)+"</td>")
-						.append("<td width=\"8%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.fees",locale)+"</td>")
-						.append("<td width=\"6%\" align=\"right\" class=\"drawtablerowbold\">"+getLabel("loan.total",locale)+"</td>")
-						.append("</tr>");
+				xmlBuilder.startTag("table", "width","100%","border","0","cellspacing","0","cellpadding","0");
+				xmlBuilder.startTag("tr");
+				xmlBuilder.startTag("td","colspan","8");
+				xmlBuilder.nonBreakingSpace();
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td", "colspan","4","class","drawtablerowboldnoline");
+				xmlBuilder.text(getLabel("loan.running_bal",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.endTag("tr");
+				xmlBuilder.startTag("tr" ,"class","drawtablerowbold");
+				xmlBuilder.startTag("td","width","9%","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.date",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","19%","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.activity",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.principal",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.fees",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.penalty",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","6%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.total",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","4","align","right","class","fontnormalbold");
+				xmlBuilder.nonBreakingSpace();
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.principal",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(MifosConfiguration.getInstance().getLabel(ConfigurationConstants.INTEREST,locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","8%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.fees",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.startTag("td","width","6%","align","right","class","drawtablerowbold");
+				xmlBuilder.text(getLabel("loan.total",locale));
+				xmlBuilder.endTag("td");
+				xmlBuilder.endTag("tr");
 				
 				List<LoanActivityView> loanRecentActivityViewSet = (List<LoanActivityView>) object;
 				Iterator<LoanActivityView> it = loanRecentActivityViewSet.iterator();
 				while(it.hasNext()) {
 					LoanActivityView loanActivityView = it.next();
-					builder.append("<tr valign=\"top\">");
-					builder.append(buildLeftHeaderRows(loanActivityView));
-					builder.append(buildRightHeaderRows(loanActivityView));
-					builder.append("</tr>");
+					xmlBuilder.startTag("tr", "valign","top");
+					xmlBuilder.append(buildLeftHeaderRows(loanActivityView));
+					xmlBuilder.append(buildRightHeaderRows(loanActivityView));
+					xmlBuilder.endTag("tr");
 				}
-				builder.append("</table>");
+				xmlBuilder.endTag("table");
 			}
-			pageContext.getOut().write(builder.toString());
+			pageContext.getOut().write(xmlBuilder.toString());
 			
 			
 		}catch(Exception e) {
@@ -74,44 +102,53 @@ public class LoanActivityTag extends BodyTagSupport{
 		return SKIP_BODY;
 	}
 	
-	 String buildLeftHeaderRows(LoanActivityView loanRecentActivityView) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder
-		.append("<td class=\"drawtablerow\">")
-		.append(DateUtils.getUserLocaleDate(locale, loanRecentActivityView.getActionDate().toString())).append("</td>")
-		.append("<td class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getActivity()).append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getPrincipal()).append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getInterest()).append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getFees()).append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getPenalty()).append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getTotal()).append("</td>")
-		.append("<td align=\"right\" class=\"fontnormalbold\"><br></td>");
-		return stringBuilder.toString();
+	 XmlBuilder buildLeftHeaderRows(LoanActivityView loanRecentActivityView) {
+			XmlBuilder xmlBuilder = new XmlBuilder();
+			xmlBuilder.startTag("td","class","drawtablerow");
+			xmlBuilder.text(DateUtils.getUserLocaleDate(locale, loanRecentActivityView.getActionDate().toString()));
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getActivity());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getPrincipal().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getInterest().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getFees().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getPenalty().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getTotal().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","fontnormalbold");
+			xmlBuilder.singleTag("br");
+			xmlBuilder.endTag("td");
+		return xmlBuilder;
 	}
 	
-	 String buildRightHeaderRows(LoanActivityView loanRecentActivityView) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getRunningBalancePrinciple())
-		.append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getRunningBalanceInterest())
-		.append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getRunningBalanceFees())
-		.append("</td>")
-		.append("<td align=\"right\" class=\"drawtablerow\">")
-		.append(loanRecentActivityView.getRunningBalancePrinciple().add(loanRecentActivityView.getRunningBalanceInterest()).add(loanRecentActivityView.getRunningBalanceFees()))
-		.append("</td>")
-		.append("<td align=\"right\" class=\"fontnormalbold\"><br></td>");
-		return stringBuilder.toString();
+	 XmlBuilder buildRightHeaderRows(LoanActivityView loanRecentActivityView) {
+		 XmlBuilder xmlBuilder = new XmlBuilder();
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getRunningBalancePrinciple().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getRunningBalanceInterest().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getRunningBalanceFees().toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","drawtablerow");
+			xmlBuilder.text(loanRecentActivityView.getRunningBalancePrinciple().add(loanRecentActivityView.getRunningBalanceInterest()).add(loanRecentActivityView.getRunningBalanceFees()).toString());
+			xmlBuilder.endTag("td");
+			xmlBuilder.startTag("td","align","right","class","fontnormalbold");
+			xmlBuilder.singleTag("br");
+			xmlBuilder.endTag("td");
+		return xmlBuilder;
 	}
 
 	private String  getLabel(String key,Locale locale) throws JspException{

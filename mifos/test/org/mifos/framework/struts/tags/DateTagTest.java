@@ -3,7 +3,9 @@ package org.mifos.framework.struts.tags;
 import java.util.Locale;
 
 import javax.servlet.jsp.JspException;
+import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
+import org.dom4j.DocumentException;
 import org.hibernate.Session;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -27,38 +29,21 @@ public class DateTagTest extends MifosTestCase {
 		HibernateUtil.closeSession(session);
 	}
 
-	public void testSimpleStyle() {
+	public void testSimpleStyle() throws DocumentException {
 		dateTag.setRenderstyle("simple");
-		assertEquals(
+		assertWellFormedFragment(dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y").toString());
+		assertEquals((
 			"<input type=\"text\" id=\"asdDD\" name=\"asdDD\" "
-				+ "maxlength=\"2\" size=\"2\" value=\"1\"  " 
+				+ "maxlength=\"2\" size=\"2\" value=\"1\" " 
 				+ "style=\"width:1.5em\""
-				+ "/>&nbsp;DD&nbsp;<input type=\"text\" "
-				+ "id=\"asdMM\" name=\"asdMM\" maxlength=\"2\" size=\"2\" value=\"1\"  "
-				+ "style=\"width:1.5em\"/>"
-				+ "&nbsp;MM&nbsp;"
+				+ " />\u00a0DD\u00a0<input type=\"text\" "
+				+ "id=\"asdMM\" name=\"asdMM\" maxlength=\"2\" size=\"2\" value=\"1\" "
+				+ "style=\"width:1.5em\" />"
+				+ "\u00a0MM\u00a0"
 				+ "<input type=\"text\" id=\"asdYY\" name=\"asdYY\" "
-				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  " 
+				+ "maxlength=\"4\" size=\"4\" value=\"2000\" " 
 				+ "style=\"width:3em\""
-				+ "/>&nbsp;YYYY&nbsp;",
-			dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y"));
-	}
-	
-	public void testSimpleMappedStyle() throws Exception {
-		dateTag.setRenderstyle("simplemapped");
-		assertEquals(
-			"<input type=\"text\" id=\"value(asd_DD)\" name=\"value(asd_DD)\" "
-				+ "maxlength=\"2\" size=\"2\" value=\"1\"  " 
-				+ "style=\"width:1.5em\""
-				+ "/>&nbsp;DD&nbsp;<input type=\"text\" "
-				+ "id=\"value(asd_MM)\" name=\"value(asd_MM)\" maxlength=\"2\" size=\"2\" value=\"1\"  "
-				+ "style=\"width:1.5em\"/>"
-				+ "&nbsp;MM&nbsp;"
-				+ "<input type=\"text\" id=\"value(asd_YY)\" name=\"value(asd_YY)\" "
-				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  " 
-				+ "style=\"width:3em\""
-				+ "/>&nbsp;YYYY&nbsp;",
-			dateTag.makeMappedUserFields("asd", "1", "1", "2000", "", "d/m/y"));
+				+ " />\u00a0YYYY\u00a0"),dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y").toString());
 	}
 	
 	public void testGetFormat() throws Exception {
@@ -86,7 +71,7 @@ public class DateTagTest extends MifosTestCase {
 		assertEquals("dd/MM/yy", format);
 	}
 
-	public void testPrepareOutputString() {
+	public void testPrepareOutputString() throws DocumentException {
 		dateTag.setKeyhm("keyHm");
 		assertEquals("keyHm", dateTag.getKeyhm());
 
@@ -94,38 +79,40 @@ public class DateTagTest extends MifosTestCase {
 		assertEquals("Disabled", dateTag.getIsDisabled());
 
 		dateTag.setIndexed(true);
-
+		assertWellFormedFragment(dateTag.prepareOutputString("asd", "asd", "asd", "asd","asd","asd","asd").toString());
 		assertEquals(
 			"<input type=\"text\" id=\"asdYY\" name=\"asdYY\" maxlength=\"4\" " +
 			"size=\"4\" value=\"asd\" onBlur=\"makeDateString('asdYY','asd','asd')\" " +
 			"style=\"width:3em\"" +
-			"/>&nbsp;YYYY&nbsp;" +
-			"<input type=\"hidden\" id=\"asd\" name=\"asd\" value=\"asd\"/>" +
-			"<input type=\"hidden\" id=\"asdFormat\" name=\"asdFormat\" value=\"asd\"/>" +
-			"<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\"asd\"/>",
-			dateTag.prepareOutputString("asd", "asd", "asd", "asd","asd","asd","asd"));
+			" />\u00a0YYYY\u00a0" +
+			"<input type=\"hidden\" id=\"asd\" name=\"asd\" value=\"asd\" />" +
+			"<input type=\"hidden\" id=\"asdFormat\" name=\"asdFormat\" value=\"asd\" />" +
+			"<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\"asd\" />",
+			dateTag.prepareOutputString("asd", "asd", "asd", "asd","asd","asd","asd").toString());
 	}
 	
-	public void testDoStartTag() throws JspException {
+	public void testDoStartTag() throws JspException, DocumentException {
 		UserContext userContext = new UserContext(Locale.UK);
 		dateTag.setRenderstyle("simple");
 		dateTag.setProperty("testdate");
 		assertEquals(
 			"<!-- simple style -->" +
 			"<input type=\"text\" id=\"testdateDD\" name=\"testdateDD\" " +
-			"maxlength=\"2\" size=\"2\" value=\"\"  " +
+			"maxlength=\"2\" size=\"2\" value=\"\" " +
 			"style=\"width:1.5em\"" +
-			"/>&nbsp;DD&nbsp;" +
+			" />\u00a0DD\u00a0" +
 			"" +
 			"<input type=\"text\" id=\"testdateMM\" name=\"testdateMM\" " +
-			"maxlength=\"2\" size=\"2\" value=\"\"  " +
+			"maxlength=\"2\" size=\"2\" value=\"\" " +
 			"style=\"width:1.5em\"" +
-			"/>&nbsp;MM&nbsp;" +
+			" />\u00a0MM\u00a0" +
 			"" +
 			"<input type=\"text\" id=\"testdateYY\" name=\"testdateYY\" " +
-			"maxlength=\"4\" size=\"4\" value=\"\"  style=\"width:3em\"" +
-			"/>&nbsp;YYYY&nbsp;", 
+			"maxlength=\"4\" size=\"4\" value=\"\" " +
+			"style=\"width:3em\"" +
+			" />\u00a0YYYY\u00a0", 
 			dateTag.render(userContext, null));
+		assertWellFormedFragment(dateTag.render(userContext, null));
 	}
 
 }

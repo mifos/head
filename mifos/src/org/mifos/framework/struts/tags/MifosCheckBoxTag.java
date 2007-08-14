@@ -26,12 +26,14 @@ public class MifosCheckBoxTag extends ELCheckboxTag {
 		if(fieldConfig.isFieldHidden(getKeyhm()))
 			return EVAL_PAGE;
 		else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm()) ){
-			StringBuffer inputsForhidden=new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
-		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());
+			TagUtils.getInstance().write(this.pageContext,renderInputsForhidden());
 		}
 		return super.doStartTag();
 	}
 	
-	
+	public String renderInputsForhidden(){
+		XmlBuilder html = new XmlBuilder();
+		html.singleTag("input", "type","hidden","name",getKeyhm(),"value",getPropertyExpr());
+		return html.toString();
+	}
 }

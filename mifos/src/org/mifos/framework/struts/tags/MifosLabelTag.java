@@ -157,9 +157,9 @@ public class MifosLabelTag extends BodyTagSupport {
 	public int doStartTag() throws JspException {
 
 		if (fieldConfig.isFieldHidden(getKeyhm())) {
-			StringBuilder label = new StringBuilder();
-			hideLabelColumn(label);
-			TagUtils.getInstance().write(pageContext, label.toString());
+			XmlBuilder html = new XmlBuilder();
+			hideLabelColumn(html);
+			TagUtils.getInstance().write(pageContext, html.toString());
 		} else {
 			StringBuilder label = new StringBuilder();
 			label.append(getLabel());
@@ -190,12 +190,13 @@ public class MifosLabelTag extends BodyTagSupport {
 	 */
 	protected String getLabel() throws JspException {
 
-		StringBuilder result = new StringBuilder();
+		XmlBuilder html = new XmlBuilder();
+		StringBuilder outputHtml = new StringBuilder();
 		// check if the field is hidden
 		if (LabelTagUtils.getInstance().isHidden(name, pageContext)) {
 			// if the field is hidden hide the tr associated with it.
-			hideLabelRow(result);
-			return result.toString();
+			hideLabelRow(html);
+			return html.toString();
 		}
 
 		// check if the field is mandatory by default
@@ -206,24 +207,29 @@ public class MifosLabelTag extends BodyTagSupport {
 					&& getIsManadatoryIndicationNotRequired().equalsIgnoreCase(
 							"yes")) {
 			} else
-				result
-						.append("<span class=\"mandatorytext\"><font color=\"#FF0000\">*</font></span>");
-
+			{	
+				html.startTag("span", "class","mandatorytext");
+				html.startTag("font","color","#FF0000");
+				html.text("*");
+				html.endTag("font");
+				html.endTag("span");
+			}
 		} else {
 			// if it is not mandatory check if it is configurable mandatory
 			if (LabelTagUtils.getInstance().isConfigurableMandatory(name,
 					pageContext)) {
 				// if the field is configurable mandatory add a hidden variable
 				// and *.
-				result
-						.append(
-								"<input type=\"hidden\" name=\"hidden_" + name
-										+ "\">")
-						.append(
-								"<span class=\"mandatorytext\"><font color=\"#FF0000\">*</font></span>");
+				html.singleTag("input","type" ,"hidden","name","hidden_"+name);
+				html.startTag("span", "class","mandatorytext");
+				html.startTag("font","color","#FF0000");
+				html.text("*");
+				html.endTag("font");
+				html.endTag("span");
 			}
 		}
-		result.append(LabelTagUtils.getInstance().getLabel(
+		outputHtml.append(html);
+		outputHtml.append(LabelTagUtils.getInstance().getLabel(
 				pageContext,
 				getLabelBundle(),
 				LabelTagUtils.getInstance().getUserPreferredLocaleObject(
@@ -235,10 +241,10 @@ public class MifosLabelTag extends BodyTagSupport {
 			// UserContext
 			// String locale =(UserContext)
 			// (pageContext.getSession().getAttribute("UserContext")).getLocale();
-			result.append(" ("
+			outputHtml.append(" ("
 					+ LabelTagUtils.getInstance().getCurrency("locale") + ") ");
 		}
-		return result.toString();
+		return outputHtml.toString();
 	}
 
 	/**
@@ -246,17 +252,19 @@ public class MifosLabelTag extends BodyTagSupport {
 	 * StringBuilder
 	 * 
 	 */
-	protected void hideLabelRow(StringBuilder result) {
-		result.append("<script language=\"javascript\">").append(
-				"document.getElementById(\"" + name + "\")").append(
-				".style.display=\"none\"").append("</script> ");
+	protected void hideLabelRow(XmlBuilder html) {
+		html.startTag("script", "language","javascript");
+		html.text("document.getElementById(\"" + name + "\")");
+		html.text(".style.display=\"none\"}");
+		html.endTag("script");
 	}
 
-	protected void hideLabelColumn(StringBuilder result) {
-		result.append("<script language=\"javascript\">").append(
-				"if(document.getElementById(\"" + getKeyhm() + "\")!=null){")
-				.append("document.getElementById(\"" + getKeyhm() + "\")")
-				.append(".style.display=\"none\";}").append("</script> ");
+	protected void hideLabelColumn(XmlBuilder html) {
+		html.startTag("script", "language","javascript");
+		html.text("if(document.getElementById(\"" + getKeyhm() + "\")!=null){");
+		html.text("document.getElementById(\"" + getKeyhm() + "\")");
+		html.text(".style.display=\"none\";}");
+		html.endTag("script");
 	}
 
 	protected String getLabelBundle() throws JspException {

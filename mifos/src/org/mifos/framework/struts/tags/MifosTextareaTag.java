@@ -25,11 +25,14 @@ public class MifosTextareaTag extends ELTextareaTag {
 		if(fieldConfig.isFieldHidden(getKeyhm()))
 			return EVAL_PAGE;
 		else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm()) ){
-			StringBuffer inputsForhidden=new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
-		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());
+			TagUtils.getInstance().write(this.pageContext,render());
 		}
 		return super.doStartTag();
 	}
 	
+	public String render(){
+		XmlBuilder html = new XmlBuilder();
+		html.singleTag("input", "type","hidden","name",getKeyhm(),"value",getPropertyExpr());
+		return html.toString();
+	}
 }

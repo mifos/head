@@ -52,7 +52,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPreferredLocale();
-		assertContains("100.0",loanRepaymentTag.createInstallmentRow( (LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),false ));
+		assertContains("100.0",loanRepaymentTag.createInstallmentRow( (LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),false ).toString());
 	}
 	
 	public void testcreateRunningBalanceRow(){
@@ -65,7 +65,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPreferredLocale();
-		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")));
+		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")).toString());
 	}
 
 	private LoanBO getLoanAccount(AccountState state, Date startDate,

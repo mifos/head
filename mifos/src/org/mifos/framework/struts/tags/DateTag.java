@@ -96,23 +96,23 @@ public class DateTag extends BaseInputTag {
 	@Override
 	public int doStartTag() throws JspException {
 		if (fieldConfig.isFieldHidden(getKeyhm())) {
-			StringBuffer inputsForhidden = new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""
-					+ getProperty() + "\" value=\"\"/>");
-			inputsForhidden.append("<input type=\"hidden\"  name=\""
-					+ getProperty() + "Format\" value=\"\"/>");
-			inputsForhidden.append("<input type=\"hidden\"  name=\""
-					+ getProperty() + "YY\" value=\"\"/>");
+		
+			
+			XmlBuilder htmlInputsForhidden = new XmlBuilder();
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty());
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty()+"Format","Value");
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty()+"YY","Value");
+		
 			TagUtils.getInstance().write(this.pageContext,
-					inputsForhidden.toString());
+					htmlInputsForhidden.toString());
 			return EVAL_PAGE;
 		} else if (!fieldConfig.isFieldHidden(getKeyhm())
 				&& fieldConfig.isFieldManadatory(getKeyhm())) {
-			StringBuffer inputsForhidden = new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""
-					+ getKeyhm() + "\" value=\"" + getProperty() + "\"/>");
+	
+			XmlBuilder htmlInputsForhidden = new XmlBuilder();
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",getKeyhm(),"Value",getProperty());
 			TagUtils.getInstance().write(this.pageContext,
-					inputsForhidden.toString());
+					htmlInputsForhidden.toString());
 		}
 
 		UserContext userContext = (UserContext) pageContext.getSession()
@@ -156,6 +156,7 @@ public class DateTag extends BaseInputTag {
 		if (getRenderstyle().equalsIgnoreCase("simple")) {
 			output = "<!-- simple style -->" +
 				makeUserFields(property, ddValue, mmValue, yyValue, "", format);
+			makeMappedUserFields(property, ddValue, mmValue, yyValue, "", format);
 		} else if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
 			output = "<!-- simple-mapped style -->" +
 				makeMappedUserFields(property, ddValue, mmValue, yyValue, "", format);
@@ -195,9 +196,10 @@ public class DateTag extends BaseInputTag {
 	public String prepareOutputString(String format, String dateName,
 			String ddValue, String mmValue, String yyValue, String separator,
 			String userfrmt) {
-
 		StringBuilder dateFunction = new StringBuilder();
-		dateFunction.append("onBlur=\"makeDateString(");
+	
+		dateFunction.append("onBlur,");
+		dateFunction.append("makeDateString(");
 		StringTokenizer tokenizer = new StringTokenizer(format, "/");
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
@@ -209,9 +211,8 @@ public class DateTag extends BaseInputTag {
 				dateFunction.append("'" + dateName + "YY',");
 			}
 		}
-
 		dateFunction.append("'" + dateName + "'");
-		dateFunction.append(",'" + separator + "')\"");
+		dateFunction.append(",'" + separator + "')");
 		String date = "";
 		if (ddValue != null && !ddValue.equals("") && mmValue != null
 				&& !mmValue.equals("") && yyValue != null
@@ -219,146 +220,146 @@ public class DateTag extends BaseInputTag {
 			date = DateUtils.createDateString(ddValue, mmValue, yyValue, format);
 		}
 		
-		StringBuilder output = new StringBuilder(makeUserFields(dateName,
-				ddValue, mmValue, yyValue, dateFunction.toString(), format));
+		XmlBuilder htmlBuilder = makeUserFields(dateName,
+				ddValue, mmValue, yyValue, dateFunction.toString(), format);
+		htmlBuilder.singleTag("input", "type","hidden","id",dateName,"name",dateName,"value",date);
+		htmlBuilder.singleTag("input", "type","hidden","id",dateName+"Format","name",dateName+"Format","value",format);
+		htmlBuilder.singleTag("input", "type","hidden","id","datePattern","name","datePattern","value",userfrmt);
 		
-		String hiddentext = "<input type=\"hidden\" id=\"" + dateName
-				+ "\" name=\"" + dateName + "\" value=\"" + date + "\"/>";
-		String hiddenformattext = "<input type=\"hidden\" id=\"" + dateName
-				+ "Format\" name=\"" + dateName + "Format\" value=\"" + format
-				+ "\"/>";
-		String hiddenpatterntext = "<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\""
-				+ userfrmt + "\"/>";
-
-		tokenizer = new StringTokenizer(format, "/");
-		output.append(hiddentext);
-		output.append(hiddenformattext);
-		output.append(hiddenpatterntext);
-		return output.toString();
+	
+		return htmlBuilder.toString();
 	}
 
-	public String makeUserFields(String dateName, String ddValue,
+	public XmlBuilder makeUserFields(String dateName, String ddValue,
 			String mmValue, String yyValue, String dateFunction,
 			String format) {
-		StringBuilder output = new StringBuilder();
-
+		
 		boolean disabled = getIsDisabled() != null
-				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
-
-		String daytext = "<input type=\"text\" id=\""
-				+ dateName
-				+ "DD\" name=\""
-				+ dateName
-				+ "DD\" "
-				+ "maxlength=\"2\" size=\"2\" value=\""
-				+ ddValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:1.5em\"";
+		&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
+		XmlBuilder htmlOutput = new XmlBuilder();
+		XmlBuilder htmlBuilderDay = new XmlBuilder();
+		XmlBuilder htmlBuilderMonth = new XmlBuilder();
+		XmlBuilder htmlBuilderYear = new XmlBuilder();
+		
+		if(dateFunction.equals("")){
+			if (disabled)
+				htmlBuilderDay.singleTag("input", "type","text","id",dateName+"DD","name",dateName+"DD","maxlength","2","size","2","value",ddValue,"style","width:1.5em","disabled","disabled");
+			else
+				htmlBuilderDay.singleTag("input", "type","text","id",dateName+"DD","name",dateName+"DD","maxlength","2","size","2","value",ddValue,"style","width:1.5em");
+			htmlBuilderDay.nonBreakingSpace();
+			htmlBuilderDay.text("DD");
+			htmlBuilderDay.nonBreakingSpace();
+			
+			if (disabled)
+				htmlBuilderMonth.singleTag("input", "type","text","id",dateName+"MM","name",dateName+"MM","maxlength","2","size","2","value",mmValue,"style","width:1.5em","disabled","disabled");
+			else
+				htmlBuilderMonth.singleTag("input", "type","text","id",dateName+"MM","name",dateName+"MM","maxlength","2","size","2","value",mmValue,"style","width:1.5em");
+			htmlBuilderMonth.nonBreakingSpace();
+			htmlBuilderMonth.text("MM");
+			htmlBuilderMonth.nonBreakingSpace();
+			
+			if (disabled)
+				htmlBuilderYear.singleTag("input", "type","text","id",dateName+"YY","name",dateName+"YY","maxlength","4","size","4","value",yyValue,"style","width:3em","disabled","disabled");
+			else
+				htmlBuilderYear.singleTag("input", "type","text","id",dateName+"YY","name",dateName+"YY","maxlength","4","size","4","value",yyValue,"style","width:3em");
+			htmlBuilderYear.nonBreakingSpace();
+			htmlBuilderYear.text("YYYY");
+			htmlBuilderYear.nonBreakingSpace();
+		}
+		else{
+			String strFirstPart =null;
+			String strSecondPart =null;
+			strFirstPart =dateFunction.substring(0, dateFunction.indexOf(","));
+			strSecondPart = dateFunction.substring(dateFunction.indexOf(",")+1);
+			
 		if (disabled)
-			daytext = daytext + "disabled";
-		daytext = daytext + "/>&nbsp;DD&nbsp;";
-		String monthtext = "<input type=\"text\" id=\""
-				+ dateName
-				+ "MM\" name=\""
-				+ dateName
-				+ "MM\" "
-				+ "maxlength=\"2\" size=\"2\" value=\""
-				+ mmValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:1.5em\"";
+			htmlBuilderDay.singleTag("input", "type","text","id",dateName+"DD","name",dateName+"DD","maxlength","2","size","2","value",ddValue,strFirstPart,strSecondPart,"style","width:1.5em","disabled","disabled");
+		else
+			htmlBuilderDay.singleTag("input", "type","text","id",dateName+"DD","name",dateName+"DD","maxlength","2","size","2","value",ddValue,strFirstPart,strSecondPart,"style","width:1.5em");
+		htmlBuilderDay.nonBreakingSpace();
+		htmlBuilderDay.text("DD");
+		htmlBuilderDay.nonBreakingSpace();
+		
 		if (disabled)
-			monthtext = monthtext + "disabled";
-		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
-		String yeartext = "<input type=\"text\" id=\""
-				+ dateName
-				+ "YY\" name=\""
-				+ dateName
-				+ "YY\" "
-				+ "maxlength=\"4\" size=\"4\" value=\""
-				+ yyValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:3em\"";
+			htmlBuilderMonth.singleTag("input", "type","text","id",dateName+"MM","name",dateName+"MM","maxlength","2","size","2","value",mmValue,strFirstPart,strSecondPart,"style","width:1.5em","disabled","disabled");
+		else
+			htmlBuilderMonth.singleTag("input", "type","text","id",dateName+"MM","name",dateName+"MM","maxlength","2","size","2","value",mmValue,strFirstPart,strSecondPart,"style","width:1.5em");
+		htmlBuilderMonth.nonBreakingSpace();
+		htmlBuilderMonth.text("MM");
+		htmlBuilderMonth.nonBreakingSpace();
+		
 		if (disabled)
-			yeartext = yeartext + "disabled";
-		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";
-
+			htmlBuilderYear.singleTag("input", "type","text","id",dateName+"YY","name",dateName+"YY","maxlength","4","size","4","value",yyValue,strFirstPart,strSecondPart,"style","width:3em","disabled","disabled");
+		else
+			htmlBuilderYear.singleTag("input", "type","text","id",dateName+"YY","name",dateName+"YY","maxlength","4","size","4","value",yyValue,strFirstPart,strSecondPart,"style","width:3em");
+		htmlBuilderYear.nonBreakingSpace();
+		htmlBuilderYear.text("YYYY");
+		htmlBuilderYear.nonBreakingSpace();
+		
+		}
+		
 		StringTokenizer tokenizer = new StringTokenizer(format, "/");
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
 			if (ch.equals("D") || ch.equals("d")) {
-				output.append(daytext);
+				htmlOutput.append(htmlBuilderDay);
 			} else if (ch.equals("M") || ch.equals("m")) {
-				output.append(monthtext);
+				htmlOutput.append(htmlBuilderMonth);
 			} else {
-				output.append(yeartext);
+				htmlOutput.append(htmlBuilderYear);
 			}
 		}
-		return output.toString();
+		return htmlOutput;
 	}
 	
 	public String makeMappedUserFields(String dateName, String ddValue,
 			String mmValue, String yyValue, String dateFunction,
 			String format) throws JspException {
-		StringBuilder output = new StringBuilder();
-
+		
+		XmlBuilder htmlOutput = new XmlBuilder();
+		XmlBuilder htmlBuilderDay = new XmlBuilder();
+		XmlBuilder htmlBuilderMonth = new XmlBuilder();
+		XmlBuilder htmlBuilderYear = new XmlBuilder();
 		boolean disabled = getIsDisabled() != null
 				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
 		
-		String daytext = "<input type=\"text\" id=\"value("
-				+ dateName
-				+ "_DD)\" name=\"value("
-				+ dateName
-				+ "_DD)\" "
-				+ "maxlength=\"2\" size=\"2\" value=\""
-				+ ddValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:1.5em\"";
 		if (disabled)
-			daytext = daytext + "disabled";
-		daytext = daytext + "/>&nbsp;DD&nbsp;";
-		String monthtext = "<input type=\"text\" id=\"value("
-				+ dateName
-				+ "_MM)\" name=\"value("
-				+ dateName
-				+ "_MM)\" "
-				+ "maxlength=\"2\" size=\"2\" value=\""
-				+ mmValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:1.5em\"";
+			htmlBuilderDay.singleTag("input", "type","text","id","value"+"("+dateName+"_DD)","name","value"+"("+dateName+"_DD)","maxlength","2","size","2","value",ddValue,"style","width:1.5em","disabled","disabled");
+		else
+			htmlBuilderDay.singleTag("input", "type","text","id","value"+"("+dateName+"_DD)","name","value"+"("+dateName+"_DD)","maxlength","2","size","2","value",ddValue,"style","width:1.5em");
+		htmlBuilderDay.nonBreakingSpace();
+		htmlBuilderDay.text("DD");
+		htmlBuilderDay.nonBreakingSpace();
+		
 		if (disabled)
-			monthtext = monthtext + "disabled";
-		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
-		String yeartext = "<input type=\"text\" id=\"value("
-				+ dateName
-				+ "_YY)\" name=\"value("
-				+ dateName
-				+ "_YY)\" "
-				+ "maxlength=\"4\" size=\"4\" value=\""
-				+ yyValue
-				+ "\" "
-				+ dateFunction
-				+ " style=\"width:3em\"";
+			htmlBuilderMonth.singleTag("input", "type","text","id","value"+"("+dateName+"_MM)","name","value"+"("+dateName+"_MM)","maxlength","2","size","2","value",mmValue,"style","width:1.5em","disabled","disabled");
+		else
+			htmlBuilderMonth.singleTag("input", "type","text","id","value"+"("+dateName+"_MM)","name","value"+"("+dateName+"_MM)","maxlength","2","size","2","value",mmValue,"style","width:1.5em");
+		htmlBuilderMonth.nonBreakingSpace();
+		htmlBuilderMonth.text("MM");
+		htmlBuilderMonth.nonBreakingSpace();
+		
 		if (disabled)
-			yeartext = yeartext + "disabled";
-		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";
+			htmlBuilderYear.singleTag("input", "type","text","id","value"+"("+dateName+"_YY)","name","value"+"("+dateName+"_YY)","maxlength","4","size","4","value",yyValue,"style","width:3em","disabled","disabled");
+		else
+			htmlBuilderYear.singleTag("input", "type","text","id","value"+"("+dateName+"_YY)","name","value"+"("+dateName+"_YY)","maxlength","4","size","4","value",yyValue,"style","width:3em");
+		htmlBuilderYear.nonBreakingSpace();
+		htmlBuilderYear.text("YY");
+		htmlBuilderYear.nonBreakingSpace();
+		
 
 		StringTokenizer tokenizer = new StringTokenizer(format, "/");
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
 			if (ch.equals("D") || ch.equals("d")) {
-				output.append(daytext);
+				htmlOutput.append(htmlBuilderDay);
 			} else if (ch.equals("M") || ch.equals("m")) {
-				output.append(monthtext);
+				htmlOutput.append(htmlBuilderMonth);
 			} else {
-				output.append(yeartext);
+				htmlOutput.append(htmlBuilderYear);
 			}
 		}
-		return output.toString();
+		return htmlOutput.toString();
 	}
-
+	
 }

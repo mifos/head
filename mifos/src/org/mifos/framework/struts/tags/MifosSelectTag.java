@@ -35,9 +35,7 @@ public class MifosSelectTag extends ELSelectTag {
 		if (fieldConfig.isFieldHidden(getKeyhm()))
 			return SKIP_BODY;
 		else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm()) ){
-			StringBuffer inputsForhidden=new StringBuffer();
-			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
-		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());
+			TagUtils.getInstance().write(this.pageContext,renderDoStartTag());
 		}
 		return super.doStartTag();
 	}
@@ -57,17 +55,29 @@ public class MifosSelectTag extends ELSelectTag {
         StringBuffer results = new StringBuffer();
         results.append("<option value= \"\">");
         String preferredUserLocale=LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
-        results.append(LabelTagUtils.getInstance().getLabel(pageContext,bundle,preferredUserLocale,name,null));
-        results.append("</option>");
-	
-        if (saveBody != null) {
-            results.append(saveBody);
-            saveBody = null;
-        }
-        
-        results.append("</select>");
-        
-        TagUtils.getInstance().write(pageContext, results.toString());
+        String label = (LabelTagUtils.getInstance().getLabel(pageContext,bundle,preferredUserLocale,name,null));
+        TagUtils.getInstance().write(pageContext, renderDoEndTag(label));
         return (EVAL_PAGE);
     }
+	
+	public String renderDoStartTag(){
+		XmlBuilder html = new XmlBuilder();
+		html.singleTag("input", "type","hidden","name",getKeyhm(),"value",getPropertyExpr());
+		return html.toString();
+	}
+	
+	public String renderDoEndTag(String label){
+		 XmlBuilder html = new XmlBuilder();
+		 StringBuilder outputHtml = new StringBuilder();
+	        html.startTag("option", "value","");
+	        html.text(label);
+	        html.endTag("option");
+	        outputHtml.append(html.toString());
+	         if (saveBody != null) {
+	        	 outputHtml.append(saveBody);
+	        	saveBody = null;
+	        }
+	         outputHtml.append("</select>");
+			return outputHtml.toString();
+	}
 }

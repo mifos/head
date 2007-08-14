@@ -116,8 +116,7 @@ public class MifosNumberTextTag extends ELTextTag {
 		//set the javascript function to be called on keypress
 		this.setOnkeypress("return FnCheckNumberOnPress(event);");
 		//load the javascript files required.
-		TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/func.js\"></script>");
-		TagUtils.getInstance().write(this.pageContext,"<script src=\"pages/framework/js/func_"+preferredUserLocale+".js\"></script>");
+		TagUtils.getInstance().write(this.pageContext,render(preferredUserLocale));
 		return super.doStartTag();
 	}
 	
@@ -130,5 +129,14 @@ public class MifosNumberTextTag extends ELTextTag {
         super.release();
         maxValue=null;
         minValue=null;
+    }
+    
+    public String render(String preferredUserLocale){
+    	XmlBuilder html = new XmlBuilder();
+    	html.startTag("script", "src","pages/framework/js/func.js");
+    	html.endTag("script");
+    	html.startTag("script", "src","pages/framework/js/func_"+preferredUserLocale+".js");
+    	html.endTag("script");
+		return html.toString();
     }
 }
