@@ -57,6 +57,7 @@ public class ReportsCategoryAction extends BaseAction {
 				SecurityConstants.DEFINE_REPORT_CATEGORY);
 		security.allow("viewReportsCategory",
 				SecurityConstants.VIEW_REPORT_CATEGORY);
+		security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
 	}
 
@@ -138,9 +139,22 @@ public class ReportsCategoryAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsCategoryAction:viewReportsCategory Method: ");
-		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTCATEGORIES,
+		request.getSession().setAttribute(
+				ReportsConstants.LISTOFREPORTCATEGORIES,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsCategoryAction:edit Method: ");
+		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
+		String categoryName = reportsCategoryActionForm.getCategoryName();
+		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
+		reportsCategoryBO.setReportCategoryName(categoryName);
+		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
+		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 
 

@@ -96,12 +96,20 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		assertNull(((ReportsCategoryActionForm) getActionForm())
 				.getCategoryName());
 	}
-	
+
 	public void testShouldForwardToViewReportsCategoryPage() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "viewReportsCategory");
 		actionPerform();
 		verifyForwardPath("/pages/application/reports/jsp/viewReportsCategory.jsp");
+		verifyNoActionErrors();
+	}
+
+	public void testShouldForwardToEditReportsCategoryPages() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "edit");
+		actionPerform();
+		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
 		verifyNoActionErrors();
 	}
 	

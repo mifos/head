@@ -28,6 +28,7 @@
 			<forward name="create_success" path="/AdminAction.do?method=load"/>
 			<forward name="preview_failure" path="/pages/application/reports/jsp/defineNewReportsCategory.jsp" />
 			<forward name="get_success" path="/pages/application/reports/jsp/viewReportsCategory.jsp" />
+			<forward name="edit_success" path="/pages/application/reports/jsp/editReportsCategory.jsp" />
 		</action>
     </action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

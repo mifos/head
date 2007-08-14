@@ -16,7 +16,7 @@
   	}
     </script>
 		<html-el:form method="post"
-			action="/birtReportsUploadAction.do?method=editpreview"
+			action="/reportsCategoryAction.do?method=edit"
 			 enctype="multipart/form-data">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -76,8 +76,7 @@
 									    <mifos:mifoslabel
 										name="reportsCategory.name" />:</td>
 									<td>
-										<!--html-el:text styleId="111" property="categoryName" maxlength="200"/-->
-										<html-el:text styleId="111" property="reportTitle" maxlength="200"/>
+										<html-el:text styleId="111" property="categoryName" maxlength="200"/>
 									</td>
 								</tr>
 						  </table><br>	
