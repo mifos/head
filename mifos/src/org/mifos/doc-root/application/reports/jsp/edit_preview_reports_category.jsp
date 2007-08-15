@@ -29,7 +29,7 @@
 					<html-el:link href="AdminAction.do?method=load">
 						<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 					</html-el:link> / </span> 
-					<span class="fontnormal8pt"><html-el:link href="reportsCategoryAction.do?method=getViewReportsCategoryPage">
+					<span class="fontnormal8pt"><html-el:link href="reportsCategoryAction.do?method=viewReportsCategory">
 						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	/>
 					</html-el:link> / </span> 
 					<span class="fontnormal8ptbold">${reportsCategoryActionForm.categoryName}</span>

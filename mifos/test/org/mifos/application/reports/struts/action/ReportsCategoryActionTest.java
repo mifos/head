@@ -205,4 +205,21 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		String[] errors = { ReportsConstants.ERROR_CATEGORYNAMENOTEDIT };
 		verifyActionErrors(errors);
 	}
+	
+	public void testShouldPreviewSuccessAfterEdit()
+	throws Exception{
+		setRequestPathInfo("/reportsCategoryAction.do");
+		
+		ReportsCategoryActionForm form = new ReportsCategoryActionForm();
+		String categoryName = "Not Null";
+		form.setCategoryName(categoryName);
+		form.setCategoryId((short)1);
+		setActionForm(form);
+		
+		addRequestParameter("method", "editPreview");
+		
+		actionPerform();
+		verifyForwardPath("/pages/application/reports/jsp/edit_preview_reports_category.jsp");
+		verifyNoActionErrors();
+	}
 }
