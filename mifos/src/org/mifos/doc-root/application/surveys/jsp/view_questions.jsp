@@ -28,12 +28,14 @@
 	<br><span class="fontnormal">
               <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
                <a href="questionsAction.do?method=defineQuestions">
-               <mifos:mifoslabel name="Surveys.definequestion"/></div>
+               <mifos:mifoslabel name="Surveys.definequestion"/></a></div>
       <c:if test="${requestScope.itemCount > 0}">
         <br/>
         <span class="fontnormal" style="color:orange; font-weight:bold">
           <mifos:mifoslabel name="Surveys.newquestionsmsgprefix"/> <c:out value="${requestScope.itemCount}"/> <mifos:mifoslabel name="Surveys.newquestionsmsgsuffix"/>
-        </span>
+        </span><br>
+        <a href="questionsAction.do?method=create_entry">
+        <mifos:mifoslabel name="Surveys.definenewsurvey"/></a>
       </c:if>
 
       <br/>
