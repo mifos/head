@@ -162,6 +162,19 @@ public class ReportsCategoryAction extends BaseAction {
 				.getReportCategoryByCategoryId(Short
 						.valueOf(reportsCategoryActionForm.getCategoryId()));
 
+		reportsCategoryActionForm.setCategoryName(reportsCategoryBO
+				.getReportCategoryName());
+
+		if (!isValidToDelete(request, reportsCategoryBO)) {
+			return mapping
+					.findForward(ActionForwards.confirm_delete.toString());
+		}
+
+		return mapping.findForward(ActionForwards.confirm_delete.toString());
+	}
+
+	private boolean isValidToDelete(HttpServletRequest request,
+			ReportsCategoryBO reportsCategoryBO) {
 		if (!reportsCategoryBO.getReportsSet().isEmpty()) {
 			ActionErrors errors = new ActionErrors();
 			errors
@@ -169,10 +182,9 @@ public class ReportsCategoryAction extends BaseAction {
 							new ActionMessage(
 									ReportsConstants.ERROR_CATEGORYHASREPORTS));
 			request.setAttribute(Globals.ERROR_KEY, errors);
+			return false;
 		}
-		reportsCategoryActionForm.setCategoryName(reportsCategoryBO
-				.getReportCategoryName());
-		return mapping.findForward(ActionForwards.confirm_delete.toString());
+		return true;
 	}
 
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
@@ -237,13 +249,7 @@ public class ReportsCategoryAction extends BaseAction {
 				.getReportCategoryByCategoryId(Short
 						.valueOf(reportsCategoryActionForm.getCategoryId()));
 
-		if (!reportsCategoryBO.getReportsSet().isEmpty()) {
-			ActionErrors errors = new ActionErrors();
-			errors
-					.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
-							new ActionMessage(
-									ReportsConstants.ERROR_CATEGORYHASREPORTS));
-			request.setAttribute(Globals.ERROR_KEY, errors);
+		if (!isValidToDelete(request, reportsCategoryBO)) {
 			return mapping
 					.findForward(ActionForwards.confirm_delete.toString());
 		}
