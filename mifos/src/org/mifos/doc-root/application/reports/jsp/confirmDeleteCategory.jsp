@@ -49,22 +49,22 @@
 	<tiles:put name="body" type="string">
 	<script type="text/javascript">
 	function goToCancelPage(form){
-		form.action = "reportsCategoryAction.do?method=getViewReportsCategoryPage";
+		form.action = "reportsCategoryAction.do?method=viewReportsCategory";
 		form.submit();
 	}
 	</script>
-		<html-el:form action="/rolesPermission.do?method=delete">
+		<html-el:form method = "post" action="/reportsCategoryAction.do?method=deleteReportsCategory">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt">
 					<html-el:link href="AdminAction.do?method=load">
 						<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 					</html-el:link> / </span> 
-					<span class="fontnormal8pt"><html-el:link href="reportCategoryAction.do?method=getViewReportsCategoryPage">
+					<span class="fontnormal8pt"><html-el:link href="reportsCategoryAction.do?method=viewReportsCategory">
 						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	bundle="reportsCategoryUIResources" />
 					</html-el:link> / </span> 
 					 
-					<span class="fontnormal8ptbold">${reportsCategoryActionForm.categoryName}</span></td>
+					<span class="fontnormal8ptbold"><%=request.getParameter("categoryName")%></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -73,7 +73,7 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="50%" height="23" class="heading">
-							<c:out value="${reportsCategoryActionForm.categoryName}" />
+							<c:out value="<%=request.getParameter("categoryName")%>" />
 							-
 							<span class="headingorange">
 								<mifos:mifoslabel name="reportsCategory.deleteCategory"	bundle="reportsCategoryUIResources" />
@@ -104,14 +104,15 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit 
-								styleClass="buttn" style="width:70px;">
-								<mifos:mifoslabel name="reportsCategory.submit"
-									bundle="reportsCategoryUIResources" />
-
-
-							</html-el:submit> &nbsp; <html-el:button
-								onclick=" goToCancelPage()"  property="SS"
+							<td align="center">
+							<% if (null == request.getAttribute(org.apache.struts.Globals.ERROR_KEY)) { %>
+							<html-el:submit styleClass="buttn" style="width:70px;">
+								<mifos:mifoslabel name="reportsCategory.submit" bundle="reportsCategoryUIResources" />
+							</html-el:submit>
+							<% } %>
+							&nbsp;
+							<html-el:button
+								onclick="goToCancelPage(this.form)"  property="SS"
 								styleClass="cancelbuttn" style="width:70px;">
 
 								<mifos:mifoslabel name="reportsCategory.cancel"
@@ -123,6 +124,7 @@
 				</tr>
 			</table>
 			<br>
+			<input type="hidden" name="categoryName" value="<%=request.getParameter("categoryName")%>">
 		</html-el:form>
 	</tiles:put>
 

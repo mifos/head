@@ -61,6 +61,8 @@ public class ReportsCategoryAction extends BaseAction {
 				SecurityConstants.DELETE_REPORT_CATEGORY);
 		security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		security.allow("editPreview", SecurityConstants.VIEW_REPORT_CATEGORY);
+		security.allow("deleteReportsCategory",
+				SecurityConstants.DELETE_REPORT_CATEGORY);
 		security
 				.allow("editThenSubmit", SecurityConstants.VIEW_REPORT_CATEGORY);
 		return security;
@@ -155,6 +157,22 @@ public class ReportsCategoryAction extends BaseAction {
 			HttpServletResponse response) {
 		logger
 				.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
+		String categoryName = request.getParameter("categoryName");
+		for (ReportsCategoryBO category : new ReportsPersistence()
+				.getAllReportCategories()) {
+			if (category.getReportCategoryName().equals(categoryName)) {
+				if (!category.getReportsSet().isEmpty()) {
+					ActionErrors errors = new ActionErrors();
+					errors.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
+							new ActionMessage(
+									ReportsConstants.ERROR_CATEGORYHASREPORTS));
+					request.setAttribute(Globals.ERROR_KEY, errors);
+
+				}
+				break;
+			}
+		}
+
 		return mapping.findForward(ActionForwards.confirm_delete.toString());
 	}
 
@@ -176,6 +194,47 @@ public class ReportsCategoryAction extends BaseAction {
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
 	}
+
+	public ActionForward deleteReportsCategory(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("In ReportsCategoryAction:deleteReportsCategory Method: ");
+		String categoryName = request.getParameter("categoryName");
+		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
+		for (ReportsCategoryBO category : new ReportsPersistence()
+				.getAllReportCategories()) {
+			if (category.getReportCategoryName().equals(categoryName)) {
+				if (!category.getReportsSet().isEmpty()) {
+					ActionErrors errors = new ActionErrors();
+					errors.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
+							new ActionMessage(
+									ReportsConstants.ERROR_CATEGORYHASREPORTS));
+					request.setAttribute(Globals.ERROR_KEY, errors);
+					return mapping.findForward(ActionForwards.confirm_delete
+							.toString());
+				}
+				else {
+					reportsCategoryBO = category;
+					break;
+				}
+			}
+		}
+		
+		Connection conn = new ReportsPersistence().getConnection();
+		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+				reportsCategoryBO.getActivityId(),
+				SecurityConstants.REPORTS_MANAGEMENT,
+				DatabaseVersionPersistence.ENGLISH_LOCALE, categoryName)
+				.downgrade(conn);
+		new ReportsPersistence().delete(reportsCategoryBO);
+		
+		request.getSession().setAttribute(
+				ReportsConstants.LISTOFREPORTCATEGORIES,
+				new ReportsPersistence().getAllReportCategories());
+
+		return mapping.findForward(ActionForwards.delete_success.toString());
+	}
+
 
 	public ActionForward editThenSubmit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

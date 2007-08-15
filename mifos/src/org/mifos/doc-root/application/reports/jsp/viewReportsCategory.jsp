@@ -74,7 +74,7 @@
 													<mifos:mifoslabel name = "reportsCategory.edit" bundle="reportsCategoryUIResources" />
 												</a>
 												|
-												<a href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&reportCategoryId=<c:out value="${reportCategory.reportCategoryId}" />">
+												<a href="reportsCategoryAction.do?method=confirmDeleteReportsCategory&categoryName=<c:out value="${reportCategory.reportCategoryName}" />">
 													<mifos:mifoslabel name = "reportsCategory.delete" bundle="reportsCategoryUIResources" />
 												</a>
 											</td>
