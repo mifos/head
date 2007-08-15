@@ -154,11 +154,16 @@
 								<c:out value="${tabAllowed.prdOfferingName}" />
 								<br>
 							</c:forEach>
+							<br>
 							<c:if
 								test="${showMessage}">
 								<mifos:mifoslabel name="product.tocontinueclickonsubmit"
 								bundle="ProductDefUIResources" />
-								
+							</c:if>
+							<c:if
+								test="${showMessage}">
+								<mifos:mifoslabel name="product.othersprdwillbeupdatedauto"
+								bundle="ProductDefUIResources" />
 							</c:if>
 							</td>
 						</tr>
