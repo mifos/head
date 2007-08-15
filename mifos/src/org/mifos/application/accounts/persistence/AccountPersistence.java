@@ -223,4 +223,67 @@ public class AccountPersistence extends Persistence {
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 
+	public Short getAccountId(String accountName) {
+		Map nameToId = new HashMap<String,Short>();
+		
+		nameToId.put("ASSETS",(short)1);
+		nameToId.put("Cash and bank balances",(short)2);
+		nameToId.put("Petty Cash Accounts",(short)3);
+		nameToId.put("Cash 1",(short)4);
+		nameToId.put("Cash 2",(short)5);
+		nameToId.put("Bank Balances",(short)6);
+		nameToId.put("Bank Account 1",(short)7);
+		nameToId.put("Bank Account 2",(short)8);
+		nameToId.put("Loan Portfolio",(short)9);
+		nameToId.put("Loans and Advances",(short)10);
+		nameToId.put("Loans to clients",(short)11);
+		nameToId.put("Loan Loss Provisions ",(short)12);
+		nameToId.put("Write-offs",(short)13);
+		nameToId.put("LIABILITIES",(short)14);
+		nameToId.put("Interest Payable",(short)15);
+		nameToId.put("Interest payable on clients savings",(short)16);
+		nameToId.put("Interest on mandatory savings",(short)17);
+		nameToId.put("INCOME",(short)18);
+		nameToId.put("Direct Income",(short)19);
+		nameToId.put("Interest income from loans",(short)20);
+		nameToId.put("Interest on loans",(short)21);
+		nameToId.put("Penalty",(short)22);
+		nameToId.put("Income from micro credit & lending activities",(short)23);
+		nameToId.put("Fees",(short)24);
+		nameToId.put("Income from 999 Account",(short)25);
+		nameToId.put("Clients Deposits 1",(short)26);
+		nameToId.put("Clients Deposits 2",(short)27);
+		nameToId.put("Savings accounts ",(short)28);
+		nameToId.put("Mandatory Savings 1",(short)29);
+		nameToId.put("Mandatory Savings 2",(short)30);
+		nameToId.put("Mandatory Savings Accounts",(short)31);
+		nameToId.put("IGLoan",(short)32);
+		nameToId.put("ManagedICICI-IGLoan",(short)33);
+		nameToId.put("SPLoan",(short)34);
+		nameToId.put("ManagedICICI-SPLoan",(short)35);
+		nameToId.put("WFLoan",(short)36);
+		nameToId.put("Managed WFLoan",(short)37);
+		nameToId.put("Emergency Loans",(short)38);
+		nameToId.put("Special  Loans",(short)39);
+		nameToId.put("Micro Enterprises Loans",(short)40);
+		nameToId.put("Emergency Fund",(short)41);
+		nameToId.put("Margin Money-1",(short)42);
+		nameToId.put("Margin Money-2",(short)43);
+		nameToId.put("Village Development Fund",(short)44);
+		nameToId.put("Interest",(short)45);
+		nameToId.put("Processing Fees",(short)46);
+		nameToId.put("Annual Subscription Fee",(short)47);
+		nameToId.put("Emergency Loan Documentation Fee",(short)48);
+		nameToId.put("Sale of Publication",(short)49);
+		nameToId.put("Fines & Penalties",(short)50);
+		nameToId.put("Miscelleneous Income",(short)51);
+		nameToId.put("EXPENDITURE",(short)53);
+		nameToId.put("Direct Expenditure",(short)54);
+		nameToId.put("Cost of Funds",(short)55);
+		nameToId.put("Interest on clients voluntary savings",(short)56);
+		nameToId.put("Interest on clients mandatory savings",(short)57);
+		
+		return (Short)nameToId.get(accountName);
+		
+	}
 }

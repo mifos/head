@@ -26,4 +26,22 @@
         factory-method="getInstance">        
     </bean>
 
+
+    <bean id = "dynamicFinancialRules"
+        class="org.mifos.application.accounts.financial.util.helpers.DynamicFinancialRules"
+        abstract="false" lazy-init="default" autowire="default"
+        dependency-check="default"
+        >        
+        <property name="actionToCategoryNameDebit">
+            <map>
+                <entry key="PRINCIPALPOSTING" value="Bank Account 1"/>
+            </map>
+        </property>
+        <property name="actionToCategoryNameCredit">
+            <map>
+                <entry key="PRINCIPALPOSTING" value="Loans and Advances"/>
+            </map>
+        </property>
+    </bean>
+    
 </beans>
