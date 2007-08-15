@@ -47,7 +47,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.master.business.CustomFieldDefinitionEntityTest;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.FilePaths;

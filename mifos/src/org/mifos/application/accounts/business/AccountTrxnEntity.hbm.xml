@@ -45,11 +45,10 @@
 				class="org.mifos.application.accounts.business.AccountTrxnEntity"
 				lazy="true" cascade="all" insert="true" update="false" access="field" />
 				
-		<list name="financialTransactions" inverse="true" cascade="all" lazy="true" access="field" >   	
+		<set name="financialTransactions" inverse="true" cascade="all" lazy="true" access="field" order-by="TRXN_ID desc">
 			<key column="ACCOUNT_TRXN_ID"/>
-			<index column="TRXN_ID" />
 			<one-to-many class="org.mifos.application.accounts.financial.business.FinancialTransactionBO"/>
-		</list>
+		</set>
 		<joined-subclass
 			name="org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity"
 			table="LOAN_TRXN_DETAIL">

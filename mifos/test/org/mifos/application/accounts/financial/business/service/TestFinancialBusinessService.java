@@ -1,7 +1,7 @@
 package org.mifos.application.accounts.financial.business.service;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -341,7 +341,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			savings.changeStatus(AccountState.SAVINGS_ACC_CLOSED.getValue(),
 					AccountStateFlag.SAVINGS_REJECTED.getValue(), "");
 			financialBusinessService.buildAccountingEntries(accountTrxn);
-			List<FinancialTransactionBO> financialTrxns = accountTrxn
+			Set<FinancialTransactionBO> financialTrxns = accountTrxn
 					.getFinancialTransactions();
 			assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
 
@@ -411,7 +411,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);
-		List<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
+		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
 				.getFinancialTransactions();
 		assertEquals(finTrxnSet.size(), 2);
 		int countNegativeFinTrxn = 0;
