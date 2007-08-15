@@ -78,6 +78,7 @@
 							<span class="headingorange">
 								<mifos:mifoslabel name="reportsCategory.deleteCategory"	bundle="reportsCategoryUIResources" />
 							</span>
+							<% if (null == request.getAttribute(org.apache.struts.Globals.ERROR_KEY)) { %>
 							<br /><br />
 							<span class="fontnormalRedBold">
 								<mifos:mifoslabel name="reportsCategory.deleteCategoryConfirm" bundle="reportsCategoryUIResources" />
@@ -86,6 +87,7 @@
 							<span class="fontnormal">
 								<mifos:mifoslabel name="reportsCategory.deleteCategoryInstruction" bundle="reportsCategoryUIResources" />
 							</span>
+							<% } %>
 							</td>
 						</tr>
 						<tr>
