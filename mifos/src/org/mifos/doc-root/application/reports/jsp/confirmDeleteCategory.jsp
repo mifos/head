@@ -64,7 +64,7 @@
 						<mifos:mifoslabel name="reportsCategory.linkViewReportCategory"	bundle="reportsCategoryUIResources" />
 					</html-el:link> / </span> 
 					 
-					<span class="fontnormal8ptbold"><%=request.getParameter("categoryName")%></span></td>
+					<span class="fontnormal8ptbold">${reportsCategoryActionForm.categoryName}</span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -73,7 +73,7 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="50%" height="23" class="heading">
-							<c:out value="<%=request.getParameter("categoryName")%>" />
+							<c:out value="${reportsCategoryActionForm.categoryName}" />
 							-
 							<span class="headingorange">
 								<mifos:mifoslabel name="reportsCategory.deleteCategory"	bundle="reportsCategoryUIResources" />
@@ -126,7 +126,7 @@
 				</tr>
 			</table>
 			<br>
-			<input type="hidden" name="categoryName" value="<%=request.getParameter("categoryName")%>">
+			<input type="hidden" name="categoryId" value="<%=request.getParameter("categoryId")%>">
 		</html-el:form>
 	</tiles:put>
 

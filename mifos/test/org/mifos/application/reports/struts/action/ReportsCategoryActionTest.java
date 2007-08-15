@@ -157,22 +157,18 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 	public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method","confirmDeleteReportsCategory");
+		addRequestParameter("categoryId","1");
 		actionPerform();
 		verifyForward("confirm_delete");
 		verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
 	}
 	
-	public void testShouldForwardToViewReportCategoryPageWhenDeleteReportCategory() throws Exception {
-		String categoryName = "diandian";
-		setRequestPathInfo("/reportsCategoryAction.do");
-		addRequestParameter("method", "addNewCategory");
-		addRequestParameter("categoryName", categoryName);
-		actionPerform();
+	public void testShouldForwardToConfirmDeleteReportsCategoryPageWhenDeleteReportCategoryHasReports() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method","deleteReportsCategory");
-		addRequestParameter("categoryName", categoryName);
+		addRequestParameter("categoryId","1");
 		actionPerform();
-		verifyForward("delete_success");
-		verifyForwardPath("/pages/application/reports/jsp/viewReportsCategory.jsp");
+		verifyForward("confirm_delete");
+		verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
 	}
 }

@@ -157,22 +157,21 @@ public class ReportsCategoryAction extends BaseAction {
 			HttpServletResponse response) {
 		logger
 				.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
-		String categoryName = request.getParameter("categoryName");
-		for (ReportsCategoryBO category : new ReportsPersistence()
-				.getAllReportCategories()) {
-			if (category.getReportCategoryName().equals(categoryName)) {
-				if (!category.getReportsSet().isEmpty()) {
-					ActionErrors errors = new ActionErrors();
-					errors.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
+		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
+		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence()
+				.getReportCategoryByCategoryId(Short
+						.valueOf(reportsCategoryActionForm.getCategoryId()));
+
+		if (!reportsCategoryBO.getReportsSet().isEmpty()) {
+			ActionErrors errors = new ActionErrors();
+			errors
+					.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
 							new ActionMessage(
 									ReportsConstants.ERROR_CATEGORYHASREPORTS));
-					request.setAttribute(Globals.ERROR_KEY, errors);
-
-				}
-				break;
-			}
+			request.setAttribute(Globals.ERROR_KEY, errors);
 		}
-
+		reportsCategoryActionForm.setCategoryName(reportsCategoryBO
+				.getReportCategoryName());
 		return mapping.findForward(ActionForwards.confirm_delete.toString());
 	}
 
@@ -182,8 +181,10 @@ public class ReportsCategoryAction extends BaseAction {
 		logger.debug("In ReportsCategoryAction:edit Method: ");
 		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
 		String reportCategoryId = request.getParameter("categoryId");
-		ReportsCategoryBO reportCategory = new ReportsPersistence().getReportCategoryByCategoryId(Short.valueOf(reportCategoryId));
-		reportsCategoryActionForm.setCategoryName(reportCategory.getReportCategoryName());
+		ReportsCategoryBO reportCategory = new ReportsPersistence()
+				.getReportCategoryByCategoryId(Short.valueOf(reportCategoryId));
+		reportsCategoryActionForm.setCategoryName(reportCategory
+				.getReportCategoryName());
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 
@@ -199,35 +200,30 @@ public class ReportsCategoryAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsCategoryAction:deleteReportsCategory Method: ");
-		String categoryName = request.getParameter("categoryName");
-		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
-		for (ReportsCategoryBO category : new ReportsPersistence()
-				.getAllReportCategories()) {
-			if (category.getReportCategoryName().equals(categoryName)) {
-				if (!category.getReportsSet().isEmpty()) {
-					ActionErrors errors = new ActionErrors();
-					errors.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
+		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
+		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence()
+				.getReportCategoryByCategoryId(Short
+						.valueOf(reportsCategoryActionForm.getCategoryId()));
+
+		if (!reportsCategoryBO.getReportsSet().isEmpty()) {
+			ActionErrors errors = new ActionErrors();
+			errors
+					.add(ReportsConstants.ERROR_CATEGORYHASREPORTS,
 							new ActionMessage(
 									ReportsConstants.ERROR_CATEGORYHASREPORTS));
-					request.setAttribute(Globals.ERROR_KEY, errors);
-					return mapping.findForward(ActionForwards.confirm_delete
-							.toString());
-				}
-				else {
-					reportsCategoryBO = category;
-					break;
-				}
-			}
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping
+					.findForward(ActionForwards.confirm_delete.toString());
 		}
-		
+
 		Connection conn = new ReportsPersistence().getConnection();
 		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
 				reportsCategoryBO.getActivityId(),
 				SecurityConstants.REPORTS_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, categoryName)
-				.downgrade(conn);
+				DatabaseVersionPersistence.ENGLISH_LOCALE, reportsCategoryBO
+						.getReportCategoryName()).downgrade(conn);
 		new ReportsPersistence().delete(reportsCategoryBO);
-		
+
 		request.getSession().setAttribute(
 				ReportsConstants.LISTOFREPORTCATEGORIES,
 				new ReportsPersistence().getAllReportCategories());
@@ -242,8 +238,10 @@ public class ReportsCategoryAction extends BaseAction {
 		logger.debug("In ReportsCategoryAction:editThenSubmit Method: ");
 		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
 		short reportCategoryId = reportsCategoryActionForm.getCategoryId();
-		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(reportCategoryId);
-		reportsCategoryBO.setReportCategoryName(reportsCategoryActionForm.getCategoryName());
+		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence()
+				.getReportCategoryByCategoryId(reportCategoryId);
+		reportsCategoryBO.setReportCategoryName(reportsCategoryActionForm
+				.getCategoryName());
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
