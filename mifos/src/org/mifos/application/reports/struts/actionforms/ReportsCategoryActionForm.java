@@ -53,6 +53,7 @@ public class ReportsCategoryActionForm extends ValidatorActionForm {
 		String method = request.getParameter("method");
 
 		validateMethod(errors, Methods.preview.toString(), method);
+		validateMethod(errors, Methods.editPreview.toString(), method);
 
 
 		if (null != errors && !errors.isEmpty()) {

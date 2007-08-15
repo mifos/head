@@ -84,19 +84,6 @@ public class ReportsCategoryAction extends BaseAction {
 		ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
 		String categoryName = defineCategoryForm.getCategoryName();
 		request.setAttribute("categoryName", categoryName);
-		return mapping.findForward(ActionForwards.preview_success.toString());
-
-	}
-
-	public ActionForward addNewCategory(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("In ReportsCategoryAction:addNewCategory Method: ");
-
-		ReportsCategoryActionForm defineNewCategoryForm = (ReportsCategoryActionForm) form;
-		String categoryName = defineNewCategoryForm.getCategoryName();
-		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
-
 
 		for (ReportsCategoryBO category : new ReportsPersistence()
 				.getAllReportCategories()) {
@@ -112,6 +99,19 @@ public class ReportsCategoryAction extends BaseAction {
 						.toString());
 			}
 		}
+
+		return mapping.findForward(ActionForwards.preview_success.toString());
+
+	}
+
+	public ActionForward addNewCategory(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsCategoryAction:addNewCategory Method: ");
+
+		ReportsCategoryActionForm defineNewCategoryForm = (ReportsCategoryActionForm) form;
+		String categoryName = defineNewCategoryForm.getCategoryName();
+		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
 
 		int activityId = 0;
 		for (ActivityEntity activity : new RolesPermissionsBusinessService()
@@ -192,6 +192,38 @@ public class ReportsCategoryAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In ReportsCategoryAction:editPreview Method: ");
+		ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
+		String categoryName = defineCategoryForm.getCategoryName();
+		short reportCategoryId = defineCategoryForm.getCategoryId();
+		ReportsCategoryBO reportCategory = new ReportsPersistence()
+				.getReportCategoryByCategoryId(reportCategoryId);
+		if (categoryName.equals(reportCategory.getReportCategoryName())) {
+			ActionErrors errors = new ActionErrors();
+			errors.add(ReportsConstants.ERROR_CATEGORYNAMENOTEDIT,
+					new ActionMessage(
+							ReportsConstants.ERROR_CATEGORYNAMENOTEDIT));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.editPreview_failure
+					.toString());
+		}
+		else {
+			for (ReportsCategoryBO category : new ReportsPersistence()
+					.getAllReportCategories()) {
+				if (category.getReportCategoryName().equals(categoryName)) {
+					ActionErrors errors = new ActionErrors();
+					errors
+							.add(
+									ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST,
+									new ActionMessage(
+											ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST));
+					request.setAttribute(Globals.ERROR_KEY, errors);
+					return mapping
+							.findForward(ActionForwards.editPreview_failure
+									.toString());
+				}
+			}
+		}
+
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
 	}

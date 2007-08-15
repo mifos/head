@@ -720,6 +720,7 @@
 			<forward name="get_success" path="/pages/application/reports/jsp/viewReports.jsp" />
 			<forward name="edit_success" path="/pages/application/reports/jsp/editReport.jsp" />
 			<forward name="editpreview_success" path="/pages/application/reports/jsp/edit_preview_report.jsp" />
+			<forward name="editpreview_failure" path="/pages/application/reports/jsp/editReport.jsp" />
 		    <forward name="editprevious_success" path="/pages/application/reports/jsp/editReport.jsp" />
 		</action>
 		<!-- Birt Reports Action end-->
@@ -735,9 +736,10 @@
 			<forward name="get_success" path="/pages/application/reports/jsp/viewReportsCategory.jsp" />
 			<forward name="confirm_delete" path="/pages/application/reports/jsp/confirmDeleteCategory.jsp" />
 		    <forward name="edit_success" path="/pages/application/reports/jsp/editReportsCategory.jsp" />
-			<forward name="editpreview_success" path="/pages/application/reports/jsp/edit_preview_reports_category.jsp" />
+			<forward name="editPreview_success" path="/pages/application/reports/jsp/edit_preview_reports_category.jsp" />
+			<forward name="editPreview_failure" path="/pages/application/reports/jsp/editReportsCategory.jsp" />
 			<forward name="delete_success" path="/pages/application/reports/jsp/viewReportsCategory.jsp" />
-		</action>
+        </action>
 		<!-- Reports Catetory Action END-->
 		
 	

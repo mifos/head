@@ -107,7 +107,7 @@
 				</tr>
 			</table>
 			<html:hidden property="method" value="search" />
-			
+			<html-el:hidden property="categoryId"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

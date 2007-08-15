@@ -43,7 +43,6 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		verifyActionErrors(errors);
 	}
 
-
 	public void testCategoryNameShouldEqualsToInputValueWhenDoPreivewAction()
 			throws Exception {
 		String categoryName = "hahaCategoryName";
@@ -67,10 +66,10 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 
 	public void testShouldForwardToDefineNewCategoryPageIfCategoryNameExisted() {
 		setRequestPathInfo("/reportsCategoryAction.do");
-		addRequestParameter("method", "addNewCategory");
+		addRequestParameter("method", "preview");
 		addRequestParameter("categoryName", "Haha");
 		actionPerform();
-		addRequestParameter("method", "addNewCategory");
+		addRequestParameter("method", "preview");
 		addRequestParameter("categoryName", "Haha");
 		actionPerform();
 
@@ -124,25 +123,18 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 				ReportsConstants.LISTOFREPORTCATEGORIES));
 	}
 
-	public void testShouldForwardToPreviewCategoryPage() throws Exception {
-		setRequestPathInfo("/reportsCategoryAction.do");
-		addRequestParameter("method", "editPreview");
-		actionPerform();
-		verifyForwardPath("/pages/application/reports/jsp/edit_preview_reports_category.jsp");
-		verifyNoActionErrors();
-	}
-
 	public void testCategoryNameShouldEqualsToInputValueWhenDoEditPreivewAction()
 			throws Exception {
 		String categoryName = "hahaCategoryName";
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "editPreview");
 		addRequestParameter("categoryName", categoryName);
+		addRequestParameter("categoryId", "1");
 		actionPerform();
 		assertEquals(categoryName,
 				((ReportsCategoryActionForm) getActionForm()).getCategoryName());
 	}
-	
+
 	public void testShouldSubmitSuccessAfterEdit() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "editThenSubmit");
@@ -153,22 +145,64 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/reportsCategoryAction.do?method=viewReportsCategory");
 		verifyNoActionErrors();
 	}
-	
-	public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {
+
+	public void testShouldForwardToConfirmDeleteReportsCategoryPage()
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
-		addRequestParameter("method","confirmDeleteReportsCategory");
-		addRequestParameter("categoryId","1");
+		addRequestParameter("method", "confirmDeleteReportsCategory");
+		addRequestParameter("categoryId", "1");
 		actionPerform();
 		verifyForward("confirm_delete");
 		verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
 	}
-	
-	public void testShouldForwardToConfirmDeleteReportsCategoryPageWhenDeleteReportCategoryHasReports() throws Exception {
+
+	public void testShouldForwardToConfirmDeleteReportsCategoryPageWhenDeleteReportCategoryHasReports()
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
-		addRequestParameter("method","deleteReportsCategory");
-		addRequestParameter("categoryId","1");
+		addRequestParameter("method", "deleteReportsCategory");
+		addRequestParameter("categoryId", "1");
 		actionPerform();
 		verifyForward("confirm_delete");
 		verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
+	}
+
+	public void testShouldEditPreviewSuccessIfCategoryNameIsNotNull()
+			throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryName", "NotNull");
+		addRequestParameter("categoryId", "1");
+		actionPerform();
+		verifyForward("editpreview_success");
+		verifyForwardPath("/pages/application/reports/jsp/edit_preview_reports_category.jsp");
+		verifyNoActionErrors();
+	}
+
+	public void testShouldEditPreviewFailureIfReportCategoryNameIsNull()
+	        throws Exception{
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editPreview");
+		actionPerform();
+
+		verifyForwardPath("/reportsCategoryAction.do?method=validate");
+		String[] errors = { ReportsConstants.ERROR_CATEGORYNAME };
+		verifyActionErrors(errors);
+	}
+	
+	public void testShouldEditPreviewFailureIfReportCategoryNotEdit()
+	throws Exception{
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryName", "Haha");
+		addRequestParameter("categoryId", "1");
+		actionPerform();
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryName", "Haha");
+		addRequestParameter("categoryId", "1");
+		actionPerform();
+		
+		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
+		String[] errors = { ReportsConstants.ERROR_CATEGORYNAMENOTEDIT };
+		verifyActionErrors(errors);
 	}
 }
