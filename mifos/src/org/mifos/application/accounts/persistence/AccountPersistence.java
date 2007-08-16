@@ -223,6 +223,70 @@ public class AccountPersistence extends Persistence {
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 
+	public Short getAccountIdFromGlCode(String glCode) {
+		Map nameToId = new HashMap<String, Short>();
+
+		nameToId.put("1501", (short) 32);
+		nameToId.put("1502", (short) 33);
+		nameToId.put("1503", (short) 34);
+		nameToId.put("1504", (short) 35);
+		nameToId.put("1505", (short) 36);
+		nameToId.put("1506", (short) 37);
+		nameToId.put("1507", (short) 38);
+		nameToId.put("1508", (short) 39);
+		nameToId.put("1509", (short) 40);
+		nameToId.put("4601", (short) 41);
+		nameToId.put("4602", (short) 42);
+		nameToId.put("4603", (short) 43);
+		nameToId.put("4606", (short) 44);
+		nameToId.put("5001", (short) 45);
+		nameToId.put("5201", (short) 46);
+		nameToId.put("5202", (short) 47);
+		nameToId.put("5203", (short) 48);
+		nameToId.put("5204", (short) 49);
+		nameToId.put("5205", (short) 50);
+		nameToId.put("6201", (short) 51);
+		nameToId.put("10000", (short) 1);
+		nameToId.put("11000", (short) 2);
+		nameToId.put("11100", (short) 3);
+		nameToId.put("11101", (short) 4);
+		nameToId.put("11102", (short) 5);
+		nameToId.put("11200", (short) 6);
+		nameToId.put("11201", (short) 7);
+		nameToId.put("11202", (short) 8);
+		nameToId.put("13000", (short) 9);
+		nameToId.put("13100", (short) 10);
+		nameToId.put("13101", (short) 11);
+		nameToId.put("13200", (short) 12);
+		nameToId.put("13201", (short) 13);
+		nameToId.put("20000", (short) 14);
+		nameToId.put("22000", (short) 15);
+		nameToId.put("22100", (short) 16);
+		nameToId.put("22101", (short) 17);
+		nameToId.put("23000", (short) 26);
+		nameToId.put("23100", (short) 27);
+		nameToId.put("23101", (short) 28);
+		nameToId.put("24000", (short) 29);
+		nameToId.put("24100", (short) 30);
+		nameToId.put("24101", (short) 31);
+		nameToId.put("30000", (short) 18);
+		nameToId.put("31000", (short) 19);
+		nameToId.put("31100", (short) 20);
+		nameToId.put("31101", (short) 21);
+		nameToId.put("31102", (short) 22);
+		nameToId.put("31300", (short) 23);
+		nameToId.put("31301", (short) 24);
+		nameToId.put("31401", (short) 25);
+		nameToId.put("40000", (short) 53);
+		nameToId.put("41000", (short) 54);
+		nameToId.put("41100", (short) 55);
+		nameToId.put("41101", (short) 56);
+		nameToId.put("41102", (short) 57);
+
+		return (Short) nameToId.get(glCode);
+
+	}
+
 	public Short getAccountId(String accountName) {
 		Map nameToId = new HashMap<String,Short>();
 		

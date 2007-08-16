@@ -28,18 +28,51 @@
 
 
     <bean id = "dynamicFinancialRules"
-        class="org.mifos.application.accounts.financial.util.helpers.DynamicFinancialRules"
-        abstract="false" lazy-init="default" autowire="default"
-        dependency-check="default"
-        >        
-        <property name="actionToCategoryNameDebit">
+        class="org.mifos.application.accounts.financial.util.helpers.DynamicFinancialRules">        
+        <property name="actionToGLCodeDebit">
             <map>
-                <entry key="PRINCIPALPOSTING" value="Bank Account 1"/>
+                <entry key="PRINCIPALPOSTING" value="11201"/>
+                <entry key="INTERESTPOSTING" value="11201"/>
+                <entry key="FEEPOSTING" value="11201"/>
+                <entry key="PENALTYPOSTING" value="11200"/>
+                <entry key="ROUNDING" value="31401"/>
+                <entry key="MANDATORYDEPOSIT" value="11201"/>
+                <entry key="VOLUNTORYDEPOSIT" value="11201"/>
+                <entry key="MANDATORYWITHDRAWAL" value="24000"/>
+                <entry key="VOLUNTORYWITHDRAWAL" value="23000"/>
+                <entry key="SAVINGS_INTERESTPOSTING" value="41000"/>
+                <entry key="DISBURSAL" value="13101"/>
+                <entry key="MISCFEEPOSTING" value="11201"/>
+                <entry key="MISCPENALTYPOSTING" value="11201"/>
+                <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="11201"/>
+                <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="24000"/>
+                <entry key="VOLUNTORYDEPOSIT_ADJUSTMENT" value="23000"/>
+                <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
+                <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
+                <entry key="WRITEOFF" value="13201"/>
             </map>
         </property>
-        <property name="actionToCategoryNameCredit">
+        <property name="actionToGLCodeCredit">
             <map>
-                <entry key="PRINCIPALPOSTING" value="Loans and Advances"/>
+                <entry key="PRINCIPALPOSTING" value="13100"/>
+                <entry key="INTERESTPOSTING" value="31100"/>
+                <entry key="FEEPOSTING" value="31300"/>
+                <entry key="PENALTYPOSTING" value="31102"/>
+                <entry key="ROUNDING" value="31401"/>
+                <entry key="MANDATORYDEPOSIT" value="24000"/>
+                <entry key="VOLUNTORYDEPOSIT" value="23000"/>
+                <entry key="MANDATORYWITHDRAWAL" value="11201"/>
+                <entry key="VOLUNTORYWITHDRAWAL" value="11201"/>
+                <entry key="SAVINGS_INTERESTPOSTING" value="24100"/>
+                <entry key="DISBURSAL" value="11201"/>
+                <entry key="MISCFEEPOSTING" value="31301"/>
+                <entry key="MISCPENALTYPOSTING" value="31102"/>
+                <entry key="CUSTOMERACCOUNTMISCFEESPOSTING" value="31301"/>
+                <entry key="MANDATORYDEPOSIT_ADJUSTMENT" value="11201"/>
+                <entry key="VOLUNTORYDEPOSIT_ADJUSTMENT" value="11201"/>
+                <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="24000"/>
+                <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="23000"/>
+                <entry key="WRITEOFF" value="13101"/>
             </map>
         </property>
     </bean>

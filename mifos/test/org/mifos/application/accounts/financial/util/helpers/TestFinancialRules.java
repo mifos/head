@@ -47,14 +47,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestFinancialRules {
 	private static Map financialActionToCategoryDebit = new HashMap<FinancialActionConstants, Short>();
 	private static Map financialActionToCategoryCredit = new HashMap<FinancialActionConstants, Short>();
 
+	private static ApplicationContext context;
 	
 	@BeforeClass
 	public static void init() throws Exception {
@@ -100,12 +102,15 @@ public class TestFinancialRules {
 			financialActionToCategoryCredit.put(WRITEOFF, 						LOANTOCLIENTS);
 		}
 
+		context = new ClassPathXmlApplicationContext(
+			"org/mifos/config/applicationContext.xml");
+		
 	}
 
 	@Before
 	public void initSpring() {
 		MifosLogManager.configure(FilePaths.LOGFILE);
-		ApplicationInitializer.initializeSpring();
+		//ApplicationInitializer.initializeSpring();
 		
 	}
 	
@@ -165,8 +170,9 @@ public class TestFinancialRules {
 		
 		Short[] transactionTypes = {FinancialConstants.DEBIT, FinancialConstants.CREDIT};
 		
-		DynamicFinancialRules financialRulesDynamic = new DynamicFinancialRules();
-		financialRulesDynamic.initByName();
+		DynamicFinancialRules financialRulesDynamic = (DynamicFinancialRules)context.getBean("dynamicFinancialRules");
+//		DynamicFinancialRules financialRulesDynamic = new DynamicFinancialRules();
+//		financialRulesDynamic.initByGlCode();
 		
 		for (FinancialActionConstants financialAction : FinancialActionConstants.values()) {
 			for (Short transactionType : transactionTypes) {

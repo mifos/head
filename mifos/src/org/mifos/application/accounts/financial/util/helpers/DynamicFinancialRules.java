@@ -76,6 +76,7 @@ import static org.mifos.application.accounts.financial.util.helpers.FinancialCon
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -83,9 +84,6 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 public class DynamicFinancialRules {
 	private Map<FinancialActionConstants, Short> actionToCategoryDebit = new HashMap<FinancialActionConstants, Short>();
 	private Map<FinancialActionConstants, Short> actionToCategoryCredit = new HashMap<FinancialActionConstants, Short>();
-
-	private HashMap<FinancialActionConstants, String> actionToCategoryNameDebit = new HashMap<FinancialActionConstants, String>();
-	private HashMap<FinancialActionConstants, String> actionToCategoryNameCredit = new HashMap<FinancialActionConstants, String>();
 	
 	private static AccountPersistence accountPersistence = new AccountPersistence();
 
@@ -188,6 +186,64 @@ public class DynamicFinancialRules {
 		addMapping(CREDIT, VOLUNTORYWITHDRAWAL_ADJUSTMENT,	CLIENTSDEPOSITS_NAME);
 		addMapping(CREDIT, WRITEOFF, 						LOANTOCLIENTS_NAME);
 	}
+
+	public void initByGlCode() {
+		String BANKACCOUNTONE_NAME = "11201";
+		String BANKBALANCES_NAME = "11200";
+		String ROUNDINGGL_NAME = "31401";
+		String MANDATORYSAVINGS_NAME = "24000";
+		String CLIENTSDEPOSITS_NAME = "23000";
+		String DIRECTEXPENDITURE_NAME = "41000";
+		String LOANTOCLIENTS_NAME = "13101";
+		String WRITEOFFS_NAME = "13201";
+		String LOANSADVANCES_NAME = "13100";
+		String INTERESTINCOMELOANS_NAME = "31100";
+		String INCOMEMICROCREDIT_NAME = "31300";
+		String PENALTY_NAME = "31102";
+		String SAVINGSMANDATORY_NAME = "24100";
+		String FEES_NAME = "31301";
+		
+		
+		addMapping(DEBIT, PRINCIPALPOSTING, 		BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, INTERESTPOSTING, 			BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, FEEPOSTING, 				BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, PENALTYPOSTING, 			BANKBALANCES_NAME);
+		addMapping(DEBIT, ROUNDING, 				ROUNDINGGL_NAME);
+		addMapping(DEBIT, MANDATORYDEPOSIT, 		BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, VOLUNTORYDEPOSIT, 		BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, MANDATORYWITHDRAWAL,		MANDATORYSAVINGS_NAME);
+		addMapping(DEBIT, VOLUNTORYWITHDRAWAL, 		CLIENTSDEPOSITS_NAME);
+		addMapping(DEBIT, SAVINGS_INTERESTPOSTING,	DIRECTEXPENDITURE_NAME);
+		addMapping(DEBIT, DISBURSAL,	 			LOANTOCLIENTS_NAME);
+		addMapping(DEBIT, MISCFEEPOSTING, 			BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, MISCPENALTYPOSTING, 		BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, CUSTOMERACCOUNTMISCFEESPOSTING, 	BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, MANDATORYDEPOSIT_ADJUSTMENT, 		MANDATORYSAVINGS_NAME);
+		addMapping(DEBIT, VOLUNTORYDEPOSIT_ADJUSTMENT, 		CLIENTSDEPOSITS_NAME);
+		addMapping(DEBIT, MANDATORYWITHDRAWAL_ADJUSTMENT, 	BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, VOLUNTORYWITHDRAWAL_ADJUSTMENT, 	BANKACCOUNTONE_NAME);
+		addMapping(DEBIT, WRITEOFF,				 			WRITEOFFS_NAME);
+
+		addMapping(CREDIT, PRINCIPALPOSTING, 			LOANSADVANCES_NAME);
+		addMapping(CREDIT, INTERESTPOSTING, 			INTERESTINCOMELOANS_NAME);
+		addMapping(CREDIT, FEEPOSTING, 					INCOMEMICROCREDIT_NAME);
+		addMapping(CREDIT, PENALTYPOSTING, 				PENALTY_NAME);
+		addMapping(CREDIT, ROUNDING, 					ROUNDINGGL_NAME);
+		addMapping(CREDIT, MANDATORYDEPOSIT, 			MANDATORYSAVINGS_NAME);
+		addMapping(CREDIT, VOLUNTORYDEPOSIT, 			CLIENTSDEPOSITS_NAME);
+		addMapping(CREDIT, MANDATORYWITHDRAWAL, 		BANKACCOUNTONE_NAME);
+		addMapping(CREDIT, VOLUNTORYWITHDRAWAL, 	 	BANKACCOUNTONE_NAME);
+		addMapping(CREDIT, SAVINGS_INTERESTPOSTING, 	SAVINGSMANDATORY_NAME);
+		addMapping(CREDIT, DISBURSAL, 					BANKACCOUNTONE_NAME);
+		addMapping(CREDIT, MISCFEEPOSTING, 				FEES_NAME);
+		addMapping(CREDIT, MISCPENALTYPOSTING, 			PENALTY_NAME);
+		addMapping(CREDIT, CUSTOMERACCOUNTMISCFEESPOSTING,	FEES_NAME);
+		addMapping(CREDIT, MANDATORYDEPOSIT_ADJUSTMENT, 	BANKACCOUNTONE_NAME);
+		addMapping(CREDIT, VOLUNTORYDEPOSIT_ADJUSTMENT, 	BANKACCOUNTONE_NAME);
+		addMapping(CREDIT, MANDATORYWITHDRAWAL_ADJUSTMENT,	MANDATORYSAVINGS_NAME);
+		addMapping(CREDIT, VOLUNTORYWITHDRAWAL_ADJUSTMENT,	CLIENTSDEPOSITS_NAME);
+		addMapping(CREDIT, WRITEOFF, 						LOANTOCLIENTS_NAME);
+	}
 	
 	public short getCategoryAssociatedToAction(short financialActionId,
 			Short type) throws FinancialException {
@@ -196,8 +252,8 @@ public class DynamicFinancialRules {
 	}
 	
 	public void addMapping(Short type, FinancialActionConstants action,
-			String categoryName) {
-		addMapping(type, action, accountPersistence.getAccountId(categoryName));
+			String glCode) {
+		addMapping(type, action, accountPersistence.getAccountIdFromGlCode(glCode));
 	}
 
 	public void addMapping(Short type, FinancialActionConstants action,
@@ -232,13 +288,17 @@ public class DynamicFinancialRules {
 		this.actionToCategoryCredit = actionToCategoryCredit;
 	}
 
-	public void setActionToCategoryNameDebit(
-			HashMap<FinancialActionConstants, String> actionToCategoryNameDebit) {
-		this.actionToCategoryNameDebit = actionToCategoryNameDebit;
+	public void setActionToGLCodeDebit(
+			HashMap<FinancialActionConstants, String> actionToGLCodeDebit) {
+		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeDebit.entrySet()) {
+			actionToCategoryDebit.put(entry.getKey(), accountPersistence.getAccountIdFromGlCode(entry.getValue()));
+		}
 	}
 
-	public void setActionToCategoryNameCredit(
-			HashMap<FinancialActionConstants, String> actionToCategoryNameCredit) {
-		this.actionToCategoryNameCredit = actionToCategoryNameCredit;
+	public void setActionToGLCodeCredit(
+			HashMap<FinancialActionConstants, String> actionToGLCodeCredit) {
+		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeCredit.entrySet()) {
+			actionToCategoryCredit.put(entry.getKey(), accountPersistence.getAccountIdFromGlCode(entry.getValue()));
+		}
 	}
 }
