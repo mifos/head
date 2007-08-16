@@ -47,8 +47,18 @@
 								<mifos:mifoslabel name="reports.linkinfo" bundle="reportsUIResources" />
 							</html-el:link>
 		              		<br />
-		              		<br />
-              			</span>
+		          			<br />
+		            	</span>
+		            </td>
+              		<table width="95%" border="0" cellpadding="3" cellspacing="0">
+              		<tr>
+              			<td>
+								<font class="fontnormalRedBold">
+									<html-el:errors	bundle="adminUIResources" />	
+								</font>
+						</td>
+					</tr>	
+					</table>
              		 	<table width="75%" border="0" cellpadding="3" cellspacing="0">
 	                 		<c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
 	    		              <tr>
@@ -71,9 +81,15 @@
                                 						</c:if>
 	                    						</span>
 		                    				</td>
-					                    	<td width="30%" class="blueline"> 
+		                    
+											
+					      					<td width="30%" class="blueline"> 
 												<a href="birtReportsUploadAction.do?method=edit&reportId=<c:out value="${report.reportId}" />">
 													<mifos:mifoslabel name = "reports.edit" bundle="reportsUIResources" />
+												</a>
+									      		|
+												<a href="birtReportsUploadAction.do?method=downloadBirtReport&reportId=<c:out value="${report.reportId}" />">
+													<mifos:mifoslabel name = "reports.download" bundle="reportsUIResources" />
 												</a>
 											</td>
 		    	            	  		</tr>
