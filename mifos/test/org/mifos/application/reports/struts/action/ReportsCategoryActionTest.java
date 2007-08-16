@@ -137,9 +137,13 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 
 	public void testShouldSubmitSuccessAfterEdit() throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
+
 		addRequestParameter("method", "editThenSubmit");
-		addRequestParameter("categoryName", "Haha");
-		addRequestParameter("categoryId", "1");
+		ReportsCategoryActionForm form = new ReportsCategoryActionForm();
+		String categoryName = "neverExist";
+		form.setCategoryName(categoryName);
+		form.setCategoryId((short) 1);
+		setActionForm(form);
 		actionPerform();
 		verifyForward("create_success");
 		verifyForwardPath("/reportsCategoryAction.do?method=viewReportsCategory");
@@ -179,7 +183,7 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testShouldEditPreviewFailureIfReportCategoryNameIsNull()
-	        throws Exception{
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "editPreview");
 		actionPerform();
@@ -188,38 +192,77 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		String[] errors = { ReportsConstants.ERROR_CATEGORYNAME };
 		verifyActionErrors(errors);
 	}
-	
+
 	public void testShouldEditPreviewFailureIfReportCategoryNotEdit()
-	throws Exception{
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
+		ReportsCategoryActionForm form = new ReportsCategoryActionForm();
+		String categoryName = "categoryName3";
+		form.setCategoryName(categoryName);
+		form.setCategoryId((short) 1);
+		setActionForm(form);
+		addRequestParameter("method", "editThenSubmit");
+		actionPerform();
+
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryName", "Haha");
+		addRequestParameter("categoryName", "categoryName3");
 		addRequestParameter("categoryId", "1");
 		actionPerform();
-		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryName", "Haha");
-		addRequestParameter("categoryId", "1");
-		actionPerform();
-		
+
 		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
 		String[] errors = { ReportsConstants.ERROR_CATEGORYNAMENOTEDIT };
 		verifyActionErrors(errors);
 	}
-	
-	public void testShouldPreviewSuccessAfterEdit()
-	throws Exception{
+
+	public void testShouldEditPreviewFailureIfReportCategoryAlreadyExist()
+			throws Exception {
 		setRequestPathInfo("/reportsCategoryAction.do");
-		
+		addRequestParameter("method", "addNewCategory");
+		addRequestParameter("categoryName", "jijiwaiwai");
+		actionPerform();
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryName", "jijiwaiwai");
+		addRequestParameter("categoryId", "1");
+		actionPerform();
+
+		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
+		String[] errors = { ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST };
+		verifyActionErrors(errors);
+	}
+
+	public void testShouldPreviewSuccessAfterEdit() throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+
 		ReportsCategoryActionForm form = new ReportsCategoryActionForm();
 		String categoryName = "Not Null";
 		form.setCategoryName(categoryName);
-		form.setCategoryId((short)1);
+		form.setCategoryId((short) 1);
 		setActionForm(form);
-		
+
 		addRequestParameter("method", "editPreview");
-		
+
 		actionPerform();
 		verifyForwardPath("/pages/application/reports/jsp/edit_preview_reports_category.jsp");
 		verifyNoActionErrors();
+	}
+
+	public void testShouldEditFailureIfReportCategoryAlreadyExist()
+			throws Exception {
+		setRequestPathInfo("/reportsCategoryAction.do");
+		addRequestParameter("method", "addNewCategory");
+		addRequestParameter("categoryName", "wuwulala");
+		actionPerform();
+
+		ReportsCategoryActionForm form = new ReportsCategoryActionForm();
+		String categoryName = "wuwulala";
+		form.setCategoryName(categoryName);
+		form.setCategoryId((short) 1);
+		setActionForm(form);
+		addRequestParameter("method", "editThenSubmit");
+		actionPerform();
+
+		verifyForwardPath("/pages/application/reports/jsp/editReportsCategory.jsp");
+		String[] errors = { ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST };
+		verifyActionErrors(errors);
 	}
 }

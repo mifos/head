@@ -205,39 +205,53 @@ public class ReportsCategoryAction extends BaseAction {
 			throws Exception {
 		logger.debug("In ReportsCategoryAction:editPreview Method: ");
 		ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
-		String categoryName = defineCategoryForm.getCategoryName();
+		String inputCategoryName = defineCategoryForm.getCategoryName();
 		short reportCategoryId = defineCategoryForm.getCategoryId();
 		ReportsCategoryBO reportCategory = new ReportsPersistence()
 				.getReportCategoryByCategoryId(reportCategoryId);
-		if (categoryName.equals(reportCategory.getReportCategoryName())) {
+		if (isReportCategoryNameNotEdit(request, inputCategoryName,
+				reportCategory)) {
+			return mapping.findForward(ActionForwards.editPreview_failure
+					.toString());
+		}
+		else if (isReportCategoryNameAlreadyExist(request, inputCategoryName)) {
+			return mapping.findForward(ActionForwards.editPreview_failure
+					.toString());
+		}
+
+		return mapping.findForward(ActionForwards.editpreview_success
+				.toString());
+	}
+
+	private boolean isReportCategoryNameAlreadyExist(
+			HttpServletRequest request, String inputCategoryName) {
+		for (ReportsCategoryBO category : new ReportsPersistence()
+				.getAllReportCategories()) {
+			if (category.getReportCategoryName().equals(inputCategoryName)) {
+				ActionErrors errors = new ActionErrors();
+				errors
+						.add(
+								ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST,
+								new ActionMessage(
+										ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST));
+				request.setAttribute(Globals.ERROR_KEY, errors);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isReportCategoryNameNotEdit(HttpServletRequest request,
+			String inputCategoryName, ReportsCategoryBO reportCategory) {
+		if (inputCategoryName.equals(reportCategory.getReportCategoryName())) {
 			ActionErrors errors = new ActionErrors();
 			errors.add(ReportsConstants.ERROR_CATEGORYNAMENOTEDIT,
 					new ActionMessage(
 							ReportsConstants.ERROR_CATEGORYNAMENOTEDIT));
 			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping.findForward(ActionForwards.editPreview_failure
-					.toString());
+			return true;
 		}
-		else {
-			for (ReportsCategoryBO category : new ReportsPersistence()
-					.getAllReportCategories()) {
-				if (category.getReportCategoryName().equals(categoryName)) {
-					ActionErrors errors = new ActionErrors();
-					errors
-							.add(
-									ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST,
-									new ActionMessage(
-											ReportsConstants.ERROR_CATEGORYNAMEALREADYEXIST));
-					request.setAttribute(Globals.ERROR_KEY, errors);
-					return mapping
-							.findForward(ActionForwards.editPreview_failure
-									.toString());
-				}
-			}
-		}
-
-		return mapping.findForward(ActionForwards.editpreview_success
-				.toString());
+		return false;
 	}
 
 	public ActionForward deleteReportsCategory(ActionMapping mapping,
@@ -276,10 +290,14 @@ public class ReportsCategoryAction extends BaseAction {
 		logger.debug("In ReportsCategoryAction:editThenSubmit Method: ");
 		ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
 		short reportCategoryId = reportsCategoryActionForm.getCategoryId();
+		String inputCategoryName = reportsCategoryActionForm.getCategoryName();
 		ReportsCategoryBO reportsCategoryBO = new ReportsPersistence()
 				.getReportCategoryByCategoryId(reportCategoryId);
-		reportsCategoryBO.setReportCategoryName(reportsCategoryActionForm
-				.getCategoryName());
+		if (isReportCategoryNameAlreadyExist(request, inputCategoryName)) {
+			return mapping.findForward(ActionForwards.editPreview_failure
+					.toString());
+		}
+		reportsCategoryBO.setReportCategoryName(inputCategoryName);
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
