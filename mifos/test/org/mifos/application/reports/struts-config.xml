@@ -14,7 +14,8 @@
 			<forward name="create_success" path="/AdminAction.do?method=load"/>
 			<forward name="preview_failure" path="/pages/application/reports/jsp/birtReportUpload.jsp" />
 		    <forward name="edit_success" path="/pages/application/reports/jsp/editReport.jsp" />	
-		    <forward name="download_success" path="/pages/application/reports/jsp/downloadReport.jsp" />	
+		    <forward name="download_success" path="/pages/application/reports/jsp/downloadReport.jsp" />
+		    <forward name="editpreview_failure" path="/pages/application/reports/jsp/editReport.jsp" />		
 		</action>
     </action-mappings>
     <form-beans> 

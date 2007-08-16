@@ -75,7 +75,10 @@ public interface ReportsConstants {
 	public static final String HIDDEN_PASSWORD = "********";
 	public static final String ERROR_CATEGORYNAME="error.categoryName";
 	public static final String ERROR_CATEGORYNAMEALREADYEXIST="error.categoryNameAlreadyExist";
-	public String ERROR_CATEGORYNAMENOTEDIT = "error.categoryNameNotEdit";
+	public static final String ERROR_CATEGORYNAMENOTEDIT = "error.categoryNameNotEdit";
 	public static final String ERROR_CATEGORYHASREPORTS="error.categoryHasReports";
+	public static final String ERROR_REPORTINFONOTEDIT="error.reportInfoNotEdit";
+	public static final String ERROR_REPORTALREADYEXIST="error.reportAlreadyExist";
+	
 	
 }

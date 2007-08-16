@@ -23,36 +23,6 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 		verifyNoActionErrors();
 	}
-
-	public void testPreviewFailureWhenReportTitleIsEmpty() {
-		setRequestPathInfo("/birtReportsUploadAction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("reportTitle", "");
-		addRequestParameter("reportCategoryId", "1");
-		addRequestParameter("isActive", "1");
-		actionPerform();
-		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
-	}
-	
-	public void testPreviewFailureWhenReportCategoryIdIsEmpty() {
-		setRequestPathInfo("/birtReportsUploadAction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("reportTitle", "existTitle");
-		addRequestParameter("reportCategoryId", "");
-		addRequestParameter("isActive", "1");
-		actionPerform();
-		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
-	}
-	
-	public void testPreviewFailureWhenIsActiveIsEmpty() {
-		setRequestPathInfo("/birtReportsUploadAction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter("reportTitle", "exsitTitle");
-		addRequestParameter("reportCategoryId", "1");
-		addRequestParameter("isActive", "");
-		actionPerform();
-		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
-	}
 	
 	public void testEdit() {
 		setRequestPathInfo("/birtReportsUploadAction.do");
@@ -64,5 +34,35 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.edit_success.toString());
 	}
-
+	public void testShouldEditPreviewFailureWhenReportTitleIsEmpty() {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "editpreview");
+		addRequestParameter("reportTitle", "");
+		addRequestParameter("reportCategoryId", "1");
+		addRequestParameter("isActive", "1");
+		actionPerform();
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	public void testShouldEditPreviewFailureWhenReportCategoryIdIsEmpty() {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "editpreview");
+		addRequestParameter("reportTitle", "existTitle");
+		addRequestParameter("reportCategoryId", "");
+		addRequestParameter("isActive", "1");
+		actionPerform();
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	public void testShouldEditPreviewFailureWhenIsActiveIsEmpty() {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "editpreview");
+		addRequestParameter("reportTitle", "exsitTitle");
+		addRequestParameter("reportCategoryId", "1");
+		addRequestParameter("isActive", "");
+		actionPerform();
+		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	
 }

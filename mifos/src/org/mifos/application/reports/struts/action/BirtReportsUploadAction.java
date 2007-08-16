@@ -226,11 +226,56 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
-		request.setAttribute("category", category);
+		ReportsBO report = new ReportsPersistence().getReport(Short
+				.valueOf(uploadForm.getReportId()));
+		if (isReportInfoNotEdit(request, uploadForm, report)) {
+			return mapping.findForward(ActionForwards.editpreview_failure
+					.toString());
+		}
+		else if (isReportAlreadyExist(request, uploadForm)) {
+			return mapping.findForward(ActionForwards.editpreview_failure
+					.toString());
+		}
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
+	}
+
+	private boolean isReportInfoNotEdit(HttpServletRequest request,
+			BirtReportsUploadActionForm form, ReportsBO report) {
+
+		if (form.getReportTitle().equals(report.getReportName())
+				&& form.getReportCategoryId().equals(
+						report.getReportsCategoryBO().getReportCategoryId()
+								.toString())
+				&& form.getIsActive().equals(report.getIsActive().toString())) {
+			ActionErrors errors = new ActionErrors();
+			errors
+					.add(ReportsConstants.ERROR_REPORTINFONOTEDIT,
+							new ActionMessage(
+									ReportsConstants.ERROR_REPORTINFONOTEDIT));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return true;
+		}
+		return false;
+	}
+
+
+	private boolean isReportAlreadyExist(HttpServletRequest request,
+			BirtReportsUploadActionForm form) {
+		for (ReportsBO report : new ReportsPersistence().getAllReports()) {
+			if (form.getReportTitle().equals(report.getReportName())
+					&& form.getReportCategoryId().equals(
+							report.getReportsCategoryBO().getReportCategoryId()
+									.toString())) {
+				ActionErrors errors = new ActionErrors();
+				errors.add(ReportsConstants.ERROR_REPORTALREADYEXIST,
+						new ActionMessage(
+								ReportsConstants.ERROR_REPORTALREADYEXIST));
+				request.setAttribute(Globals.ERROR_KEY, errors);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public ActionForward editprevious(ActionMapping mapping, ActionForm form,
@@ -263,8 +308,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		new ReportsPersistence().createOrUpdate(reportBO);
-		
-		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category.getActivityId());
+
+		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category
+				.getActivityId());
 
 		if (StringUtils.isEmpty(formFile.getFileName())) {
 			formFile.destroy();
@@ -291,11 +337,11 @@ public class BirtReportsUploadAction extends BaseAction {
 	private ReportsCategoryBO getReportCategory(String reportCategoryId) {
 		return getReportCategory(Short.valueOf(reportCategoryId));
 	}
-	
-	public ActionForward downloadBirtReport(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		return mapping.findForward(ActionForwards.download_success
-				.toString());
+
+
+	public ActionForward downloadBirtReport(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.download_success.toString());
 	}
 }
