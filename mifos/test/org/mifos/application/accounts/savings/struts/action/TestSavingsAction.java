@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.savings.struts.action;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -559,7 +560,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(group);
-		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
+		long curTime = System.currentTimeMillis();
+		paymentData.setRecieptDate(new Date(curTime));
 		paymentData.setRecieptNum("34244");
 		AccountActionDateEntity accountActionDate = savings
 				.getAccountActionDate(Short.valueOf("1"));
@@ -583,12 +585,13 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		List<SavingsTransactionHistoryView> trxnHistlist = (List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request);
+		Collections.sort(trxnHistlist);
 		assertEquals(2, trxnHistlist.size());
 		for(SavingsTransactionHistoryView view : trxnHistlist) {
-			assertEquals("100.0",view.getBalance());
-			assertNotNull(view.getClientName());
 			assertEquals("100.0",view.getCredit());
 			assertEquals("-",view.getDebit());
+			assertEquals("100.0",view.getBalance());
+			assertNotNull(view.getClientName());
 			assertNotNull(view.getGlcode());
 			assertEquals("-",view.getNotes());
 			assertNotNull(view.getPostedBy());
@@ -598,8 +601,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 			assertNotNull(view.getAccountTrxnId());
 			assertNull(view.getLocale());
 			assertNotNull(view.getPaymentId());
-			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
-			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
+			assertEquals(DateUtils.getDateWithoutTimeStamp(curTime),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
+			assertEquals(DateUtils.getDateWithoutTimeStamp(curTime),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
 			break;
 		}
 		HibernateUtil.closeSession();	

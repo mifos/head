@@ -3,10 +3,12 @@ package org.mifos.application.accounts.business;
 import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.application.accounts.savings.struts.action.TestSavingsAction;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class TransactionHistoryView extends View {
+public class TransactionHistoryView extends View
+implements Comparable<TransactionHistoryView> {
 	private Date transactionDate;
 
 	private Integer paymentId;
@@ -174,5 +176,29 @@ public class TransactionHistoryView extends View {
 		this.balance = balance;
 		this.clientName = clientName;
 		this.postedBy = postedBy;
+	}
+	
+	/**
+	 * This is only written for test purposes. The idea is to guarantee
+	 * the order in which these objects can be organized in a list -
+	 * first compare by postedDates, if dates are equal - 'Credit' should come
+	 * before 'Debit'. There is no philosophical reasoning behind this ordering,
+	 * just something we can count on --> this should be changed to suite a
+	 * production need if one exists.
+	 * The tests that rely on this ordering include:
+	 * {@link TestSavingsAction#testSuccessfullGetTransactionHistory()}
+	 */
+	public int compareTo(TransactionHistoryView o) {
+		int dateCompare = this.getPostedDate().compareTo(o.getPostedDate());
+		if (dateCompare != 0)
+			return dateCompare;
+		else if (!this.getDebit().equals("-"))
+			return !o.getDebit().equals("-") 
+				? -1 : this.getDebit().compareTo(o.getDebit());
+		else if (!this.getCredit().equals("-"))
+			return !o.getCredit().equals("-")
+				? 1 : this.getCredit().compareTo(o.getCredit());
+		else
+			return 0;
 	}
 }

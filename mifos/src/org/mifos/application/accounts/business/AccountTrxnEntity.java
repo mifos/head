@@ -40,8 +40,8 @@ package org.mifos.application.accounts.business;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
@@ -84,7 +84,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	protected AccountTrxnEntity() {
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new TreeSet<FinancialTransactionBO>();
+		financialTransactions = new HashSet<FinancialTransactionBO>();
 		accountActionEntity = null;
 		installmentId = null;
 		dueDate = null;
@@ -105,7 +105,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 			AccountTrxnEntity relatedTrxn) {
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new TreeSet<FinancialTransactionBO>();
+		financialTransactions = new HashSet<FinancialTransactionBO>();
 		this.account = accountPayment.getAccount();
 		this.accountActionEntity = accountActionEntity;
 		this.installmentId = installmentId;

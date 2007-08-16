@@ -10,6 +10,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -113,6 +114,7 @@ public class TestAccountService extends MifosTestCase {
 
 		List<TransactionHistoryView> trxnHistlist = accountBusinessService
 				.getTrxnHistory(loan, uc);
+		Collections.sort(trxnHistlist);
 		assertNotNull("Account TrxnHistoryView list object should not be null",
 				trxnHistlist);
 		assertTrue(
@@ -121,8 +123,8 @@ public class TestAccountService extends MifosTestCase {
 		for(TransactionHistoryView view : trxnHistlist) {
 			assertEquals("100.0",view.getBalance());
 			assertNotNull(view.getClientName());
-			assertEquals("-",view.getCredit());
-			assertEquals("100.0",view.getDebit());
+			assertEquals("-",view.getDebit());
+			assertEquals("100.0",view.getCredit());
 			assertNotNull(view.getGlcode());
 			assertEquals("-",view.getNotes());
 			assertNotNull(view.getPostedBy());

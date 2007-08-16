@@ -46,8 +46,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class FinancialTransactionBO extends BusinessObject
-implements Comparable<FinancialTransactionBO> {
+public class FinancialTransactionBO extends BusinessObject {
 
 	private final Integer trxnId;
 
@@ -169,20 +168,6 @@ implements Comparable<FinancialTransactionBO> {
 
 	public PersonnelBO getPostedBy() {
 		return postedBy;
-	}
-	
-	/**
-	 * This is only written for test purposes. The idea is to maintain
-	 * the order in which these objects are entered into a Set. The structure
-	 * they are saved in is not a SortedSet, so when it gets populated by
-	 * hibernate with FinancialTransactionBO objects from the db, compareTo
-	 * is irrevlevant. If comparing the hashCodes becomes undesirable the tests
-	 * to watch for include
-	 * {@link TestSavingsAction#testSuccessfullGetTransactionHistory()} and
-	 * {@link TestAccountAction#testGetTrxnHistorySucess()}
-	 */
-	public int compareTo(FinancialTransactionBO o) {
-		return this.hashCode() - (o.hashCode());
 	}
 
 }
