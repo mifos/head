@@ -125,10 +125,10 @@ implements Comparable<SavingsTransactionHistoryView> {
 			return dateCompare;
 		else if (!this.getDebit().equals("-"))
 			return !o.getDebit().equals("-") 
-				? -1 : this.getDebit().compareTo(o.getDebit());
+				? this.getDebit().compareTo(o.getDebit()) : 1;
 		else if (!this.getCredit().equals("-"))
 			return !o.getCredit().equals("-")
-				? 1 : this.getCredit().compareTo(o.getCredit());
+				? this.getCredit().compareTo(o.getCredit()) : -1;
 		else
 			return 0;
 	}
