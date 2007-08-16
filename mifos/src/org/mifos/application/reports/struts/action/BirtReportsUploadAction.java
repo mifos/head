@@ -226,6 +226,9 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
+		request.setAttribute("category", category);
 		ReportsBO report = new ReportsPersistence().getReport(Short
 				.valueOf(uploadForm.getReportId()));
 		if (isReportInfoNotEdit(request, uploadForm, report)) {
@@ -303,24 +306,31 @@ public class BirtReportsUploadAction extends BaseAction {
 				.getReportId()));
 		reportJasperMap = new ReportsPersistence().getReport(
 				Short.valueOf(uploadForm.getReportId())).getReportsJasperMap();
-
-		reportBO.setReportName(uploadForm.getReportTitle());
-		reportBO.setReportsCategoryBO(category);
-		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
-		new ReportsPersistence().createOrUpdate(reportBO);
-
-		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category
-				.getActivityId());
-
-		if (StringUtils.isEmpty(formFile.getFileName())) {
-			formFile.destroy();
+		if (isReportAlreadyExist(request, uploadForm)) {
+			return mapping.findForward(ActionForwards.editpreview_failure
+					.toString());
 		}
 		else {
-			reportJasperMap.setReportJasper(formFile.getFileName());
-			new ReportsPersistence().createOrUpdate(reportJasperMap);
-			uploadFile(formFile);
+			reportBO.setReportName(uploadForm.getReportTitle());
+			reportBO.setReportsCategoryBO(category);
+			reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
+			new ReportsPersistence().createOrUpdate(reportBO);
+
+			AddActivity.reparentActivity(conn, reportBO.getActivityId(),
+					category.getActivityId());
+
+			if (StringUtils.isEmpty(formFile.getFileName())) {
+				formFile.destroy();
+			}
+
+			else {
+				reportJasperMap.setReportJasper(formFile.getFileName());
+				new ReportsPersistence().createOrUpdate(reportJasperMap);
+				uploadFile(formFile);
+			}
+			return mapping
+					.findForward(ActionForwards.create_success.toString());
 		}
-		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
 	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
