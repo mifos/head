@@ -27,7 +27,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 144;
+	public static final int APPLICATION_VERSION = 145;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
@@ -63,6 +63,7 @@ public class DatabaseVersionPersistence {
 		register142(register);
 		register143(register);
 		register144(register);
+		register145(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -215,6 +216,12 @@ public class DatabaseVersionPersistence {
 				SecurityConstants.DELETE_REPORT_CATEGORY,
 				SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
 				"Can delete report category"));
+	}
+	private static void register145(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(145,
+				SecurityConstants.DOWNLOAD_REPORT_TEMPLATE,
+				SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
+		"Can download report template"));
 	}
 
 	private final Connection connection;

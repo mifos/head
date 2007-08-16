@@ -68,6 +68,8 @@ public class BirtReportsUploadAction extends BaseAction {
 				.allow("editprevious", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
 		security.allow("editThenUpload",
 				SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+		security.allow("downloadBirtReport",
+				SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
 		return security;
 	}
 
@@ -288,5 +290,12 @@ public class BirtReportsUploadAction extends BaseAction {
 
 	private ReportsCategoryBO getReportCategory(String reportCategoryId) {
 		return getReportCategory(Short.valueOf(reportCategoryId));
+	}
+	
+	public ActionForward downloadBirtReport(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.download_success
+				.toString());
 	}
 }

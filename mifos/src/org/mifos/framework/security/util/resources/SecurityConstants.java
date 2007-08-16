@@ -464,4 +464,6 @@ public interface SecurityConstants {
 	public final short VIEW_REPORT_CATEGORY = 221;
 	
 	public final short DELETE_REPORT_CATEGORY = 222;
+	public final short DOWNLOAD_REPORT_TEMPLATE = 223;
+	
 }
