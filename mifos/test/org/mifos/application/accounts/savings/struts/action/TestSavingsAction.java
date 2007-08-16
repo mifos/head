@@ -587,7 +587,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		List<SavingsTransactionHistoryView> trxnHistlist = (List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request);
 		Collections.sort(trxnHistlist);
 		assertEquals(2, trxnHistlist.size());
-		/*for(SavingsTransactionHistoryView view : trxnHistlist) {
+		for(SavingsTransactionHistoryView view : trxnHistlist) {
 			assertEquals("100.0",view.getCredit());
 			assertEquals("-",view.getDebit());
 			assertEquals("100.0",view.getBalance());
@@ -604,7 +604,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 			assertEquals(DateUtils.getDateWithoutTimeStamp(curTime),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
 			assertEquals(DateUtils.getDateWithoutTimeStamp(curTime),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
 			break;
-		}*/
+		}
 		HibernateUtil.closeSession();	
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		group = savings.getCustomer();

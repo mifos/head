@@ -120,7 +120,7 @@ public class TestAccountService extends MifosTestCase {
 		assertTrue(
 				"Account TrxnHistoryView list object Size should be greater than zero",
 				trxnHistlist.size() > 0);
-		/*for(TransactionHistoryView view : trxnHistlist) {
+		for(TransactionHistoryView view : trxnHistlist) {
 			assertEquals("100.0",view.getBalance());
 			assertNotNull(view.getClientName());
 			assertEquals("-",view.getDebit());
@@ -137,7 +137,7 @@ public class TestAccountService extends MifosTestCase {
 			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
 			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
 			break;
-		}*/
+		}
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
