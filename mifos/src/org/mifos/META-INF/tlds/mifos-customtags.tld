@@ -76,7 +76,7 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
-	</tag>
+    </tag>
 	<!-- Mifos loan header table tag -->
 	<tag>
 		<name>getLoanHeader</name>

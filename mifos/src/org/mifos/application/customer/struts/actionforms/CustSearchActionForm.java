@@ -14,7 +14,9 @@ public class CustSearchActionForm extends BaseActionForm {
 	
 	private String officeName;
 
-	public String getInput() {
+    private String perspective;
+
+    public String getInput() {
 		return input;
 	}
 
@@ -54,4 +56,11 @@ public class CustSearchActionForm extends BaseActionForm {
 		this.officeName = officeName;
 	}
 
+    public String getPerspective() {
+        return perspective;
+    }
+
+    public void setPerspective(String perspective) {
+        this.perspective = perspective;
+    }
 }

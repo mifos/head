@@ -276,7 +276,10 @@ public class LoanAccountAction extends AccountAppAction {
 				request);
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, customer
 				.getCustomerAccount().getNextMeetingDate(), request);
-		return mapping.findForward(ActionForwards.getPrdOfferigs_success
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+        return mapping.findForward(ActionForwards.getPrdOfferigs_success
 				.toString());
 	}
 
@@ -297,12 +300,15 @@ public class LoanAccountAction extends AccountAppAction {
 				request);
 		SessionUtils.setCollectionAttribute(LoanConstants.LOANFUNDS,
 				getFunds(loanOffering), request);
-		return mapping.findForward(ActionForwards.load_success.toString());
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+        return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
     public ActionForward redoLoanBegin(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return mapping.findForward(ActionForwards.beginRedoLoanDispersal_success.toString());
+        return mapping.findForward(ActionForwards.beginRedoLoanDisbursal_success.toString());
     }
 
     private void loadCreateMasterData(LoanAccountActionForm actionForm, HttpServletRequest request) throws Exception {
@@ -331,32 +337,59 @@ public class LoanAccountAction extends AccountAppAction {
 		customer.setVersionNo(oldCustomer.getVersionNo());
 		oldCustomer = null;
 		LoanBO loan = null;
-		loan = new LoanBO(getUserContext(request), loanOffering, customer,
-				AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
-						.loanAmountValue(), loanActionForm
-						.getNoOfInstallmentsValue(), loanActionForm
-						.getDisbursementDateValue(getUserContext(request)
-								.getPreferredLocale()), loanActionForm
-						.isInterestDedAtDisbValue(), loanActionForm
-						.getInterestDoubleValue(), loanActionForm
-						.getGracePeriodDurationValue(), getFund(request,
-						loanActionForm.getLoanOfferingFundValue()),
-				loanActionForm.getFeesToApply(),loanActionForm.getCustomFields());
-		loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
+        String perspective = request.getParameter("perspective");
+        if (perspective != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+
+        if (perspective != null && perspective.equalsIgnoreCase("redoloan")) {
+            loan = LoanBO.redoLoan(getUserContext(request), loanOffering, customer,
+                            AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
+                            .loanAmountValue(), loanActionForm
+                            .getNoOfInstallmentsValue(), loanActionForm
+                            .getDisbursementDateValue(getUserContext(request)
+                            .getPreferredLocale()), loanActionForm
+                            .isInterestDedAtDisbValue(), loanActionForm
+                            .getInterestDoubleValue(), loanActionForm
+                            .getGracePeriodDurationValue(), getFund(request,
+                            loanActionForm.getLoanOfferingFundValue()),
+                            loanActionForm.getFeesToApply(),loanActionForm
+                            .getCustomFields());
+        }
+        else {
+            loan = LoanBO.createLoan(getUserContext(request), loanOffering, customer,
+                            AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
+                            .loanAmountValue(), loanActionForm
+                            .getNoOfInstallmentsValue(), loanActionForm
+                            .getDisbursementDateValue(getUserContext(request)
+                            .getPreferredLocale()), loanActionForm
+                            .isInterestDedAtDisbValue(), loanActionForm
+                            .getInterestDoubleValue(), loanActionForm
+                            .getGracePeriodDurationValue(), getFund(request,
+                            loanActionForm.getLoanOfferingFundValue()),
+                            loanActionForm.getFeesToApply(),loanActionForm
+                            .getCustomFields());
+        }
+        loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
 		loan.setCollateralNote(loanActionForm.getCollateralNote());
 		CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
 				request, MasterConstants.COLLATERAL_TYPES, loanActionForm
 						.getCollateralTypeIdValue());
 		loan.setCollateralType(collateralTypeEntity);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		SessionUtils.setCollectionAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
-				getLoanSchedule(loan), request);
-		boolean isPendingApprovalDefined = Configuration.getInstance()
+        List<RepaymentScheduleInstallment> installments = getLoanSchedule(loan);
+        SessionUtils.setCollectionAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
+				installments, request);
+
+        loanActionForm.initializeTransactionFields(getUserContext(request), installments.size());
+
+        boolean isPendingApprovalDefined = Configuration.getInstance()
 				.getAccountConfig(getUserContext(request).getBranchId())
 				.isPendingApprovalStateDefinedForLoan();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
 				isPendingApprovalDefined, request);
-		return mapping.findForward(ActionForwards.schedulePreview_success
+
+        return mapping.findForward(ActionForwards.schedulePreview_success
 				.toString());
 	}
 
@@ -364,7 +397,15 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(ActionForwards.preview_success.toString());
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+
+            /*LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+            LoanBO loan = (LoanBO) SessionUtils.getAttribute(
+                        Constants.BUSINESS_KEY, request);*/
+        }
+
+        return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
 	@TransactionDemarcate(joinToken = true)

@@ -79,7 +79,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
  * and how it is applied.
  */
-public class TestLoanBORedoDispersal extends MifosTestCase {
+public class TestLoanBORedoDisbursal extends MifosTestCase {
     private AccountPersistence accountPersistence;
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
@@ -147,7 +147,7 @@ public class TestLoanBORedoDispersal extends MifosTestCase {
         MifosCurrency currency = TestObjectFactory.getCurrency();
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numberOfInstallments);
-        LoanBO loan = new LoanBO(TestUtils.makeUser(), loanOffering, group,
+        LoanBO loan = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group,
 				AccountState.LOANACC_APPROVED, new Money(currency, "300.0"),
                 numberOfInstallments, meetingDates.get(0), true, 0.0, (short) 0,
                 new FundBO(), new ArrayList<FeeView>(), null);

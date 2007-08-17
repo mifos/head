@@ -12,6 +12,18 @@
 <bodycontent>empty</bodycontent>
 
 <attribute>
+<name>formatOrder</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+
+<attribute>
+<name>indexed</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+</attribute>
+
+<attribute>
 <name>keyhm</name>
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>

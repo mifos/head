@@ -304,7 +304,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 						.getInstance().getBusinessService(
 								BusinessServiceName.Customer))
 						.getCustomer(getIntegerValue(clientDetail.getClientId()));
-				LoanBO loan = new LoanBO(getUserContext(request), loanOffering,
+				LoanBO loan = LoanBO.createLoan(getUserContext(request), loanOffering,
 						client, AccountState
 								.fromShort(getShortValue(loanActionForm
 										.getStateSelected())),

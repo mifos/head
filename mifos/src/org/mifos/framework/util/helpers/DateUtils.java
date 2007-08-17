@@ -198,47 +198,6 @@ public class DateUtils {
 		return MFIString;
 	}
 
-	public static String[] getDayMonthYear(String date, String format) {
-		String day = "";
-		String month = "";
-		String year = "";
-		String token;
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
-		StringTokenizer stdt = new StringTokenizer(date, "/");
-		while (stfmt.hasMoreTokens() && stdt.hasMoreTokens()) {
-			token = stfmt.nextToken();
-			if (token.equalsIgnoreCase("D")) {
-				day = stdt.nextToken();
-			}
-			else if (token.equalsIgnoreCase("M")) {
-				month = stdt.nextToken();
-			}
-			else year = stdt.nextToken();
-		}
-		return new String[] { day, month, year };
-	}
-
-	public static String[] getDayMonthYear(String date, String format,
-			String separator) {
-		String day = "";
-		String month = "";
-		String year = "";
-		String token;
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
-		StringTokenizer stdt = new StringTokenizer(date, separator);
-		while (stfmt.hasMoreTokens() && stdt.hasMoreTokens()) {
-			token = stfmt.nextToken();
-			if (token.equalsIgnoreCase("D")) {
-				day = stdt.nextToken();
-			}
-			else if (token.equalsIgnoreCase("M")) {
-				month = stdt.nextToken();
-			}
-			else year = stdt.nextToken();
-		}
-		return new String[] { day, month, year };
-	}
-
 	// parse new-style browser date format... separate m,d,y fields, no js assembling
 	public static java.sql.Date parseBrowserDateFields(HttpServletRequest request, String property) throws InvalidDateException {
 		String yearStr = request.getParameter(property + "YY");
@@ -307,28 +266,6 @@ public class DateUtils {
 		else {
 			return null;
 		}
-	}
-
-	public static String[] getDayMonthYearDbFrmt(String date, String format) {
-		String day = "";
-		String month = "";
-		String year = "";
-		String token;
-		StringTokenizer formatTokenizer = new StringTokenizer(format, "-");
-		StringTokenizer dateTokenizer = new StringTokenizer(date, "-");
-		while (formatTokenizer.hasMoreTokens() && dateTokenizer.hasMoreTokens()) {
-			token = formatTokenizer.nextToken();
-			if (token.equalsIgnoreCase("D")) {
-				day = dateTokenizer.nextToken();
-			}
-			else if (token.equalsIgnoreCase("M")) {
-				month = dateTokenizer.nextToken();
-			}
-			else {
-				year = dateTokenizer.nextToken();
-			}
-		}
-		return new String[] { day, month, year };
 	}
 
 	public static String getMFIFormat() {

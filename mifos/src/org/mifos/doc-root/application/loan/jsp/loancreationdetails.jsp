@@ -203,7 +203,12 @@
 							<tr>
 								<td width="70%" height="24" align="left" valign="top" class="paddingleftCreates">
 									<table width="98%" border="0" cellspacing="0" cellpadding="3">
-										<tr>
+										<c:if test="${requestScope.perspective == 'redoLoan'}">
+                                        <tr>
+                                            <td><span class="fontnormalRedBold"><mifos:mifoslabel name="loan.redo_loan_note"/></span></td>
+                                        </tr>
+                                        </c:if>
+                                        <tr>
 											<td class="headingorange">
 												<span class="heading"> <mifos:mifoslabel name="accounts.create" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
 												<mifos:mifoslabel name="loan.Enter" />

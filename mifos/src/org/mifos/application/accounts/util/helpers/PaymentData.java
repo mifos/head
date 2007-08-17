@@ -35,7 +35,12 @@ public class PaymentData {
 		setTransactionDate(transactionDate);
 	}
 
-	public List<AccountPaymentData> getAccountPayments() {
+    public static PaymentData createPaymentData(PaymentDataTemplate template) {
+        return new PaymentData(template.getTotalAmount(), template.getPersonnel(),
+                template.getPaymentTypeId(), template.getTransactionDate());
+    }
+
+    public List<AccountPaymentData> getAccountPayments() {
 		return accountPayments;
 	}
 

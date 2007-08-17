@@ -64,7 +64,23 @@ public class DateTag extends BaseInputTag {
 	
 	private String renderstyle="";
 
-	public String getRenderstyle() {
+    // tbostelmann - 2007-08-16
+    // This value is being used specifically to handle CustomFieldValues
+    // that are dates with a specific order of the fields.  It really should
+    // be a SimpleDateFormat string, but I didn't have enough time to determine what
+    // the customField GroupVO's date format was.  I believe this is some
+    // customer-specific custom field.
+    private String formatOrder;
+
+    public void setFormatOrder(String value) {
+        this.formatOrder = value;
+    }
+
+    public String getFormatOrder() {
+        return this.formatOrder;
+    }
+
+    public String getRenderstyle() {
 		return renderstyle;
 	}
 	
@@ -99,9 +115,9 @@ public class DateTag extends BaseInputTag {
 		
 			
 			XmlBuilder htmlInputsForhidden = new XmlBuilder();
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty());
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty()+"Format","Value");
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",getProperty()+"YY","Value");
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName());
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"Format","Value");
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"YY","Value");
 		
 			TagUtils.getInstance().write(this.pageContext,
 					htmlInputsForhidden.toString());
@@ -110,7 +126,7 @@ public class DateTag extends BaseInputTag {
 				&& fieldConfig.isFieldManadatory(getKeyhm())) {
 	
 			XmlBuilder htmlInputsForhidden = new XmlBuilder();
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",getKeyhm(),"Value",getProperty());
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",getKeyhm(),"Value",prepareName());
 			TagUtils.getInstance().write(this.pageContext,
 					htmlInputsForhidden.toString());
 		}
@@ -121,7 +137,11 @@ public class DateTag extends BaseInputTag {
 		if (userContext != null) {
 			// TODO - get from ApplicationConfiguration
 			String currentDateValue = returnValue();
-			String output = render(userContext, currentDateValue);
+            Locale locale = userContext.getPreferredLocale();
+            if (null == locale) {
+                locale = userContext.getMfiLocale();
+            }
+            String output = render(locale, currentDateValue);
 			
 			TagUtils.getInstance().write(pageContext, output);
 		}
@@ -129,22 +149,55 @@ public class DateTag extends BaseInputTag {
 		return SKIP_BODY;
 	}
 
-	String render(UserContext userContext, String currentDateValue) 
+    private static String[] getDayMonthYear(String date, String format,
+            String separator) {
+        String day = "";
+        String month = "";
+        String year = "";
+        String token;
+        StringTokenizer stfmt = new StringTokenizer(
+                format, DateUtils.getSeparator(format));
+        StringTokenizer stdt = new StringTokenizer(date, separator);
+        while (stfmt.hasMoreTokens() && stdt.hasMoreTokens()) {
+            token = stfmt.nextToken();
+            if (token.equalsIgnoreCase("D")) {
+                day = stdt.nextToken();
+            }
+            else if (token.equalsIgnoreCase("M")) {
+                month = stdt.nextToken();
+            }
+            else year = stdt.nextToken();
+        }
+
+        // Assert that we got valid values
+        int dateLength = date.length();
+        if (dateLength > 0 && (year.length() == dateLength || month.length() == dateLength || day.length() == dateLength)) {
+            throw new IllegalStateException(
+                    "Date formatOrder is invalid: date=" + date +
+                    ", year=" + year + ", month=" + month + ", day=" + day);
+        }
+
+        return new String[] { day, month, year };
+    }
+
+    String render(Locale locale, String currentDateValue)
 	throws JspException {
 		String ddValue = "";
 		String mmValue = "";
 		String yyValue = "";
-		String userfmt = getUserFormat(userContext);
+		String userfmt = getUserFormat(locale);
 		String separator = DateUtils.getSeparator(userfmt);
 		if (currentDateValue != null && !currentDateValue.equals("")) {
-			// added by mohammedn
-			String dmy[] = null;
-			// TODO chnage this
-			if (name.equalsIgnoreCase("org.apache.struts.taglib.html.BEAN")) {
-				String format = DateUtils.convertToDateTagFormat(userfmt);
-				dmy = DateUtils.getDayMonthYear(currentDateValue, format, separator);
-			} else
-				dmy = DateUtils.getDayMonthYearDbFrmt(currentDateValue, "Y-M-D");
+			String dmy[];
+            if (getFormatOrder() == null) {
+                dmy = getDayMonthYear(currentDateValue,
+                        DateUtils.convertToDateTagFormat(userfmt), separator);
+
+            } else {
+                String formatOrder = getFormatOrder();
+                dmy = getDayMonthYear(currentDateValue,
+                        formatOrder, DateUtils.getSeparator(formatOrder));
+            }
 			ddValue = dmy[0].trim();
 			mmValue = dmy[1].trim();
 			yyValue = dmy[2].trim();
@@ -153,26 +206,30 @@ public class DateTag extends BaseInputTag {
 		String format = DateUtils.convertToDateTagFormat(userfmt);
 		
 		String output;
-		if (getRenderstyle().equalsIgnoreCase("simple")) {
+        String propertyVal;
+        if (this.getIndexed()) {
+            propertyVal = getProperty() + this.getIndexValue();
+        }
+        else {
+            propertyVal = getProperty();
+        }
+
+        if (getRenderstyle().equalsIgnoreCase("simple")) {
 			output = "<!-- simple style -->" +
-				makeUserFields(property, ddValue, mmValue, yyValue, "", format);
-			makeMappedUserFields(property, ddValue, mmValue, yyValue, "", format);
+				makeUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
+			makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
 		} else if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
 			output = "<!-- simple-mapped style -->" +
-				makeMappedUserFields(property, ddValue, mmValue, yyValue, "", format);
+				makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
 		} else {
 			output = "<!-- normal style -->" +
-				this.prepareOutputString(format, property,
+				this.prepareOutputString(format, propertyVal,
 					ddValue, mmValue, yyValue, separator, userfmt);
 		}
 		return output;
 	}
 
-	String getUserFormat(UserContext userContext) {
-		Locale locale = userContext.getPreferredLocale();
-		if (null == locale) {
-			locale = userContext.getMfiLocale();
-		}
+	String getUserFormat(Locale locale) {
 		DateFormat df = DateFormat
 				.getDateInstance(DateFormat.SHORT, locale);
 		return ((SimpleDateFormat) df).toPattern();
@@ -193,7 +250,7 @@ public class DateTag extends BaseInputTag {
 		return TagUtils.getInstance().filter(value.toString());
 	}
 
-	public String prepareOutputString(String format, String dateName,
+	String prepareOutputString(String format, String dateName,
 			String ddValue, String mmValue, String yyValue, String separator,
 			String userfrmt) {
 		StringBuilder dateFunction = new StringBuilder();

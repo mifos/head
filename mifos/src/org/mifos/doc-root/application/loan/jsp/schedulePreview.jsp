@@ -53,7 +53,7 @@
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountInstallments.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-		<html-el:form action="/loanAccountAction.do">
+        <html-el:form action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -133,7 +133,12 @@
 							<tr>
 								<td width="70%" height="24" align="left" valign="top" class="paddingleftCreates">
 									<table width="98%" border="0" cellspacing="0" cellpadding="3">
-										<tr>
+										<c:if test="${requestScope.perspective == 'redoLoan'}">
+                                        <tr>
+                                            <td><span class="fontnormalRedBold"><mifos:mifoslabel name="loan.redo_loan_note"/></span></td>
+                                        </tr>
+                                        </c:if>
+                                        <tr>
 											<td class="headingorange">
 												<span class="heading"> <mifos:mifoslabel name="accounts.create" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
 												<mifos:mifoslabel name="loan.review&edit" />
@@ -204,10 +209,20 @@
 															<img src="pages/framework/images/trans.gif" width="5" height="3">
 														</td>
 													</tr>
-													<tr>
-														<td valign="top">
-															<mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="accounts/loan" passLocale="true" />
-														</td>
+                                                    <tr>
+                                                    <td valign="top">
+                                                        <mifoscustom:mifostabletag source="repaymentScheduleInstallments"
+                                                                scope="session" xmlFileName="ProposedRepaymentSchedule.xml"
+                                                                moduleName="accounts/loan" passLocale="true"/>
+                                                    </td>
+                                                    <c:if test="${requestScope.perspective == 'redoLoan'}">
+                                                    <td valign="top">
+                                                        <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}">
+                                                            <date:datetag name="paymentDataBeans" indexed="true" property="date" />
+                                                            <mifos:mifosdecimalinput name="paymentDataBeans" indexed="true" property="amount" />
+                                                        </c:forEach>
+                                                    </td>
+                                                    </c:if>
 													</tr>
 												</table>
 											</td>

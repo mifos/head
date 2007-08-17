@@ -315,29 +315,33 @@ public class AccountBO extends BusinessObject {
 
     public PaymentData createPaymentData(Money amount, Date trxnDate,
 			String receiptId, Date receiptDate, Short paymentTypeId,
-			Short userId) throws ValidationException {
+			Short userId) {
         PersonnelBO personnel;
         try {
             personnel = new PersonnelPersistence().getPersonnel(userId);
         } catch (PersistenceException e) {
             // Generally this is the UserContext id, which shouldn't ever
-            // be invalid - for now just throw an unexpected validation error
-            throw new ValidationException(AccountConstants.ERROR_INVALID_PERSONNEL);
+            // be invalid
+            throw new IllegalArgumentException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
         if (personnel == null) {
             // see above catch clause
-            throw new ValidationException(AccountConstants.ERROR_INVALID_PERSONNEL);
+            throw new IllegalArgumentException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
 
         PaymentData paymentData = new PaymentData(
                 amount, personnel, paymentTypeId, trxnDate);
-        paymentData.setRecieptDate(receiptDate);
-		paymentData.setRecieptNum(receiptId);
-		for (AccountActionDateEntity installment : getTotalInstallmentsDue()) {
+        if (receiptDate != null) {
+            paymentData.setRecieptDate(receiptDate);
+        }
+        if (receiptId != null) {
+            paymentData.setRecieptNum(receiptId);
+        }
+
+        for (AccountActionDateEntity installment : getTotalInstallmentsDue()) {
 			if (this instanceof CustomerAccountBO) {
-				paymentData
-						.addAccountPaymentData(new CustomerAccountPaymentData(
-								installment));
+				paymentData.addAccountPaymentData(
+                        new CustomerAccountPaymentData(installment));
 			}
 		}
 		return paymentData;

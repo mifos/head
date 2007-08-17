@@ -41,12 +41,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -55,28 +55,29 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.*;
 
 public class LoanAccountActionForm extends BaseActionForm {
 
-	public LoanAccountActionForm() {
+    public LoanAccountActionForm() {
 		super();
 		defaultFees = new ArrayList<FeeView>();
 		additionalFees = new ArrayList<FeeView>();
 		customFields = new ArrayList<CustomFieldView>();
-	}
+    }
+
+    private String perspective;
 
 	private String accountId;
 
@@ -119,10 +120,16 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String stateSelected;
 
 	private String gracePeriod;
-	
+
 	private List<CustomFieldView> customFields;
 
-	public String getGracePeriod() {
+    private List<PaymentDataHtmlBean> paymentDataBeans;
+
+    public List<PaymentDataHtmlBean> getPaymentDataBeans() {
+        return this.paymentDataBeans;
+    }
+
+    public String getGracePeriod() {
 		return gracePeriod;
 	}
 
@@ -375,7 +382,21 @@ public class LoanAccountActionForm extends BaseActionForm {
 		return false;
 	}
 
-	public List<FeeView> getFeesToApply() {
+    public void initializeTransactionFields(UserContext userContext, int numberOfRows) {
+        this.paymentDataBeans = new ArrayList(numberOfRows);
+        PersonnelBO personnel;
+        try {
+            personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
+        } catch (PersistenceException e) {
+            throw new IllegalArgumentException("bad UserContext id");
+        }
+        for (int i=0; i<numberOfRows; i++) {
+            this.paymentDataBeans.add(new PaymentDataHtmlBean(
+                    userContext.getPreferredLocale(), personnel));
+        }
+    }
+
+    public List<FeeView> getFeesToApply() {
 		List<FeeView> feesToApply = new ArrayList<FeeView>();
 		for (FeeView fee : getAdditionalFees())
 			if (fee.getFeeIdValue() != null)
@@ -599,4 +620,12 @@ public class LoanAccountActionForm extends BaseActionForm {
 					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
 	}
+
+    public String getPerspective() {
+        return perspective;
+    }
+
+    public void setPerspective(String perspective) {
+        this.perspective = perspective;
+    }
 }

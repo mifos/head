@@ -166,7 +166,10 @@ public class CustSearchAction extends SearchAction {
 			throws Exception {
 		CustSearchActionForm actionForm = (CustSearchActionForm) form;
 		actionForm.setSearchString(null);
-		cleanUpSearch(request);
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+        cleanUpSearch(request);
 		return mapping
 				.findForward(ActionForwards.loadSearch_success.toString());
 	}
@@ -343,7 +346,10 @@ public class CustSearchAction extends SearchAction {
 			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 					getCustomerBusinessService().searchCustForSavings(
 							searchString, userContext.getId()), request);
-		return actionForward;
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+        return actionForward;
 
 	}
 

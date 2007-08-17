@@ -188,23 +188,94 @@ public class LoanBO extends AccountBO {
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 	}
 
-	public LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
+    public static LoanBO redoLoan(UserContext userContext, LoanOfferingBO loanOffering,
+                                      CustomerBO customer, AccountState accountState, Money loanAmount,
+                                      Short noOfinstallments, Date disbursementDate,
+                                      boolean interestDeductedAtDisbursement, Double interestRate,
+                                      Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
+                                      List<CustomFieldView> customFields)
+            throws AccountException {
+        if (loanOffering == null || loanAmount == null
+                || noOfinstallments == null || disbursementDate == null
+                || interestRate == null)
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTION);
+
+        if (!customer.isActive()) {
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
+        }
+
+        if (!loanOffering.isActive()) {
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+        }
+
+        if (interestDeductedAtDisbursement == true
+                && noOfinstallments.shortValue() <= 1) {
+            throw new AccountException(
+                    LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+        }
+
+        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount,
+                noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
+                interestRate, gracePeriodDuration, fund, feeViews, customFields);
+    }
+
+    public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering,
+                                      CustomerBO customer, AccountState accountState, Money loanAmount,
+                                      Short noOfinstallments, Date disbursementDate,
+                                      boolean interestDeductedAtDisbursement, Double interestRate,
+                                      Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
+                                      List<CustomFieldView> customFields)
+            throws AccountException {
+        if (loanOffering == null || loanAmount == null
+                || noOfinstallments == null || disbursementDate == null
+                || interestRate == null || customer == null)
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTION);
+
+        if (!customer.isActive()) {
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
+        }
+
+        if (!loanOffering.isActive()) {
+            throw new AccountException(
+                    AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+        }
+
+        if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
+            throw new AccountException(
+                    LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+        }
+
+        if (interestDeductedAtDisbursement == true
+                && noOfinstallments.shortValue() <= 1) {
+            throw new AccountException(
+                    LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+        }
+
+        return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, 
+                noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
+                interestRate, gracePeriodDuration, fund, feeViews, customFields);
+    }
+
+    private LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
 			CustomerBO customer, AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
-			boolean interestDeductedAtDisbursement, Double interesRate,
+			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields) throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
-		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
-				interesRate, gracePeriodDuration, fund, customer,
-				interestDeductedAtDisbursement);
-		setCreateDetails();
+
+        setCreateDetails();
 		this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
 		this.loanBalance = loanAmount;
 		this.noOfInstallments = noOfinstallments;
 		this.interestType = loanOffering.getInterestTypes();
-		this.interestRate = interesRate;
+		this.interestRate = interestRate;
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
 				gracePeriodDuration, noOfinstallments);
@@ -2157,7 +2228,7 @@ public class LoanBO extends AccountBO {
 		return isValid;
 	}
 
-	private boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
+	private static boolean isDisbursementDateLessThanCurrentDate(Date disbursementDate) {
 		if (DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime())
 				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
 			return true;
@@ -2414,38 +2485,6 @@ public class LoanBO extends AccountBO {
 			}
 		}
 		return fees;
-	}
-
-	private void validate(LoanOfferingBO loanOffering, Money loanAmount,
-			Short noOfinstallments, Date disbursementDate, Double interestRate,
-			Short gracePeriodDuration, FundBO fund, CustomerBO customer,
-			boolean interestDeductedAtDisbursement) throws AccountException {
-		if (loanOffering == null || loanAmount == null
-				|| noOfinstallments == null || disbursementDate == null
-				|| interestRate == null)
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION);
-
-		if (!customer.isActive()) {
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-		}
-
-		if (!loanOffering.isActive()) {
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-		}
-
-		if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-		}
-
-		if (interestDeductedAtDisbursement == true
-				&& noOfinstallments.shortValue() <= 1) {
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
-		}
 	}
 
 	private void buildAccountFee(List<FeeView> feeViews) {

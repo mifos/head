@@ -33,7 +33,7 @@
 						<tr>
 							<td class="bluetablehead">
 						<c:choose>
-						<c:when test="${custSearchActionForm.input == 'savings'}">							
+						<c:when test="${custSearchActionForm.input == 'savings'}">
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td width="33%">
@@ -133,7 +133,12 @@
 							<td width="70%" height="24" align="left" valign="top"
 								class="paddingleftCreates">
 							<table width="98%" border="0" cellspacing="0" cellpadding="3">
-								<tr>
+                                <c:if test="${requestScope.perspective == 'redoLoan'}">  
+                                <tr>
+                                    <td><span class="fontnormalRedBold"><mifos:mifoslabel name="loan.redo_loan_note"/></span></td>
+                                </tr>
+                                </c:if>
+                                <tr>
 									<td class="headingorange">
 								<c:choose>
 									<c:when test="${custSearchActionForm.input == 'savings'}">
