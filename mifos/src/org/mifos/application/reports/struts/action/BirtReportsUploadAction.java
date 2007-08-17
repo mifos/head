@@ -96,7 +96,14 @@ public class BirtReportsUploadAction extends BaseAction {
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
 		request.setAttribute("category", category);
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		if (isReportAlreadyExist(request, uploadForm)) {
+			return mapping.findForward(ActionForwards.preview_failure
+					.toString());
+		}
+		else {
+			return mapping.findForward(ActionForwards.preview_success
+					.toString());
+		}
 	}
 
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
@@ -119,17 +126,21 @@ public class BirtReportsUploadAction extends BaseAction {
 
 		ReportsCategoryBO category = getReportCategory(uploadForm
 				.getReportCategoryId());
-		for (ReportsBO report : category.getReportsSet()) {
-			if (report.getReportName().equals(uploadForm.getReportTitle())) {
-				ActionErrors errors = new ActionErrors();
-				errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST,
-						new ActionMessage(
-								ReportsConstants.ERROR_TITLEALREADYEXIST));
-				request.setAttribute(Globals.ERROR_KEY, errors);
-				return mapping.findForward(ActionForwards.preview_failure
-						.toString());
-			}
+		if (isReportAlreadyExist(request, uploadForm)) {
+			return mapping.findForward(ActionForwards.preview_failure
+					.toString());
 		}
+		/*for (ReportsBO report : category.getReportsSet()) {
+		 if (report.getReportName().equals(uploadForm.getReportTitle())) {
+		 ActionErrors errors = new ActionErrors();
+		 errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST,
+		 new ActionMessage(
+		 ReportsConstants.ERROR_TITLEALREADYEXIST));
+		 request.setAttribute(Globals.ERROR_KEY, errors);
+		 return mapping.findForward(ActionForwards.preview_failure
+		 .toString());
+		 }
+		 }*/
 		reportBO = new ReportsBO();
 		reportJasperMap = new ReportsJasperMap();
 
