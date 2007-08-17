@@ -60,14 +60,14 @@
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
-						<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+						<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center" class="heading">
 									&nbsp;
 								</td>
 							</tr>
 						</table>
-						<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+						<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
 							<tr>
 								<td class="bluetablehead">
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -129,10 +129,10 @@
 								</td>
 							</tr>
 						</table>
-						<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
+						<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
 							<tr>
-								<td width="70%" height="24" align="left" valign="top" class="paddingleftCreates">
-									<table width="98%" border="0" cellspacing="0" cellpadding="3">
+								<td width="95%" height="24" align="left" valign="top" class="paddingleftCreates">
+									<table width="98%" border="0" cellspacing="0" cellpadding="0">
 										<c:if test="${requestScope.perspective == 'redoLoan'}">
                                         <tr>
                                             <td><span class="fontnormalRedBold"><mifos:mifoslabel name="loan.redo_loan_note"/></span></td>
@@ -163,7 +163,7 @@
 										</tr>
 									</table>
 									<br>
-									<table width="93%" border="0" cellpadding="3" cellspacing="0">
+									<table width="98%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td width="100%" height="23" class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
@@ -190,7 +190,11 @@
 													</c:if>
 												</c:forEach>
 												<span class="fontnormal"> <br> </span>
-												<table width="80%" border="0" cellspacing="0" cellpadding="0">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
 													<tr>
 														<td class="headingorange">
 															<mifos:mifoslabel name="loan.inst" />
@@ -203,40 +207,58 @@
 														<td height="22" class="fontnormalbold" align="center">
 															<mifos:mifoslabel name="loan.amount_due" />
 														</td>
-													</tr>
+                                                        <c:if test="${requestScope.perspective == 'redoLoan'}">
+                                                        <td height="22" class="fontnormalbold" align="center">
+															<mifos:mifoslabel name="loan.payments" />
+														</td>
+                                                        </c:if>
+                                                    </tr>
 													<tr>
 														<td align="center" class="blueline">
 															<img src="pages/framework/images/trans.gif" width="5" height="3">
 														</td>
-													</tr>
+                                                        <c:if test="${requestScope.perspective == 'redoLoan'}">
+                                                        <td align="center" class="blueline">
+															<img src="pages/framework/images/trans.gif" width="5" height="3">
+														</td>
+                                                        </c:if>
+                                                    </tr>
                                                     <tr>
-                                                    <td valign="top">
+                                                    <td valign="top" align="center">
                                                         <mifoscustom:mifostabletag source="repaymentScheduleInstallments"
                                                                 scope="session" xmlFileName="ProposedRepaymentSchedule.xml"
                                                                 moduleName="accounts/loan" passLocale="true"/>
                                                     </td>
                                                     <c:if test="${requestScope.perspective == 'redoLoan'}">
-                                                    <td valign="top">
+                                                    <td valign="top" align="center">
+                                                        <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                        <tr  class="drawtablerowbold"  >
+                                                            <td width="80%" align="center" ><b><mifos:mifoslabel name="loan.dateofpayment" /></b></td>
+                                                            <td width="20%" align="center" ><b><mifos:mifoslabel name="loan.amount" /></b></td>
+                                                        </tr>
                                                         <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}">
-                                                            <date:datetag name="paymentDataBeans" indexed="true" property="date" />
-                                                            <mifos:mifosdecimalinput name="paymentDataBeans" indexed="true" property="amount" />
+                                                        <tr>
+                                                            <td width="80%" class="drawtablerow" align="center">
+                                                                <date:datetag name="paymentDataBeans" indexed="true" property="date" />
+                                                            </td>
+                                                            <td width="20%" class="drawtablerow" align="center">
+                                                                <mifos:mifosdecimalinput name="paymentDataBeans" indexed="true" property="amount" size="10" />
+                                                            </td>
+                                                        </tr>
                                                         </c:forEach>
+                                                        </table>
                                                     </td>
                                                     </c:if>
 													</tr>
 												</table>
 											</td>
 										</tr>
-									</table>
-									<table width="93%" border="0" cellpadding="0" cellspacing="0">
-										<tr>
+                                        <tr>
 											<td align="center" class="blueline">
 												&nbsp;
 											</td>
 										</tr>
-									</table>
 									<br>
-									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
 												<html-el:submit property="previewBtn" styleClass="buttn" style="width:70px;">
