@@ -130,17 +130,6 @@ public class BirtReportsUploadAction extends BaseAction {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
-		/*for (ReportsBO report : category.getReportsSet()) {
-		 if (report.getReportName().equals(uploadForm.getReportTitle())) {
-		 ActionErrors errors = new ActionErrors();
-		 errors.add(ReportsConstants.ERROR_TITLEALREADYEXIST,
-		 new ActionMessage(
-		 ReportsConstants.ERROR_TITLEALREADYEXIST));
-		 request.setAttribute(Globals.ERROR_KEY, errors);
-		 return mapping.findForward(ActionForwards.preview_failure
-		 .toString());
-		 }
-		 }*/
 		reportBO = new ReportsBO();
 		reportJasperMap = new ReportsJasperMap();
 
@@ -329,6 +318,10 @@ public class BirtReportsUploadAction extends BaseAction {
 
 			AddActivity.reparentActivity(conn, reportBO.getActivityId(),
 					category.getActivityId());
+			String reportHeader = "Can view ";
+			AddActivity.changeActivityMessage(conn, reportBO.getActivityId(),
+					DatabaseVersionPersistence.ENGLISH_LOCALE, reportHeader
+							+ reportBO.getReportName());
 
 			if (StringUtils.isEmpty(formFile.getFileName())) {
 				formFile.destroy();

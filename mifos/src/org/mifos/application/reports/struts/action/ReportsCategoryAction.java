@@ -299,6 +299,10 @@ public class ReportsCategoryAction extends BaseAction {
 		}
 		reportsCategoryBO.setReportCategoryName(inputCategoryName);
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
+		Connection conn = new ReportsPersistence().getConnection();
+		AddActivity.changeActivityMessage(conn, reportsCategoryBO.getActivityId(),
+				DatabaseVersionPersistence.ENGLISH_LOCALE,
+				reportsCategoryBO.getReportCategoryName());
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 }
