@@ -6,6 +6,10 @@
 		This is an open source project on micro-finance
 	</description>
 	<display-name>MiFosApplication</display-name>
+	<servlet>
+		<servlet-name>reportTemplateDownload</servlet-name>
+		<servlet-class>org.mifos.application.reports.servlet.ReportTemplateDownloadServlet</servlet-class>
+	</servlet>
 	<filter>
         <filter-name>DatabaseVersionFilter</filter-name>
         <filter-class>org.mifos.framework.persistence.DatabaseVersionFilter</filter-class>
@@ -23,6 +27,11 @@
 		</filter-class>
 	</filter>
 	
+	<servlet-mapping>
+        <servlet-name>reportTemplateDownload</servlet-name>
+        <url-pattern>/reportTemplateDownload</url-pattern>       
+    </servlet-mapping>
+	
 	<!-- DatabaseVersionFilter should aways be on top -->
 	<filter-mapping>
         <filter-name>DatabaseVersionFilter</filter-name>
@@ -33,6 +42,7 @@
 		<filter-name>loginfilter</filter-name>
 		<url-pattern>/developer/*</url-pattern>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>/reportTemplateDownload</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>

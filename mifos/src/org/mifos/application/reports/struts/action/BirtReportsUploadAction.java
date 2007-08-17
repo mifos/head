@@ -356,6 +356,8 @@ public class BirtReportsUploadAction extends BaseAction {
 	public ActionForward downloadBirtReport(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		request.getSession().setAttribute("reportsBO", new ReportsPersistence()
+				.getReport(Short.valueOf(request.getParameter("reportId"))));
 		return mapping.findForward(ActionForwards.download_success.toString());
 	}
 }
