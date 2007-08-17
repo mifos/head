@@ -23,7 +23,7 @@
 		    cascade="save-update" access="field"/>
  		<many-to-one name="customer" column="CUSTOMER_ID"  
  		    class="org.mifos.application.customer.business.CustomerBO" 
- 		    insert="true" update="true"  unique="true" lazy="true" 
+ 		    insert="true" update="true"  unique="true" 
  		    cascade="none" access="field"/>
     </class>
     <query name="getUpdatedMeetings">

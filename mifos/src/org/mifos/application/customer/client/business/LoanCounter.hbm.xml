@@ -11,7 +11,7 @@
 			<generator class="native" />
 		</id>
         <property name="loanCycleCounter" column="LOAN_CYCLE_COUNTER"/>   
-		<many-to-one name="clientPerfHistory" column="CLIENT_PERF_ID" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" lazy="true" access="field" />
-		<many-to-one name="loanOffering" column="LOAN_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" lazy="true" access="field" cascade="none"/>
+		<many-to-one name="clientPerfHistory" column="CLIENT_PERF_ID" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" access="field" />
+		<many-to-one name="loanOffering" column="LOAN_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" access="field" cascade="none"/>
     </class>    
 </hibernate-mapping>

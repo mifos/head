@@ -10,8 +10,8 @@
         </id>
     <property column="ENTITY_NAME"  name="labelName"  type="java.lang.String"/>
     <property column="LOCALE_ID"  name="localeId" />
-     <many-to-one name="locale" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" lazy="true" insert="false" update="false"/>    
-     <many-to-one name="lookUpEntity"  column="ENTITY_ID" class="org.mifos.application.master.business.MifosLookUpEntity"  lazy="true" />    
+     <many-to-one name="locale" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity"  unique="true" insert="false" update="false"/>    
+     <many-to-one name="lookUpEntity"  column="ENTITY_ID" class="org.mifos.application.master.business.MifosLookUpEntity" />    
   </class> 
 
 

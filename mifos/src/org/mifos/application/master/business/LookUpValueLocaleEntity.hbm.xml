@@ -15,7 +15,7 @@
     
     <many-to-one name="locale" column="LOCALE_ID" 
       class="org.mifos.application.master.business.SupportedLocalesEntity"
-      unique="true" lazy="true" insert="false" update="false"/>    
+      unique="true" insert="false" update="false"/>    
   
   </class> 
 </hibernate-mapping>

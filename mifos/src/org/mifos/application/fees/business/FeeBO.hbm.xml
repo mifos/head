@@ -21,7 +21,7 @@
 		
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" insert="true" update="false" access="field" />
 		<many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.application.fees.business.CategoryTypeEntity" update="false" insert="true" access="field" />
-		<many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
+		<many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
 		<one-to-one name="feeFrequency" class="org.mifos.application.fees.business.FeeFrequencyEntity" cascade="all" property-ref="fee" lazy="false" access="field" />
 		<many-to-one name="feeStatus" column="STATUS" class="org.mifos.application.fees.business.FeeStatusEntity" insert="true" update="true" />
 		<set name="feeLevels" cascade="all" inverse="true" table="FEELEVEL" access="field">

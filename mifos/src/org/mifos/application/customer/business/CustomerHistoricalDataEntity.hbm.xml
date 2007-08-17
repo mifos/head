@@ -32,7 +32,7 @@
      	<property name="updatedDate" column="UPDATED_DATE"  />
     	<property name="createdBy" column="CREATED_BY"  />
     	<property name="updatedBy" column="UPDATED_BY"  />
-       <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" lazy = "true" access="field"/>
+       <many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" insert="true" update="true" cascade="none" unique="true" access="field"/>
     </class>
     
 </hibernate-mapping>

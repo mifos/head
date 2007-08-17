@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,9 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.financial.business.COABO;
+import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
+import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
@@ -349,5 +353,16 @@ public class AccountPersistence extends Persistence {
 		
 		return (Short)nameToId.get(accountName);
 		
+	}
+	
+	public void dumpChartOfAccounts() {
+		Query topLevelAccounts = getSession().getNamedQuery("COABO.getTopLevelAccounts");
+		List listAccounts = topLevelAccounts.list();
+		Iterator it = listAccounts.iterator();
+		while (it.hasNext()) {
+			COABO coa = (COABO)it.next();
+			String name = coa.getCategoryName();
+			String glCode = coa.getAssociatedGlcode().getGlcode();
+		}	
 	}
 }

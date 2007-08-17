@@ -23,8 +23,8 @@
 		<property name="shortName" column="OFFICE_SHORT_NAME" type="string" />
 		
 		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
-		<many-to-one name="parentOffice"  class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true"	lazy="true" cascade="none" />
-		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" />
+		<many-to-one name="parentOffice"  class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true" cascade="none" />
+		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" />
 		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD" order-by="FIELD_ID">
 			<key column="OFFICE_ID" />
 			<one-to-many class="org.mifos.application.office.business.OfficeCustomFieldEntity" />
@@ -34,7 +34,7 @@
 			<one-to-many class="org.mifos.application.office.business.OfficeBO"   />
 		</set>
 
-		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" lazy="true" />
+		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" />
 	</class>
 	<query name="masterdata.activeBranches">
         <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName,office.level.id,office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.level.id=:levelId and office.status.id=:statusId and (office.searchId = :OFFICESEARCHID or office.searchId like :OFFICE_LIKE_SEARCHID) order by office.officeName]]>

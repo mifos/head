@@ -27,4 +27,18 @@
 		</set>
 
 	</class>
+    <query name="COABO.getTopLevelAccounts"><![CDATA[ 
+        select coa
+        from org.mifos.application.accounts.financial.business.COABO coa,
+             org.mifos.application.accounts.financial.business.COAHierarchyEntity hierarchy,
+             org.mifos.application.accounts.financial.business.GLCodeEntity glCode
+        where 
+            coa.categoryId = hierarchy.categoryId and
+            hierarchy.parentCategory is null and
+            coa.associatedGlcode = glCode.glcodeId
+        order by 
+            glCode.glcode
+        ]]>
+    </query>
+    
 </hibernate-mapping>

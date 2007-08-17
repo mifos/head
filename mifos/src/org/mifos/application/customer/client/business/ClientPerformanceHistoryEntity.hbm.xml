@@ -26,7 +26,7 @@
 			<column name="TOTAL_SAVINGS_AMNT" />
 		</property>     
         <many-to-one name="client" column="CUSTOMER_ID"
-			class="org.mifos.application.customer.client.business.ClientBO" lazy="true" unique="true" access="field"/>
+			class="org.mifos.application.customer.client.business.ClientBO" unique="true" access="field"/>
 		<set name="loanCounters" cascade="all" table="LOAN_COUNTER" lazy="true" access="field" inverse="true">
 			<key column="CLIENT_PERF_ID" />
 			<one-to-many class="org.mifos.application.customer.client.business.LoanCounter" />

@@ -35,8 +35,8 @@
 			<column name="MISC_PENALTY_PAID" />
 		</property>
 
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" lazy="true" cascade="none" insert="true" update="true" access="field" />
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" access="field" />
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" access="field" />
 		<set name="accountFeesActionDetails" cascade="all,delete-orphan" lazy="true" inverse="true" access="field">
 			<key column="ID" update="false" />
 			<one-to-many class="org.mifos.application.customer.business.CustomerFeeScheduleEntity" />

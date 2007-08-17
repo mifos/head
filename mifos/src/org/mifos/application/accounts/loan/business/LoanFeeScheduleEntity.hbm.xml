@@ -22,9 +22,9 @@
 			<column name="AMOUNT_PAID" />
 		</property>
 
-		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.application.accounts.business.AccountFeesEntity" lazy="true" access="field"/>
-		<many-to-one name="accountActionDate" column="ID" class="org.mifos.application.accounts.loan.business.LoanScheduleEntity" lazy="true" access="field"/>
-		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" lazy="true" access="field"/>
+		<many-to-one name="accountFee" column="ACCOUNT_FEE_ID" class="org.mifos.application.accounts.business.AccountFeesEntity" access="field"/>
+		<many-to-one name="accountActionDate" column="ID" class="org.mifos.application.accounts.loan.business.LoanScheduleEntity" access="field"/>
+		<many-to-one name="fee" column="FEE_ID" class="org.mifos.application.fees.business.FeeBO" access="field"/>
 
 	</class>
 	

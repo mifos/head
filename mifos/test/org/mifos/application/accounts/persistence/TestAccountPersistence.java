@@ -34,6 +34,10 @@ public class TestAccountPersistence extends TestAccount {
 
 	private AccountPersistence accountPersistence = new AccountPersistence();
 
+	public void testDumpChartOfAccounts() {
+		accountPersistence.dumpChartOfAccounts();
+	}
+	
 	public void testSuccessGetNextInstallmentList() {
 		List<AccountActionDateEntity> installmentIdList = accountBO
 				.getApplicableIdsForFutureInstallments();

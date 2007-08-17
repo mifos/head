@@ -25,8 +25,8 @@
 			<column name="DEPOSIT_PAID" />
 		</property>
 
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" lazy="true" cascade="none" insert="true" update="true" access="field" />
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" lazy="true" access="field" />
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field" />
+		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" access="field" />
 	</class>
 
 	<query name="account.getAllInstallmentsForAllSavingsAccounts">

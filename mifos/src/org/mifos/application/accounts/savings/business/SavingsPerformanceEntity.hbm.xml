@@ -24,6 +24,6 @@
 		</property>
 		<property name="missedDeposits" column="MISSED_DEPOSITS" />
 
-		<many-to-one name="savings" column="ACCOUNT_ID" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="true" unique="true" access="field"/>
+		<many-to-one name="savings" column="ACCOUNT_ID" class="org.mifos.application.accounts.savings.business.SavingsBO" unique="true" access="field"/>
 	</class>
 </hibernate-mapping>

@@ -54,6 +54,6 @@
 		</property>
 		<one-to-one name="loan" 
 			class="org.mifos.application.accounts.loan.business.LoanBO" 
-			lazy="true" access="field" />
+			access="field" />
 	</class>
 </hibernate-mapping>

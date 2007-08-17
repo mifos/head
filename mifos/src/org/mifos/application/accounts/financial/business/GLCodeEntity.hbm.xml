@@ -9,7 +9,7 @@
 		</id>
 
 		<property name="glcode" column="GLCODE_VALUE" access="field" />
-		<one-to-one name="associatedCOA" class="org.mifos.application.accounts.financial.business.COABO" cascade="none" lazy="true" property-ref="associatedGlcode" access="field" />
+		<one-to-one name="associatedCOA" class="org.mifos.application.accounts.financial.business.COABO" cascade="none" property-ref="associatedGlcode" access="field" />
 
 	</class>
 </hibernate-mapping>

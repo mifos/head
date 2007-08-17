@@ -13,7 +13,7 @@
 		<property name="lookUpName" type="java.lang.String" column="LOOKUP_NAME" />
 		<many-to-one name="lookUpEntity" column="ENTITY_ID" 
 			class="org.mifos.application.master.business.MifosLookUpEntity" 
-			unique="true" lazy="true" />
+			unique="true" />
 
 		<set name="lookUpValueLocales" cascade="all" lazy="false">
 			<key column="LOOKUP_ID" update="false" />

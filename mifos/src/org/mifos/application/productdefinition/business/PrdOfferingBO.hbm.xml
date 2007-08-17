@@ -66,8 +66,8 @@
 
 			<many-to-one name="gracePeriodType" column="GRACEPERIOD_TYPE_ID" class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"	cascade="none" />
 			<many-to-one name="interestTypes" column="INTEREST_TYPE_ID"	class="org.mifos.application.master.business.InterestTypesEntity" not-null="true" />
-			<many-to-one name="principalGLcode"	column="PRINCIPAL_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
-			<many-to-one name="interestGLcode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
+			<many-to-one name="principalGLcode"	column="PRINCIPAL_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
+			<many-to-one name="interestGLcode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
 
 			<!--Mapping of loan offering to its associated funds-->
 			<set name="loanOfferingFunds" cascade="all,delete-orphan" inverse="true" table="LOAN_OFFERING_FUND" access="field">
@@ -103,8 +103,8 @@
 			<many-to-one name="savingsType" column="SAVINGS_TYPE_ID" class="org.mifos.application.productdefinition.business.SavingsTypeEntity"	not-null="true" />
 			<many-to-one name="interestCalcType" column="INTEREST_CALCULATION_TYPE_ID" class="org.mifos.application.productdefinition.business.InterestCalcTypeEntity" not-null="true" />
 
-			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity"	lazy="true" insert="true" update="false" access="field" />
-			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
+			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
+			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" insert="true" update="false" access="field" />
 
 			<set name="savingsOfferingMeetings"	cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field">
 				<key column="PRD_OFFERING_ID" />

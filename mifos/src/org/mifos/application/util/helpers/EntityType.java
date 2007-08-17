@@ -1,6 +1,8 @@
 package org.mifos.application.util.helpers;
 
-
+/**
+ * This enum mirrors values contained in the ENTITY_MASTER table.
+ */
 public enum EntityType {
 
 	CLIENT(1),

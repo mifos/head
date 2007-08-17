@@ -12,8 +12,8 @@
 		</id>
 		<property name="commentDate" column="COMMENT_DATE" type="date" access="field"/>
 		<property name="comment" column="NOTE" type="string" access="field"/>
-		<many-to-one name="personnel" column="OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" insert="true" update="false" unique="true" lazy="true" access="field"/>
-		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" insert="true" update="false" unique="true" lazy="true" access="field"/>
+		<many-to-one name="personnel" column="OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" insert="true" update="false" unique="true" access="field"/>
+		<many-to-one name="account" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.AccountBO" insert="true" update="false" unique="true" access="field"/>
 	</class>
 
 	<query name="notes.getAllAccountNotes">

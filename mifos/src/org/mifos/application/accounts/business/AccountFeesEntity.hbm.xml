@@ -27,7 +27,7 @@
 			 lazy="false" access="field"/>
 		<many-to-one name="fees" column="FEE_ID" 
 			class="org.mifos.application.fees.business.FeeBO"
-			 unique="true" lazy="true" fetch="join" access="field"/>
+			 unique="true" fetch="join" access="field"/>
 
 	</class>
 		<query name="getCustomerAccountsForFee">

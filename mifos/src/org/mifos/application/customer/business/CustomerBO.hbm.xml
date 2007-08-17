@@ -41,18 +41,18 @@
 			access="field"/>
 		<many-to-one name="customerStatus" column="STATUS_ID" 
 			class="org.mifos.application.customer.business.CustomerStatusEntity" 
-			insert="true" update="true" unique="true" lazy="true" />
+			insert="true" update="true" unique="true" />
 		<many-to-one name="customerLevel" column="CUSTOMER_LEVEL_ID" 
 			class="org.mifos.application.customer.business.CustomerLevelEntity" 
-			insert="true" update="true" unique="true" lazy="true" 
+			insert="true" update="true" unique="true"  
 			access="field"/>
-		<many-to-one name="personnel" column="LOAN_OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" />
-		<many-to-one name="formedByPersonnel" column="CUSTOMER_FORMEDBY_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" lazy="true" insert="true" update="true" access="field"/>
-		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" lazy="true" insert="true" update="true" />
-		<one-to-one name="customerAddressDetail" class="org.mifos.application.customer.business.CustomerAddressDetailEntity" cascade="all" lazy="true" property-ref="customer" />
-		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" lazy="true" />
-		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" lazy="true" property-ref="customer" access="field"/>
-		<one-to-one name="customerMeeting" class="org.mifos.application.customer.business.CustomerMeetingEntity" cascade="all" lazy="true" property-ref="customer" />
+		<many-to-one name="personnel" column="LOAN_OFFICER_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" insert="true" update="true" />
+		<many-to-one name="formedByPersonnel" column="CUSTOMER_FORMEDBY_ID" class="org.mifos.application.personnel.business.PersonnelBO" unique="true" insert="true" update="true" access="field"/>
+		<many-to-one name="office" column="BRANCH_ID" class="org.mifos.application.office.business.OfficeBO" unique="true" insert="true" update="true" />
+		<one-to-one name="customerAddressDetail" class="org.mifos.application.customer.business.CustomerAddressDetailEntity" cascade="all" property-ref="customer" />
+		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" insert="true" unique="true" update="true" />
+		<one-to-one name="historicalData" class="org.mifos.application.customer.business.CustomerHistoricalDataEntity" cascade="all" property-ref="customer" access="field"/>
+		<one-to-one name="customerMeeting" class="org.mifos.application.customer.business.CustomerMeetingEntity" cascade="all" property-ref="customer" />
 	
 		<set name="customFields" cascade="all" lazy="true" access="field">
 			<key column="CUSTOMER_ID" update="false" />
@@ -100,7 +100,7 @@
 			discriminator-value="GROUP">
 			<one-to-one name="performanceHistory" 
 				class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" 
-				cascade="all" lazy="true" property-ref="group" />
+				cascade="all" property-ref="group" />
 		</subclass>
 		<subclass name="org.mifos.application.customer.client.business.ClientBO" discriminator-value="CLIENT">
 			<property name="governmentId" column="GOVERNMENT_ID" type="string" />
@@ -112,10 +112,10 @@
     	    <property name="secondLastName" column="SECOND_LAST_NAME" access="field" />
 			<one-to-one name="customerDetail" 
 				class="org.mifos.application.customer.client.business.ClientDetailEntity" 
-				cascade="all" lazy="true" />
+				cascade="all" />
 			<one-to-one name="customerPicture" 
 				class="org.mifos.application.customer.client.business.CustomerPictureEntity" 
-				cascade="all" lazy="true" property-ref="customer" />
+				cascade="all" property-ref="customer" />
 			<set name="nameDetailSet" cascade="all" access="field">
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />
@@ -130,7 +130,7 @@
 			</set>
 			<one-to-one name="performanceHistory" 
 				class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" 
-				cascade="all" lazy="true" property-ref="client" access="field"/>
+				cascade="all" property-ref="client" access="field"/>
 		</subclass>
 
 	</class>

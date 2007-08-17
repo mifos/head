@@ -13,12 +13,12 @@
 
 
 		<many-to-one name="account" column="ACCOUNT_ID"
-			class="org.mifos.application.accounts.business.AccountBO" lazy="true"
+			class="org.mifos.application.accounts.business.AccountBO"
 			insert="true" update="false" access="field" />
 
 		<many-to-one name="accountPayment" column="PAYMENT_ID"
 			class="org.mifos.application.accounts.business.AccountPaymentEntity"
-			lazy="true" insert="true" update="false" access="field" />
+			insert="true" update="false" access="field" />
 
 		<many-to-one name="accountActionEntity" column="ACCOUNT_ACTION_ID"
 			class="org.mifos.application.accounts.business.AccountActionEntity"
@@ -43,7 +43,7 @@
 		<property name="installmentId" column="INSTALLMENT_ID" type="short" access="field" />
 		<many-to-one name="relatedTrxn" column="RELATED_TRXN_ID"
 				class="org.mifos.application.accounts.business.AccountTrxnEntity"
-				lazy="true" cascade="all" insert="true" update="false" access="field" />
+				cascade="all" insert="true" update="false" access="field" />
 				
 		<set name="financialTransactions" inverse="true" cascade="all" lazy="true" access="field" order-by="TRXN_ID desc">
 			<key column="ACCOUNT_TRXN_ID"/>

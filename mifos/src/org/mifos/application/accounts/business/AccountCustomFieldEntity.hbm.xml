@@ -18,6 +18,6 @@
 		
 		<many-to-one name="account" column="ACCOUNT_ID"
 			class="org.mifos.application.accounts.business.AccountBO"
-			unique="true" lazy="true" cascade="none" insert="true" update="true" />
+			unique="true" cascade="none" insert="true" update="true" />
 	</class>
 </hibernate-mapping>
