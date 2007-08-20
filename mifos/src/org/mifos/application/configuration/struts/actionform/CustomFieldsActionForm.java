@@ -51,6 +51,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import java.text.DateFormat;
@@ -128,7 +129,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	
 	private void validateDefaultValue(ActionErrors errors, HttpServletRequest request){
 		Short dataTypeValue = Short.parseShort(dataType);
-		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!defaultValue.isEmpty()))
+		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!StringUtils.isEmpty(defaultValue)))
 		{
 			try
 			{
@@ -139,7 +140,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 				addError(errors, defaultValue, "errors.default_value_not_number", new String[]{null});
 			}
 		}
-		else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!defaultValue.isEmpty()))
+		else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!StringUtils.isEmpty(defaultValue)))
 		{
 			try
 			{
@@ -169,7 +170,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 		if (method.equals(Methods.preview.toString())) 
 		{
 			errors = super.validate(mapping, request);
-			if (!dataType.isEmpty())
+			if (!StringUtils.isEmpty(defaultValue))
 				validateDefaultValue(errors, request);
 		}
 		
