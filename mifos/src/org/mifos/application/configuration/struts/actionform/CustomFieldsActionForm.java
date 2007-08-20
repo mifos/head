@@ -40,6 +40,7 @@ package org.mifos.application.configuration.struts.actionform;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -47,9 +48,13 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.CustomFieldType;
+import java.text.DateFormat;
+import java.util.Locale;
 
 
 
@@ -60,7 +65,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	
 	private String categoryType;
 	private String labelName;
-	private boolean mandatoryCheckBox;
+	private boolean mandatoryField = false;
 	private String defaultValue;
 	private String dataType;
 	
@@ -97,21 +102,59 @@ public class CustomFieldsActionForm extends BaseActionForm{
 		this.labelName = labelName;
 	}
 
-	public boolean isMandatoryCheckBox() {
-		return mandatoryCheckBox;
+	public boolean isMandatoryField() {
+		return mandatoryField;
 	}
 
-	public void setMandatoryCheckBox(boolean mandatoryCheckBox) {
-		this.mandatoryCheckBox = mandatoryCheckBox;
+	public void setMandatoryField(boolean mandatoryField) {
+		this.mandatoryField = mandatoryField;
 	}
 	
-	private void validateForPreview(ActionErrors errors) {
-		
-		if (StringUtils.isNullOrEmpty(getCategoryType()))
-			addError(errors, "configuration.category", "errors.mandatory_selectbox", new String[]{null});
-		if (StringUtils.isNullOrEmpty(getDataType()))
-			addError(errors, "configuration.datatype", "errors.mandatory_selectbox", new String[]{null});
+	protected Locale getUserLocale(HttpServletRequest request) {
+		Locale locale = null;
+		HttpSession session = request.getSession();
+		if (session != null) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
+				locale = userContext.getPreferredLocale();
+				if (null == locale) {
+					locale = userContext.getMfiLocale();
+				}
+			}
+		}
+		return locale;
+	}
+	
+	private void validateDefaultValue(ActionErrors errors, HttpServletRequest request){
+		Short dataTypeValue = Short.parseShort(dataType);
+		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!defaultValue.isEmpty()))
+		{
+			try
+			{
+				Double.parseDouble(defaultValue);
+			}
+			catch (NumberFormatException e)
+			{
+				addError(errors, defaultValue, "errors.default_value_not_number", new String[]{null});
+			}
+		}
+		else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!defaultValue.isEmpty()))
+		{
+			try
+			{
+				Locale locale = getUserLocale(request);
+				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+				df.parse(defaultValue);
 
+			}
+			catch (Exception e)
+			{
+				addError(errors, defaultValue, "errors.default_value_not_date", new String[]{null});
+			}
+		}
+		
+		
 	}
 
 	@Override
@@ -126,6 +169,8 @@ public class CustomFieldsActionForm extends BaseActionForm{
 		if (method.equals(Methods.preview.toString())) 
 		{
 			errors = super.validate(mapping, request);
+			if (!dataType.isEmpty())
+				validateDefaultValue(errors, request);
 		}
 		
 
@@ -135,10 +180,20 @@ public class CustomFieldsActionForm extends BaseActionForm{
 		return errors;
 	}
 	
-	// reset fields on form
-	public void clear() 
+	public void clear()
 	{
 		
+	}
+	
+	// reset fields on form
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		super.reset(mapping, request);
+		String method = request.getParameter(Methods.method.toString());
+		if (method != null && method.equals(Methods.preview.toString())) {
+			mandatoryField = false;
+			
+		}
 	}
 
 }

@@ -27,7 +27,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 145;
+	public static final int APPLICATION_VERSION = 146;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
@@ -64,6 +64,7 @@ public class DatabaseVersionPersistence {
 		register143(register);
 		register144(register);
 		register145(register);
+		register146(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -222,6 +223,12 @@ public class DatabaseVersionPersistence {
 				SecurityConstants.DOWNLOAD_REPORT_TEMPLATE,
 				SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
 		"Can download report template"));
+	}
+	private static void register146(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(146,
+				SecurityConstants.CAN_DEFINE_CUSTOM_FIELD,
+				SecurityConstants.CONFIGURATION_MANAGEMENT, ENGLISH_LOCALE,
+				"Can define custom fields"));
 	}
 
 	private final Connection connection;

@@ -56,7 +56,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm;
+//import org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm;
 import org.mifos.application.configuration.struts.action.CustomFieldsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
@@ -64,6 +64,7 @@ import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
 public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
+	private final Short DEFAULT_LOCALE = 1;
 	
 	@Override
 	protected void tearDown() throws Exception {
@@ -106,11 +107,14 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		for (CustomFieldsListBoxData listboxDataType : allCategories)
 		{
 			// will debug this later 
-			// (listboxDataType.getId().equals(category.mapToEntityType().getValue())
-			String name1 = listboxDataType.getName().toUpperCase();
-			String name2 = category.name().toUpperCase();
-			if (name1.equals(name2))
-				return true;
+			if (listboxDataType.getId().equals(category.mapToEntityType().getValue()))
+			{
+				String name1 = listboxDataType.getName().toUpperCase();
+				//String name2 = category.name().toUpperCase();
+				String name2 = MessageLookup.getInstance().lookupLabel(category.name(), DEFAULT_LOCALE).toUpperCase();
+				if (name1.equals(name2))
+					return true;
+			}
 		}
 		return false;
 	}
@@ -146,9 +150,9 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		List<CustomFieldsListBoxData> allCategories = 
 			(List<CustomFieldsListBoxData>)SessionUtils.getAttribute(ConfigurationConstants.ALL_CATEGORIES, request);
 		assertTrue(allCategories.size() == CustomFieldCategory.values().length);
-		//for (CustomFieldCategory category : CustomFieldCategory.values()) {
-		//	assertTrue(findCategory(category, allCategories));
-		//}
+		for (CustomFieldCategory category : CustomFieldCategory.values()) {
+			assertTrue(findCategory(category, allCategories));
+		}
 		 
 	}
 

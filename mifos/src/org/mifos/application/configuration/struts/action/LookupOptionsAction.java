@@ -73,14 +73,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import java.util.List;
-import java.util.Set;
-import org.mifos.application.master.business.LookUpLabelEntity;
-import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.LookUpValueLocaleEntity;
 
 
 public class LookupOptionsAction extends BaseAction {

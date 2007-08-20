@@ -50,17 +50,10 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
-<script language="javascript">
-function goToPreviewPage(){
-	customfieldsactionform.action="customFieldsAction.do";
-	customfieldsactionform.method.value="preview";
-	customfieldsactionform.submit();
-	alert('here');
-  }
-</script>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<html-el:form action="/customFieldsAction.do?method=preview" focus="categories">
+		<html-el:form action="/customFieldsAction.do?method=preview" focus="categoryType">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="450" align="left" valign="top" bgcolor="#FFFFFF">
@@ -154,7 +147,7 @@ function goToPreviewPage(){
 								<tr class="fontnormal">
                   					<td align="right"><mifos:mifoslabel
 										name="configuration.mandatory"  />:</td>
-                  					<td><input type="checkbox" name="mandatoryCheckBox" value="0"></td>
+                  					<td><html-el:checkbox property="mandatoryField"  value="1" /> </td>
                 				</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel

@@ -47,8 +47,10 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 
 /**
  * This class is mainly about lookup values.
@@ -125,6 +127,10 @@ public class ApplicationConfigurationPersistence extends Persistence {
 		}
 		
 		return locales;
+	}
+	
+	public void addCustomField(CustomFieldDefinitionEntity customField) throws PersistenceException {
+		createOrUpdate(customField);
 	}
 
 }

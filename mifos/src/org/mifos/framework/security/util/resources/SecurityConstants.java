@@ -465,5 +465,6 @@ public interface SecurityConstants {
 	
 	public final short DELETE_REPORT_CATEGORY = 222;
 	public final short DOWNLOAD_REPORT_TEMPLATE = 223;
+	public final short CAN_DEFINE_CUSTOM_FIELD = 224;
 	
 }

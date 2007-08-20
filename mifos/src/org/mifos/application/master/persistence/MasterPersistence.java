@@ -5,17 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.acceptedpaymenttype.business.AcceptedPaymentType;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
+import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -308,4 +311,8 @@ public class MasterPersistence extends Persistence {
 		return categories;
 	}
 	
+	public void addLookUpEntity(MifosLookUpEntity lookUpEntity) throws PersistenceException {
+		
+		createOrUpdate(lookUpEntity);
+	}
 }
