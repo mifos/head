@@ -724,7 +724,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
 				"100.0"));
 		Money enteredAmount = new Money(currency, "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(client1);
@@ -755,7 +755,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(new Money());
 
 		Money enteredAmount = new Money(currency, "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(client1);
@@ -795,7 +795,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAccountId());
 
 		Money enteredAmount = new Money(currency, "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(client1);
@@ -844,7 +844,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		Money enteredAmount = new Money(currency, "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(group);
@@ -886,7 +886,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
 				"100.0"));
 		Money enteredAmount = new Money(currency, "300.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(client1);
