@@ -556,7 +556,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = null;
 		
 		Money enteredAmount = new Money(TestObjectFactory.getMFICurrency(), "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savings
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(group);

@@ -147,7 +147,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 	@CloseSession
 	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+            throws ApplicationException, CustomerException, ServiceException {
 		AccountBO savedAccount = (AccountBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
@@ -156,19 +156,13 @@ public class AccountApplyPaymentAction extends BaseAction {
 		checkVersionMismatch(savedAccount.getVersionNo(),account.getVersionNo());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		CustomerLevel customerLevel = null;
 
-        if(account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT))
-			customerLevel = account.getCustomer().getLevel();
-		if (account.getPersonnel() != null)
-			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
-					account.getOffice().getOfficeId(), account.getPersonnel()
-							.getPersonnelId());
-		else
-			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
-					account.getOffice().getOfficeId(), uc.getId());
-		Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
-		Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
+		if (! account.isPaymentPermitted(uc)) {
+				throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+
+        Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
 
 		if (!account.isTrxnDateValid(trxnDate))
 			throw new AccountException("errors.invalidTxndate");
@@ -183,9 +177,10 @@ public class AccountApplyPaymentAction extends BaseAction {
 			amount = account.getTotalPaymentDue();
 		}
 
-        PaymentData paymentData = account.createPaymentData(amount,
-                trxnDate, actionForm.getReceiptId(), receiptDate,
-                Short.valueOf(actionForm.getPaymentTypeId()), uc.getId());
+        Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
+        PaymentData paymentData = account.createPaymentData(uc,
+                amount, trxnDate, actionForm.getReceiptId(), receiptDate,
+                Short.valueOf(actionForm.getPaymentTypeId()));
         account.applyPayment(paymentData);
 		return mapping
 				.findForward(getForward(((AccountApplyPaymentActionForm) form)
@@ -243,18 +238,11 @@ public class AccountApplyPaymentAction extends BaseAction {
 	private void checkPermissionForMakingPayment(AccountTypes accountTypes,CustomerLevel customerLevel,
 			UserContext userContext, Short recordOfficeId,
 			Short recordLoanOfficerId) throws ApplicationException {
-		if (!isPermissionAllowed(accountTypes, customerLevel, userContext,
-				recordOfficeId, recordLoanOfficerId))
+		if (!ActivityMapper.getInstance().isPaymentPermittedForAccounts(
+				accountTypes, customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId))
 			throw new CustomerException(
 					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
-
-	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isPaymentPermittedForAccounts(
-				accountTypes, customerLevel, userContext, recordOfficeId,
-				recordLoanOfficerId);
 	}
 
     public AccountPersistence getAccountPersistence() {

@@ -22,17 +22,11 @@
 
 package org.mifos.application.accounts.util.helpers;
 
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.application.personnel.business.PersonnelBO;
-
 import java.util.Date;
 
-public interface PaymentDataTemplate {
-    public Money getTotalAmount();
+public interface RecieptPaymentDataTemplate extends PaymentDataTemplate {
 
-    public PersonnelBO getPersonnel();
+    public String getPaymentRecieptNumber();
 
-    public Short getPaymentTypeId();
-
-    public Date getTransactionDate();
+    public Date getPaymentRecieptDate();
 }

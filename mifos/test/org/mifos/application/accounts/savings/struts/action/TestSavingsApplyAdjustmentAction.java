@@ -335,7 +335,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		SavingsBO savings =  TestObjectFactory.createSavingsAccount(
 				globalAccountNum, group,
 				state, new Date(), savingsOffering, userContext);
-		PaymentData paymentData = new PaymentData(new Money("100"), savings
+		PaymentData paymentData = PaymentData.createPaymentData(new Money("100"), savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(group);

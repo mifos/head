@@ -2820,7 +2820,7 @@ public class LoanBO extends AccountBO {
 			List<AccountActionDateEntity> accountActions,
 			PersonnelBO personnel, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnel,
+		PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptId);

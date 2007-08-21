@@ -2436,7 +2436,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountId());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		PaymentData paymentData = new PaymentData(new Money(Configuration
+		PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "212.0"),
 				accountBO.getPersonnel(), Short.valueOf("1"), startDate);
 		paymentData.setRecieptDate(startDate);
@@ -5312,7 +5312,7 @@ public class TestLoanBO extends MifosTestCase {
 	private AccountBO applyPaymentandRetrieveAccount() throws AccountException,
 			SystemException {
 		Date startDate = new Date(System.currentTimeMillis());
-		PaymentData paymentData = new PaymentData(new Money(Configuration
+		PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration
 				.getInstance().getSystemConfig().getCurrency(), "212.0"),
 				accountBO.getPersonnel(), Short.valueOf("1"), startDate);
 		paymentData.setRecieptDate(startDate);

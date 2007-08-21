@@ -171,8 +171,8 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
 
-		PaymentData paymentData = loan.createPaymentData(
-                money, paymentDate, null, null, Short.valueOf("1"), userContext.getId());
+		PaymentData paymentData = loan.createPaymentData(userContext,
+                money, paymentDate, null, null, Short.valueOf("1"));
 		loan.applyPayment(paymentData);
     }
 

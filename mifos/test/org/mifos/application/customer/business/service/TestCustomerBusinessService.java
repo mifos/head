@@ -941,7 +941,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getAccountId()));
 		TestSavingsBO.setBalance(savingsBO,new Money());
 		Money enteredAmount = new Money(currency, "100.0");
-		PaymentData paymentData = new PaymentData(enteredAmount, savingsBO
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savingsBO
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
 		paymentData.setCustomer(customer);

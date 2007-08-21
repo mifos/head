@@ -26,14 +26,39 @@ public class PaymentData {
 
 	private List<AccountPaymentData> accountPayments;
 
-	public PaymentData(Money totalAmount, PersonnelBO personnel,
-			Short paymentId, Date transactionDate) {
+    private PaymentData(Money totalAmount, PersonnelBO personnel,
+            Short paymentId, Date transactionDate) {
+        accountPayments = new ArrayList<AccountPaymentData>();
+        setTotalAmount(totalAmount);
+        setPersonnel(personnel);
+        setPaymentTypeId(paymentId);
+        setTransactionDate(transactionDate);
+    }
+
+	private PaymentData(Money totalAmount, PersonnelBO personnel,
+			Short paymentId, Date transactionDate,
+            String recieptNum, Date recieptDate) {
 		accountPayments = new ArrayList<AccountPaymentData>();
 		setTotalAmount(totalAmount);
 		setPersonnel(personnel);
 		setPaymentTypeId(paymentId);
 		setTransactionDate(transactionDate);
-	}
+        setRecieptNum(recieptNum);
+        setRecieptDate(recieptDate);
+    }
+
+
+    public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel,
+                                                Short paymentId, Date transactionDate) {
+        return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
+    }
+
+    public static PaymentData createRecieptPaymentData(
+            RecieptPaymentDataTemplate template) {
+        return new PaymentData(template.getTotalAmount(), template.getPersonnel(),
+                template.getPaymentTypeId(), template.getTransactionDate(),
+                template.getPaymentRecieptNumber(), template.getPaymentRecieptDate());
+    }
 
     public static PaymentData createPaymentData(PaymentDataTemplate template) {
         return new PaymentData(template.getTotalAmount(), template.getPersonnel(),
@@ -107,5 +132,4 @@ public class PaymentData {
 	public void addAccountPaymentData(AccountPaymentData accountPaymentData) {
 		accountPayments.add(accountPaymentData);
 	}
-
 }

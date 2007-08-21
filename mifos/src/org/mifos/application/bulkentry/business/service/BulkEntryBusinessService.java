@@ -504,7 +504,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) throws ServiceException {
-		PaymentData paymentData = new PaymentData(totalAmount,
+		PaymentData paymentData = PaymentData.createPaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);
@@ -542,7 +542,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), savingsAccountView
 				.getDepositAmountEntered());
-		PaymentData paymentData = new PaymentData(enteredAmount,
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		if (!isCenterGroupIndvAccount
 				&& savingsAccountView.getAccountTrxnDetails().size() > 0)
@@ -595,7 +595,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		Money enteredAmount = new Money(Configuration.getInstance()
 				.getSystemConfig().getCurrency(), savingsAccountView
 				.getWithDrawalAmountEntered());
-		PaymentData paymentData = new PaymentData(enteredAmount,
+		PaymentData paymentData = PaymentData.createPaymentData(enteredAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setCustomer(getCustomer(customerId));
 		paymentData.setRecieptDate(receiptDate);
@@ -607,7 +607,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			List<BulkEntryInstallmentView> accountActions, Money totalAmount,
 			Short personnelId, String recieptNum, Short paymentId,
 			Date receiptDate, Date transactionDate) throws ServiceException {
-		PaymentData paymentData = new PaymentData(totalAmount,
+		PaymentData paymentData = PaymentData.createPaymentData(totalAmount,
 				getPersonnel(personnelId), paymentId, transactionDate);
 		paymentData.setRecieptDate(receiptDate);
 		paymentData.setRecieptNum(recieptNum);

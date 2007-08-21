@@ -1,47 +1,33 @@
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
-import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.application.accounts.business.AccountFlagMapping;
-import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.application.accounts.business.ViewInstallmentDetails;
+import org.mifos.application.accounts.business.*;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.CollateralTypeEntity;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.*;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -63,19 +49,14 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.*;
 
 public class LoanAccountAction extends AccountAppAction {
 
@@ -396,13 +377,32 @@ public class LoanAccountAction extends AccountAppAction {
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-        if (request.getParameter("perspective") != null) {
-            request.setAttribute("perspective", request.getParameter("perspective"));
+            throws PageExpiredException, AccountException {
+        LoanAccountActionForm loanAccountForm = (LoanAccountActionForm)form;
+        String perspective = loanAccountForm.getPerspective();
+        if (perspective != null) {
+            request.setAttribute("perspective", perspective);
 
-            /*LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-            LoanBO loan = (LoanBO) SessionUtils.getAttribute(
-                        Constants.BUSINESS_KEY, request);*/
+            if (perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
+                LoanBO loan = (LoanBO) SessionUtils.getAttribute(
+                            Constants.BUSINESS_KEY, request);
+
+                LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+                List<PaymentDataHtmlBean> paymentDataBeans =
+                        loanActionForm.getPaymentDataBeans();
+
+                PaymentData payment;
+                for (PaymentDataTemplate template : paymentDataBeans) {
+                    if (template.getTotalAmount() != null
+                            && template.getTransactionDate() != null) {
+                        if (! loan.isLastCustomerMeetingDate(template.getTransactionDate())) {
+                            throw new AccountException("errors.invalidTxndate");
+                        }
+                        payment = PaymentData.createPaymentData(template);
+                        loan.applyPayment(payment);
+                    }
+                }
+            }
         }
 
         return mapping.findForward(ActionForwards.preview_success.toString());

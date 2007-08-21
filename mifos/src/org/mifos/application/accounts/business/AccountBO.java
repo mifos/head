@@ -1,39 +1,23 @@
 /**
-
- * AccountBO.java    version: xxx
-
- 
-
  * Copyright (c) 2005-2006 Grameen Foundation USA
-
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
+ *
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
-
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 
 package org.mifos.application.accounts.business;
@@ -67,6 +51,7 @@ import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -84,8 +69,8 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -313,23 +298,24 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-    public PaymentData createPaymentData(Money amount, Date trxnDate,
-			String receiptId, Date receiptDate, Short paymentTypeId,
-			Short userId) {
+    public PaymentData createPaymentData(UserContext userContext,
+            Money amount, Date trxnDate, String receiptId,
+            Date receiptDate, Short paymentTypeId) {
         PersonnelBO personnel;
         try {
-            personnel = new PersonnelPersistence().getPersonnel(userId);
+            personnel = new PersonnelPersistence()
+                    .getPersonnel(userContext.getId());
         } catch (PersistenceException e) {
             // Generally this is the UserContext id, which shouldn't ever
             // be invalid
-            throw new IllegalArgumentException(AccountConstants.ERROR_INVALID_PERSONNEL);
+            throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
         if (personnel == null) {
             // see above catch clause
-            throw new IllegalArgumentException(AccountConstants.ERROR_INVALID_PERSONNEL);
+            throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
 
-        PaymentData paymentData = new PaymentData(
+        PaymentData paymentData = PaymentData.createPaymentData(
                 amount, personnel, paymentTypeId, trxnDate);
         if (receiptDate != null) {
             paymentData.setRecieptDate(receiptDate);
@@ -738,28 +724,44 @@ public class AccountBO extends BusinessObject {
 		return dueInstallments;
 	}
 
-	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
-		if (Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
-			Date meetingDate = null;
-			try {
-				meetingDate = new CustomerPersistence()
-						.getLastMeetingDateForCustomer(getCustomer()
-								.getCustomerId());
-			} catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
-			Date lastMeetingDate = null;
-			if (meetingDate != null) {
-				lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
-						.getTime());
-				return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
-			} else
-				return false;
-		}
+    public boolean isBackDatedTrxnAllowed() {
+        return Configuration.getInstance().getAccountConfig(
+				getOffice().getOfficeId()).isBackDatedTxnAllowed();
+    }
 
-		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
-	}
+    public boolean isLastCustomerMeetingDate(Date trxnDate) {
+        Date meetingDate = null;
+        try {
+            meetingDate = new CustomerPersistence()
+                    .getLastMeetingDateForCustomer(getCustomer()
+                            .getCustomerId());
+        } catch (PersistenceException e) {
+            // This should only occur if Customer is null
+            // which shouldn't happen.
+            // Or we had some configuration/binding error.
+            // so we'll throw a runtime exception here.
+            throw new IllegalStateException(e);
+        }
+
+        Date lastMeetingDate = null;
+        if (meetingDate != null) {
+            lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
+                    .getTime());
+            return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+        if (isBackDatedTrxnAllowed()) {
+			return isLastCustomerMeetingDate(trxnDate);
+		}
+        else {
+            return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
+        }
+    }
 
 	public List<AccountNotesEntity> getRecentAccountNotes() {
 		List<AccountNotesEntity> notes = new ArrayList<AccountNotesEntity>();
@@ -1094,7 +1096,26 @@ public class AccountBO extends BusinessObject {
 
 	}
 
-	protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnDate() {
+    public boolean isPaymentPermitted(UserContext userContext) {
+        CustomerLevel customerLevel = null;
+        if(getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+			customerLevel = getCustomer().getLevel();
+        }
+
+        Short personnelId = null;
+        if (getPersonnel() != null) {
+            personnelId = getPersonnel().getPersonnelId();
+        }
+        else {
+            personnelId = userContext.getId();
+        }
+
+        return ActivityMapper.getInstance().isPaymentPermittedForAccounts(
+				getType(), customerLevel, userContext, getOffice().getOfficeId(),
+				personnelId);
+    }
+
+    protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnDate() {
 		List<AccountTrxnEntity> accountTrxnList = new ArrayList<AccountTrxnEntity>();
 		for (AccountPaymentEntity payment : getAccountPayments()) {
 			accountTrxnList.addAll(payment.getAccountTrxns());

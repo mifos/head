@@ -124,9 +124,11 @@ public interface LoanConstants {
 	//Apply adjustments
 	public static final String LOAD_ADJUSTMENTS="loadAdjustments";
 	public static final String MAKE_ADJUSTMENTS="makeAdjustments";
-	
-	
-	//Repay Loan
+
+    //Redo Loan
+    public static final String PERSPECTIVE_VALUE_REDO_LOAN="redoLoan";
+
+    //Repay Loan
 	public static final String LOAD_EARLY_REPAYMENT_DETAILS="loadEarlyRepaymentDetails";
 	public static final String MAKE_EARLY_REPAYMENT_DETAILS="makeEarlyRepaymentDetails";
 	

@@ -1668,7 +1668,7 @@ public class TestObjectFactory {
 			List<AccountActionDateEntity> accountActions, Money totalAmount,
 			CustomerBO customer, PersonnelBO personnel, String recieptNum,
 			Short paymentId, Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnel,
+		PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
 		paymentData.setCustomer(customer);
 		paymentData.setRecieptDate(receiptDate);
@@ -1781,7 +1781,7 @@ public class TestObjectFactory {
 			List<AccountActionDateEntity> accountActions, Money totalAmount,
 			CustomerBO customer, PersonnelBO personnel, String recieptNum,
 			Short paymentId, Date receiptDate, Date transactionDate) {
-		PaymentData paymentData = new PaymentData(totalAmount, personnel,
+		PaymentData paymentData = PaymentData.createPaymentData(totalAmount, personnel,
 				paymentId, transactionDate);
 		paymentData.setCustomer(customer);
 		paymentData.setRecieptDate(receiptDate);

@@ -234,7 +234,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				.getPreferredLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPreferredLocale());
-		PaymentData paymentData = new PaymentData(actionForm.getAmountValue(),
+		PaymentData paymentData = PaymentData.createPaymentData(actionForm.getAmountValue(),
 				new PersonnelPersistence().getPersonnel(uc.getId()),
 				Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);
 		paymentData.setRecieptDate(receiptDate);
