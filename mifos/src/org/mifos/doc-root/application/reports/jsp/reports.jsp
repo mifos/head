@@ -1,8 +1,12 @@
+<%@ page import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%> 
+<%@ page import="org.mifos.application.reports.business.ReportsBO"%> 
+<%
+	boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger(ConfigurationPersistence.CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN) == 0);
+%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <tiles:insert definition=".reportLayout">
 <tiles:put name="body" type="string">
 
@@ -52,6 +56,9 @@
 								<c:forEach var="report" items="${reportCategory.reportsSet}" >	
 								<c:choose>
 								<c:when test="${report.reportsJasperMap.reportJasper != null && report.isActive == 1}">
+								<%
+								if(isDisplay || !((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".jasper")) {
+							    %>
 							  	 <table width="90%" border="0" cellspacing="0" cellpadding="0">
 								  	<tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
@@ -61,6 +68,7 @@
 					                  </td>
 					                </tr>
 				                </table>
+				                <% } %>
 				             </c:when>
 				             </c:choose>
 				               </c:forEach>	
@@ -78,6 +86,9 @@
 				  			<c:forEach var="report" items="${reportCategory.reportsSet}" >
 				  			 <c:choose>
 							 <c:when test="${report.reportsJasperMap.reportJasper != null && report.isActive == 1}">
+							 <%
+								if(isDisplay || !((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".jasper")) {
+							  %>
 					  			<table width="98%" border="0" cellspacing="0" cellpadding="0">
 					                <tr class="fontnormal">
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
@@ -87,6 +98,7 @@
 					                  </td>
 					                </tr>
 				                </table>
+				                <% } %>
 				               </c:when>
 				              </c:choose>  
 			                </c:forEach>	

@@ -1,3 +1,8 @@
+<%@ page import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%> 
+<%@ page import="org.mifos.application.reports.business.ReportsBO"%> 
+<%
+	boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger(ConfigurationPersistence.CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN) == 0);
+%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -72,6 +77,9 @@
 								<c:forEach var="report" items="${reportCategory.reportsSet}">
 		                  			<c:choose>
 										<c:when test="${report.reportsJasperMap.reportJasper != null}">
+										<%
+										if(isDisplay || !((ReportsBO)pageContext.getAttribute("report")).getReportsJasperMap().getReportJasper().endsWith(".jasper")) {
+										%>
 		                  				<tr>
 				                	 	   <td width="70%" height="30" class="blueline">
 				                    			<span class="fontnormal"> 
@@ -93,6 +101,7 @@
 												</a>
 											</td>
 		    	            	  		</tr>
+		    	            	  		<% } %>
 		    	            	  		</c:when>
 				             		</c:choose>
 								</c:forEach>

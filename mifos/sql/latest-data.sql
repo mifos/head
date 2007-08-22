@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(146);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(147);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3844,6 +3844,7 @@ VALUES(1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('sessionTimeout',60);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('jasperReportIsHidden',1);
 
 /*Added Table Personnel_Role */
 /* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */

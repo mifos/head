@@ -67,6 +67,7 @@ public class ConfigurationPersistence extends Persistence{
 	
 	public static final String CONFIGURATION_KEY_DAYS_IN_ADVANCE = "CollectionSheetHelper.daysInAdvance";
 	public static final String CONFIGURATION_KEY_SESSION_TIMEOUT = ConfigConstants.SESSION_TIMEOUT;
+	public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 	
 	public MifosCurrency getDefaultCurrency() throws PersistenceException {
 		List queryResult = executeNamedQuery(

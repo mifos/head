@@ -80,4 +80,5 @@ public interface ConfigConstants {
 	 public static final  String MIDDLE_NAME = "middle_name";
 	 public static final  String SECOND_LAST_NAME = "second_last_name";
 	 public static final  String LAST_NAME = "last_name";
+	 	 public static final String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
 }
