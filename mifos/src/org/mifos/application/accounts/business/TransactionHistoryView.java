@@ -34,10 +34,6 @@ implements Comparable<TransactionHistoryView> {
 
 	private Locale locale = null;
 
-	private String userPrefferedTransactionDate = null;
-
-	private String userPrefferedPostedDate = null;
-
 	public Integer getAccountTrxnId() {
 		return accountTrxnId;
 	}
@@ -140,10 +136,6 @@ implements Comparable<TransactionHistoryView> {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public void setUserPrefferedPostedDate(String userPrefferedPostedDate) {
-		this.userPrefferedPostedDate = userPrefferedPostedDate;
 	}
 
 	public String getUserPrefferedPostedDate() {

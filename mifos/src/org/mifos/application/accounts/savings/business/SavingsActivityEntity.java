@@ -67,7 +67,8 @@ public class SavingsActivityEntity extends PersistentObject {
 	public Integer getId() {
 		return id;
 	}
-
+	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private PersonnelBO getTrxnCreatedBy() {
 		return trxnCreatedBy;
 	}

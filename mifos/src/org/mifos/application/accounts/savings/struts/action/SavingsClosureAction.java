@@ -58,7 +58,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -83,14 +82,11 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class SavingsClosureAction extends BaseAction {
 	private SavingsBusinessService savingsService;
 
-	private MasterDataService masterDataService;
-
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public SavingsClosureAction() throws ServiceException {
 		savingsService = new SavingsBusinessService();
-		masterDataService = new MasterDataService();
 	}
 
 	@Override

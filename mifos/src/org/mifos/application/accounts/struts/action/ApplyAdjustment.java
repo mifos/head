@@ -117,8 +117,6 @@ public class ApplyAdjustment extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "previewAdjustment");
-		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		return mapping.findForward("previewadj_success");
 	}
 

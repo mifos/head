@@ -93,10 +93,6 @@ public class PaymentData {
 		return transactionDate;
 	}
 
-	private void setAccountPayments(List<AccountPaymentData> accountPayments) {
-		this.accountPayments = accountPayments;
-	}
-
 	private void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}

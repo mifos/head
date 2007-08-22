@@ -554,7 +554,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				SavingsConstants.NEW_STATUS_NAME, request));
 		assertNull("Since new Status is not Closed,so flag should be null.",
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request));
-		setRequestPathInfo("/editCustomerStatusAction.do");
+		setRequestPathInfo("/editCustomerStatusAction");
 		addRequestParameter("method", Methods.updateStatus.toString());
 		actionPerform();
 		verifyActionErrors(new String[] { ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION });

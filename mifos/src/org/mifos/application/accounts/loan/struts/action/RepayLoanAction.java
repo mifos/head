@@ -16,12 +16,10 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -30,7 +28,6 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -42,15 +39,11 @@ public class RepayLoanAction extends BaseAction {
 
 	private LoanBusinessService loanBusinessService;
 
-	private MasterDataService masterDataService;
-
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public RepayLoanAction() throws ServiceException {
 		loanBusinessService = new LoanBusinessService();
-		masterDataService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
 	}
 
 	@Override

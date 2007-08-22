@@ -13,7 +13,8 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class LoanPerformanceHistoryEntity extends PersistentObject {
-
+	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer id;
 
 	private final LoanBO loan;

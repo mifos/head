@@ -58,8 +58,6 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 
 	private Map<Short, Money> feesPaid;
 
-	private AccountActionDateEntity accountActionDateEntity = null;
-
 	public Map<Short, Money> getFeesPaid() {
 		return feesPaid;
 	}
@@ -84,11 +82,6 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 		this.miscPenaltyPaid = miscPenaltyPaid;
 	}
 
-	private void setAccountActionDateEntity(
-			AccountActionDateEntity accountActionDateEntity) {
-		this.accountActionDateEntity = accountActionDateEntity;
-	}
-
 	public CustomerAccountPaymentData(AccountActionDateEntity accountAction) {
 		super(accountAction);
 		CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) accountAction;
@@ -100,7 +93,6 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 			feesPaid.put(accountFees.getFee().getFeeId(), accountFees
 					.getFeeAmount());
 		}
-		this.accountActionDateEntity = accountAction;
 		setFeesPaid(feesPaid);
 		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}

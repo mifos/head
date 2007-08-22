@@ -14,7 +14,6 @@ public class SavingsRecentActivityView implements Serializable{
 	private String amount;
 	private String runningBalance;
 	private Locale locale=null;
-	private String userPrefferedDate=null;
 	
 	public Integer getAccountTrxnId() {
 		return accountTrxnId;

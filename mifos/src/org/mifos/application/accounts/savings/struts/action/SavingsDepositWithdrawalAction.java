@@ -27,7 +27,6 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -57,8 +56,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 	private SavingsBusinessService savingsService;
 
 	private AccountBusinessService accountsService;
-
-	private MasterDataService masterDataService;
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
@@ -277,13 +274,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		SessionUtils.removeAttribute(AccountConstants.TRXN_TYPES,request);
 		SessionUtils.removeAttribute(SavingsConstants.CLIENT_LIST,request);
 		SessionUtils.removeAttribute(MasterConstants.PAYMENT_TYPE,request);
-	}
-
-	private MasterDataService getMasterDataService() throws ServiceException {
-		if (masterDataService == null) {
-			masterDataService = new MasterDataService();
-		}
-		return masterDataService;
 	}
 
 	private SavingsBusinessService getSavingsService() throws ServiceException {

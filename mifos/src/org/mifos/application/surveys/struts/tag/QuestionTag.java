@@ -98,7 +98,7 @@ public class QuestionTag extends BodyTagSupport {
 		String name = "value(response_" + Integer.toString(question.getQuestionId()) + ")";
 		if (question.getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
 			String[] valueArray = value.split(",");
-			int i = 0;
+			int i = 1;
 			for (QuestionChoice choice : question.getChoices()) {
 				AttributeList attributes = new AttributeList();
 				attributes.add("type", "checkbox");

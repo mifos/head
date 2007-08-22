@@ -34,7 +34,7 @@
         <span class="fontnormal" style="color:orange; font-weight:bold">
           <mifos:mifoslabel name="Surveys.newquestionsmsgprefix"/> <c:out value="${requestScope.itemCount}"/> <mifos:mifoslabel name="Surveys.newquestionsmsgsuffix"/>
         </span><br>
-        <a href="questionsAction.do?method=create_entry">
+        <a href="surveysAction.do?method=create_entry">
         <mifos:mifoslabel name="Surveys.definenewsurvey"/></a>
       </c:if>
 

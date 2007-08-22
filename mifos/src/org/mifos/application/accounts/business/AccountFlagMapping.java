@@ -10,7 +10,8 @@ public class AccountFlagMapping extends PersistentObject{
 	public Integer getAccountFlagId() {
 		return accountFlagId;
 	}
-
+	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setAccountFlagId(Integer accountFlagId) {
 		this.accountFlagId = accountFlagId;
 	}

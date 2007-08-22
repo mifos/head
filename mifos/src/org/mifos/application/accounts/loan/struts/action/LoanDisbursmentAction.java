@@ -19,19 +19,16 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -41,8 +38,6 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class LoanDisbursmentAction extends BaseAction {
 
 	private LoanBusinessService loanBusinessService = null;
-
-	private MasterDataService masterDataService = null;
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("loanDisbursmentAction");
@@ -166,14 +161,6 @@ public class LoanDisbursmentAction extends BaseAction {
 			loanBusinessService = new LoanBusinessService();
 		}
 		return loanBusinessService;
-	}
-
-	private MasterDataService getMasterDataService() throws ServiceException {
-		if (masterDataService == null)
-			masterDataService = (MasterDataService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.MasterDataService);
-		return masterDataService;
 	}
 
 	@TransactionDemarcate(joinToken = true)

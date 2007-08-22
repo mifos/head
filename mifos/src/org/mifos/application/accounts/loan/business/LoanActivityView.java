@@ -22,7 +22,6 @@ public class LoanActivityView implements Serializable{
 	private Money runningBalanceFees = new Money();
 	private Money runningBalancePenalty = new Money();
 	private Locale locale=null;
-	private String userPrefferedDate=null;
 	private java.sql.Timestamp timeStamp;
 	
 	public Date getActionDate() {

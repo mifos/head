@@ -38,6 +38,7 @@
 package org.mifos.application.accounts.struts.action;
 
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,21 +55,16 @@ import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActi
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
-import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -81,7 +77,6 @@ public class AccountApplyPaymentAction extends BaseAction {
 
 	LoanBusinessService loanBusinessService = null;
 
-	private MasterDataService masterDataService;
     private AccountPersistence accountPersistence = new AccountPersistence();
 
     public AccountApplyPaymentAction() {
@@ -215,14 +210,6 @@ public class AccountApplyPaymentAction extends BaseAction {
 		return accountBusinessService;
 	}
 
-	private MasterDataService getMasterDataService() {
-		if (masterDataService == null)
-			masterDataService = (MasterDataService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.MasterDataService);
-		return masterDataService;
-	}
-
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -233,16 +220,6 @@ public class AccountApplyPaymentAction extends BaseAction {
 			forward = method + "_failure";
 		}
 		return mapping.findForward(forward);
-	}
-
-	private void checkPermissionForMakingPayment(AccountTypes accountTypes,CustomerLevel customerLevel,
-			UserContext userContext, Short recordOfficeId,
-			Short recordLoanOfficerId) throws ApplicationException {
-		if (!ActivityMapper.getInstance().isPaymentPermittedForAccounts(
-				accountTypes, customerLevel, userContext, recordOfficeId,
-				recordLoanOfficerId))
-			throw new CustomerException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
 
     public AccountPersistence getAccountPersistence() {
