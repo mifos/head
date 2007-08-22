@@ -343,7 +343,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		paymentData.setRecieptNum("34244");
 		AccountActionDateEntity accountActionDate=null;
 		paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
-		savings.applyPayment(paymentData);
+		savings.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		return new SavingsPersistence().findById(savings.getAccountId());

@@ -107,7 +107,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 						"100.0"), null, account.getPersonnel(), "423423", Short
 						.valueOf("1"), currentDate, currentDate);
 		try {
-			account.applyPayment(paymentData);
+			account.applyPaymentWithPersist(paymentData);
 			assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
 					.getAmountDoubleValue(), Double.valueOf("100.0"));
 		} catch (Exception e) {
@@ -144,7 +144,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 						"100.0"), null, account.getPersonnel(), "423423", Short
 						.valueOf("1"), currentDate, currentDate);
 
-		account.applyPayment(paymentData);
+		account.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
 				.getAmountDoubleValue(), Double.valueOf("100.0"));
@@ -179,7 +179,7 @@ public class TestBulkEntryPersistence extends MifosTestCase {
 				Short.valueOf("1"), startDate, startDate);
 
 		try {
-			account.applyPayment(paymentData);
+			account.applyPaymentWithPersist(paymentData);
 			assertTrue(false);
 		} catch (AccountException be) {
 			assertNotNull(be);

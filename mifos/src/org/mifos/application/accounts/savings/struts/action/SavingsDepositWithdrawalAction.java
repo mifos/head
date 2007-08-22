@@ -205,7 +205,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
 		Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
 		if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-			savings.applyPayment(createPaymentDataForDeposit(actionForm, uc,
+			savings.applyPaymentWithPersist(createPaymentDataForDeposit(actionForm, uc,
 					savings));
 		} else if (trxnTypeId
 				.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()))

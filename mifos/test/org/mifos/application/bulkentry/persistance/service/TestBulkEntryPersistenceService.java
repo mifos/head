@@ -105,7 +105,7 @@ public class TestBulkEntryPersistenceService extends MifosTestCase {
 						"100.0"), null, account.getPersonnel(), "423423", Short
 						.valueOf("1"), currentDate, currentDate);
 
-		account.applyPayment(paymentData);
+		account.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
 				.getAmountDoubleValue(), Double.valueOf("100.0"));

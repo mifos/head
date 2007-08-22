@@ -115,7 +115,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 						.getMoneyForMFICurrency(0), null, loan.getPersonnel(),
 						"receiptNum", Short.valueOf("1"), currentDate,
 						currentDate);
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
 		actionPerform();
 		verifyForward("getTransactionHistory_success");

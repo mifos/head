@@ -367,7 +367,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		AccountBO account = null;
 		try {
 			account = getAccount(accountId, AccountTypes.CUSTOMER_ACCOUNT);
-			account.applyPayment(accountPaymentDataView);
+			account.applyPaymentWithPersist(accountPaymentDataView);
 		} catch (AccountException ae) {
 			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
@@ -492,7 +492,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			AccountBO account = null;
 			try {
 				account = getAccount(accountId, AccountTypes.LOAN_ACCOUNT);
-				account.applyPayment(paymentData);
+				account.applyPaymentWithPersist(paymentData);
 			} catch (Exception ae) {
 				throw new ServiceException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
@@ -522,7 +522,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			else
 				account = getAccount(accountId, AccountTypes.SAVINGS_ACCOUNT);
 			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
-			account.applyPayment(accountPaymentDataView);
+			account.applyPaymentWithPersist(accountPaymentDataView);
 			HibernateUtil.getSessionTL().clear();
 			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
 					(SavingsBO) account, YesNoFlag.YES));

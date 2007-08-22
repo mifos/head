@@ -124,7 +124,7 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(88), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(firstPaymentData);
+		loan.applyPaymentWithPersist(firstPaymentData);
 
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
@@ -143,7 +143,7 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(700), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(firstPaymentData);
+		loan.applyPaymentWithPersist(firstPaymentData);
 
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
@@ -153,7 +153,7 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(100), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(secondPaymentData);
+		loan.applyPaymentWithPersist(secondPaymentData);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		loan.setUserContext(TestUtils.makeUser());
@@ -236,7 +236,7 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(700), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
 
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
@@ -260,13 +260,13 @@ public class TestAccountBO extends TestAccount {
 						.getMoneyForMFICurrency(216), null,
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestUtils.makeUser());
-		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
+		loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null,
 				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate));
@@ -307,7 +307,7 @@ public class TestAccountBO extends TestAccount {
 						.getMoneyForMFICurrency(712), null,
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 
 		TestObjectFactory.updateObject(loan);
 		try {
@@ -332,7 +332,7 @@ public class TestAccountBO extends TestAccount {
 						"receiptNum", Short.valueOf("1"), currentDate,
 						currentDate);
 
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
@@ -360,7 +360,7 @@ public class TestAccountBO extends TestAccount {
 						.getMoneyForMFICurrency(100), null,
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
@@ -405,7 +405,7 @@ public class TestAccountBO extends TestAccount {
 						.getMoneyForMFICurrency(100), null,
 						personnel, "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
@@ -601,13 +601,13 @@ public class TestAccountBO extends TestAccount {
 				TestObjectFactory.getMoneyForMFICurrency(212), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		accountBO.applyPayment(paymentData);
+		accountBO.applyPaymentWithPersist(paymentData);
 
 		HibernateUtil.commitTransaction();
 		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 
-		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
+		loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null,
 				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate));

@@ -767,7 +767,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsPaymentData savingsPaymentData = new SavingsPaymentData(
 				accountActionDate);
 		paymentData.addAccountPaymentData(savingsPaymentData);
-		savings.applyPayment(paymentData);
+		savings.applyPaymentWithPersist(paymentData);
 		assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings
 				.getAccountState().getId().shortValue());
 		assertEquals(100.0, savings.getSavingsBalance().getAmountDoubleValue());
@@ -807,7 +807,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsPaymentData savingsPaymentData = new SavingsPaymentData(
 				accountActionDate);
 		paymentData.addAccountPaymentData(savingsPaymentData);
-		savings.applyPayment(paymentData);
+		savings.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = (SavingsBO) accountPersistence.getAccount(savings
@@ -851,7 +851,7 @@ public class TestSavingsBO extends MifosTestCase {
 		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
 		paymentData.setRecieptNum("34244");
 		paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
-		savings.applyPayment(paymentData);
+		savings.applyPaymentWithPersist(paymentData);
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

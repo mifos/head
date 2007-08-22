@@ -173,7 +173,7 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
 
 		PaymentData paymentData = loan.createPaymentData(userContext,
                 money, paymentDate, null, null, Short.valueOf("1"));
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
     }
 
     private Date createPreviousDate(int numberOfDays) {

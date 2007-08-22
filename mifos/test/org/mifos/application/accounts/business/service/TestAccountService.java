@@ -106,7 +106,7 @@ public class TestAccountService extends MifosTestCase {
 						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());

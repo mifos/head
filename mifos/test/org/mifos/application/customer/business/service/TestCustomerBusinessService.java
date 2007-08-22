@@ -953,7 +953,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		SavingsPaymentData savingsPaymentData = new SavingsPaymentData(
 				accountActionDate);
 		paymentData.addAccountPaymentData(savingsPaymentData);
-		savingsBO.applyPayment(paymentData);
+		savingsBO.applyPaymentWithPersist(paymentData);
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

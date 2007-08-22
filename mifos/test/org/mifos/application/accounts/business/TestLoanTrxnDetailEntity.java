@@ -69,7 +69,7 @@ public class TestLoanTrxnDetailEntity extends MifosTestCase {
 						.getMFICurrency(), "700.0"), null, account
 						.getPersonnel(), "423423", Short.valueOf("1"),
 				sampleDate, sampleDate);
-		account.applyPayment(paymentData);
+		account.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 
 		assertEquals(1, account.getAccountPayments().size());

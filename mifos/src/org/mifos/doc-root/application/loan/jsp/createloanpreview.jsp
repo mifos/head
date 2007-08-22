@@ -392,7 +392,14 @@
 													</tr>
 													<tr>
 														<td valign="top">
-															<mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="accounts/loan" passLocale="true" />
+                                                            <c:choose>
+                                                                <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                                    <loanfn:getLoanRepaymentTable />
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <mifoscustom:mifostabletag source="repaymentScheduleInstallments" scope="session" xmlFileName="ProposedRepaymentSchedule.xml" moduleName="accounts/loan" passLocale="true" />
+                                                                </c:otherwise>
+                                                            </c:choose>
 														</td>
 													</tr>
 												</table>

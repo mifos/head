@@ -146,7 +146,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
-		customerAccount.applyPayment(accountPaymentDataView);
+		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of the payments done is", customerAccount
 				.getAccountPayments().size(), 1);
@@ -184,13 +184,13 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 
-		customerAccount.applyPayment(accountPaymentDataView);
+		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of the payments done is", customerAccount
 				.getAccountPayments().size(), 1);
 
 		try {
-			customerAccount.applyPayment(accountPaymentDataView);
+			customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 			assertTrue("Payment is done even though they are no dues", false);
 		} catch (AccountException ae) {
 			assertTrue("Payment is not allowed when there are no dues", true);
@@ -321,7 +321,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
-		customerAccount.applyPayment(accountPaymentDataView);
+		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of the payments done is", customerAccount
 				.getAccountPayments().size(), 1);
@@ -1144,7 +1144,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
-		customerAccount.applyPayment(accountPaymentDataView);
+		customerAccount.applyPaymentWithPersist(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		assertEquals("The size of the payments done is", customerAccount
 				.getAccountPayments().size(), 1);

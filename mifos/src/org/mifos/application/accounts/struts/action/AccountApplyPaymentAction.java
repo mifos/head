@@ -176,7 +176,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         PaymentData paymentData = account.createPaymentData(uc,
                 amount, trxnDate, actionForm.getReceiptId(), receiptDate,
                 Short.valueOf(actionForm.getPaymentTypeId()));
-        account.applyPayment(paymentData);
+        account.applyPaymentWithPersist(paymentData);
 		return mapping
 				.findForward(getForward(((AccountApplyPaymentActionForm) form)
 						.getInput()));

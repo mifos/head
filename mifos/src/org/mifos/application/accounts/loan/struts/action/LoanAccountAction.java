@@ -23,6 +23,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -377,7 +378,7 @@ public class LoanAccountAction extends AccountAppAction {
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-            throws PageExpiredException, AccountException {
+            throws PageExpiredException, AccountException, CustomerException {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm)form;
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
@@ -391,6 +392,10 @@ public class LoanAccountAction extends AccountAppAction {
                 List<PaymentDataHtmlBean> paymentDataBeans =
                         loanActionForm.getPaymentDataBeans();
 
+                if (! loan.isPaymentPermitted(getUserContext(request))) {
+                    throw new CustomerException(
+                        SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                }
                 PaymentData payment;
                 for (PaymentDataTemplate template : paymentDataBeans) {
                     if (template.getTotalAmount() != null
@@ -399,7 +404,7 @@ public class LoanAccountAction extends AccountAppAction {
                             throw new AccountException("errors.invalidTxndate");
                         }
                         payment = PaymentData.createPaymentData(template);
-                        loan.applyPayment(payment);
+                        loan.applyPayment(payment, false);
                     }
                 }
             }

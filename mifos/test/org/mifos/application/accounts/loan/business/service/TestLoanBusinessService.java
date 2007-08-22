@@ -116,7 +116,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 			assertNotNull(actionDate);
 			accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 			PaymentData paymentData = createPaymentViewObject(accountBO);
-			accountBO.applyPayment(paymentData);
+			accountBO.applyPaymentWithPersist(paymentData);
 			TestObjectFactory.updateObject(accountBO);
 		}
 	}

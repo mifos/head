@@ -286,16 +286,25 @@ public class AccountBO extends BusinessObject {
 								view.getFieldValue()));
 			}
 	}
-	public final void applyPayment(PaymentData paymentData)
+
+    public final void applyPayment(PaymentData paymentData,
+                                   boolean persistChanges)
 			throws AccountException {
-		AccountPaymentEntity accountPayment = makePayment(paymentData);
+        AccountPaymentEntity accountPayment = makePayment(paymentData);
 		addAccountPayment(accountPayment);
 		buildFinancialEntries(accountPayment.getAccountTrxns());
-		try {
-			(new AccountPersistence()).createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
+        if (persistChanges) {
+            try {
+                (new AccountPersistence()).createOrUpdate(this);
+            } catch (PersistenceException e) {
+                throw new AccountException(e);
+            }
+        }
+    }
+
+    public final void applyPaymentWithPersist(PaymentData paymentData)
+			throws AccountException {
+		applyPayment(paymentData, true);
 	}
 
     public PaymentData createPaymentData(UserContext userContext,

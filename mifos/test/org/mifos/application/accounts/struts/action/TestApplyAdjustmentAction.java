@@ -117,7 +117,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				loan.getPersonnel(),"receiptNum",Short.valueOf("1"),
 				currentDate,currentDate );
 		
-		loan.applyPayment(accountPaymentDataView);
+		loan.applyPaymentWithPersist(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

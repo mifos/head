@@ -319,7 +319,7 @@
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-	<target name="war" depends="compile, copy_files, integrate_birt_web_viewer, copy_birt_reports">
+	<target name="war" depends="clean,compile,copy_files,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" 
 			webxml="${build.web-inf}/web.xml">

@@ -180,7 +180,7 @@ public class TestLoanBO extends MifosTestCase {
 				TestObjectFactory.getMoneyForMFICurrency(200), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
 		TestObjectFactory.updateObject(loan);
 		for (AccountActionDateEntity accountActionDateEntity : loan
 				.getAccountActionDates()) {
@@ -254,7 +254,7 @@ public class TestLoanBO extends MifosTestCase {
 				TestObjectFactory.getMoneyForMFICurrency(200), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
 		TestObjectFactory.updateObject(loan);
 		for (AccountActionDateEntity accountActionDateEntity : loan
 				.getAccountActionDates()) {
@@ -1112,7 +1112,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("160"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, startDate,
 				startDate));
@@ -1243,7 +1243,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("180.1"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, startDate,
 				startDate));
@@ -1870,7 +1870,7 @@ public class TestLoanBO extends MifosTestCase {
 				accountBO.getPersonnel(), "5435345", Short.valueOf("1"),
 				startDate, startDate);
 
-		accountBO.applyPayment(paymentData);
+		accountBO.applyPaymentWithPersist(paymentData);
 		assertEquals(
 				"When Last installment is paid the status has been changed to closed",
 				((LoanBO) accountBO).getAccountState().getId().toString(),
@@ -2370,7 +2370,7 @@ public class TestLoanBO extends MifosTestCase {
 				TestObjectFactory.getMoneyForMFICurrency(700), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
 		
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
@@ -2442,7 +2442,7 @@ public class TestLoanBO extends MifosTestCase {
 		paymentData.setRecieptDate(startDate);
 		paymentData.setRecieptNum("5435345");
 
-		accountBO.applyPayment(paymentData);
+		accountBO.applyPaymentWithPersist(paymentData);
 		TestObjectFactory.flushandCloseSession();
 
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
@@ -4256,7 +4256,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
 				.getTotalPaymentDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("212"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4269,7 +4269,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		assertEquals(new Money("212.0"), ((LoanBO) accountBO)
 				.getTotalPaymentDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("200"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4289,7 +4289,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getApplicableIdsForFutureInstallments().get(0);
 		assertEquals(new Money("212.0"), nextInstallment.getTotalDueWithFees());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("312"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4310,7 +4310,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getApplicableIdsForFutureInstallments().get(0);
 		assertEquals(new Money("212.0"), nextInstallment.getTotalDueWithFees());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("1272"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4334,7 +4334,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getApplicableIdsForFutureInstallments().get(0);
 		assertEquals(new Money("212.0"), nextInstallment.getTotalDueWithFees());
 		try {
-			accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+			accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 					null, new Money("1300"), accountBO.getCustomer(), accountBO
 							.getPersonnel(), "432423", (short) 1, new Date(
 							System.currentTimeMillis()), new Date(System
@@ -4355,7 +4355,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money("100.0"), nextInstallment.getTotalFeeDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("10"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4364,7 +4364,7 @@ public class TestLoanBO extends MifosTestCase {
 		nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money("90"), nextInstallment.getTotalFeeDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("30"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4411,7 +4411,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
 				.getDetailsOfNextInstallment();
 		assertEquals(new Money("100.0"), nextInstallment.getTotalFeeDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("10"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4422,7 +4422,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money("90"), nextInstallment.getTotalFeeDue());
 		assertEquals(new Money("202.0"), ((LoanBO) accountBO)
 				.getTotalPaymentDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("202"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -4463,7 +4463,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("60"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, startDate,
 				startDate));
@@ -4545,7 +4545,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("60"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, startDate,
 				startDate));
@@ -4676,7 +4676,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(new Money("112.0"), ((LoanBO) accountBO)
 				.getTotalPaymentDue());
-		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+		accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("100"), accountBO.getCustomer(), accountBO
 						.getPersonnel(), "432423", (short) 1, new Date(System
 						.currentTimeMillis()), new Date(System
@@ -5318,7 +5318,7 @@ public class TestLoanBO extends MifosTestCase {
 		paymentData.setRecieptDate(startDate);
 		paymentData.setRecieptNum("5435345");
 
-		accountBO.applyPayment(paymentData);
+		accountBO.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

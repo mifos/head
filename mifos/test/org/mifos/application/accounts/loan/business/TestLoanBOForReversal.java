@@ -127,7 +127,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 				TestObjectFactory.getMoneyForMFICurrency(200), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
-		loan.applyPayment(paymentData);
+		loan.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 	}

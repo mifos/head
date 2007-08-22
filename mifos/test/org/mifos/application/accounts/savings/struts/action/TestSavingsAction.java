@@ -569,7 +569,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
 		paymentData.addAccountPaymentData(savingsPaymentData);
 		
-		savings.applyPayment(paymentData);
+		savings.applyPaymentWithPersist(paymentData);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
