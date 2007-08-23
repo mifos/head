@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.financial.business;
 
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
@@ -37,6 +38,20 @@ public class TestCOABO extends MifosTestCase {
         TestUtils.verifyBasicEqualsContract(
         	new COABO[] { chart53, chart53b, subclass }, 
         	new COABO[] { chart54 });
+    }
+    
+    public void testGetSubCategoryCOABOs() throws FinancialException {
+    	String[] SUB_CATEGORY_NAMES = {"Petty Cash Accounts", "Bank Balances"};
+    	String[] SUB_CATEGORY_GLCODES = {"11100", "11200"};
+    	
+		FinancialInitializer.initialize();
+		COABO coa = ChartOfAccountsCache.get(CategoryConstants.CASHBANKBALANCE);
+		List<COABO> subCategories = coa.getSubCategoryCOABOs();
+		for (int index=0; index < subCategories.size(); ++index) {
+			COABO subcat1 = subCategories.get(index);
+			assertEquals(SUB_CATEGORY_NAMES[index], subcat1.getCategoryName());
+			assertEquals(SUB_CATEGORY_GLCODES[index], subcat1.getAssociatedGlcode().getGlcode());
+		}    	
     }
 
 }

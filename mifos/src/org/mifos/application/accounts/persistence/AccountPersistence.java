@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.persistence;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -8,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -353,14 +356,56 @@ public class AccountPersistence extends Persistence {
 		
 	}
 	
-	public void dumpChartOfAccounts() {
+	private static final String GL_ACCOUNT_TAG = ".GLAccount";
+	private static final String ASSETS_GL_ACCOUNT_TAG = ".GLAssetsAccount";
+	private static final String LIABILITIES_GL_ACCOUNT_TAG = ".GLLiabilitiesAccount";
+	private static final String INCOME_GL_ACCOUNT_TAG = ".GLIncomeAccount";
+	private static final String EXPENDITURE_GL_ACCOUNT_TAG = ".GLExpenditureAccount";
+	private static final String ASSETS_ACCOUNT_GL_CODE = "10000";
+	private static final String LIABILITIES_ACCOUNT_GL_CODE = "20000";
+	private static final String INCOME_ACCOUNT_GL_CODE = "30000";
+	private static final String EXPENDITURE_ACCOUNT_GL_CODE = "40000";
+	
+	public void addAccountSubcategories(XMLConfiguration config, COABO coa, String path){
+		for (COABO subcat : coa.getSubCategoryCOABOs()) {
+			config.addProperty(path + "(-1)[@code]", subcat.getAssociatedGlcode().getGlcode());
+			config.addProperty(path + "[@name]", subcat.getCategoryName());
+			addAccountSubcategories(config, subcat, path + GL_ACCOUNT_TAG);
+		}
+		
+	}
+	
+	public String dumpChartOfAccounts() throws ConfigurationException {
+		XMLConfiguration config = new XMLConfiguration();
 		Query topLevelAccounts = getSession().getNamedQuery("COABO.getTopLevelAccounts");
 		List listAccounts = topLevelAccounts.list();
 		Iterator it = listAccounts.iterator();
 		while (it.hasNext()) {
 			COABO coa = (COABO)it.next();
-			coa.getCategoryName();
-			coa.getAssociatedGlcode().getGlcode();
+			String name = coa.getCategoryName();
+			String glCode = coa.getAssociatedGlcode().getGlcode();
+			String path = "ChartOfAccounts";
+			if (glCode.equals(ASSETS_ACCOUNT_GL_CODE)) {
+				path = path + ASSETS_GL_ACCOUNT_TAG;
+			} else if (glCode.equals(LIABILITIES_ACCOUNT_GL_CODE)) {
+				path = path + LIABILITIES_GL_ACCOUNT_TAG;
+			} else if (glCode.equals(INCOME_ACCOUNT_GL_CODE)) {
+				path = path + INCOME_GL_ACCOUNT_TAG;
+			} else if (glCode.equals(EXPENDITURE_ACCOUNT_GL_CODE)) {
+				path = path + EXPENDITURE_GL_ACCOUNT_TAG;
+			} else {
+				throw new RuntimeException("Unrecognized top level GLCode: " + glCode);
+			}
+			config.addProperty(path + "(-1)[@code]", glCode);
+			config.addProperty(path + "[@name]", name);
+			addAccountSubcategories(config, coa, path + GL_ACCOUNT_TAG);
 		}	
-	}
+		StringWriter stringWriter = new StringWriter();
+		config.save(stringWriter);
+		String chart = stringWriter.toString();
+		System.out.println(chart);
+		return chart;
+
+	}	
 }
+

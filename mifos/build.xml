@@ -379,6 +379,15 @@
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>
 	</target>
+	
+	<target name="build_2_test_dbs">
+		  <antcall target="build_test_db">
+		    <param name="testdb.name" value="test2"/>
+		  </antcall>
+		  <antcall target="build_test_db">
+		    <param name="testdb.name" value="test"/>
+		  </antcall>
+	</target>	
 
 	<!-- For example, "ant -Ddowngrade.to=76 downgrade" -->
 	<target name="downgrade" depends="compile"

@@ -38,8 +38,12 @@
 
 package org.mifos.application.accounts.financial.business;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.framework.business.BusinessObject;
@@ -52,6 +56,7 @@ import org.mifos.framework.business.BusinessObject;
  * find?).
  */
 public class COABO extends BusinessObject {
+	
 	private Short categoryId;
 
 	private String categoryName;
@@ -108,6 +113,22 @@ public class COABO extends BusinessObject {
 		return applicableCOA;
 	}
 
+	/*
+	 * Get a list of the subcategories of this account
+	 * ordered by GLCode.
+	 */
+	public List<COABO> getSubCategoryCOABOs() {
+		List<COABO> subCategories = new ArrayList<COABO>();
+		if (subCategory != null) {
+			for (COAHierarchyEntity hierarchyEntity : (Set<COAHierarchyEntity>)subCategory) {
+				subCategories.add(hierarchyEntity.getCoa());			
+			}
+		}
+		Collections.sort(subCategories, new GLCodeComparator());
+		return subCategories;
+	}
+
+	
 	public COABO getCOAHead() {
 		COAHierarchyEntity headHiearchy = null;
 		COAHierarchyEntity currentHiearchy = null;
@@ -157,4 +178,11 @@ public class COABO extends BusinessObject {
         }
     }
 
+    public class GLCodeComparator implements Comparator<COABO> {
+    	public int compare(COABO coa1, COABO coa2) {
+    		int coa1code = Integer.parseInt(coa1.getAssociatedGlcode().getGlcode());
+    		int coa2code = Integer.parseInt(coa2.getAssociatedGlcode().getGlcode());
+    		return coa1code - coa2code;
+    	}
+    }
 }
