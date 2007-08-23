@@ -641,14 +641,15 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+		java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, date,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		try {
-			new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+			new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, date,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			fail();
 		} catch (CustomerException e) {

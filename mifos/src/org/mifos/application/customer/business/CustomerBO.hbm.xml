@@ -270,7 +270,24 @@
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and :customerId = 0) or (:customerId != 0 and client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerId !=:customerId)]]>
     </query>					  
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
-	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
+ 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
+
+<!--  NOTE: care must be taken with the query above to use java.sql.Date objects and not java.util.Date objects when clients
+		A more defensive query would be as below, where we explicity ignore time information more fine grained than "day".
+		Unfortunately, Mayfly can't deal with the generated SQL at this time.
+		
+	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client 
+	    where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and 
+	    day(client.dateOfBirth) = day(:DATE_OFBIRTH) and 
+	    month(client.dateOfBirth) = month(:DATE_OFBIRTH) and
+	    year(client.dateOfBirth) = year(:DATE_OFBIRTH) and
+	    :customerId = 0) or 
+	    (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and 
+	    day(client.dateOfBirth) = day(:DATE_OFBIRTH) and 
+	    month(client.dateOfBirth) = month(:DATE_OFBIRTH) and
+	    year(client.dateOfBirth) = year(:DATE_OFBIRTH) and
+	    client.customerId !=:customerId)]]>
+ -->	    
   </query>
     <query name="Customer.getAttedanceForOffice">
 	    <![CDATA[select new org.mifos.application.bulkentry.business. BulkEntryClientAttendanceView( client.customerId,
