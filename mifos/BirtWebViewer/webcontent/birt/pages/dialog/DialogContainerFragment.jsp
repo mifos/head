@@ -94,7 +94,7 @@
 							<div class="dialogBtnBarButtonRightBackgroundEnabled"></div>
 							<input type="button" value='<%= BirtResources.getMessage( "birt.viewer.dialog.cancel" )%>' 
 								title='<%= BirtResources.getMessage( "birt.viewer.dialog.cancel" )%>'  
-								class="dialogBtnBarButtonText dialogBtnBarButtonEnabled"/>
+								class="dialogBtnBarButtonText dialogBtnBarButtonEnabled" onclick="javascript:history.go(-1)"/>
 						</div> 
 					</div>							
 				</div>

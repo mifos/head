@@ -79,6 +79,7 @@ public interface ReportsConstants {
 	public static final String ERROR_CATEGORYHASREPORTS="error.categoryHasReports";
 	public static final String ERROR_REPORTINFONOTEDIT="error.reportInfoNotEdit";
 	public static final String ERROR_REPORTALREADYEXIST="error.reportAlreadyExist";
+	public static final String ERROR_REPORTACTIVITYIDISNULL="error.reportActivityIdIsNull";
 	
 	
 }
