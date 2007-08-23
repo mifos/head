@@ -17,7 +17,7 @@ CREATE TABLE LOAN_MONITORING (
 )
 ENGINE=InnoDB CHARACTER SET utf8;
 
--- 0 by default: Don't Allow group loan account with individual monitoring
+-- 0: by default: Don't Allow group loan account with individual monitoring
 -- 1: Allow group loan account with individual monitoring
 
 INSERT INTO LOAN_MONITORING (LOAN_MONITORING_ID,INDIVIDUAL_MONITORING_FLAG,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,VERSION_NO)
