@@ -280,6 +280,7 @@
 				</tr>
 			</table>
 			<html-el:hidden property="method" value="preview" />
+            <html-el:hidden property="perspective" value="${requestScope.perspective}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

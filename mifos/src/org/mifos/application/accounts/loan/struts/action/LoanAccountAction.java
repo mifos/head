@@ -22,8 +22,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -32,6 +32,8 @@ import org.mifos.application.master.business.*;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
@@ -51,6 +53,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
@@ -303,27 +308,54 @@ public class LoanAccountAction extends AccountAppAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+
+		LoanBO loan = constructLoan(loanActionForm, request);
+
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        List<RepaymentScheduleInstallment> installments = getLoanSchedule(loan);
+        SessionUtils.setCollectionAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
+				installments, request);
+
+        String perspective = request.getParameter("perspective");
+        if (perspective != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+        loanActionForm.initializeTransactionFields(getUserContext(request), installments.size());
+
+        boolean isPendingApprovalDefined = Configuration.getInstance()
+				.getAccountConfig(getUserContext(request).getBranchId())
+				.isPendingApprovalStateDefinedForLoan();
+		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
+				isPendingApprovalDefined, request);
+
+        return mapping.findForward(ActionForwards.schedulePreview_success
+				.toString());
+	}
+
+    private CustomerBO getCustomer(HttpServletRequest request)
+            throws PageExpiredException, ServiceException {
+        CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(
+				LoanConstants.LOANACCOUNTOWNER, request);
+		CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
+		customer.getPersonnel().getDisplayName();
+		customer.getOffice().getOfficeName();
+		// TODO: I'm not sure why we're resetting version number - need to investigate this
+        customer.setVersionNo(oldCustomer.getVersionNo());
+        return customer;
+    }
+
+    private LoanBO constructLoan(LoanAccountActionForm loanActionForm, HttpServletRequest request)
+            throws AccountException, ServiceException, PageExpiredException {
+        LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct)).getLoanOffering(
 				((LoanOfferingBO) SessionUtils.getAttribute(
 						LoanConstants.LOANOFFERING, request))
 						.getPrdOfferingId(), getUserContext(request)
 						.getLocaleId());
-
-		CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(
-				LoanConstants.LOANACCOUNTOWNER, request);
-		CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
-		customer.getPersonnel().getDisplayName();
-		customer.getOffice().getOfficeName();
-		customer.setVersionNo(oldCustomer.getVersionNo());
-		oldCustomer = null;
-		LoanBO loan = null;
         String perspective = request.getParameter("perspective");
-        if (perspective != null) {
-            request.setAttribute("perspective", request.getParameter("perspective"));
-        }
-
+        CustomerBO customer = getCustomer(request);
+        LoanBO loan;
         if (perspective != null && perspective.equalsIgnoreCase("redoloan")) {
             loan = LoanBO.redoLoan(getUserContext(request), loanOffering, customer,
                             AccountState.LOANACC_PARTIALAPPLICATION, loanActionForm
@@ -358,55 +390,61 @@ public class LoanAccountAction extends AccountAppAction {
 				request, MasterConstants.COLLATERAL_TYPES, loanActionForm
 						.getCollateralTypeIdValue());
 		loan.setCollateralType(collateralTypeEntity);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-        List<RepaymentScheduleInstallment> installments = getLoanSchedule(loan);
-        SessionUtils.setCollectionAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
-				installments, request);
 
-        loanActionForm.initializeTransactionFields(getUserContext(request), installments.size());
+        return loan;
+    }
 
-        boolean isPendingApprovalDefined = Configuration.getInstance()
-				.getAccountConfig(getUserContext(request).getBranchId())
-				.isPendingApprovalStateDefinedForLoan();
-		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
-				isPendingApprovalDefined, request);
+    public LoanBO redoLoan(LoanAccountActionForm loanActionForm,
+                           HttpServletRequest request)
+            throws PageExpiredException, AccountException, ServiceException {
+        LoanBO loan = constructLoan(loanActionForm, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
-        return mapping.findForward(ActionForwards.schedulePreview_success
-				.toString());
-	}
+        loan.changeStatus(AccountState.LOANACC_ACTIVEINGOODSTANDING,
+                null, "Automatic Status Update (Redo Loan)");
 
-	@TransactionDemarcate(joinToken = true)
+        PersonnelBO personnel = null;
+        try {
+            personnel = new PersonnelPersistence()
+                    .getPersonnel(getUserContext(request).getId());
+        } catch (PersistenceException e) {
+            throw new IllegalStateException(e);
+        }
+
+        // We're assuming cash disbursal for this situation right now
+        loan.disburseLoan(personnel, Short.valueOf((short)1), false);
+
+        List<PaymentDataHtmlBean> paymentDataBeans =
+                loanActionForm.getPaymentDataBeans();
+        PaymentData payment;
+        for (PaymentDataTemplate template : paymentDataBeans) {
+            if (template.getTotalAmount() != null
+                    && template.getTransactionDate() != null) {
+                if (! loan.isLastCustomerMeetingDate(template.getTransactionDate())) {
+                    throw new AccountException("errors.invalidTxndate");
+                }
+                payment = PaymentData.createPaymentData(template);
+                loan.applyPayment(payment, false);
+            }
+        }
+
+        return loan;
+    }
+
+    @TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-            throws PageExpiredException, AccountException, CustomerException {
+            throws PageExpiredException, AccountException, CustomerException, ServiceException {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm)form;
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
             request.setAttribute("perspective", perspective);
 
             if (perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
-                LoanBO loan = (LoanBO) SessionUtils.getAttribute(
-                            Constants.BUSINESS_KEY, request);
-
                 LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-                List<PaymentDataHtmlBean> paymentDataBeans =
-                        loanActionForm.getPaymentDataBeans();
 
-                if (! loan.isPaymentPermitted(getUserContext(request))) {
-                    throw new CustomerException(
-                        SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-                }
-                PaymentData payment;
-                for (PaymentDataTemplate template : paymentDataBeans) {
-                    if (template.getTotalAmount() != null
-                            && template.getTransactionDate() != null) {
-                        if (! loan.isLastCustomerMeetingDate(template.getTransactionDate())) {
-                            throw new AccountException("errors.invalidTxndate");
-                        }
-                        payment = PaymentData.createPaymentData(template);
-                        loan.applyPayment(payment, false);
-                    }
-                }
+                LoanBO loan = redoLoan(loanActionForm, request);
+                SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
             }
         }
 
@@ -425,15 +463,25 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
+        String perspective = loanActionForm.getPerspective();
+        CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
-		checkPermissionForCreate(loanActionForm.getState().getValue(),
-				getUserContext(request), null, customer.getOffice()
-						.getOfficeId(), customer.getPersonnel()
-						.getPersonnelId());
-		LoanBO loan = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
-		loan.save(loanActionForm.getState());
+        LoanBO loan;
+        if (perspective != null &&
+                perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
+            loan = redoLoan(loanActionForm, request);
+            SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+            loan.save();
+        }
+        else {
+            checkPermissionForCreate(loanActionForm.getState().getValue(),
+                    getUserContext(request), null, customer.getOffice()
+                            .getOfficeId(), customer.getPersonnel()
+                            .getPersonnelId());
+            loan = (LoanBO) SessionUtils.getAttribute(
+                    Constants.BUSINESS_KEY, request);
+            loan.save(loanActionForm.getState());
+        }
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
 		request.setAttribute("globalAccountNum", loan.getGlobalAccountNum());
@@ -716,7 +764,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private FundBO getFund(HttpServletRequest request, Short fundId)
-			throws Exception {
+            throws PageExpiredException {
 		List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(
 				LoanConstants.LOANFUNDS, request);
 		for (FundBO fund : funds) {
@@ -753,7 +801,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private MasterDataEntity findMasterEntity(HttpServletRequest request,
-			String collectionName, Short value) throws Exception {
+			String collectionName, Short value) throws PageExpiredException {
 		List<MasterDataEntity> entities = (List<MasterDataEntity>) SessionUtils
 				.getAttribute(collectionName, request);
 		for (MasterDataEntity entity : entities)

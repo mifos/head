@@ -238,7 +238,8 @@ public class MeetingBO extends BusinessObject {
 			throw new MeetingException(MeetingConstants.INVALID_MEETINGPLACE);
 	}
 	
-	public boolean isValidMeetingDate(Date meetingDate, Date endDate)throws MeetingException{
+	public boolean isValidMeetingDate(Date meetingDate, Date endDate)
+            throws MeetingException {
 		validateMeetingDate(meetingDate);
 		validateEndDate(endDate);
 		Date currentScheduleDate=getFirstDate(getStartDate());

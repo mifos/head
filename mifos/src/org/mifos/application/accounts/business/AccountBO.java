@@ -22,34 +22,16 @@
 
 package org.mifos.application.accounts.business;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.FeeInstallment;
-import org.mifos.application.accounts.util.helpers.InstallmentDate;
-import org.mifos.application.accounts.util.helpers.PaymentData;
-import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.accounts.util.helpers.*;
 import org.mifos.application.customer.business.CustomerAccountBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -69,8 +51,8 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -119,8 +101,10 @@ public class AccountBO extends BusinessObject {
 		personnel = null;
 		accountType = null;
 		accountFees = new HashSet<AccountFeesEntity>();
-		accountPayments = new HashSet<AccountPaymentEntity>();
-		accountActionDates = new HashSet<AccountActionDateEntity>();
+        // TODO: Need an ordered collection here - this generalized Set attribute should ultimately be a List
+		accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+        // TODO: Need an ordered collection here - this generalized Set attribute should ultimately be a List
+		accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
 		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
 		accountNotes = new HashSet<AccountNotesEntity>();
 		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
@@ -134,8 +118,10 @@ public class AccountBO extends BusinessObject {
 		validate(userContext, customer, accountType, accountState);
 
 		accountFees = new HashSet<AccountFeesEntity>();
-		accountPayments = new HashSet<AccountPaymentEntity>();
-		accountActionDates = new HashSet<AccountActionDateEntity>();
+        // TODO: Need an ordered collection here - this generalized Set attribute should ultimately be a List
+        accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+        // TODO: Need an ordered collection here - this generalized Set attribute should ultimately be a List
+		accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
 		accountCustomFields = new HashSet<AccountCustomFieldEntity>();
 		accountNotes = new HashSet<AccountNotesEntity>();
 		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
@@ -250,7 +236,7 @@ public class AccountBO extends BusinessObject {
 
 	protected void addAccountPayment(AccountPaymentEntity payment) {
 		if (accountPayments == null)
-			accountPayments = new HashSet<AccountPaymentEntity>();
+			accountPayments = new LinkedHashSet<AccountPaymentEntity>();
 		accountPayments.add(payment);
 	}
 

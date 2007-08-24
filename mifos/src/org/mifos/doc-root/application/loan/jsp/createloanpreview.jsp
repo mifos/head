@@ -449,7 +449,8 @@
 											<html-el:hidden property="input" value="accountPreview" />
 											<html-el:hidden value="" property="stateSelected" />
 											<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-										</tr>
+                                            <html-el:hidden property="perspective" value="${requestScope.perspective}" />
+                                        </tr>
 									</table>
 									<br>
 								</td>

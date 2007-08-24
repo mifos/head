@@ -217,6 +217,11 @@ public class LoanBO extends AccountBO {
                     LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
         }
 
+        if (! isDisbursementDateValid(customer, disbursementDate)) {
+            throw new AccountException(
+                LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+        }
+            
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount,
                 noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
                 interestRate, gracePeriodDuration, fund, feeViews, customFields);
@@ -248,6 +253,11 @@ public class LoanBO extends AccountBO {
         if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
             throw new AccountException(
                     LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+        }
+
+        if (! isDisbursementDateValid(customer, disbursementDate)) {
+            throw new AccountException(
+                LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
         }
 
         if (interestDeductedAtDisbursement == true
@@ -755,9 +765,24 @@ public class LoanBO extends AccountBO {
 		return totalOverDueAmounts;
 	}
 
-	public void disburseLoan(String recieptNum, Date transactionDate,
+    public void disburseLoan(String recieptNum, Date transactionDate,
 			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
-			Short rcvdPaymentTypeId) throws AccountException {
+			Short rcvdPaymentTypeId)
+            throws AccountException {
+        disburseLoan(recieptNum, transactionDate, paymentTypeId, personnel,
+                receiptDate, rcvdPaymentTypeId, true);
+    }
+
+    public void disburseLoan(PersonnelBO personnel, Short rcvdPaymentTypeId,
+                             boolean persistChange)
+            throws AccountException {
+        disburseLoan(null, getDisbursementDate(), rcvdPaymentTypeId, 
+                personnel, null, rcvdPaymentTypeId, persistChange);
+    }
+
+    public void disburseLoan(String recieptNum, Date transactionDate,
+			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
+			Short rcvdPaymentTypeId, boolean persistChange) throws AccountException {
 		AccountPaymentEntity accountPaymentEntity = null;
 		addLoanActivity(buildLoanActivity(this.loanAmount, personnel,
 				AccountConstants.LOAN_DISBURSAL, transactionDate));
@@ -840,13 +865,16 @@ public class LoanBO extends AccountBO {
 		if (getPerformanceHistory() != null)
 			getPerformanceHistory().setLoanMaturityDate(
 					getLastInstallmentAccountAction().getActionDate());
-		try {
-			new AccountPersistence().createOrUpdate(this);
-		}
-		catch (PersistenceException e) {
-			throw new AccountException(e);
-		}
-	}
+
+        if (persistChange) {
+            try {
+                new AccountPersistence().createOrUpdate(this);
+            }
+            catch (PersistenceException e) {
+                throw new AccountException(e);
+            }
+        }
+    }
 
 	public Money getTotalEarlyRepayAmount() {
 		Money amount = new Money();
@@ -1646,12 +1674,6 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void generateMeetingSchedule() throws AccountException {
-	
-		//Allowing loan disbursal dates to become independent of meeting schedules.				
-		
-		/*if (!isDisbursementDateValid())
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);*/
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
 		List<InstallmentDate> installmentDates = getInstallmentDates(
@@ -2207,18 +2229,12 @@ public class LoanBO extends AccountBO {
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
 
-	/*
-	 * This method will be never used because we allowed laon
-	 * disbursal dates to become independent of meeting schedules
-	 * TODO removing this method later if unusable  
-	 **/ 
-	@SuppressWarnings("unused")
-	private Boolean isDisbursementDateValid() throws AccountException {
+	private static Boolean isDisbursementDateValid(CustomerBO specifiedCustomer, Date disbursementDate) throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"IsDisbursementDateValid invoked ");
 		Boolean isValid = false;
 		try {
-			isValid = this.getCustomer().getCustomerMeeting().getMeeting()
+			isValid = specifiedCustomer.getCustomerMeeting().getMeeting()
 					.isValidMeetingDate(disbursementDate,
 							DateUtils.getLastDayOfNextYear());
 		}
@@ -2944,7 +2960,11 @@ public class LoanBO extends AccountBO {
 				&& isInterestDeductedAtDisbursement();
 	}
 
-	private void makeEarlyRepaymentForDueInstallments(
+    public boolean isRedone() {
+        return this.getCreatedDate().getTime() > this.getDisbursementDate().getTime();
+    }
+
+    private void makeEarlyRepaymentForDueInstallments(
 			AccountPaymentEntity accountPaymentEntity, String comments,
 			AccountActionTypes accountActionTypes) throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();

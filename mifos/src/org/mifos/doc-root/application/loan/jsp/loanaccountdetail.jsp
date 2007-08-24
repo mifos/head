@@ -101,7 +101,10 @@
 								<td class="fontnormal">
 									<mifos:mifoslabel name="loan.proposed_date" />: 
 									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
-								</td>
+                                    <c:if test="${BusinessKey.redone}">
+                                        &nbsp(<mifos:mifoslabel name="loan.is_redo_loan" />)
+                                    </c:if>
+                                </td>
 							</tr>
 							<tr id="Loan.PurposeOfLoan">
 								<td class="fontnormal">
