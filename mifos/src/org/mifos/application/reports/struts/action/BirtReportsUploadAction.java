@@ -27,8 +27,6 @@ import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -122,7 +120,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		ReportsBO reportBO;
 		ReportsJasperMap reportJasperMap;
 		String activityNameHead = "Can view ";
-		int activityId = 0;
+
 		short parentActivity = 0;
 
 		ReportsCategoryBO category = getReportCategory(uploadForm
@@ -135,21 +133,27 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportJasperMap = new ReportsJasperMap();
 
 		Connection conn = new ReportsPersistence().getConnection();
-		for (ActivityEntity activity : new RolesPermissionsBusinessService()
-				.getActivities()) {
-			if (activity.getId().intValue() > activityId)
-				activityId = activity.getId();
-		}
 
-		int newActivityId = activityId + 1;
 		parentActivity = category.getActivityId();
 
-		AddActivity activity = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-						(short) newActivityId, parentActivity,
-						DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
-								+ uploadForm.getReportTitle());
+		int newActivityId = AddActivity.calculateDynamicActivityId();
+
+		if (newActivityId < Short.MIN_VALUE) {
+			ActionErrors errors = new ActionErrors();
+			errors.add(ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID,
+					new ActionMessage(
+							ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.preview_failure
+					.toString());
+		}
+		AddActivity activity = new AddActivity(
+				DatabaseVersionPersistence.APPLICATION_VERSION,
+				(short) newActivityId, parentActivity,
+				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
+						+ uploadForm.getReportTitle());
 		activity.upgrade(conn);
-		
+
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
@@ -184,15 +188,14 @@ public class BirtReportsUploadAction extends BaseAction {
 		InputStream is = formFile.getInputStream();
 		OutputStream os;
 		/* for test purposes, if the real path does not exist (if we're
-		* operating outside a deployed environment) the file is just written
-		* to a ByteArrayOutputStream which is not actually stored.
-		* !! This does not produce any sort of file that can be retirieved.
-		* !! it only allows us to perform the upload action.
-		*/ 
+		 * operating outside a deployed environment) the file is just written
+		 * to a ByteArrayOutputStream which is not actually stored.
+		 * !! This does not produce any sort of file that can be retirieved.
+		 * !! it only allows us to perform the upload action.
+		 */
 		if (dirPath != null)
 			os = new FileOutputStream(file);
-		else
-			os = new ByteArrayOutputStream();
+		else os = new ByteArrayOutputStream();
 		byte[] buffer = new byte[4096];
 		int bytesRead = 0;
 		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {

@@ -80,6 +80,7 @@ public interface ReportsConstants {
 	public static final String ERROR_REPORTINFONOTEDIT="error.reportInfoNotEdit";
 	public static final String ERROR_REPORTALREADYEXIST="error.reportAlreadyExist";
 	public static final String ERROR_REPORTACTIVITYIDISNULL="error.reportActivityIdIsNull";
+	public static final String ERROR_NOMOREDYNAMICACTIVITYID="error.noMoreDynamicActivityId";
 	
 	
 }

@@ -16,8 +16,6 @@ import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -113,21 +111,25 @@ public class ReportsCategoryAction extends BaseAction {
 		String categoryName = defineNewCategoryForm.getCategoryName();
 		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
 
-		int activityId = 0;
-		for (ActivityEntity activity : new RolesPermissionsBusinessService()
-				.getActivities()) {
-			if (activity.getId().intValue() > activityId)
-				activityId = activity.getId();
+		int newActivityId = AddActivity.calculateDynamicActivityId();
+
+		if (newActivityId < Short.MIN_VALUE) {
+			ActionErrors errors = new ActionErrors();
+			errors.add(ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID,
+					new ActionMessage(
+							ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID));
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			return mapping.findForward(ActionForwards.preview_failure
+					.toString());
 		}
-		activityId = activityId + 1;
 
 		Connection conn = new ReportsPersistence().getConnection();
 		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short) activityId, SecurityConstants.REPORTS_MANAGEMENT,
+				(short) newActivityId, SecurityConstants.REPORTS_MANAGEMENT,
 				DatabaseVersionPersistence.ENGLISH_LOCALE, categoryName)
 				.upgrade(conn);
 
-		reportsCategoryBO.setActivityId((short) activityId);
+		reportsCategoryBO.setActivityId((short) newActivityId);
 		reportsCategoryBO.setReportCategoryName(categoryName);
 
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);

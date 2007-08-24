@@ -8,7 +8,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddActivity extends Upgrade {
@@ -28,9 +31,8 @@ public class AddActivity extends Upgrade {
 	 * @param locale Locale in which we want to define a name
 	 * @param activityName Name to give the activity, in that locale.
 	 */
-	public AddActivity(
-		int higherVersion, short newActivityId, Short parentActivity, 
-		Short locale, String activityName) {
+	public AddActivity(int higherVersion, short newActivityId,
+			Short parentActivity, Short locale, String activityName) {
 		super(higherVersion);
 		this.newActivityId = newActivityId;
 		this.parentActivity = parentActivity;
@@ -46,41 +48,42 @@ public class AddActivity extends Upgrade {
 		insertMessage(connection, lookupId, locale, activityName);
 		try {
 			addActivityEntity(connection, lookupId);
-		} catch (SQLException e) {
-			deleteFromLookupValueLocale(connection, (short)lookupId);
-			deleteFromLookupValue(connection, (short)lookupId);
+		}
+		catch (SQLException e) {
+			deleteFromLookupValueLocale(connection, (short) lookupId);
+			deleteFromLookupValue(connection, (short) lookupId);
 			throw e;
 		}
 		try {
-			allowActivity(connection, newActivityId, 
+			allowActivity(connection, newActivityId,
 					RolesAndPermissionConstants.ADMIN_ROLE);
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			deleteFromActivity(connection);
-			deleteFromLookupValueLocale(connection, (short)lookupId);
-			deleteFromLookupValue(connection, (short)lookupId);
+			deleteFromLookupValueLocale(connection, (short) lookupId);
+			deleteFromLookupValue(connection, (short) lookupId);
 			throw e;
 		}
 		upgradeVersion(connection);
 	}
 
-	private void allowActivity(Connection connection, 
-		short activityId, int roleId) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"insert into ROLES_ACTIVITY(ACTIVITY_ID, ROLE_ID) VALUES(?, ?)");
+	private void allowActivity(Connection connection, short activityId,
+			int roleId) throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("insert into ROLES_ACTIVITY(ACTIVITY_ID, ROLE_ID) VALUES(?, ?)");
 		statement.setShort(1, activityId);
 		statement.setInt(2, roleId);
 		statement.executeUpdate();
 		statement.close();
 	}
 
-	private void addActivityEntity(Connection connection, int lookupId) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"insert into ACTIVITY(" +
-			"ACTIVITY_ID,PARENT_ID," +
-			"ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) " +
-			"VALUES(?,?,?,?)");
+	private void addActivityEntity(Connection connection, int lookupId)
+			throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("insert into ACTIVITY("
+						+ "ACTIVITY_ID,PARENT_ID,"
+						+ "ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) "
+						+ "VALUES(?,?,?,?)");
 		statement.setShort(1, newActivityId);
 		statement.setObject(2, parentActivity, Types.SMALLINT);
 		statement.setInt(3, lookupId);
@@ -90,7 +93,8 @@ public class AddActivity extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException, SQLException {
+	public void downgrade(Connection connection) throws IOException,
+			SQLException {
 		short lookupId = findLookupId(connection, newActivityId);
 		deleteFromRolesActivity(connection);
 		deleteFromActivity(connection);
@@ -99,11 +103,11 @@ public class AddActivity extends Upgrade {
 		downgradeVersion(connection);
 	}
 
-	private static short findLookupId(Connection connection, short activityId) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"select ACTIVITY_NAME_LOOKUP_ID " +
-			"from ACTIVITY where activity_id = ?");
+	private static short findLookupId(Connection connection, short activityId)
+			throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("select ACTIVITY_NAME_LOOKUP_ID "
+						+ "from ACTIVITY where activity_id = ?");
 		statement.setShort(1, activityId);
 		ResultSet results = statement.executeQuery();
 		if (results.next()) {
@@ -114,43 +118,53 @@ public class AddActivity extends Upgrade {
 		else {
 			statement.close();
 			throw new RuntimeException(
-				"unable to downgrade: no activity with id " + activityId);
+					"unable to downgrade: no activity with id " + activityId);
 		}
 	}
 
-	private void deleteFromRolesActivity(Connection connection) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from ROLES_ACTIVITY where ACTIVITY_ID = ?");
+	private void deleteFromRolesActivity(Connection connection)
+			throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("delete from ROLES_ACTIVITY where ACTIVITY_ID = ?");
 		statement.setInt(1, newActivityId);
 		statement.executeUpdate();
 		statement.close();
 	}
 
-	private void deleteFromActivity(Connection connection) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from ACTIVITY where ACTIVITY_ID = ?");
+	private void deleteFromActivity(Connection connection) throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("delete from ACTIVITY where ACTIVITY_ID = ?");
 		statement.setInt(1, newActivityId);
 		statement.executeUpdate();
 		statement.close();
 	}
 
-	public static void changeActivityMessage(Connection connection, 
-		short activity, short locale, String newMessage) 
-	throws SQLException {
+	public static void changeActivityMessage(Connection connection,
+			short activity, short locale, String newMessage)
+			throws SQLException {
 		int lookupId = findLookupId(connection, activity);
 		updateMessage(connection, lookupId, locale, newMessage);
 	}
 
-	public static void reparentActivity(Connection connection, 
-		short activityId, Short newParent) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"update ACTIVITY set PARENT_ID = ? where ACTIVITY_ID = ?");
+	public static void reparentActivity(Connection connection,
+			short activityId, Short newParent) throws SQLException {
+		PreparedStatement statement = connection
+				.prepareStatement("update ACTIVITY set PARENT_ID = ? where ACTIVITY_ID = ?");
 		statement.setObject(1, newParent, Types.SMALLINT);
 		statement.setShort(2, activityId);
 		statement.executeUpdate();
 		statement.close();
+	}
+
+	public static int calculateDynamicActivityId() throws ServiceException {
+		int activityId = 0;
+		for (ActivityEntity activity : new RolesPermissionsBusinessService()
+				.getActivities()) {
+			if (activity.getId().intValue() < activityId)
+				activityId = activity.getId();
+		}
+		int newActivityId = activityId - 1;
+		return newActivityId;
 	}
 
 }

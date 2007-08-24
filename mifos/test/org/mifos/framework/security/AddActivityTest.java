@@ -18,6 +18,7 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
@@ -50,7 +51,7 @@ public class AddActivityTest {
 			LookUpValueEntity entity = new LookUpValueEntity();
 			entity.setLookUpName("test look up value " + i);
 			MifosLookUpEntity mifosLookUpEntity = new MifosLookUpEntity();
-			mifosLookUpEntity.setEntityId((short)87);
+			mifosLookUpEntity.setEntityId((short) 87);
 			entity.setLookUpEntity(mifosLookUpEntity);
 			writer.save(entity);
 		}
@@ -59,39 +60,33 @@ public class AddActivityTest {
 		upgradeAndCheck(database);
 	}
 
-	private Upgrade upgradeAndCheck(TestDatabase database) 
-	throws IOException, SQLException, ApplicationException {
+	private Upgrade upgradeAndCheck(TestDatabase database) throws IOException,
+			SQLException, ApplicationException {
 		short newId = 17032;
 		AddActivity upgrade = new AddActivity(
-			DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-			newId,
-			SecurityConstants.LOAN_MANAGEMENT,
-			TEST_LOCALE,
-			"Can use the executive washroom");
+				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+				SecurityConstants.LOAN_MANAGEMENT, TEST_LOCALE,
+				"Can use the executive washroom");
 		upgrade.upgrade(database.openConnection());
-		ActivityEntity fetched = (ActivityEntity) 
-			database.openSession().get(ActivityEntity.class, newId);
+		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
+				ActivityEntity.class, newId);
 		fetched.setLocaleId(TEST_LOCALE);
-		assertEquals("Can use the executive washroom",
-			fetched.getActivityName());
-		assertEquals(SecurityConstants.LOAN_MANAGEMENT,
-			fetched.getParent().getId());
-		
-		ActivityContext activityContext = 
-			new ActivityContext(newId, TestObjectFactory.HEAD_OFFICE);
+		assertEquals("Can use the executive washroom", fetched
+				.getActivityName());
+		assertEquals(SecurityConstants.LOAN_MANAGEMENT, fetched.getParent()
+				.getId());
+
+		ActivityContext activityContext = new ActivityContext(newId,
+				TestObjectFactory.HEAD_OFFICE);
 		AuthorizationManager authorizer = AuthorizationManager.getInstance();
 		authorizer.init(database.openSession());
 
-		UserContext admin = TestUtils.makeUser(
-			RolesAndPermissionConstants.ADMIN_ROLE);
-		assertTrue(
-			authorizer
-				.isActivityAllowed(admin, activityContext));
+		UserContext admin = TestUtils
+				.makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
+		assertTrue(authorizer.isActivityAllowed(admin, activityContext));
 
 		UserContext nonAdmin = TestUtils.makeUser(TestUtils.DUMMY_ROLE);
-		assertFalse(
-			authorizer
-				.isActivityAllowed(nonAdmin, activityContext));
+		assertFalse(authorizer.isActivityAllowed(nonAdmin, activityContext));
 		return upgrade;
 	}
 
@@ -101,14 +96,11 @@ public class AddActivityTest {
 
 		short newId = 17032;
 		AddActivity upgrade = new AddActivity(
-			DatabaseVersionPersistence.APPLICATION_VERSION + 1,
-			newId,
-			null,
-			TEST_LOCALE,
-			"Can use the executive washroom");
+				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+				null, TEST_LOCALE, "Can use the executive washroom");
 		upgrade.upgrade(database.openConnection());
-		ActivityEntity fetched = (ActivityEntity) 
-			database.openSession().get(ActivityEntity.class, newId);
+		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
+				ActivityEntity.class, newId);
 		assertEquals(null, fetched.getParent());
 	}
 
@@ -116,4 +108,19 @@ public class AddActivityTest {
 		return new JUnit4TestAdapter(AddActivityTest.class);
 	}
 
+	public void testShouldGenerateMinActivityIdWhenCalculate() throws Exception {
+		AddActivity activity = null;
+		int minActivityId = -2;
+		activity = new AddActivity(
+				DatabaseVersionPersistence.APPLICATION_VERSION,
+				(short) minActivityId,
+				SecurityConstants.ORGANIZATION_MANAGEMENT,
+				DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
+		activity.upgrade(HibernateUtil.getSessionTL().connection());
+
+		assertEquals(minActivityId - 1, AddActivity
+				.calculateDynamicActivityId());
+
+		activity.downgrade(HibernateUtil.getSessionTL().connection());
+	}
 }
