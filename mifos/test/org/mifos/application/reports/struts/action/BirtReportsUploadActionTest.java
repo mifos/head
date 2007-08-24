@@ -79,12 +79,6 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
 	}
 
-	/**
-	 * !!Remove the 'x' in method name to allow test to run!!
-	 * This is tests if the upgrade path for activities is not ruined by
-	 * BirtReports permission changes. At this point the test fails because
-	 * BirtReports does interfere with the upgrade path.
-	 */
 	public void testUpgradePathNotRuined() throws Exception {
 		// Retrieve initial activities information
 		List<ActivityEntity> activities = new RolesPermissionsBusinessService()
@@ -164,4 +158,20 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		activity.downgrade(HibernateUtil.getSessionTL().connection());
 	}
 
+	public void testShouldPreviewSuccessWithReportTemplate() throws Exception {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+
+		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
+		form.setFile(new MockFormFile("testFileName.rptdesign"));
+		form.setIsActive("1");
+		form.setReportCategoryId("1");
+		form.setReportTitle("testReportTitle");
+		setActionForm(form);
+
+		addRequestParameter("method", "preview");
+		actionPerform();
+
+		verifyNoActionErrors();
+		verifyForward("preview_success");
+	}
 }
