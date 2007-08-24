@@ -545,6 +545,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getBranchGlobalNum());
 		assertEquals(0, personnel.getNoOfTries().intValue());
 		assertFalse(personnel.isPasswordChanged());
+		// There should be 2 roles
 		assertEquals(getRoles(personnel).size(),userContext.getRoles().size());
 	}
 

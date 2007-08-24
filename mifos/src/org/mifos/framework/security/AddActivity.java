@@ -44,10 +44,22 @@ public class AddActivity extends Upgrade {
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
 		insertMessage(connection, lookupId, locale, activityName);
-		addActivityEntity(connection, lookupId);
-		allowActivity(connection, newActivityId, 
-			RolesAndPermissionConstants.ADMIN_ROLE);
-		
+		try {
+			addActivityEntity(connection, lookupId);
+		} catch (SQLException e) {
+			deleteFromLookupValueLocale(connection, (short)lookupId);
+			deleteFromLookupValue(connection, (short)lookupId);
+			throw e;
+		}
+		try {
+			allowActivity(connection, newActivityId, 
+					RolesAndPermissionConstants.ADMIN_ROLE);
+		} catch (SQLException e) {
+			deleteFromActivity(connection);
+			deleteFromLookupValueLocale(connection, (short)lookupId);
+			deleteFromLookupValue(connection, (short)lookupId);
+			throw e;
+		}
 		upgradeVersion(connection);
 	}
 

@@ -1,8 +1,20 @@
 package org.mifos.application.reports.struts.action;
 
+import java.util.List;
+
+import org.apache.struts.upload.FormFile;
+import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
+import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.security.AddActivity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
@@ -62,6 +74,62 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("isActive", "");
 		actionPerform();
 		verifyForwardPath("/birtReportsUploadAction.do?method=validate");
+	}
+	
+	/**
+	 * !!Remove the 'x' in method name to allow test to run!!
+	 * This is tests if the upgrade path for activities is not ruined by
+	 * BirtReports permission changes. At this point the test fails because
+	 * BirtReports does interfere with the upgrade path.
+	 */
+	public void xtestUpgradePathNotRuined() throws Exception {
+		// Retrieve initial activities information
+		List<ActivityEntity> activities = new RolesPermissionsBusinessService()
+		.getActivities();
+		int newActivityId = activities.get(activities.size() - 1).getId() + 1;
+		
+		// Upload a report creating an activity for the report
+		FormFile file = new MockFormFile("testFilename");
+		BirtReportsUploadActionForm actionForm =
+			new BirtReportsUploadActionForm();
+		setRequestPathInfo("/birtReportsUploadAction.do");
+		addRequestParameter("method", "upload");
+		actionForm.setFile(file);
+		actionForm.setReportTitle("exsitTitle");
+		actionForm.setReportCategoryId("1");
+		actionForm.setIsActive("1");
+		setActionForm(actionForm);
+		actionPerform();
+		assertEquals(0, getErrorSize());
+		
+		assertNotNull(request.getAttribute("activity"));
+		assertNotNull(request.getAttribute("report"));
+		
+		// Simulate an future activities upgrade 
+		AddActivity activity = null;
+		try {
+			activity = 
+				new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+						(short)newActivityId, SecurityConstants.ORGANIZATION_MANAGEMENT,
+						DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
+			activity.upgrade(HibernateUtil.getSessionTL().connection());
+
+		} catch (Exception e) {
+			((AddActivity)request.getAttribute("activity"))
+				.downgrade(HibernateUtil.getSessionTL().connection());
+			HibernateUtil.startTransaction();
+			new RolesPermissionsPersistence()
+				.delete(request.getAttribute("report"));
+			HibernateUtil.commitTransaction();
+			throw e;
+		}
+		
+		//Undo
+		activity.downgrade(HibernateUtil.getSessionTL().connection());
+		((AddActivity)request.getAttribute("activity"))
+			.downgrade(HibernateUtil.getSessionTL().connection());
+		new RolesPermissionsPersistence()
+		.delete(request.getAttribute("report"));
 	}
 	
 	

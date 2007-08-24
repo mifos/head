@@ -1,10 +1,12 @@
 package org.mifos.application.reports.struts.action;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.List;
 
@@ -142,11 +144,12 @@ public class BirtReportsUploadAction extends BaseAction {
 		int newActivityId = activityId + 1;
 		parentActivity = category.getActivityId();
 
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short) newActivityId, parentActivity,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
-						+ uploadForm.getReportTitle()).upgrade(conn);
-
+		AddActivity activity = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
+						(short) newActivityId, parentActivity,
+						DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
+								+ uploadForm.getReportTitle());
+		activity.upgrade(conn);
+		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
@@ -159,6 +162,8 @@ public class BirtReportsUploadAction extends BaseAction {
 		uploadFile(formFile);
 		allowActivityPermission(reportBO, newActivityId);
 
+		request.setAttribute("activity", activity);
+		request.setAttribute("report", reportBO);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -173,11 +178,21 @@ public class BirtReportsUploadAction extends BaseAction {
 
 	private void uploadFile(FormFile formFile) throws FileNotFoundException,
 			IOException {
-		File dir = new File(getServlet().getServletContext().getRealPath("/")
-				+ "report");
+		String dirPath = getServlet().getServletContext().getRealPath("/");
+		File dir = new File(dirPath + "report");
 		File file = new File(dir, formFile.getFileName());
 		InputStream is = formFile.getInputStream();
-		FileOutputStream os = new FileOutputStream(file);
+		OutputStream os;
+		/* for test purposes, if the real path does not exist (if we're
+		* operating outside a deployed environment) the file is just written
+		* to a ByteArrayOutputStream which is not actually stored.
+		* !! This does not produce any sort of file that can be retirieved.
+		* !! it only allows us to perform the upload action.
+		*/ 
+		if (dirPath != null)
+			os = new FileOutputStream(file);
+		else
+			os = new ByteArrayOutputStream();
 		byte[] buffer = new byte[4096];
 		int bytesRead = 0;
 		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {
