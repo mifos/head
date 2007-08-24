@@ -116,7 +116,7 @@
 	    <%
 		    String message = request.getParameter("message");
 		    if (message != null) {
-		    	String[] messages = message.split("\n");
+		    	String[] messages = message.split("~");
 		    	for(String currMessage : messages) {
 	    %>
 	    <%

@@ -47,7 +47,7 @@ public class BirtReportValidationFilter implements Filter {
 	}
 
 	private void addErrorMessage(String currentErrorMessage) {
-		errorMessage += (currentErrorMessage + "%0A");
+		errorMessage += (currentErrorMessage + "~");
 	}
 
 	private void showError(ServletRequest request, ServletResponse response)
