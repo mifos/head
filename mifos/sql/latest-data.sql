@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(148);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(149);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3845,6 +3845,8 @@ VALUES(1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('sessionTimeout',60);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('jasperReportIsHidden',1);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('loanIndividualMonitoringIsEnabled',0);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('repaymentSchedulesIndependentOfMeetingIsEnabled',0);
 
 /*Added Table Personnel_Role */
 /* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */
@@ -4453,16 +4455,6 @@ INSERT INTO OFFICE_CUSTOM_FIELD (OFFICE_ID,FIELD_ID,FIELD_VALUE) VALUES(1,10,'')
 INSERT INTO OFFICE_CUSTOM_FIELD (OFFICE_ID,FIELD_ID,FIELD_VALUE) VALUES(1,11,'');
 INSERT INTO OFFICE_CUSTOM_FIELD (OFFICE_ID,FIELD_ID,FIELD_VALUE) VALUES(1,12,'');
 INSERT INTO OFFICE_CUSTOM_FIELD (OFFICE_ID,FIELD_ID,FIELD_VALUE) VALUES(1,13,'');
-
-/* 
-The table LOAN_MONITORING will contain the default behavior of the group loan with individual monitoring on the MFI - Configuration
-This information can not be configured through the UI, so it does need to be configured in the script
-*/
--- 0 by default: Don't Allow group loan account with individual monitoring
--- 1: Allow group loan account with individual monitoring
-
-INSERT INTO LOAN_MONITORING (LOAN_MONITORING_ID,INDIVIDUAL_MONITORING_FLAG,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE,VERSION_NO)
-VALUES(1,0,NULL,NULL,NULL,NULL,1);
 
 
 -- Begin data for Reports Mini Portal
