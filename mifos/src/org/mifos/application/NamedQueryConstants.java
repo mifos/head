@@ -399,6 +399,7 @@ public interface NamedQueryConstants {
 	/*custom fields*/
 	public String RETRIEVE_CUSTOM_FIELDS="retrieveCustomFields";
 	public String RETRIEVE_ALL_CUSTOM_FIELDS="retrieveAllCustomFields";
+	public String RETRIEVE_ONE_CUSTOM_FIELD="retrieveOneCustomField";
 	
 	public String LISTOFSAVINGSANDLOANACCOUNTS="accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";

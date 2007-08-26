@@ -42,7 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-<tiles:insert definition=".view">
+<tiles:insert definition=".create">
 <tiles:put name="body" type="string">
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
@@ -56,7 +56,7 @@
 				customfieldsactionform.submit();
 		  	}		
 </script>
-<html-el:form action="/customFieldsAction.do?method=update" onsubmit="return func_disableSubmitBtn('submitBtn');">
+<html-el:form action="/customFieldsAction.do?method=create" onsubmit="return func_disableSubmitBtn('submitBtn');">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td height="450" align="left" valign="top" bgcolor="#FFFFFF">      

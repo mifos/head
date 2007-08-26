@@ -1221,8 +1221,8 @@
             <forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
             <forward name="viewCategory_success" path="/pages/application/configuration/jsp/view_additional_fields.jsp" />
             <forward name="viewCategory_failure" path="/pages/application/configuration/jsp/view_additional_field_categories.jsp" />
-            <forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
-            <forward name="update_failure" path="/pages/application/configuration/jsp/preview_additional_fields.jsp" />
+            <forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="create_failure" path="/pages/application/configuration/jsp/preview_additional_fields.jsp" />
             <forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
             <forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
             <forward name="loadDefineCustomFields_success" path="/pages/application/configuration/jsp/define_additional_fields.jsp" />
@@ -1232,6 +1232,17 @@
             <forward name="previous_success" path="/pages/application/configuration/jsp/define_additional_fields.jsp" />
 			<forward name="previous_failure" path="/pages/application/configuration/jsp/preview_additional_fields.jsp" />
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
+			<forward name="edit_failure" path="/pages/application/configuration/jsp/view_additional_fields.jsp" />
+			<forward name="edit_success" path="/pages/application/configuration/jsp/edit_additional_fields.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+            <forward name="update_failure" path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp" />
+            <forward name="cancelUpdate_success" path="/AdminAction.do?method=load" />
+            <forward name="editprevious_success" path="/pages/application/configuration/jsp/edit_additional_fields.jsp" />
+			<forward name="editprevious_failure" path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp" />
+			<forward name="editPreview_success" path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp" />
+            <forward name="editPreview_failure" path="/pages/application/configuration/jsp/edit_additional_fields.jsp"  />
+            <forward name="cancelEdit_success" path="/customFieldsAction.do?method=viewCategory" />
+			
         </action>
         <action path="/acceptedPaymentTypeAction" type="org.mifos.application.acceptedpaymenttype.struts.action.AcceptedPaymentTypeAction" name="acceptedpaymenttypeactionform" parameter="method" input="/acceptedPaymentTypeAction.do?method=validate"
            validate="false" scope="session">

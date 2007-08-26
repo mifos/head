@@ -197,6 +197,15 @@ public class MasterPersistence extends Persistence {
 		
 	}
 	
+	public CustomFieldDefinitionEntity retrieveOneCustomFieldDefinition(
+			Short fieldId) throws PersistenceException {
+			Map<String, Object> queryParameters = new HashMap<String, Object>();
+			queryParameters.put("fieldId", fieldId);
+			return (CustomFieldDefinitionEntity)execUniqueResultNamedQuery(
+					NamedQueryConstants.RETRIEVE_ONE_CUSTOM_FIELD, queryParameters);
+		
+	}
+	
 	/**
 	 * This method is used to retrieve both custom and fixed value list elements.
 	 */

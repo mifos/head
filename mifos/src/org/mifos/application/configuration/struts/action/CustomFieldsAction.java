@@ -48,7 +48,7 @@ import org.mifos.application.configuration.struts.actionform.CustomFieldsActionF
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.application.util.helpers.YesNoFlag;
+//import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -59,18 +59,20 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldCategory;
-import org.mifos.application.master.business.MifosLookUpEntity;
+//import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.util.helpers.SessionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
-//import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
 //import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 //import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
@@ -79,6 +81,10 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 //import org.mifos.application.master.business.LookUpValueEntity;
 //import java.util.HashSet;
 //import java.util.Set;
+import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.fund.struts.actionforms.FundActionForm;
+import org.mifos.application.fund.util.helpers.FundConstants;
+import org.mifos.framework.util.helpers.StringUtils;
 
 
 public class CustomFieldsAction extends BaseAction {
@@ -92,12 +98,16 @@ public class CustomFieldsAction extends BaseAction {
 		security.allow("load", SecurityConstants.VIEW);
 		security.allow("viewCategory", SecurityConstants.VIEW);
 		security.allow("update", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
 		security.allow("loadDefineCustomFields", SecurityConstants.CAN_DEFINE_CUSTOM_FIELD);
 		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("editPreview", SecurityConstants.VIEW);
 		security.allow("previous",SecurityConstants.CAN_DEFINE_CUSTOM_FIELD);
 		security.allow("cancelCreate", SecurityConstants.VIEW);
-				
+		security.allow("editField", SecurityConstants.CAN_DEFINE_CUSTOM_FIELD);
+		security.allow("editPrevious",SecurityConstants.CAN_DEFINE_CUSTOM_FIELD);
+		security.allow("cancelEdit", SecurityConstants.VIEW);		
 		return security;
 	}
 
@@ -114,7 +124,6 @@ public class CustomFieldsAction extends BaseAction {
 		logger.debug("Inside load method");
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
 		actionForm.clear();
-
 		logger.debug("Outside load method");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -127,12 +136,34 @@ public class CustomFieldsAction extends BaseAction {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editPrevious(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		request.setAttribute("category", actionForm.getCategoryTypeName());
+		logger.debug("start previous method of Define Custom Fields Action");
+		return mapping.findForward(ActionForwards.editprevious_success.toString());
+	}
+	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("start Cancel Create method of Define Custom Fields Action");
 		return mapping.findForward(ActionForwards.cancelCreate_success.toString());
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelEdit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		request.setAttribute("category", actionForm.getCategoryTypeName());
+		String flow = request.getParameter(Constants.CURRENTFLOWKEY).toString();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flow);
+		logger.debug("start Cancel Edit method of Define Custom Fields Action");
+		return mapping.findForward(ActionForwards.cancelEdit_success.toString());
 	}
 
 	private void loadDataTypes(Locale locale,
@@ -208,10 +239,13 @@ public class CustomFieldsAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside viewCategory method");
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-		actionForm.clear();
-
-		request.setAttribute("category", request.getParameter("category"));
-
+		String category = null;
+		if (request.getParameter("category") != null)
+			category = request.getParameter("category");
+		else
+			category = actionForm.getCategoryTypeName();
+		request.setAttribute("category", category);
+		
 		logger.debug("Outside viewCategory method");
 		return mapping.findForward(ActionForwards.viewCategory_success
 				.toString());
@@ -230,9 +264,17 @@ public class CustomFieldsAction extends BaseAction {
 			return CustomerLevel.CLIENT.getValue();
 		
 	}
-
+	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside update method");
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		/*CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
@@ -271,8 +313,8 @@ public class CustomFieldsAction extends BaseAction {
 				flag);
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.addCustomField(customField);*/
-		logger.debug("Inside update method");
-		return mapping.findForward(ActionForwards.update_success.toString());
+		logger.debug("Inside create method");
+		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -289,11 +331,100 @@ public class CustomFieldsAction extends BaseAction {
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		request.setAttribute("category", actionForm.getCategoryTypeName());
+		return mapping.findForward(ActionForwards.editPreview_success.toString());
+	}
 
 	@Override
 	protected BusinessService getService() {
 		return ServiceFactory.getInstance().getBusinessService(
 				BusinessServiceName.Configuration);
+	}
+	
+	private String getEntityTypeName(Short entityTypeId, Short localeId)
+	{
+		String entityTypeName = null;
+		for (CustomFieldCategory category : CustomFieldCategory.values()) {
+			EntityType entityType = category.mapToEntityType();
+			if (entityType.getValue().equals(entityTypeId))
+			{
+				entityTypeName = MessageLookup.getInstance().lookupLabel(category.name(), localeId);
+				break;
+			}
+		}
+		return entityTypeName;
+	}
+	
+	private String getDataType(Short dataTypeId, Locale locale)
+	{
+		String dataTypeName = null;
+		for (CustomFieldType dataType : CustomFieldType.values()) {
+			if (dataType.getValue().equals(dataTypeId))
+			{
+				dataTypeName = MessageLookup.getInstance().lookup(dataType, locale);
+				break;
+			}
+			
+		}
+		return dataTypeName;
+	}
+	
+	private void setFormAttributes(CustomFieldsActionForm actionForm, Short editedCustomFieldId,
+			HttpServletRequest request)
+			throws Exception
+	{
+		Short localeId = getUserContext(request).getLocaleId();
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomFieldDefinitionEntity customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
+		actionForm.setCategoryType(customField.getEntityType().toString()); // entity type id
+		actionForm.setDefaultValue(customField.getDefaultValue());
+		String label = customField.getLookUpEntity().getLabelForLocale(localeId);
+		actionForm.setLabelName(label);
+		String entityTypeName = getEntityTypeName(customField.getEntityType(), localeId);
+		actionForm.setCategoryTypeName(entityTypeName);
+		request.setAttribute("category", entityTypeName);
+		Locale locale = getUserLocale(request);
+		String dataTypeName = getDataType(customField.getFieldType(), locale);
+		actionForm.setDataType(customField.getFieldType().toString());
+		actionForm.setMandatoryField(Boolean.parseBoolean(customField.getMandatoryStringValue()));
+		List<CustomFieldsListBoxData> dataTypes = new ArrayList<CustomFieldsListBoxData>();
+		CustomFieldsListBoxData dataType = new CustomFieldsListBoxData();
+		dataType.setName(dataTypeName);
+		dataType.setId(customField.getFieldType());
+		dataTypes.add(dataType);
+		SessionUtils.setCollectionAttribute(
+				ConfigurationConstants.CURRENT_DATA_TYPE, dataTypes, request);
+		List<CustomFieldsListBoxData> categories = new ArrayList<CustomFieldsListBoxData>();
+		CustomFieldsListBoxData category = new CustomFieldsListBoxData();
+		category.setName(entityTypeName);
+		category.setId(customField.getEntityType());
+		categories.add(category);
+		SessionUtils.setCollectionAttribute(
+				ConfigurationConstants.CURRENT_CATEGORY, categories, request);
+		SessionUtils.setAttribute(
+				ConfigurationConstants.CURRENT_CUSTOM_FIELD, customField, request);
+		
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editField(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start manage method of Fund Action");
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		if (StringUtils.isNullOrEmpty(actionForm.getCustomFieldIdStr()))
+				throw new Exception("Error! No custom field id is null.");
+		Short editedCustomFieldId = Short.parseShort(actionForm.getCustomFieldIdStr());
+		setFormAttributes(actionForm, editedCustomFieldId, request);
+		String flow = request.getParameter(Constants.CURRENTFLOWKEY).toString();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flow);
+		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -301,6 +432,7 @@ public class CustomFieldsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Inside validate method");
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
 		ActionForwards actionForward = ActionForwards.update_failure;
 
 		String method = (String) request.getAttribute("method");
@@ -313,6 +445,10 @@ public class CustomFieldsAction extends BaseAction {
 			}
 			else if (method.equals(Methods.preview.toString())) {
 				actionForward = ActionForwards.preview_failure;
+			}
+			else if (method.equals(Methods.editPreview.toString())) {
+				request.setAttribute("category", actionForm.getCategoryTypeName());
+				actionForward = ActionForwards.editPreview_failure;
 			}
 		}
 

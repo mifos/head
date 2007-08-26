@@ -61,10 +61,12 @@ import org.mifos.application.configuration.struts.action.CustomFieldsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
 
+
 public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
 	private final Short DEFAULT_LOCALE = 1;
+	//private String flowKey;
 	
 	@Override
 	protected void tearDown() throws Exception {
@@ -105,12 +107,10 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	private boolean findCategory(CustomFieldCategory category, List<CustomFieldsListBoxData> allCategories)
 	{
 		for (CustomFieldsListBoxData listboxDataType : allCategories)
-		{
-			// will debug this later 
+		{ 
 			if (listboxDataType.getId().equals(category.mapToEntityType().getValue()))
 			{
 				String name1 = listboxDataType.getName().toUpperCase();
-				//String name2 = category.name().toUpperCase();
 				String name2 = MessageLookup.getInstance().lookupLabel(category.name(), DEFAULT_LOCALE).toUpperCase();
 				if (name1.equals(name2))
 					return true;
@@ -155,35 +155,238 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		}
 		 
 	}
+	public void testFailurePreviewWithAllValuesNull() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		assertEquals(4, getErrorSize());
+		assertEquals("Category Type null value error", 1, getErrorSize("categoryType"));
+		assertEquals("Data Type null value error", 1,
+				getErrorSize("dataType"));
+		assertEquals("Default Value null value error", 1,
+				getErrorSize("defaultValue"));
+		assertEquals("Label null value error", 1, getErrorSize("labelName"));
+		verifyInputForward();
+	}
+	
+	public void testFailurePreviewWithDataTypeNumericAndDefaultValueNotMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		assertEquals(1, getErrorSize());
+		verifyInputForward();
+	}
+	
+	public void testSuccessfulPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
+		addRequestParameter("defaultValue", "10");
+		performNoErrors();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+	
+	public void testFailurePreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		assertEquals(1, getErrorSize());
+		verifyInputForward();
+	}
+	
+	public void testSuccessfulPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
+		addRequestParameter("defaultValue", "01/12/2007");
+		performNoErrors();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+	
+	public void testPreviewSuccessful() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "Personnel");
+		performNoErrors();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+	
+	public void testFailureEditPreviewWithDefaultValuesNull() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
+		actionPerform();
+		assertEquals(2, getErrorSize());
+		assertEquals("Default Value null value error", 1,
+				getErrorSize("defaultValue"));
+		assertEquals("Label null value error", 1, getErrorSize("labelName"));
+		verifyInputForward();
+	}
+	
+	public void testFailureEditPreviewWithDataTypeNumericAndDefaultValueNotMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		assertEquals(1, getErrorSize());
+		verifyInputForward();
+	}
+	
+	public void testSuccessfulEditPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
+		addRequestParameter("defaultValue", "10");
+		performNoErrors();
+		verifyForward(ActionForwards.editPreview_success.toString());
+	}
+	
+	public void testFailureEditPreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		assertEquals(1, getErrorSize());
+		verifyInputForward();
+	}
+	
+	public void testSuccessfulEditPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
+		addRequestParameter("defaultValue", "01/12/2007");
+		performNoErrors();
+		verifyForward(ActionForwards.editPreview_success.toString());
+	}
+	
+	public void testEditPreviewSuccessful() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "Personnel");
+		performNoErrors();
+		verifyForward(ActionForwards.editPreview_success.toString());
+	}
+
 
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "load");
 		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
-		/*
-		 * TODO: verify that data loads correctly
-		 * CustomFieldsActionForm customFieldsActionForm = (CustomFieldsActionForm) request.getSession()
-		 * .getAttribute("customfieldsactionform");
-		 * ???
-		 */
 	}
 
 	public void testCancel() {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "cancel");
-
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.cancel_success.toString());
+	}
+	
+	public void testCancelEdit() {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "cancelEdit");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.cancelEdit_success.toString());
+	}
+	
+	public void testCancelCreate() {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "cancelCreate");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.cancelCreate_success.toString());
+	}
+	
+	public void testPrevious() {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "previous");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.previous_success.toString());
+	}
+	
+	public void testEditPrevious() {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPrevious");
+		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "Personnel");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.editprevious_success.toString());
+	}
+	
+	public void testViewCategory() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "viewCategory");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.viewCategory_success.toString());
+
+		/*
+		 * TODO: verify that data displays correctly
+		 */
 	}
 
 
 	public void testUpdate() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "update");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.update_success.toString());
 
+		/*
+		 * TODO: verify that data updates correctly
+		 */
+	}
+	
+	public void testCreate() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();

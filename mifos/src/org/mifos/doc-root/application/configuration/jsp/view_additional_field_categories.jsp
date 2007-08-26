@@ -82,9 +82,10 @@
 							<tr>
 								<td class="fontnormalbold">
 									<span class="fontnormal"><mifos:mifoslabel name="configuration.select_category" /> 
-										<a href="customFieldsAction.do?method=addField&amp;currentFlowKey=${requestScope.currentFlowKey}">
-											<mifos:mifoslabel name="configuration.add_new_field" />
-										</a> 
+										<html-el:link href="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}">
+											<mifos:mifoslabel name="configuration.add_new_field" >
+										</mifos:mifoslabel>
+										</html-el:link>
 										<br> 
 									</span>
 									<br>

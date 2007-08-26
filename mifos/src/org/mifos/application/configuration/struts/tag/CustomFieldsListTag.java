@@ -76,8 +76,8 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
 		XmlBuilder html = new XmlBuilder();
 		String url = (actionName + "?method=" + methodName
-						+ "&ref=" + customField.getFieldId());
-//						+ "&currentFlowKey=" + flowKey);
+						+ "&customFieldIdStr=" + customField.getFieldId()
+						+ "&currentFlowKey=" + flowKey);
 
 		html.startTag("tr"); html.newline();		
 			html.startTag("td", "width", "11%", "class", "drawtablerow"); 

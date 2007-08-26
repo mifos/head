@@ -51,7 +51,7 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 
 
-<tiles:insert definition=".view">
+<tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<html-el:form action="/customFieldsAction.do?method=preview" focus="categoryType">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

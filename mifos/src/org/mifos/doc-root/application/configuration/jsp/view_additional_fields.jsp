@@ -2,7 +2,7 @@
 
 /**
 
- * view_additional_field_categories.jsp
+ * view_additional_fields.jsp
 
 
 
@@ -56,7 +56,7 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 
-		<html-el:form action="customFieldsAction.do">
+		<html-el:form action="/customFieldsAction.do?method=editField">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -145,6 +145,7 @@
 			
 			<html-el:hidden property="currentFlowKey"
 				value="${requestScope.currentFlowKey}" />
+			
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

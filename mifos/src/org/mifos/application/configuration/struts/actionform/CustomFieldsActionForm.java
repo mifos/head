@@ -64,12 +64,15 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	private MifosLogger logger = MifosLogManager
 	.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 	
-	private String categoryType;
+	private String categoryType;  // id
 	private String labelName;
 	private boolean mandatoryField = false;
 	private String defaultValue;
 	private String dataType;
-	
+	private Short customFieldId;
+	private String customFieldIdStr;
+	private String categoryTypeName;
+
 	
 	public String getCategoryType() {
 		return categoryType;
@@ -129,7 +132,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	
 	private void validateDefaultValue(ActionErrors errors, HttpServletRequest request){
 		Short dataTypeValue = Short.parseShort(dataType);
-		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!StringUtils.isEmpty(defaultValue)))
+		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!StringUtils.isNullOrEmpty(defaultValue)))
 		{
 			try
 			{
@@ -140,7 +143,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 				addError(errors, defaultValue, "errors.default_value_not_number", new String[]{null});
 			}
 		}
-		else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!StringUtils.isEmpty(defaultValue)))
+		else if (dataTypeValue.equals(CustomFieldType.DATE.getValue()) && (!StringUtils.isNullOrEmpty(defaultValue)))
 		{
 			try
 			{
@@ -167,10 +170,10 @@ public class CustomFieldsActionForm extends BaseActionForm{
 				.getParameter(Constants.CURRENTFLOWKEY));
 
 		ActionErrors errors = new ActionErrors();
-		if (method.equals(Methods.preview.toString())) 
+		if ((method.equals(Methods.preview.toString())) || (method.equals(Methods.editPreview.toString())))
 		{
 			errors = super.validate(mapping, request);
-			if (!StringUtils.isEmpty(defaultValue))
+			if (!StringUtils.isNullOrEmpty(defaultValue))
 				validateDefaultValue(errors, request);
 		}
 		
@@ -183,6 +186,15 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	
 	public void clear()
 	{
+		this.customFieldId = null;
+		this.categoryType = null;;  // id
+		this.labelName = null;;
+		this.mandatoryField = false;
+		this.defaultValue = null;;
+		this.dataType = null;;
+		this.customFieldId = null;;
+		this.customFieldIdStr = null;;
+		this.categoryTypeName = null;;
 		
 	}
 	
@@ -196,5 +208,29 @@ public class CustomFieldsActionForm extends BaseActionForm{
 			
 		}
 	}
+
+	public Short getCustomFieldId() {
+		return customFieldId;
+	}
+	public void setCustomFieldId(Short customFieldId) {
+		this.customFieldId = customFieldId;
+	}
+	
+	public String getCustomFieldIdStr() {
+		return customFieldIdStr;
+	}
+	
+	public void setCustomFieldIdStr(String customFieldIdStr) {
+		this.customFieldIdStr = customFieldIdStr;
+	}
+
+	public String getCategoryTypeName() {
+		return categoryTypeName;
+	}
+
+	public void setCategoryTypeName(String categoryTypeName) {
+		this.categoryTypeName = categoryTypeName;
+	}
+
 
 }

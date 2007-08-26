@@ -59,6 +59,9 @@ public static final String LOOKUP_OPTION_DATA="LookupOptionData";
 public static final String LOOKUP_TYPE="lookupType";
 public static final String ALL_DATA_TYPES="allDataTypes";
 public static final String ALL_CATEGORIES="allCategories";
+public static final String CURRENT_DATA_TYPE="currentDataType";
+public static final String CURRENT_CATEGORY="currentCategory";
+public static final String CURRENT_CUSTOM_FIELD="currentCustomField";
 
 
 }

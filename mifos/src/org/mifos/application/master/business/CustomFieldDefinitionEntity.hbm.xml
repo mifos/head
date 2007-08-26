@@ -19,5 +19,6 @@
     </class>
     <query name="retrieveCustomFields"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.entityType = :entityType order by cfd.fieldId]]></query>
     <query name="retrieveAllCustomFields"><![CDATA[from CustomFieldDefinitionEntity ]]></query>
+    <query name="retrieveOneCustomField"><![CDATA[from CustomFieldDefinitionEntity as cfd where cfd.fieldId = :fieldId]]></query>
     
 </hibernate-mapping>
