@@ -174,7 +174,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		int surveyId = surveysPersistence.retrieveAllSurveys().get(0).getSurveyId();
 		setRequestPathInfo("/surveysAction");
-		addRequestParameter("method", "newVersion");
+		addRequestParameter("method", "edit_entry");
 		addRequestParameter("value(surveyId)", Integer.toString(surveyId));
 		actionPerform();
 		verifyNoActionErrors();

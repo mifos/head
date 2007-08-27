@@ -37,8 +37,10 @@ public class PPIAction extends PersistenceAction {
 	public PPIAction() {
 		super();
 		validator = new Schema();
-		validator.setSimpleValidator("country", new EnumValidator(Country.class));
-		validator.setSimpleValidator("state", new EnumValidator(SurveyState.class));
+		validator.setSimpleValidator("country",
+				new EnumValidator(Country.class));
+		validator.setSimpleValidator("state",
+				new EnumValidator(SurveyState.class));
 		validator.setSimpleValidator("veryPoorMin", new IntValidator());
 		validator.setSimpleValidator("veryPoorMax", new IntValidator());
 		validator.setSimpleValidator("poorMin", new IntValidator());

@@ -99,7 +99,7 @@
 <tr><td align="center" class="blueline">&nbsp;</td></tr>
             </table>              
             <br></td>
-            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=newVersion&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
+            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=edit_entry&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
             <mifos:mifoslabel name="Surveys.EditSurvey" bundle="SurveysUIResources"/>
             </html-el:link>
             </td>

@@ -35,8 +35,10 @@ public class QuestionsAction extends PersistenceAction {
 	
 	static {
 		addQuestionValidator = new Schema();
-		addQuestionValidator.setSimpleValidator("value(shortName)", new NotNullEmptyValidator());
-		addQuestionValidator.setSimpleValidator("value(questionText)", new NotNullEmptyValidator());
+		addQuestionValidator.setSimpleValidator("value(shortName)",
+				new NotNullEmptyValidator());
+		addQuestionValidator.setSimpleValidator("value(questionText)",
+				new NotNullEmptyValidator());
 	}
 	
 	@Override
@@ -68,11 +70,13 @@ public class QuestionsAction extends PersistenceAction {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
 		int length = surveysPersistence.getNumQuestions();
-		String offsetParameter = request.getParameter(SurveysConstants.KEY_ITEM_OFFSET);
+		String offsetParameter = request.getParameter(
+				SurveysConstants.KEY_ITEM_OFFSET);
 		int offset = offsetParameter != null ?
 				Integer.parseInt(offsetParameter) : 1;
 		List<Question> questionList =
-			surveysPersistence.retrieveSomeQuestions(offset - 1, QUESTIONS_PER_PAGE);
+			surveysPersistence.retrieveSomeQuestions(offset - 1,
+					QUESTIONS_PER_PAGE);
 		
 		request.setAttribute(SurveysConstants.KEY_QUESTIONS_LIST, questionList);
 		request.setAttribute("length", length);
@@ -87,7 +91,8 @@ public class QuestionsAction extends PersistenceAction {
 		
 		int questionId = Integer.parseInt(request.getParameter("questionId"));
 		Question question = surveysPersistence.getQuestion(questionId);
-		request.getSession().setAttribute(SurveysConstants.KEY_QUESTION, question);
+		request.getSession().setAttribute(SurveysConstants.KEY_QUESTION,
+				question);
 		
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
@@ -95,7 +100,8 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward edit_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
+		Question question = (Question) request.getSession().getAttribute(
+				SurveysConstants.KEY_QUESTION);
 		List<QuestionChoice> choices = question.getChoices();
 		
 		// Determine if question belongs to a PPISurvey
@@ -104,16 +110,20 @@ public class QuestionsAction extends PersistenceAction {
 			
 			ActionMessages errors = new ActionMessages();
 			errors.add(
-					question.getShortName(), new ActionMessage("errors.readonly", question.getShortName()));
+					question.getShortName(),
+					new ActionMessage("errors.readonly",
+							question.getShortName()));
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.get_success.toString());
 		}
 		
-		request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
+		request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES,
+				choices);
 		GenericActionForm actionForm = (GenericActionForm) form;
 		actionForm.setValue("shortName", question.getShortName());
 		actionForm.setValue("questionText", question.getQuestionText());
-		actionForm.setValue("questionState", Integer.toString(question.getQuestionState()));
+		actionForm.setValue("questionState", Integer.toString(
+				question.getQuestionState()));
 		
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
@@ -132,7 +142,8 @@ public class QuestionsAction extends PersistenceAction {
 		}
 		GenericActionForm actionForm = (GenericActionForm) form;
 		request.setAttribute("shortName", actionForm.getValue("shortName"));
-		request.setAttribute("questionText", actionForm.getValue("questionText"));
+		request.setAttribute("questionText",
+				actionForm.getValue("questionText"));
 		request.setAttribute("status", actionForm.getValue("questionState"));
 		
 		return mapping.findForward(ActionForwards.preview_success.toString());
@@ -143,11 +154,13 @@ public class QuestionsAction extends PersistenceAction {
 			throws Exception {
 		
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
-		Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
+		Question question = (Question) request.getSession().getAttribute(
+				SurveysConstants.KEY_QUESTION);
 		GenericActionForm actionForm = (GenericActionForm) form;
 		question.setShortName(actionForm.getValue("shortName"));
 		question.setQuestionText(actionForm.getValue("questionText"));
-		question.setQuestionState(Integer.parseInt(actionForm.getValue("questionState")));
+		question.setQuestionState(Integer.parseInt(actionForm.getValue(
+				"questionState")));
 		
 		surveysPersistence.createOrUpdate(question);
 		
@@ -160,15 +173,12 @@ public class QuestionsAction extends PersistenceAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		LinkedList<String> choices = new LinkedList<String>();
-		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
+		request.getSession().setAttribute(
+				SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
 		LinkedList<Question> newQuestions = new LinkedList<Question>();
-		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTIONS, newQuestions);
-		/* This code is seemingly useless. Leaving in for now just in case
-		*LinkedList<AnswerType> answerTypes = new LinkedList<AnswerType>();
-		*for (AnswerType type : AnswerType.values()) {
-		*	answerTypes.add(type);
-		*}
-		**/
+		request.getSession().setAttribute(
+				SurveysConstants.KEY_NEW_QUESTIONS, newQuestions);
+		
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	
@@ -176,7 +186,9 @@ public class QuestionsAction extends PersistenceAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		LinkedList<String> choices = (LinkedList<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES);
+		LinkedList<String> choices = 
+			(LinkedList<String>) request.getSession().getAttribute(
+					SurveysConstants.KEY_NEW_QUESTION_CHOICES);
 		choices.add(actionForm.getValue("choice"));
 		actionForm.setValue("choice", "");
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -185,7 +197,9 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward deleteChoice(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		LinkedList<String> choices = (LinkedList<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES);
+		LinkedList<String> choices = 
+			(LinkedList<String>) request.getSession().getAttribute(
+					SurveysConstants.KEY_NEW_QUESTION_CHOICES);
 		int index = Integer.parseInt(request.getParameter("choiceNum"));
 		choices.remove(index);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -194,7 +208,9 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward deleteNewQuestion(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		LinkedList<Question> questions = (LinkedList<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		LinkedList<Question> questions =
+			(LinkedList<Question>) request.getSession().getAttribute(
+					SurveysConstants.KEY_NEW_QUESTIONS);
 		int index = Integer.parseInt(request.getParameter("newQuestionNum"));
 		questions.remove(index);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -203,7 +219,9 @@ public class QuestionsAction extends PersistenceAction {
 	public ActionForward createQuestions(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		List<Question> questions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		List<Question> questions =
+				(List<Question>) request.getSession().getAttribute(
+						SurveysConstants.KEY_NEW_QUESTIONS);
 		SurveysPersistence persistence = new SurveysPersistence();
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);
@@ -228,38 +246,48 @@ public class QuestionsAction extends PersistenceAction {
 		}
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
-		LinkedList<Question> newQuestions = (LinkedList<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		LinkedList<Question> newQuestions = 
+			(LinkedList<Question>) request.getSession().getAttribute(
+					SurveysConstants.KEY_NEW_QUESTIONS);
 		LinkedList<String> questionNames = new LinkedList<String>();
 		for (Question q : newQuestions) {
 			questionNames.add(q.getShortName());
 		}
 		String shortName = actionForm.getValue("shortName");
 		if (questionNames.contains(shortName))
-			errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
+			errors.add("shortName", new ActionMessage(
+					SurveysConstants.NAME_EXISTS));
 		else {
 				List<Question> retrievedQuestions = 
 				surveysPersistence.retrieveQuestionsByName(shortName);
 			if (retrievedQuestions.size() > 0)
-				errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
+				errors.add("shortName", new ActionMessage(
+						SurveysConstants.NAME_EXISTS));
 		}
 		if (errors.size() > 0) {
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.load_success.toString());
 		}
 				
-		AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getValue("answerType")));
+		AnswerType type = AnswerType.fromInt(Integer.parseInt(
+				actionForm.getValue("answerType")));
 		Question question = new Question(shortName,
 				actionForm.getValue("questionText"), type);
 		if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
 			List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
-			for (String choiceText : (List<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES)) {
+			List<String> newQuestionChoices =
+				(List<String>) request.getSession().getAttribute(
+						SurveysConstants.KEY_NEW_QUESTION_CHOICES);
+			for (String choiceText : newQuestionChoices) {
 				choices.add(new QuestionChoice(choiceText));
 			}
 			question.setChoices(choices);
 		}
 		newQuestions.add(question);
 		actionForm.clear();
-		request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, new LinkedList<Question>());
+		request.getSession().setAttribute(
+				SurveysConstants.KEY_NEW_QUESTION_CHOICES,
+				new LinkedList<Question>());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 

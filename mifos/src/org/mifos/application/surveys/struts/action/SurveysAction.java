@@ -40,19 +40,22 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysAction extends BaseAction {
 	
-	Schema previewValidator;
-	Schema newVersionValidator;
+	private Schema previewValidator;
+	private Schema editEntryValidator;
 	
 	public SurveysAction() {
 		super();
 		previewValidator = new Schema();
-		previewValidator.setSimpleValidator("value(name)", new NotNullEmptyValidator(
-				new MaxLengthValidator(30)));
-		previewValidator.setSimpleValidator("value(appliesTo)", new EnumValidator(SurveyType.class));
-		previewValidator.setSimpleValidator("value(state)", new EnumValidator(SurveyState.class));
+		previewValidator.setSimpleValidator("value(name)",
+				new NotNullEmptyValidator(new MaxLengthValidator(30)));
+		previewValidator.setSimpleValidator("value(appliesTo)",
+				new EnumValidator(SurveyType.class));
+		previewValidator.setSimpleValidator("value(state)",
+				new EnumValidator(SurveyState.class));
 		
-		newVersionValidator = new Schema();
-		newVersionValidator.setSimpleValidator("value(surveyId)", new IntValidator());
+		editEntryValidator = new Schema();
+		editEntryValidator.setSimpleValidator("value(surveyId)",
+				new IntValidator());
 	}
 
 	
@@ -65,7 +68,7 @@ public class SurveysAction extends BaseAction {
 		security.allow("delete_new_question", SecurityConstants.VIEW);
 		security.allow("preview", SecurityConstants.VIEW);
 		security.allow("create", SecurityConstants.VIEW);
-		security.allow("newVersion", SecurityConstants.VIEW);
+		security.allow("edit_entry", SecurityConstants.VIEW);
 		security.allow("preview_update", SecurityConstants.VIEW);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("edit", SecurityConstants.VIEW);
@@ -86,7 +89,7 @@ public class SurveysAction extends BaseAction {
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
-//		return new SurveysBusinessService();
+		//return new SurveysBusinessService();
 	}
 	
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
@@ -94,18 +97,29 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		
-		// TODO: change this to aggregate the customers and accounts lists from the subtypes
-		List<Survey> clientSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT);
-		List<Survey> centerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CENTER);
-		List<Survey> groupSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.GROUP);
-		List<Survey> loanSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.LOAN);
-		List<Survey> savingsSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.SAVINGS);
+		// TODO: change this to aggregate the customers and accounts lists from
+		// the subtypes
+		List<Survey> clientSurveys =
+			surveysPersistence.retrieveSurveysByType(SurveyType.CLIENT);
+		List<Survey> centerSurveys =
+			surveysPersistence.retrieveSurveysByType(SurveyType.CENTER);
+		List<Survey> groupSurveys =
+			surveysPersistence.retrieveSurveysByType(SurveyType.GROUP);
+		List<Survey> loanSurveys =
+			surveysPersistence.retrieveSurveysByType(SurveyType.LOAN);
+		List<Survey> savingsSurveys =
+			surveysPersistence.retrieveSurveysByType(SurveyType.SAVINGS);
 		
-		request.setAttribute(SurveysConstants.KEY_CLIENT_SURVEYS_LIST, clientSurveys);
-		request.setAttribute(SurveysConstants.KEY_CENTER_SURVEYS_LIST, centerSurveys);
-		request.setAttribute(SurveysConstants.KEY_GROUP_SURVEYS_LIST, groupSurveys);
-		request.setAttribute(SurveysConstants.KEY_LOAN_SURVEYS_LIST, loanSurveys);
-		request.setAttribute(SurveysConstants.KEY_SAVINGS_SURVEYS_LIST, savingsSurveys);
+		request.setAttribute(
+				SurveysConstants.KEY_CLIENT_SURVEYS_LIST, clientSurveys);
+		request.setAttribute(
+				SurveysConstants.KEY_CENTER_SURVEYS_LIST, centerSurveys);
+		request.setAttribute(
+				SurveysConstants.KEY_GROUP_SURVEYS_LIST, groupSurveys);
+		request.setAttribute(
+				SurveysConstants.KEY_LOAN_SURVEYS_LIST, loanSurveys);
+		request.setAttribute(
+				SurveysConstants.KEY_SAVINGS_SURVEYS_LIST, savingsSurveys);
 		return mapping.findForward(ActionForwards.load_main_page
 				.toString());
 	}
@@ -116,10 +130,13 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
-		int surveyId = BaseActionForm.getIntegerValue(actionForm.getValue("surveyId"));
-		Survey survey = surveysPersistence.getSurvey(surveyId);
+		int surveyId =
+			BaseActionForm.getIntegerValue(actionForm.getValue("surveyId"));
+		Survey survey =
+			surveysPersistence.getSurvey(surveyId);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
-		request.setAttribute(SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
+		request.setAttribute(
+				SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	
@@ -141,8 +158,10 @@ public class SurveysAction extends BaseAction {
 				questionsList);
 		request.getSession().setAttribute(SurveysConstants.KEY_ADDED_QUESTIONS,
 				new LinkedList<Question>());
-		request.getSession().setAttribute(SurveysConstants.KEY_SURVEY_TYPES, SurveyType.values());
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		request.getSession().setAttribute(
+				SurveysConstants.KEY_SURVEY_TYPES, SurveyType.values());
+		return mapping.findForward(
+				ActionForwards.create_entry_success.toString());
 	}
 	
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
@@ -154,7 +173,8 @@ public class SurveysAction extends BaseAction {
 		}
 		catch (SchemaValidationError e) {
 			saveErrors(request, Schema.makeActionMessages(e));
-			return mapping.findForward(ActionForwards.create_entry_success.toString());
+			return mapping.findForward(
+					ActionForwards.create_entry_success.toString());
 		}
 		
 		request.getSession().setAttribute(
@@ -166,9 +186,9 @@ public class SurveysAction extends BaseAction {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 	
-	public ActionForward add_new_question(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward add_new_question(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		List<Question> questionsList = (List<Question>)
@@ -193,31 +213,37 @@ public class SurveysAction extends BaseAction {
 		}
 	}
 	
-	public ActionForward add_new_question_edit(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward add_new_question_edit(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		add_new_question(mapping, form, request, response);
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
 	
-	public ActionForward delete_new_question(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward delete_new_question(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
 		Question question = surveysPersistence.getQuestion(questionNum);
-		List<Question> questionsList = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_QUESTIONS_LIST);
-		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
+		List<Question> questionsList =
+			(List<Question>) request.getSession().getAttribute(
+					SurveysConstants.KEY_QUESTIONS_LIST);
+		List<Question> addedQuestions =
+			(List<Question>)request.getSession().getAttribute(
+					SurveysConstants.KEY_ADDED_QUESTIONS);
 		if (addedQuestions.contains(question)) {
 			addedQuestions.remove(question);
 			questionsList.add(question);
 		}
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		return mapping.findForward(
+				ActionForwards.create_entry_success.toString());
 	}
 	
-	public ActionForward delete_new_question_edit(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	public ActionForward delete_new_question_edit(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response)
 			throws Exception {
 		delete_new_question(mapping, form, request, response);
 		return mapping.findForward(ActionForwards.edit_success.toString());
@@ -233,34 +259,42 @@ public class SurveysAction extends BaseAction {
 			throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
 		GenericActionForm actionForm = (GenericActionForm) form;
-		SurveyState state = Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
-		SurveyType type = SurveyType.fromString(actionForm.getValue("appliesTo"));
+		SurveyState state =
+			Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
+		SurveyType type =
+			SurveyType.fromString(actionForm.getValue("appliesTo"));
 		Survey newSurvey = new Survey(actionForm.getValue("name"),
 				state, type);
 		// we have to ensure that all new question choices are created during this
 		// transaction, so that they're associated with the same hibernate request
 		// that the rest of the survey and questions are
-		List<Question> addedQuestions = (List<Question>)request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
+		List<Question> addedQuestions =
+			(List<Question>)request.getSession().getAttribute(
+					SurveysConstants.KEY_ADDED_QUESTIONS);
 		for (Question question : addedQuestions) {
-			LinkedList<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+			LinkedList<QuestionChoice> choices =
+				new LinkedList<QuestionChoice>();
 			if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
 				for (QuestionChoice choice : question.getChoices()) {
 					choices.add(new QuestionChoice(choice.getChoiceText()));
 				}
 			}
 			question.setChoices(choices);
-			boolean mandatory = actionForm.getValue("mandatory_" + question.getQuestionId()) != null;
+			boolean mandatory = null !=
+				actionForm.getValue("mandatory_" + question.getQuestionId());
 			newSurvey.addQuestion(question, mandatory);
 		}
 		persistence.createOrUpdate(newSurvey);
-		request.setAttribute(SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
+		request.setAttribute(
+				SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return mapping.findForward(ActionForwards.create_entry_success.toString());
+		return mapping.findForward(
+				ActionForwards.create_entry_success.toString());
 	}
 	
 	public ActionForward edit_update(ActionMapping mapping, ActionForm form,
@@ -274,11 +308,12 @@ public class SurveysAction extends BaseAction {
 			return persistence.retrieveQuestionsByState(QuestionState.ACTIVE);
 	}
 	
-	public ActionForward newVersion(ActionMapping mapping, ActionForm form,
+	public ActionForward edit_entry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		int surveyId = Integer.parseInt(request.getParameter("value(surveyId)"));
+		int surveyId =
+			Integer.parseInt(request.getParameter("value(surveyId)"));
 		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		if (survey instanceof PPISurvey) {
@@ -286,7 +321,8 @@ public class SurveysAction extends BaseAction {
 		}
 		actionForm.setValue("name", survey.getName());
 		actionForm.setValue("appliesTo", survey.getAppliesTo());
-               actionForm.setValue("state", SurveyState.fromInt(survey.getState()).toString());
+        actionForm.setValue("state",
+        		SurveyState.fromInt(survey.getState()).toString());
 		List<Question> associatedQuestions = new LinkedList<Question>();
 		List<Question> questionsList = new LinkedList<Question>();
 		for (Question question : getQuestions()) {
@@ -308,31 +344,37 @@ public class SurveysAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		preview(mapping, form, request, response);
-		return mapping.findForward(ActionForwards.editpreview_success.toString());
+		return mapping.findForward(
+				ActionForwards.editpreview_success.toString());
 	}
 	
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
-		Survey survey = (Survey)request.getSession().getAttribute(Constants.BUSINESS_KEY);
+		Survey survey =
+			(Survey)request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		survey.setQuestions(new LinkedList<SurveyQuestion>());
 		
 		List<Question> associatedQuestions = (List<Question>)
-			request.getSession().getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
+			request.getSession().getAttribute(
+					SurveysConstants.KEY_ADDED_QUESTIONS);
 		for (Question question : associatedQuestions) {
-			LinkedList<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+			LinkedList<QuestionChoice> choices =
+				new LinkedList<QuestionChoice>();
 			if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
 				for (QuestionChoice choice : question.getChoices()) {
 					choices.add(new QuestionChoice(choice.getChoiceText()));
 				}
 			}
 			question.setChoices(choices);
-			boolean mandatory = actionForm.getValue("mandatory_" + question.getQuestionId()) != null;
+			boolean mandatory = null !=
+				actionForm.getValue("mandatory_" + question.getQuestionId());
 			survey.addQuestion(question, mandatory);
 		}
 		
-		SurveyState state = Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
+		SurveyState state =
+			Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
 		survey.setState(state);
 		survey.setAppliesTo(actionForm.getValue("appliesTo"));
 		new SurveysPersistence().createOrUpdate(survey);
