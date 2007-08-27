@@ -162,10 +162,10 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 
 		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
-		form.setFile(new MockFormFile("testFileName.rptdesign"));
+		form.setFile(new MockFormFile("testFileName1.rptdesign"));
 		form.setIsActive("1");
 		form.setReportCategoryId("1");
-		form.setReportTitle("testReportTitle");
+		form.setReportTitle("testReportTitle1");
 		setActionForm(form);
 
 		addRequestParameter("method", "preview");
@@ -174,4 +174,20 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward("preview_success");
 	}
+	
+	public void testShouldPreviewFailureWithOutReportTemplate() throws Exception {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+
+		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
+		form.setIsActive("1");
+		form.setReportCategoryId("1");
+		form.setReportTitle("testReportTitle2");
+		setActionForm(form);
+
+		addRequestParameter("method", "preview");
+		actionPerform();
+
+		String[] errors = { ReportsConstants.ERROR_FILE };
+		verifyActionErrors(errors);
+	}	
 }
