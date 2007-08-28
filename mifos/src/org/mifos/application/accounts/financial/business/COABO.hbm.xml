@@ -11,7 +11,7 @@
 		<property name="categoryName" column="COA_NAME" access="field" />
 		<many-to-one name="associatedGlcode" column="GLCODE_ID" 
 		    class="org.mifos.application.accounts.financial.business.GLCodeEntity" 
-		    outer-join="true" cascade="none" update="false" insert="false" 
+		    outer-join="true" cascade="none" update="false" insert="true" 
 		    unique="true" access="field" />
 		<many-to-one name="coaHierarchy" column="COA_ID" 
 		    class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" 
@@ -38,6 +38,15 @@
             coa.associatedGlcode = glCode.glcodeId
         order by 
             glCode.glcode
+        ]]>
+    </query>
+    <query name="COABO.getAccountIdForGLCode"><![CDATA[ 
+        select coa.categoryId
+        from org.mifos.application.accounts.financial.business.COABO coa,
+             org.mifos.application.accounts.financial.business.GLCodeEntity glCodeEntity
+        where 
+            glCodeEntity.glcode = :glCode and
+            coa.associatedGlcode = glCodeEntity.glcodeId
         ]]>
     </query>
     

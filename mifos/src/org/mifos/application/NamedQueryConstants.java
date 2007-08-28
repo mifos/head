@@ -674,4 +674,6 @@ public interface NamedQueryConstants {
 	public String GET_ACCEPTED_PAYMENT_TYPE ="acceptedpaymenttype.getAcceptedPaymentType";
 	public String GET_ACCEPTED_PAYMENT_TYPES_FOR_A_TRANSACTION="acceptedpaymenttype.getAcceptedPaymentTypesForATransaction";
 
+	public String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
+	public String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
 }

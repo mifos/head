@@ -198,5 +198,7 @@ public interface AccountConstants {
 	public String AMNT_WAIVED="Amnt waived";
 	
 	public String SURVEY_KEY="accountSurveys";
+	
+	public static final String GL_CODE = "glCode"; 
 }
 

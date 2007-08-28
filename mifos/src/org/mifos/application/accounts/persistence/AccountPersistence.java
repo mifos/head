@@ -19,6 +19,8 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.financial.business.COABO;
+import org.mifos.application.accounts.financial.business.COAHierarchyEntity;
+import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
@@ -39,6 +41,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class AccountPersistence extends Persistence {
 
@@ -229,131 +232,23 @@ public class AccountPersistence extends Persistence {
 	}
 
 	public Short getAccountIdFromGlCode(String glCode) {
-		Map nameToId = new HashMap<String, Short>();
-
-		nameToId.put("1501", (short) 32);
-		nameToId.put("1502", (short) 33);
-		nameToId.put("1503", (short) 34);
-		nameToId.put("1504", (short) 35);
-		nameToId.put("1505", (short) 36);
-		nameToId.put("1506", (short) 37);
-		nameToId.put("1507", (short) 38);
-		nameToId.put("1508", (short) 39);
-		nameToId.put("1509", (short) 40);
-		nameToId.put("4601", (short) 41);
-		nameToId.put("4602", (short) 42);
-		nameToId.put("4603", (short) 43);
-		nameToId.put("4606", (short) 44);
-		nameToId.put("5001", (short) 45);
-		nameToId.put("5201", (short) 46);
-		nameToId.put("5202", (short) 47);
-		nameToId.put("5203", (short) 48);
-		nameToId.put("5204", (short) 49);
-		nameToId.put("5205", (short) 50);
-		nameToId.put("6201", (short) 51);
-		nameToId.put("10000", (short) 1);
-		nameToId.put("11000", (short) 2);
-		nameToId.put("11100", (short) 3);
-		nameToId.put("11101", (short) 4);
-		nameToId.put("11102", (short) 5);
-		nameToId.put("11200", (short) 6);
-		nameToId.put("11201", (short) 7);
-		nameToId.put("11202", (short) 8);
-		nameToId.put("13000", (short) 9);
-		nameToId.put("13100", (short) 10);
-		nameToId.put("13101", (short) 11);
-		nameToId.put("13200", (short) 12);
-		nameToId.put("13201", (short) 13);
-		nameToId.put("20000", (short) 14);
-		nameToId.put("22000", (short) 15);
-		nameToId.put("22100", (short) 16);
-		nameToId.put("22101", (short) 17);
-		nameToId.put("23000", (short) 26);
-		nameToId.put("23100", (short) 27);
-		nameToId.put("23101", (short) 28);
-		nameToId.put("24000", (short) 29);
-		nameToId.put("24100", (short) 30);
-		nameToId.put("24101", (short) 31);
-		nameToId.put("30000", (short) 18);
-		nameToId.put("31000", (short) 19);
-		nameToId.put("31100", (short) 20);
-		nameToId.put("31101", (short) 21);
-		nameToId.put("31102", (short) 22);
-		nameToId.put("31300", (short) 23);
-		nameToId.put("31301", (short) 24);
-		nameToId.put("31401", (short) 25);
-		nameToId.put("40000", (short) 53);
-		nameToId.put("41000", (short) 54);
-		nameToId.put("41100", (short) 55);
-		nameToId.put("41101", (short) 56);
-		nameToId.put("41102", (short) 57);
-
-		return (Short) nameToId.get(glCode);
-
-	}
-
-	public Short getAccountId(String accountName) {
-		Map nameToId = new HashMap<String,Short>();
-		
-		nameToId.put("ASSETS",(short)1);
-		nameToId.put("Cash and bank balances",(short)2);
-		nameToId.put("Petty Cash Accounts",(short)3);
-		nameToId.put("Cash 1",(short)4);
-		nameToId.put("Cash 2",(short)5);
-		nameToId.put("Bank Balances",(short)6);
-		nameToId.put("Bank Account 1",(short)7);
-		nameToId.put("Bank Account 2",(short)8);
-		nameToId.put("Loan Portfolio",(short)9);
-		nameToId.put("Loans and Advances",(short)10);
-		nameToId.put("Loans to clients",(short)11);
-		nameToId.put("Loan Loss Provisions ",(short)12);
-		nameToId.put("Write-offs",(short)13);
-		nameToId.put("LIABILITIES",(short)14);
-		nameToId.put("Interest Payable",(short)15);
-		nameToId.put("Interest payable on clients savings",(short)16);
-		nameToId.put("Interest on mandatory savings",(short)17);
-		nameToId.put("INCOME",(short)18);
-		nameToId.put("Direct Income",(short)19);
-		nameToId.put("Interest income from loans",(short)20);
-		nameToId.put("Interest on loans",(short)21);
-		nameToId.put("Penalty",(short)22);
-		nameToId.put("Income from micro credit & lending activities",(short)23);
-		nameToId.put("Fees",(short)24);
-		nameToId.put("Income from 999 Account",(short)25);
-		nameToId.put("Clients Deposits 1",(short)26);
-		nameToId.put("Clients Deposits 2",(short)27);
-		nameToId.put("Savings accounts ",(short)28);
-		nameToId.put("Mandatory Savings 1",(short)29);
-		nameToId.put("Mandatory Savings 2",(short)30);
-		nameToId.put("Mandatory Savings Accounts",(short)31);
-		nameToId.put("IGLoan",(short)32);
-		nameToId.put("ManagedICICI-IGLoan",(short)33);
-		nameToId.put("SPLoan",(short)34);
-		nameToId.put("ManagedICICI-SPLoan",(short)35);
-		nameToId.put("WFLoan",(short)36);
-		nameToId.put("Managed WFLoan",(short)37);
-		nameToId.put("Emergency Loans",(short)38);
-		nameToId.put("Special  Loans",(short)39);
-		nameToId.put("Micro Enterprises Loans",(short)40);
-		nameToId.put("Emergency Fund",(short)41);
-		nameToId.put("Margin Money-1",(short)42);
-		nameToId.put("Margin Money-2",(short)43);
-		nameToId.put("Village Development Fund",(short)44);
-		nameToId.put("Interest",(short)45);
-		nameToId.put("Processing Fees",(short)46);
-		nameToId.put("Annual Subscription Fee",(short)47);
-		nameToId.put("Emergency Loan Documentation Fee",(short)48);
-		nameToId.put("Sale of Publication",(short)49);
-		nameToId.put("Fines & Penalties",(short)50);
-		nameToId.put("Miscelleneous Income",(short)51);
-		nameToId.put("EXPENDITURE",(short)53);
-		nameToId.put("Direct Expenditure",(short)54);
-		nameToId.put("Cost of Funds",(short)55);
-		nameToId.put("Interest on clients voluntary savings",(short)56);
-		nameToId.put("Interest on clients mandatory savings",(short)57);
-		
-		return (Short)nameToId.get(accountName);
-		
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.GL_CODE, glCode);
+		List queryResult;
+		try {
+			queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_ACCOUNT_ID_FOR_GL_CODE, queryParameters);
+		}
+		catch (PersistenceException e) {
+			throw new RuntimeException(e);
+		}
+		if (queryResult.size() == 0) {
+			throw new RuntimeException("No Account ID found for GLCode: " + glCode);
+		}
+		if (queryResult.size() > 1) {
+			throw new RuntimeException("Multiple Account IDs found for GLCode: " + glCode);			
+		}
+		return (Short)queryResult.get(0);
 	}
 	
 	private static final String GL_ACCOUNT_TAG = ".GLAccount";
@@ -366,7 +261,7 @@ public class AccountPersistence extends Persistence {
 	private static final String INCOME_ACCOUNT_GL_CODE = "30000";
 	private static final String EXPENDITURE_ACCOUNT_GL_CODE = "40000";
 	
-	public void addAccountSubcategories(XMLConfiguration config, COABO coa, String path){
+	private void addAccountSubcategories(XMLConfiguration config, COABO coa, String path){
 		for (COABO subcat : coa.getSubCategoryCOABOs()) {
 			config.addProperty(path + "(-1)[@code]", subcat.getAssociatedGlcode().getGlcode());
 			config.addProperty(path + "[@name]", subcat.getCategoryName());
@@ -377,7 +272,7 @@ public class AccountPersistence extends Persistence {
 	
 	public String dumpChartOfAccounts() throws ConfigurationException {
 		XMLConfiguration config = new XMLConfiguration();
-		Query topLevelAccounts = getSession().getNamedQuery("COABO.getTopLevelAccounts");
+		Query topLevelAccounts = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_ACCOUNTS);
 		List listAccounts = topLevelAccounts.list();
 		Iterator it = listAccounts.iterator();
 		while (it.hasNext()) {
@@ -403,9 +298,32 @@ public class AccountPersistence extends Persistence {
 		StringWriter stringWriter = new StringWriter();
 		config.save(stringWriter);
 		String chart = stringWriter.toString();
-		System.out.println(chart);
-		return chart;
 
+		return chart;
+	}
+
+	public COABO addGeneralLedgerAccount(String name, String glCode,
+			String parentGLCode) {
+		return addGeneralLedgerAccount(name, glCode, getAccountIdFromGlCode(parentGLCode));
 	}	
+	
+	public COABO addGeneralLedgerAccount(String name, String glcode,
+			Short parent_id) {
+		GLCodeEntity glCodeEntity = new GLCodeEntity(null, glcode);
+		try {
+			createOrUpdate(glCodeEntity);
+			COABO newCOA = new COABO(name, glCodeEntity);
+			createOrUpdate(newCOA);
+			COABO parentCOA = (COABO)HibernateUtil.getSessionTL().load(COABO.class, parent_id);
+			COAHierarchyEntity coaHierarchyEntity = new COAHierarchyEntity(newCOA,parentCOA.getCoaHierarchy());
+			createOrUpdate(coaHierarchyEntity);
+			return newCOA;
+		}
+		catch (PersistenceException e) {
+			throw new RuntimeException(e);
+		}		
+	}	
+	
+	
 }
 

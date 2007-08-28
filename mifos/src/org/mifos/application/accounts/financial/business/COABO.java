@@ -80,6 +80,11 @@ public class COABO extends BusinessObject {
 		this.categoryId = (short) categoryId;
 		this.categoryName = categoryName;
 	}
+	
+	public COABO(String categoryName, GLCodeEntity glCodeEntity) {
+		this.categoryName = categoryName;
+		this.associatedGlcode = glCodeEntity;
+	}
 
 	public Short getCategoryId() {
 		return categoryId;

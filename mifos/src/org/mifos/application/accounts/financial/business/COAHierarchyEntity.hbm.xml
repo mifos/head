@@ -6,7 +6,7 @@
 	<class name="org.mifos.application.accounts.financial.business.COAHierarchyEntity" table="COAHIERARCHY">
 		<id name="categoryId" column="COA_ID" access="field">
 			<generator class="foreign">
-				<param name="property">COA</param>
+				<param name="property">coa</param>
 			</generator>
 		</id>
 
