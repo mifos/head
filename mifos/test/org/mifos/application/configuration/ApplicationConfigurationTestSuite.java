@@ -9,6 +9,7 @@ import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigur
 import org.mifos.application.configuration.struts.action.LabelConfigurationActionTest;
 import org.mifos.application.configuration.struts.action.LookupOptionsActionTest;
 import org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTagTest;
+import org.mifos.application.configuration.struts.tag.CustomFieldsListTagTest;
 
 public class ApplicationConfigurationTestSuite extends TestSuite {
 	
@@ -29,6 +30,8 @@ public class ApplicationConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(LookupOptionsActionTest.class);
 		testSuite.addTestSuite(CustomFieldsActionTest.class);
 		testSuite.addTestSuite(CustomFieldCategoryListTagTest.class);
+		testSuite.addTestSuite(CustomFieldsListTagTest.class);
+		
 		return testSuite;
 		
 	}

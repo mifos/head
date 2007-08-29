@@ -39,7 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -66,7 +66,7 @@ public class TestCaseInitializer {
 			MifosConfiguration.getInstance().init();
 			AuditConfigurtion.init();
 			
-			ApplicationInitializer.initializeSpring();
+			TestUtils.initializeSpring();
 
 		} catch (Exception e) {
 			e.printStackTrace();

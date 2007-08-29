@@ -45,7 +45,6 @@ import junitx.framework.StringAssert;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -60,7 +59,7 @@ public class CustomFieldsListTagTest extends TestCase {
 		super.setUp();
 		DatabaseSetup.configureLogging();
 		DatabaseSetup.initializeHibernate();
-		ApplicationInitializer.initializeSpring();
+		TestUtils.initializeSpring();
 		
 		userContext = TestUtils.makeUser();
 	}
@@ -95,7 +94,7 @@ public class CustomFieldsListTagTest extends TestCase {
 				+ mandatory
 				+ "</td>\n"
 				+ "<td width=\"8%\" align=\"right\" class=\"drawtablerow\">"
-				+ "<a href=\"action?method=method&amp;ref=" + fieldId + "\">Edit</a>"
+				+ "<a href=\"action?method=method&amp;customFieldIdStr=" + fieldId + "&amp;currentFlowKey=flow\">Edit</a>"
 				+ "</td>\n"
 				+ "</tr>\n",
 				link.getOutput());

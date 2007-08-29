@@ -9,12 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.ApplicationInitializer;
+import org.mifos.framework.TestUtils;
 
 public class CustomFieldDefinitionEntityTest {
 	@BeforeClass
 	public static void init() throws Exception {
-		ApplicationInitializer.initializeSpring();
+		TestUtils.initializeSpring();
 	}
 
 	@Test

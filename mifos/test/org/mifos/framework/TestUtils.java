@@ -18,6 +18,8 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestUtils {
 	
@@ -214,6 +216,15 @@ public class TestUtils {
 				" MB"
 				);
 		System.out.println();
+	}
+
+	/**
+	 * This method initializes the Spring framework context. 
+	 */
+	static ApplicationContext context = null;
+	public static void initializeSpring() {
+			context = new ClassPathXmlApplicationContext(
+				"org/mifos/config/applicationContext.xml");
 	}
 
 }

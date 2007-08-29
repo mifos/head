@@ -36,7 +36,6 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here, when the application is shutdown. 
@@ -45,20 +44,6 @@ public class ApplicationInitializer implements ServletContextListener {
 	
 	private static Throwable databaseVersionError;
 
-	/**
-	 * This is a simple initial use of Spring for resource bundle management
-	 * and injection.  Ultimately an XMLWebApplicationContext initialized 
-	 * via struts is probably the right thing to use.
-	 * But this is just a first step to try introducting Spring with an
-	 * initially low impact on other code and with the intent to iterate 
-	 * and evolve the usage.  This usage will be refactored.
-	 */
-	//private static ApplicationContext context =
-	static {
-		new ClassPathXmlApplicationContext(
-			"org/mifos/config/applicationContext.xml");
-	}
-	
 	public void contextInitialized(ServletContextEvent ctx) {
 		init();
 	}
@@ -244,10 +229,5 @@ public class ApplicationInitializer implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent ctx) {
 		
 	}
-	
-	/**
-	 * This method initializes Spring by loading this class.
-	 */
-	public static void initializeSpring() {
-	}
+	 
 }
