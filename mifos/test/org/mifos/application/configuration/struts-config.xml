@@ -82,9 +82,5 @@
 		<set-property property="pathnames" value="org/mifos/application/configuration/validation.xml,org/mifos/application/configuration/validator-rules.xml" />
 		<set-property property="stopOnFirstError" value="false" />
 	</plug-in>
-	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
-		<set-property property="contextConfigLocation" 
-			value="/org/mifos/config/applicationContext.xml"/>
-	</plug-in>
 	
 </struts-config>

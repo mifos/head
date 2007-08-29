@@ -4,36 +4,26 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.junit.Before;
+import junit.framework.JUnit4TestAdapter;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestMessageLookup {
 	private static MessageLookup messageLookup;
-	
-	private static ApplicationContext context;
 	
 	@BeforeClass
 	public static void init() throws Exception {
 		MifosLogManager.configure(FilePaths.LOGFILE);
 		DatabaseSetup.initializeHibernate();
-		
-		context = new ClassPathXmlApplicationContext(
-			"org/mifos/config/applicationContext.xml");		
+		TestUtils.initializeSpring();
 		messageLookup = MessageLookup.getInstance();
 	}
-	
-	@Before
-	public void setUp() throws Exception {
-	}
-
-
 
 	@Test
 	public void testWeekDayLookup() {
@@ -50,5 +40,10 @@ public class TestMessageLookup {
 		// French locale
 		assertEquals("Lundi",messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
 	}
+	
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(TestMessageLookup.class);
+	}
+	
 
 }
