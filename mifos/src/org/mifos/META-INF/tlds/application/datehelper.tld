@@ -13,7 +13,19 @@
   
    <function>
     <description>
-     This takes a Locale Object and string date and returns date in the locale format
+     This takes a Locale Object and Date object and returns date in the locale format
+    </description>
+    <name>getUserLocaleDateObject</name>
+    <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>
+    <function-signature>java.lang.String getUserLocaleDateObject(java.util.Locale,java.util.Date)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getUserLocaleDateObject(locale,date)}">
+    </example>
+  </function>
+  
+  <function>
+    <description>
+     This takes a Locale Object and string date in db format and returns date in the locale format
     </description>
     <name>getUserLocaleDate</name>
     <function-class>org.mifos.framework.struts.tags.DateHelper</function-class>

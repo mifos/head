@@ -1,5 +1,7 @@
 package org.mifos.application.personnel.struts.actionforms;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.validator.GenericValidator;
@@ -11,6 +13,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelSettingsActionForm extends BaseActionForm {
@@ -37,8 +40,6 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 
 	private String userName;
 
-	private String displayName;
-
 	private Address address;
 
 	public String getDisplayName() {
@@ -59,6 +60,10 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 
 	public String getDob() {
 		return dob;
+	}
+	
+	public Date getDobDateObject() {
+		return DateUtils.getDateAsRetrievedFromDb(dob);
 	}
 
 	public void setDob(String dob) {

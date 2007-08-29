@@ -86,6 +86,12 @@ public class DateUtils {
 			throw new InvalidDateException(dbDate);
 		}
 	}
+	
+	public static String getUserLocaleDate(Locale locale, Date databaseDate) {
+		SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
+			.getDateInstance(DateFormat.SHORT, locale);
+		return shortFormat.format(databaseDate);
+	}
 
 	public static String getUserLocaleDate(Locale locale, String databaseDate) {
 		if (locale != null && databaseDate != null && !databaseDate.equals("")) {
@@ -100,6 +106,8 @@ public class DateUtils {
 				throw e;
 			}
 			catch (Exception e) {
+				System.out.println("databaseDate=" + databaseDate
+						+ ", locale=" + locale);
 				throw new FrameworkRuntimeException(e);
 			}
 		}
@@ -126,6 +134,26 @@ public class DateUtils {
 		else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Converts a string of a date in DB format ("yyyy-MM-dd") to a
+	 * {@link java.util.Date} object.
+	 * @param date, a String of the form "yyyy-MM-dd"
+	 * @return A {@link java.util.Date} object equivilant to the value of the
+	 * parameter.
+	 */
+	public static java.util.Date getDateAsRetrievedFromDb(String date) {
+		if (date != null && !date.equals("")) {
+			SimpleDateFormat format = new SimpleDateFormat(dbFormat);
+			try {
+				return format.parse(date);
+			}
+			catch (ParseException e) {
+			throw new RuntimeException(e);
+			}
+		} else
+			return null;
 	}
 
 	// Bug id 26765. Added the method convertToCurrentDateFormat and called it
