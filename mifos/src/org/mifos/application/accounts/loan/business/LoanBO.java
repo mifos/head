@@ -2908,9 +2908,12 @@ public class LoanBO extends AccountBO {
 			LoanPaymentData loanPayment;
 			if (DateUtils.getDateWithoutTimeStamp(
 					nextInstallment.getActionDate().getTime()).equals(
-					DateUtils.getCurrentDateWithoutTimeStamp()))
-				loanPayment = new LoanPaymentData(nextInstallment);
-			else loanPayment = new LoanPaymentData(nextInstallment, totalAmount);
+					DateUtils.getCurrentDateWithoutTimeStamp())) {
+                loanPayment = new LoanPaymentData(nextInstallment);
+            }
+            else {
+                loanPayment = new LoanPaymentData(nextInstallment, totalAmount);
+            }
 			paymentData.addAccountPaymentData(loanPayment);
 			totalAmount = totalAmount.subtract(loanPayment
 					.getAmountPaidWithFeeForInstallment());

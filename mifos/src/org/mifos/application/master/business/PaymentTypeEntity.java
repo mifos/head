@@ -39,6 +39,7 @@
 package org.mifos.application.master.business;
 
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class PaymentTypeEntity extends MasterDataEntity {
@@ -55,4 +56,8 @@ public class PaymentTypeEntity extends MasterDataEntity {
 		setName(localeId, name);
 		new MasterPersistence().createOrUpdate(this);
 	}
+
+    public String toString() {
+        return PaymentTypes.getPaymentType(getId()).toString();
+    }
 }

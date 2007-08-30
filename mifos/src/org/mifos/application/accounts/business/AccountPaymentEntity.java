@@ -55,7 +55,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class AccountPaymentEntity extends PersistentObject {
 
-	private final Integer paymentId = null;
+    private final Integer paymentId = null;
 
 	private final AccountBO account;
 
@@ -204,4 +204,12 @@ public class AccountPaymentEntity extends PersistentObject {
 						+ getAccountTrxns().size());
 		return newlyAddedTrxns;
 	}
+
+    public String toString() {
+        return "{" +
+                paymentId + ", " +
+                account + ", " +
+                paymentType + ", " +
+                amount + "}";
+    }
 }

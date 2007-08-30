@@ -53,7 +53,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public abstract class AccountTrxnEntity extends PersistentObject {
 
-	private final Integer accountTrxnId = null;
+    private final Integer accountTrxnId = null;
 
 	private final AccountBO account;
 
@@ -190,4 +190,12 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	protected abstract AccountTrxnEntity generateReverseTrxn(
 			PersonnelBO personnel, String adjustmentComment) throws AccountException;
 
+    public String toString() {
+        return "{" +
+                accountTrxnId + ", " +
+                account + ", " +
+                accountActionEntity + ", " +
+                amount + ", " +
+                installmentId + "}";
+    }
 }

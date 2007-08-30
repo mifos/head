@@ -42,7 +42,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelBO extends BusinessObject {
 
-	private final Short personnelId;
+    private final Short personnelId;
 
 	private PersonnelLevelEntity level;
 
@@ -826,4 +826,9 @@ public class PersonnelBO extends BusinessObject {
 		return office.getSearchId();
 	}
 
+    public String toString() {
+        return "{" +
+                getDisplayName() + ", " +
+                getPersonnelId() + "}";
+    }
 }

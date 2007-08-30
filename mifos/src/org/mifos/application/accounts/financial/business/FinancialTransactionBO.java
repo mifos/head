@@ -170,4 +170,16 @@ public class FinancialTransactionBO extends BusinessObject {
 		return postedBy;
 	}
 
+    public String toString() {
+        return "{" +
+                trxnId + ", " +
+                actionDate + ", " +
+                postedDate + ", " +
+                postedAmount + ", " +
+                balanceAmount + ", " +
+                postedBy + ", " +
+                glcode + ", " +
+                debitCreditFlag + "}";
+
+    }
 }

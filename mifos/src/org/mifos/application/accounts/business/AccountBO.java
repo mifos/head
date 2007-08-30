@@ -59,7 +59,12 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountBO extends BusinessObject {
 
-	private final Integer accountId;
+	public String toString() {
+        return "{" +
+                globalAccountNum + "}";
+    }
+
+    private final Integer accountId;
 
 	protected String globalAccountNum;
 

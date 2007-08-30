@@ -68,4 +68,8 @@ public class GLCodeEntity extends PersistentObject {
 	public COABO getAssociatedCOA() {
 		return associatedCOA;
 	}
+
+    public String toString() {
+        return glcode;
+    }
 }

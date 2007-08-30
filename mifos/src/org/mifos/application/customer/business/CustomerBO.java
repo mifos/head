@@ -87,7 +87,7 @@ import org.mifos.framework.util.helpers.StringUtils;
  */
 public abstract class CustomerBO extends BusinessObject {
 
-	private final Integer customerId;
+    private final Integer customerId;
 
 	private String globalCustNum;
 
@@ -1300,4 +1300,9 @@ public abstract class CustomerBO extends BusinessObject {
 			}
 	}
 	
+	public String toString() {
+        return "{" +
+                customerId + ", " +
+                displayName + "}";
+    }
 }
