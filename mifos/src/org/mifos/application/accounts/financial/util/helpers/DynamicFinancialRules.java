@@ -258,6 +258,16 @@ public class DynamicFinancialRules {
 
 	public void addMapping(Short type, FinancialActionConstants action,
 			Short categoryId) {
+		if (type == null) {
+			throw new RuntimeException("Got invalid null mapping type instead of CREDIT/DEBIT value");
+		}
+		if (categoryId == null) {
+			throw new RuntimeException("Got invalid null categoryId");
+		}
+		if (action == null) {
+			throw new RuntimeException("Got invalid null financial action");
+		}
+		
 		if (type.equals(FinancialConstants.CREDIT)) {
 			actionToCategoryCredit.put(action, categoryId);
 		} else if (type.equals(FinancialConstants.DEBIT)) {

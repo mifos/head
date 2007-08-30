@@ -40,6 +40,9 @@ package org.mifos.application.accounts.financial.business;
 
 import org.mifos.framework.business.PersistentObject;
 
+/**
+ * Unused and candidate for removal.
+ */
 public class COAIDMapperEntity extends PersistentObject {
 	private final Short constantId;
 

@@ -49,5 +49,11 @@
             coa.associatedGlcode = glCodeEntity.glcodeId
         ]]>
     </query>
+	<query name="COABO.getAllCoa">
+		<![CDATA[
+		    from  org.mifos.application.accounts.financial.business.COABO coa
+		]]>
+	</query>
+    
     
 </hibernate-mapping>

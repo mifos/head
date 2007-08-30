@@ -40,6 +40,25 @@ public class TestAccountPersistence extends TestAccount {
 
 	private AccountPersistence accountPersistence = new AccountPersistence();
 
+	public void testAddDuplicateGlAccounts() {
+		String name = "New Account Name";
+		String name2 = "New Account Name 2";
+		String glCode = "999999";
+		String parentGlCode = "10000";
+		
+		try {
+			COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode);
+			COABO coa2 = accountPersistence.addGeneralLedgerAccount(name2, glCode, parentGlCode);
+			fail();
+		} catch(Exception e) {
+			assertTrue(e.getMessage().contains("An account already exists with glcode"));
+		} finally {
+            HibernateUtil.rollbackTransaction();
+            HibernateUtil.closeSession();
+        }
+		
+	}
+	
 	public void testAddGlAccount() {
 		String name = "New Account Name";
 		String glCode = "999999";

@@ -231,6 +231,11 @@ public class AccountPersistence extends Persistence {
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 
+	/**
+	 * Return the COABO (general ledger account) id that corresponds to
+	 * the GLCode (general ledger code) passed in or return null if no
+	 * account is found for the glCode.
+	 */
 	public Short getAccountIdFromGlCode(String glCode) {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.GL_CODE, glCode);
@@ -243,7 +248,7 @@ public class AccountPersistence extends Persistence {
 			throw new RuntimeException(e);
 		}
 		if (queryResult.size() == 0) {
-			throw new RuntimeException("No Account ID found for GLCode: " + glCode);
+			return null;
 		}
 		if (queryResult.size() > 1) {
 			throw new RuntimeException("Multiple Account IDs found for GLCode: " + glCode);			
@@ -309,6 +314,9 @@ public class AccountPersistence extends Persistence {
 	
 	public COABO addGeneralLedgerAccount(String name, String glcode,
 			Short parent_id) {
+		if (getAccountIdFromGlCode(glcode) != null) {
+			throw new RuntimeException("An account already exists with glcode: " + glcode);
+		}
 		GLCodeEntity glCodeEntity = new GLCodeEntity(null, glcode);
 		try {
 			createOrUpdate(glCodeEntity);

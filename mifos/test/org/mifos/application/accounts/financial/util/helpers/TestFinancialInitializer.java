@@ -47,17 +47,4 @@ public class TestFinancialInitializer extends MifosTestCase {
 				FinancialActionConstants.PRINCIPALPOSTING.value);
 	}
 
-	public void testCOAInitializerForInvalidConnection() {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			FinancialInitializer.initializeCOA(HibernateUtil.getSessionTL());
-			fail();
-		} catch (FinancialException e) {
-			assertTrue(true);
-		} finally {
-			HibernateUtil.closeSession();
-		}
-
-	}
-
 }

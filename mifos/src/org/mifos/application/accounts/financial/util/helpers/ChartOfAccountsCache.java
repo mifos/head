@@ -42,20 +42,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mifos.application.accounts.financial.business.COABO;
-import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
 public class ChartOfAccountsCache {
 	private static Map<Short, COABO> cache = new HashMap<Short, COABO>();
 
-	public static void add(COAIDMapperEntity coaIdMapper) {
-		if ((coaIdMapper != null)
-				&& (cache.get(coaIdMapper.getConstantId()) == null)) {
-			cache.put(coaIdMapper.getConstantId(), coaIdMapper.getCoa());
+	public static boolean isInitialized() {
+		return !cache.isEmpty();
+	}
+	
+	public static void add(COABO coa) {
+		if (coa == null) {
+			throw new RuntimeException("Got a null coa reference");
+		}
+		if (cache.get(coa.getCategoryId()) == null) {
+			cache.put(coa.getCategoryId(), coa);
+		} else {
+			throw new RuntimeException("ChartOfAcctionsCache already contains an account with id: " + coa.getCategoryId());
 		}
 	}
 
+	
 	public static COABO get(short categoryId) throws FinancialException {
 		COABO category = cache.get(categoryId);
 		if (category == null) {

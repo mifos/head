@@ -1,43 +1,31 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import org.hibernate.Hibernate;
+import junit.framework.TestCase;
+
 import org.mifos.application.accounts.financial.business.COABO;
-import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class ChartOfAccountsCacheTest extends MifosTestCase {
+public class ChartOfAccountsCacheTest extends TestCase {
 
-	public static final Short EXCEED_SIZE=155;
-
+	private static final Short EXCEED_SIZE=20000;
+	private static final short TEST_ID = 10000;
+	private static final String TEST_NAME = "test account";
+	
 	public void testAddAndGet() throws FinancialException {
-		ChartOfAccountsCache.add(createMapperEntity());
+		ChartOfAccountsCache.add(new COABO(TEST_ID,TEST_NAME));
 
-		COABO coaAssets = ChartOfAccountsCache.get(CategoryConstants.ASSETS);
-		assertEquals(1, coaAssets.getCategoryId().shortValue());
+		COABO coaAssets = ChartOfAccountsCache.get(TEST_ID);
+		assertEquals(TEST_ID, coaAssets.getCategoryId().shortValue());
+		assertEquals(TEST_NAME, coaAssets.getCategoryName());
 	}
 
 	public void testExceedSize() {
 		try {
-			ChartOfAccountsCache.add(createMapperEntity());
 			ChartOfAccountsCache.get(EXCEED_SIZE);
 			fail();
 		} catch (FinancialException expected) {
 		}
 
-	}
-
-	private COAIDMapperEntity createMapperEntity() {
-		COABO coaAssets = (COABO) HibernateUtil.getSessionTL().get(COABO.class,
-				new Short("1"));
-		Hibernate.initialize(coaAssets);
-		Hibernate.initialize(coaAssets.getCOAHead());
-		Hibernate.initialize(coaAssets.getAssociatedGlcode());
-		Hibernate.initialize(coaAssets.getSubCategory());
-		COAIDMapperEntity mapperEntity = new COAIDMapperEntity(
-				CategoryConstants.ASSETS, coaAssets);
-		return mapperEntity;
 	}
 
 }

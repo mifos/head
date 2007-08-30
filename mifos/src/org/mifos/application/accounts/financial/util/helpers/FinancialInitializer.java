@@ -44,7 +44,8 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
@@ -73,18 +74,13 @@ public class FinancialInitializer {
 	}
 
 	public static void initializeCOA(Session session) throws FinancialException {
-		try {
-			Query queryCOAIDMapper = session.getNamedQuery("GETALLCOA");
-			List<COAIDMapperEntity> listIdMapper = queryCOAIDMapper.list();
-			Iterator<COAIDMapperEntity> iterIdMapper = listIdMapper.iterator();
-			while (iterIdMapper.hasNext()) {
-				ChartOfAccountsCache.add(hibernateInitalize(iterIdMapper.next()));
-			}
-		} catch (Exception e) {
-			throw new FinancialException(
-					FinancialExceptionConstants.COA_INITFAILED, e);
+		if (ChartOfAccountsCache.isInitialized()) return;
+		
+		Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_COA);
+		List<COABO> coaList = query.list();
+		for (COABO coa: coaList){
+			ChartOfAccountsCache.add(hibernateInitalize(coa));
 		}
-
 	}
 
 	public static void initalizeFinancialAction(Session session)
@@ -106,15 +102,15 @@ public class FinancialInitializer {
 
 	}
 
-	private static COAIDMapperEntity hibernateInitalize(
-			COAIDMapperEntity coaIDMapper) {
+	private static COABO hibernateInitalize(
+			COABO coa) {
 
-		Hibernate.initialize(coaIDMapper.getCoa());
-		Hibernate.initialize(coaIDMapper.getCoa().getCOAHead());
-		Hibernate.initialize(coaIDMapper.getCoa().getAssociatedGlcode());
-		Hibernate.initialize(coaIDMapper.getCoa().getSubCategory());
+		Hibernate.initialize(coa);
+		Hibernate.initialize(coa.getCOAHead());
+		Hibernate.initialize(coa.getAssociatedGlcode());
+		Hibernate.initialize(coa.getSubCategory());
 
-		return coaIDMapper;
+		return coa;
 	}
 
 }
