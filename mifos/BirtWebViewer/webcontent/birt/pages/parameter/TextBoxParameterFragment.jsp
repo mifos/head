@@ -117,10 +117,10 @@
 		    String message = request.getParameter("message");
 		    if (message != null) {
 		    	String[] messages = message.split("~");
-		    	for(String currMessage : messages) {
+		    	for(int i=0;i<messages.length;i++){
 	    %>
 	    <%
-		    		out.println("<li>" + currMessage + "</li>");
+		    		out.println("<li>" + messages[i] + "</li>");
 		    	}
 		    }
 	    %>
