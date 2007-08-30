@@ -69,7 +69,8 @@ public class GLCodeEntity extends PersistentObject {
 		return associatedCOA;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return glcode;
     }
 }

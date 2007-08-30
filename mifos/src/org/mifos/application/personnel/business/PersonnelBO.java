@@ -826,7 +826,8 @@ public class PersonnelBO extends BusinessObject {
 		return office.getSearchId();
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return "{" +
                 getDisplayName() + ", " +
                 getPersonnelId() + "}";

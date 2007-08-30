@@ -190,7 +190,8 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	protected abstract AccountTrxnEntity generateReverseTrxn(
 			PersonnelBO personnel, String adjustmentComment) throws AccountException;
 
-    public String toString() {
+    @Override
+	public String toString() {
         return "{" +
                 accountTrxnId + ", " +
                 account + ", " +

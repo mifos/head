@@ -149,7 +149,7 @@ public class TestAccountPersistence extends TestAccount {
 		"<GLAccount code=\"1509\" name=\"Micro Enterprises Loans\"/>\n" + 
 		"<GLAccount code=\"13101\" name=\"Loans to clients\"/>\n" + 
 		"</GLAccount>\n" + 
-		"<GLAccount code=\"13200\" name=\"Loan Loss Provisions \">\n" + 
+		"<GLAccount code=\"13200\" name=\"Loan Loss Provisions\">\n" + 
 		"<GLAccount code=\"13201\" name=\"Write-offs\"/>\n" + 
 		"</GLAccount>\n" + 
 		"</GLAccount>\n" + 
@@ -166,7 +166,7 @@ public class TestAccountPersistence extends TestAccount {
 		"<GLAccount code=\"4602\" name=\"Margin Money-1\"/>\n" + 
 		"<GLAccount code=\"4603\" name=\"Margin Money-2\"/>\n" + 
 		"<GLAccount code=\"4606\" name=\"Village Development Fund\"/>\n" + 
-		"<GLAccount code=\"23101\" name=\"Savings accounts \"/>\n" + 
+		"<GLAccount code=\"23101\" name=\"Savings accounts\"/>\n" + 
 		"</GLAccount>\n" + 
 		"</GLAccount>\n" + 
 		"<GLAccount code=\"24000\" name=\"Mandatory Savings\">\n" + 

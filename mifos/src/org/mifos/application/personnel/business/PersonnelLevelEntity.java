@@ -31,7 +31,8 @@ public class PersonnelLevelEntity extends MasterDataEntity {
 		return parent;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return PersonnelLevel.fromInt(getId()).toString();
     }
 }

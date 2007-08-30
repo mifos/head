@@ -1300,6 +1300,7 @@ public abstract class CustomerBO extends BusinessObject {
 			}
 	}
 	
+	@Override
 	public String toString() {
         return "{" +
                 customerId + ", " +

@@ -59,6 +59,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountBO extends BusinessObject {
 
+	@Override
 	public String toString() {
         return "{" +
                 globalAccountNum + "}";

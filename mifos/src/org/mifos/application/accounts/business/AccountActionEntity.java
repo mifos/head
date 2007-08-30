@@ -20,7 +20,8 @@ public class AccountActionEntity extends MasterDataEntity {
 		return AccountActionTypes.fromInt(getId());
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return AccountActionTypes.fromInt(getId()).toString();
     }
 }

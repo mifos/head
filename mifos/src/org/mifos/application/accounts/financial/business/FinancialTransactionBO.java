@@ -170,7 +170,8 @@ public class FinancialTransactionBO extends BusinessObject {
 		return postedBy;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return "{" +
                 trxnId + ", " +
                 actionDate + ", " +

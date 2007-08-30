@@ -57,7 +57,8 @@ public class PaymentTypeEntity extends MasterDataEntity {
 		new MasterPersistence().createOrUpdate(this);
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return PaymentTypes.getPaymentType(getId()).toString();
     }
 }
