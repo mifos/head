@@ -2,8 +2,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@page import="org.mifos.application.surveys.helpers.AnswerType"%>
-<tiles:insert definition=".clientsacclayoutsearchmenu">
+<tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -15,9 +14,7 @@
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="surveysAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${sessionScope.currentFlowKey}">
-          				<mifos:mifoslabel name="Surveys.AddQuestions" bundle="SurveysUIResources"/>
-          			</html-el:link> 
+       				<mifos:mifoslabel name="Surveys.EditQuestion" bundle="SurveysUIResources"/>
 	              </span>
     	        </td>
 	    	  </tr>

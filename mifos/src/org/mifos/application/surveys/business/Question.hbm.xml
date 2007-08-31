@@ -26,7 +26,7 @@
        <![CDATA[from Question as question order by question.shortName]]>
     </query>
  	<query name="questions.retrieveByState">
-       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE]]>
+       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE order by question.shortName]]>
     </query>
     <query name="questions.retrieveByName">
        <![CDATA[from Question as question where question.shortName=:SHORT_NAME]]>

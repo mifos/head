@@ -2,8 +2,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
-<%@page import="org.mifos.application.surveys.helpers.AnswerType"%>
-<tiles:insert definition=".clientsacclayoutsearchmenu">
+<tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -15,9 +14,7 @@
 					</html-el:link> /
 	              </span>
 	              <span class="fontnormal8pt">
-	              	<html-el:link action="surveysAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-          				<mifos:mifoslabel name="Surveys.AddQuestions" bundle="SurveysUIResources"/>
-          			</html-el:link> 
+     				<mifos:mifoslabel name="Surveys.AddQuestions" bundle="SurveysUIResources"/>
 	              </span>
     	        </td>
 	    	  </tr>
@@ -37,16 +34,16 @@
             <html-el:form action="/questionsAction.do?method=defineQuestions" focus="questionText">
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
               <tr class="fontnormal">
-                <td width="24%" align="right"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources"/></td>
+                <td width="24%" align="right"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources" mandatory="yes"/></td>
                 <td width="76%"><html-el:text property="value(shortName)"/></td>
               </tr>
               <tr class="fontnormal">
-                <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources"/></td>
+                <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources" mandatory="yes"/></td>
                 <td width="76%"><html-el:text property="value(questionText)"/></td>
               </tr>
 
               <tr class="fontnormal">
-                <td align="right"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources"/></td>
+                <td align="right"><mifos:mifoslabel name="Surveys.Answertype" bundle="SurveysUIResources" mandatory="yes"/></td>
 
                 <td><html-el:select property="value(answerType)" styleId="answerType" onchange="setDisable();">
                   <html-el:option value="1"><mifos:mifoslabel name="Surveys.Multiselect"/></html-el:option>
@@ -59,7 +56,7 @@
               <tr id="choiceInputsElement1" class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answerchoice" bundle="SurveysUIResources"/></td>
                 <td><html-el:text property="value(choice)" styleId="choice" disabled="true"/>
-                  <button id="AddButton" class="insidebuttn" style="width:65px" onclick="submitQuestionForm('addChoice')" disabled="true">
+                  <button id="AddButton" class="insidebuttn" style="width:65px" onclick="submitQuestionForm('addChoice')">
                   <mifos:mifoslabel name="Surveys.Add" bundle="SurveysUIResources"/> &gt;&gt;
                   </button>
                   </td>
@@ -130,7 +127,7 @@
 </c:choose>
 </td>
                 <td class="drawtablerow"><html-el:link action="questionsAction?method=deleteNewQuestion&newQuestionNum=${status.index}&randomNUm=${sessionScope.randomNUm}">
-                [<mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/>]
+                <mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/>
                 </html-el:link></td>
               </tr>
               </c:forEach>

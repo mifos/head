@@ -28,7 +28,7 @@
 	<br><span class="fontnormal">
               <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
                <a href="questionsAction.do?method=defineQuestions">
-               <mifos:mifoslabel name="Surveys.definequestion"/></a></div>
+               <mifos:mifoslabel name="Surveys.definequestion"/></a></span></div>
       <c:if test="${requestScope.itemCount > 0}">
         <br/>
         <span class="fontnormal" style="color:orange; font-weight:bold">
@@ -51,18 +51,16 @@
           <c:out value="${question.shortName}"/>
         </html-el:link>
         <c:if test="${question.questionState == 0}">
-          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/></span>
+          <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/>
         </c:if>
       </td>
     </tr>
     <c:set var="count" value="${count + 1}" />
   </c:forEach>
-    </td>
-  </tr>
   </table><br>
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
-    	<td align="middle" class="blueline">&nbsp;</td>
+    	<td align="center" class="blueline">&nbsp;</td>
   	</tr>
   </table>
   <br>
@@ -75,7 +73,7 @@
 		<c:otherwise>Previous</c:otherwise>
 		</c:choose>
 		</td>
-		<td align="middle" class="fontnormalbold">
+		<td align="center" class="fontnormalbold">
 		Questions <c:out value="${itemOffset}"/>-<c:out value="${itemOffset + count - 1}"/>
 		of <c:out value="${length}"/></td>
 		<td width="75" align="right" class="fontnormalboldgray">
@@ -87,5 +85,8 @@
 		</td>
 	  </tr>
   </table>
+ </td>
+ </tr>
+ </table>
 </tiles:put>
 </tiles:insert>

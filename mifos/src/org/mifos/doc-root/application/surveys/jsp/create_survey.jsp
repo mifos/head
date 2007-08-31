@@ -109,20 +109,20 @@
                       <c:choose>
 					  <c:when test="${edit}"><html-el:hidden property="value(appliesTo)"/>
 					  <mifos:select property="value(appliesTo)" style="width:136px;" disabled="true">
-                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" bundle="SurveysUIResources" /></html-el:option>
                         </mifos:select></c:when>
 					  <c:otherwise><mifos:select property="value(appliesTo)" style="width:136px;">
-                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
-                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" mandatory="yes" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="client"><mifos:mifoslabel name="Surveys.client_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="center"><mifos:mifoslabel name="Surveys.center_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="group"><mifos:mifoslabel name="Surveys.group_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="loan"><mifos:mifoslabel name="Surveys.loan_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="savings"><mifos:mifoslabel name="Surveys.savings_type" bundle="SurveysUIResources" /></html-el:option>
+                           <html-el:option value="all"><mifos:mifoslabel name="Surveys.all_type" bundle="SurveysUIResources" /></html-el:option>
                         </mifos:select>
                         </c:otherwise>
                         </c:choose>
