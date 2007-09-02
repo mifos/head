@@ -47,6 +47,7 @@ import javax.servlet.http.HttpSession;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -56,17 +57,22 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-//import org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm;
 import org.mifos.application.configuration.struts.action.CustomFieldsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
+//import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.util.helpers.YesNoFlag;
 
 
 public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
 	private final Short DEFAULT_LOCALE = 1;
-	//private String flowKey;
+	private final String tooLong = 
+		  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+		+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+		+ "0";
 	
 	@Override
 	protected void tearDown() throws Exception {
@@ -135,6 +141,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		return locale;
 	}
 	
+	public String getCategoryValueString(CustomFieldCategory category)
+	{
+		return category.mapToEntityType().getValue().toString();
+	}
+	
 	public void testLoadDefineCustomFields() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "loadDefineCustomFields");
@@ -159,12 +170,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();
-		assertEquals(4, getErrorSize());
+		assertEquals(3, getErrorSize());
 		assertEquals("Category Type null value error", 1, getErrorSize("categoryType"));
 		assertEquals("Data Type null value error", 1,
 				getErrorSize("dataType"));
-		assertEquals("Default Value null value error", 1,
-				getErrorSize("defaultValue"));
+		
 		assertEquals("Label null value error", 1, getErrorSize("labelName"));
 		verifyInputForward();
 	}
@@ -172,10 +182,10 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testFailurePreviewWithDataTypeNumericAndDefaultValueNotMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Client));
+		addRequestParameter("labelName", "Custom Field for Client");
 		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
-		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("defaultValue", "Client Default Value");
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		verifyInputForward();
@@ -184,8 +194,8 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testSuccessfulPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Loan));
+		addRequestParameter("labelName", "Custom Field for Loan");
 		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
 		addRequestParameter("defaultValue", "10");
 		performNoErrors();
@@ -195,10 +205,10 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testFailurePreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Savings));
+		addRequestParameter("labelName", "Custom Field for Saving");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
-		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("defaultValue", "Saving Default Value");
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		verifyInputForward();
@@ -207,7 +217,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testSuccessfulPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Personnel));
 		addRequestParameter("labelName", "Custom Field for Personnel");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
 		addRequestParameter("defaultValue", "01/12/2007");
@@ -218,46 +228,61 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testPreviewSuccessful() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "preview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Group));
+		addRequestParameter("labelName", "Custom Field for Group");
 		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
-		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("defaultValue", "Group");
 		performNoErrors();
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 	
-	public void testFailureEditPreviewWithDefaultValuesNull() throws Exception {
+	public void testFailureEditPreviewWithLabelNull() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Center));
 		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
 		actionPerform();
-		assertEquals(2, getErrorSize());
-		assertEquals("Default Value null value error", 1,
-				getErrorSize("defaultValue"));
+		assertEquals(1, getErrorSize());
 		assertEquals("Label null value error", 1, getErrorSize("labelName"));
 		verifyInputForward();
 	}
 	
-	public void testFailureEditPreviewWithDataTypeNumericAndDefaultValueNotMatched() throws Exception {
+
+	public void testFailureEditPreviewWithTooLongLabel() throws Exception {
+		
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
-		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
-		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Center));
+		addRequestParameter("labelName", tooLong);
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString()); 
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		verifyInputForward();
 	}
 	
+	public void testFailureEditPreviewWithTooLongDefaultValue() throws Exception {
+		
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Client));
+		addRequestParameter("labelName", "Label Name");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString()); 
+		addRequestParameter("defaultValue", tooLong);
+		actionPerform();
+		assertEquals(1, getErrorSize());
+		verifyInputForward();
+	}
+	
+	
+	
 	public void testSuccessfulEditPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Center));
+		addRequestParameter("labelName", "Custom Field for Center");
 		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString()); 
 		addRequestParameter("defaultValue", "10");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		performNoErrors();
 		verifyForward(ActionForwards.editPreview_success.toString());
 	}
@@ -265,10 +290,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testFailureEditPreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("categoryType",getCategoryValueString(CustomFieldCategory.Personnel));
 		addRequestParameter("labelName", "Custom Field for Personnel");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
 		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		verifyInputForward();
@@ -277,8 +303,8 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testSuccessfulEditPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Loan));
+		addRequestParameter("labelName", "Custom Field for Loan");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString()); 
 		addRequestParameter("defaultValue", "01/12/2007");
 		performNoErrors();
@@ -288,10 +314,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testEditPreviewSuccessful() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPreview");
-		addRequestParameter("categoryType", "Personnel");
-		addRequestParameter("labelName", "Custom Field for Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Savings));
+		addRequestParameter("labelName", "Custom Field for Savings");
 		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
-		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("defaultValue", "Savings");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		performNoErrors();
 		verifyForward(ActionForwards.editPreview_success.toString());
 	}
@@ -334,10 +361,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testPrevious() {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "previous");
-		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Personnel));
 		addRequestParameter("labelName", "Custom Field for Personnel");
 		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
 		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("mandatoryField", YesNoFlag.NO.getValue().toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -347,10 +375,11 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	public void testEditPrevious() {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "editPrevious");
-		addRequestParameter("categoryType", "Personnel");
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Personnel));
 		addRequestParameter("labelName", "Custom Field for Personnel");
 		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
 		addRequestParameter("defaultValue", "Personnel");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -365,36 +394,85 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.viewCategory_success.toString());
 
-		/*
-		 * TODO: verify that data displays correctly
-		 */
 	}
 
 
 	public void testUpdate() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "update");
+		Short editedCustomFieldId = 6;
+		MasterPersistence masterPersistence = new MasterPersistence();
+		CustomFieldDefinitionEntity customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
+		addRequestParameter("categoryType", getCategoryValueString(CustomFieldCategory.Personnel));
+		String newDefaultValue = "new default value";
+		String newLabelName = "new label name";
+		addRequestParameter("labelName", newLabelName);
+		addRequestParameter("defaultValue", newDefaultValue);
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
+		SessionUtils.setAttribute(
+				ConfigurationConstants.CURRENT_CUSTOM_FIELD, customField, request);
+		
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-
-		/*
-		 * TODO: verify that data updates correctly
-		 */
+		customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
+		assertTrue(customField.getDefaultValue().equals(newDefaultValue));
+		assertTrue(customField.isMandatory() == true);
+		assertTrue(customField.getLabel(DEFAULT_LOCALE).equals(newLabelName));
 	}
 	
-	public void testCreate() throws Exception {
+	
+	public void testCreateForClientCategory() throws Exception {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "create");
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("categoryType", CustomFieldCategory.Client.mapToEntityType().getValue().toString());
+		addRequestParameter("labelName", "Custom Field for Client");
+		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "Client");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		verifyForward(ActionForwards.update_success.toString());
-
-		/*
-		 * TODO: verify that data updates correctly
-		 */
+		verifyForward(ActionForwards.create_success.toString());
+		
 	}
+	
+	public void testCreateForGroupCategory() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("categoryType", CustomFieldCategory.Group.mapToEntityType().getValue().toString());
+		addRequestParameter("labelName", "Custom Field for Group");
+		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString());
+		addRequestParameter("defaultValue", "08/20/2007");
+		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+		
+	}
+	
+	public void testCreateForCenterCategory() throws Exception {
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
+		setRequestPathInfo("/customFieldsAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("categoryType", CustomFieldCategory.Center.mapToEntityType().getValue().toString());
+		addRequestParameter("labelName", "Custom Field for Center");
+		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString());
+		addRequestParameter("defaultValue", "10.2");
+		addRequestParameter("mandatoryField", YesNoFlag.NO.getValue().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+		
+	}
+	
 
 }

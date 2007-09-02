@@ -48,7 +48,7 @@ import org.mifos.application.configuration.struts.actionform.CustomFieldsActionF
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-//import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -65,7 +65,6 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldCategory;
-//import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.util.helpers.SessionUtils;
 import java.util.ArrayList;
@@ -74,17 +73,10 @@ import java.util.Locale;
 import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
-//import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-//import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-//import org.mifos.application.master.business.LookUpLabelEntity;
-//import org.mifos.application.master.business.LookUpValueEntity;
-//import java.util.HashSet;
-//import java.util.Set;
-import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.fund.struts.actionforms.FundActionForm;
-import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.framework.util.helpers.StringUtils;
+
 
 
 public class CustomFieldsAction extends BaseAction {
@@ -206,6 +198,7 @@ public class CustomFieldsAction extends BaseAction {
 		if (session != null) {
 			UserContext userContext = (UserContext) session
 					.getAttribute(LoginConstants.USERCONTEXT);
+			
 			if (null != userContext) {
 				locale = userContext.getPreferredLocale();
 				if (null == locale) {
@@ -251,68 +244,72 @@ public class CustomFieldsAction extends BaseAction {
 				.toString());
 	}
 	
-	private Short getLevelId(String categoryType)
-	{
-		Short entityValue = Short.parseShort(categoryType);
-		EntityType entityType = EntityType.fromInt(entityValue);
-		
-		if (entityType == EntityType.CENTER)
-			return CustomerLevel.CENTER.getValue();
-		else if (entityType == EntityType.GROUP)
-			return CustomerLevel.GROUP.getValue();
-		else
-			return CustomerLevel.CLIENT.getValue();
-		
-	}
+	
 	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		CustomFieldDefinitionEntity customField = (CustomFieldDefinitionEntity)SessionUtils.getAttribute(
+				ConfigurationConstants.CURRENT_CUSTOM_FIELD, request);
+		customField.setDefaultValue(actionForm.getDefaultValue());
+		YesNoFlag flag = null;
+		if (actionForm.isMandatoryField())
+			flag = YesNoFlag.YES;
+		else
+			flag = YesNoFlag.NO;
+		customField.setMandatoryFlag(flag.getValue());
+		Short localeId = getUserContext(request).getLocaleId();
+		customField.setLabel(actionForm.getLabelName(), localeId);
+		
+		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
+		persistence.updateCustomField(customField);
+		request.setAttribute("category", actionForm.getCategoryTypeName());
 		logger.debug("Inside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+	/*
+	 * For now the level id of the custom field is derived from the category. It may be changed
+	 * when business knows what exactly the level id is
+	 */
+	private Short getLevelId(String categoryType)
+	{
+		Short entityValue = Short.parseShort(categoryType);
+		EntityType entityType = EntityType.fromInt(entityValue);
+		
+		if (entityType.equals(EntityType.CENTER))
+			return CustomerLevel.CENTER.getValue();
+		else if (entityType.equals(EntityType.GROUP))
+			return CustomerLevel.GROUP.getValue();
+		else if (entityType.equals(EntityType.CLIENT))
+			return CustomerLevel.CLIENT.getValue();
+		else
+			return null;
+		
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		/*CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
 		String categoryType = actionForm.getCategoryType();
-		MifosLookUpEntity lookupEntity = new MifosLookUpEntity();
-		String entityType = actionForm.getLabelName();
-		lookupEntity.setEntityType(entityType);
-		
-		Set<LookUpLabelEntity> lookUpLabels = new HashSet<LookUpLabelEntity>();
-		LookUpLabelEntity lookupLabel = new LookUpLabelEntity();
-		lookupLabel.setLabelName(entityType);
-		lookupLabel.setLookUpEntity(lookupEntity);
-		Short localeId = getUserContext(request).getLocaleId();
-		lookupLabel.setLocaleId(localeId);
-		lookUpLabels.add(lookupLabel);
-		lookupEntity.setLookUpLabels(lookUpLabels);
-		
-		Set<LookUpValueEntity> lookUpValues = new HashSet<LookUpValueEntity>();
-		LookUpValueEntity lookupValue = new LookUpValueEntity();
-		lookupValue.setLookUpName("");
-		lookupValue.setLookUpEntity(lookupEntity);
-		lookUpValues.add(lookupValue);
-		lookupEntity.setLookUpValues(lookUpValues);
-		//MasterPersistence masterPersistence = new MasterPersistence();
-		//masterPersistence.addLookUpEntity(lookupEntity);	
-		CustomFieldType fieldType = CustomFieldType.fromInt(Integer.parseInt(actionForm.getDataType()));
 		EntityType categoryTypeEntity = EntityType.fromInt(Integer.parseInt(categoryType));
-		short fieldIndex = getLevelId(categoryType);
+		CustomFieldType fieldType = CustomFieldType.fromInt(Integer.parseInt(actionForm.getDataType()));
+		String label = actionForm.getLabelName();
+		Short levelId = getLevelId(categoryType);
 		YesNoFlag flag = null;
 		if (actionForm.isMandatoryField())
 			flag = YesNoFlag.YES;
 		else
 			flag = YesNoFlag.NO;
-		CustomFieldDefinitionEntity customField = 
-		new CustomFieldDefinitionEntity(lookupEntity, fieldIndex, fieldType, categoryTypeEntity, actionForm.getDefaultValue(), 
-				flag);
+		Short localeId = getUserContext(request).getLocaleId();
+		String defaultValue = actionForm.getDefaultValue();
+		CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity(label, levelId,fieldType, categoryTypeEntity,
+				defaultValue, flag, localeId );
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
-		persistence.addCustomField(customField);*/
+		persistence.addCustomField(customField);
 		logger.debug("Inside create method");
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
@@ -329,6 +326,16 @@ public class CustomFieldsAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		YesNoFlag flag = null;
+		if (actionForm.isMandatoryField())
+			flag = YesNoFlag.YES;
+		else
+			flag = YesNoFlag.NO;
+		Locale locale = getUserLocale(request);
+		String mandatoryStringValue =CustomFieldDefinitionEntity.getMandatoryStringValue(locale, flag.getValue());
+		actionForm.setMandatoryStringValue(mandatoryStringValue);
+		
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 	
@@ -338,6 +345,15 @@ public class CustomFieldsAction extends BaseAction {
 			throws Exception {
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
 		request.setAttribute("category", actionForm.getCategoryTypeName());
+		YesNoFlag flag = null;
+		if (actionForm.isMandatoryField())
+			flag = YesNoFlag.YES;
+		else
+			flag = YesNoFlag.NO;
+		Locale locale = getUserLocale(request);
+		String mandatoryStringValue =CustomFieldDefinitionEntity.getMandatoryStringValue(locale, flag.getValue());
+		actionForm.setMandatoryStringValue(mandatoryStringValue);
+		
 		return mapping.findForward(ActionForwards.editPreview_success.toString());
 	}
 
@@ -392,7 +408,8 @@ public class CustomFieldsAction extends BaseAction {
 		Locale locale = getUserLocale(request);
 		String dataTypeName = getDataType(customField.getFieldType(), locale);
 		actionForm.setDataType(customField.getFieldType().toString());
-		actionForm.setMandatoryField(Boolean.parseBoolean(customField.getMandatoryStringValue()));
+		actionForm.setMandatoryField(customField.isMandatory());
+		actionForm.setMandatoryStringValue(customField.getMandatoryStringValue(locale));
 		List<CustomFieldsListBoxData> dataTypes = new ArrayList<CustomFieldsListBoxData>();
 		CustomFieldsListBoxData dataType = new CustomFieldsListBoxData();
 		dataType.setName(dataTypeName);

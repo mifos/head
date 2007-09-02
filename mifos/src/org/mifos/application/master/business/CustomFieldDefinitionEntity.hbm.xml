@@ -10,10 +10,10 @@
         <id name="fieldId" column="FIELD_ID" type="short" access="field">
             <generator class="native"/>
         </id>
-        <property name="levelId" column="LEVEL_ID" type="short"  not-null="true" access="field"/>
+        <property name="levelId" column="LEVEL_ID" type="short"  access="field"/>
         <property name="fieldType" column="FIELD_TYPE" type="short"  not-null="true" access="field"/>
         <property name="entityType" column="ENTITY_TYPE" type="short"  not-null="true" access="field"/>
-        <property name="defaultValue" column="DEFAULT_VALUE" type="string" access="field"/>
+        <property name="defaultValue" column="DEFAULT_VALUE" type="string" not-null="true" access="field"/>
         <property name="mandatoryFlag" column="MANDATORY_FLAG" type="short"  not-null="true" access="field"/>
         <many-to-one name="lookUpEntity" column="ENTITY_ID" class="org.mifos.application.master.business.MifosLookUpEntity"  not-null="true" lazy="false" access="field"/>
     </class>

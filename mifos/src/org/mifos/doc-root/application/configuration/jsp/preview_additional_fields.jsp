@@ -146,16 +146,8 @@
 		    	<br> 
 		    	
 				<span class="fontnormal"> <mifos:mifoslabel name="configuration.mandatory" isColonRequired="Yes"/> </span>
-				<c:choose>
-					<c:when test="${sessionScope.customfieldsactionform.mandatoryField == true}">
-						<mifos:mifoslabel name="configuration.mandatory_yes" />
-						<br>
-					</c:when>
-					<c:otherwise>
-						<mifos:mifoslabel name="configuration.mandatory_no" />
-						<br>
-					</c:otherwise>
-				</c:choose>
+				<c:out value="${sessionScope.customfieldsactionform.mandatoryStringValue}"/> 
+				<br>
 				
 		    	<span class="fontnormal">
 		        <mifos:mifoslabel name="configuration.data_type" isColonRequired="Yes"/>
@@ -173,7 +165,6 @@
      	 
      	 		<c:out value="${sessionScope.customfieldsactionform.defaultValue}"/>  	 
 		    	<br>      		        
-			    <br>
      			
      			<span class="fontnormal"></span>
 			    

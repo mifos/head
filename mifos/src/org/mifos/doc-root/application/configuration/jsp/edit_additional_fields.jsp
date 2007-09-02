@@ -131,7 +131,7 @@
 				</tr>
 				<tr class="fontnormal">
 					<td width="27%" align="right"><mifos:mifoslabel
-						name="configuration.default_value" mandatory="yes" />:</td>
+						name="configuration.default_value" />:</td>
 					<td width="73%" valign="top"><mifos:mifosalphanumtext
 						property="defaultValue" maxlength="200" /></td>
 				</tr>

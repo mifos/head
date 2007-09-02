@@ -72,8 +72,17 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	private Short customFieldId;
 	private String customFieldIdStr;
 	private String categoryTypeName;
+	private String mandatoryStringValue;
 
 	
+	public String getMandatoryStringValue() {
+		return mandatoryStringValue;
+	}
+
+	public void setMandatoryStringValue(String mandatoryStringValue) {
+		this.mandatoryStringValue = mandatoryStringValue;
+	}
+
 	public String getCategoryType() {
 		return categoryType;
 	}
@@ -165,6 +174,7 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		logger.debug("Inside validate method");
+
 		String method = request.getParameter(Methods.method.toString());
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
@@ -203,7 +213,8 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
 		String method = request.getParameter(Methods.method.toString());
-		if (method != null && method.equals(Methods.preview.toString())) {
+		if (method != null && (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString())
+				|| method.equals(Methods.editField.toString()))) {
 			mandatoryField = false;
 			
 		}

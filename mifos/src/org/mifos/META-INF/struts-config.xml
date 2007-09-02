@@ -1234,7 +1234,7 @@
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
 			<forward name="edit_failure" path="/pages/application/configuration/jsp/view_additional_fields.jsp" />
 			<forward name="edit_success" path="/pages/application/configuration/jsp/edit_additional_fields.jsp" />
-			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/customFieldsAction.do?method=viewCategory" />
             <forward name="update_failure" path="/pages/application/configuration/jsp/preview_edit_additional_fields.jsp" />
             <forward name="cancelUpdate_success" path="/AdminAction.do?method=load" />
             <forward name="editprevious_success" path="/pages/application/configuration/jsp/edit_additional_fields.jsp" />

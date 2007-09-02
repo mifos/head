@@ -44,6 +44,8 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Represents a named custom field of a given type {@link CustomFieldType}
@@ -71,9 +73,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 	 */
 	private final Short entityType;
 
-	private final String defaultValue;
+	private  String defaultValue;
 
-	private final Short mandatoryFlag;
+	private  Short mandatoryFlag;
 
 	/*
 	 * Adding a default constructor is hibernate's requirement and should not be
@@ -89,7 +91,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		this.mandatoryFlag = null;
 	}
 	
-	public CustomFieldDefinitionEntity(MifosLookUpEntity name, short fieldIndex, CustomFieldType fieldType, 
+	public CustomFieldDefinitionEntity(MifosLookUpEntity name, Short fieldIndex, CustomFieldType fieldType, 
 			EntityType entityType, String defaultValue, YesNoFlag mandatory) {
 		this.fieldId = null;       // this should be assigned when persisted to the database 
 		this.lookUpEntity = name;  
@@ -98,6 +100,40 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		this.entityType = entityType.getValue();
 		this.defaultValue = defaultValue;
 		this.mandatoryFlag = mandatory.getValue();
+		
+	}
+	
+	/*
+	 * This constructor is used to create a custom field and after that it will be saved to the 
+	 * database using addCustomField of ApplicationConfigurationPersistence
+	 */
+	public CustomFieldDefinitionEntity(String label, Short levelId, CustomFieldType fieldType, 
+		EntityType entityType, String defaultValue, YesNoFlag mandatory, Short localeId) {
+		
+		MifosLookUpEntity lookupEntity = new MifosLookUpEntity();
+		lookupEntity.setEntityType(label);
+		
+		Set<LookUpLabelEntity> lookUpLabels = new HashSet<LookUpLabelEntity>();
+		LookUpLabelEntity lookupLabel = new LookUpLabelEntity();
+		lookupLabel.setLabelName(label);
+		lookupLabel.setLookUpEntity(lookupEntity);
+		lookupLabel.setLocaleId(localeId);
+		lookUpLabels.add(lookupLabel);
+		lookupEntity.setLookUpLabels(lookUpLabels);
+		
+		Set<LookUpValueEntity> lookUpValues = new HashSet<LookUpValueEntity>();
+		LookUpValueEntity lookupValue = new LookUpValueEntity();
+		lookupValue.setLookUpName("");
+		lookupValue.setLookUpEntity(lookupEntity);
+		lookUpValues.add(lookupValue);
+		lookupEntity.setLookUpValues(lookUpValues);
+		this.lookUpEntity = lookupEntity;
+		this.fieldType = fieldType.value;
+		this.levelId = levelId;
+		this.defaultValue = defaultValue;
+		this.mandatoryFlag = mandatory.getValue();
+		this.entityType = entityType.getValue();
+		this.fieldId = null;
 		
 	}
 	
@@ -129,9 +165,17 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 	public String getDefaultValue() {
 		return defaultValue;
 	}
+	
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 
 	public boolean isMandatory() {
 		return mandatoryFlag.equals(YesNoFlag.YES.getValue());
+	}
+	
+	public void setMandatoryFlag(Short mandatoryFlag) {
+		this.mandatoryFlag = mandatoryFlag;
 	}
 
 	@Override
@@ -147,10 +191,39 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 			return false;
 		}
 	}
+	
+	public static String getMandatoryStringValue(Locale locale, Short flag) {
+		return MessageLookup.getInstance().lookup(
+				YesNoFlag.fromInt(flag), locale);
+	}
 
 	public String getMandatoryStringValue(Locale locale) {
 		return MessageLookup.getInstance().lookup(
 				YesNoFlag.fromInt(mandatoryFlag), locale);
+	}
+	
+	public void setLabel(String label, Short localeId)
+	{
+		for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
+			if (entity.getLocaleId().equals(localeId))
+			{
+				entity.setLabelName(label);
+				break;
+			}
+		}
+	}
+	
+	public String getLabel(Short localeId)
+	{
+		/*String label = null;
+		for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
+			if (entity.getLocaleId().equals(localeId))
+			{
+				label = entity.getLabelName();
+				break;
+			}
+		}*/
+		return lookUpEntity.getLabelForLocale(localeId);
 	}
 
 	/*

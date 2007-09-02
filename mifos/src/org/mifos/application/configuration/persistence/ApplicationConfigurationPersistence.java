@@ -51,6 +51,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.persistence.MasterPersistence; 
 
 /**
  * This class is mainly about lookup values.
@@ -130,7 +131,14 @@ public class ApplicationConfigurationPersistence extends Persistence {
 	}
 	
 	public void addCustomField(CustomFieldDefinitionEntity customField) throws PersistenceException {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		masterPersistence.addLookUpEntity(customField.getLookUpEntity());	
 		createOrUpdate(customField);
+	}
+	
+	public void updateCustomField(CustomFieldDefinitionEntity customField) throws PersistenceException {
+		createOrUpdate(customField);
+		createOrUpdate(customField.getLookUpEntity());
 	}
 
 }

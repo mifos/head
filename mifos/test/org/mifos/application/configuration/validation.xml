@@ -188,17 +188,26 @@
 				<msg name="required" key="errors.mandatory_selectbox" bundle="configurationUIResources" />
 				<arg0 key="configuration.category" />
 			</field>
-			<field property="labelName" depends="required">
+			<field property="labelName" depends="required,maxlength">
 				<msg name="required" key="errors.mandatory_textbox" bundle="configurationUIResources" />
-				<arg0 key="configuration.label" />
+				<msg name="maxlength" key="errors.toolong" bundle="configurationUIResources" />
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false" />
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>200</var-value>
+                </var>
 			</field>
 			<field property="dataType" depends="required">
 				<msg name="required" key="errors.mandatory_selectbox" bundle="configurationUIResources" />
 				<arg0 key="configuration.data_type" />
 			</field>
-			<field property="defaultValue" depends="required">
-				<msg name="required" key="errors.mandatory_textbox" bundle="configurationUIResources" />
-				<arg0 key="configuration.default_value" />
+			<field property="defaultValue" depends="maxlength">
+				<msg name="maxlength" key="errors.toolong" bundle="configurationUIResources" />
+				<arg0 name="maxlength" key="${var:maxlength}" resource="false" />
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>200</var-value>
+                </var>
 			</field>
 		</form>
         
