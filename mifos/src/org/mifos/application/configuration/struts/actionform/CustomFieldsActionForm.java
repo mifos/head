@@ -56,6 +56,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import java.text.DateFormat;
 import java.util.Locale;
+import org.mifos.framework.util.helpers.DateUtils;
 
 
 
@@ -156,9 +157,10 @@ public class CustomFieldsActionForm extends BaseActionForm{
 		{
 			try
 			{
-				Locale locale = getUserLocale(request);
-				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-				df.parse(defaultValue);
+				// for now just use this function to validate the string. 
+				// need to check more when the exact format is specified
+				DateUtils.getDate(defaultValue);
+					
 
 			}
 			catch (Exception e)

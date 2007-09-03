@@ -76,6 +76,10 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.DateUtils;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import org.mifos.application.configuration.business.MifosConfiguration;
 
 
 
@@ -244,16 +248,29 @@ public class CustomFieldsAction extends BaseAction {
 				.toString());
 	}
 	
-	
+	private String changeDefaultValueDateToDBFormat(String defaultValue, Locale locale)
+	{
+		SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
+		.getDateInstance(DateFormat.SHORT, locale);
+		String userfmt = DateUtils.convertToCurrentDateFormat(shortFormat
+		.toPattern());
+		return DateUtils.convertUserToDbFmt(defaultValue, userfmt);
+	}
+
 	
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
+		Locale locale = getUserLocale(request);
 		CustomFieldDefinitionEntity customField = (CustomFieldDefinitionEntity)SessionUtils.getAttribute(
 				ConfigurationConstants.CURRENT_CUSTOM_FIELD, request);
-		customField.setDefaultValue(actionForm.getDefaultValue());
+		Short dataType = Short.parseShort(actionForm.getDataType());
+		if (dataType.equals(CustomFieldType.DATE.getValue()))
+			customField.setDefaultValue(changeDefaultValueDateToDBFormat(actionForm.getDefaultValue(), locale));
+		else
+			customField.setDefaultValue(actionForm.getDefaultValue());
 		YesNoFlag flag = null;
 		if (actionForm.isMandatoryField())
 			flag = YesNoFlag.YES;
@@ -261,11 +278,14 @@ public class CustomFieldsAction extends BaseAction {
 			flag = YesNoFlag.NO;
 		customField.setMandatoryFlag(flag.getValue());
 		Short localeId = getUserContext(request).getLocaleId();
-		customField.setLabel(actionForm.getLabelName(), localeId);
+		String labelName = actionForm.getLabelName();
+		customField.setLabel(labelName, localeId);
 		
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.updateCustomField(customField);
+		//MifosConfiguration.getInstance().reload();
 		request.setAttribute("category", actionForm.getCategoryTypeName());
+		MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(), labelName, localeId);
 		logger.debug("Inside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
@@ -297,6 +317,10 @@ public class CustomFieldsAction extends BaseAction {
 		String categoryType = actionForm.getCategoryType();
 		EntityType categoryTypeEntity = EntityType.fromInt(Integer.parseInt(categoryType));
 		CustomFieldType fieldType = CustomFieldType.fromInt(Integer.parseInt(actionForm.getDataType()));
+		String defaultValue = actionForm.getDefaultValue();
+		if (fieldType.equals(CustomFieldType.DATE))
+			defaultValue = changeDefaultValueDateToDBFormat(defaultValue, getUserLocale(request));
+		
 		String label = actionForm.getLabelName();
 		Short levelId = getLevelId(categoryType);
 		YesNoFlag flag = null;
@@ -305,11 +329,11 @@ public class CustomFieldsAction extends BaseAction {
 		else
 			flag = YesNoFlag.NO;
 		Short localeId = getUserContext(request).getLocaleId();
-		String defaultValue = actionForm.getDefaultValue();
 		CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity(label, levelId,fieldType, categoryTypeEntity,
 				defaultValue, flag, localeId );
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.addCustomField(customField);
+		MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(), label, localeId);
 		logger.debug("Inside create method");
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
@@ -399,7 +423,7 @@ public class CustomFieldsAction extends BaseAction {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomFieldDefinitionEntity customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
 		actionForm.setCategoryType(customField.getEntityType().toString()); // entity type id
-		actionForm.setDefaultValue(customField.getDefaultValue());
+		
 		String label = customField.getLookUpEntity().getLabelForLocale(localeId);
 		actionForm.setLabelName(label);
 		String entityTypeName = getEntityTypeName(customField.getEntityType(), localeId);
@@ -407,7 +431,13 @@ public class CustomFieldsAction extends BaseAction {
 		request.setAttribute("category", entityTypeName);
 		Locale locale = getUserLocale(request);
 		String dataTypeName = getDataType(customField.getFieldType(), locale);
-		actionForm.setDataType(customField.getFieldType().toString());
+		Short fieldType = customField.getFieldType();
+		String defaultValue = customField.getDefaultValue();
+		if (fieldType.equals(CustomFieldType.DATE.getValue()) && !StringUtils.isNullOrEmpty(defaultValue))
+			actionForm.setDefaultValue(DateUtils.getUserLocaleDate(locale, defaultValue));
+		else
+			actionForm.setDefaultValue(defaultValue);
+		actionForm.setDataType(fieldType.toString());
 		actionForm.setMandatoryField(customField.isMandatory());
 		actionForm.setMandatoryStringValue(customField.getMandatoryStringValue(locale));
 		List<CustomFieldsListBoxData> dataTypes = new ArrayList<CustomFieldsListBoxData>();

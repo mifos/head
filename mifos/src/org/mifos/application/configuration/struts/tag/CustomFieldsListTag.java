@@ -52,6 +52,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport { 
 	private String actionName;
@@ -71,6 +73,14 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 		methodName = method;
 		flowKey = flow;
 		categoryName = category;
+	}
+	
+	private String getDefaultValue(CustomFieldDefinitionEntity customField, UserContext userContext)
+	{
+		String defaultValue = customField.getDefaultValue();
+		if (customField.getFieldType().equals(CustomFieldType.DATE.getValue()) && !StringUtils.isNullOrEmpty(defaultValue))
+			defaultValue = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), defaultValue);
+		return defaultValue;
 	}
 
 	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
@@ -94,7 +104,7 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 				if (customField.getDefaultValue() == null) {
 					html.nonBreakingSpace();
 				} else {
-					html.text(customField.getDefaultValue());
+					html.text(getDefaultValue(customField, userContext));
 				}
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "17%", "class", "drawtablerow");

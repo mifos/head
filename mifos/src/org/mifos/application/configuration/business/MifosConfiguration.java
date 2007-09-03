@@ -59,6 +59,23 @@ public class MifosConfiguration {
 		initializeloacleIdCache();
 
 	}
+	
+	
+	
+	public void updateLabelKey(String keyString, String newLabelValue, Short localeId)
+	{
+		synchronized(labelCache)
+		{
+			LabelKey key = new LabelKey( keyString,localeId);
+			if (labelCache.containsKey(key))
+			{
+				labelCache.remove(key);
+				labelCache.put(key, newLabelValue);
+			}
+			else
+				labelCache.put(key, newLabelValue);
+		}
+	}
 
 	private void initializeLabelCache() {
 		ApplicationConfigurationPersistence configurationPersistence = 

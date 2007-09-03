@@ -10,8 +10,10 @@
         <id name="fieldId" column="FIELD_ID" type="short" access="field">
             <generator class="native"/>
         </id>
+        <!-- the level id is the foreign key to the level_id of the customer_level table -->
         <property name="levelId" column="LEVEL_ID" type="short"  access="field"/>
         <property name="fieldType" column="FIELD_TYPE" type="short"  not-null="true" access="field"/>
+        <!-- the entity Type is the foreign key to the ENTITY_TYPE_ID of the ENTITY_MASTER table -->
         <property name="entityType" column="ENTITY_TYPE" type="short"  not-null="true" access="field"/>
         <property name="defaultValue" column="DEFAULT_VALUE" type="string" not-null="true" access="field"/>
         <property name="mandatoryFlag" column="MANDATORY_FLAG" type="short"  not-null="true" access="field"/>

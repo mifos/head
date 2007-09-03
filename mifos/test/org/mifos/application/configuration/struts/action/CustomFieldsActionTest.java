@@ -408,6 +408,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		String newLabelName = "new label name";
 		addRequestParameter("labelName", newLabelName);
 		addRequestParameter("defaultValue", newDefaultValue);
+		addRequestParameter("dataType", "1");
 		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		SessionUtils.setAttribute(
 				ConfigurationConstants.CURRENT_CUSTOM_FIELD, customField, request);
@@ -448,7 +449,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("categoryType", CustomFieldCategory.Group.mapToEntityType().getValue().toString());
 		addRequestParameter("labelName", "Custom Field for Group");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString());
-		addRequestParameter("defaultValue", "08/20/2007");
+		addRequestParameter("defaultValue", "20/08/2007");
 		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
 		actionPerform();
 		verifyNoActionErrors();
