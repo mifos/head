@@ -22,6 +22,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -118,7 +119,7 @@ public class AddActivityTest {
 				DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
 		activity.upgrade(HibernateUtil.getSessionTL().connection());
 
-		assertEquals(minActivityId - 1, AddActivity
+		assertEquals(minActivityId - 1, ActivityGenerator
 				.calculateDynamicActivityId());
 
 		activity.downgrade(HibernateUtil.getSessionTL().connection());

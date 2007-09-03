@@ -25,6 +25,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
+import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -111,7 +112,7 @@ public class ReportsCategoryAction extends BaseAction {
 		String categoryName = defineNewCategoryForm.getCategoryName();
 		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
 
-		int newActivityId = AddActivity.calculateDynamicActivityId();
+		int newActivityId = ActivityGenerator.calculateDynamicActivityId();
 
 		if (newActivityId < Short.MIN_VALUE) {
 			ActionErrors errors = new ActionErrors();

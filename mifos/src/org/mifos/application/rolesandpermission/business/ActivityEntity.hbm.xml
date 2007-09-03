@@ -8,19 +8,18 @@
 		name="org.mifos.application.rolesandpermission.business.ActivityEntity"
 		table="ACTIVITY">
 		<id name="id" type="short" column="ACTIVITY_ID" access="field">
-			<generator class="native" />
 		</id>
 		<many-to-one name="parent" column="PARENT_ID"
 			class="org.mifos.application.rolesandpermission.business.ActivityEntity"
-			cascade="none" update="false" insert="false" access="field" />
+			cascade="none" update="true" insert="true" access="field" />
 		<many-to-one name="activityNameLookupValues"
 			column="ACTIVITY_NAME_LOOKUP_ID"
 			class="org.mifos.application.master.business.LookUpValueEntity"
-			cascade="none" update="false" insert="false" access="field" />
+			cascade="none" update="true" insert="true" access="field" />
 		<many-to-one name="descriptionLookupValues"
 			column="DESCRIPTION_LOOKUP_ID"
 			class="org.mifos.application.master.business.LookUpValueEntity"
-			cascade="none" update="false" insert="false" access="field" />
+			cascade="none" update="true" insert="true" access="field" />
 	</class>
 	
 	<query name="getAllActivities">

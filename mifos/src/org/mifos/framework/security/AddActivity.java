@@ -8,10 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddActivity extends Upgrade {
@@ -156,15 +153,5 @@ public class AddActivity extends Upgrade {
 		statement.close();
 	}
 
-	public static int calculateDynamicActivityId() throws ServiceException {
-		int activityId = 0;
-		for (ActivityEntity activity : new RolesPermissionsBusinessService()
-				.getActivities()) {
-			if (activity.getId().intValue() < activityId)
-				activityId = activity.getId();
-		}
-		int newActivityId = activityId - 1;
-		return newActivityId;
-	}
-
+	
 }

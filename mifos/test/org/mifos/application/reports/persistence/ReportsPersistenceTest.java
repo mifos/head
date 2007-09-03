@@ -4,7 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsDataSource;
@@ -12,6 +13,7 @@ import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 
 public class ReportsPersistenceTest extends MifosTestCase {
@@ -168,7 +170,11 @@ public class ReportsPersistenceTest extends MifosTestCase {
 	 }
 	 
 	 public void testGetAllReports(){
-		 assertEquals(29,reportsPersistence.getAllReports().size());
+		 org.hibernate.Session session= HibernateUtil.getSessionTL();
+		 Query query = session.createQuery("select count(*) from ReportsBO");
+		 List list = query.list();
+		 int reportsNum = ((Integer)list.get(0)).intValue();
+		 assertEquals(reportsNum, reportsPersistence.getAllReports().size());
 	 }
 	 
 	 public void testViewDataSource() throws Exception {

@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+import org.hibernate.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
@@ -34,8 +35,10 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
+import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -132,11 +135,11 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO = new ReportsBO();
 		reportJasperMap = new ReportsJasperMap();
 
-		Connection conn = new ReportsPersistence().getConnection();
+//		Connection conn = new ReportsPersistence().getConnection();
 
 		parentActivity = category.getActivityId();
 
-		int newActivityId = AddActivity.calculateDynamicActivityId();
+		int newActivityId = ActivityGenerator.calculateDynamicActivityId();
 
 		if (newActivityId < Short.MIN_VALUE) {
 			ActionErrors errors = new ActionErrors();
@@ -152,8 +155,14 @@ public class BirtReportsUploadAction extends BaseAction {
 				(short) newActivityId, parentActivity,
 				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
 						+ uploadForm.getReportTitle());
-		activity.upgrade(conn);
+//		activity.upgrade(conn);
+		Session session = HibernateUtil.getSessionTL();
+		
+		ActivityGenerator activityGenerator = new ActivityGenerator();
+		String lookUpDescription = activityNameHead + uploadForm.getReportTitle();
+		activityGenerator.upgradeUsingHQL(session, parentActivity, lookUpDescription);
 
+		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);

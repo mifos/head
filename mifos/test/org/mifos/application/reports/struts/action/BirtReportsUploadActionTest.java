@@ -3,8 +3,12 @@ package org.mifos.application.reports.struts.action;
 import java.util.List;
 
 import org.apache.struts.upload.FormFile;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
+import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
@@ -86,7 +90,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		int newActivityId = activities.get(activities.size() - 1).getId() + 1;
 
 		// Upload a report creating an activity for the report
-		FormFile file = new MockFormFile("testFilename");
+		FormFile file = new MockFormFile("testFilename.rptdesign");
 		BirtReportsUploadActionForm actionForm = new BirtReportsUploadActionForm();
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "upload");
@@ -190,4 +194,43 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		String[] errors = { ReportsConstants.ERROR_FILE };
 		verifyActionErrors(errors);
 	}	
+	
+	public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
+		
+	
+		setRequestPathInfo("/birtReportsUploadAction.do");
+
+		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
+		form.setReportTitle("test1ReportsTitle");
+		form.setReportCategoryId("1");
+		form.setIsActive("1");
+		form.setFile(new MockFormFile("testFileName1.rptdesign"));
+		setActionForm(form);
+		
+		addRequestParameter("method", "upload");
+		actionPerform();
+
+		verifyNoActionErrors();
+		verifyForward("create_success");
+		
+		removeReport("test1ReportsTitle", (short)1);
+	
+	}
+
+	private void removeReport(String reportName, short categoryId) {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("from ReportsBO rbo where rbo.reportName=:rname and rbo.reportsCategoryBO=:rcbo");
+		query.setParameter("rname", reportName);
+		ReportsCategoryBO rcbo = (ReportsCategoryBO)session.load(ReportsCategoryBO.class, Short.valueOf(categoryId));
+		query.setParameter("rcbo", rcbo);
+		ReportsBO rbo = (ReportsBO) query.list().get(0);
+		rcbo.getReportsSet().remove(rbo);
+		rbo.setReportsCategoryBO(null);
+		rbo.setReportsJasperMap(null);
+		session.delete(rbo);
+		tx.commit();
+	}
+	
+	
 }

@@ -31,6 +31,13 @@ public class ActivityEntity extends PersistentObject {
 		this.activityNameLookupValues = null;
 		this.descriptionLookupValues = null;
 	}
+	
+	public ActivityEntity(short id, ActivityEntity parentActivityEntity, LookUpValueEntity lookUpValueEntity) {
+		this.id = id;
+		this.parent = parentActivityEntity;
+		this.activityNameLookupValues = lookUpValueEntity;
+		this.descriptionLookupValues = this.activityNameLookupValues;
+	}
 
 	public Short getId() {
 		return id;
