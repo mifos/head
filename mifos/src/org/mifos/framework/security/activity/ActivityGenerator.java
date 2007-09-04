@@ -11,7 +11,10 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.business.RoleActivityEntity;
+import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -34,6 +37,7 @@ public class ActivityGenerator {
 			insertLookUpValue(session);
 			insertLookUpValueLocale(session, lookUpId, lookUpDescription);
 			insertActivity(session, parentActivity, lookUpId);
+			insertRolesActivity(session);
 			tx.commit();
 		}
 		catch (Exception ex) {
@@ -42,17 +46,29 @@ public class ActivityGenerator {
 
 	}
 
+	private void insertRolesActivity(Session session) {
+		
+		RoleBO role = (RoleBO)session.load(RoleBO.class, (short)RolesAndPermissionConstants.ADMIN_ROLE);
+		
+	    RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role, activityEntity);
+		session.save(roleActivityEntity);
+	}
+
 	private void insertActivity(Session session, short parentActivity,
 			int lookUpId) throws ServiceException {
-		ActivityEntity parentActivityEntity = (ActivityEntity) session.load(ActivityEntity.class, parentActivity);
-		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) session.load(LookUpValueEntity.class, lookUpId);
-		activityEntity = new ActivityEntity((short) calculateDynamicActivityId(), parentActivityEntity, lookupValueEntity);
+		ActivityEntity parentActivityEntity = (ActivityEntity) session.load(
+				ActivityEntity.class, parentActivity);
+		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) session.load(
+				LookUpValueEntity.class, lookUpId);
+		activityEntity = new ActivityEntity(
+				(short) calculateDynamicActivityId(), parentActivityEntity,
+				lookupValueEntity);
 		session.save(activityEntity);
 	}
-	
-//	public ActivityEntity getActivity() {
-//		return activityEntity;
-//	}
+
+	//	public ActivityEntity getActivity() {
+	//		return activityEntity;
+	//	}
 
 	private void insertLookUpValueLocale(Session session, int lookUpId,
 			String lookUpDescription) {
@@ -66,20 +82,20 @@ public class ActivityGenerator {
 
 	private void insertLookUpValue(Session session) throws PersistenceException {
 
-//		MifosLookUpEntity lookUpEntity = new MifosLookUpEntity();
-//		lookUpEntity.setEntityId((short) MifosLookUpEntity.ACTIVITY);
+		//		MifosLookUpEntity lookUpEntity = new MifosLookUpEntity();
+		//		lookUpEntity.setEntityId((short) MifosLookUpEntity.ACTIVITY);
 
 		LookUpValueEntity anLookUp = new LookUpValueEntity();
-		anLookUp.setLookUpEntity((MifosLookUpEntity) session.load(MifosLookUpEntity.class, (short)MifosLookUpEntity.ACTIVITY));
+		anLookUp.setLookUpEntity((MifosLookUpEntity) session.load(
+				MifosLookUpEntity.class, (short) MifosLookUpEntity.ACTIVITY));
 		session.save(anLookUp);
 		lookUpId = anLookUp.getLookUpId().intValue();
 	}
 
 	public LookUpValueLocaleEntity getLookUpValueLocaleEntity(Session session,
 			int lookUpId) {
-		Query query = session
-				.createQuery(
-						"from LookUpValueLocaleEntity u where u.lookUpId = :anId")
+		Query query = session.createQuery(
+				"from LookUpValueLocaleEntity u where u.lookUpId = :anId")
 				.setParameter("anId", new Integer(lookUpId));
 		List list = query.list();
 		if (list == null || list.isEmpty())

@@ -24,10 +24,17 @@
 		               </span><br>
 		              <span class="fontnormal">
 		              	<mifos:mifoslabel name="reports.instructions" bundle="reportsUIResources"/>   
+		              	<%
+						 if(isDisplay) {
+					    %>
 		              	<mifos:mifoslabel name="reports.or" bundle="reportsUIResources"/> 
 		              	<html-el:link action="reportsAction.do?method=getAdminReportPage&viewPath=administerreports_path">  
-		              	<mifos:mifoslabel name="reports.administerreports" bundle="reportsUIResources"/>          			               		              	
+		              	<mifos:mifoslabel name="reports.administerreports" bundle="reportsUIResources"/> 
 		              	</html-el:link>         			               		              	
+		              	<%
+		              	}
+		              	%>  
+		              	.       			               		              	
 			          </span>         
 
 		            </td>		            
