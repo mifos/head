@@ -56,8 +56,12 @@ public class ActivityGenerator {
 
 	private void insertActivity(Session session, short parentActivity,
 			int lookUpId) throws ServiceException {
-		ActivityEntity parentActivityEntity = (ActivityEntity) session.load(
+		ActivityEntity parentActivityEntity;
+		if(parentActivity != 0)
+			parentActivityEntity = (ActivityEntity) session.load(
 				ActivityEntity.class, parentActivity);
+		else
+			parentActivityEntity = null;
 		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) session.load(
 				LookUpValueEntity.class, lookUpId);
 		activityEntity = new ActivityEntity(

@@ -135,8 +135,6 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO = new ReportsBO();
 		reportJasperMap = new ReportsJasperMap();
 
-//		Connection conn = new ReportsPersistence().getConnection();
-
 		parentActivity = category.getActivityId();
 
 		int newActivityId = ActivityGenerator.calculateDynamicActivityId();
@@ -155,7 +153,6 @@ public class BirtReportsUploadAction extends BaseAction {
 				(short) newActivityId, parentActivity,
 				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
 						+ uploadForm.getReportTitle());
-//		activity.upgrade(conn);
 		Session session = HibernateUtil.getSessionTL();
 		
 		ActivityGenerator activityGenerator = new ActivityGenerator();

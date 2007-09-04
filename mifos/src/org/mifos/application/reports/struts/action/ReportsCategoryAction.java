@@ -11,6 +11,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.hibernate.Session;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
@@ -23,6 +24,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.activity.ActivityGenerator;
@@ -123,13 +125,11 @@ public class ReportsCategoryAction extends BaseAction {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
-
-		Connection conn = new ReportsPersistence().getConnection();
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short) newActivityId, SecurityConstants.REPORTS_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, categoryName)
-				.upgrade(conn);
-
+        Session session = HibernateUtil.getSessionTL();
+		
+		ActivityGenerator activityGenerator = new ActivityGenerator();
+		activityGenerator.upgradeUsingHQL(session, (short)0, categoryName);
+        
 		reportsCategoryBO.setActivityId((short) newActivityId);
 		reportsCategoryBO.setReportCategoryName(categoryName);
 
