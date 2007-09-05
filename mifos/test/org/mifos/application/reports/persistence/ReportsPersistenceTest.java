@@ -28,8 +28,11 @@ public class ReportsPersistenceTest extends MifosTestCase {
 	public void testGetAllReportCategories() {
 		List<ReportsCategoryBO> listOfReportCategories = reportsPersistence
 				.getAllReportCategories();
-
-		assertEquals(7, listOfReportCategories.size());
+         Session session = HibernateUtil.getSessionTL();
+         Query query = session.createQuery("select count(*) from ReportsCategoryBO");
+         List list = query.list();
+         
+		assertEquals(list.get(0), listOfReportCategories.size());
 		assertEquals("1", listOfReportCategories.get(0)
 				.getReportCategoryId().toString());
 		assertEquals("Client Detail",
