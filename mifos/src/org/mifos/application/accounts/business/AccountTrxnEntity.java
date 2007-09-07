@@ -84,6 +84,8 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	protected AccountTrxnEntity() {
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
+		// Note: the GK mifos branch is using a TreeSet instead of HashSet here.
+		// Is there a good reason to use a TreeSet rather than HashSet?
 		financialTransactions = new HashSet<FinancialTransactionBO>();
 		accountActionEntity = null;
 		installmentId = null;
