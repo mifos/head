@@ -11,7 +11,7 @@
 		<version name="versionNo" column="VERSION_NO" type="integer" 
 			unsaved-value="null" />
 
-		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM" 
+        <property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"
 			access="field" />
 		<property name="createdBy" column="CREATED_BY" not-null="true" 
 			update="false" lazy="true" />
@@ -87,7 +87,8 @@
 			table="LOAN_ACCOUNT">
 			<key column="ACCOUNT_ID" />
 
-			<property name="groupFlag" column="GROUP_FLAG" />
+            <property name="redone" column="REDONE" type="boolean"/>        
+            <property name="groupFlag" column="GROUP_FLAG" />
 			<property name="businessActivityId" column="BUSINESS_ACTIVITIES_ID" />
 			<property name="interestRate" column="INTEREST_RATE" lazy="true" />
 			<property name="noOfInstallments" column="NO_OF_INSTALLMENTS" not-null="true" />

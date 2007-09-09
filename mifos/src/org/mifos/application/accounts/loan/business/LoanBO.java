@@ -159,7 +159,9 @@ public class LoanBO extends AccountBO {
 
 	private FundBO fund;
 
-	/**
+    private Boolean redone;
+
+    /**
 	 Is this used?  Is it related to the activity IDs in places
 	 like
 	 {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} 
@@ -186,7 +188,8 @@ public class LoanBO extends AccountBO {
 		this.loanPrdPersistence = null;
 		this.performanceHistory = null;
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-	}
+        this.redone = false;
+    }
 
     public static LoanBO redoLoan(UserContext userContext, LoanOfferingBO loanOffering,
                                       CustomerBO customer, AccountState accountState, Money loanAmount,
@@ -224,7 +227,7 @@ public class LoanBO extends AccountBO {
             
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount,
                 noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
-                interestRate, gracePeriodDuration, fund, feeViews, customFields);
+                interestRate, gracePeriodDuration, fund, feeViews, customFields, true);
     }
 
     public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering,
@@ -268,7 +271,7 @@ public class LoanBO extends AccountBO {
 
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, 
                 noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
-                interestRate, gracePeriodDuration, fund, feeViews, customFields);
+                interestRate, gracePeriodDuration, fund, feeViews, customFields, false);
     }
 
     private LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
@@ -276,11 +279,12 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields) throws AccountException {
+			List<CustomFieldView> customFields, Boolean isRedone) throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 
         setCreateDetails();
-		this.loanOffering = loanOffering;
+        this.redone = isRedone;
+        this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
 		this.loanBalance = loanAmount;
 		this.noOfInstallments = noOfinstallments;
@@ -1306,10 +1310,11 @@ public class LoanBO extends AccountBO {
 				.getAccountPayments()) {
 			LoanScheduleEntity accountAction = (LoanScheduleEntity) getAccountActionDate(accountPaymentData
 					.getInstallmentId());
-			if (accountAction.isPaid())
+			if (accountAction.isPaid()) {
 				throw new AccountException("errors.update",
 						new String[] { getGlobalAccountNum() });
-			if (accountAction.getInstallmentId().equals(
+            }
+            if (accountAction.getInstallmentId().equals(
 					lastAccountAction.getInstallmentId())
 					&& accountPaymentData.isPaid()) {
 				changeLoanStatus(AccountState.LOANACC_OBLIGATIONSMET,
@@ -2964,7 +2969,13 @@ public class LoanBO extends AccountBO {
 	}
 
     public boolean isRedone() {
-        return this.getCreatedDate().getTime() > this.getDisbursementDate().getTime();
+        return this.redone;
+    }
+    Boolean getRedone() {
+        return this.redone;
+    }
+    void setRedone(Boolean val) {
+        this.redone = val;
     }
 
     private void makeEarlyRepaymentForDueInstallments(
