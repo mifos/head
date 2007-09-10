@@ -25,5 +25,8 @@
 	<query name="getAllActivities">
             <![CDATA[ from ActivityEntity ae order by ae.id]]>
     </query>
+	<query name="activityEntity.getActivityEntityByLookUpValueEntity">
+            <![CDATA[ from ActivityEntity ae where ae.activityNameLookupValues=:aLookUpValueEntity]]>
+    </query>
 </hibernate-mapping>
 

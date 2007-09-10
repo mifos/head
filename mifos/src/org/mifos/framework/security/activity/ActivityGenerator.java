@@ -1,19 +1,19 @@
 package org.mifos.framework.security.activity;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -34,10 +34,10 @@ public class ActivityGenerator {
 
 		Transaction tx = session.beginTransaction();
 		try {
-			insertLookUpValue(session);
-			insertLookUpValueLocale(session, lookUpId, lookUpDescription);
-			insertActivity(session, parentActivity, lookUpId);
-			insertRolesActivity(session);
+			insertLookUpValue();
+			insertLookUpValueLocale(lookUpId, lookUpDescription);
+			insertActivity(parentActivity, lookUpId);
+			insertRolesActivity();
 			tx.commit();
 		}
 		catch (Exception ex) {
@@ -46,87 +46,111 @@ public class ActivityGenerator {
 
 	}
 
-	private void insertRolesActivity(Session session) {
-		
-		RoleBO role = (RoleBO)session.load(RoleBO.class, (short)RolesAndPermissionConstants.ADMIN_ROLE);
-		
-	    RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role, activityEntity);
-		session.save(roleActivityEntity);
+	private void insertRolesActivity() throws PersistenceException {
+		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		RoleBO role = (RoleBO) rpp.getPersistentObject(RoleBO.class,
+				(short) RolesAndPermissionConstants.ADMIN_ROLE);
+
+		RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role,
+				activityEntity);
+		rpp.createOrUpdate(roleActivityEntity);
 	}
 
-	private void insertActivity(Session session, short parentActivity,
-			int lookUpId) throws ServiceException {
+	private void insertActivity(short parentActivity, int lookUpId)
+			throws ServiceException, ActivityGeneratorException,
+			PersistenceException {
 		ActivityEntity parentActivityEntity;
-		if(parentActivity != 0)
-			parentActivityEntity = (ActivityEntity) session.load(
-				ActivityEntity.class, parentActivity);
-		else
-			parentActivityEntity = null;
-		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) session.load(
-				LookUpValueEntity.class, lookUpId);
+		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		if (parentActivity != 0)
+			parentActivityEntity = (ActivityEntity) rpp.getPersistentObject(
+					ActivityEntity.class, parentActivity);
+		else parentActivityEntity = null;
+		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) rpp
+				.getPersistentObject(LookUpValueEntity.class, lookUpId);
 		activityEntity = new ActivityEntity(
 				(short) calculateDynamicActivityId(), parentActivityEntity,
 				lookupValueEntity);
-		session.save(activityEntity);
+		rpp.createOrUpdate(activityEntity);
 	}
 
-	//	public ActivityEntity getActivity() {
-	//		return activityEntity;
-	//	}
 
-	private void insertLookUpValueLocale(Session session, int lookUpId,
-			String lookUpDescription) {
+	private void insertLookUpValueLocale(int lookUpId, String lookUpDescription)
+			throws PersistenceException {
+		MasterPersistence mp = new MasterPersistence();
 		LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
 		lookUpValueLocaleEntity.setLookUpId(new Integer(lookUpId));
 		lookUpValueLocaleEntity
 				.setLocaleId(DatabaseVersionPersistence.ENGLISH_LOCALE);
 		lookUpValueLocaleEntity.setLookUpValue(lookUpDescription);
-		session.save(lookUpValueLocaleEntity);
+		mp.createOrUpdate(lookUpValueLocaleEntity);
 	}
 
-	private void insertLookUpValue(Session session) throws PersistenceException {
-
-		//		MifosLookUpEntity lookUpEntity = new MifosLookUpEntity();
-		//		lookUpEntity.setEntityId((short) MifosLookUpEntity.ACTIVITY);
+	private void insertLookUpValue() throws PersistenceException {
 
 		LookUpValueEntity anLookUp = new LookUpValueEntity();
-		anLookUp.setLookUpEntity((MifosLookUpEntity) session.load(
-				MifosLookUpEntity.class, (short) MifosLookUpEntity.ACTIVITY));
-		session.save(anLookUp);
+		MasterPersistence mp = new MasterPersistence();
+		MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) mp
+				.getPersistentObject(MifosLookUpEntity.class, Short
+						.valueOf((short) MifosLookUpEntity.ACTIVITY));
+		anLookUp.setLookUpEntity(lookUpEntity);
+		mp.createOrUpdate(anLookUp);
 		lookUpId = anLookUp.getLookUpId().intValue();
 	}
 
-	public LookUpValueLocaleEntity getLookUpValueLocaleEntity(Session session,
-			int lookUpId) {
-		Query query = session.createQuery(
-				"from LookUpValueLocaleEntity u where u.lookUpId = :anId")
-				.setParameter("anId", new Integer(lookUpId));
-		List list = query.list();
-		if (list == null || list.isEmpty())
-			return null;
-		else return (LookUpValueLocaleEntity) list.get(0);
+	public LookUpValueLocaleEntity getLookUpValueLocaleEntity(short localId, int lookUpId)
+			throws PersistenceException {
+		MasterPersistence mp = new MasterPersistence();
+		return mp.retrieveOneLookUpValueLocaleEntity(localId, lookUpId);
 	}
 
-	public ActivityEntity getActivityEntity(Session session, int lookUpId) {
-		Query query = session
-				.createQuery(
-						"select u from ActivityEntity u where u.activityNameLookupValues = :anId")
-				.setParameter("anId", new Integer(lookUpId));
-		List list = query.list();
-		if (list == null || list.isEmpty())
-			return null;
-		else return (ActivityEntity) list.get(0);
+	public ActivityEntity getActivityEntity(Session session, int lookUpId)
+			throws PersistenceException {
+		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		return rpp.retrieveOneActivityEntity(lookUpId);
 	}
 
-	public static int calculateDynamicActivityId() throws ServiceException {
+	public static int calculateDynamicActivityId() throws ServiceException,
+			ActivityGeneratorException {
 		int activityId = 0;
 		for (ActivityEntity activity : new RolesPermissionsBusinessService()
 				.getActivities()) {
 			if (activity.getId().intValue() < activityId)
 				activityId = activity.getId();
 		}
+		if (activityId <= Short.MIN_VALUE)
+			throw new ActivityGeneratorException();
 		int newActivityId = activityId - 1;
+
 		return newActivityId;
+	}
+
+	public static void reparentActivityUsingHibernate(short activityId,
+			Short newParent) throws PersistenceException {
+		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		Transaction tr = rpp.getSession().beginTransaction();
+		ActivityEntity parent = (ActivityEntity) rpp.getPersistentObject(
+				ActivityEntity.class, newParent);
+		ActivityEntity activity = (ActivityEntity) rpp.getPersistentObject(
+				ActivityEntity.class, activityId);
+		activity.setParent(parent);
+		rpp.createOrUpdate(activity);
+		tr.commit();
+	}
+
+	public static void changeActivityMessage(short activityId, short localeId, String newMessage) throws PersistenceException {
+		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		MasterPersistence mp = new MasterPersistence();
+		Transaction tr = mp.getSession().beginTransaction();
+		ActivityEntity activityEntity = (ActivityEntity) rpp
+				.getPersistentObject(ActivityEntity.class, Short
+						.valueOf(activityId));
+		Integer lookUpId = activityEntity.getActivityNameLookupValues()
+				.getLookUpId();
+		LookUpValueLocaleEntity lookUpValueLocaleEntity = mp
+				.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId);
+		lookUpValueLocaleEntity.setLookUpValue(newMessage);
+		mp.createOrUpdate(lookUpValueLocaleEntity);
+		tr.commit();
 	}
 
 

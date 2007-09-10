@@ -10,7 +10,7 @@ public class ActivityEntity extends PersistentObject {
 
 	private final Short id;
 
-	private final ActivityEntity parent;
+	private ActivityEntity parent;
 
 	private final LookUpValueEntity activityNameLookupValues;
 
@@ -89,6 +89,10 @@ public class ActivityEntity extends PersistentObject {
 			}
 		}
 		return name;
+	}
+
+	public void setParent(ActivityEntity parent) {
+		this.parent = parent;
 	}
 
 }

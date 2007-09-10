@@ -28,6 +28,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.activity.ActivityGenerator;
+import org.mifos.framework.security.activity.ActivityGeneratorException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -114,13 +115,14 @@ public class ReportsCategoryAction extends BaseAction {
 		String categoryName = defineNewCategoryForm.getCategoryName();
 		ReportsCategoryBO reportsCategoryBO = new ReportsCategoryBO();
 
-		int newActivityId = ActivityGenerator.calculateDynamicActivityId();
+		int newActivityId;
+		try {
+			newActivityId = ActivityGenerator.calculateDynamicActivityId();
+		}
+		catch (ActivityGeneratorException agex) {
 
-		if (newActivityId < Short.MIN_VALUE) {
 			ActionErrors errors = new ActionErrors();
-			errors.add(ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID,
-					new ActionMessage(
-							ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID));
+			errors.add(agex.getKey(), new ActionMessage(agex.getKey()));
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());

@@ -102,7 +102,8 @@ public interface NamedQueryConstants {
 	public String GETROLE="getRole";	
 	public String GETACTIVITIES="getActivities";
 	public String GETROLEWITHID="getRoleWithId";
-	
+	public String GETLOOKUPVALUELOCALE="lookUpValueLocaleEntity.getByLocaleAndLookUpId";
+	public String GETACTIVITYENTITY = "activityEntity.getActivityEntityByLookUpValueEntity";	
 	//for security
 	public String GETACTIVITYROLES="getActivityRoles";
 	public String GETPERSONROLES="getPersonRoles";
@@ -677,4 +678,5 @@ public interface NamedQueryConstants {
 	public String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
 	public String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
 	public String GET_ALL_COA = "COABO.getAllCoa";
+
 }

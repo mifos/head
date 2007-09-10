@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
@@ -34,11 +35,13 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.activity.ActivityGenerator;
+import org.mifos.framework.security.activity.ActivityGeneratorException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
@@ -119,63 +122,49 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		FormFile formFile = uploadForm.getFile();
-		ReportsBO reportBO;
-		ReportsJasperMap reportJasperMap;
-		String activityNameHead = "Can view ";
 
-		short parentActivity = 0;
-
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
 		if (isReportAlreadyExist(request, uploadForm)) {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
-		reportBO = new ReportsBO();
-		reportJasperMap = new ReportsJasperMap();
 
-		parentActivity = category.getActivityId();
+		ReportsCategoryBO category = getReportCategory(uploadForm
+				.getReportCategoryId());
 
-		int newActivityId = ActivityGenerator.calculateDynamicActivityId();
-
-		if (newActivityId < Short.MIN_VALUE) {
+		short parentActivity = category.getActivityId();
+		int newActivityId;
+		String activityNameHead = "Can view ";
+		try {
+			newActivityId = insertActivity(parentActivity, activityNameHead
+					+ uploadForm.getReportTitle());
+		}
+		catch (ActivityGeneratorException ex) {
 			ActionErrors errors = new ActionErrors();
-			errors.add(ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID,
-					new ActionMessage(
-							ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID));
+			errors.add(ex.getKey(), new ActionMessage(ex.getKey()));
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
+
+		ReportsBO reportBO = createOrUpdateReport(category, newActivityId, uploadForm
+				.getReportTitle(), Short.valueOf(uploadForm.getIsActive()));
+
+		FormFile formFile = uploadForm.getFile();
+		insertReportsJasperMap(formFile.getFileName());
+
+		uploadFile(formFile);
+		allowActivityPermission(reportBO, newActivityId);
+		request.setAttribute("report", reportBO);
+
 		AddActivity activity = new AddActivity(
 				DatabaseVersionPersistence.APPLICATION_VERSION,
 				(short) newActivityId, parentActivity,
 				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
 						+ uploadForm.getReportTitle());
-		Session session = HibernateUtil.getSessionTL();
-		
-		ActivityGenerator activityGenerator = new ActivityGenerator();
-		String lookUpDescription = activityNameHead + uploadForm.getReportTitle();
-		activityGenerator.upgradeUsingHQL(session, parentActivity, lookUpDescription);
-
-		
-		reportBO.setReportName(uploadForm.getReportTitle());
-		reportBO.setReportsCategoryBO(category);
-		reportBO.setActivityId((short) newActivityId);
-		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
-		new ReportsPersistence().createOrUpdate(reportBO);
-
-		reportJasperMap.setReportJasper(formFile.getFileName());
-		new ReportsPersistence().createOrUpdate(reportJasperMap);
-
-		uploadFile(formFile);
-		allowActivityPermission(reportBO, newActivityId);
-
 		request.setAttribute("activity", activity);
-		request.setAttribute("report", reportBO);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
+
 
 	private void allowActivityPermission(ReportsBO reportBO, int newActivityId)
 			throws ApplicationException {
@@ -345,17 +334,19 @@ public class BirtReportsUploadAction extends BaseAction {
 					.findForward(ActionForwards.create_failure.toString());
 		}
 
-		reportBO.setReportName(uploadForm.getReportTitle());
-		reportBO.setReportsCategoryBO(category);
-		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
-		new ReportsPersistence().createOrUpdate(reportBO);
+		createOrUpdateReport(category, reportBO.getActivityId(), uploadForm
+				.getReportTitle(), Short.valueOf(uploadForm.getIsActive()));
 
-		Connection conn = new ReportsPersistence().getConnection();
-		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category
+//		Connection conn = new ReportsPersistence().getConnection();
+		ActivityGenerator.reparentActivityUsingHibernate(reportBO.getActivityId(), category
 				.getActivityId());
-		AddActivity.changeActivityMessage(conn, reportBO.getActivityId(),
-				DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
+		ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
 						+ reportBO.getReportName());
+//		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category
+//				.getActivityId());
+//		AddActivity.changeActivityMessage(conn, reportBO.getActivityId(),
+//				DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
+//						+ reportBO.getReportName());
 
 		FormFile formFile = uploadForm.getFile();
 		if (StringUtils.isEmpty(formFile.getFileName())) {
@@ -407,5 +398,36 @@ public class BirtReportsUploadAction extends BaseAction {
 				new ReportsPersistence().getReport(Short.valueOf(request
 						.getParameter("reportId"))));
 		return mapping.findForward(ActionForwards.download_success.toString());
+	}
+
+	private void insertReportsJasperMap(String fileName)
+			throws PersistenceException {
+		ReportsJasperMap reportJasperMap = new ReportsJasperMap();
+		reportJasperMap.setReportJasper(fileName);
+		new ReportsPersistence().createOrUpdate(reportJasperMap);
+	}
+
+	private int insertActivity(short parentActivity, String lookUpDescription)
+			throws ServiceException, ActivityGeneratorException, IOException,
+			HibernateException, PersistenceException {
+		int newActivityId;
+		newActivityId = ActivityGenerator.calculateDynamicActivityId();
+		Session session = HibernateUtil.getSessionTL();
+		ActivityGenerator activityGenerator = new ActivityGenerator();
+		activityGenerator.upgradeUsingHQL(session, parentActivity,
+				lookUpDescription);
+		return newActivityId;
+	}
+
+	private ReportsBO createOrUpdateReport(ReportsCategoryBO category,
+			int newActivityId, String reportTitle, Short isActive)
+			throws PersistenceException {
+		ReportsBO reportBO = new ReportsBO();
+		reportBO.setReportName(reportTitle);
+		reportBO.setReportsCategoryBO(category);
+		reportBO.setActivityId((short) newActivityId);
+		reportBO.setIsActive(isActive);
+		new ReportsPersistence().createOrUpdate(reportBO);
+		return reportBO;
 	}
 }

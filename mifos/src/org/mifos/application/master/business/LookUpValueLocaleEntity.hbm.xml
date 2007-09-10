@@ -18,4 +18,8 @@
       unique="true" insert="false" update="false"/>    
   
   </class> 
+  <query name="lookUpValueLocaleEntity.getByLocaleAndLookUpId">
+		<![CDATA[from org.mifos.application.master.business.LookUpValueLocaleEntity luvle 
+		         where luvle.localeId=:aLocaleId and luvle.lookUpId=:aLookUpId ]]>
+  </query>
 </hibernate-mapping>
