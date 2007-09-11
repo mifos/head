@@ -67,6 +67,7 @@ import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
+import org.mifos.config.TestConfigurationManager;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
@@ -96,6 +97,7 @@ public class ApplicationTestSuite extends TestSuite {
 		TestSuite suite = new ApplicationTestSuite();
 
 		// Put fast tests at the top for quick feedback if they fail
+		suite.addTest(TestConfigurationManager.suite());
 		suite.addTest(ProductMixTestSuite.suite());
 		suite.addTest(FastTests.suite());
 		suite.addTest(SecurityTestSuite.suite());
