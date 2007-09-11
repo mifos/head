@@ -1,13 +1,25 @@
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.business.*;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.AccountFlagMapping;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -28,10 +40,15 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.*;
+import org.mifos.application.master.business.CollateralTypeEntity;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -55,14 +72,19 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoanAccountAction extends AccountAppAction {
 
@@ -417,15 +439,22 @@ public class LoanAccountAction extends AccountAppAction {
         List<PaymentDataHtmlBean> paymentDataBeans =
                 loanActionForm.getPaymentDataBeans();
         PaymentData payment;
-        for (PaymentDataTemplate template : paymentDataBeans) {
-            if (template.getTotalAmount() != null
-                    && template.getTransactionDate() != null) {
-                if (! loan.isLastCustomerMeetingDate(template.getTransactionDate())) {
-                    throw new AccountException("errors.invalidTxndate");
+        CustomerBO customer = getCustomer(request);
+        try {
+            for (PaymentDataTemplate template : paymentDataBeans) {
+                if (template.getTotalAmount() != null
+                        && template.getTransactionDate() != null) {
+                        if (! customer.getCustomerMeeting().getMeeting().isValidMeetingDate(
+                            template.getTransactionDate(), DateUtils.getLastDayOfNextYear())) {
+                            throw new AccountException("errors.invalidTxndate");
+                        }
+                    payment = PaymentData.createPaymentData(template);
+                    loan.applyPayment(payment, false);
                 }
-                payment = PaymentData.createPaymentData(template);
-                loan.applyPayment(payment, false);
             }
+        }
+        catch (MeetingException e) {
+            throw new ServiceException(e);
         }
 
         return loan;

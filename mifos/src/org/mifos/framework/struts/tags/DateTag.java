@@ -208,7 +208,7 @@ public class DateTag extends BaseInputTag {
 		String output;
         String propertyVal;
         if (this.getIndexed()) {
-            propertyVal = getProperty() + this.getIndexValue();
+            propertyVal = getName() + "[" + getIndexValue() + "]." + getProperty();
         }
         else {
             propertyVal = getProperty();
