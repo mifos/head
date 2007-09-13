@@ -50,23 +50,35 @@ import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanAccountActionForm extends BaseActionForm {
 
@@ -123,7 +135,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	private List<CustomFieldView> customFields;
 
-    private List<PaymentDataHtmlBean> paymentDataBeans;
+    private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList();
 
     public List<PaymentDataHtmlBean> getPaymentDataBeans() {
         return this.paymentDataBeans;
@@ -449,7 +461,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 				checkValidationForSchedulePreview(errors, request);
 			else if (method.equals(Methods.managePreview.toString()))
 				checkValidationForManagePreview(errors, request);
-		} catch (ApplicationException ae) {
+            else if (method.equals(Methods.preview.toString()))
+                checkValidationForPreview(errors, request);
+        } catch (ApplicationException ae) {
 			// Discard other errors (is that right?)
 			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
@@ -480,21 +494,24 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	private void checkValidationForSchedulePreview(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
-		checkValidationForPreview(errors, request);
+		checkValidationForPreviewBefore(errors, request);
 		validateFees(request, errors);
 		validateCustomFields(request, errors);
-
 	}
 
-	private void checkValidationForManagePreview(ActionErrors errors,
+    private void checkValidationForPreview(ActionErrors errors,
+			HttpServletRequest request) throws ApplicationException {
+        validateRedoLoanPayments(request, errors);
+	}
+
+    private void checkValidationForManagePreview(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
 		if(getState().equals(AccountState.LOANACC_PARTIALAPPLICATION) || getState().equals(AccountState.LOANACC_PENDINGAPPROVAL))
 			checkValidationForPreview(errors, request);
 		validateCustomFields(request, errors);
-
 	}
 	
-	private void checkValidationForPreview(ActionErrors errors,
+	private void checkValidationForPreviewBefore(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
 		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
 				.getAttribute(LoanConstants.LOANOFFERING, request);
@@ -620,6 +637,64 @@ public class LoanAccountActionForm extends BaseActionForm {
 					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
 	}
+
+    private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
+        try {
+            CustomerBO customer = getCustomer(request);
+            for (PaymentDataTemplate template : paymentDataBeans) {
+                if (template.getTotalAmount() != null
+                        && template.getTransactionDate() != null) {
+                    if (! customer.getCustomerMeeting().getMeeting().isValidMeetingDate(
+                        template.getTransactionDate(), DateUtils.getLastDayOfNextYear())) {
+                        errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE,
+                            new ActionMessage(LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                    }
+                }
+            }
+        }
+        catch (MeetingException e) {
+            errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+                    new ActionMessage(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+        }
+        catch (PageExpiredException e) {
+            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+        }
+        catch (ServiceException e) {
+            errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+                    new ActionMessage(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+        }
+    }
+
+    protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
+		return getCustomerBusinessService().getCustomer(customerId);
+	}
+
+    protected CustomerBusinessService getCustomerBusinessService() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
+	}
+
+    private CustomerBO getCustomer(HttpServletRequest request)
+                throws PageExpiredException, ServiceException {
+        CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(
+                LoanConstants.LOANACCOUNTOWNER, request);
+        Integer oldCustomerId;
+        if (oldCustomer == null) {
+            oldCustomerId = Integer.parseInt(getCustomerId());
+        }
+        else {
+            oldCustomerId = oldCustomer.getCustomerId();
+        }
+        CustomerBO customer = getCustomer(oldCustomerId);
+        customer.getPersonnel().getDisplayName();
+        customer.getOffice().getOfficeName();
+        // TODO: I'm not sure why we're resetting version number - need to investigate this
+        if (oldCustomer != null) {
+            customer.setVersionNo(oldCustomer.getVersionNo());
+        }
+        return customer;
+    }
 
     public String getPerspective() {
         return perspective;

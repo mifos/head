@@ -248,7 +248,13 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		ActionForwards actionForward = null;
+        LoanAccountActionForm loanAccountForm = (LoanAccountActionForm)form;
+        String perspective = loanAccountForm.getPerspective();
+        if (perspective != null) {
+            request.setAttribute("perspective", perspective);
+        }
+        
+        ActionForwards actionForward = null;
 		String method = (String) request.getAttribute("methodCalled");
 		if (method.equals(Methods.getPrdOfferings.toString())
 				|| method.equals(Methods.load.toString()))
@@ -257,8 +263,10 @@ public class LoanAccountAction extends AccountAppAction {
 			actionForward = ActionForwards.load_success;
 		else if (method.equals(Methods.managePreview.toString()))
 			actionForward = ActionForwards.managepreview_failure;
+        else if (method.equals(Methods.preview.toString()))
+            actionForward = ActionForwards.preview_failure;
 
-		return mapping.findForward(actionForward.toString());
+        return mapping.findForward(actionForward.toString());
 	}
 
 	@TransactionDemarcate(saveToken = true)

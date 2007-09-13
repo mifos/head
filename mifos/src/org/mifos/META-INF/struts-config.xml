@@ -892,7 +892,8 @@
 			<forward name="schedulePreview_success" path="/pages/application/loan/jsp/schedulePreview.jsp" />
 			<forward name="schedulePreview_failure" path="/pages/application/loan/jsp/loancreationdetails.jsp" />
 			<forward name="preview_success" path="/pages/application/loan/jsp/createloanpreview.jsp" />
-			<forward name="create_failure" path="/pages/application/loan/jsp/createloanpreview.jsp" />
+            <forward name="preview_failure" path="/pages/application/loan/jsp/schedulePreview.jsp" />
+            <forward name="create_failure" path="/pages/application/loan/jsp/createloanpreview.jsp" />
 			<forward name="create_success" path="/pages/application/loan/jsp/CreateLoanAccountConfirmation.jsp" />
 			<forward name="manage_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
 			<forward name="managepreview_success" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
