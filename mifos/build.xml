@@ -264,9 +264,11 @@
 	<target name="run_test" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests.">
+		<echo>Using database: ${testdb.name}</echo>
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
 			failureproperty="tests.failure">
+			<sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
 			<classpath>
 				<path refid="class.path"/>
 				<pathelement location="${build.classes}"/>
@@ -360,6 +362,7 @@
 	</target>
 
 	<target name="build_test_db">
+		<echo>Using database: ${testdb.name}</echo>
 		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
 			userid="${testdb.user}" password="${testdb.pwd}"
 			classpath="${database.driver.jar}">
@@ -386,6 +389,12 @@
 		  </antcall>
 		  <antcall target="build_test_db">
 		    <param name="testdb.name" value="test"/>
+		  </antcall>
+	</target>	
+
+	<target name="run_test_2">
+		  <antcall target="run_test">
+		    <param name="testdb.name" value="test2"/>
 		  </antcall>
 	</target>	
 

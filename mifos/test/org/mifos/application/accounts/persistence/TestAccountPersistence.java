@@ -141,7 +141,7 @@ public class TestAccountPersistence extends TestAccount {
 	}
 	public void testDumpChartOfAccounts() throws ConfigurationException {
 		String expected_chart = 
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+		// "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 		"<configuration>\n" + 
 		"<ChartOfAccounts>\n" + 
 		"<GLAssetsAccount code=\"10000\" name=\"ASSETS\">\n" + 
@@ -225,7 +225,12 @@ public class TestAccountPersistence extends TestAccount {
 		"</configuration>\n";
 		String chart = accountPersistence.dumpChartOfAccounts();
 		// Note: replacing \r is an attempt to make this work on both Windows & Linux
-		assertEquals(expected_chart, chart.replace("\r", ""));
+		chart = chart.replace("\r", "");
+		// ignore the first <?xml... line for the time being, output seems to vary
+		// from machine to machine (even Windows to Windows).  Some output looks like
+		// <?xml version="1.0" encoding="UTF-8" standalone="no" ?> 
+		// Why do we get the "standalone" attribute sometimes but not others?
+		assertEquals(expected_chart, chart.substring(chart.indexOf("<configuration>")));
 	}
 	
 	public void testSuccessGetNextInstallmentList() {
