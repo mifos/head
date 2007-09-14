@@ -350,7 +350,7 @@ public class LoanAccountAction extends AccountAppAction {
         if (perspective != null) {
             request.setAttribute("perspective", request.getParameter("perspective"));
         }
-        loanActionForm.initializeTransactionFields(getUserContext(request), installments.size());
+        loanActionForm.initializeTransactionFields(getUserContext(request), installments);
 
         boolean isPendingApprovalDefined = Configuration.getInstance()
 				.getAccountConfig(getUserContext(request).getBranchId())

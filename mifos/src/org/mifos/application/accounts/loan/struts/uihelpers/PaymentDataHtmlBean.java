@@ -25,6 +25,7 @@ package org.mifos.application.accounts.loan.struts.uihelpers;
 import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -38,12 +39,20 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     private Short paymentTypeId;
     private PersonnelBO personnel;
 
-    public PaymentDataHtmlBean(Locale locale, PersonnelBO personnel) {
+    private RepaymentScheduleInstallment installment;
+
+    public PaymentDataHtmlBean(Locale locale, PersonnelBO personnel, RepaymentScheduleInstallment installment) {
         this.locale = locale;
         this.personnel = personnel;
-        this.date = DateUtils.getUserLocaleDate(locale,
-                new java.sql.Date(new java.util.Date().getTime()).toString());
         this.paymentTypeId = PaymentTypes.CASH.getValue();
+
+        long currentTime = new java.util.Date().getTime();
+        this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDate().toString());
+        if (installment.getDueDate().getTime() <= currentTime) {
+            this.amount = installment.getTotal().toString();
+        }
+
+        this.installment = installment;
     }
 
     public Money getTotalAmount() {
@@ -71,6 +80,10 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         else {
             return null;
         }
+    }
+
+    public RepaymentScheduleInstallment getInstallment() {
+        return this.installment;
     }
 
     public String getAmount() {

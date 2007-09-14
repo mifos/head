@@ -261,7 +261,7 @@
 					</td>
 				</tr>
 			</table>
-            <html:hidden property="perspective" value="${custSearchActionForm.perspective}"/>
+            <html:hidden property="perspective" value="${requestScope.perspective}"/>
             <html:hidden property="method" value="search" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			

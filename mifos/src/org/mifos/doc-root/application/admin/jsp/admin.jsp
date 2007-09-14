@@ -316,6 +316,12 @@
 								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.disbursal" /></html-el:link></td>
 
                   </tr>
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><html-el:link
+								href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.redo" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> </html-el:link></td>
+
+                  </tr>
                 </table>
                 
                 <br />

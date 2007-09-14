@@ -39,6 +39,7 @@ package org.mifos.application.accounts.loan.struts.actionforms;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -394,17 +396,18 @@ public class LoanAccountActionForm extends BaseActionForm {
 		return false;
 	}
 
-    public void initializeTransactionFields(UserContext userContext, int numberOfRows) {
-        this.paymentDataBeans = new ArrayList(numberOfRows);
+    public void initializeTransactionFields(UserContext userContext, List<RepaymentScheduleInstallment> installments) {
+        this.paymentDataBeans = new ArrayList(installments.size());
         PersonnelBO personnel;
         try {
             personnel = new PersonnelPersistence().getPersonnel(userContext.getId());
         } catch (PersistenceException e) {
             throw new IllegalArgumentException("bad UserContext id");
         }
-        for (int i=0; i<numberOfRows; i++) {
+        
+        for (Iterator<RepaymentScheduleInstallment> iter = installments.iterator(); iter.hasNext();) {
             this.paymentDataBeans.add(new PaymentDataHtmlBean(
-                    userContext.getPreferredLocale(), personnel));
+                    userContext.getPreferredLocale(), personnel, iter.next()));
         }
     }
 
@@ -640,14 +643,16 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
         try {
-            CustomerBO customer = getCustomer(request);
-            for (PaymentDataTemplate template : paymentDataBeans) {
-                if (template.getTotalAmount() != null
-                        && template.getTransactionDate() != null) {
-                    if (! customer.getCustomerMeeting().getMeeting().isValidMeetingDate(
-                        template.getTransactionDate(), DateUtils.getLastDayOfNextYear())) {
-                        errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE,
-                            new ActionMessage(LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+            if (paymentDataBeans != null && paymentDataBeans.size() > 0) {
+                CustomerBO customer = getCustomer(request);
+                for (PaymentDataTemplate template : paymentDataBeans) {
+                    if (template.getTotalAmount() != null
+                            && template.getTransactionDate() != null) {
+                        if (! customer.getCustomerMeeting().getMeeting().isValidMeetingDate(
+                            template.getTransactionDate(), DateUtils.getLastDayOfNextYear())) {
+                            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE,
+                                new ActionMessage(LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                        }
                     }
                 }
             }
