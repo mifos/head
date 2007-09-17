@@ -41,84 +41,6 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
 	}
 
-	/**
-	 * TODO: This test only passes when run as part of
-	 * {@link ApplicationTestSuite}, not by itself.
-	 * Something seems to be putting in Grameen Koota configuration
-	 * (Kendra/Member instead of Center/Client, etc).  It seems
-	 * to be in ConfigurationTestSuite-- TestConfiguration seems to
-	 * be the specific culprit. If this test runs before TestConfiguration
-	 * it fails, if it runs after TestConfiguration, it succeeds.
-	 */
-	public void testLoad() throws Exception {
-		setRequestPathInfo("/labelconfigurationaction.do");
-		addRequestParameter("method", "load");
-		performNoErrors();
-		verifyForward(ActionForwards.load_success.toString());
-		LabelConfigurationActionForm labelConfigurationActionForm = 
-			(LabelConfigurationActionForm) request
-				.getSession().getAttribute("labelconfigurationactionform");
-		assertEquals("Head Office", labelConfigurationActionForm
-				.getHeadOffice());
-		assertEquals("Regional Office", labelConfigurationActionForm
-				.getRegionalOffice());
-		assertEquals("Divisional Office", labelConfigurationActionForm
-				.getSubRegionalOffice());
-		assertEquals("Area Office", labelConfigurationActionForm
-				.getAreaOffice());
-		assertEquals("Branch Office", labelConfigurationActionForm
-				.getBranchOffice());
-		assertEquals("Member", labelConfigurationActionForm.getClient());
-		assertEquals("Group", labelConfigurationActionForm.getGroup());
-		assertEquals("Kendra", labelConfigurationActionForm.getCenter());
-		assertEquals("Cash", labelConfigurationActionForm.getCash());
-		assertEquals("Cheque", labelConfigurationActionForm.getCheck());
-		assertEquals("Voucher", labelConfigurationActionForm.getVouchers());
-		assertEquals("Loan", labelConfigurationActionForm.getLoans());
-		assertEquals("Margin Money", labelConfigurationActionForm.getSavings());
-		assertEquals("State", labelConfigurationActionForm.getState());
-		assertEquals("Postal Code", labelConfigurationActionForm
-				.getPostalCode());
-		assertEquals("Caste", labelConfigurationActionForm.getEthnicity());
-		assertEquals("Religion", labelConfigurationActionForm.getCitizenship());
-		assertEquals("Handicapped", labelConfigurationActionForm
-				.getHandicapped());
-		assertEquals("Government ID", labelConfigurationActionForm.getGovtId());
-		assertEquals("Address1", labelConfigurationActionForm.getAddress1());
-		assertEquals("Address2", labelConfigurationActionForm.getAddress2());
-		assertEquals("Village", labelConfigurationActionForm.getAddress3());
-		assertEquals("Partial Application", labelConfigurationActionForm
-				.getPartialApplication());
-		assertEquals("Application Pending Approval",
-				labelConfigurationActionForm.getPendingApproval());
-		assertEquals("Application Approved", labelConfigurationActionForm
-				.getApproved());
-		assertEquals("Cancel", labelConfigurationActionForm.getCancel());
-		assertEquals("Closed", labelConfigurationActionForm.getClosed());
-		assertEquals("On Hold", labelConfigurationActionForm.getOnhold());
-		assertEquals("Active", labelConfigurationActionForm.getActive());
-		assertEquals("Inactive", labelConfigurationActionForm.getInActive());
-		assertEquals("Active in Good Standing", labelConfigurationActionForm
-				.getActiveInGoodStanding());
-		assertEquals("Active in Bad Standing", labelConfigurationActionForm
-				.getActiveInBadStanding());
-		assertEquals("Closed- Obligation met", labelConfigurationActionForm
-				.getClosedObligationMet());
-		assertEquals("Closed- Rescheduled", labelConfigurationActionForm
-				.getClosedRescheduled());
-		assertEquals("Closed- Written Off", labelConfigurationActionForm
-				.getClosedWrittenOff());
-		assertEquals("None", labelConfigurationActionForm.getNone());
-		assertEquals("Grace on all repayments", labelConfigurationActionForm
-				.getGraceOnAllRepayments());
-		assertEquals("Principal only grace", labelConfigurationActionForm
-				.getPrincipalOnlyGrace());
-		assertEquals("Service Charge", labelConfigurationActionForm
-				.getInterest());
-		assertEquals("External Id", labelConfigurationActionForm
-				.getExternalId());
-		assertEquals("Bulk entry", labelConfigurationActionForm.getBulkEntry());
-	}
 
 	public void testUpdateWithOutData() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -375,4 +297,84 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_failure.toString());
 	}
+	
+	/**
+	 * TODO: This test only passes when run as part of
+	 * {@link ApplicationTestSuite}, not by itself.
+	 * Something seems to be putting in Grameen Koota configuration
+	 * (Kendra/Member instead of Center/Client, etc).  It seems
+	 * to be in ConfigurationTestSuite-- TestConfiguration seems to
+	 * be the specific culprit. If this test runs before TestConfiguration
+	 * it fails, if it runs after TestConfiguration, it succeeds.
+	 */
+	public void testLoad() throws Exception {
+		setRequestPathInfo("/labelconfigurationaction.do");
+		addRequestParameter("method", "load");
+		performNoErrors();
+		verifyForward(ActionForwards.load_success.toString());
+		LabelConfigurationActionForm labelConfigurationActionForm = 
+			(LabelConfigurationActionForm) request
+				.getSession().getAttribute("labelconfigurationactionform");
+		assertEquals("Head Office", labelConfigurationActionForm
+				.getHeadOffice());
+		assertEquals("Regional Office", labelConfigurationActionForm
+				.getRegionalOffice());
+		assertEquals("Divisional Office", labelConfigurationActionForm
+				.getSubRegionalOffice());
+		assertEquals("Area Office", labelConfigurationActionForm
+				.getAreaOffice());
+		assertEquals("Branch Office", labelConfigurationActionForm
+				.getBranchOffice());
+		assertEquals("Member", labelConfigurationActionForm.getClient());
+		assertEquals("Group", labelConfigurationActionForm.getGroup());
+		assertEquals("Kendra", labelConfigurationActionForm.getCenter());
+		assertEquals("Cash", labelConfigurationActionForm.getCash());
+		assertEquals("Cheque", labelConfigurationActionForm.getCheck());
+		assertEquals("Voucher", labelConfigurationActionForm.getVouchers());
+		assertEquals("Loan", labelConfigurationActionForm.getLoans());
+		assertEquals("Margin Money", labelConfigurationActionForm.getSavings());
+		assertEquals("State", labelConfigurationActionForm.getState());
+		assertEquals("Postal Code", labelConfigurationActionForm
+				.getPostalCode());
+		assertEquals("Caste", labelConfigurationActionForm.getEthnicity());
+		assertEquals("Religion", labelConfigurationActionForm.getCitizenship());
+		assertEquals("Handicapped", labelConfigurationActionForm
+				.getHandicapped());
+		assertEquals("Government ID", labelConfigurationActionForm.getGovtId());
+		assertEquals("Address1", labelConfigurationActionForm.getAddress1());
+		assertEquals("Address2", labelConfigurationActionForm.getAddress2());
+		assertEquals("Village", labelConfigurationActionForm.getAddress3());
+		assertEquals("Partial Application", labelConfigurationActionForm
+				.getPartialApplication());
+		assertEquals("Application Pending Approval",
+				labelConfigurationActionForm.getPendingApproval());
+		assertEquals("Application Approved", labelConfigurationActionForm
+				.getApproved());
+		assertEquals("Cancel", labelConfigurationActionForm.getCancel());
+		assertEquals("Closed", labelConfigurationActionForm.getClosed());
+		assertEquals("On Hold", labelConfigurationActionForm.getOnhold());
+		assertEquals("Active", labelConfigurationActionForm.getActive());
+		assertEquals("Inactive", labelConfigurationActionForm.getInActive());
+		assertEquals("Active in Good Standing", labelConfigurationActionForm
+				.getActiveInGoodStanding());
+		assertEquals("Active in Bad Standing", labelConfigurationActionForm
+				.getActiveInBadStanding());
+		assertEquals("Closed- Obligation met", labelConfigurationActionForm
+				.getClosedObligationMet());
+		assertEquals("Closed- Rescheduled", labelConfigurationActionForm
+				.getClosedRescheduled());
+		assertEquals("Closed- Written Off", labelConfigurationActionForm
+				.getClosedWrittenOff());
+		assertEquals("None", labelConfigurationActionForm.getNone());
+		assertEquals("Grace on all repayments", labelConfigurationActionForm
+				.getGraceOnAllRepayments());
+		assertEquals("Principal only grace", labelConfigurationActionForm
+				.getPrincipalOnlyGrace());
+		assertEquals("Service Charge", labelConfigurationActionForm
+				.getInterest());
+		assertEquals("External Id", labelConfigurationActionForm
+				.getExternalId());
+		assertEquals("Bulk entry", labelConfigurationActionForm.getBulkEntry());
+	}
+	
 }

@@ -15,7 +15,7 @@
 	<property file="${conf.dir}/my.build.properties"/>
 
 	<property file="${conf.dir}/build.properties"/>
-	
+
 	<!-- Which suite to run in the run_test and profile_test
 	     targets.  Normally the whole suite, but can be
 	     set to a sub-suite or individual test, for example by specifying
@@ -57,7 +57,7 @@
 	</path>
 
 	<echo level="debug">CLASSPATH - ${java.class.path}</echo>
-  
+
 	<target name="init">
 		<tstamp>
 			<format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
@@ -132,14 +132,14 @@
 
 		</javac>
 	</target>
-	
+
 	<!--
 	Note that my.hibernate.properties and my.HibernateTest.properties,
 	unlike my.build.properties, entirely override the corresponding
 	file if they are present.
 	-->
 	<target name="copy_files">
-        <available file="${conf.dir}/my.hibernate.properties"
+		<available file="${conf.dir}/my.hibernate.properties"
                 property="my.hibernate.properties.present" value="true" />
 		<copy todir="${build.web-inf}/lib">
 			<fileset dir="${lib.dir}" 
@@ -161,7 +161,7 @@
 		<copy todir="${build.src.dir}/pages">
 			<fileset dir="${src.dir}/org/mifos/doc-root"/>
 		</copy>
-		
+
 		<copy todir="${build.classes}/org/mifos/application">
 			<fileset dir="${src.dir}/org/mifos/application">
 				<exclude name="**/*.java"/>
@@ -177,25 +177,25 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-        <copy tofile="${build.classes}/conf/hibernate.properties" verbose="true">
+		<copy tofile="${build.classes}/conf/hibernate.properties" verbose="true">
 			<fileset dir="${conf.dir}">
-                <include name="my.hibernate.properties" 
+				<include name="my.hibernate.properties" 
                 	if="my.hibernate.properties.present" />
-                <include name="hibernate.properties" 
+				<include name="hibernate.properties" 
                 	unless="my.hibernate.properties.present" />
 			</fileset>
 		</copy>
 		<copy todir="${build.web-inf}/services/MifosService/META-INF">
-		    <fileset dir="${src.dir}/org/mifos/api/resources">
-		        <include name="services.xml"/>
-		        <include name="*.wsdl"/>
-		    </fileset>
+			<fileset dir="${src.dir}/org/mifos/api/resources">
+				<include name="services.xml"/>
+				<include name="*.wsdl"/>
+			</fileset>
 		</copy>
 		<copy todir="${build.src.dir}/pages/application/reports/uploads">
-		    <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
-			<include name="*.jrxml"/>
-		        <include name="*.jasper"/>
-		    </fileset>
+			<fileset dir="${src.dir}/org/mifos/application/reports/uploads">
+				<include name="*.jrxml"/>
+				<include name="*.jasper"/>
+			</fileset>
 		</copy>
 	</target>
 
@@ -209,7 +209,7 @@
 		</concat>
 		<replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="	&lt;!-- section: birt web viewer --&gt;" />
 	</target>
-	
+
 	<target name="copy_birt_reports">
 		<copy todir="${build.src.dir}/report">
 			<fileset dir="${birt.report.design.dir}" />
@@ -217,21 +217,21 @@
 	</target>
 
 	<target name="lib" depends="compile" description="Build the mifos library">
-            <mkdir dir="${build.lib}"/>
-            <copy todir="${build.lib}">
-		<fileset dir="${build.classes}">
-		    <exclude name="**/struts/**"/>
-		</fileset>
-            </copy>
-            <jar basedir="${build.lib}"
+		<mkdir dir="${build.lib}"/>
+		<copy todir="${build.lib}">
+			<fileset dir="${build.classes}">
+				<exclude name="**/struts/**"/>
+			</fileset>
+		</copy>
+		<jar basedir="${build.lib}"
                  destfile="${dist.dir}/mifos-lib.jar"
 		 />
 	</target>
 
 	<!-- The lib-x target is only for bootstrapping the API. It should go away soon -->
 	<target name="lib-x" depends="copy_files">
-	  <delete file="${dist.dir}/mifos-x.jar"/>
-	  <jar basedir="${build.web-inf}/classes"
+		<delete file="${dist.dir}/mifos-x.jar"/>
+		<jar basedir="${build.web-inf}/classes"
 	       destfile="${dist.dir}/mifos-x.jar"/>
 	</target>
 
@@ -240,7 +240,7 @@
 		description="Build mifos API support"/>
 
 	<target name="copy_test_files">
-        <available file="${conf.dir}/my.HibernateTest.properties"
+		<available file="${conf.dir}/my.HibernateTest.properties"
                 property="my.HibernateTest.properties.present" value="true"/>
 		<copy todir="${test.classes}">
 			<fileset dir="${test.dir}">
@@ -252,10 +252,10 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-        <copy tofile="${test.classes}/conf/HibernateTest.properties" verbose="true">
+		<copy tofile="${test.classes}/conf/HibernateTest.properties" verbose="true">
 			<fileset dir="${conf.dir}">
-                <include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
-                <include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
+				<include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
+				<include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
 			</fileset>
 		</copy>
 
@@ -285,7 +285,33 @@
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
-	
+
+	<target name="run_test_no_compile" 
+		depends="build_test_db" 
+		description="Run tests.">
+		<echo>Using database: ${testdb.name}</echo>
+		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+			dir="${basedir}"
+			failureproperty="tests.failure">
+			<sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${build.classes}"/>
+				<pathelement location="${test.classes}"/>
+			</classpath>
+
+			<formatter type="xml" />
+			<batchtest todir="${dist.dir}" >
+				<fileset dir="${test.classes}">
+					<include name="**/${test.suite}.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="tests.failure" 
+			message="Unit tests failed - Report is available at ${dist.dir}"/>
+		<echo>Completed ${test.suite}</echo>
+	</target>
+
 	<target name ="covertTestReportToHTML" description="Convert test report to HTML format">
 		<junitreport todir="${dist.dir}">
 			<fileset dir="${dist.dir}">
@@ -302,7 +328,7 @@
 		<junit printsummary="on" fork="true" maxmemory="${profile.memory}" 
 			dir="${basedir}"
 			failureproperty="tests.failure">
-			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/> 
+			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/>
 			<jvmarg value="-Dprofile.properties=${conf.dir}/profile.properties"/>
 			<classpath>
 				<path refid="class.path"/>
@@ -355,8 +381,8 @@
 				use ${db.name};
 			</transaction>
 			<transaction src="./sql/mifosdroptables.sql" />
-            <transaction src="./sql/latest-schema.sql" />
-            <transaction src="./sql/latest-data.sql" />
+			<transaction src="./sql/latest-schema.sql" />
+			<transaction src="./sql/latest-data.sql" />
 			<!-- <transaction src="./sql/Index.sql" /> -->
 		</sql>
 	</target>
@@ -376,40 +402,86 @@
 			     be the same as the one in build_db except
 			     for testdbinsertionscript.sql.  -->
 			<transaction src="./sql/mifosdroptables.sql" />
-            <transaction src="./sql/latest-schema.sql" />
-            <transaction src="./sql/latest-data.sql" />
+			<transaction src="./sql/latest-schema.sql" />
+			<transaction src="./sql/latest-data.sql" />
 
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>
 	</target>
-	
-	<target name="build_2_test_dbs">
-		  <antcall target="build_test_db">
-		    <param name="testdb.name" value="test2"/>
-		  </antcall>
-		  <antcall target="build_test_db">
-		    <param name="testdb.name" value="test"/>
-		  </antcall>
-	</target>	
 
-	<target name="run_test_2">
-		  <antcall target="run_test">
-		    <param name="testdb.name" value="test2"/>
-		  </antcall>
-	</target>	
+	<target name="run_test_parallel_2"
+		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		<parallel>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test1"/>
+				<param name="test.suite" value="ApplicationTestSets1and2"/>
+			</antcall>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test2"/>
+				<param name="test.suite" value="ApplicationTestSets3and4"/>
+			</antcall>
+		</parallel>
+	</target>
+
+	<target name="run_test_parallel_2x2"
+		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		<parallel>
+			<sequential>
+				<antcall target="run_test_no_compile">
+					<param name="testdb.name" value="test1"/>
+					<param name="test.suite" value="ApplicationTestSet1"/>
+				</antcall>
+				<antcall target="run_test_no_compile">
+					<param name="testdb.name" value="test1"/>
+					<param name="test.suite" value="ApplicationTestSet2"/>
+				</antcall>
+			</sequential>
+			<sequential>
+				<antcall target="run_test_no_compile">
+					<param name="testdb.name" value="test2"/>
+					<param name="test.suite" value="ApplicationTestSet3"/>
+				</antcall>
+				<antcall target="run_test_no_compile">
+					<param name="testdb.name" value="test2"/>
+					<param name="test.suite" value="ApplicationTestSet4"/>
+				</antcall>
+			</sequential>
+		</parallel>
+	</target>
+	
+	<target name="run_test_parallel_4"
+		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		<parallel>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test1"/>
+				<param name="test.suite" value="ApplicationTestSet1" />
+			</antcall>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test2" />
+				<param name="test.suite" value="ApplicationTestSet2" />
+			</antcall>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test3" />
+				<param name="test.suite" value="ApplicationTestSet3" />
+			</antcall>
+			<antcall target="run_test_no_compile">
+				<param name="testdb.name" value="test4" />
+				<param name="test.suite" value="ApplicationTestSet4" />
+			</antcall>
+		</parallel>
+	</target>
 
 	<!-- For example, "ant -Ddowngrade.to=76 downgrade" -->
-	<target name="downgrade" depends="compile"
-		description="Downgrade to revision downgrade.to">
-        <java classname="org.mifos.framework.persistence.Downgrader"
+	<target name="downgrade" depends="compile" description="Downgrade to revision downgrade.to">
+		<java classname="org.mifos.framework.persistence.Downgrader"
             classpathref="class.path"
             fork="yes" failonerror="yes">
-            <arg value="${downgrade.to}"/>
-        	<arg value="jdbc:mysql://${db.ip}:${db.port}/${db.name}" />
-        	<arg value="${db.driver}" />
-        	<arg value="${db.user}"/>
-        	<arg value="${db.pwd}"/>
-        </java>
+			<arg value="${downgrade.to}"/>
+			<arg value="jdbc:mysql://${db.ip}:${db.port}/${db.name}" />
+			<arg value="${db.driver}" />
+			<arg value="${db.user}"/>
+			<arg value="${db.pwd}"/>
+		</java>
 	</target>
 
 	<target name="deploy" depends="war">
@@ -420,7 +492,7 @@
 	</target>
 
 	<target name="javadoc">
-	<!--
+		<!--
 		<mkdir dir="${doc.dir}/api"/>
 		<javadoc packagenames="org.*"
 			 sourcepath="${src.dir}" 
@@ -444,5 +516,5 @@
 			</fileset>
 		</zip>
 	</target>-->
-	
+
 </project>

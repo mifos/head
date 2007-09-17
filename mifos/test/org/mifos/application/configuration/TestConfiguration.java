@@ -16,7 +16,7 @@ public class TestConfiguration extends MifosTestCase {
 		configuration = MifosConfiguration.getInstance();
 	}
 
-	public void testInitializeLabelCahe() {
+	public void testInitializeLabelCache() {
 
 		Map<LabelKey, String> labelCache = configuration.getLabelCache();
 		assertEquals(true, labelCache.size() > 10);
