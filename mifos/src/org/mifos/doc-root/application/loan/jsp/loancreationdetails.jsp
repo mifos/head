@@ -53,7 +53,15 @@
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 
-		<SCRIPT>
+        <c:if test="${requestScope.perspective == 'redoLoan'}">
+            <SCRIPT>
+            function fun_cancel(form)
+            {
+                location.href="AdminAction.do?method=load";
+            }
+            </SCRIPT>
+        </c:if>
+        <SCRIPT>
 				function intDedAtDisb() {
 					if(document.getElementsByName("gracePeriodTypeId")[0].value==1) {
 						document.getElementsByName("gracePeriodDuration")[0].disabled=true;
@@ -210,7 +218,18 @@
                                         </c:if>
                                         <tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="accounts.create" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
+												<span class="heading">
+                                                    <c:choose>
+                                                    <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                        <mifos:mifoslabel name="admin.redo" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <mifos:mifoslabel name="accounts.create" />
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                </span>
 												<mifos:mifoslabel name="loan.Enter" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.acc_info" />

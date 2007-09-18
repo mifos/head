@@ -50,14 +50,30 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<script>
-				function fun_cancel(form)
-					{
-						form.method.value="loadMainSearch";
-						form.action="custSearchAction.do";
-						form.submit();
-					}
-		</script>
+    <c:choose>
+        <c:when test="${requestScope.perspective == 'redoLoan'}">
+            <script>
+            function fun_cancel(form)
+            {
+
+                form.action="AdminAction.do";
+                form.method.value="load";
+                form.submit();
+            }
+            </script>
+        </c:when>
+        <c:otherwise>
+            <script>
+            function fun_cancel(form)
+            {
+
+                form.action="custSearchAction.do";
+                form.method.value="loadMainSearch";
+                form.submit();
+            }
+            </script>
+        </c:otherwise>
+    </c:choose>
 
 		<html-el:form method="post"
 			action="/custSearchAction.do?method=search">
@@ -190,8 +206,15 @@
 									</c:when>
 									<c:otherwise>
 										<span class="heading"> 
-											<mifos:mifoslabel name="accounts.create" />
-											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+											<c:choose>
+                                            <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                <mifos:mifoslabel name="admin.redo" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <mifos:mifoslabel name="accounts.create" />
+                                            </c:otherwise>
+                                            </c:choose>
+                                            <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 											<mifos:mifoslabel name="accounts.Account" /> - 
 										</span>  
 									</c:otherwise>

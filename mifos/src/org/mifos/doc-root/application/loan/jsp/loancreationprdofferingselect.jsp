@@ -48,8 +48,16 @@
 	<tiles:put name="body" type="string">
 
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
-		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-		<html-el:form action="/loanAccountAction.do" >
+        <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+        <c:if test="${requestScope.perspective == 'redoLoan'}">
+            <SCRIPT>
+            function fun_cancel(form)
+            {
+                location.href="AdminAction.do?method=load";
+            }
+            </SCRIPT>
+        </c:if>
+        <html-el:form action="/loanAccountAction.do" >
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -135,7 +143,18 @@
                                         </c:if>
                                         <tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="accounts.create" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
+												<span class="heading">
+                                                    <c:choose>
+                                                    <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                        <mifos:mifoslabel name="admin.redo" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <mifos:mifoslabel name="accounts.create" />
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                </span>
 												<mifos:mifoslabel name="loan.Enter" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.acc_info" />

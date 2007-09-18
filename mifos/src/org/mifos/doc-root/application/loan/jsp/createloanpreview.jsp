@@ -53,7 +53,15 @@
 
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-		<SCRIPT>
+		<c:if test="${requestScope.perspective == 'redoLoan'}">
+            <script>
+            function fun_cancel(form)
+            {
+                location.href="AdminAction.do?method=load";
+            }
+            </script>
+        </c:if>
+        <SCRIPT>
 		function displayAdminFormula(feeId , index ){
 			var span = document.getElementById("feeFormulaAdminSpan"+index);
 			if( feeId!= null)
@@ -163,7 +171,18 @@
                                         </c:if>
                                         <tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="accounts.create" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
+												<span class="heading">
+                                                    <c:choose>
+                                                    <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                        <mifos:mifoslabel name="admin.redo" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <mifos:mifoslabel name="accounts.create" />
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                </span>
 												<mifos:mifoslabel name="loan.preview" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.acc_info" />
@@ -421,24 +440,30 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:button property="saveForLaterButton" styleClass="buttn" style="width:100px;" onclick="javascript:fun_saveForLater(this.form)">
-													<mifos:mifoslabel name="loan.saveForLater" />
-												</html-el:button>
-												&nbsp;
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
-												<c:choose>
-													
-													<c:when test='${PendingApproval == true}'>
-														<html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
-															<mifos:mifoslabel name="loan.submitForApproval" />
-														</html-el:button>
-													</c:when>
-													<c:otherwise>
-														<html-el:button property="approvedButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_approved(this.form)">
-															<mifos:mifoslabel name="loan.approved" />
-														</html-el:button>
-													</c:otherwise>
-												</c:choose>
+												<c:if test="${requestScope.perspective == 'redoLoan'}">
+                                                    <html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
+                                                        <mifos:mifoslabel name="loan.submit" />
+                                                    </html-el:button>
+                                                </c:if>
+                                                <c:if test="${requestScope.perspective != 'redoLoan'}">
+                                                    <html-el:button property="saveForLaterButton" styleClass="buttn" style="width:100px;" onclick="javascript:fun_saveForLater(this.form)">
+                                                        <mifos:mifoslabel name="loan.saveForLater" />
+                                                    </html-el:button>
+                                                    &nbsp;
+                                                    <c:choose>
+                                                        <c:when test='${PendingApproval == true}'>
+                                                            <html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
+                                                                <mifos:mifoslabel name="loan.submitForApproval" />
+                                                            </html-el:button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <html-el:button property="approvedButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_approved(this.form)">
+                                                                <mifos:mifoslabel name="loan.approved" />
+                                                            </html-el:button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:if>
 												&nbsp;
 
 												<html-el:button property="cancelButton" styleClass="cancelbuttn" style="width:70px;" onclick="javascript:fun_cancel(this.form)">

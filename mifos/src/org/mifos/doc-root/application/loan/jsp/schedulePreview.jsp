@@ -50,8 +50,28 @@
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
-		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountInstallments.js"></SCRIPT>
-		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<c:choose>
+            <c:when test="${requestScope.perspective == 'redoLoan'}">
+                <script>
+                function fun_cancel(form)
+                {
+                    location.href="AdminAction.do?method=load";
+                }
+                </script>
+            </c:when>
+            <c:otherwise>
+                <script>
+                function fun_cancel(form)
+                {
+
+                    form.action="custSearchAction.do";
+                    form.method.value="loadMainSearch";
+                    form.submit();
+                }
+                </script>
+            </c:otherwise>
+        </c:choose>
+        <SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
         <html-el:form action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
@@ -140,7 +160,18 @@
                                         </c:if>
                                         <tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="accounts.create" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp; </span>
+												<span class="heading">
+                                                    <c:choose>
+                                                    <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                        <mifos:mifoslabel name="admin.redo" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <mifos:mifoslabel name="accounts.create" />
+                                                    </c:otherwise>
+                                                    </c:choose>
+                                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+                                                </span>
 												<mifos:mifoslabel name="loan.review&edit" />
 											</td>
 										</tr>

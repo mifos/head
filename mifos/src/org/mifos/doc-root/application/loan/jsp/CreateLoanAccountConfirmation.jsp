@@ -56,8 +56,15 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td class="headingorange">
-									<mifos:mifoslabel name="loan.successful_creation" />
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+                                    <c:choose>
+										<c:when test="${requestScope.perspective == 'redoLoan'}">
+                                            <mifos:mifoslabel name="loan.successful_recreation" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <mifos:mifoslabel name="loan.successful_creation" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 									<mifos:mifoslabel name="accounts.account" />
 
 									<br>

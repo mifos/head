@@ -501,6 +501,9 @@ public class LoanAccountAction extends AccountAppAction {
 			throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         String perspective = loanActionForm.getPerspective();
+        if (perspective != null) {
+            request.setAttribute("perspective", perspective);
+        }
         CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
         LoanBO loan;

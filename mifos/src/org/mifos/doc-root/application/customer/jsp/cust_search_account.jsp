@@ -7,16 +7,30 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<script>
-				function fun_cancel(form)
-					{
-						
-						form.action="custSearchAction.do";
-						form.method.value="loadMainSearch";
-						form.submit();
-					}
-		</script>
+        <c:choose>
+            <c:when test="${requestScope.perspective == 'redoLoan'}">
+                <script>
+                function fun_cancel(form)
+                {
 
+                    form.action="AdminAction.do";
+                    form.method.value="load";
+                    form.submit();
+                }
+                </script>
+            </c:when>
+            <c:otherwise>
+                <script>
+                function fun_cancel(form)
+                {
+
+                    form.action="custSearchAction.do";
+                    form.method.value="loadMainSearch";
+                    form.submit();
+                }
+                </script>
+            </c:otherwise>
+        </c:choose>
 		<html-el:form method="post"
 			action="/custSearchAction.do?method=search">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -149,9 +163,16 @@
 										</span>  
 									</c:when>
 									<c:otherwise>
-										<span class="heading"> 
-											<mifos:mifoslabel name="accounts.create" />
-											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+										<span class="heading">
+                                            <c:choose>
+                                            <c:when test="${requestScope.perspective == 'redoLoan'}">
+                                                <mifos:mifoslabel name="admin.redo" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <mifos:mifoslabel name="accounts.create" />
+                                            </c:otherwise>
+                                            </c:choose>
+                                            <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 											<mifos:mifoslabel name="accounts.Account" /> - 
 										</span>  
 									</c:otherwise>
@@ -195,12 +216,12 @@
 										style="width:70px;">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit>&nbsp;
-									<html-el:button property="cancelButton"
-											onclick="javascript:fun_cancel(this.form)"
-											styleClass="cancelbuttn" style="width:70px;">
-											<mifos:mifoslabel name="accounts.cancel" />
-										</html-el:button>
-									</td>
+                                    <html-el:button property="cancelButton"
+                                        onclick="javascript:fun_cancel(this.form)"
+                                        styleClass="cancelbuttn" style="width:70px;">
+                                        <mifos:mifoslabel name="accounts.cancel" />
+                                    </html-el:button>
+                                    </td>
 								</tr>
 							</table><br>
 							</td>

@@ -1,3 +1,5 @@
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <script language="javascript">
 	function fnLogout() {
 		location.href="loginAction.do?method=logout";
@@ -13,9 +15,18 @@
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
           <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
-          <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
-          <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
-          <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+          <c:choose>
+              <c:when test="${requestScope.perspective == 'redoLoan'}">
+                  <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch">Clients &amp; Accounts </a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="taborange"><a href="AdminAction.do?method=load" class="tabfontwhite">Admin</a></td>
+              </c:when>
+              <c:otherwise>
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              </c:otherwise>
+          </c:choose>
         </tr>
       </table>
     </td>
