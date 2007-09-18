@@ -2,11 +2,9 @@ package org.mifos.application.reports.struts.action;
 
 import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.security.AddActivity;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
@@ -272,13 +270,8 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 
 	public void testShouldCreateFailureWhenActivityIdOutOfRange()
 			throws Exception {
-		AddActivity activity = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION,
-				Short.MIN_VALUE, SecurityConstants.ORGANIZATION_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE,
-				"report with a min activityId");
-		activity.upgrade(HibernateUtil.getSessionTL().connection());
-
+		ActivityEntity activity = ActivityTestUtil
+				.insertActivityForTest(Short.MIN_VALUE);
 		setRequestPathInfo("/reportsCategoryAction.do");
 		addRequestParameter("method", "addNewCategory");
 		addRequestParameter("categoryName", "willFailureForRangeNewCategory");
@@ -288,7 +281,8 @@ public class ReportsCategoryActionTest extends MifosMockStrutsTestCase {
 		String[] errors = { ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID };
 		verifyActionErrors(errors);
 
-		activity.downgrade(HibernateUtil.getSessionTL().connection());
+		ActivityTestUtil.deleteActivityForTest(activity);
 	}
+
 
 }

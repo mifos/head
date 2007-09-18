@@ -6,16 +6,23 @@ import org.apache.struts.upload.FormFile;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.business.ReportsJasperMap;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
+import org.mifos.application.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
@@ -66,7 +73,8 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 	public void testShouldEditPreviewFailureWhenReportCategoryIdIsEmpty() {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "editpreview");
-		addRequestParameter("reportTitle", "existTitle");
+		addRequestParameter("reportTitle",
+				"editPreviewFailureWhenReportCategoryIdIsEmpty");
 		addRequestParameter("reportCategoryId", "");
 		addRequestParameter("isActive", "1");
 		actionPerform();
@@ -76,7 +84,8 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 	public void testShouldEditPreviewFailureWhenIsActiveIsEmpty() {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "editpreview");
-		addRequestParameter("reportTitle", "exsitTitle");
+		addRequestParameter("reportTitle",
+				"editPreviewFailureWhenIsActiveIsEmpty");
 		addRequestParameter("reportCategoryId", "1");
 		addRequestParameter("isActive", "");
 		actionPerform();
@@ -102,10 +111,9 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertEquals(0, getErrorSize());
 
-		assertNotNull(request.getAttribute("activity"));
 		assertNotNull(request.getAttribute("report"));
 
-		// Simulate an future activities upgrade 
+		// Simulate an future activities upgrade
 		AddActivity activity = null;
 		try {
 			activity = new AddActivity(
@@ -117,8 +125,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
 		}
 		catch (Exception e) {
-			((AddActivity) request.getAttribute("activity"))
-					.downgrade(HibernateUtil.getSessionTL().connection());
+			activity.downgrade(HibernateUtil.getSessionTL().connection());
 			HibernateUtil.startTransaction();
 			new RolesPermissionsPersistence().delete(request
 					.getAttribute("report"));
@@ -126,29 +133,23 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 			throw e;
 		}
 
-		//Undo
+		// Undo
 		activity.downgrade(HibernateUtil.getSessionTL().connection());
-		((AddActivity) request.getAttribute("activity"))
-				.downgrade(HibernateUtil.getSessionTL().connection());
-		new RolesPermissionsPersistence()
-				.delete(request.getAttribute("report"));
+		ReportsBO report = (ReportsBO) request.getAttribute("report");
+		removeReport(report.getReportId());
 	}
 
 	public void testShouldCreateFailureWhenActivityIdOutOfRange()
 			throws Exception {
-		AddActivity activity = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION,
-				Short.MIN_VALUE, SecurityConstants.ORGANIZATION_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE,
-				"report with a min activityId");
-		activity.upgrade(HibernateUtil.getSessionTL().connection());
+		ActivityEntity activityEntity = ActivityTestUtil
+				.insertActivityForTest(Short.MIN_VALUE);
 
 		FormFile file = new MockFormFile("testFilename");
 		BirtReportsUploadActionForm actionForm = new BirtReportsUploadActionForm();
 		setRequestPathInfo("/birtReportsUploadAction.do");
 		addRequestParameter("method", "upload");
 		actionForm.setFile(file);
-		actionForm.setReportTitle("exsitTitle");
+		actionForm.setReportTitle("existingTitle");
 		actionForm.setReportCategoryId("1");
 		actionForm.setIsActive("1");
 		setActionForm(actionForm);
@@ -158,8 +159,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		String[] errors = { ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID };
 		verifyActionErrors(errors);
 
-
-		activity.downgrade(HibernateUtil.getSessionTL().connection());
+		ActivityTestUtil.deleteActivityForTest(activityEntity);
 	}
 
 	public void testShouldPreviewSuccessWithReportTemplate() throws Exception {
@@ -178,8 +178,9 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward("preview_success");
 	}
-	
-	public void testShouldPreviewFailureWithOutReportTemplate() throws Exception {
+
+	public void testShouldPreviewFailureWithOutReportTemplate()
+			throws Exception {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 
 		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
@@ -193,44 +194,138 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
 		String[] errors = { ReportsConstants.ERROR_FILE };
 		verifyActionErrors(errors);
-	}	
-	
+	}
+
 	public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
-		
-	
+
+
 		setRequestPathInfo("/birtReportsUploadAction.do");
 
 		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
-		form.setReportTitle("test1ReportsTitle");
+		form.setReportTitle("testShouldSubmitSucessWhenUploadNewReport");
 		form.setReportCategoryId("1");
 		form.setIsActive("1");
 		form.setFile(new MockFormFile("testFileName1.rptdesign"));
 		setActionForm(form);
-		
+
 		addRequestParameter("method", "upload");
 		actionPerform();
 
+		ReportsBO report = (ReportsBO) request.getAttribute("report");
+		assertNotNull(report);
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(
+				ReportsJasperMap.class, report.getReportId());
+		assertNotNull(jasper);
+
 		verifyNoActionErrors();
 		verifyForward("create_success");
-		
-		removeReport("test1ReportsTitle", (short)1);
-	
+
+		removeReport(report.getReportId());
+
 	}
 
-	private void removeReport(String reportName, short categoryId) {
+	public void testShouldSubmitSuccessAfterEdit() throws Exception {
+		setRequestPathInfo("/birtReportsUploadAction.do");
+
+		Session session = HibernateUtil.getSessionTL();
+		ReportsPersistence persistence = new ReportsPersistence();
+		ReportsBO report = new ReportsBO();
+		report.setReportName("testShouldSubmitSuccessAfterEdit");
+		report.setReportsCategoryBO((ReportsCategoryBO) session.load(
+				ReportsCategoryBO.class, (short) 1));
+		report.setIsActive((short) 1);
+		short newActivityId = (short) (new BirtReportsUploadAction())
+				.insertActivity((short) 1, "test"
+						+ "testShouldSubmitSuccessAfterEdit");
+		report.setActivityId(newActivityId);
+
+		ReportsJasperMap reportJasperMap = report.getReportsJasperMap();
+//		reportJasperMap.setReportId(report.getReportId());
+		reportJasperMap.setReportJasper("testFileName_EDIT.rptdesign");
+		report.setReportsJasperMap(reportJasperMap);
+		persistence.createOrUpdate(report);
+//		persistence.createOrUpdate(reportJasperMap);
+
+		BirtReportsUploadActionForm editForm = new BirtReportsUploadActionForm();
+		editForm.setReportId(report.getReportId().toString());
+		editForm.setReportTitle("newTestShouldSubmitSuccessAfterEdit");
+		editForm.setReportCategoryId("2");
+		editForm.setIsActive("0");
+		editForm.setFile(new MockFormFile(
+				"newTestShouldSubmitSuccessAfterEdit.rptdesign"));
+		setActionForm(editForm);
+		addRequestParameter("method", "editThenUpload");
+
+		actionPerform();
+
+		ReportsBO newReport = new ReportsPersistence().getReport(report
+				.getReportId());
+		ReportsJasperMap jasper = (ReportsJasperMap) new ReportsPersistence().getPersistentObject(
+				ReportsJasperMap.class, report.getReportId());
+		
+		assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport
+				.getReportName());
+		assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId()
+				.shortValue());
+		assertEquals(0, newReport.getIsActive().shortValue());
+		assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport
+				.getReportsJasperMap().getReportJasper());
+		assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
+
+		removeReport(newReport.getReportId());
+
+	}
+
+	private void removeReport(Short reportId) throws PersistenceException {
+
+		ReportsPersistence reportPersistence = new ReportsPersistence();
+		ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(
+				ReportsBO.class, reportId);
+
 		Session session = HibernateUtil.getSessionTL();
 		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("from ReportsBO rbo where rbo.reportName=:rname and rbo.reportsCategoryBO=:rcbo");
-		query.setParameter("rname", reportName);
-		ReportsCategoryBO rcbo = (ReportsCategoryBO)session.load(ReportsCategoryBO.class, Short.valueOf(categoryId));
-		query.setParameter("rcbo", rcbo);
-		ReportsBO rbo = (ReportsBO) query.list().get(0);
-		rcbo.getReportsSet().remove(rbo);
-		rbo.setReportsCategoryBO(null);
-		rbo.setReportsJasperMap(null);
-		session.delete(rbo);
+
+		ReportsJasperMap jasperMap = (ReportsJasperMap) reportPersistence
+				.getPersistentObject(ReportsJasperMap.class, report
+						.getReportId());
+		if (jasperMap != null)
+			reportPersistence.delete(jasperMap);
+		RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
+		ActivityEntity activityEntity = (ActivityEntity) permPersistence
+				.getPersistentObject(ActivityEntity.class, report
+						.getActivityId());
+		reportPersistence.delete(report);
+
+		LookUpValueEntity anLookUp = activityEntity
+				.getActivityNameLookupValues();
+
+		Query query1 = session
+				.createQuery("from RoleActivityEntity a where a.activity =:anActivity");
+		query1.setParameter("anActivity", activityEntity);
+
+		for (int i = 0; null != query1.list() && i < query1.list().size(); i++) {
+			RoleActivityEntity roleActivityEntity = (RoleActivityEntity) query1
+					.list().get(i);
+			permPersistence.delete(roleActivityEntity);
+		}
+
+		int lookUpId = anLookUp.getLookUpId();
+		permPersistence.delete(activityEntity);
+
+		Query query2 = session
+				.createQuery("from LookUpValueLocaleEntity a where a.lookUpId =:anlookUpId");
+		query2.setParameter("anlookUpId", lookUpId);
+		for (int i = 0; null != query2.list() && i < query2.list().size(); i++) {
+			LookUpValueLocaleEntity locale = (LookUpValueLocaleEntity) query2
+					.list().get(i);
+			permPersistence.delete(locale);
+		}
+
+		permPersistence.delete(anLookUp);
+
 		tx.commit();
 	}
-	
-	
+
+
 }

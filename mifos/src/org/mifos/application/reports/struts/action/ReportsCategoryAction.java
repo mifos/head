@@ -1,7 +1,5 @@
 package org.mifos.application.reports.struts.action;
 
-import java.sql.Connection;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +24,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.activity.ActivityGeneratorException;
 import org.mifos.framework.security.util.ActionSecurity;
@@ -127,11 +124,11 @@ public class ReportsCategoryAction extends BaseAction {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
-        Session session = HibernateUtil.getSessionTL();
-		
+		Session session = HibernateUtil.getSessionTL();
+
 		ActivityGenerator activityGenerator = new ActivityGenerator();
-		activityGenerator.upgradeUsingHQL(session, (short)0, categoryName);
-        
+		activityGenerator.upgradeUsingHQL(session, (short) 0, categoryName);
+
 		reportsCategoryBO.setActivityId((short) newActivityId);
 		reportsCategoryBO.setReportCategoryName(categoryName);
 
@@ -272,13 +269,6 @@ public class ReportsCategoryAction extends BaseAction {
 			return mapping
 					.findForward(ActionForwards.confirm_delete.toString());
 		}
-
-		Connection conn = new ReportsPersistence().getConnection();
-		new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION,
-				reportsCategoryBO.getActivityId(),
-				SecurityConstants.REPORTS_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, reportsCategoryBO
-						.getReportCategoryName()).downgrade(conn);
 		new ReportsPersistence().delete(reportsCategoryBO);
 
 		request.getSession().setAttribute(
@@ -304,9 +294,8 @@ public class ReportsCategoryAction extends BaseAction {
 		}
 		reportsCategoryBO.setReportCategoryName(inputCategoryName);
 		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
-		Connection conn = new ReportsPersistence().getConnection();
-		AddActivity.changeActivityMessage(conn, reportsCategoryBO.getActivityId(),
-				DatabaseVersionPersistence.ENGLISH_LOCALE,
+		ActivityGenerator.changeActivityMessage(reportsCategoryBO
+				.getActivityId(), DatabaseVersionPersistence.ENGLISH_LOCALE,
 				reportsCategoryBO.getReportCategoryName());
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}

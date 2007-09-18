@@ -1,7 +1,5 @@
 package org.mifos.framework.security.activity;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.hibernate.Query;
@@ -13,6 +11,7 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -37,10 +36,8 @@ public class ActivityGeneratorTest extends TestCase {
 
 		short parentId = 13;
 
-		int maxLookUpId = findMaxLookUpId(session, lookUpEntity);
 		activityGenerator.upgradeUsingHQL(session, parentId, "abcd");
 		int lookUpId = activityGenerator.getLookUpId();
-		assertEquals(maxLookUpId, lookUpId - 1);
 		assertEquals("abcd", activityGenerator.getLookUpValueLocaleEntity(
 				DatabaseVersionPersistence.ENGLISH_LOCALE, lookUpId)
 				.getLookUpValue());
@@ -96,15 +93,13 @@ public class ActivityGeneratorTest extends TestCase {
 		ActivityGenerator.changeActivityMessage((short) 3, localeId, "Can create funds");
 
 	}
-
-	private int findMaxLookUpId(Session session, MifosLookUpEntity lookUpEntity) {
-
-		Query queryForMaxLookUpId = session
-				.createQuery("select max(u.lookUpId) from LookUpValueEntity u");
-		List list = queryForMaxLookUpId.list();
-		if (list == null || list.isEmpty())
-			return 0;
-		else return ((Integer) list.get(0)).intValue();
+	
+	public void testShouldGenerateMinActivityIdWhenCalculate() throws Exception {
+		short minActivityId = -32767;
+		ActivityEntity activity = ActivityTestUtil.insertActivityForTest(minActivityId);
+		assertEquals(minActivityId - 1, ActivityGenerator
+				.calculateDynamicActivityId());
+		ActivityTestUtil.deleteActivityForTest(activity);
 	}
-
+	
 }

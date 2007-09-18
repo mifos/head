@@ -4,6 +4,7 @@
 <struts-config>
 	<form-beans> 
 		<form-bean name="birtReportsUploadActionForm" type="org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm" />
+		<form-bean name="reportsCategoryActionForm" type="org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm" />
     </form-beans>
     <action-mappings>
 		<action path="/birtReportsUploadAction" type="org.mifos.application.reports.struts.action.BirtReportsUploadAction" 
@@ -17,11 +18,6 @@
 		    <forward name="download_success" path="/pages/application/reports/jsp/downloadReport.jsp" />
 		    <forward name="editpreview_failure" path="/pages/application/reports/jsp/editReport.jsp" />		
 		</action>
-    </action-mappings>
-    <form-beans> 
-		<form-bean name="reportsCategoryActionForm" type="org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm" />
-    </form-beans>
-    <action-mappings>
 		<action path="/reportsCategoryAction" type="org.mifos.application.reports.struts.action.ReportsCategoryAction" 
 			name="reportsCategoryActionForm" parameter="method" scope="session"
 			input="/reportsCategoryAction.do?method=validate" validate="true">

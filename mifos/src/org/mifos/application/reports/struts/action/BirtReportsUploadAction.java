@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Connection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +37,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
-import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.activity.ActivityGeneratorException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -99,10 +96,12 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsCategoryBO category = (ReportsCategoryBO) rp
+				.getPersistentObject(ReportsCategoryBO.class, Short
+						.valueOf(uploadForm.getReportCategoryId()));
 		request.setAttribute("category", category);
-		if (isReportAlreadyExist(request, uploadForm)) {
+		if (isReportAlreadyExist(request, uploadForm.getReportTitle(),category)) {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
@@ -123,13 +122,16 @@ public class BirtReportsUploadAction extends BaseAction {
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 
-		if (isReportAlreadyExist(request, uploadForm)) {
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsCategoryBO category = (ReportsCategoryBO) rp
+				.getPersistentObject(ReportsCategoryBO.class, Short
+						.valueOf(uploadForm.getReportCategoryId()));
+
+		if (isReportAlreadyExist(request, uploadForm.getReportTitle(), category)) {
 			return mapping.findForward(ActionForwards.preview_failure
 					.toString());
 		}
 
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
 
 		short parentActivity = category.getActivityId();
 		int newActivityId;
@@ -146,22 +148,17 @@ public class BirtReportsUploadAction extends BaseAction {
 					.toString());
 		}
 
-		ReportsBO reportBO = createOrUpdateReport(category, newActivityId, uploadForm
-				.getReportTitle(), Short.valueOf(uploadForm.getIsActive()));
-
 		FormFile formFile = uploadForm.getFile();
-		insertReportsJasperMap(formFile.getFileName());
-
 		uploadFile(formFile);
+		
+
+		ReportsBO reportBO = createOrUpdateReport( category, newActivityId,
+				uploadForm.getReportTitle(), Short.valueOf(uploadForm
+						.getIsActive()), formFile.getFileName());
+		
 		allowActivityPermission(reportBO, newActivityId);
 		request.setAttribute("report", reportBO);
 
-		AddActivity activity = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short) newActivityId, parentActivity,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, activityNameHead
-						+ uploadForm.getReportTitle());
-		request.setAttribute("activity", activity);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -182,11 +179,12 @@ public class BirtReportsUploadAction extends BaseAction {
 		File file = new File(dir, formFile.getFileName());
 		InputStream is = formFile.getInputStream();
 		OutputStream os;
-		/* for test purposes, if the real path does not exist (if we're
-		 * operating outside a deployed environment) the file is just written
-		 * to a ByteArrayOutputStream which is not actually stored.
-		 * !! This does not produce any sort of file that can be retirieved.
-		 * !! it only allows us to perform the upload action.
+		/*
+		 * for test purposes, if the real path does not exist (if we're
+		 * operating outside a deployed environment) the file is just written to
+		 * a ByteArrayOutputStream which is not actually stored. !! This does
+		 * not produce any sort of file that can be retirieved. !! it only
+		 * allows us to perform the upload action.
 		 */
 		if (dirPath != null)
 			os = new FileOutputStream(file);
@@ -238,8 +236,10 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsCategoryBO category = (ReportsCategoryBO) rp
+				.getPersistentObject(ReportsCategoryBO.class, Short
+						.valueOf(uploadForm.getReportCategoryId()));
 		request.setAttribute("category", category);
 		ReportsBO report = new ReportsPersistence().getReport(Short
 				.valueOf(uploadForm.getReportId()));
@@ -248,7 +248,7 @@ public class BirtReportsUploadAction extends BaseAction {
 					.toString());
 		}
 		else if (!isReportItsSelf(uploadForm, report)
-				&& isReportAlreadyExist(request, uploadForm)) {
+				&& isReportAlreadyExist(request, uploadForm.getReportTitle(),category)) {
 			return mapping.findForward(ActionForwards.editpreview_failure
 					.toString());
 		}
@@ -273,12 +273,12 @@ public class BirtReportsUploadAction extends BaseAction {
 	}
 
 	private boolean isReportAlreadyExist(HttpServletRequest request,
-			BirtReportsUploadActionForm form) {
+			String reportName,ReportsCategoryBO categoryBO) throws Exception{
 		for (ReportsBO report : new ReportsPersistence().getAllReports()) {
-			if (form.getReportTitle().equals(report.getReportName())
-					&& form.getReportCategoryId().equals(
+			if (reportName.equals(report.getReportName())
+					&& categoryBO.getReportCategoryId().equals(
 							report.getReportsCategoryBO().getReportCategoryId()
-									.toString())) {
+									)) {
 				ActionErrors errors = new ActionErrors();
 				errors.add(ReportsConstants.ERROR_REPORTALREADYEXIST,
 						new ActionMessage(
@@ -287,7 +287,6 @@ public class BirtReportsUploadAction extends BaseAction {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -306,8 +305,12 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
+		// ReportsCategoryBO category = getReportCategory(uploadForm
+		// .getReportCategoryId());
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsCategoryBO category = (ReportsCategoryBO) rp
+				.getPersistentObject(ReportsCategoryBO.class, Short
+						.valueOf(uploadForm.getReportCategoryId()));
 		request.setAttribute("category", category);
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
@@ -317,15 +320,15 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		ReportsCategoryBO category = getReportCategory(uploadForm
-				.getReportCategoryId());
+		ReportsPersistence rp = new ReportsPersistence();
+		ReportsCategoryBO category = (ReportsCategoryBO) rp
+				.getPersistentObject(ReportsCategoryBO.class, Short
+						.valueOf(uploadForm.getReportCategoryId()));
 		ReportsBO reportBO = new ReportsPersistence().getReport(Short
 				.valueOf(uploadForm.getReportId()));
-		ReportsJasperMap reportJasperMap = new ReportsPersistence().getReport(
-				Short.valueOf(uploadForm.getReportId())).getReportsJasperMap();
-
+		ReportsJasperMap reportJasperMap = reportBO.getReportsJasperMap();
 		if (!isReportItsSelf(uploadForm, reportBO)
-				&& isReportAlreadyExist(request, uploadForm)) {
+				&& isReportAlreadyExist(request, uploadForm.getReportTitle(),category)) {
 			return mapping.findForward(ActionForwards.editpreview_failure
 					.toString());
 		}
@@ -334,19 +337,17 @@ public class BirtReportsUploadAction extends BaseAction {
 					.findForward(ActionForwards.create_failure.toString());
 		}
 
-		createOrUpdateReport(category, reportBO.getActivityId(), uploadForm
-				.getReportTitle(), Short.valueOf(uploadForm.getIsActive()));
+		reportBO.setReportName(uploadForm.getReportTitle());
+		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
+		reportBO.setReportsCategoryBO(category);
+		
+		rp.createOrUpdate(reportBO);
 
-//		Connection conn = new ReportsPersistence().getConnection();
-		ActivityGenerator.reparentActivityUsingHibernate(reportBO.getActivityId(), category
-				.getActivityId());
-		ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
+		ActivityGenerator.reparentActivityUsingHibernate(reportBO
+				.getActivityId(), category.getActivityId());
+		ActivityGenerator.changeActivityMessage(reportBO.getActivityId(),
+				DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
 						+ reportBO.getReportName());
-//		AddActivity.reparentActivity(conn, reportBO.getActivityId(), category
-//				.getActivityId());
-//		AddActivity.changeActivityMessage(conn, reportBO.getActivityId(),
-//				DatabaseVersionPersistence.ENGLISH_LOCALE, "Can view "
-//						+ reportBO.getReportName());
 
 		FormFile formFile = uploadForm.getFile();
 		if (StringUtils.isEmpty(formFile.getFileName())) {
@@ -354,10 +355,10 @@ public class BirtReportsUploadAction extends BaseAction {
 		}
 		else {
 			reportJasperMap.setReportJasper(formFile.getFileName());
-			new ReportsPersistence().createOrUpdate(reportJasperMap);
+			rp.createOrUpdate(reportJasperMap);
 			uploadFile(formFile);
 		}
-
+		
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -374,22 +375,6 @@ public class BirtReportsUploadAction extends BaseAction {
 		return false;
 	}
 
-	private ReportsCategoryBO getReportCategory(Short reportCategoryId) {
-		List<ReportsCategoryBO> categories = new ReportsPersistence()
-				.getAllReportCategories();
-		for (ReportsCategoryBO reportsCategory : categories) {
-			if (reportsCategory.getReportCategoryId().equals(reportCategoryId)) {
-				return reportsCategory;
-			}
-		}
-		return null;
-	}
-
-	private ReportsCategoryBO getReportCategory(String reportCategoryId) {
-		return getReportCategory(Short.valueOf(reportCategoryId));
-	}
-
-
 	public ActionForward downloadBirtReport(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -400,14 +385,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		return mapping.findForward(ActionForwards.download_success.toString());
 	}
 
-	private void insertReportsJasperMap(String fileName)
-			throws PersistenceException {
-		ReportsJasperMap reportJasperMap = new ReportsJasperMap();
-		reportJasperMap.setReportJasper(fileName);
-		new ReportsPersistence().createOrUpdate(reportJasperMap);
-	}
-
-	private int insertActivity(short parentActivity, String lookUpDescription)
+	protected int insertActivity(short parentActivity, String lookUpDescription)
 			throws ServiceException, ActivityGeneratorException, IOException,
 			HibernateException, PersistenceException {
 		int newActivityId;
@@ -420,13 +398,19 @@ public class BirtReportsUploadAction extends BaseAction {
 	}
 
 	private ReportsBO createOrUpdateReport(ReportsCategoryBO category,
-			int newActivityId, String reportTitle, Short isActive)
+			int newActivityId, String reportTitle, Short isActive, String fileName)
 			throws PersistenceException {
 		ReportsBO reportBO = new ReportsBO();
 		reportBO.setReportName(reportTitle);
 		reportBO.setReportsCategoryBO(category);
 		reportBO.setActivityId((short) newActivityId);
 		reportBO.setIsActive(isActive);
+
+		
+		ReportsJasperMap reportsJasperMap = reportBO.getReportsJasperMap();
+		reportsJasperMap.setReportJasper(fileName);
+		reportBO.setReportsJasperMap(reportsJasperMap);
+
 		new ReportsPersistence().createOrUpdate(reportBO);
 		return reportBO;
 	}

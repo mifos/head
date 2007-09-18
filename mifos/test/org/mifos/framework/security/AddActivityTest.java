@@ -18,11 +18,9 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.security.activity.ActivityGenerator;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -109,19 +107,4 @@ public class AddActivityTest {
 		return new JUnit4TestAdapter(AddActivityTest.class);
 	}
 
-	public void testShouldGenerateMinActivityIdWhenCalculate() throws Exception {
-		AddActivity activity = null;
-		int minActivityId = -2;
-		activity = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION,
-				(short) minActivityId,
-				SecurityConstants.ORGANIZATION_MANAGEMENT,
-				DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
-		activity.upgrade(HibernateUtil.getSessionTL().connection());
-
-		assertEquals(minActivityId - 1, ActivityGenerator
-				.calculateDynamicActivityId());
-
-		activity.downgrade(HibernateUtil.getSessionTL().connection());
-	}
 }
