@@ -42,4 +42,5 @@ public class SurveysConstants {
 	public static final String EMPTY_FIELD = "errors.emptyfield";
 	public static final String INVALID_OFFICER="errors.invalidofficer";
 	public static final String NAME_EXISTS="errors.nameexists";
+    public static final String INVALID_NUMBER_OF_CHOICES="erros.invalidnumberofchoices";
 }

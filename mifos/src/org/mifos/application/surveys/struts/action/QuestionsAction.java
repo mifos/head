@@ -264,13 +264,24 @@ public class QuestionsAction extends PersistenceAction {
 				errors.add("shortName", new ActionMessage(
 						SurveysConstants.NAME_EXISTS));
 		}
-		if (errors.size() > 0) {
+
+        AnswerType type = AnswerType.fromInt(Integer.parseInt(
+				actionForm.getValue("answerType")));
+        if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
+			List<String> newQuestionChoices =
+				(List<String>) request.getSession().getAttribute(
+						SurveysConstants.KEY_NEW_QUESTION_CHOICES);
+            if (newQuestionChoices == null || newQuestionChoices.size() < 2) {
+                errors.add("answerType", new ActionMessage(
+                    SurveysConstants.INVALID_NUMBER_OF_CHOICES));
+            }
+		}
+        if (errors.size() > 0) {
 			saveErrors(request, errors);
 			return mapping.findForward(ActionForwards.load_success.toString());
 		}
 				
-		AnswerType type = AnswerType.fromInt(Integer.parseInt(
-				actionForm.getValue("answerType")));
+
 		Question question = new Question(shortName,
 				actionForm.getValue("questionText"), type);
 		if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
@@ -278,7 +289,7 @@ public class QuestionsAction extends PersistenceAction {
 			List<String> newQuestionChoices =
 				(List<String>) request.getSession().getAttribute(
 						SurveysConstants.KEY_NEW_QUESTION_CHOICES);
-			for (String choiceText : newQuestionChoices) {
+            for (String choiceText : newQuestionChoices) {
 				choices.add(new QuestionChoice(choiceText));
 			}
 			question.setChoices(choices);

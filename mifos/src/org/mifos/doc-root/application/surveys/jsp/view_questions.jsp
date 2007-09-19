@@ -11,7 +11,7 @@
     <td class="bluetablehead05">
       <span class="fontnormal8pt">
         <html-el:link action="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-          <mifos:mifoslabel name="Surveys.linkAdmin" bundle="SurveysUIResources"/>	
+          <mifos:mifoslabel name="Surveys.linkAdmin" bundle="SurveysUIResources"/>
         </html-el:link> /
       </span>
       <span class="fontnormal8pt">
@@ -24,22 +24,30 @@
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="70%" align="left" valign="middle" class="paddingL15T15"> <!-- this td represents the entire central content area -->
-			<div style="padding:3px" class="headingorange"><mifos:mifoslabel name="Surveys.viewquestions"/>
-	<br><span class="fontnormal">
-              <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
-               <a href="questionsAction.do?method=defineQuestions">
-               <mifos:mifoslabel name="Surveys.definequestion"/></a></span></div>
-      <c:if test="${requestScope.itemCount > 0}">
+        <div style="padding:3px" class="headingorange"><mifos:mifoslabel name="Surveys.viewquestions"/>
+            <br/>
+            <br/>
+            <span class="fontnormal">
+                <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
+                <a href="questionsAction.do?method=defineQuestions">
+                    <mifos:mifoslabel name="Surveys.definequestion"/>
+                </a>
+            </span>
+        </div>
+        <c:if test="${requestScope.itemCount > 0}">
         <br/>
         <span class="fontnormal" style="color:orange; font-weight:bold">
-          <mifos:mifoslabel name="Surveys.newquestionsmsgprefix"/> <c:out value="${requestScope.itemCount}"/> <mifos:mifoslabel name="Surveys.newquestionsmsgsuffix"/>
-        </span><br>
+            <mifos:mifoslabel name="Surveys.newquestionsmsgprefix"/>
+            <c:out value="${requestScope.itemCount}"/>
+            <mifos:mifoslabel name="Surveys.newquestionsmsgsuffix"/>
+        </span>
+        <br/>
         <a href="surveysAction.do?method=create_entry">
-        <mifos:mifoslabel name="Surveys.definenewsurvey"/></a>
-      </c:if>
+            <mifos:mifoslabel name="Surveys.definenewsurvey"/>
+        </a>
+        </c:if>
 
-      <br/>
-      <br/>
+        <br/>
       <!-- the question list table -->
       <table width="90%" border="0" cellspacing="0" cellpadding="0">
       <c:set var="count" value="0"/>
