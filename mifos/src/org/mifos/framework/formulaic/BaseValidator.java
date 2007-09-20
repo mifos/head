@@ -17,9 +17,13 @@ public abstract class BaseValidator implements Validator {
 		return errorPrefix + "." + errorType;
 	}
 
-	
-	protected ValidationError makeError(Object value, Enum errorType) {
+    protected ValidationError makeError(Object value, Enum errorType) {
 		ActionMessage message = new ActionMessage(getKey(errorType.toString()));
+		return new ValidationError(value, message);
+	}
+
+    protected ValidationError makeError(Object value, Enum errorType, String property) {
+		ActionMessage message = new ActionMessage(getKey(errorType.toString()), property);
 		return new ValidationError(value, message);
 	}
 	

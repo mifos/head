@@ -2,7 +2,8 @@ package org.mifos.framework.formulaic;
 
 public enum ErrorType {
 	MISSING,
-	NUMBER_OUT_OF_RANGE,
+    MISSING_FIELD,
+    NUMBER_OUT_OF_RANGE,
 	DATE_FORMAT,
 	INVALID_ENUM,
 	INVALID_INT,

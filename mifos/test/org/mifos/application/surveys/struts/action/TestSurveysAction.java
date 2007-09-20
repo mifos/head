@@ -73,7 +73,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(state)", "ACTIVE");
 		addRequestParameter("method", "preview");
 		actionPerform();
-		verifyActionErrors(new String[] {"errors.NotNullEmptyValidator.MISSING"});
+		verifyActionErrors(new String[] {"errors.NotNullEmptyValidator.MISSING_FIELD"});
 	}
 	
 	public void testMainpage() throws Exception {

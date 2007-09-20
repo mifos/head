@@ -2,6 +2,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<jsp:useBean id="newQuestionChoices" type="java.util.Collection" scope="session" />
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 	<script src="pages/application/surveys/js/questions.js" type="text/javascript"></script>
@@ -13,7 +14,7 @@
 						<mifos:mifoslabel name="Surveys.linkAdmin" bundle="SurveysUIResources"/>	
 					</html-el:link> /
 	              </span>
-	              <span class="fontnormal8pt">
+	              <span class="fontnormal8ptbold">
      				<mifos:mifoslabel name="Surveys.AddQuestions" bundle="SurveysUIResources"/>
 	              </span>
     	        </td>
@@ -64,19 +65,21 @@
                   <tr valign="top" class="fontnormal">
                     <td>&nbsp;</td>
                     <td align="left">
-            <table border="0" cellpadding="3" cellspacing="0">
-              <tr>
-                <td width="28%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Choice" bundle="SurveysUIResources"/></td>
-                <td width="19%" class="drawtablehd"><mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/></td>
-              </tr>
+                <% if (newQuestionChoices.size() > 0) { %>
+                <table border="0" cellpadding="3" cellspacing="0">
+                    <tr>
+                        <td width="28%" class="drawtablehd"><mifos:mifoslabel name="Surveys.Choice" bundle="SurveysUIResources"/></td>
+                        <td width="19%" class="drawtablehd"><mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/></td>
+                    </tr>
 
-              <c:forEach var="choice" varStatus="status" items="${newQuestionChoices}">
-              <tr>
-                <td width="28%" class="drawtablerow"><c:out value="${choice}"/></td>
-                <td width="19%" class="drawtablerow"><html-el:link action="questionsAction?method=deleteChoice&choiceNum=${status.index}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/></html-el:link> </td>
-              </tr>
-	      </c:forEach>
-            </table>
+                    <c:forEach var="choice" varStatus="status" items="${newQuestionChoices}">
+                        <tr>
+                            <td width="28%" class="drawtablerow"><c:out value="${choice}"/></td>
+                            <td width="19%" class="drawtablerow"><html-el:link action="questionsAction?method=deleteChoice&choiceNum=${status.index}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="Surveys.removelink" bundle="SurveysUIResources"/></html-el:link> </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                <% } %>
                     </td>
                   </tr>
             <tr>

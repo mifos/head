@@ -36,9 +36,9 @@ public class QuestionsAction extends PersistenceAction {
 	static {
 		addQuestionValidator = new Schema();
 		addQuestionValidator.setSimpleValidator("value(shortName)",
-				new NotNullEmptyValidator());
+				new NotNullEmptyValidator("Question Name"));
 		addQuestionValidator.setSimpleValidator("value(questionText)",
-				new NotNullEmptyValidator());
+				new NotNullEmptyValidator("Question text"));
 	}
 	
 	@Override

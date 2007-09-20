@@ -18,7 +18,7 @@
           <mifos:mifoslabel name="Surveys.viewquestions" bundle="SurveysUIResources"/>
         </html-el:link>  /
       </span>
-      <span class="fontnormal8pt">
+      <span class="fontnormal8ptbold">
           <c:out value="${question.shortName}"/>
       </span>
     </td>

@@ -31,6 +31,7 @@ import org.mifos.framework.formulaic.MaxLengthValidator;
 import org.mifos.framework.formulaic.NotNullEmptyValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
+import org.mifos.framework.formulaic.ValidationError;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -47,11 +48,11 @@ public class SurveysAction extends BaseAction {
 		super();
 		previewValidator = new Schema();
 		previewValidator.setSimpleValidator("value(name)",
-				new NotNullEmptyValidator(new MaxLengthValidator(30)));
+				new NotNullEmptyValidator("Name", new MaxLengthValidator(30)));
 		previewValidator.setSimpleValidator("value(appliesTo)",
-				new EnumValidator(SurveyType.class));
+				new EnumValidator(SurveyType.class, "Applies To"));
 		previewValidator.setSimpleValidator("value(state)",
-				new EnumValidator(SurveyState.class));
+				new EnumValidator(SurveyState.class, "State"));
 		
 		editEntryValidator = new Schema();
 		editEntryValidator.setSimpleValidator("value(surveyId)",
@@ -167,26 +168,31 @@ public class SurveysAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		Map<String, Object> results;
 		try {
-			results = previewValidator.validate(request);
+			doPreview(mapping, form, request, response);
 		}
 		catch (SchemaValidationError e) {
 			saveErrors(request, Schema.makeActionMessages(e));
 			return mapping.findForward(
 					ActionForwards.create_entry_success.toString());
 		}
-		
-		request.getSession().setAttribute(
+		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+
+    private void doPreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+            throws ValidationError {
+        Map<String, Object> results = previewValidator.validate(request);
+
+        request.getSession().setAttribute(
 				SurveysConstants.KEY_VALIDATED_VALUES, results);
 		List<Question> addedQuestions = (List<Question>) request.getSession()
 				.getAttribute(SurveysConstants.KEY_ADDED_QUESTIONS);
 		request.setAttribute(SurveysConstants.KEY_ITEM_COUNT,
 				addedQuestions.size());
-		return mapping.findForward(ActionForwards.preview_success.toString());
-	}
-	
-	public ActionForward add_new_question(ActionMapping mapping,
+    }
+
+    public ActionForward add_new_question(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
@@ -342,10 +348,17 @@ public class SurveysAction extends BaseAction {
 	
 	public ActionForward preview_update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		preview(mapping, form, request, response);
-		return mapping.findForward(
-				ActionForwards.editpreview_success.toString());
+            throws ValidationError {
+        try {
+            doPreview(mapping, form, request, response);
+        }
+        catch (SchemaValidationError e) {
+            saveErrors(request, Schema.makeActionMessages(e));
+			return mapping.findForward(
+					ActionForwards.edit_success.toString());
+        }
+        return mapping.findForward(
+            ActionForwards.editpreview_success.toString());
 	}
 	
 	public ActionForward update(ActionMapping mapping, ActionForm form,

@@ -13,7 +13,7 @@
 						<mifos:mifoslabel name="Surveys.linkAdmin" bundle="SurveysUIResources"/>	
 					</html-el:link> /
 	              </span>
-	              <span class="fontnormal8pt">
+	              <span class="fontnormal8ptbold">
        				<mifos:mifoslabel name="Surveys.EditQuestion" bundle="SurveysUIResources"/>
 	              </span>
     	        </td>

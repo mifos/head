@@ -10,24 +10,39 @@ public class NotNullEmptyValidator extends IsInstanceValidator {
 
 	
 	private Validator other;
+    private String fieldName;
 
-	public NotNullEmptyValidator() {
+    public NotNullEmptyValidator() {
 		super(String.class);
 	}
-	
-	public NotNullEmptyValidator(Validator other) {
+
+    public NotNullEmptyValidator(String fieldName) {
+        super(String.class);
+        this.fieldName = fieldName;
+    }
+
+    public NotNullEmptyValidator(Validator other) {
 		super(String.class);
 		this.other = other;
 	}
-	
-	@Override
+
+    public NotNullEmptyValidator(String fieldName, Validator other) {
+		super(String.class);
+		this.other = other;
+        this.fieldName = fieldName;
+    }
+
+    @Override
 	public String validate(Object value) throws ValidationError {
 		super.validate(value);
 		if (other != null)
 			other.validate(value);
 		if (((String)value).trim().equals("")) {
-			throw makeError(value, ErrorType.MISSING);
-		}
+            if (fieldName == null)
+                throw makeError(value, ErrorType.MISSING);
+            else
+                throw makeError(value, ErrorType.MISSING_FIELD, fieldName);
+        }
 		return (String) value;
 	}
 }

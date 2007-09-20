@@ -12,15 +12,24 @@ public class EnumValidator extends IsInstanceValidator {
 	public static final String INVALID_ENUM_ERROR = "invalidenum";
 	
 	private Class enumType;
-	
-	public EnumValidator(Class enumType) {
+    private String fieldName;
+
+    public EnumValidator(Class enumType) {
 		super(String.class);
 		assert enumType != null;
 		assert enumType.isEnum();
 		this.enumType = enumType;
 	}
-	
-	@Override
+
+    public EnumValidator(Class enumType, String fieldName) {
+		super(String.class);
+		assert enumType != null;
+		assert enumType.isEnum();
+		this.enumType = enumType;
+        this.fieldName = fieldName;
+    }
+
+    @Override
 	public Enum validate(Object input) throws ValidationError {
 		input = super.validate(input);
 		
@@ -29,8 +38,11 @@ public class EnumValidator extends IsInstanceValidator {
 			return Enum.valueOf(enumType, inputString);
 		}
 		catch (IllegalArgumentException e) {
-			throw makeError(input, ErrorType.INVALID_ENUM);
-		}
+            if (fieldName == null)
+                throw makeError(input, ErrorType.INVALID_ENUM);
+            else
+                throw makeError(input, ErrorType.INVALID_ENUM, fieldName);
+        }
 		
 	}
 

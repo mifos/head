@@ -66,7 +66,7 @@
                       </td>
                     </tr>
                     <tr class="fontnormal">
-                    <td align="right"><mifos:mifoslabel name="Surveys.Status" bundle="SurveysUIResources"/>:</td>
+                    <td align="right"><mifos:mifoslabel mandatory="yes" name="Surveys.Status" bundle="SurveysUIResources"/>:</td>
                     <td><mifos:select property="value(state)">
                     <html-el:option value="INACTIVE"><mifos:mifoslabel name="Surveys.Inactive"/></html-el:option>
                     <html-el:option value="ACTIVE"><mifos:mifoslabel name="Surveys.Active"/></html-el:option>

@@ -14,10 +14,8 @@
 						<mifos:mifoslabel name="Surveys.linkAdmin" bundle="SurveysUIResources"/>	
 					</html-el:link> /
 	              </span>
-	              <span class="fontnormal8pt">
-	              	<html-el:link action="surveysAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${sessionScope.currentFlowKey}">
-          				<mifos:mifoslabel name="Surveys.AddQuestions" bundle="SurveysUIResources"/>
-          			</html-el:link> 
+	              <span class="fontnormal8ptbold">
+	              	<mifos:mifoslabel name="Surveys.PreviewEditQuestion" bundle="SurveysUIResources"/>
 	              </span>
     	        </td>
 	    	  </tr>
