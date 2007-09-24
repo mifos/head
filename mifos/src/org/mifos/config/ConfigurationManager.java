@@ -1,10 +1,16 @@
 package org.mifos.config;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationFactory;
+
 
 /**
  * This is a quick initial sketch of a class for managing configuration
@@ -26,15 +32,17 @@ import org.apache.commons.configuration.ConfigurationFactory;
  * This class is currently under active development, so it is likely
  * to be changed significantly as iterative development proceeds.
  */
-public class ConfigurationManager {
+public class ConfigurationManager implements Configuration {
 	private static ConfigurationManager configurationManagerInstance = new ConfigurationManager();
 		
 	private Configuration configuration;
 	
 	public static final String TestKey = "test.value"; 
 	
+	
 	public static final ConfigurationManager getInstance() {
 		return configurationManagerInstance;
+		
 	}
 
 	public ConfigurationManager() {
@@ -53,5 +61,188 @@ public class ConfigurationManager {
 	public Configuration getConfiguration() {
 		return configuration;
 	}
+	
+	public Short getShort(String key, Short defaultValue)
+	{
+		return configuration.getShort(key, defaultValue);
+	}
+	
+	public short getShort(String key, short defaultValue)
+	{
+		return configuration.getShort(key, defaultValue);
+	}
+	
+	public  short getShort(String key)
+	{
+		return configuration.getShort(key);
+	}
+	
+	public float getFloat(String key)
+	{
+		return configuration.getFloat(key);
+	}
+	
+	
+	public String getString(String key, String defaultValue)
+	{
+		return configuration.getString(key, defaultValue);
+	}
+	
+	
+	public  int getInt(String key, int defaultValue)
+	{
+		return configuration.getInt(key, defaultValue);
+	}
+	
+	public int getInt(String key)
+	{
+		return configuration.getInt(key);
+	}
+	
+	public double getDouble(String key, double defaultValue)
+	{
+		return configuration.getDouble(key, defaultValue);
+	}
+	
+	public  double getDouble(String key)
+	{
+		return configuration.getDouble(key);
+	}
+	
+	public  boolean containsKey(String key)
+	{
+		return configuration.containsKey(key);
+	}
+
+	public void addProperty(String propertyName, Object propertyValue) {
+		configuration.addProperty(propertyName, propertyValue);
+	}
+	
+	public void clearProperty(String propertyName) {
+		configuration.clearProperty(propertyName);
+	}
+
+	public void clear() {
+		configuration.clear();
+	}
+
+	public BigDecimal getBigDecimal(String key) {
+		return configuration.getBigDecimal(key);
+	}
+
+	public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+		return configuration.getBigDecimal(key, defaultValue);
+	}
+
+	public BigInteger getBigInteger(String key) {
+		return configuration.getBigInteger(key);
+	}
+
+	public BigInteger getBigInteger(String key, BigInteger defaultValue) {
+		return configuration.getBigInteger(key, defaultValue);
+	}
+
+	public boolean getBoolean(String key) {
+		return configuration.getBoolean(key);
+	}
+
+	public boolean getBoolean(String key, boolean defaultValue) {
+		return configuration.getBoolean(key, defaultValue);
+	}
+
+	public Boolean getBoolean(String key, Boolean defaultValue) {
+		return configuration.getBoolean(key, defaultValue);
+	}
+
+	public byte getByte(String key) {
+		return configuration.getByte(key);
+	}
+
+	public byte getByte(String key, byte defaultValue) {
+		return configuration.getByte(key, defaultValue);
+	}
+
+	public Byte getByte(String key, Byte defaultValue) {
+		return configuration.getByte(key, defaultValue);
+	}
+
+	
+
+	public Double getDouble(String key, Double defaultValue) {
+		return configuration.getDouble(key, defaultValue);
+	}
+
+	public float getFloat(String key, float defaultValue) {
+		return configuration.getFloat(key, defaultValue);
+	}
+
+	public Float getFloat(String key, Float defaultValue) {
+		return configuration.getFloat(key, defaultValue);
+	}
+
+
+	public Integer getInteger(String key, Integer defaultValue) {
+		return configuration.getInteger(key, defaultValue);
+	}
+
+	public Iterator getKeys() {
+		return configuration.getKeys();
+	}
+
+	public Iterator getKeys(String key) {
+		return configuration.getKeys(key);
+	}
+
+	public List getList(String key) {
+		return configuration.getList(key);
+	}
+
+	public List getList(String key, List defaultValue) {
+		return configuration.getList(key, defaultValue);
+	}
+
+	public long getLong(String key) {
+		return configuration.getLong(key);
+	}
+
+	public long getLong(String key, long defaultValue) {
+		return configuration.getLong(key, defaultValue);
+	}
+
+	public Long getLong(String key, Long defaultValue) {
+		return configuration.getLong(key, defaultValue);
+	}
+
+	public Properties getProperties(String key) {
+		return configuration.getProperties(key);
+	}
+
+	public Object getProperty(String key) {
+		return configuration.getProperty(key);
+	}
+
+
+	public String getString(String key) {
+		return configuration.getString(key);
+	}
+
+	public String[] getStringArray(String key) {
+		return configuration.getStringArray(key);
+	}
+
+	public boolean isEmpty() {
+		return configuration.isEmpty();
+	}
+
+	public void setProperty(String propertyName, Object propertyValue) {
+		configuration.setProperty(propertyName, propertyValue);
+	}
+	
+    // Return a decorator Configuration containing every key from the current Configuration 
+	// that starts with the specified prefix
+	public Configuration subset(String prefix) {
+		return configuration.subset(prefix);
+	}
+	
 	
 }

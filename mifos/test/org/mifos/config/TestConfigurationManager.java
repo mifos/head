@@ -2,6 +2,7 @@ package org.mifos.config;
 
 import static org.junit.Assert.assertEquals;
 
+
 import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration.Configuration;

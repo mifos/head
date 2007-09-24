@@ -14,7 +14,7 @@ public class ConfigEntity extends Persistence {
 	private Short centerHierarchyExist; 
 	private Short groupCanApplyLoans; 
 	private Short clientCanExistOutsideGroup; 
-	private Short noOfInterestDays;
+	//private Short noOfInterestDays;
 
 	public ConfigEntity(){}
 
@@ -66,13 +66,13 @@ public class ConfigEntity extends Persistence {
 		this.nameSequence = nameSequence;
 	}
 	
-	public Short getNoOfInterestDays() {
-		return noOfInterestDays;
-	}
+	//public Short getNoOfInterestDays() {
+	//	return noOfInterestDays;
+	//}
 	
-	public void setNoOfInterestDays(Short noOfInterestDays) {
-		this.noOfInterestDays = noOfInterestDays;
-	}
+	//public void setNoOfInterestDays(Short noOfInterestDays) {
+	//	this.noOfInterestDays = noOfInterestDays;
+	//}
 	
 	public OfficeBO getOffice() {
 		return office;

@@ -74,7 +74,7 @@ public class TestConfiguration extends MifosTestCase{
 		assertEquals(false,accountConfig.isDisbursedToLOStateDefinedForLoan());
 		assertEquals(Short.valueOf("10"),accountConfig.getLatenessDays());
 		assertEquals(Short.valueOf("30"),accountConfig.getDormancyDays());
-		assertEquals(Short.valueOf("365"),accountConfig.getInterestDays());
+		//kim remove test because of AccountingRules assertEquals(Short.valueOf("365"),accountConfig.getInterestDays());
 		assertEquals(true,accountConfig.isBackDatedTxnAllowed());
 	}
 

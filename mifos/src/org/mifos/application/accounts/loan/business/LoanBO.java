@@ -124,6 +124,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.config.AccountingRules;
 
 public class LoanBO extends AccountBO {
 
@@ -1871,8 +1872,10 @@ public class LoanBO extends AccountBO {
 
 	// read from configuration
 	private int getInterestDays() {
-		return Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId()).getInterestDays();
+		// kim replace the code below with AccountingRules.getNumberOfInterestDays
+		//return Configuration.getInstance().getAccountConfig(
+		//		getOffice().getOfficeId()).getInterestDays();
+		return AccountingRules.getNumberOfInterestDays().shortValue();
 	}
 
 	// read from configuration

@@ -81,7 +81,6 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("acceptedPaymentTypeAction");
 		security.allow("load", SecurityConstants.CAN_DEFINE_ACCEPTED_PAYMENT_TYPE);
-		security.allow("load", SecurityConstants.VIEW);
 		security.allow("update", SecurityConstants.VIEW);
 		security.allow("cancel", SecurityConstants.VIEW);
 		return security;

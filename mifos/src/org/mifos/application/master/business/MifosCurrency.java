@@ -39,6 +39,7 @@
 package org.mifos.application.master.business;
 
 import java.math.RoundingMode;
+import org.mifos.config.AccountingRules;
 
 import org.mifos.framework.business.PersistentObject;
 /**
@@ -136,16 +137,29 @@ public final class MifosCurrency extends PersistentObject {
 	}
 
 	public RoundingMode getRoundingModeEnum() {
+		// kim replace this with AccountingRule
+		//if (roundingMode == CEILING_MODE) {
+		//	return RoundingMode.CEILING;
+		//}
+		//else if (roundingMode == FLOOR_MODE) {
+		//	return RoundingMode.FLOOR;
+		//}
+		//else {
+		//	throw new IllegalStateException(
+		//		"bad rounding mode " + roundingMode);
+		//}
+		RoundingMode defaultValue;
 		if (roundingMode == CEILING_MODE) {
-			return RoundingMode.CEILING;
+			defaultValue =  RoundingMode.CEILING;
 		}
 		else if (roundingMode == FLOOR_MODE) {
-			return RoundingMode.FLOOR;
+			defaultValue = RoundingMode.FLOOR;
 		}
 		else {
 			throw new IllegalStateException(
 				"bad rounding mode " + roundingMode);
 		}
+		return AccountingRules.getRoundingRule(defaultValue);
 	}
 	
 	@SuppressWarnings("unused") // see .hbm.xml file
@@ -179,7 +193,9 @@ public final class MifosCurrency extends PersistentObject {
 	}
 
 	public Float getRoundingAmount() {
-		return roundingAmount;
+		// kim replace this with AccountingRules
+		//return roundingAmount;
+		return AccountingRules.getAmountToBeRoundedTo(roundingAmount);
 	}
 	
 	@SuppressWarnings("unused") // See .hbm.xml file
@@ -188,7 +204,9 @@ public final class MifosCurrency extends PersistentObject {
 	}
 	
 	public Short getDefaultDigitsAfterDecimal() {
-		return defaultDigitsAfterDecimal;
+		// kim replace this with AccountingRules
+		//return defaultDigitsAfterDecimal;
+		return AccountingRules.getDigitsAfterDecimal(defaultDigitsAfterDecimal);
 	}
 	
 	@SuppressWarnings("unused") // See .hbm.xml file

@@ -20,7 +20,7 @@
 	        <property name="centerHierarchyExist" column="CENTER_HIERARCHY_EXIST" type="short" />
 	        <property name="groupCanApplyLoans" column="GROUP_CAN_APPLY_LOANS" type="short" />
 	        <property name="clientCanExistOutsideGroup" column="CLIENT_CAN_EXIST_OUTSIDE_GROUP" type="short" />
-		    <property name="noOfInterestDays" column="NO_OF_INTEREST_DAYS" type="short" />	     																																															  
+		    	     																																															  
 	     </class>
   <query name="getOfficeConfig"><![CDATA[from org.mifos.framework.components.configuration.business.ConfigEntity config where config.office.officeId is not null]]></query>
    </hibernate-mapping>
