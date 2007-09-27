@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(152);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(153);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -2486,6 +2486,9 @@ INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
 VALUES(2,127,'Savings Account');
 INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
 VALUES(3,140,'Customer Account');
+-- Add an Individual Loan Account Type (A virtual Loan Account)
+INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
+VALUES(4,126,'Individual Loan Account');
 
 /* The table SPOUSE_FATHER_LOOKUP contains the spouse father data which is used in display - System */ 
 INSERT INTO SPOUSE_FATHER_LOOKUP(SPOUSE_FATHER_ID,LOOKUP_ID)
