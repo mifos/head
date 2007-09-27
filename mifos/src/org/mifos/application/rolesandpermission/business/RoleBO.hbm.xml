@@ -17,7 +17,7 @@
 		<property name="updatedBy"  column="UPDATED_BY" />
 		<property name="updatedDate" column="UPDATED_DATE" />
 
-		<set name="activities" cascade="all,delete-orphan" inverse="true" lazy="false" fetch="join" access="field">
+		<set name="activities" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
 			<key column="ROLE_ID" />
 			<one-to-many
 				class="org.mifos.application.rolesandpermission.business.RoleActivityEntity" />

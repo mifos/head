@@ -19,7 +19,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
@@ -80,6 +79,7 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getBirtReportPage Method: ");
+		HibernateUtil.flushAndCloseSession();
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 		uploadForm.clear();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
@@ -210,6 +210,7 @@ public class BirtReportsUploadAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In ReportsAction:getViewReportsPage Method: ");
+		HibernateUtil.flushAndCloseSession();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
 				new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(ActionForwards.get_success.toString());
@@ -305,8 +306,6 @@ public class BirtReportsUploadAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
-		// ReportsCategoryBO category = getReportCategory(uploadForm
-		// .getReportCategoryId());
 		ReportsPersistence rp = new ReportsPersistence();
 		ReportsCategoryBO category = (ReportsCategoryBO) rp
 				.getPersistentObject(ReportsCategoryBO.class, Short
@@ -324,7 +323,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		ReportsCategoryBO category = (ReportsCategoryBO) rp
 				.getPersistentObject(ReportsCategoryBO.class, Short
 						.valueOf(uploadForm.getReportCategoryId()));
-		ReportsBO reportBO = new ReportsPersistence().getReport(Short
+		ReportsBO reportBO = rp.getReport(Short
 				.valueOf(uploadForm.getReportId()));
 		ReportsJasperMap reportJasperMap = reportBO.getReportsJasperMap();
 		if (!isReportItsSelf(uploadForm, reportBO)
@@ -336,11 +335,10 @@ public class BirtReportsUploadAction extends BaseAction {
 			return mapping
 					.findForward(ActionForwards.create_failure.toString());
 		}
-
+		
 		reportBO.setReportName(uploadForm.getReportTitle());
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		reportBO.setReportsCategoryBO(category);
-		
 		rp.createOrUpdate(reportBO);
 
 		ActivityGenerator.reparentActivityUsingHibernate(reportBO
@@ -358,7 +356,6 @@ public class BirtReportsUploadAction extends BaseAction {
 			rp.createOrUpdate(reportJasperMap);
 			uploadFile(formFile);
 		}
-		
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -390,9 +387,8 @@ public class BirtReportsUploadAction extends BaseAction {
 			HibernateException, PersistenceException {
 		int newActivityId;
 		newActivityId = ActivityGenerator.calculateDynamicActivityId();
-		Session session = HibernateUtil.getSessionTL();
 		ActivityGenerator activityGenerator = new ActivityGenerator();
-		activityGenerator.upgradeUsingHQL(session, parentActivity,
+		activityGenerator.upgradeUsingHQL(parentActivity,
 				lookUpDescription);
 		return newActivityId;
 	}

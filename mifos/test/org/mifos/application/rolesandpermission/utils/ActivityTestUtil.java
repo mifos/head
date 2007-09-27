@@ -1,6 +1,5 @@
 package org.mifos.application.rolesandpermission.utils;
 
-import org.hibernate.Transaction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -26,11 +25,8 @@ public class ActivityTestUtil {
 				ActivityEntity.class, (short) 13);
 		ActivityEntity activityEntity = new ActivityEntity(activityId,
 				parent, anLookUp);
-		Transaction tr = rpp.getSession().beginTransaction();
 		rpp.createOrUpdate(anLookUp);
 		rpp.createOrUpdate(activityEntity);
-		tr.commit();
-		
 		return activityEntity;
 	}
 	
@@ -40,12 +36,11 @@ public class ActivityTestUtil {
 	public static void deleteActivityForTest(ActivityEntity activityEntity)
 			throws PersistenceException {
 		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+		rpp.getSession().clear();
 		LookUpValueEntity anLookUp = activityEntity
 				.getActivityNameLookupValues();
-		Transaction tr = rpp.getSession().beginTransaction();
 		rpp.delete(activityEntity);
 		rpp.delete(anLookUp);
-		tr.commit();
 	}
 
 }

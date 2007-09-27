@@ -3,11 +3,7 @@ package org.mifos.application.reports.struts.action;
 import java.util.List;
 
 import org.apache.struts.upload.FormFile;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
@@ -16,7 +12,6 @@ import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
-import org.mifos.application.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.application.rolesandpermission.utils.ActivityTestUtil;
@@ -228,12 +223,11 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 	public void testShouldSubmitSuccessAfterEdit() throws Exception {
 		setRequestPathInfo("/birtReportsUploadAction.do");
 
-		Session session = HibernateUtil.getSessionTL();
 		ReportsPersistence persistence = new ReportsPersistence();
 		ReportsBO report = new ReportsBO();
 		report.setReportName("testShouldSubmitSuccessAfterEdit");
-		report.setReportsCategoryBO((ReportsCategoryBO) session.load(
-				ReportsCategoryBO.class, (short) 1));
+		report.setReportsCategoryBO((ReportsCategoryBO) persistence
+				.getPersistentObject(ReportsCategoryBO.class, (short) 1));
 		report.setIsActive((short) 1);
 		short newActivityId = (short) (new BirtReportsUploadAction())
 				.insertActivity((short) 1, "test"
@@ -241,11 +235,9 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		report.setActivityId(newActivityId);
 
 		ReportsJasperMap reportJasperMap = report.getReportsJasperMap();
-//		reportJasperMap.setReportId(report.getReportId());
 		reportJasperMap.setReportJasper("testFileName_EDIT.rptdesign");
 		report.setReportsJasperMap(reportJasperMap);
 		persistence.createOrUpdate(report);
-//		persistence.createOrUpdate(reportJasperMap);
 
 		BirtReportsUploadActionForm editForm = new BirtReportsUploadActionForm();
 		editForm.setReportId(report.getReportId().toString());
@@ -259,9 +251,9 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
 		actionPerform();
 
-		ReportsBO newReport = new ReportsPersistence().getReport(report
+		ReportsBO newReport = persistence.getReport(report
 				.getReportId());
-		ReportsJasperMap jasper = (ReportsJasperMap) new ReportsPersistence().getPersistentObject(
+		ReportsJasperMap jasper = (ReportsJasperMap) persistence.getPersistentObject(
 				ReportsJasperMap.class, report.getReportId());
 		
 		assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport
@@ -280,17 +272,10 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 	private void removeReport(Short reportId) throws PersistenceException {
 
 		ReportsPersistence reportPersistence = new ReportsPersistence();
+		reportPersistence.getSession().clear();
 		ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(
 				ReportsBO.class, reportId);
 
-		Session session = HibernateUtil.getSessionTL();
-		Transaction tx = session.beginTransaction();
-
-		ReportsJasperMap jasperMap = (ReportsJasperMap) reportPersistence
-				.getPersistentObject(ReportsJasperMap.class, report
-						.getReportId());
-		if (jasperMap != null)
-			reportPersistence.delete(jasperMap);
 		RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
 		ActivityEntity activityEntity = (ActivityEntity) permPersistence
 				.getPersistentObject(ActivityEntity.class, report
@@ -300,31 +285,10 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		LookUpValueEntity anLookUp = activityEntity
 				.getActivityNameLookupValues();
 
-		Query query1 = session
-				.createQuery("from RoleActivityEntity a where a.activity =:anActivity");
-		query1.setParameter("anActivity", activityEntity);
-
-		for (int i = 0; null != query1.list() && i < query1.list().size(); i++) {
-			RoleActivityEntity roleActivityEntity = (RoleActivityEntity) query1
-					.list().get(i);
-			permPersistence.delete(roleActivityEntity);
-		}
-
-		int lookUpId = anLookUp.getLookUpId();
 		permPersistence.delete(activityEntity);
-
-		Query query2 = session
-				.createQuery("from LookUpValueLocaleEntity a where a.lookUpId =:anlookUpId");
-		query2.setParameter("anlookUpId", lookUpId);
-		for (int i = 0; null != query2.list() && i < query2.list().size(); i++) {
-			LookUpValueLocaleEntity locale = (LookUpValueLocaleEntity) query2
-					.list().get(i);
-			permPersistence.delete(locale);
-		}
-
 		permPersistence.delete(anLookUp);
 
-		tx.commit();
+		HibernateUtil.commitTransaction();
 	}
 
 

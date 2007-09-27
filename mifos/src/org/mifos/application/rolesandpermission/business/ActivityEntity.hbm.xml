@@ -9,6 +9,11 @@
 		table="ACTIVITY">
 		<id name="id" type="short" column="ACTIVITY_ID" access="field">
 		</id>
+		<set name="roles" cascade="all,delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="ACTIVITY_ID" />
+			<one-to-many
+				class="org.mifos.application.rolesandpermission.business.RoleActivityEntity" />
+		</set>
 		<many-to-one name="parent" column="PARENT_ID"
 			class="org.mifos.application.rolesandpermission.business.ActivityEntity"
 			cascade="none" update="true" insert="true" access="field" />

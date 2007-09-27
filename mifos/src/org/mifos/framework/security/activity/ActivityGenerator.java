@@ -3,7 +3,6 @@ package org.mifos.framework.security.activity;
 import java.io.IOException;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -17,6 +16,7 @@ import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPers
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 
 public class ActivityGenerator {
@@ -28,22 +28,16 @@ public class ActivityGenerator {
 		return lookUpId;
 	}
 
-	public void upgradeUsingHQL(Session session, short parentActivity,
+	public void upgradeUsingHQL(short parentActivity,
 			String lookUpDescription) throws IOException, HibernateException,
-			PersistenceException, ServiceException {
+			PersistenceException, ServiceException, ActivityGeneratorException {
 
-		Transaction tx = session.beginTransaction();
-		try {
+		Transaction tx = HibernateUtil.startTransaction();
 			insertLookUpValue();
 			insertLookUpValueLocale(lookUpId, lookUpDescription);
 			insertActivity(parentActivity, lookUpId);
 			insertRolesActivity();
 			tx.commit();
-		}
-		catch (Exception ex) {
-			tx.rollback();
-		}
-
 	}
 
 	private void insertRolesActivity() throws PersistenceException {
@@ -103,7 +97,7 @@ public class ActivityGenerator {
 		return mp.retrieveOneLookUpValueLocaleEntity(localId, lookUpId);
 	}
 
-	public ActivityEntity getActivityEntity(Session session, int lookUpId)
+	public ActivityEntity getActivityEntity(int lookUpId)
 			throws PersistenceException {
 		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
 		return rpp.retrieveOneActivityEntity(lookUpId);
@@ -127,20 +121,17 @@ public class ActivityGenerator {
 	public static void reparentActivityUsingHibernate(short activityId,
 			Short newParent) throws PersistenceException {
 		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-		Transaction tr = rpp.getSession().beginTransaction();
 		ActivityEntity parent = (ActivityEntity) rpp.getPersistentObject(
 				ActivityEntity.class, newParent);
 		ActivityEntity activity = (ActivityEntity) rpp.getPersistentObject(
 				ActivityEntity.class, activityId);
 		activity.setParent(parent);
 		rpp.createOrUpdate(activity);
-		tr.commit();
 	}
 
 	public static void changeActivityMessage(short activityId, short localeId, String newMessage) throws PersistenceException {
 		RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
 		MasterPersistence mp = new MasterPersistence();
-		Transaction tr = mp.getSession().beginTransaction();
 		ActivityEntity activityEntity = (ActivityEntity) rpp
 				.getPersistentObject(ActivityEntity.class, Short
 						.valueOf(activityId));
@@ -150,7 +141,6 @@ public class ActivityGenerator {
 				.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId);
 		lookUpValueLocaleEntity.setLookUpValue(newMessage);
 		mp.createOrUpdate(lookUpValueLocaleEntity);
-		tr.commit();
 	}
 
 

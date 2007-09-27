@@ -21,7 +21,7 @@
     		class="org.mifos.application.reports.business.ReportsCategoryBO" 
     		/>   
 		<one-to-one 
-			name="reportsJasperMap" cascade="save-update"
+			name="reportsJasperMap" cascade="all"
 			class="org.mifos.application.reports.business.ReportsJasperMap" 
 			/>   
 

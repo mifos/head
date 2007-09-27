@@ -53,6 +53,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -105,7 +106,8 @@ public class ReportsAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form, 
 		HttpServletRequest request, HttpServletResponse response)	
 	throws Exception {
-		logger.debug("In ReportsAction:load Method: ");		
+		logger.debug("In ReportsAction:load Method: ");
+		HibernateUtil.flushAndCloseSession();
 		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}

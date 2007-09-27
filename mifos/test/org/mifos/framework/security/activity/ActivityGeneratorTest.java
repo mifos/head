@@ -36,18 +36,18 @@ public class ActivityGeneratorTest extends TestCase {
 
 		short parentId = 13;
 
-		activityGenerator.upgradeUsingHQL(session, parentId, "abcd");
+		activityGenerator.upgradeUsingHQL(parentId, "abcd");
 		int lookUpId = activityGenerator.getLookUpId();
 		assertEquals("abcd", activityGenerator.getLookUpValueLocaleEntity(
 				DatabaseVersionPersistence.ENGLISH_LOCALE, lookUpId)
 				.getLookUpValue());
 		assertEquals(ActivityGenerator.calculateDynamicActivityId(),
-				(int) activityGenerator.getActivityEntity(session, lookUpId)
+				(int) activityGenerator.getActivityEntity(lookUpId)
 						.getId() - 1);
 		Query query = session
 				.createQuery("from RoleActivityEntity r where r.activity = :activity and r.role = :role");
 		query.setParameter("activity", activityGenerator.getActivityEntity(
-				session, lookUpId));
+				 lookUpId));
 		RoleBO roleBo = (RoleBO) session.load(RoleBO.class,
 				(short) RolesAndPermissionConstants.ADMIN_ROLE);
 		query.setParameter("role", roleBo);

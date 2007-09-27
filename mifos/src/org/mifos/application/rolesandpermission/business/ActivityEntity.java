@@ -1,5 +1,6 @@
 package org.mifos.application.rolesandpermission.business;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -17,6 +18,9 @@ public class ActivityEntity extends PersistentObject {
 	private final LookUpValueEntity descriptionLookupValues;
 
 	private Short localeId;
+
+	private final Set<RoleActivityEntity> roles = 
+		new HashSet<RoleActivityEntity>();
 
 	protected ActivityEntity() {
 		this.id = null;
@@ -93,6 +97,10 @@ public class ActivityEntity extends PersistentObject {
 
 	public void setParent(ActivityEntity parent) {
 		this.parent = parent;
+	}
+
+	public Set<RoleActivityEntity> getRoles() {
+		return roles;
 	}
 
 }
