@@ -12,6 +12,8 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -62,8 +64,25 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, EditStatusAction.class);
 	}
 
+	private void reloadMembers() {
+		if (accountBO != null) {
+			accountBO = (AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		}
+		if (group != null) {
+			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+		}
+		if (center != null) {
+			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+		}
+		if (client != null) {
+			client = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+		}
+		
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);

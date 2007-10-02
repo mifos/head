@@ -1,8 +1,10 @@
 package org.mifos.application.surveys.struts.action;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +34,7 @@ import org.mifos.framework.formulaic.NotNullEmptyValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.formulaic.ValidationError;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -365,25 +368,35 @@ public class SurveysAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GenericActionForm actionForm = (GenericActionForm) form;
+		// potential problem: the survey should be reattached to the session
 		Survey survey =
 			(Survey)request.getSession().getAttribute(Constants.BUSINESS_KEY);
-		survey.setQuestions(new LinkedList<SurveyQuestion>());
+		survey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, survey.getSurveyId());
+		
+		// badness here!  the previous list of questions is lost in this next line
+		//survey.setQuestions(new LinkedList<SurveyQuestion>());
+		Set<Question> existingQuestions = new HashSet<Question>();
+		for (SurveyQuestion surveyQuestion : survey.getQuestions()) {
+			existingQuestions.add(surveyQuestion.getQuestion());
+		}
 		
 		List<Question> associatedQuestions = (List<Question>)
 			request.getSession().getAttribute(
 					SurveysConstants.KEY_ADDED_QUESTIONS);
 		for (Question question : associatedQuestions) {
-			LinkedList<QuestionChoice> choices =
-				new LinkedList<QuestionChoice>();
-			if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
-				for (QuestionChoice choice : question.getChoices()) {
-					choices.add(new QuestionChoice(choice.getChoiceText()));
+			if (!existingQuestions.contains(question)) {			
+				LinkedList<QuestionChoice> choices =
+					new LinkedList<QuestionChoice>();
+				if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
+					for (QuestionChoice choice : question.getChoices()) {
+						choices.add(new QuestionChoice(choice.getChoiceText()));
+					}
 				}
+				question.setChoices(choices);
+				boolean mandatory = null !=
+					actionForm.getValue("mandatory_" + question.getQuestionId());
+				survey.addQuestion(question, mandatory);
 			}
-			question.setChoices(choices);
-			boolean mandatory = null !=
-				actionForm.getValue("mandatory_" + question.getQuestionId());
-			survey.addQuestion(question, mandatory);
 		}
 		
 		SurveyState state =

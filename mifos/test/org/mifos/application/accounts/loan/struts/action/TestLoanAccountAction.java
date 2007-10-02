@@ -1,5 +1,12 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
@@ -30,6 +38,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
@@ -41,11 +50,7 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
@@ -75,8 +80,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
@@ -105,8 +108,25 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, LoanAccountAction.class);
 	}
 
+	private void reloadMembers() {
+		if (accountBO != null) {
+			accountBO = (AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+		}
+		if (group != null) {
+			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+		}
+		if (center != null) {
+			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+		}
+		if (client != null) {
+			client = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+		}
+		
+	}
+	
 	@Override
 	protected void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
@@ -960,9 +980,11 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
 		assertEquals(loanOffering.getDefNoInstallments(), loan
 				.getNoOfInstallments());
-		assertEquals(new java.sql.Date(DateUtils
-				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan
-				.getDisbursementDate().toString());
+//		assertEquals(new java.sql.Date(DateUtils
+//				.getCurrentDateWithoutTimeStamp().getTime()).toString(), 
+//				loan.getDisbursementDate().toString());
+		assertEquals(new LocalDate(), new LocalDate(loan.getDisbursementDate().getTime()));
+		
 		assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
 		assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));

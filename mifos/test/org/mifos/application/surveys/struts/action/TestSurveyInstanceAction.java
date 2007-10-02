@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
@@ -40,11 +39,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.hibernate.helper.SessionHolder;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -52,20 +48,11 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
-
-	private TestDatabase database; 
-	private Session session;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		database = TestDatabase.makeStandard();
-		HibernateUtil.closeSession();
-		AuditInterceptor interceptor = new AuditInterceptor();
-		session = database.openSession(interceptor);
-		SessionHolder holder = new SessionHolder(session);
-		holder.setInterceptor(interceptor);
-		HibernateUtil.setThreadLocal(holder);
+
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
 				.getPath());
 		setConfigFile(ResourceLoader.getURI(
@@ -80,7 +67,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.resetDatabase();
+		HibernateUtil.resetMySQLDatabase();
 		super.tearDown();
 	}
 	
@@ -210,6 +197,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
+		retrievedSurvey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, retrievedSurvey.getSurveyId());
+		
 		assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
 		assertEquals(SurveyInstanceAction.getBusinessObjectName(survey
 				.getAppliesToAsEnum(), globalNum), (String) request.getAttribute(
@@ -518,6 +507,8 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create_entry");
 		actionPerform();
 		verifyNoActionErrors();
+		
+		ppiSurvey = (PPISurvey)HibernateUtil.getSessionTL().get(PPISurvey.class, ppiSurvey.getSurveyId());
 		
 		addRequestParameter("value(dateSurveyed_DD)", "01");
 		addRequestParameter("value(dateSurveyed_MM)", "02");

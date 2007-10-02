@@ -18,6 +18,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -71,10 +73,19 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
+		if (savings != null) {
+			savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+		}
 		TestObjectFactory.cleanUp(savings);
 		savings = null;
+		if (group != null) {
+			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+		}
 		TestObjectFactory.cleanUp(group);
 		group = null;
+		if (center != null) {
+			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+		}
 		TestObjectFactory.cleanUp(center);
 		center = null;
 		HibernateUtil.closeSession();
@@ -119,8 +130,6 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				accountAction.asEnum());
 		assertEquals(Short.valueOf("1"),  SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
 	}
 
 	public void testSuccessfullLoad_WithValidLastPaymentWithdrawal()
@@ -161,8 +170,6 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				accountAction.asEnum());
 		assertEquals(Short.valueOf("1"), SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
 	}
 
 	public void testSuccessfullLoad_WithoutValidLastPayment() throws Exception {
@@ -187,8 +194,6 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				SavingsConstants.CLIENT_NAME,request));
 		assertEquals(Short.valueOf("0"),  SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
 	}
 
 	public void testSuccessfullPreviewSuccess() throws Exception {
@@ -213,9 +218,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyNoActionErrors();
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistence().findById(savings.getAccountId());
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
+//		savings = new SavingsPersistence().findById(savings.getAccountId());
 	}
 
 	public void testSuccessfullPreviewFailure_NoLastPayment() throws Exception {
@@ -257,9 +260,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrorSize(AccountConstants.MAX_NOTE_LENGTH));
 		assertEquals(1, getErrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
 		HibernateUtil.closeSession();
-		savings = new SavingsPersistence().findById(savings.getAccountId());
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
+//		savings = new SavingsPersistence().findById(savings.getAccountId());
 	}
 	
 	public void testSuccessfullPrevious() {
@@ -312,8 +313,6 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(2).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
 	}
 
 	private void createInitialObjects() {

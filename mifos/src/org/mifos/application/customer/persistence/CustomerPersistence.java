@@ -790,6 +790,7 @@ public class CustomerPersistence extends Persistence {
 				initialize(customerStatusFlagEntity);
 				initialize(customerStatusFlagEntity.getNames());
 			}
+			initialize(customerStatus.getLookUpValue());
 		}
 		return queryResult;
 	}

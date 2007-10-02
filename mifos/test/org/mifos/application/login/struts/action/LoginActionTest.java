@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -38,8 +42,16 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 				"org/mifos/application/login/struts-config.xml").getPath());
 	}
 
+	private void reloadMembers() {
+		if (personnel != null) {
+			personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+		}
+		
+	}
+	
 	@Override
 	protected void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.cleanUp(personnel);
 		HibernateUtil.closeSession();
 		super.tearDown();
@@ -134,6 +146,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		HibernateUtil.commitTransaction();
+		personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 		assertTrue(personnel.isPasswordChanged());
 	}
 
@@ -258,6 +271,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 
 		HibernateUtil.commitTransaction();
+		personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+	
 		assertTrue(personnel.isPasswordChanged());
 		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));

@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class Survey implements Serializable {
@@ -136,6 +138,7 @@ public class Survey implements Serializable {
 		if (surveyQuestion.getOrder() == null)
 			surveyQuestion.setOrder(getQuestions().size());
 		getQuestions().add(surveyQuestion);
+		
 		return surveyQuestion;
 	}
 	

@@ -106,7 +106,7 @@ public class ConfigureSession
 			// Allow database to be specified dynamically for testing
 			if (System.getProperty("hibernate.connection.url") != null) {
 				config.setProperty("hibernate.connection.url", System.getProperty("hibernate.connection.url"));
-			}			
+			}
 		} catch (Exception e) {
 			throw new HibernateStartUpException(
 					HibernateConstants.HIBERNATEPROPNOTFOUND, e);

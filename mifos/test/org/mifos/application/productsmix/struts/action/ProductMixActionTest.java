@@ -102,12 +102,15 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeObject(loanOffering1);
 		TestObjectFactory.removeObject(savingProduct);
 		TestObjectFactory.removeObject(savingProduct2);
+
+		// HACK: reload the productOffering in the new session to avoid 
+		// org.hibernate.StaleObjectStateException issues
+		productOffering = (PrdOfferingBO)HibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
 		TestObjectFactory.removeObject(productOffering);
 		TestObjectFactory.removeObject(prdmix);	
 		TestObjectFactory.removeObject(saving1);
 		TestObjectFactory.removeObject(saving2);
 
-		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 

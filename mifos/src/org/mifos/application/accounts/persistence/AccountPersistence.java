@@ -141,6 +141,7 @@ public class AccountPersistence extends Persistence {
 				initialize(accountStateFlagEntity);
 				initialize(accountStateFlagEntity.getNames());
 			}
+			initialize(accountStateEntity.getNames());
 		}
 		return queryResult;
 	}

@@ -51,6 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -177,8 +178,15 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
 				request);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(
-					Integer.valueOf(actionForm.getParentGroupId())));
+			CustomerBO customer = getCustomerBusinessService().getCustomer(
+					Integer.valueOf(actionForm.getParentGroupId()));
+			// make sure that lazily loaded child objects get read in
+			// so that they are there to be used when the object is detached
+			// from the Hibernate session
+			Hibernate.initialize(customer.getPersonnel());
+			Hibernate.initialize(customer.getOffice());
+			actionForm.setParentGroup(customer);
+			
 			if (actionForm.getParentGroup().getCustomerMeeting() != null) {
 				actionForm.getParentGroup().getCustomerMeeting().getMeeting()
 						.isMonthly();
@@ -214,8 +222,11 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getParentGroupId() != null) {
 			CustomerBO parent = getCustomerBusinessService().getCustomer(
 					Integer.valueOf(actionForm.getParentGroupId()));
-			if (null != parent && null != parent.getParentCustomer())
+			if (null != parent && null != parent.getParentCustomer()) {
 				parent.getParentCustomer().getDisplayName();
+			}
+			Hibernate.initialize(parent.getPersonnel());
+			Hibernate.initialize(parent.getOffice());				
 			actionForm.setParentGroup(parent);
 		}
 		if (Configuration.getInstance().getCustomerConfig(

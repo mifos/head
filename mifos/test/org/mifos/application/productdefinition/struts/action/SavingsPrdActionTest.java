@@ -918,6 +918,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
+		
+		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
 		assertEquals("Savings Offering", product.getPrdOfferingName());
 		assertEquals("SAVP", product.getPrdOfferingShortName());
 		assertEquals(2, product.getPrdCategory().getProductCategoryID()
@@ -937,8 +939,6 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.getRecommendedAmount());
 		assertEquals(9.0, product.getInterestRate());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		product = (SavingsOfferingBO) TestObjectFactory.getObject(
-				SavingsOfferingBO.class, product.getPrdOfferingId());
 	}
 
 	public void testPreviousManage() throws Exception {
@@ -996,6 +996,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
+		
+		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
+		
 		assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "search");
@@ -1007,10 +1010,14 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
 						request);
 		assertEquals("The size of savings products", 1, savingsProducts.size());
-		assertEquals("Inactive", savingsProducts.get(0).getPrdStatus()
-				.getPrdState().getName());
-		product = (SavingsOfferingBO) TestObjectFactory.getObject(
-				SavingsOfferingBO.class, product.getPrdOfferingId());
+		
+		SavingsOfferingBO savingsProduct = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, savingsProducts.get(0).getPrdOfferingId());
+
+		Short DEFAULT_LOCALE_ID = 1;
+		assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName(DEFAULT_LOCALE_ID));
+
+		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
+
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
@@ -1051,4 +1058,5 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, product,
 				request);
 	}
+		
 }

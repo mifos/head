@@ -37,7 +37,10 @@
  */
 package org.mifos.framework.hibernate.helper;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -49,6 +52,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.persistence.SqlUpgrade;
 
 public class HibernateUtil {
 	
@@ -76,6 +80,15 @@ public class HibernateUtil {
 		closeSession();
 	}
 
+	public static void resetMySQLDatabase() throws FileNotFoundException, SQLException {
+		Connection connection = HibernateUtil.getSessionTL().connection();
+		SqlUpgrade.execute(new FileInputStream("sql/mifosdroptables.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/latest-schema.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/latest-data.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/testdbinsertionscript.sql"), connection);
+		closeSession();
+	}
+	
 	/**
 	 * Open a new hibernate session.
 	 */

@@ -11,13 +11,13 @@
 		</id>
 		<property name="mandatory" column="mandatory"/>
 		<property name="order" column="QUESTION_ORDER" access="field"/>
-		<many-to-one name="survey" column="SURVEY_ID"
+		<many-to-one name="survey" column="SURVEY_ID" 
 			class="org.mifos.application.surveys.business.Survey"     
-		    cascade="all" access="field" not-null="true"/>
+		    access="field" not-null="true"/>
 		    
-		<many-to-one name="question" column="QUESTION_ID" 
+		<many-to-one name="question" column="QUESTION_ID" cascade="save-update"
 		    class="org.mifos.application.surveys.business.Question"     
-		    cascade="all" access="field" not-null="true"/>
+		    access="field"/>
 	</class>
 </hibernate-mapping>
 

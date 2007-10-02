@@ -78,7 +78,7 @@ public abstract class MasterDataEntity extends PersistentObject {
 	}
 
 	public String getName() {
-		return getName(this.localeId);
+		return getName(getLocaleId());
 	}
 
 	public Set<LookUpValueLocaleEntity> getNames() {

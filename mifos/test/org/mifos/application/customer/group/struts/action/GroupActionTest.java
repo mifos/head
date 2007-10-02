@@ -541,8 +541,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	public void testGet() throws Exception {
 		createCustomers();
 		CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(
-				new PositionEntity(Short.valueOf("1")), client, client
-						.getParentCustomer());
+				new PositionEntity((short)1), client, client.getParentCustomer());
 		group.addCustomerPosition(customerPositionEntity);
 		savingsBO = getSavingsAccount("fsaf6","ads6");
 		loanBO = getLoanAccount();
@@ -560,11 +559,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.get_success.toString());
 
 		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(center.getCustomerId()).intValue());
+				center.getCustomerId());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				Integer.valueOf(group.getCustomerId()).intValue());
+				group.getCustomerId());
 		client = TestObjectFactory.getObject(ClientBO.class,
-				Integer.valueOf(client.getCustomerId()).intValue());
+				client.getCustomerId());
 		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		savingsBO = (SavingsBO) new AccountPersistence()
@@ -580,10 +579,12 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertEquals("No of active clients should be 1", 1,
 				((List<CustomerBO>) SessionUtils.getAttribute(
 						GroupConstants.CLIENT_LIST, request)).size());
+		
+		Short DEFAULT_LOCALE = (short)1;
 		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertEquals("Center Leader", customerPosition.getPosition()
-					.getName());
+					.getName(DEFAULT_LOCALE));
 			break;
 		}
 		TestObjectFactory.removeCustomerFromPosition(group);
@@ -873,6 +874,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
+		
+		group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
 		assertTrue(!group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
 		

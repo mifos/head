@@ -14,6 +14,8 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -64,8 +66,34 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 	}
 	
+	private void reloadMembers() {
+		if (savings != null) {
+			savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+		}
+		if (group != null) {
+			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+		}
+		if (center != null) {
+			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+		}
+		if (client1 != null) {
+			client1 = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client1.getCustomerId());
+		}
+		if (client2 != null) {
+			client2 = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client2.getCustomerId());
+		}
+		if (client3 != null) {
+			client3 = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client3.getCustomerId());
+		}
+		if (client4 != null) {
+			client4 = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client4.getCustomerId());
+		}
+		
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);
@@ -141,16 +169,6 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		Boolean isBackDatedAllowed = (Boolean)SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,request);
 		assertNotNull(isBackDatedAllowed);
 		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
-		client1 = new CustomerPersistence().getCustomer(client1
-				.getCustomerId());
-		client2 = new CustomerPersistence().getCustomer(client2
-				.getCustomerId());
-		client3 = new CustomerPersistence().getCustomer(client3
-				.getCustomerId());
-		client4 = new CustomerPersistence().getCustomer(client4
-				.getCustomerId());
 	}
 	
 	public void testSuccessfullReLoad() throws Exception {

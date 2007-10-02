@@ -215,9 +215,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(1, center.getCustomerNotes().size());
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
+		assertEquals(1, center.getCustomerNotes().size());
 	}
 
 	public void testLoadForClient() {
@@ -313,10 +313,10 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.client_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(1, client.getRecentCustomerNotes().size());
-		assertEquals(1, client.getCustomerNotes().size());
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
 				new Integer(client.getCustomerId())));
+		assertEquals(1, client.getRecentCustomerNotes().size());
+		assertEquals(1, client.getCustomerNotes().size());
 	}
 
 	public void testSearch() throws Exception {
@@ -461,10 +461,10 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.group_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(1, group.getRecentCustomerNotes().size());
-		assertEquals(1, group.getCustomerNotes().size());
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
 				new Integer(group.getCustomerId())));
+		assertEquals(1, group.getRecentCustomerNotes().size());
+		assertEquals(1, group.getCustomerNotes().size());
 	}
 
 	public void testSearchForGroup() throws Exception {

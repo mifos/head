@@ -11,7 +11,7 @@
 		<property name="appliesTo" column="SURVEY_APPLIES_TO"/>
 		<property name="dateOfCreation" column="DATE_OF_CREATION"/>
 		<property name="state" column="STATE" not-null="true"/>
-		<list name="questions" cascade="all" lazy="false" inverse="true">
+		<list name="questions" lazy="false" inverse="true" cascade="save-update">
 			<key column="SURVEY_ID" not-null="true"/>
 			<index column="QUESTION_ORDER"/>
 			<one-to-many class="org.mifos.application.surveys.business.SurveyQuestion"/>

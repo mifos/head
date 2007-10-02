@@ -30,6 +30,9 @@ import org.mifos.framework.components.audit.business.service.AuditBusinessServic
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -50,6 +53,7 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public abstract class BaseAction extends DispatchAction {
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
 
 	protected abstract BusinessService getService() throws ServiceException;
 
@@ -60,9 +64,15 @@ public abstract class BaseAction extends DispatchAction {
 		if(MifosTask.isBatchJobRunning()){
 			return logout(mapping, request);
 		}
+		if (HibernateUtil.isSessionOpen()) {
+			logger.warn("Hibernate session is about to be reused for new action:" + getClass().getName());
+		}
 		TransactionDemarcate annotation = getTransaction(form, request);
 		preExecute(form, request, annotation);
 		ActionForward forward = super.execute(mapping, form, request, response);
+		// TODO: passing 'true' to postExecute guarantees that the session will be closed
+		// still working through resolving issues related to enforcing this
+		// postExecute(request, annotation, true);
 		postExecute(request, annotation, isCloseSessionAnnotationPresent(form, request));
 		return forward;
 	}
@@ -195,8 +205,13 @@ public abstract class BaseAction extends DispatchAction {
 			postHandleTransaction(request, annotation);
 		}
 
-		if(closeSession)
+		if(closeSession) {
+			if (HibernateUtil.isSessionOpen()) {
+				logger.info("Closing open hibernate session at end of action: " + getClass().getName());
+			}
+			//HibernateUtil.flushAndCloseSession();
 			HibernateUtil.closeSession();
+		}
 	}
 
 	protected boolean isNewBizRequired(HttpServletRequest request)

@@ -166,7 +166,9 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
-
+		client = TestObjectFactory.getObject(CustomerBO.class,
+				client.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
 		assertFalse(client.isActive());
 		for (CustomerFlagDetailEntity customerFlagDetailEntity : client
 				.getCustomerFlags()) {
@@ -240,6 +242,10 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.client_detail_page.toString());
 
+		client = TestObjectFactory.getObject(CustomerBO.class,
+				client.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class, 
+				group.getCustomerId());		
 		assertFalse(client.isActive());
 		for (CustomerFlagDetailEntity customerFlagDetailEntity : client
 				.getCustomerFlags()) {

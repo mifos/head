@@ -2,12 +2,15 @@ package org.mifos.application.accounts.struts.action;
 
 import java.sql.Date;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -68,8 +71,28 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
+	private void reloadMembers() {
+		if (savingsBO != null) {
+			savingsBO = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
+		}
+		if (loanBO != null) {
+			loanBO = (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, loanBO.getAccountId());
+		}
+		if (group != null) {
+			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+		}
+		if (center != null) {
+			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+		}
+		if (client != null) {
+			client = (CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
+		}
+		
+	}
+	
 	@Override
 	public void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(client);

@@ -1114,16 +1114,29 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 		LoanOfferingBO loanOffering1 = (LoanOfferingBO) SessionUtils
 				.getAttribute(Constants.BUSINESS_KEY, request);
+		
+		loanOffering1 = (LoanOfferingBO)HibernateUtil.getSessionTL().get(LoanOfferingBO.class, loanOffering1.getPrdOfferingId());
+		
+		// TODO: the need to pass a locale id in to the getName methods below
+		// points out something that may be a bug which will show up elsewhere.
+		// In these cases, an object is loaded into the http session which is
+		// associated with a given Hibernate session.  When it is loaded, somehow
+		// it seems to have the locale set (in MasterDataEntity).  However the
+		// locale is not persisted.  When the object is accessed after the Hibernate
+		// session has been closed, then it needs to be reloaded or reattached 
+		// to the session.  But in reloaded, the locale that has been set is lost.
+		Short DEFAULT_LOCALE_ID = 1;
+		
 		assertNotNull(loanOffering1.getPrdOfferingId());
 		assertNotNull(loanOffering1.getPrdOfferingName());
 		assertNotNull(loanOffering1.getPrdOfferingShortName());
 		assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
-		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
+		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName(DEFAULT_LOCALE_ID));
 		assertNotNull(loanOffering1.getPrdApplicableMasterEnum());
 		assertNotNull(loanOffering1.getStartDate());
-		assertNotNull(loanOffering1.getGracePeriodType().getName());
+		assertNotNull(loanOffering1.getGracePeriodType().getName(DEFAULT_LOCALE_ID));
 		assertNotNull(loanOffering1.getGracePeriodDuration());
-		assertNotNull(loanOffering1.getInterestTypes().getName());
+		assertNotNull(loanOffering1.getInterestTypes().getName(DEFAULT_LOCALE_ID));
 		assertNotNull(loanOffering1.getMaxLoanAmount());
 		assertNotNull(loanOffering1.getMinLoanAmount());
 		assertNotNull(loanOffering1.getMaxInterestRate());
@@ -1163,10 +1176,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 						request);
 		assertNotNull(loanOfferings);
 		assertEquals(2, loanOfferings.size());
+		Short DEFAULT_LOCALE_ID = (short)1;
 		for (LoanOfferingBO loanOfferingBO : loanOfferings) {
+			loanOfferingBO = (LoanOfferingBO)HibernateUtil.getSessionTL().get(LoanOfferingBO.class, loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdOfferingName());
 			assertNotNull(loanOfferingBO.getPrdOfferingId());
-			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
+			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName(DEFAULT_LOCALE_ID));
 		}
 		HibernateUtil.closeSession();
 		TestObjectFactory.removeObject(loanOffering1);

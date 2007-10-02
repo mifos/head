@@ -933,6 +933,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 			
 		removeFees(feesToRemove);
+		savingsOffering1 = (SavingsOfferingBO)TestObjectFactory.getObject(SavingsOfferingBO.class, 
+			savingsOffering1.getPrdOfferingId());
 	}
 	
 	public void testCreateSuccessWithoutGroup() throws Exception {
@@ -1291,9 +1293,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
-		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
+		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue());
 
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
 				EntityType.CLIENT,client.getCustomerId());
@@ -1389,9 +1391,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		assertEquals("123", client.getExternalId());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
+		assertEquals("123", client.getExternalId());
 		
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
 				EntityType.CLIENT,client.getCustomerId());
@@ -1497,10 +1499,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		assertEquals("3", client.getExternalId());
-		assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		assertEquals("3", client.getExternalId());
+		assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
 	}
 
 	public void testUpdateMfiInfoWithoutTrained_ClientInBranch()
@@ -1524,10 +1528,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		assertEquals("3", client.getExternalId());
-		assertFalse(client.isTrained());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
+		assertEquals("3", client.getExternalId());
+		assertFalse(client.isTrained());
 	}
 	
 	public void testUpdateMfiInfoWithTrained() throws Exception {
@@ -1552,10 +1556,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
-		assertEquals("3", client.getExternalId());
-		assertTrue(client.isTrained());
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
+		assertEquals("3", client.getExternalId());
+		assertTrue(client.isTrained());
 	}
 
 	public void testUpdateMfiInfoWithTrainedDateValidation() throws Exception {
@@ -1605,11 +1609,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		client = TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
 		assertEquals("3", client.getExternalId());
 		assertTrue(client.isTrained());
 		assertEquals(3, client.getPersonnel().getPersonnelId().shortValue());
-		client = TestObjectFactory.getObject(ClientBO.class, client
-				.getCustomerId());
 	}
 	
 	public void testCreateSuccessUnderGroupInBranch() throws Exception {

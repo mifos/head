@@ -1354,7 +1354,7 @@ public class GroupBOTest extends MifosTestCase {
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus,
 			Short officeId) throws Exception{
 		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
-		return TestObjectFactory.createGroupUnderBranch("group1", groupStatus,
+		return TestObjectFactory.createGroupUnderBranchWithMakeUser("group1", groupStatus,
 				officeId, meeting, personnel);
 	}
 

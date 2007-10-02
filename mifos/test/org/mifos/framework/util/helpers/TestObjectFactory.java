@@ -330,6 +330,16 @@ public class TestObjectFactory {
 		return fees;
 	}
 
+	public static List<FeeView> getFeesWithMakeUser() {
+		List<FeeView> fees = new ArrayList<FeeView>();
+		AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFeeWithMakeUser(
+				"Maintenance Fee", FeeCategory.ALLCUSTOMERS, "100",
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
+		FeeView fee = new FeeView(getContext(), maintenanceFee);
+		fees.add(fee);
+		return fees;
+	}
+	
 	public static List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 		CustomFieldView fee = new CustomFieldView(Short.valueOf("4"), "Custom",
@@ -395,6 +405,15 @@ public class TestObjectFactory {
 				meeting, loanOfficerId);
 	}
 
+	public static GroupBO createGroupUnderBranchWithMakeUser(String customerName,
+			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
+			Short loanOfficerId) {
+		Short formedBy = PersonnelConstants.SYSTEM_USER;
+		return createGroupUnderBranch(customerName, customerStatus, null,
+				false, null, null, null, getFeesWithMakeUser(), formedBy, officeId,
+				meeting, loanOfficerId);
+	}
+	
 	public static GroupBO createGroupUnderBranch(String customerName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
@@ -874,7 +893,21 @@ public class TestObjectFactory {
 		}
 		return fee;
 	}
-	
+
+	public static FeeBO createPeriodicAmountFeeWithMakeUser(String feeName,
+			FeeCategory feeCategory, String feeAmnt,
+			RecurrenceType meetingFrequency, Short recurAfter) {
+		FeeBO fee;
+		try {
+			fee = createPeriodicAmountFee(feeName, feeCategory,
+				feeAmnt, meetingFrequency, recurAfter,
+				TestUtils.makeUserWithLocales());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return fee;
+	}
+
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter,
@@ -1268,6 +1301,8 @@ public class TestObjectFactory {
 	private static void deleteCustomer(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
+		// HACK to get this loaded in a new session
+		customer = (CustomerBO)session.load(CustomerBO.class, customer.getCustomerId());
 		session.lock(customer, LockMode.NONE);
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);

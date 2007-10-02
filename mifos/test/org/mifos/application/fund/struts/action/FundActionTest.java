@@ -2,6 +2,10 @@ package org.mifos.application.fund.struts.action;
 
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.fund.persistence.FundPersistence;
 import org.mifos.application.fund.util.helpers.FundConstants;
@@ -42,8 +46,19 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, FundAction.class);
 	}
 	
+	private void reloadMembers() {
+		if (fund != null) {
+			fund = (FundBO)HibernateUtil.getSessionTL().get(FundBO.class, fund.getFundId());
+		}
+		if (fundBO != null) {
+			fundBO = (FundBO)HibernateUtil.getSessionTL().get(FundBO.class, fundBO.getFundId());
+		}
+		
+	}
+	
 	@Override
 	protected void tearDown() throws Exception {
+		reloadMembers();
 		TestObjectFactory.removeObject(fund);
 		TestObjectFactory.removeObject(fundBO);
 		HibernateUtil.closeSession();

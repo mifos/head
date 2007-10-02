@@ -59,6 +59,7 @@ import org.mifos.framework.formulaic.IsInstanceValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.formulaic.ValidationError;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -502,10 +503,11 @@ public class SurveyInstanceAction extends BaseAction {
 		BusinessObject businessObject = (BusinessObject) request.getSession()
 			.getAttribute(Constants.BUSINESS_KEY);
 		String displayName = getBusinessObjectName(businessObject);
-			request.setAttribute(
-		SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
+		request.setAttribute(
+				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 		Survey survey = (Survey) request.getSession().getAttribute(
 				SurveysConstants.KEY_SURVEY);
+		survey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, survey.getSurveyId());
 		String ppi = "";
 		if (PPISurvey.class.isInstance(survey))
 			ppi = "_ppi";
@@ -642,6 +644,9 @@ public class SurveyInstanceAction extends BaseAction {
 		try {
 			results = sessionValidator.validate(request.getSession());
 			survey = (Survey) results.get(SurveysConstants.KEY_SURVEY);
+			// reload the survey in the current Hibernate session (there should be a cleaner way)
+			survey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, survey.getSurveyId());
+
 			actionForm = (GenericActionForm) form;
 			formInputs = new SurveyValidator(survey).validate(actionForm);
 		}

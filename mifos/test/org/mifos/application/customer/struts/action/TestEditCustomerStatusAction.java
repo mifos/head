@@ -673,6 +673,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 					.isBlackListed());
 			break;
 		}
+		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
 		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertNull(customerPosition.getCustomer());
@@ -897,6 +898,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertNull(request.getAttribute(Constants.FLOWMANAGER));
+		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
 		assertTrue(group.isBlackListed());
 	}
 
@@ -912,6 +914,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertNull(request.getAttribute(Constants.FLOWMANAGER));
+		group = TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
 		assertEquals("ActivationDate should be the current date.", DateUtils
 				.getDateWithoutTimeStamp(new java.util.Date().getTime()),
 				DateUtils.getDateWithoutTimeStamp(group
@@ -973,6 +976,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		verifyActionErrors(new String[] { GroupConstants.BRANCH_INACTIVE });
+		office = (OfficeBO)TestObjectFactory.getObject(OfficeBO.class, office.getOfficeId());
+
+		
 	}
 
 	public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial()

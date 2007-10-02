@@ -111,6 +111,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 		savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY,request);
+
+		savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
 		Hibernate.initialize(savings.getAccountPayments());
 		Hibernate.initialize(savings.getAccountFees());
 		Hibernate.initialize(savings.getAccountActionDates());
@@ -118,7 +120,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				MasterConstants.PAYMENT_TYPE,request));
 		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
 		assertNull(clientList);
-
+		
 		group = new CustomerPersistence().getCustomer(group
 				.getCustomerId());
 		center = new CustomerPersistence().getCustomer(center
@@ -147,6 +149,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 		savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY,request);
+		savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
 		Hibernate.initialize(savings.getAccountPayments());
 		Hibernate.initialize(savings.getAccountFees());
 		Hibernate.initialize(savings.getAccountActionDates());

@@ -448,8 +448,10 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
+
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
+
+		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 	}
 
 	public void testLoadUnLockUser() throws Exception {
