@@ -58,6 +58,27 @@
 
 	<echo level="debug">CLASSPATH - ${java.class.path}</echo>
 
+	<!--definitions & target for SVNant 
+		To make the targets work (1) get svnant from http://subclipse.tigris.org/svnant.html
+		(2) copy  svnClientAdapter.jar and svnant.jar to ${ANT_HOME}/lib
+	-->
+	<property name="src.revision" value="Unknown" />
+	<condition property="svnant.installed">
+		<and>
+			<available file="${env.ANT_HOME}/lib/svnClientAdapter.jar"/>
+			<available file="${env.ANT_HOME}/lib/svnant.jar"/>
+		</and>
+	</condition>
+
+	<target name="svn-revision" if="svnant.installed"  description="Sets SVN revision">
+		<typedef name="svn"  classname="org.tigris.subversion.svnant.SvnTask"  /> 	
+		<svn javahl="false" >
+			<status path="./build.xml" revisionProperty="src.revision" />
+		</svn>
+	</target>
+	<!-- end definitions & target for svnant -->
+	
+	
 	<target name="init">
 		<tstamp>
 			<format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
@@ -133,6 +154,10 @@
 		</javac>
 	</target>
 
+	<!-- new target to encapsulate both the old copy and the svnant integration --> 
+	<target name="copy_files2" depends="copy_files,copy-revision">
+	</target>
+	
 	<!--
 	Note that my.hibernate.properties and my.HibernateTest.properties,
 	unlike my.build.properties, entirely override the corresponding
@@ -199,6 +224,17 @@
 		</copy>
 	</target>
 
+	<!-- if svnant is not installed revision is set to Unknown-->
+	<target name="copy-revision" depends="svn-revision"  description="Creates revision property file">
+		<copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
+			<filterset>
+				<filter token="revision" value="${src.revision}" />
+			</filterset>
+		</copy>	
+	</target>	
+
+	
+	
 	<target name="integrate_birt_web_viewer">
 		<copy todir="${build.src.dir}">
 			<fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
@@ -359,6 +395,15 @@
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy" 
 		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
 	/>
+	
+	<target name="dist-war-rev" 
+			depends="svn-revision,clean,compile,copy_files2,compile_test,copy_test_files,run_test,war,deploy" 
+			if="src.revision"
+			description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
+		<move file="${dist.dir}/${webapplication.name}.war"
+			  tofile="${dist.dir}/${webapplication.name}-${src.revision}.war" />
+	</target>
+
 
 	<target name="dist_build_db" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
