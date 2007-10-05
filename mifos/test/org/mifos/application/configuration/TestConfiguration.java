@@ -34,11 +34,11 @@ public class TestConfiguration extends MifosTestCase {
 	 * granel",MifosConfiguration.getInstance().getLabelValue(ConfigurationConstants.BULKENTRY,(short)2)) ; }
 	 */
 
-	public void testInitializeLabelLocaleIdCache() {
-		Map<String, Short> loacleIdCache = configuration.getLoacleIdCache();
-		assertEquals(true, loacleIdCache.size() > 0);
+	//kim commented out on 10/02 will remove soon commented this test will go to Localization test public void testInitializeLabelLocaleIdCache() {
+	//	Map<String, Short> loacleIdCache = configuration.getLoacleIdCache();
+	//	assertEquals(true, loacleIdCache.size() > 0);
 
-	}
+	//}
 
 	public void testLabelKey() {
 		LabelKey labelKey = new LabelKey("key", (short)1);

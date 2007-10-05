@@ -9,9 +9,7 @@ import java.util.Set;
 
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.CountryEntity;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.business.LanguageEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeBO;
@@ -39,6 +37,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.config.Localization;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -776,18 +775,21 @@ public class PersonnelBO extends BusinessObject {
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
 			updateLastPersonnelLoggedin();
 		}
-		SupportedLocalesEntity supportedLocales = getPreferredLocale();
+		//kim commented out on 10/02 will remove soon  replace this with what in Localization SupportedLocalesEntity supportedLocales = getPreferredLocale();
+		SupportedLocalesEntity supportedLocales = Localization.getInstance().getSupportedLocale();
 		if (null != supportedLocales) {
 			userContext.setLocaleId(supportedLocales.getLocaleId());
-			LanguageEntity lang = supportedLocales.getLanguage();
-			CountryEntity country = supportedLocales.getCountry();
-			if (null != lang && null != country) {
-				userContext.setPreferredLocale(new Locale(lang
-						.getLanguageShortName(), country
-						.getCountryShortName()));
-			} else {
-				throw new PersonnelException(SecurityConstants.GENERALERROR);
-			}
+			Locale preferredLocale = Localization.getInstance().getLocale();
+			userContext.setPreferredLocale(preferredLocale);
+			//kim commented out on 10/02 will remove soon LanguageEntity lang = supportedLocales.getLanguage();
+			//CountryEntity country = supportedLocales.getCountry();
+			//if (null != lang && null != country) {
+			//	userContext.setPreferredLocale(new Locale(lang
+			//			.getLanguageShortName(), country
+			//			.getCountryShortName()));
+			//} else {
+			//	throw new PersonnelException(SecurityConstants.GENERALERROR);
+			//}
 		}
 		userContext.setBranchId(getOffice().getOfficeId());
 		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());

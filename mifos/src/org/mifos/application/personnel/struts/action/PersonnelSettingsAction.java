@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -31,6 +30,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.Localization;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 
 public class PersonnelSettingsAction extends BaseAction {
 	@Override
@@ -237,6 +238,7 @@ public class PersonnelSettingsAction extends BaseAction {
 					return locale.getLocaleId();
 				break;
 			}
-		return Short.valueOf("1");
+		//kim commented out on 10/02 will remove soon commented out on 10/02 will remove soon return Short.valueOf("1");
+		return Localization.getInstance().getLocaleId();
 	}
 }

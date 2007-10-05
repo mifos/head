@@ -72,11 +72,13 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		assertEquals(1, configList.size());
 	}
 
-	public void testGetSupportedLocale() throws Exception {
-		SupportedLocalesEntity locale =
-			configurationPersistence.getSupportedLocale();
-		assertEquals(Short.valueOf("1"),locale.getLocaleId());
-	}
+	//kim commented out on 10/02 will remove soon this test is removed because
+	// this method is removed 
+	//public void testGetSupportedLocale() throws Exception {
+	//	SupportedLocalesEntity locale =
+	//		configurationPersistence.getSupportedLocale();
+	//	assertEquals(Short.valueOf("1"),locale.getLocaleId());
+	//}
 
 	public void testGetWeekDaysList() throws Exception{
 		List<WeekDaysEntity> weekDaysList =

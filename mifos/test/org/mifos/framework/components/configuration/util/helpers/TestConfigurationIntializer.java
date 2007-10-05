@@ -64,8 +64,6 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		key.setKey(OfficeConfigConstants.CLIENT_CAN_EXIST_OUTSIDE_GROUP);
 		assertNotNull(officeCache.getElement(key));
 
-		//kim remove it for AccoutingRules key.setKey(OfficeConfigConstants.NO_OF_INTEREST_DAYS);
-		//assertNotNull(officeCache.getElement(key));
 	}
 
 	public void testInitialize() throws Exception{

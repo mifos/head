@@ -36,6 +36,8 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.config.Localization;
+
 /**
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here, when the application is shutdown. 
@@ -63,6 +65,9 @@ public class ApplicationInitializer implements ServletContextListener {
 							"Failed to upgrade/downgrade database version", false, null, t);
 				}
 				if(databaseVersionError==null){
+					// this method is called so that supported locales will be loaded
+					// from db and stored in cache for later use
+					Localization.getInstance().init(); 
 					initializeSecurity();
 					configureAdminUser();
 					FinancialInitializer.initialize();
@@ -73,6 +78,7 @@ public class ApplicationInitializer implements ServletContextListener {
 					Configuration.getInstance();
 					configureAuditLogValues();
 					MifosConfiguration.getInstance().init();
+					
 				}
 			}
 		}catch(Exception e){

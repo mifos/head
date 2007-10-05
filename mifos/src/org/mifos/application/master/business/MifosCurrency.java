@@ -137,7 +137,7 @@ public final class MifosCurrency extends PersistentObject {
 	}
 
 	public RoundingMode getRoundingModeEnum() {
-		// kim replace this with AccountingRule
+		// kim commented out,  will remove soon replace this with AccountingRule
 		//if (roundingMode == CEILING_MODE) {
 		//	return RoundingMode.CEILING;
 		//}
@@ -193,7 +193,7 @@ public final class MifosCurrency extends PersistentObject {
 	}
 
 	public Float getRoundingAmount() {
-		// kim replace this with AccountingRules
+		// kim commented out,  will remove soon replace this with AccountingRules
 		//return roundingAmount;
 		return AccountingRules.getAmountToBeRoundedTo(roundingAmount);
 	}
@@ -204,7 +204,7 @@ public final class MifosCurrency extends PersistentObject {
 	}
 	
 	public Short getDefaultDigitsAfterDecimal() {
-		// kim replace this with AccountingRules
+		// kim commented out, will remove soon commented out,will remove soon replace this with AccountingRules
 		//return defaultDigitsAfterDecimal;
 		return AccountingRules.getDigitsAfterDecimal(defaultDigitsAfterDecimal);
 	}

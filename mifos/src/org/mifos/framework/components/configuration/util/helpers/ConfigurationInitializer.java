@@ -76,6 +76,7 @@ import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.config.Localization;
 
 public class ConfigurationInitializer {
 	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
@@ -98,13 +99,14 @@ public class ConfigurationInitializer {
 
 		MifosCurrency defaultCurrency = configurationPersistence
 						.getDefaultCurrency();
-		SupportedLocalesEntity supportedLocale = configurationPersistence
-						.getSupportedLocale();
+		// kim commented out on 10/02 will remove soon commented this out SupportedLocalesEntity supportedLocale = configurationPersistence
+		//				.getSupportedLocale();
 
 		// TODO: pick timezone offset from database
 		int timeZone = 19800000;
+		
 
-		return new SystemConfiguration(supportedLocale, defaultCurrency, 
+		return new SystemConfiguration(defaultCurrency, 
 				sessionTimeout, timeZone);
 	}
 

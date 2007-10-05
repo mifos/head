@@ -48,9 +48,11 @@ import org.mifos.application.fees.FeeTestSuite;
 import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
+import org.mifos.config.ConfigTestSuite;
 import org.mifos.config.TestConfigurationManager;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.security.SecurityTestSuite;
+
 
 public class ApplicationTestSet1 extends TestSuite {
 
@@ -64,9 +66,10 @@ public class ApplicationTestSet1 extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new ApplicationTestSet1();
-
+		suite.addTest(ConfigTestSuite.suite());
 		// Put fast tests at the top for quick feedback if they fail
 		suite.addTest(TestConfigurationManager.suite());
+		
 		suite.addTest(ProductMixTestSuite.suite());
 		suite.addTest(FastTests.suite());
 		suite.addTest(SecurityTestSuite.suite());
@@ -78,6 +81,7 @@ public class ApplicationTestSet1 extends TestSuite {
 		suite.addTest(OfficeTestSuite.suite());
 
 		suite.addTest(ComponentsTestSuite.suite());
+		
 		
 		return suite;
 	}

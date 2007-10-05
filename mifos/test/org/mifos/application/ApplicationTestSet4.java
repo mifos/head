@@ -97,6 +97,7 @@ public class ApplicationTestSet4 extends TestSuite {
 		suite.addTest(SurveysTestSuite.suite());
 		suite.addTest(PPITestSuite.suite());
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
+		
 		return suite;
 	}
 }

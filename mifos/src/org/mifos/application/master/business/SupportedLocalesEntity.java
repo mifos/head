@@ -39,6 +39,7 @@
 package org.mifos.application.master.business;
 
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.config.Localization;
 
 public class SupportedLocalesEntity extends PersistentObject {
 
@@ -49,31 +50,32 @@ public class SupportedLocalesEntity extends PersistentObject {
 	private Short defaultLocale;
 
 	private LanguageEntity language;
-
 	private CountryEntity country;
-
+	
 	public SupportedLocalesEntity() {
 		super();
+		
 	}
 	public SupportedLocalesEntity(Short localeId) {
 		super();
-		this.localeId=localeId;
+		this.localeId = localeId;
 	}
 
-	public CountryEntity getCountry() {
-		return country;
+	public String getCountryCode() {
+		return country.getCountryShortName();
 	}
 
-	public void setCountry(CountryEntity country) {
-		this.country = country;
+	
+	public String getCountryName() {
+		return country.getCountryName();
 	}
 
-	public LanguageEntity getLanguage() {
-		return language;
+	public String getLanguageCode() {
+		return language.getLanguageShortName();
 	}
-
-	public void setLanguage(LanguageEntity language) {
-		this.language = language;
+	
+	public String getLanguageName() {
+		return language.getLanguageName();
 	}
 
 	public Short getDefaultLocale() {
@@ -98,6 +100,18 @@ public class SupportedLocalesEntity extends PersistentObject {
 
 	public void setLocaleName(String localeName) {
 		this.localeName = localeName;
+	}
+	public CountryEntity getCountry() {
+		return country;
+	}
+	public void setCountry(CountryEntity country) {
+		this.country = country;
+	}
+	public LanguageEntity getLanguage() {
+		return language;
+	}
+	public void setLanguage(LanguageEntity language) {
+		this.language = language;
 	}
 
 }

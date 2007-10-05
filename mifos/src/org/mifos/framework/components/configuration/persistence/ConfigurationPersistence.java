@@ -97,17 +97,18 @@ public class ConfigurationPersistence extends Persistence{
 		return new FrameworkRuntimeException(null, message);
 	}
 
-	public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
+	/* kim commented out on 10/02 will remove soon
+	 * this method is replace by Localization getSupportedLocale
+	 * public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
 		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
 		  if (supportedLocaleList==null || supportedLocaleList.size()==0) {
 			    logger.error("No Default Locale Specified");
 				throw new FrameworkRuntimeException(null, "No Default Locale Specified");
 		  }
 		  SupportedLocalesEntity locale = supportedLocaleList.get(0);
-		  initialize(locale.getCountry());
-		  initialize(locale.getLanguage());
+		  
 		  return locale;
-	}
+	}*/
 	
 	public List<ConfigEntity> getOfficeConfiguration()throws PersistenceException{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICE_CONFIG, null);

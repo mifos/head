@@ -533,11 +533,11 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getLocaleId());
 		assertEquals(Configuration.getInstance().getSystemConfig()
 				.getMFILocaleId(), userContext.getMfiLocaleId());
-		assertEquals(personnel.getPreferredLocale().getLanguage()
-				.getLanguageName(), userContext.getPreferredLocale()
+		assertEquals(personnel.getPreferredLocale().getLanguageName()
+				, userContext.getPreferredLocale()
 				.getDisplayLanguage(userContext.getPreferredLocale()));
-		assertEquals(personnel.getPreferredLocale().getCountry()
-				.getCountryName(), userContext.getPreferredLocale()
+		assertEquals(personnel.getPreferredLocale().getCountryName()
+				, userContext.getPreferredLocale()
 				.getDisplayCountry(userContext.getPreferredLocale()));
 		assertEquals(personnel.getOffice().getOfficeId(), userContext
 				.getBranchId());

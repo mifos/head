@@ -82,6 +82,7 @@ import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
+import org.mifos.config.ConfigTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 
@@ -95,7 +96,7 @@ public class ApplicationTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new ApplicationTestSuite();
-
+		suite.addTest(ConfigTestSuite.suite());
 		// Put fast tests at the top for quick feedback if they fail
 		suite.addTest(TestConfigurationManager.suite());
 		suite.addTest(ProductMixTestSuite.suite());
@@ -141,6 +142,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(SurveysTestSuite.suite());
 		suite.addTest(PPITestSuite.suite());
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
+		
 		return suite;
 	}
 }

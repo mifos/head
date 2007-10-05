@@ -39,6 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -59,7 +60,8 @@ public class TestCaseInitializer {
 		try {
 			DatabaseSetup.configureLogging();
 			DatabaseSetup.initializeHibernate();
-
+			//	add this because it is added to Application Initializer
+			Localization.getInstance().init(); 
 			FinancialInitializer.initialize();
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();

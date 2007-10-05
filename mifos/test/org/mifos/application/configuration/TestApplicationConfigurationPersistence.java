@@ -21,8 +21,6 @@ public class TestApplicationConfigurationPersistence extends MifosTestCase {
 		assertNotNull(configurationPersistence.getLookupValues());
 	}
 	
-	public void testGetSupportedLocale(){
-		assertNotNull(configurationPersistence.getSupportedLocale());
-	}
+	
 }
 

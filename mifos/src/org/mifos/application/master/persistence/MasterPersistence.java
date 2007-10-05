@@ -29,6 +29,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.config.Localization;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -75,8 +76,10 @@ public class MasterPersistence extends Persistence {
 		return entityList;
 	}
 
+	
 	public short getLocaleId(Locale locale) {
-		return Short.valueOf("1");
+		// kim return Short.valueOf("1");
+		return Localization.getInstance().getLocaleId();
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.config.Localization;
 
 public class SystemConfiguration {
 	
@@ -15,14 +16,18 @@ public class SystemConfiguration {
 	  private final Integer sessionTimeOut;
 	  private final TimeZone timeZone;
 
-	  public SystemConfiguration(SupportedLocalesEntity mfiLocale, 
-			  MifosCurrency currency, int sessionTimeOut, 
-			  int timeZoneOffSet) {
-		  this.mfiLocale = mfiLocale;
+	  //public SystemConfiguration(SupportedLocalesEntity mfiLocale, 
+		//	  MifosCurrency currency, int sessionTimeOut, 
+		//	  int timeZoneOffSet) {
+	  public SystemConfiguration( 
+					  MifosCurrency currency, int sessionTimeOut, 
+					  int timeZoneOffSet) {
+		  this.mfiLocale = Localization.getInstance().getSupportedLocale();
 		  this.currency = currency;
 		  this.sessionTimeOut = sessionTimeOut;
 		  this.timeZone = new SimpleTimeZone(timeZoneOffSet,SimpleTimeZone.getAvailableIDs(timeZoneOffSet)[0]);
-		  this.locale = new Locale(mfiLocale.getLanguage().getLanguageShortName(),mfiLocale.getCountry().getCountryShortName());
+		  //kim commented out on 10/02 will remove soon replace this with Localization method this.locale = new Locale(mfiLocale.getLanguage().getLanguageShortName(),mfiLocale.getCountry().getCountryShortName());
+		  this.locale = Localization.getInstance().getLocale();
 	  }
 
 	  public Locale getMFILocale() {

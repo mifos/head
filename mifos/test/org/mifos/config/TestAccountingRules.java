@@ -52,6 +52,7 @@ public class TestAccountingRules {
 		{
 			assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file nor database.");
 		}
+		configMgr.clearProperty(AccountingRulesDigitsAfterDecimal);
 		
 	}
 
@@ -95,6 +96,7 @@ public class TestAccountingRules {
 			assertEquals(e.getMessage(), "The rounding mode defined in the config file is not CEILING nor FLOOR. It is "
 					+ roundingMode);
 		}
+		configMgr.clearProperty(AccountingRulesRoundingRule);
 	}
 	
 	
@@ -132,6 +134,8 @@ public class TestAccountingRules {
 		{
 			assertEquals(e.getMessage(), "The number of interest days is not defined in the config file ");
 		}
+		insertedDays = 365;
+		configMgr.addProperty(AccountingRulesNumberOfInterestDays, insertedDays);
 	}
 	
 	
