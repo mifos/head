@@ -88,7 +88,7 @@
 							</tr>
 						</table>
 						<br>
-						<table width="80%" border="0" cellpadding="3" cellspacing="0" rules="all">
+						<table width="80%" border="0" cellpadding="3" cellspacing="0" >
 							<tr>
 								<td width="11%" class="drawtablehd">
 									Sequence No.

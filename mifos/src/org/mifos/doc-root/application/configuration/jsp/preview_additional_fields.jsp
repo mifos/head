@@ -115,7 +115,7 @@
                 <mifos:mifoslabel name="configuration.preview_instruction" />
                 </td>
               </tr>
-            </table>            <br>
+            </table>         <br>   
             
             
             <table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -158,20 +158,20 @@
 					</c:if>
 				</c:forEach>
 		        <br>
-		        
+		        </span>
 		        <span class="fontnormal">
      	 		<mifos:mifoslabel name="configuration.default_value" isColonRequired="Yes"/>	
      	 		</span>							     	 
-     	 
-     	 		<c:out value="${sessionScope.customfieldsactionform.defaultValue}"/>  	 
-		    	<br>      		        
-     			
-     			<span class="fontnormal"></span>
-			    
+     	 		<span class="fontnormal">
+     	 		<c:out value="${sessionScope.customfieldsactionform.defaultValue}"/> 
+     	 		</span> 	 
+		    	<br> 
+		    	<br>     		        
+			    <span class="fontnormal">
 			    <html-el:button property="button" styleClass="insidebuttn" onclick="javascript:fnPrevious();">
 					<mifos:mifoslabel name="configuration.edit_additional_field" ></mifos:mifoslabel>
 				</html-el:button>      
-				
+				</span>
                 </td>
               </tr>
             </table>
