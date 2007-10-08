@@ -4,9 +4,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.ServletRequestEvent;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -42,8 +43,8 @@ import org.mifos.config.Localization;
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here, when the application is shutdown. 
  * */
-public class ApplicationInitializer implements ServletContextListener {
-	
+public class ApplicationInitializer implements ServletContextListener, ServletRequestListener {
+
 	private static Throwable databaseVersionError;
 
 	public void contextInitialized(ServletContextEvent ctx) {
@@ -235,5 +236,12 @@ public class ApplicationInitializer implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent ctx) {
 		
 	}
-	 
+
+    public void requestDestroyed(ServletRequestEvent event) {
+        HibernateUtil.closeSession();
+    }
+
+    public void requestInitialized(ServletRequestEvent event) {
+        
+    }
 }
