@@ -117,6 +117,15 @@
 		<delete dir="${build.dir}"/>
 	</target>
 
+	<target name="bkp-war" description="move old war files to the dist/bkp directory">
+		<mkdir dir="${dist.dir}/bkp"/>
+		<move todir="${dist.dir}/bkp">
+			<fileset dir="${dist.dir}">
+				<include name="${webapplication.name}-*.war"/>
+			</fileset>
+		</move>
+	</target>
+	
 	<target name="clean_all" depends="clean">
 		<delete dir="${dist.dir}"/>
 		<!-- <delete dir="${doc.dir}/api"/> -->
@@ -397,13 +406,12 @@
 	/>
 	
 	<target name="dist-war-rev" 
-			depends="svn-revision,clean,compile,copy_files2,compile_test,copy_test_files,run_test,war,deploy" 
+			depends="svn-revision,clean,compile,copy_files2,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
 			if="src.revision"
 			description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
 		<move file="${dist.dir}/${webapplication.name}.war"
 			  tofile="${dist.dir}/${webapplication.name}-${src.revision}.war" />
 	</target>
-
 
 	<target name="dist_build_db" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
