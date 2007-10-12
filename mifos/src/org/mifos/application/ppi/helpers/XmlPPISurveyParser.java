@@ -1,13 +1,13 @@
 package org.mifos.application.ppi.helpers;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
+import java.net.URISyntaxException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPISurvey;
@@ -20,16 +20,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XmlPPISurveyParser {
 	
-	public PPISurvey parseInto(String uri, PPISurvey survey) throws Exception {
+	public PPISurvey parseInto(String uri, PPISurvey survey)
+            throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
 		InputStream xml = ResourceLoader.getURI(uri).toURL().openStream();
 		return parseInto(xml, survey);
 	}
 	
-	public PPISurvey parseInto(InputStream stream, PPISurvey survey) 
-	throws Exception {
+	private PPISurvey parseInto(InputStream stream, PPISurvey survey)
+            throws ParserConfigurationException, IOException, SAXException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory
 		.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -38,11 +40,7 @@ public class XmlPPISurveyParser {
 		return parseInto(document, survey);
 	}
 
-	public PPISurvey parseInto(File file, PPISurvey survey) throws Exception {
-		return parseInto(new FileInputStream(file), survey);
-	}
-	
-	public PPISurvey parseInto(Document document, PPISurvey survey) throws Exception {
+    PPISurvey parseInto(Document document, PPISurvey survey) {
 		Element docElement = document.getDocumentElement();
 		
 		Country country = Country.valueOf(docElement.getAttribute("country"));
@@ -90,7 +88,7 @@ public class XmlPPISurveyParser {
 				Node choiceNode = choiceNodeList.item(j);
 				PPIChoice choice = new PPIChoice();
 				if (!emptyQuestionList) {
-					choice = (PPIChoice)question.getChoices().get(j);
+ 					choice = (PPIChoice)question.getChoices().get(j);
 				} else {
 					question.addChoice(choice);
 				}

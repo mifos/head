@@ -158,14 +158,17 @@ public class PPIAction extends PersistenceAction {
 				new PPISurvey((Country)results.get("country")) : ppiSurvey;
 		
 		XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
-		ppiSurvey = xmlParser.parseInto(
+        // TODO: parseInto method parses values from the xml document and overwrites whatever is stored in the database.
+        ppiSurvey = xmlParser.parseInto(
 				"org/mifos/framework/util/resources/ppi/PPISurvey" + 
 				results.get("country") + ".xml", ppiSurvey);
-		
-		ppiSurvey.setAppliesTo(SurveyType.CLIENT);
+
+        // TODO: Now it appears that PPI surveys, overwrite applies to no matter what.  This needs to be fixed.
+        ppiSurvey.setAppliesTo(SurveyType.CLIENT);
 		ppiSurvey.setState((SurveyState)results.get("state"));
-		
-		ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
+
+        // TODO: Now we seem to be going back to the database for values...????
+        ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
 		ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
 		ppiSurvey.setPoorMin((Integer)results.get("poorMin"));
 		ppiSurvey.setPoorMax((Integer)results.get("poorMax"));
