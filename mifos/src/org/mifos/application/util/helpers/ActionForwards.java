@@ -177,7 +177,8 @@ public enum ActionForwards {
 	viewAllProductMix_success,
 	// surveys additions
 	create_entry_success,
-	manage_questions,
+    print_success,
+    manage_questions,
 	create_entry_success_ppi,
 	get_success_ppi,
 	choose_survey,

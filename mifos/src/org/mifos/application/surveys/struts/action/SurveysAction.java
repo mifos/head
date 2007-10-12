@@ -78,7 +78,8 @@ public class SurveysAction extends BaseAction {
 		security.allow("edit", SecurityConstants.VIEW);
 		security.allow("edit_update", SecurityConstants.VIEW);
 		security.allow("printVersion", SecurityConstants.VIEW);
-		security.allow("delete_new_question_edit", SecurityConstants.VIEW);
+        security.allow("prePrintVersion", SecurityConstants.VIEW);
+        security.allow("delete_new_question_edit", SecurityConstants.VIEW);
 		security.allow("add_new_question_edit", SecurityConstants.VIEW);
 		return security;
 	}
@@ -87,7 +88,7 @@ public class SurveysAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		get(mapping, form, request, response);
-		return mapping.findForward("print_success");
+		return mapping.findForward(ActionForwards.print_success.toString());
 	}
 
 	@Override
@@ -167,8 +168,20 @@ public class SurveysAction extends BaseAction {
 		return mapping.findForward(
 				ActionForwards.create_entry_success.toString());
 	}
-	
-	public ActionForward preview(ActionMapping mapping, ActionForm form,
+
+    public ActionForward prePrintVersion(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+        Survey survey = createSurvey(form, request);
+
+        request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
+		request.setAttribute(
+				SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
+
+        return mapping.findForward(ActionForwards.print_success.toString());
+	}
+
+    public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
@@ -267,8 +280,18 @@ public class SurveysAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SurveysPersistence persistence = new SurveysPersistence();
-		GenericActionForm actionForm = (GenericActionForm) form;
-		SurveyState state =
+
+        Survey newSurvey = createSurvey(form, request);
+
+        persistence.createOrUpdate(newSurvey);
+		request.setAttribute(
+				SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+    private Survey createSurvey(ActionForm form, HttpServletRequest request) {
+        GenericActionForm actionForm = (GenericActionForm) form;
+        SurveyState state =
 			Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
 		SurveyType type =
 			SurveyType.fromString(actionForm.getValue("appliesTo"));
@@ -289,17 +312,14 @@ public class SurveysAction extends BaseAction {
 				}
 			}
 			question.setChoices(choices);
-			boolean mandatory = null !=
-				actionForm.getValue("mandatory_" + question.getQuestionId());
+			boolean mandatory = (null != actionForm.getValue("mandatory_" + question.getQuestionId()));
 			newSurvey.addQuestion(question, mandatory);
 		}
-		persistence.createOrUpdate(newSurvey);
-		request.setAttribute(
-				SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
-		return mapping.findForward(ActionForwards.create_success.toString());
-	}
-	
-	public ActionForward edit(ActionMapping mapping, ActionForm form,
+
+        return newSurvey;
+    }
+
+    public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(
