@@ -37,18 +37,28 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mifos.framework.TestUtils.EURO;
 import static org.mifos.framework.TestUtils.RUPEE;
 
 import java.math.BigDecimal;
 
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 
+import org.junit.Ignore;
+import org.junit.Test;
+import org.mifos.application.master.business.MifosCurrency;
 /**
  * This class is used to test Money class.
  */
-public class MoneyTest extends TestCase {
+public class MoneyTest {
 
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(MoneyTest.class);
+	}
+	
+	@Test
 	public void testAdd() {
 		Money money = new Money(RUPEE, "100.0");
 		Money addendend = new Money(RUPEE, "200.0");
@@ -56,6 +66,7 @@ public class MoneyTest extends TestCase {
 				money.add(addendend));
 	}
 
+	@Test
 	public void testAddMultipleDecimalAmounts() {
 		Money money = new Money(RUPEE, "0.1");
 		Money money1 = money.add(new Money(RUPEE, "0.1"));
@@ -66,6 +77,7 @@ public class MoneyTest extends TestCase {
 				new Money(RUPEE, "0.5"), money4);
 	}
 
+	@Test
 	public void testAddWithDiffCurrencies() {
 		Money money = new Money(RUPEE, "100.0");
 		try {
@@ -76,6 +88,7 @@ public class MoneyTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testSubtract() {
 		Money subtrahend = new Money(RUPEE, "100.0");
 		Money money = new Money(RUPEE, "200.0");
@@ -83,6 +96,7 @@ public class MoneyTest extends TestCase {
 				"100.0"), money.subtract(subtrahend));
 	}
 
+	@Test
 	public void testSubtractWithDiffCurrencies() {
 		Money money = new Money(RUPEE, "100.0");
 		try {
@@ -93,6 +107,7 @@ public class MoneyTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMultiply() {
 		Money multiplicand = new Money(RUPEE, "10.0");
 		Money money = new Money(RUPEE, "20.0");
@@ -100,6 +115,7 @@ public class MoneyTest extends TestCase {
 				"200.0"), money.multiply(multiplicand));
 	}
 
+	@Test
 	public void testFactorMultiply() {
 		Money money = new Money(RUPEE, "100.0");
 		Double factor = new Double(1 + (24 / 100.0));
@@ -107,6 +123,7 @@ public class MoneyTest extends TestCase {
 				new Money(RUPEE, "124.0"), money.multiply(factor));
 	}
 
+	@Test
 	public void testMultiplyWithDiffCurrencies() {
 		Money money = new Money(RUPEE, "20.0");
 		try {
@@ -117,6 +134,7 @@ public class MoneyTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDivide() {
 		Money dividend = new Money(RUPEE, "10.0");
 		Money money = new Money(RUPEE, "20.0");
@@ -124,6 +142,18 @@ public class MoneyTest extends TestCase {
 				money.divide(dividend));
 	}
 
+	// TODO: This test is broken and needs to be fixed!
+	@Test @Ignore
+	public void testDivideRepeating() {
+		Money dividend = new Money(RUPEE, "3.0");
+		Money money = new Money(RUPEE, "20.0");
+		// need to figure out what final result should be, it won't be 0.0
+		// this case was constructed just to generate the exception
+		assertEquals("testing divide, should succeed", new Money(RUPEE, "0.0"),
+				money.divide(dividend));
+	}
+	
+	@Test
 	public void testDivideWithDiffCurrencies() {
 		Money money = new Money(RUPEE, "20.0");
 		try {
@@ -134,21 +164,36 @@ public class MoneyTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testNegate() {
 		Money money = new Money(RUPEE, "20.0");
 		assertEquals(new Money(RUPEE, "-20.0"), money.negate());
 	}
 
+	@Test
 	public void testRoundUp() {
 		Money money = new Money(RUPEE, "142.34");
 		assertEquals(new Money(RUPEE, "143.00"), Money.round(money));
 	}
 
+	@Test
 	public void testRoundDown() {
 		Money money = new Money(EURO, "142.34");
 		assertEquals(new Money(EURO, "142.00"), Money.round(money));
 	}
 
+	// TODO: This test is broken and needs to be fixed!
+	@Test @Ignore
+	public void testRoundRepeating() {
+		MifosCurrency currency = new MifosCurrency((short)1,"test", "$", (short)1, (float)3.0, (short)1, (short)1 );
+		Money money = new Money(currency, "1");		
+		// need to figure out what the actual result should be.  
+		// this case was constructed just to generate the exception
+		assertEquals(new Money(currency, "1"), Money.round(money));
+	}
+
+	
+	@Test
 	public void testHashCode() {
 		Money money = new Money(RUPEE, "142.34");
 		BigDecimal amnt = new BigDecimal(142.34);
@@ -156,11 +201,13 @@ public class MoneyTest extends TestCase {
 				.intValue()), money.hashCode());
 	}
 
+	@Test
 	public void testHashCodeForNullAmnt() {
 		Money money = new Money(RUPEE, "");
 		assertEquals(0, money.hashCode());
 	}
 
+	@Test
 	public void testSetScale() {
 		assertEquals(142.3, new Money(RUPEE, "142.344").getAmountDoubleValue(),
 				0.00000001);
@@ -168,6 +215,7 @@ public class MoneyTest extends TestCase {
 				0.00000001);
 	}
 
+	@Test
 	public void testToString() {
 		Money money = new Money(RUPEE, "4456456456.6");
 		assertEquals("The toString of money returns : ", "4456456456.6", money

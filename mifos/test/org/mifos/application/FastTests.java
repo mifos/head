@@ -101,7 +101,7 @@ public class FastTests extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new FastTests();
-		suite.addTestSuite(MoneyTest.class);
+		suite.addTest(MoneyTest.suite());
 		suite.addTestSuite(MifosCurrencyTest.class);
 		suite.addTestSuite(DateUtilsTest.class);
 		suite.addTestSuite(CustomFieldViewTest.class);

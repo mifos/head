@@ -1736,6 +1736,8 @@ public class LoanBO extends AccountBO {
 		return null;
 	}
 
+	// why not pass "100" as a string rather than Double.toString(100)?
+	// seems like the Double.toString call could introduce small errors
 	private Money getFlatInterestAmount(Date installmentEndDate)
 			throws AccountException {
 		Double interestRate = getInterestRate();
