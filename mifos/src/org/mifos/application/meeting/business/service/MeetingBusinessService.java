@@ -5,7 +5,6 @@ import java.util.List;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -15,6 +14,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class MeetingBusinessService extends BusinessService{
 	@Override
@@ -22,12 +22,10 @@ public class MeetingBusinessService extends BusinessService{
 		return null;
 	}
 	
-	public List<WeekDaysEntity> getWorkingDays(Short localeId)throws ServiceException{
-		try {
-			return new MeetingPersistence().getWorkingDays(localeId);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}	
+	
+	public List<WeekDay> getWorkingDays()throws RuntimeException{
+			return new MeetingPersistence().getWorkingDays();
+		
 	}
 	
 	public MeetingBO getMeeting(Integer meetingId)throws ServiceException{

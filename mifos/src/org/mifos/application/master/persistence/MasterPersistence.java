@@ -78,7 +78,6 @@ public class MasterPersistence extends Persistence {
 
 	
 	public short getLocaleId(Locale locale) {
-		// kim return Short.valueOf("1");
 		return Localization.getInstance().getLocaleId();
 	}
 

@@ -80,10 +80,11 @@ public class TestConfigurationPersistence extends MifosTestCase {
 	//	assertEquals(Short.valueOf("1"),locale.getLocaleId());
 	//}
 
-	public void testGetWeekDaysList() throws Exception{
-		List<WeekDaysEntity> weekDaysList =
-			configurationPersistence.getWeekDaysList();
-		assertEquals(7, weekDaysList.size());
-	}
+	//kim remove this testcase because it is replaced by FiscalCalendarRules
+	//public void testGetWeekDaysList() throws Exception{
+	//	List<WeekDay> weekDaysList =
+	//		configurationPersistence.getWeekDaysList();
+	//	assertEquals(7, weekDaysList.size());
+	//}
 
 }

@@ -43,6 +43,7 @@ import java.util.List;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants;
+import org.mifos.config.FiscalCalendarRules;
 
 /**
  *  This class defines methods that tells configuration details about Meeting. 
@@ -50,18 +51,18 @@ import org.mifos.framework.components.configuration.util.helpers.OfficeConfigCon
  *  This class restricts the interface of configuration items specific to Meeting only.  
  *  e.g.  getWeekOffDays(), getSchTypeForMeetingOnHoliday() etc.
  */
-public class MeetingConfig extends BaseConfig{
+public class MeetingConfig {
 	  
-	  public MeetingConfig(CacheRepository cacheRepo,OfficeConfig officeConf) {
-		  super(cacheRepo,officeConf);
+	  public MeetingConfig() {
+
 	  }
 
 	  public Short getFiscalWeekStartDay() {
-		  return getShortValueFromCache(ConfigConstants.FISCAL_START_OF_WEEK,ConfigConstants.FISCAL_START_OF_WEEK_DEFAULT);
+		  return FiscalCalendarRules.getStartOfWeek();
 	  }
 
 	  public List<Short> getWeekOffDays() {
-		  	return (List<Short>) getValueFromCache(ConfigConstants.WEEK_OFF_LIST);
+		  	return FiscalCalendarRules.getWeekDayOffList();
 	  }
 	  
 	  /**
@@ -69,7 +70,7 @@ public class MeetingConfig extends BaseConfig{
 	   * @return schedule type can have either of (sameday, nextworkingday or nextmeetingday)
 	   */
 	  public String getSchTypeForMeetingOnHoliday() {
-		  return getStringValueFromCache(OfficeConfigConstants.SCHEDULE_TYPE_FOR_MEETING_ON_HOLIDAY, ConfigConstants.MEETING_SCHEDULE_TYPE_DEFAULT);
+		  return FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday();
 	  }
 	   
 	  /**
@@ -77,6 +78,6 @@ public class MeetingConfig extends BaseConfig{
 	   * next year can be entered.
 	   */
 	  public Short getDaysForCalDefinition() {
-		  return getShortValueFromCache(OfficeConfigConstants.DAYS_FOR_CAL_DEFINITION,ConfigConstants.DAYS_FOR_CAL_DEFINITION_DEFAULT);
+		  return FiscalCalendarRules.getDaysForCalendarDefinition();
 	  }
 }

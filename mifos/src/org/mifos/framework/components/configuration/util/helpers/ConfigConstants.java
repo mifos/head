@@ -70,7 +70,6 @@ public interface ConfigConstants {
 	 public static final  Short LATENESS_DAYS_DEFAULT = 30;
 	 public static final  Short INTEREST_DAYS_DEFAULT = 365;
 	 public static final  Short FISCAL_START_OF_WEEK_DEFAULT = 2;
-	 public static final  Short DAYS_FOR_CAL_DEFINITION_DEFAULT = 30;
 	 public static final  String NAME_SEQUENCE_DEFAULT = "first_name,middle_name,last_name,second_last_name";
 	 public static final  String MEETING_SCHEDULE_TYPE_DEFAULT = "same_day";
 	 
@@ -80,5 +79,5 @@ public interface ConfigConstants {
 	 public static final  String MIDDLE_NAME = "middle_name";
 	 public static final  String SECOND_LAST_NAME = "second_last_name";
 	 public static final  String LAST_NAME = "last_name";
-	 	 public static final String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
+	 public static final String JASPER_REPORT_IS_HIDDEN = "jasperReportIsHidden";
 }

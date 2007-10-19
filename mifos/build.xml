@@ -292,6 +292,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
+
 		<copy todir="${test.classes}/org/mifos/WEB-INF">
 			<fileset dir="${src.dir}/org/mifos/META-INF">
 				<exclude name="**/*.java"/>
@@ -303,6 +304,12 @@
 				<include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
 			</fileset>
 		</copy>
+		<copy todir="${test.classes}/org/mifos/config">
+					<fileset dir="${test.dir}/org/mifos/config">
+						<exclude name="**/*.java"/>
+					</fileset>
+		</copy>
+		 
 
 	</target>
 
@@ -318,6 +325,7 @@
 				<path refid="class.path"/>
 				<pathelement location="${build.classes}"/>
 				<pathelement location="${test.classes}"/>
+				<pathelement location="${test.classes}/org/mifos/config/resources"/>
 			</classpath>
 
 			<formatter type="xml" />
@@ -343,6 +351,7 @@
 				<path refid="class.path"/>
 				<pathelement location="${build.classes}"/>
 				<pathelement location="${test.classes}"/>
+				<pathelement location="${test.classes}/org/mifos/config/resources"/>
 			</classpath>
 
 			<formatter type="xml" />

@@ -78,9 +78,5 @@ public class AccountConfig extends BaseConfig{
 		  return getShortValueFromCache(ConfigConstants.DORMANCY_DAYS,ConfigConstants.DORMANCY_DAYS_DEFAULT);
 	  }
 	  
-	  //public Short getInterestDays() {
-		  // kim replace the code below with AccountingRule.getNumberOfInterestDays
-		  //return getShortValueFromCache(OfficeConfigConstants.NO_OF_INTEREST_DAYS,ConfigConstants.INTEREST_DAYS_DEFAULT);
-		//  return AccountingRules.getNumberOfInterestDays();
-	  //}
+	  
 }

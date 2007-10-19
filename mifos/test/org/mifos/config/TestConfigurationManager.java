@@ -21,8 +21,6 @@ public class TestConfigurationManager {
 	}
 	
 	Configuration configuration;
-	
-	private static final String testValue = "Just Testing";
 	private static final String badKey = "Bad Key";
 	
 	@BeforeClass
@@ -34,10 +32,7 @@ public class TestConfigurationManager {
 	public void before() {
 		configuration = ConfigurationManager.getInstance().getConfiguration();
 	}
-	@Test
-	public void testGetProperty() {
-		assertEquals(testValue, configuration.getString(ConfigurationManager.TestKey));
-	}
+	
 	
 	@Test(expected=NoSuchElementException.class)
 	public void testGetUndefinedProperty() {

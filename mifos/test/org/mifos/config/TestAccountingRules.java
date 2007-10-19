@@ -102,9 +102,10 @@ public class TestAccountingRules {
 	
 	@Test 
 	public void testGetNumberOfInterestDays() {
-		Short insertedDays = 365;
+		Short interestDaysInConfig = AccountingRules.getNumberOfInterestDays();
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		// return value from accounting rules class has to be the value defined in the config file
+		Short insertedDays = 365;
+		configMgr.setProperty(AccountingRulesNumberOfInterestDays, insertedDays);
 		assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
 		insertedDays = 360;
 		// set new value
@@ -134,8 +135,8 @@ public class TestAccountingRules {
 		{
 			assertEquals(e.getMessage(), "The number of interest days is not defined in the config file ");
 		}
-		insertedDays = 365;
-		configMgr.addProperty(AccountingRulesNumberOfInterestDays, insertedDays);
+		
+		configMgr.addProperty(AccountingRulesNumberOfInterestDays, interestDaysInConfig);
 	}
 	
 	

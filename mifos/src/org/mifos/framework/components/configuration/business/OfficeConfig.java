@@ -50,7 +50,7 @@ public class OfficeConfig{
 		  this.officeId = officeId;
 		  customerConfig = new CustomerConfig(cacheRepo,this);
 		  accountConfig = new AccountConfig(cacheRepo,this);
-		  meetingConfig = new MeetingConfig(cacheRepo,this);
+		  meetingConfig = new MeetingConfig();
 	  }
 	  
 	  public AccountConfig getAccountConfig() {

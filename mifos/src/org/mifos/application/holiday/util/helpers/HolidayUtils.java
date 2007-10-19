@@ -13,12 +13,10 @@ import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
-import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.config.FiscalCalendarRules;
 
 public class HolidayUtils {
 //	public static long inHolidayTotalDuration = 0;
@@ -35,37 +33,8 @@ public class HolidayUtils {
 	
 	//Holiday Checking helpers methods	
 	public static boolean isWorkingDay(Calendar day) throws RuntimeException{
-		//long startTime = System.currentTimeMillis();
+		return FiscalCalendarRules.isWorkingDay(day);
 		
-		MeetingBusinessService meetingService = new MeetingBusinessService();
-		List<WeekDaysEntity> weekDaysList = null;
-		
-		try {
-			weekDaysList = meetingService.getWorkingDays((short)1);
-		}
-		catch (ServiceException e) {
-			throw new RuntimeException(e);
-		}
-		
-		int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
-		
-		for (WeekDaysEntity weekDaysEntity : weekDaysList) {		
-			if ( WeekDay.getWeekDay(Short.valueOf(dayOfWeek+"")).name().equalsIgnoreCase(weekDaysEntity.getName()) &&
-			     weekDaysEntity.isWorkingDay()) {		
-				
-				//long endTime = System.currentTimeMillis();;
-				//long runTime = endTime - startTime;
-				//isWorkingDayDuration += runTime;
-				
-				return true;
-			}
-		}
-		
-		//long endTime = System.currentTimeMillis();;
-		//long runTime = endTime - startTime;
-		//isWorkingDayDuration += runTime;
-		
-		return false;
 	}
 
 	public static HolidayBO inHoliday(Calendar pday) throws RuntimeException{	

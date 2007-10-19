@@ -36,12 +36,18 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.config.ConfigurationManager;
+import org.mifos.config.FiscalCalendarRules;
 
 public class TestHolidayUtils extends MifosTestCase {
 	
 	private MeetingBO meeting;
 	private Short recurAfter = Short.valueOf("1"); // recur After January
 	private Date startDate;
+	private  ConfigurationManager configMgr = null;
+	private  String savedConfigWorkingDays = null;
+	private String sundayExcludedWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY";
+	private String sundayIncludedWorkingDays = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY";
 	
 	private String[] inputDates       = 
 			{"21/08/2007", "21/08/2007", "21/08/2007", "26/08/2007",
@@ -82,6 +88,23 @@ public class TestHolidayUtils extends MifosTestCase {
 		// Make SUNDAY as Non Working Day
 		toggleFirstDayOnOff(Short.valueOf("0"));
 		/////////////////////
+		configMgr = ConfigurationManager.getInstance();
+		savedConfigWorkingDays = configMgr.getProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays).toString();
+		savedConfigWorkingDays = savedConfigWorkingDays.replace("[", "");
+		savedConfigWorkingDays = savedConfigWorkingDays.replace("]", "");
+		setNewWorkingDays(sundayExcludedWorkingDays);
+	}
+	
+	private void setSavedConfig()
+	{
+		configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, savedConfigWorkingDays);
+		FiscalCalendarRules.reloadConfigWorkingDays();
+	}
+	
+	private void setNewWorkingDays(String newWorkingDays)
+	{
+		configMgr.setProperty(FiscalCalendarRules.FiscalCalendarRulesWorkingDays, newWorkingDays);
+		FiscalCalendarRules.reloadConfigWorkingDays();
 	}
 
 	@Override
@@ -93,6 +116,7 @@ public class TestHolidayUtils extends MifosTestCase {
 			TestObjectFactory.cleanUp(center);
 			// why no clean up of savingsOffering?
 			HibernateUtil.closeSession();
+			setSavedConfig();
 		}
 		catch (Exception e) {
 			/* Throwing from a finally block, which tearDown is called from,
@@ -112,12 +136,13 @@ public class TestHolidayUtils extends MifosTestCase {
 	}
 
 	public void testNonWorkingDay() throws Exception {
+		setNewWorkingDays(sundayIncludedWorkingDays);
 		Date testDate = getDate("19/08/2007");
 				
 		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
 		
 		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-				DateUtils.getDateWithoutTimeStamp(getDate("20/08/2007").getTime()).getTime());
+						DateUtils.getDateWithoutTimeStamp(getDate("19/08/2007").getTime()).getTime());
 
 	}
 	
@@ -191,6 +216,7 @@ public class TestHolidayUtils extends MifosTestCase {
 	}
 	
 	public void testNextWorkingDay() throws Exception {
+		
     	Date holidayStartDate = getDate("20/08/2007");
 		Date holidayEndDate = getDate("22/08/2007");
 		
@@ -212,6 +238,7 @@ public class TestHolidayUtils extends MifosTestCase {
 
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
+		
 	}
 
     public void testHolidayCombinations() throws Exception {
@@ -249,6 +276,7 @@ public class TestHolidayUtils extends MifosTestCase {
     public void testRescheduleLoanRepaymentDates() throws Exception{
     	// Make SUNDAY (FirstDay) as Working Day.
     	toggleFirstDayOnOff(Short.valueOf("1"));
+    	setNewWorkingDays(sundayIncludedWorkingDays);
 		
 		// Create the Schedule to be used in testing
 		Calendar startDate = Calendar.getInstance();
@@ -329,11 +357,13 @@ public class TestHolidayUtils extends MifosTestCase {
 		
 		// Create Non Working Day
 		toggleFirstDayOnOff(Short.valueOf("0"));
+		setNewWorkingDays(sundayIncludedWorkingDays);
     }
 
     public void testRescheduleSavingDates() throws Exception{
     	// Make SUNDAY (FirstDay) as Working Day.
     	toggleFirstDayOnOff(Short.valueOf("1"));
+    	setNewWorkingDays(sundayIncludedWorkingDays);
 		
 		// Create the Schedule to be used in testing
 		Calendar startDate = Calendar.getInstance();		
@@ -422,6 +452,7 @@ public class TestHolidayUtils extends MifosTestCase {
 		
 		// Create Non Working Day
 		toggleFirstDayOnOff(Short.valueOf("0"));
+		setNewWorkingDays(sundayExcludedWorkingDays);
     }
     
 	private HolidayBO[] createHolidayCollection(

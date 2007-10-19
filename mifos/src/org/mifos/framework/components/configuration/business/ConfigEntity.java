@@ -2,6 +2,7 @@ package org.mifos.framework.components.configuration.business;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.config.FiscalCalendarRules;
 
 public class ConfigEntity extends Persistence {
 
@@ -43,7 +44,7 @@ public class ConfigEntity extends Persistence {
 	}
 	
 	public Short getDaysForCalDefinition() {
-		return daysForCalDefinition;
+		return FiscalCalendarRules.getDaysForCalendarDefinition();
 	}
 	
 	public void setDaysForCalDefinition(Short daysForCalDefinition) {
@@ -83,7 +84,8 @@ public class ConfigEntity extends Persistence {
 	}
 	
 	public String getScheduleMeetingOnHoliday() {
-		return scheduleMeetingOnHoliday;
+		//return scheduleMeetingOnHoliday;
+		return FiscalCalendarRules.getScheduleTypeForMeetingOnHoliday();
 	}
 	
 	public void setScheduleMeetingOnHoliday(String scheduleMeetingOnHoliday) {

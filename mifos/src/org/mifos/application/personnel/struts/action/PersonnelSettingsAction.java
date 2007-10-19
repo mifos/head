@@ -238,7 +238,7 @@ public class PersonnelSettingsAction extends BaseAction {
 					return locale.getLocaleId();
 				break;
 			}
-		//kim commented out on 10/02 will remove soon commented out on 10/02 will remove soon return Short.valueOf("1");
+		
 		return Localization.getInstance().getLocaleId();
 	}
 }

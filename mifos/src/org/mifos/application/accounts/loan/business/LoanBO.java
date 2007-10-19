@@ -1874,9 +1874,6 @@ public class LoanBO extends AccountBO {
 
 	// read from configuration
 	private int getInterestDays() {
-		// kim replace the code below with AccountingRules.getNumberOfInterestDays
-		//return Configuration.getInstance().getAccountConfig(
-		//		getOffice().getOfficeId()).getInterestDays();
 		return AccountingRules.getNumberOfInterestDays().shortValue();
 	}
 

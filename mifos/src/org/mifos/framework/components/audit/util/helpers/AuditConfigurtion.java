@@ -85,10 +85,7 @@ public class AuditConfigurtion {
 	private AuditConfigurtion(){
 		masterPersistence=new MasterPersistence();
 		configurationPersistence=new ApplicationConfigurationPersistence();
-		// kim commented out on 10/02 will remove soon replace this with method of Localization class
-		//locales=new ArrayList<Short>();
-		//for(SupportedLocalesEntity supportedLocales : configurationPersistence.getSupportedLocale())
-		//	locales.add(supportedLocales.getLocaleId());
+		
 		locales = Localization.getInstance().getSupportedLocaleIds();
 		columnNames = (PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/framework/util/resources/audit/ColumnMappingBundle");
 		locale =Configuration.getInstance().getSystemConfig().getMFILocale();

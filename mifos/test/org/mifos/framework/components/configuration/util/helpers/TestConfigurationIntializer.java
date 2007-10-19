@@ -43,12 +43,8 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		OfficeCache officeCache = configInitializer.createOfficeCache();
 		assertNotNull(officeCache);
 		OfficeBO headOffice = new OfficePersistence().getHeadOffice();
-		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.SCHEDULE_TYPE_FOR_MEETING_ON_HOLIDAY);
-		assertNotNull(officeCache.getElement(key));
-
-		key.setKey(OfficeConfigConstants.DAYS_FOR_CAL_DEFINITION);
-		assertNotNull(officeCache.getElement(key));
-
+		
+		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.NAME_SEQUENCE);
 		key.setKey(OfficeConfigConstants.NAME_SEQUENCE);
 		assertNotNull(officeCache.getElement(key));
 
@@ -79,12 +75,8 @@ public class TestConfigurationIntializer extends MifosTestCase{
 
 		//check values of officeCache
 		OfficeBO headOffice = new OfficePersistence().getHeadOffice();
-		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.SCHEDULE_TYPE_FOR_MEETING_ON_HOLIDAY);
-		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
-
-		key.setKey(OfficeConfigConstants.DAYS_FOR_CAL_DEFINITION);
-		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
-
+		
+		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.NAME_SEQUENCE);
 		key.setKey(OfficeConfigConstants.NAME_SEQUENCE);
 		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
 
@@ -100,8 +92,7 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		key.setKey(OfficeConfigConstants.CLIENT_CAN_EXIST_OUTSIDE_GROUP);
 		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
 
-		//kim remove it key.setKey(OfficeConfigConstants.NO_OF_INTEREST_DAYS);
-		//assertNotNull(cacheRepo.getValueFromOfficeCache(key));
+		
 	}
 
 	public void testStartUpException() throws Exception {

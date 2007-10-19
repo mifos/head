@@ -77,6 +77,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.config.Localization;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class ConfigurationInitializer {
 	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
@@ -132,35 +134,40 @@ public class ConfigurationInitializer {
 				.getAccountStates(ConfigConstants.OPTIONAL_FLAG);
 		setAccountOptionalStates(officeConfigMap, accountOptionalStates);
 
-		List<WeekDaysEntity> weekDaysList = configurationPersistence.getWeekDaysList();
+		//kim commented out for FiscalCalendarRules List<WeekDaysEntity> weekDaysList = configurationPersistence.getWeekDaysList();
+		List<WeekDay> weekDaysList = FiscalCalendarRules.getWeekDaysList();
 
-		setFiscalStartOfWeek(officeConfigMap, weekDaysList);
-		setWeekOffList(officeConfigMap, weekDaysList);
+		setFiscalStartOfWeek(officeConfigMap);
+		setWeekOffList(officeConfigMap);
 		setLateNessAndDormancyDaysForAccount(officeConfigMap);
 
 		return new OfficeCache(officeConfigMap);
 	}
 
-	private void setFiscalStartOfWeek(Map<Key,Object> officeConfigMap,List<WeekDaysEntity> weekDaysList)throws SystemException,ApplicationException{
-		for(WeekDaysEntity weekDaysEntity : weekDaysList){
-			if(weekDaysEntity.isStartOfFiscalWeek()){
-				officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.FISCAL_START_OF_WEEK),weekDaysEntity.getId());
-				break;
-			}
-		}
+	private void setFiscalStartOfWeek(Map<Key,Object> officeConfigMap)throws SystemException,ApplicationException{
+		//kim commented out for FiscalCalendarRules remove soon for(WeekDaysEntity weekDaysEntity : weekDaysList){
+		//	if(weekDaysEntity.isStartOfFiscalWeek()){
+		//		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.FISCAL_START_OF_WEEK),weekDaysEntity.getId());
+		//		break;
+		//	}
+		//}
+		Short id = FiscalCalendarRules.getStartOfWeek();
+		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),ConfigConstants.FISCAL_START_OF_WEEK),id);
 	}
 
-	private void setWeekOffList(Map<Key, Object> officeConfigMap,
-			List<WeekDaysEntity> weekDaysList) throws SystemException,
+	private void setWeekOffList(Map<Key, Object> officeConfigMap) throws SystemException,
 			ApplicationException {
-		List<Short> weekOffList = null;
-		for (WeekDaysEntity weekDaysEntity : weekDaysList) {
-			if (!weekDaysEntity.isWorkingDay()) {
-				if (weekOffList == null)
-					weekOffList = new ArrayList<Short>();
-				weekOffList.add(weekDaysEntity.getId());
-			}
-		}
+		// kim remove this because of FiscalCalendarRules, will delete soon
+		//List<Short> weekOffList = null;
+		//for (WeekDaysEntity weekDaysEntity : weekDaysList) {
+		//	if (!weekDaysEntity.isWorkingDay()) {
+		//		if (weekOffList == null)
+		//			weekOffList = new ArrayList<Short>();
+		//		weekOffList.add(weekDaysEntity.getId());
+		//	}
+		//}//
+		// get weekday off (not working day)
+		List<Short> weekOffList = FiscalCalendarRules.getWeekDayOffList();
 		if (weekOffList != null)
 			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
 					ConfigConstants.WEEK_OFF_LIST), weekOffList);

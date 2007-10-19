@@ -82,13 +82,8 @@ public class TestConfiguration extends MifosTestCase{
 		assertEquals("same_day",meetingConfig.getSchTypeForMeetingOnHoliday());
 		assertEquals(Short.valueOf("30"),meetingConfig.getDaysForCalDefinition());
 		List<Short> weekOffs = meetingConfig.getWeekOffDays();
-		
-		// This is what it currently does:
-		assertNull(weekOffs);
+		assertEquals(weekOffs.size(), 0);
 
-		// This is what it should do(?):
-		//assertNotNull(weekOffs);
-		//assertEquals(Integer.valueOf(1).intValue(),weekOffs.size());
-		//assertEquals(Short.valueOf("1"),weekOffs.get(0));
+		
 	}
 }

@@ -25,8 +25,6 @@ public class MifosConfiguration {
 
 	private Map<LabelKey, String> labelCache;
 
-	//kim commented out on 10/02 will remove soonmove the cache to Localization class, so everything related to the cache is moved, too
-	// private Map<String, Short> loacleIdCache;
 
 	private boolean centerHierarchyExist;
 
@@ -39,7 +37,6 @@ public class MifosConfiguration {
 
 	private MifosConfiguration() {
 		labelCache = new ConcurrentHashMap<LabelKey, String>();
-		//kim commented out on 10/02 will remove soon loacleIdCache = new ConcurrentHashMap<String, Short>();
 	}
 
 	public boolean isCenterHierarchyExist() {
@@ -51,13 +48,11 @@ public class MifosConfiguration {
 	}
 
 	public Short getMFILocaleId() {
-		// kim commented out on 10/02 will remove soon return Short.valueOf("1");
 		return Localization.getInstance().getLocaleId();
 	}
 
 	public void init() {
 		initializeLabelCache();
-		// kim commented out on 10/02 will remove soon initializeloacleIdCache();
 
 	}
 	
@@ -106,23 +101,7 @@ public class MifosConfiguration {
 		}
 	}
 
-	/*kim commented out on 10/02 will remove soon this is moved to Localization class private void initializeloacleIdCache() {
-		List<SupportedLocalesEntity> locales = 
-			new ApplicationConfigurationPersistence().getSupportedLocale();
-
-		for (SupportedLocalesEntity locale : locales) {
-
-			//kim replace this loacleIdCache.put(locale.getLanguage().getLanguageShortName()
-			//		.toLowerCase()
-			//		+ "_" + locale.getCountry().getCountryShortName(), locale
-			//		.getLocaleId());
-			loacleIdCache.put(locale.getLanguageCode()
-							.toLowerCase()
-							+ "_" + locale.getCountryCode(), locale
-							.getLocaleId());
-		}
-		
-	}*/
+	
 
 	public Map<LabelKey, String> getLabelCache() {
 		return labelCache;
@@ -132,15 +111,12 @@ public class MifosConfiguration {
 		return labelCache.get(new LabelKey( key,localeId));
 	}
 
-	//public Map<String, Short> getLoacleIdCache() {
-	//	return loacleIdCache;
-	//}
+	
 
 	public String getLabel(String key, Locale locale)throws ConfigurationException {
 		if(locale==null || key==null)
 			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
-		// kim commented out on 10/02 will remove soon commented this out String localeKey = locale.getLanguage() + "_" + locale.getCountry();
-		// Short curLocaleId = getLoacleIdFromCache(localeKey);
+		
 		Short curLocaleId = Localization.getInstance().getLocaleId();
 		if(curLocaleId==null )
 			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
@@ -150,7 +126,5 @@ public class MifosConfiguration {
 		return labelText;
 	}
 
-	/*kim commented out on 10/02 will remove soon private Short getLoacleIdFromCache(String localeKey) {
-		return loacleIdCache.get(localeKey);
-	}*/
+	
 }

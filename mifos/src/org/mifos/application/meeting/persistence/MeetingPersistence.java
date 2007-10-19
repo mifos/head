@@ -46,17 +46,25 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 
 public class MeetingPersistence extends Persistence{
 	
-	public List<WeekDaysEntity> getWorkingDays(Short localeId)throws PersistenceException{
-		List<WeekDaysEntity> workingDays = new ArrayList<WeekDaysEntity>(); 
+	
+	List<WeekDaysEntity> getWorkingDays(Short localeId)throws PersistenceException{
+	List<WeekDaysEntity> workingDays = new ArrayList<WeekDaysEntity>(); 
 		List<MasterDataEntity> weekDaysList = new MasterPersistence().retrieveMasterEntities(WeekDaysEntity.class, localeId);
 		for(MasterDataEntity weekDay: weekDaysList){
 			if(((WeekDaysEntity)weekDay).isWorkingDay())
 				workingDays.add((WeekDaysEntity)weekDay);			
 		}
 		return workingDays;
+	}
+	
+	public List<WeekDay> getWorkingDays()
+	{
+		return FiscalCalendarRules.getWorkingDays();
 	}
 	
 	public MeetingBO getMeeting(Integer meetingId)throws PersistenceException{

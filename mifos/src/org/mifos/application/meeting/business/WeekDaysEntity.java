@@ -43,6 +43,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.config.FiscalCalendarRules;
 
 /**
  * This class encapsulate the weekDay
@@ -62,11 +63,11 @@ public class WeekDaysEntity extends MasterDataEntity {
 	}
 	
 	public boolean isWorkingDay(){
-		return (workDay!=null&& workDay.equals(YesNoFlag.NO.getValue())) ? false : true;
+		return FiscalCalendarRules.isWorkingDay(getId());
 	}
 	
 	public boolean isStartOfFiscalWeek(){
-		return (startOfWeek!=null&& startOfWeek.equals(Constants.YES));
+		return FiscalCalendarRules.isStartOfFiscalWeek(getId());
 	}
 		
 	

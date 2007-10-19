@@ -283,7 +283,7 @@ public class MeetingAction extends BaseAction {
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST,
-				getMeetingBusinessService().getWorkingDays(localeId), request);
+				getMeetingBusinessService().getWorkingDays(), request);
 		SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST,
 				getMasterEntities(RankOfDaysEntity.class, localeId), request);
 	}

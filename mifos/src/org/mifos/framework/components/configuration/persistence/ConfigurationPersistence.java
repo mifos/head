@@ -59,19 +59,19 @@ import org.mifos.framework.persistence.Persistence;
  * This class concerns certain configuration settings, especially
  * {@link ConfigurationKeyValueInteger} and friends.
  */
-public class ConfigurationPersistence extends Persistence{
-	private MifosLogger logger = 
-		MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
-	
+public class ConfigurationPersistence extends Persistence {
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+
 	private static final String KEY_QUERY_PARAMETER = "KEY";
-	
+
 	public static final String CONFIGURATION_KEY_DAYS_IN_ADVANCE = "CollectionSheetHelper.daysInAdvance";
 	public static final String CONFIGURATION_KEY_SESSION_TIMEOUT = ConfigConstants.SESSION_TIMEOUT;
 	public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
-	
+
 	public MifosCurrency getDefaultCurrency() throws PersistenceException {
 		List queryResult = executeNamedQuery(
-			NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
+				NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
 		return defaultCurrencyFromList(queryResult);
 	}
 
@@ -83,9 +83,9 @@ public class ConfigurationPersistence extends Persistence{
 			MifosCurrency candidate0 = (MifosCurrency) queryResult.get(0);
 			MifosCurrency candidate1 = (MifosCurrency) queryResult.get(1);
 
-			throw logAndThrow("Both " + candidate0.getCurrencyName() +
-			    " and " + candidate1.getCurrencyName() + 
-			    " are marked as default currencies");
+			throw logAndThrow("Both " + candidate0.getCurrencyName() + " and "
+					+ candidate1.getCurrencyName()
+					+ " are marked as default currencies");
 		}
 		else {
 			throw logAndThrow("No Default Currency Specified");
@@ -100,46 +100,51 @@ public class ConfigurationPersistence extends Persistence{
 	/* kim commented out on 10/02 will remove soon
 	 * this method is replace by Localization getSupportedLocale
 	 * public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
-		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
-		  if (supportedLocaleList==null || supportedLocaleList.size()==0) {
-			    logger.error("No Default Locale Specified");
-				throw new FrameworkRuntimeException(null, "No Default Locale Specified");
-		  }
-		  SupportedLocalesEntity locale = supportedLocaleList.get(0);
-		  
-		  return locale;
-	}*/
-	
-	public List<ConfigEntity> getOfficeConfiguration()throws PersistenceException{
-		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICE_CONFIG, null);
-		if (queryResult==null || queryResult.size()==0) {
+	 List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
+	 if (supportedLocaleList==null || supportedLocaleList.size()==0) {
+	 logger.error("No Default Locale Specified");
+	 throw new FrameworkRuntimeException(null, "No Default Locale Specified");
+	 }
+	 SupportedLocalesEntity locale = supportedLocaleList.get(0);
+	 
+	 return locale;
+	 }*/
+
+	public List<ConfigEntity> getOfficeConfiguration()
+			throws PersistenceException {
+		List<ConfigEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_OFFICE_CONFIG, null);
+		if (queryResult == null || queryResult.size() == 0) {
 			logger.error("Office Configuration Not Specified");
-			throw new FrameworkRuntimeException(null, "Office Configuration Not Specified");
+			throw new FrameworkRuntimeException(null,
+					"Office Configuration Not Specified");
 		}
 		return queryResult;
 	}
 
-	public List<WeekDaysEntity> getWeekDaysList()throws PersistenceException{
-		List<WeekDaysEntity> queryResult = executeNamedQuery(NamedQueryConstants.GETWEEKDAYS, null);
-		if (queryResult==null || queryResult.size()==0) {
-			logger.error("WeekDays List Not Specified");
-			throw new FrameworkRuntimeException(null, "WeekDays List Not Specified");
-		}
-		return queryResult;
-	}
-	
+	// kim commented out for FiscalCalendarRules
+	//public List<WeekDaysEntity> getWeekDaysList()throws PersistenceException{
+	//	List<WeekDaysEntity> queryResult = executeNamedQuery(NamedQueryConstants.GETWEEKDAYS, null);
+	//	if (queryResult==null || queryResult.size()==0) {
+	//		logger.error("WeekDays List Not Specified");
+	//		throw new FrameworkRuntimeException(null, "WeekDays List Not Specified");
+	//	}
+	//	return queryResult;
+	//}
+
 	/**
 	 * Lookup an integer valued, persistent configuration key-value pair based on the key.
 	 * This is intended to be more of a helper method than to be used directly.
 	 * @return if the key is found return the corresponding ConfigurationKeyValueInteger,
 	 * if not then return null.
 	 */
-	public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key)
-		throws PersistenceException {
+	public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(
+			String key) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(KEY_QUERY_PARAMETER, key);
-		ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger)
-			execUniqueResultNamedQuery(NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);		
+		ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger) execUniqueResultNamedQuery(
+				NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY,
+				queryParameters);
 		return keyValue;
 	}
 
@@ -148,40 +153,44 @@ public class ConfigurationPersistence extends Persistence{
 	 * @throws RuntimeException thrown if no value is found for the key.
 	 */
 	public int getConfigurationValueInteger(String key)
-		throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue =  getConfigurationKeyValueInteger(key);
+			throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
 		if (keyValue != null) {
 			return keyValue.getValue();
-		} else {
-			throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
+		}
+		else {
+			throw new RuntimeException(
+					"Configuration parameter not found for key: " + "'" + key
+							+ "'");
 		}
 	}
 
 	/**
 	 * Update the value of a persistent integer configuration value;
 	 */
-	public void updateConfigurationKeyValueInteger(String key, int value) 
-		throws PersistenceException {
+	public void updateConfigurationKeyValueInteger(String key, int value)
+			throws PersistenceException {
 		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
 		keyValue.setValue(value);
 		createOrUpdate(keyValue);
 	}
-	
+
 	/**
 	 * Create a new persistent integer configuration key value pair.
 	 */
-	public void addConfigurationKeyValueInteger(String key, int value) 
-		throws PersistenceException {
-		ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(key, value);
+	public void addConfigurationKeyValueInteger(String key, int value)
+			throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(
+				key, value);
 		createOrUpdate(keyValue);
 	}
-	
+
 	/**
 	 * Delete a persistent integer configuration key value pair.
 	 */
-	public void deleteConfigurationKeyValueInteger(String key) 
-		throws PersistenceException {
+	public void deleteConfigurationKeyValueInteger(String key)
+			throws PersistenceException {
 		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
-		delete(keyValue);	
+		delete(keyValue);
 	}
 }

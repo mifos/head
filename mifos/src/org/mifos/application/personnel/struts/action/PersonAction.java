@@ -414,11 +414,7 @@ public class PersonAction extends SearchAction {
 	private void loadLanguageList(HttpServletRequest request)throws Exception{
 		
 		List <SupportedLocalesEntity> locales= getPersonnelBusinessService().getSupportedLocales();
-		// kim commented out on 10/02 will remove soon commented this block out UserContext userContext = getUserContext(request);
-		//for (SupportedLocalesEntity entity : locales) {
-			//entity.getLanguage().setLocaleId(userContext.getLocaleId());
-			//entity.getLanguage().setLocaleId(userContext.getLocaleId());
-		//}
+		
 		SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST,locales,request);
 	}
 	private void updatePersonnelLevelList(HttpServletRequest request)

@@ -23,21 +23,12 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	
 	public void testGetWeekDaysList() throws Exception{
 		MeetingBusinessService service = new MeetingBusinessService();
-		List<WeekDaysEntity> weekDaysList = service.getWorkingDays(Short.valueOf("1"));
+		List<WeekDay> weekDaysList = service.getWorkingDays();
 		assertNotNull(weekDaysList);
-		//assertEquals(6, weekDaysList.size());
 		assertEquals(7, weekDaysList.size());
 	}
 	
-	public void testFailureGetWeekDaysList() throws Exception{
-		MeetingBusinessService service = new MeetingBusinessService();
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			service.getWorkingDays((short) 1);
-		} catch (ServiceException e) {
-			assertTrue(true);
-		}
-	}
+	
 	
 	public void testGetMeeting() throws Exception{
 		MeetingBusinessService service = new MeetingBusinessService();

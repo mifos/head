@@ -26,7 +26,6 @@ public class SystemConfiguration {
 		  this.currency = currency;
 		  this.sessionTimeOut = sessionTimeOut;
 		  this.timeZone = new SimpleTimeZone(timeZoneOffSet,SimpleTimeZone.getAvailableIDs(timeZoneOffSet)[0]);
-		  //kim commented out on 10/02 will remove soon replace this with Localization method this.locale = new Locale(mfiLocale.getLanguage().getLanguageShortName(),mfiLocale.getCountry().getCountryShortName());
 		  this.locale = Localization.getInstance().getLocale();
 	  }
 

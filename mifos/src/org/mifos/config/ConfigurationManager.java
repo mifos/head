@@ -37,7 +37,6 @@ public class ConfigurationManager implements Configuration {
 		
 	private Configuration configuration;
 	
-	public static final String TestKey = "test.value"; 
 	
 	
 	public static final ConfigurationManager getInstance() {

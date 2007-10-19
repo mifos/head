@@ -775,21 +775,13 @@ public class PersonnelBO extends BusinessObject {
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
 			updateLastPersonnelLoggedin();
 		}
-		//kim commented out on 10/02 will remove soon  replace this with what in Localization SupportedLocalesEntity supportedLocales = getPreferredLocale();
+		
 		SupportedLocalesEntity supportedLocales = Localization.getInstance().getSupportedLocale();
 		if (null != supportedLocales) {
 			userContext.setLocaleId(supportedLocales.getLocaleId());
 			Locale preferredLocale = Localization.getInstance().getLocale();
 			userContext.setPreferredLocale(preferredLocale);
-			//kim commented out on 10/02 will remove soon LanguageEntity lang = supportedLocales.getLanguage();
-			//CountryEntity country = supportedLocales.getCountry();
-			//if (null != lang && null != country) {
-			//	userContext.setPreferredLocale(new Locale(lang
-			//			.getLanguageShortName(), country
-			//			.getCountryShortName()));
-			//} else {
-			//	throw new PersonnelException(SecurityConstants.GENERALERROR);
-			//}
+			
 		}
 		userContext.setBranchId(getOffice().getOfficeId());
 		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
