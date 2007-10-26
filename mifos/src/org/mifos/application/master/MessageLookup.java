@@ -14,6 +14,7 @@ import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
+import org.mifos.config.Localization;
 
 /**
  * This class looks up messages
@@ -56,6 +57,14 @@ public class MessageLookup implements MessageSourceAware {
 	}
 	
 	public String lookup(LocalizedTextLookup namedObject, Locale locale) {
+		return messageSource.getMessage(namedObject.getPropertiesKey(), null, namedObject.getPropertiesKey(), locale);		
+	}
+	
+	/*
+	 * TODO: this will need to change in order to support per user Locale selection
+	 */
+	public String lookup(LocalizedTextLookup namedObject) {
+		Locale locale = Localization.getInstance().getLocale();
 		return messageSource.getMessage(namedObject.getPropertiesKey(), null, namedObject.getPropertiesKey(), locale);		
 	}
 	

@@ -169,7 +169,7 @@ function goToCancelPage(){
 												name="meeting.labelWeeks" bundle="MeetingResources" /> 
 												<mifos:select property="weekDay">
 													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
-															<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 													</c:forEach>
 												</mifos:select></td>
 										</tr>
@@ -200,7 +200,7 @@ function goToCancelPage(){
 											</mifos:select>
 											<mifos:select property="monthWeek" onfocus="checkMonthType2()">
 												<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
-															<html-el:option value="${weekDay.id}">${weekDay.name}</html-el:option>
+															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext

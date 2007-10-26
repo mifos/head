@@ -1,5 +1,7 @@
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {
@@ -12,9 +14,12 @@ public enum WeekDay implements LocalizedTextLookup {
 	SATURDAY((short) 7);
 
 	Short value;
+	String name;
 
 	WeekDay(Short value) {
 		this.value = value;
+		this.name = null;
+		
 	}
 
 	public Short getValue() {
@@ -35,6 +40,16 @@ public enum WeekDay implements LocalizedTextLookup {
 			return SUNDAY;
 		}
 		return getWeekDay(value + 1);
+	}
+	
+	/*
+	 * TODO: we should be passing in a Locale or UserContext here
+	 */
+	public String getName()
+	{
+		if (name == null)
+			name = MessageLookup.getInstance().lookup(this);
+		return name;
 	}
 
 	public String getPropertiesKey() {
