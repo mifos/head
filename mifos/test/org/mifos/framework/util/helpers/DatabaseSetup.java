@@ -24,6 +24,11 @@ import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
 	
+	private static final String DEFAULT_HIBERNATE_TEST_PROPERTIES =
+		"conf/HibernateTest.properties";
+	private static final String LOCAL_HIBERNATE_TEST_PROPERTIES =
+		"conf/my.HibernateTest.properties";
+
 	private static DataStore standardMayflyStore;
 	
 	private static SessionFactory mayflySessionFactory;
@@ -39,7 +44,11 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
-		initializeHibernate("conf/HibernateTest.properties");
+		if (new File(LOCAL_HIBERNATE_TEST_PROPERTIES).exists()) {
+			initializeHibernate(LOCAL_HIBERNATE_TEST_PROPERTIES);
+		} else {
+			initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES);
+		}
 	}
 
 	public static void initializeHibernate(String hibernatePropertiesFileName) {

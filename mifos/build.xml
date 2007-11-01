@@ -334,6 +334,9 @@
 					<include name="**/${test.suite}.class" />
 				</fileset>
 			</batchtest>
+			<assertions>
+				<enable />
+			</assertions>
 		</junit>
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
@@ -360,6 +363,9 @@
 					<include name="**/${test.suite}.class" />
 				</fileset>
 			</batchtest>
+			<assertions>
+				<enable />
+			</assertions>
 		</junit>
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>

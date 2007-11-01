@@ -73,6 +73,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtilsTest;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
+import org.mifos.framework.util.helpers.StringUtilsTest;
 
 /**
  * Tests which run quickly (say, <10ms per test, or some such,
@@ -144,6 +145,8 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(TestValidators.class);
 		
 		suite.addTestSuite(TestXmlPPIParser.class);
+		
+		suite.addTest(StringUtilsTest.suite());
 		return suite;
 	}
 
