@@ -1,25 +1,25 @@
 package org.mifos.config;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FilePaths;
-import junit.framework.JUnit4TestAdapter;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.config.FiscalCalendarRules;
 import static org.junit.Assert.assertTrue;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.SimpleTimeZone;
+
 import java.text.DateFormat;
-import java.util.Locale;
-
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
+
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class TestFiscalCalendarRules {
 	
@@ -115,9 +115,12 @@ public class TestFiscalCalendarRules {
 			 Calendar calendar = new GregorianCalendar(pdt);
 			 try
 			 {
-				 DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
-				 Date thursday = df.parse("2007/10/12");
+				 SimpleDateFormat df = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
+				 df.applyPattern("yyyy/MM/dd");
+				 Date thursday = df.parse("2007/10/11");
 				 calendar.setTime(thursday);
+				 String out = thursday.toString();
+				 out.contains("A");
 			 }
 			 catch (Exception e)
 			 {
@@ -127,7 +130,7 @@ public class TestFiscalCalendarRules {
 			calendar.add(Calendar.DAY_OF_WEEK, 1); // Friday
 			assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
 			calendar.add(Calendar.DAY_OF_WEEK, 1); // Sat
-			assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
+			assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
 			calendar.add(Calendar.DAY_OF_WEEK, 1); // Sunday
 			assertTrue(!FiscalCalendarRules.isWorkingDay(calendar));
 			//	set it back
