@@ -98,9 +98,9 @@ public class ApplicationTestSuite extends TestSuite {
 		TestSuite suite = new ApplicationTestSuite();
 		suite.addTest(ConfigTestSuite.suite());
 		// Put fast tests at the top for quick feedback if they fail
-		suite.addTest(FastTests.suite());
 		suite.addTest(TestConfigurationManager.suite());
 		suite.addTest(ProductMixTestSuite.suite());
+		suite.addTest(FastTests.suite());
 		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CustomerTestSuite.suite());
