@@ -49,10 +49,14 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import java.text.DateFormat;
+import org.mifos.config.Localization;
+import java.util.Locale;
 
 public class CenterCustActionForm extends CustomerActionForm{
 	
@@ -66,7 +70,9 @@ public class CenterCustActionForm extends CustomerActionForm{
 			|| StringUtils.isNullOrEmpty(mfiJoiningDateYY))
 			return null;
 			//return super.getMfiJoiningDate();
-		return mfiJoiningDateDD + "/" + mfiJoiningDateMM + "/" + mfiJoiningDateYY;
+		//kim temporarily commented out return mfiJoiningDateDD + "/" + mfiJoiningDateMM + "/" + mfiJoiningDateYY;
+		String dateSeparator = Localization.getInstance().getDateSeparator();
+		return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
 	}
 	
 	public void setMfiJoiningDate(int day, int month, int year) {

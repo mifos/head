@@ -18,7 +18,8 @@ public class DateTagTest extends TestCase {
     public void testSimpleStyle() throws DocumentException {
         DateTag dateTag = new DateTag();
         dateTag.setRenderstyle("simple");
-		assertWellFormedFragment(dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y").toString());
+        String separator = "/";
+		assertWellFormedFragment(dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y", separator).toString());
 		assertEquals(
 			"<input type=\"text\" id=\"asdDD\" name=\"asdDD\" "
 				+ "maxlength=\"2\" size=\"2\" value=\"1\" " 
@@ -30,7 +31,7 @@ public class DateTagTest extends TestCase {
 				+ "<input type=\"text\" id=\"asdYY\" name=\"asdYY\" "
 				+ "maxlength=\"4\" size=\"4\" value=\"2000\" " 
 				+ "style=\"width:3em\""
-				+ " />\u00a0YYYY\u00a0",dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y").toString());
+				+ " />\u00a0YYYY\u00a0",dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y", separator).toString());
 	}
 	
 	public void testGetFormat() throws Exception {
@@ -51,7 +52,6 @@ public class DateTagTest extends TestCase {
 
 		dateTag.setIsDisabled("Disabled");
 		assertEquals("Disabled", dateTag.getIsDisabled());
-
 		assertWellFormedFragment(dateTag.prepareOutputString("asd", "asd", "asd", "asd","asd","asd","asd").toString());
 		assertEquals(
 			"<input type=\"text\" id=\"asdYY\" name=\"asdYY\" maxlength=\"4\" " +

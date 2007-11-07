@@ -1,6 +1,7 @@
 package org.mifos.config;
 
-import static org.junit.Assert.assertEquals;import java.math.RoundingMode;
+import static org.junit.Assert.assertEquals;
+import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.util.helpers.FilePaths;
 import junit.framework.JUnit4TestAdapter;
 import org.mifos.config.AccountingRules;
+
 
 public class TestAccountingRules {
 	
@@ -27,6 +29,7 @@ public class TestAccountingRules {
 	@BeforeClass
 	public static void init() throws Exception {
 		MifosLogManager.configure(FilePaths.LOGFILE);
+		
 	}
 	
 	@Test 

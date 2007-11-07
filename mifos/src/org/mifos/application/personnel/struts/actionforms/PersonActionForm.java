@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -131,9 +133,12 @@ public class PersonActionForm extends BaseActionForm {
 		if (StringUtils.isNullAndEmptySafe(dateOfJoiningMFIDD)
 				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIMM)
 				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIYY)) {
-
-			return dateOfJoiningMFIDD + "/" + dateOfJoiningMFIMM + "/"
+			//	kim temporarily implemented this
+			String dateSeparator = Localization.getInstance().getDateSeparator();
+			return dateOfJoiningMFIDD + dateSeparator+ dateOfJoiningMFIMM + dateSeparator
 				+ dateOfJoiningMFIYY;
+
+			
 		}
 		else {
 			return null;
@@ -157,7 +162,10 @@ public class PersonActionForm extends BaseActionForm {
 			return null;
 		}
 		else {
-			return dobDD + "/" + dobMM + "/" + dobYY;
+			//			kim temporarily implemented this
+			String dateSeparator = Localization.getInstance().getDateSeparator();
+			return dobDD + dateSeparator + dobMM + dateSeparator + dobYY;
+			
 		}
 	}
 

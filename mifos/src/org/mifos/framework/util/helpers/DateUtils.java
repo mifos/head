@@ -49,9 +49,11 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
+
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
+
 
 public class DateUtils {
 	
@@ -59,8 +61,8 @@ public class DateUtils {
 	public enum DIRECTION {FUTURE, PAST, NONE}
 
 	private final static String dbFormat = "yyyy-MM-dd";
-
-	private final static Locale internalLocale = Locale.UK;
+	private final static Locale internalLocale = Localization.getInstance().getLocale(); // kim temporarily commented this out Locale.UK;
+	private static String dateSeparator = Localization.getInstance().getDateSeparator();
 
 	public static String convertUserToDbFmt(String userDate, String userPattern) {
 		try {
@@ -72,6 +74,11 @@ public class DateUtils {
 		catch (ParseException e) {
 			throw new InvalidDateException(userDate);
 		}
+	}
+	
+	public static String getDateSeparator()
+	{
+		return dateSeparator;
 	}
 
 	public static String convertDbToUserFmt(String dbDate, String userPattern) {
@@ -115,11 +122,18 @@ public class DateUtils {
 			return "";
 		}
 	}
+	
 
 	public static java.util.Date getDate(String value) {
 		if (value != null && !value.equals("")) {
 			try {
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				// kim temporarily put in
+				String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
+				//if ((internalLocale.equals(Locale.US)) || (internalLocale.equals(Locale.UK)))
+				//	formatStr = "dd/MM/yyyy";
+				//else
+				//	formatStr = "dd.MM.yyyy";
+				SimpleDateFormat format = new SimpleDateFormat(formatStr);
 				// Enable this once we've taken a bit more of a look
 				// at where this gets called, run the tests, etc.
 				// But when the user types "13" for the month, for example,
@@ -179,7 +193,7 @@ public class DateUtils {
 		boolean d = false;
 		boolean m = false;
 		boolean y = false;
-		String separator = DateUtils.getSeparator(pattern);
+		String separator = dateSeparator;
 		for (int i = 0; i < chArray.length; i++) {
 			if ((chArray[i] == 'd' || chArray[i] == 'D') && !d) {
 				fmt.append("dd");
@@ -207,9 +221,14 @@ public class DateUtils {
 		String month = "";
 		String year = "";
 		String token;
+		String separator = Localization.getInstance().getDateSeparator();
+		//if ((internalLocale.equals(Locale.US)) || (internalLocale.equals(Locale.UK)))
+		//	separator = "/";
+		//else
+		//	separator = ".";
 		MFIfmt = convertToDateTagFormat(MFIfmt);
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
-		StringTokenizer stdt = new StringTokenizer(date, "/");
+		StringTokenizer stfmt = new StringTokenizer(format, separator);
+		StringTokenizer stdt = new StringTokenizer(date, separator);
 		while (stfmt.hasMoreTokens() && stdt.hasMoreTokens()) {
 			token = stfmt.nextToken();
 			if (token.equalsIgnoreCase("D")) {
@@ -235,7 +254,7 @@ public class DateUtils {
 	}
 	
 	public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) {
-		return getDateAsSentFromBrowser(dayStr + "/" + monthStr + "/" + yearStr);
+		return getDateAsSentFromBrowser(dayStr + dateSeparator + monthStr + dateSeparator + yearStr);
 	}
 
 	/**
@@ -248,7 +267,13 @@ public class DateUtils {
 			return null;
 		}
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("d/M/yy", internalLocale);
+			String formatStr = "d" + dateSeparator + "M" + dateSeparator + "yy";
+			SimpleDateFormat format = new SimpleDateFormat(formatStr, internalLocale);
+			//if (internalLocale.equals(Locale.UK) || internalLocale.equals(Locale.US))
+			//	format = new SimpleDateFormat("d/M/yy", internalLocale);
+			//else
+			//	format = new SimpleDateFormat("d.M.yy", internalLocale);
+			//kim temporarily SimpleDateFormat format = new SimpleDateFormat("d/M/yy", internalLocale);
 			format.setLenient(false);
 			return new java.sql.Date(format.parse(value).getTime());
 		}
@@ -263,7 +288,7 @@ public class DateUtils {
 	public static boolean isValidDate(String value) {
 		try {
 			SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
-					.getDateInstance(DateFormat.SHORT, Locale.UK);
+					.getDateInstance(DateFormat.SHORT, internalLocale); // kim commented out Locale.UK
 			shortFormat.setLenient(false);
 			shortFormat.parse(value);
 			return true;
@@ -298,30 +323,44 @@ public class DateUtils {
 
 	public static String getMFIFormat() {
 		// TODO change this to pick from app config
-		return "dd/mm/yy";
+		String formatStr = "dd" + dateSeparator + "mm" + dateSeparator + "yy";
+		//if ((internalLocale.equals(Locale.US)) || (internalLocale.equals(Locale.UK)))
+		//	formatStr = "dd/mm/yy";
+		//else
+		//	formatStr = "dd.mm.yy";
+		return formatStr;
 	}
 
 	public static String getMFIShortFormat() {
-		return convertToDateTagFormat("dd/mm/yy");
+		//kim return convertToDateTagFormat("dd/mm/yy");
+		String formatStr = "dd" + dateSeparator + "mm" + dateSeparator + "yy";
+		//kim temporarily
+		//if ((internalLocale.equals(Locale.US)) || (internalLocale.equals(Locale.UK)))
+		//	formatStr = "dd/mm/yy";
+		//else
+		//	formatStr = "dd.mm.yy";
+		return formatStr;
 	}
 
 	public static String convertToDateTagFormat(String pattern) {
 		char chArray[] = pattern.toCharArray();
+		String separator = dateSeparator;
+		
 		StringBuilder fmt = new StringBuilder();
 		boolean d = false;
 		boolean m = false;
 		boolean y = false;
 		for (int i = 0; i < chArray.length; i++) {
 			if ((chArray[i] == 'd' || chArray[i] == 'D') && !d) {
-				fmt.append("D/");
+				fmt.append("D" + separator);
 				d = true;
 			}
 			else if ((chArray[i] == 'm' || chArray[i] == 'M') && !m) {
-				fmt.append("M/");
+				fmt.append("M" + separator);
 				m = true;
 			}
 			else if ((chArray[i] == 'y' || chArray[i] == 'Y') && !y) {
-				fmt.append("Y/");
+				fmt.append("Y" + separator);
 				y = true;
 			}
 		}
@@ -343,18 +382,20 @@ public class DateUtils {
 
 	public static String createDateString(String day, String month,
 			String year, String format) {
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
+		String separator = dateSeparator;
+		
+		StringTokenizer stfmt = new StringTokenizer(format, separator);
 		String token;
 		StringBuilder dt = new StringBuilder();
 		while (stfmt.hasMoreTokens()) {
 			token = stfmt.nextToken();
 			if (token.equals("D")) {
-				dt.append(day + "/");
+				dt.append(day + separator);
 			}
 			else if (token.equals("M")) {
-				dt.append(month + "/");
+				dt.append(month + separator);
 			}
-			else dt.append(year + "/");
+			else dt.append(year + separator);
 		}
 
 		return dt.deleteCharAt((dt.length() - 1)).toString();
@@ -435,7 +476,13 @@ public class DateUtils {
 	}
 
 	public static String makeDateAsSentFromBrowser(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat("d/M/yyyy",
+		String formatStr = "d" + dateSeparator + "M" + dateSeparator + "yyyy";
+		//kim temporarily
+		//if ((internalLocale.equals(Locale.US)) || (internalLocale.equals(Locale.UK)))
+		//	formatStr = "d/M/yyyy";
+		//else
+		//	formatStr = "d.M.yyyy";
+		SimpleDateFormat format = new SimpleDateFormat(formatStr,
 				internalLocale);
 		return format.format(date);
 	}

@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(154);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(155);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4773,3 +4773,22 @@ INSERT INTO LOOKUP_VALUE_LOCALE VALUES(943,1,598,'Can define custom fields');
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,
   DESCRIPTION_LOOKUP_ID) VALUES(224,203,598,598);
 INSERT INTO ROLES_ACTIVITY VALUES (224,1);
+
+/* This is for I18n in this order */
+/* Iceland is inserted into country table */
+INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME) VALUES(7,'Iceland','IS');
+
+/*language*/
+INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(190,74,' ');
+
+/* Icelandic is inserted into the language table */
+INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES(2,'Icelandic','IS',190);
+/* and the Iceland locale is inserted */
+INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(2,7,2,'IS',0);
+
+	
+
+
+
+
+

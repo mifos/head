@@ -51,6 +51,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.config.Localization;
 
 public class DateTag extends BaseInputTag {
 
@@ -216,11 +217,11 @@ public class DateTag extends BaseInputTag {
 
         if (getRenderstyle().equalsIgnoreCase("simple")) {
 			output = "<!-- simple style -->" +
-				makeUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
-			makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
+				makeUserFields(propertyVal, ddValue, mmValue, yyValue, "", format, separator);
+			makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format, separator);
 		} else if (getRenderstyle().equalsIgnoreCase("simplemapped")) {
 			output = "<!-- simple-mapped style -->" +
-				makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format);
+				makeMappedUserFields(propertyVal, ddValue, mmValue, yyValue, "", format, separator);
 		} else {
 			output = "<!-- normal style -->" +
 				this.prepareOutputString(format, propertyVal,
@@ -250,6 +251,7 @@ public class DateTag extends BaseInputTag {
 		return TagUtils.getInstance().filter(value.toString());
 	}
 
+
 	String prepareOutputString(String format, String dateName,
 			String ddValue, String mmValue, String yyValue, String separator,
 			String userfrmt) {
@@ -257,7 +259,8 @@ public class DateTag extends BaseInputTag {
 	
 		dateFunction.append("onBlur,");
 		dateFunction.append("makeDateString(");
-		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		String dateSeparator = Localization.getInstance().getDateSeparator(); 
+		StringTokenizer tokenizer = new StringTokenizer(format, dateSeparator);
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
 			if (ch.equalsIgnoreCase("D")) {
@@ -278,7 +281,7 @@ public class DateTag extends BaseInputTag {
 		}
 		
 		XmlBuilder htmlBuilder = makeUserFields(dateName,
-				ddValue, mmValue, yyValue, dateFunction.toString(), format);
+				ddValue, mmValue, yyValue, dateFunction.toString(), format, dateSeparator);
 		htmlBuilder.singleTag("input", "type","hidden","id",dateName,"name",dateName,"value",date);
 		htmlBuilder.singleTag("input", "type","hidden","id",dateName+"Format","name",dateName+"Format","value",format);
 		htmlBuilder.singleTag("input", "type","hidden","id","datePattern","name","datePattern","value",userfrmt);
@@ -289,7 +292,7 @@ public class DateTag extends BaseInputTag {
 
 	public XmlBuilder makeUserFields(String dateName, String ddValue,
 			String mmValue, String yyValue, String dateFunction,
-			String format) {
+			String format, String separator) {
 		
 		boolean disabled = getIsDisabled() != null
 		&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
@@ -355,7 +358,7 @@ public class DateTag extends BaseInputTag {
 		
 		}
 		
-		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		StringTokenizer tokenizer = new StringTokenizer(format, separator);
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
 			if (ch.equals("D") || ch.equals("d")) {
@@ -371,7 +374,7 @@ public class DateTag extends BaseInputTag {
 	
 	public String makeMappedUserFields(String dateName, String ddValue,
 			String mmValue, String yyValue, String dateFunction,
-			String format) throws JspException {
+			String format, String separator) throws JspException {
 		
 		XmlBuilder htmlOutput = new XmlBuilder();
 		XmlBuilder htmlBuilderDay = new XmlBuilder();
@@ -405,7 +408,7 @@ public class DateTag extends BaseInputTag {
 		htmlBuilderYear.nonBreakingSpace();
 		
 
-		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		StringTokenizer tokenizer = new StringTokenizer(format, separator);
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();
 			if (ch.equals("D") || ch.equals("d")) {

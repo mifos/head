@@ -8,6 +8,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import java.util.ArrayList;
+import static org.junit.Assert.assertTrue;
 
 import org.mifos.config.Localization;;
 
@@ -26,9 +27,9 @@ public class TestLocalization extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	Configuration configuration;
-	private static final String LocalizationCountryCode="Localization.CountryCode";
-	private static final String LocalizationLanguageCode="Localization.LanguageCode";
+	//Configuration configuration;
+	//private static final String LocalizationCountryCode="Localization.CountryCode";
+	//private static final String LocalizationLanguageCode="Localization.LanguageCode";
 	
 	
 	
@@ -37,36 +38,150 @@ public class TestLocalization extends MifosTestCase {
 		MifosLogManager.configure(FilePaths.LOGFILE);
 	}
 	
-	@Test 
-	public void testGetCountryCode() {
-		
-		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		String savedCountryCode = Localization.getInstance().getCountryCode();
+	private void restoreConfigSetup(Localization localization, ConfigLocale savedConfigLocale)
+	{
+		localization.setConfigLocale(savedConfigLocale);
+	}
+	
+	private void restoreConfigSetupToConfigFile(Localization localization, ConfigLocale savedConfigLocale)
+	{
+		localization.setCountryCodeLanguageCodeToConfigFile(savedConfigLocale);
+	}
+	
+	@Test
+	public void testGetDoubleValueForCurrentLocale()
+	{
+		String doubleValueString = "2.59";
+		Double dValue = 2.59;
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
 		String countryCode = "GB";
-		configMgr.setProperty(LocalizationCountryCode, countryCode);
-		assertEquals(countryCode, Localization.getInstance().getCountryCode());
+		String languageCode = "EN";
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		Double dNumber = localization.getDoubleValueForCurrentLocale(doubleValueString);
+		assertEquals(dValue, dNumber);
+		String doubleValueString2 = localization.getDoubleValueStringForCurrentLocale(dValue);
+		assertEquals(doubleValueString, doubleValueString2);
+		restoreConfigSetup(localization, savedConfigLocale);
+	}
+	
+	@Test 
+	public void testGetCountryCodeAndGetLanguageCode() {
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
+		String countryCode = "GB";
+		String languageCode = "EN";
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		localization.refresh();
+		//configMgr.setProperty(LocalizationCountryCode, countryCode);
+		assertEquals(countryCode, localization.getCountryCode());
+		assertEquals(languageCode, localization.getLanguageCode());
 		// clear the country code property from the config file
-		configMgr.clearProperty(LocalizationCountryCode);
+		localization.clearCountryCodeLanguageCodeFromConfigFile();
 		// should throw exception
 		try
 		{
-			Localization.getInstance().getCountryCode();
+			localization.getCountryCode();
 		}
 		catch (RuntimeException e)
 		{
 			assertEquals(e.getMessage(), "The country code is not defined in the config file.");
-			configMgr.addProperty(LocalizationCountryCode, savedCountryCode); // add back for following tests
+			restoreConfigSetupToConfigFile(localization, savedConfigLocale);
 		}
 		
 	}
+	
 	@Test 
+	public void testGetLanguageNameCountryName() {
+		
+		String languageName = "English";
+		String languageCode = "EN";
+		String countryName = "United Kingdom";
+		String countryCode = "GB";
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		localization.refresh();
+		assertEquals(languageName, localization.getLanguageName());
+		assertEquals(countryName, localization.getCountryName());
+		restoreConfigSetup(localization, savedConfigLocale);
+	}
+	
+	@Test 
+	public void testGetSupportedLocale() {
+		
+		short localeId = 1;
+		String countryCode = "GB";
+		String languageCode = "EN";
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		localization.refresh();
+		assertEquals(localeId, localization.getSupportedLocale().getLocaleId().shortValue());
+		restoreConfigSetup(localization, savedConfigLocale);
+		
+	}
+	
+	private boolean findLocaleId(ArrayList<Short> locales, short localeId)
+	{
+		for (int i=0; i < locales.size(); i++)
+			if (locales.get(i).shortValue() == localeId)
+				return true;
+		return false;
+	}
+	
+	@Test
+	public void testGetSupportedLocaleIds() {
+		short localeId = 1;
+		String countryCode = "GB";
+		String languageCode = "EN";
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		ArrayList<Short> locales = localization.getSupportedLocaleIds();
+		assertTrue(findLocaleId(locales, localeId));
+		restoreConfigSetup(localization, savedConfigLocale);
+		
+	}
+	
+	@Test
+	public void testGetDateSeparator() {
+		String separator = "/";
+		String countryCode = "GB";
+		String languageCode = "EN";
+		Localization localization = Localization.getInstance();
+		ConfigLocale savedConfigLocale = localization.getConfigLocale();
+		ConfigLocale newConfigLocale = new ConfigLocale();
+		newConfigLocale.setCountryCode(countryCode);
+		newConfigLocale.setLanguageCode(languageCode);
+		localization.setConfigLocale(newConfigLocale);
+		assertEquals(separator, localization.getDateSeparator());
+		restoreConfigSetup(localization, savedConfigLocale);
+		
+	}
+	/*@Test 
 	public void testGetLanguageCode() {
 		
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		String languageCode = "EN";
-		// return value from Localization class has to be the value defined in the config file
+		configMgr.setProperty(LocalizationLanguageCode, languageCode);
+		//		 return value from Localization class has to be the value defined in the config file
 		assertEquals(languageCode, Localization.getInstance().getLanguageCode());
-		configMgr.addProperty(LocalizationLanguageCode, languageCode);
 		// clear the country code property from the config file
 		configMgr.clearProperty(LocalizationLanguageCode); // add back for following tests
 		// should throw exception
@@ -83,14 +198,7 @@ public class TestLocalization extends MifosTestCase {
 	}
 	
 	@Test 
-	public void testGetLanguageName() {
 	
-		String languageName = "English";
-		String languageCode = "EN";
-		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		configMgr.setProperty(LocalizationLanguageCode, languageCode);
-		assertEquals(languageName, Localization.getInstance().getLanguageName());
-	}
 	
 	@Test 
 	public void testGetCountryName() {
@@ -125,7 +233,7 @@ public class TestLocalization extends MifosTestCase {
 	@Test
 	public void testGetSupportedLocaleIds() {
 		
-		short size = 1;
+	
 		short localeId = 1;
 		String savedCountryCode = Localization.getInstance().getCountryCode();
 		String savedLanguageCode = Localization.getInstance().getLanguageCode();
@@ -135,12 +243,11 @@ public class TestLocalization extends MifosTestCase {
 		configMgr.setProperty(LocalizationCountryCode, countryCode);
 		configMgr.setProperty(LocalizationLanguageCode, languageCode);
 		ArrayList<Short> locales = Localization.getInstance().getSupportedLocaleIds();
-		assertEquals(size, locales.size());
 		assertEquals(localeId, locales.get(0).shortValue());
 		configMgr.setProperty(LocalizationCountryCode, savedCountryCode);
 		configMgr.setProperty(LocalizationLanguageCode, savedLanguageCode);
 		
-	}
+	}*/
 	
 
 	
