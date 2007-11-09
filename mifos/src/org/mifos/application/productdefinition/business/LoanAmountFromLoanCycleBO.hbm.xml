@@ -7,19 +7,19 @@
 <hibernate-mapping>
 
 	<class
-		name="org.mifos.application.productdefinition.business.LoanOfferingFeesEntity"
-		table="PRD_OFFERING_FEES">
-		<id name="prdOfferingFeeId" column="PRD_OFFERING_FEE_ID"
-			access="field">
+		name="org.mifos.application.productdefinition.business.LoanAmountFromLoanCycleBO"
+		table="LOAN_AMOUNT_FROM_LOAN_CYCLE">
+		<id name="loanAmountFromLoanCycleID"
+			column="LOAN_AMOUNT_FROM_LOAN_CYCLE_ID" access="field">
 			<generator class="native" />
 		</id>
+		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
+		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" />
+		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" />
+		<property name="rangeIndex" column="RANGE_INDEX" />
 		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
 			class="org.mifos.application.productdefinition.business.LoanOfferingBO"
 			cascade="none" insert="true" update="true" unique="true"
 			access="field" />
-		<many-to-one name="fees" column="FEE_ID"
-			class="org.mifos.application.fees.business.FeeBO" cascade="none"
-			insert="true" update="true" unique="true" access="field" />
 	</class>
-
 </hibernate-mapping>

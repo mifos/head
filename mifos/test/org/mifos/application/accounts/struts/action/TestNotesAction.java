@@ -13,7 +13,9 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -22,6 +24,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -380,6 +383,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", client, 
 			AccountState.LOANACC_ACTIVEINGOODSTANDING, 
 			startDate, loanOffering);

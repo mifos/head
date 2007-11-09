@@ -37,10 +37,6 @@
  */
 package org.mifos.application.accounts.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -55,6 +51,8 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -65,6 +63,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	protected AccountBO accountBO;
@@ -310,6 +309,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);

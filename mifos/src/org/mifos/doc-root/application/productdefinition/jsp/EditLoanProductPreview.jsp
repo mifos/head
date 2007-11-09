@@ -68,103 +68,123 @@
 			}
 		//-->
 		</script>
-		<html-el:form action="/loanproductaction" onsubmit="func_disableSubmitBtn();">
+		<html-el:form action="/loanproductaction"
+			onsubmit="func_disableSubmitBtn();">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
-							</html-el:link> / <html-el:link href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
-								<c:out value="${param.prdOfferName}" />
-							</html-el:link></span>
-					</td>
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<html-el:link
+						href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<mifos:mifoslabel name="product.admin"
+							bundle="ProductDefUIResources" />
+					</html-el:link> / <html-el:link
+						href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+						<mifos:mifoslabel name="product.savingsview"
+							bundle="ProductDefUIResources" />
+						<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+							bundle="ProductDefUIResources" />
+						<mifos:mifoslabel name="product.products"
+							bundle="ProductDefUIResources" />
+					</html-el:link> / <html-el:link
+						href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+						<c:out value="${param.prdOfferName}" />
+					</html-el:link></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td class="headingorange">
-									<span class="heading"><c:out value="${param.prdOfferName}" /> - </span>
-									<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.productinfo" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td class="fontnormal">
-									<mifos:mifoslabel name="product.previewfields" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clicksubmit" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clickcancel" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.withoutsubmit" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-						</table>
-						<font class="fontnormalRedBold"><html-el:errors bundle="ProductDefUIResources" /></font>
-						<br>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prddetails" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.prdOfferingName}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.shortname" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.prdOfferingShortName}" /></span>
-									<br>
-									<br>
-									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
-									<br>
-									<span class="fontnormal"> <c:if test="${!empty sessionScope.loanproductactionform.description}">
-											<c:out value="${sessionScope.loanproductactionform.description}" />
-											<br>
-										</c:if></span>
-									<br>
-									<mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductCategoryList')}" var="category">
-											<c:if test="${category.productCategoryID eq sessionScope.loanproductactionform.prdCategory}">
-												<c:out value="${category.productCategoryName}" />
-											</c:if>
-										</c:forEach> </span>
-									<br>
-									<mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.startDate}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.endDate}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanApplForList')}" var="ApplForList">
-											<c:if test="${ApplForList.id eq sessionScope.loanproductactionform.prdApplicableMaster}">
-												<c:out value="${ApplForList.name}" />
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td class="headingorange"><span class="heading"><c:out
+								value="${param.prdOfferName}" /> - </span> <mifos:mifoslabel
+								name="product.preview" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.productinfo" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td class="fontnormal"><mifos:mifoslabel
+								name="product.previewfields" bundle="ProductDefUIResources" />
+							<mifos:mifoslabel name="product.clicksubmit"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.clickcancel" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.withoutsubmit" bundle="ProductDefUIResources" />
+							</td>
+						</tr>
+					</table>
+					<font class="fontnormalRedBold"><html-el:errors
+						bundle="ProductDefUIResources" /></font> <br>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prddetails" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.prodinstname" bundle="ProductDefUIResources" /> :
+							<span class="fontnormal"> <c:out
+								value="${sessionScope.loanproductactionform.prdOfferingName}" /></span>
+							<br>
+							<mifos:mifoslabel name="product.shortname"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+								value="${sessionScope.loanproductactionform.prdOfferingShortName}" /></span>
+							<br>
+							<br>
+							<mifos:mifoslabel name="product.desc"
+								bundle="ProductDefUIResources" /> <br>
+							<span class="fontnormal"> <c:if
+								test="${!empty sessionScope.loanproductactionform.description}">
+								<c:out value="${sessionScope.loanproductactionform.description}" />
+								<br>
+							</c:if></span> <br>
+							<mifos:mifoslabel name="product.prodcat"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductCategoryList')}"
+								var="category">
+								<c:if
+									test="${category.productCategoryID eq sessionScope.loanproductactionform.prdCategory}">
+									<c:out value="${category.productCategoryName}" />
+								</c:if>
+							</c:forEach> </span> <br>
+							<mifos:mifoslabel name="product.startdate"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+								value="${sessionScope.loanproductactionform.startDate}" /></span> <br>
+							<mifos:mifoslabel name="product.enddate"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+								value="${sessionScope.loanproductactionform.endDate}" /></span> <br>
+							<mifos:mifoslabel name="product.applfor"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanApplForList')}"
+								var="ApplForList">
+								<c:if
+									test="${ApplForList.id eq sessionScope.loanproductactionform.prdApplicableMaster}">
+									<c:out value="${ApplForList.name}" />
 
-											</c:if>
-										</c:forEach> </span>
-									<br>
-									<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
-											<c:when test="${sessionScope.loanproductactionform.loanCounter==1}">
-												<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
-											</c:when>
-											<c:otherwise>
-												<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
-											</c:otherwise>
-										</c:choose> </span>
-									<br>
-									<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
+								</c:if>
+							</c:forEach> </span> <br>
+							<mifos:mifoslabel name="product.inclin"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.cyclecounter" bundle="ProductDefUIResources" /> :
+							<span class="fontnormal"> <c:choose>
+								<c:when
+									test="${sessionScope.loanproductactionform.loanCounter==1}">
+									<mifos:mifoslabel name="product.yes"
+										bundle="ProductDefUIResources" />
+								</c:when>
+								<c:otherwise>
+									<mifos:mifoslabel name="product.no"
+										bundle="ProductDefUIResources" />
+								</c:otherwise>
+							</c:choose> </span> <br>
+							<!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.maxLoanAmount}" /> </span>
@@ -177,204 +197,665 @@
 									<mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.defaultLoanAmount}" /> </span>
-								</td>
-							</tr>
-						</table>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.status" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.status" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanPrdStatusList')}" var="PrdStatus">
-											<c:if test="${PrdStatus.offeringStatusId eq sessionScope.loanproductactionform.prdStatus}">
-												<c:out value="${PrdStatus.prdState.name}" />
-											</c:if>
-										</c:forEach> </span>
-								</td>
-							</tr>
-						</table>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.type" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'InterestTypesList')}" var="InterestTypes">
-											<c:if test="${InterestTypes.id eq sessionScope.loanproductactionform.interestTypes}">
-												<c:out value="${InterestTypes.name}" />
-											</c:if>
-										</c:forEach> </span>
+								--> <c:if
+								test="${sessionScope.loanproductactionform.loanAmtCalcType=='2'}">
+								<table width="100%" border="0" cellpadding="3" cellspacing="0">
 									<br>
-									<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.maxInterestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /></span>
-									<br>
-									<mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.minInterestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /></span>
-									<br>
-									<mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.defInterestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /></span>
-									<br>
-								</td>
-							</tr>
-						</table>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.repaysch" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.recurAfter}" /> <c:if test="${sessionScope.loanproductactionform.freqOfInstallments eq 1}">
-											<mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" />
-										</c:if> <c:if test="${sessionScope.loanproductactionform.freqOfInstallments eq 2}">
-											<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
-										</c:if> </span>
-									<br>
-									<mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.maxNoInstallments}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.loanproductactionform.minNoInstallments}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.defNoInstallments}" /></span>
-									<br>
-									<mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanGracePeriodTypeList')}" var="LoanGracePeriodType">
-											<c:if test="${LoanGracePeriodType.id eq sessionScope.loanproductactionform.gracePeriodType}">
-												<c:out value="${LoanGracePeriodType.name}" />
-											</c:if>
-										</c:forEach> </span>
-									<br>
-									<mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.gracePeriodDuration}" /> <mifos:mifoslabel name="product.installments" bundle="ProductDefUIResources" /></span>
-									<br>
-									<mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
-											<c:when test="${sessionScope.loanproductactionform.intDedDisbursementFlag==1}">
-												<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
-											</c:when>
-											<c:otherwise>
-												<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
-											</c:otherwise>
-										</c:choose> </span>
-									<br>
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.deductedatdis" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
-											<c:when test="${sessionScope.loanproductactionform.prinDueLastInstFlag==1}">
-												<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
-											</c:when>
-											<c:otherwise>
-												<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
-											</c:otherwise>
-										</c:choose> </span>
-								</td>
-							</tr>
-						</table>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.fees&pen" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<span class="fontnormal"><c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfeeselectedlist')}" var="prdOfferingFees">
-											<c:out value="${prdOfferingFees.feeName}" />
-											<br>
-										</c:forEach></span>
-									<br>
-								</td>
-							</tr>
-						</table>
-						<table width="93%" border="0" cellpadding="3" cellspacing="0">
-							<tr>
-								<td width="100%" height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.accounting" bundle="ProductDefUIResources" />
-								</td>
-							</tr>
-							<tr>
-								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.srcfunds" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="product.calcloanamount"
+										bundle="ProductDefUIResources" />
 									:
-									<br>
-									<span class="fontnormal"><br> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfundselectedlist')}" var="loanOffeingFund">
-											<c:out value="${loanOffeingFund.fundName}" />
-											<br>
-										</c:forEach></span>
-									<br>
-									<mifos:mifoslabel name="product.productglcode" bundle="ProductDefUIResources" />
-									:
-									<br>
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
-											<c:if test="${glCode.glcodeId == sessionScope.loanproductactionform.interestGLCode}">
-												<c:out value="${glCode.glcode}" />
-											</c:if>
-										</c:forEach></span>
-									<br>
-									<mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}">
-											<c:if test="${glCode.glcodeId == sessionScope.loanproductactionform.principalGLCode}">
-												<c:out value="${glCode.glcode}" />
-											</c:if>
-										</c:forEach></span>
-									<br>
-								</td>
-							</tr>
-						</table>
-						<br>
-						<table width="93%" border="0" cellpadding="0" cellspacing="0">
-							<tr>
-								<td class="blueline">
-									<span class="fontnormal"> <html-el:button property="edit" styleClass="insidebuttn" onclick="fnEdit(this.form)">
-											<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel name="product.info" bundle="ProductDefUIResources" />
-										</html-el:button> <br> <br> <br> </span>
-								</td>
-							</tr>
-						</table>
-						<span class="fontnormal"> </span>
-						<br>
-						<table width="93%" border="0" cellpadding="0" cellspacing="0">
-							<tr>
-								<td align="center">
-									&nbsp;
-									<html-el:submit styleClass="buttn" style="width:70px" property="submitBut">
-										<mifos:mifoslabel name="product.butsubmit" bundle="ProductDefUIResources" />
-									</html-el:submit>
-									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel(this.form)">
-										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
-									</html-el:button>
-								</td>
-							</tr>
-						</table>
-						<br>
+									<span class="fontnormal"> <mifos:mifoslabel
+										name="product.bylastloanamount" bundle="ProductDefUIResources" /></span>
+									<tr>
+										<td width="25%" class="drawtablehd"><mifos:mifoslabel
+											name="product.lastloanamount" bundle="ProductDefUIResources" />
+										</td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.minloanamt" bundle="ProductDefUIResources" /></td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.defamt" bundle="ProductDefUIResources" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt1}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt1}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt1}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt1}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt1}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt2}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt2}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt2}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt2}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt2}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt3}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt3}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt3}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt3}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt3}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt4}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt4}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt4}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt4}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt4}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt5}" />
+										-<c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt5}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt5}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt5}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt5}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startRangeLoanAmt6}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endRangeLoanAmt6}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMinLoanAmt6}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanMaxLoanAmt6}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.lastLoanDefaultLoanAmt6}" /></td>
+									</tr>
+								</table>
+							</c:if> <%-- by loan cycle --%> <c:if
+								test="${sessionScope.loanproductactionform.loanAmtCalcType=='3'}">
+								<br />
+								<mifos:mifoslabel name="product.calcloanamount"
+									bundle="ProductDefUIResources" />:<span class="fontnormal">
+								<mifos:mifoslabel name="product.byloancycle"
+									bundle="ProductDefUIResources" /></span>
+								<br />
+
+								<table width="90%" border="0" cellspacing="0" cellpadding="3">
+									<tr>
+										<td width="15%" class="drawtablehd"><mifos:mifoslabel
+											name="product.loancycleno" bundle="ProductDefUIResources" />
+										</td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.minloanamt" bundle="ProductDefUIResources" /></td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.defamt" bundle="ProductDefUIResources" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="0" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt1}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt1}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt1}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="1" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt2}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt2}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt2}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="2" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt3}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt3}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt3}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="3" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt4}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt4}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt4}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="4" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt5}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt5}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt5}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value=">4" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMinLoanAmt6}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanMaxLoanAmt6}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.cycleLoanDefaultLoanAmt6}" /></td>
+									</tr>
+								</table>
+							</c:if> <c:if
+								test="${sessionScope.loanproductactionform.loanAmtCalcType=='1'}">
+								<mifos:mifoslabel name="product.calcloanamount"
+									bundle="ProductDefUIResources" />:<span class="fontnormal">
+								<mifos:mifoslabel name="product.sameforallloans"
+									bundle="ProductDefUIResources" /></span>
+								<br>
+
+								<table width="60%" border="0" cellspacing="0" cellpadding="3">
+									<tr>
+										<td width="20%" class="drawtablehd"><mifos:mifoslabel
+											name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+											name="product.amount" bundle="ProductDefUIResources" /></td>
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+											name="product.amount" bundle="ProductDefUIResources" /></td>
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+											name="product.amount" bundle="ProductDefUIResources" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal" width="20%"><c:out
+											value="${sessionScope.loanproductactionform.minLoanAmount}" /></td>
+										<td class="fontnormal" width="20%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanAmount}" /></td>
+										<td class="fontnormal" width="20%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defaultLoanAmount}" /></td>
+									</tr>
+								</table>
+							</c:if></td>
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.status" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.status" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanPrdStatusList')}"
+								var="PrdStatus">
+								<c:if
+									test="${PrdStatus.offeringStatusId eq sessionScope.loanproductactionform.prdStatus}">
+									<c:out value="${PrdStatus.prdState.name}" />
+								</c:if>
+							</c:forEach> </span></td>
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prdrate" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prdrate" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.type" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'InterestTypesList')}"
+								var="InterestTypes">
+								<c:if
+									test="${InterestTypes.id eq sessionScope.loanproductactionform.interestTypes}">
+									<c:out value="${InterestTypes.name}" />
+								</c:if>
+							</c:forEach> </span> <br>
+							<mifos:mifoslabel name="product.max"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:out
+								value="${sessionScope.loanproductactionform.maxInterestRate}" />
+							<mifos:mifoslabel name="product.perc"
+								bundle="ProductDefUIResources" /></span> <br>
+							<mifos:mifoslabel name="product.min"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:out
+								value="${sessionScope.loanproductactionform.minInterestRate}" />
+							<mifos:mifoslabel name="product.perc"
+								bundle="ProductDefUIResources" /></span> <br>
+							<mifos:mifoslabel name="product.default"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:out
+								value="${sessionScope.loanproductactionform.defInterestRate}" />
+							<mifos:mifoslabel name="product.perc"
+								bundle="ProductDefUIResources" /></span> <br>
+							</td>
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.repaysch" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.freqofinst" bundle="ProductDefUIResources" /> : <span
+								class="fontnormal"> <c:out
+								value="${sessionScope.loanproductactionform.recurAfter}" /> <c:if
+								test="${sessionScope.loanproductactionform.freqOfInstallments eq 1}">
+								<mifos:mifoslabel name="product.week"
+									bundle="ProductDefUIResources" />
+							</c:if> <c:if
+								test="${sessionScope.loanproductactionform.freqOfInstallments eq 2}">
+								<mifos:mifoslabel name="product.month"
+									bundle="ProductDefUIResources" />
+							</c:if> </span> <br>
+							<!--<mifos:mifoslabel name="product.maxinst"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:out
+								value="${sessionScope.loanproductactionform.maxNoInstallments}" /></span>
+							<br>
+							<mifos:mifoslabel name="product.mininst"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:out
+								value="${sessionScope.loanproductactionform.minNoInstallments}" /></span>
+							<br>
+							<mifos:mifoslabel name="product.definst"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+								value="${sessionScope.loanproductactionform.defNoInstallments}" /></span>
+							--> <br>
+							<c:if
+								test="${sessionScope.loanproductactionform.calcInstallmentType=='2'}">
+								<mifos:mifoslabel name="product.calcInstallment"
+									bundle="ProductDefUIResources" />:<span class="fontnormal">
+								<mifos:mifoslabel name="product.installbylastloanamount"
+									bundle="ProductDefUIResources" /></span>
+								<br>
+								<table width="100%" border="0" cellpadding="3" cellspacing="0">
+									<tr>
+										<td width="25%" class="drawtablehd"><mifos:mifoslabel
+											name="product.lastloanamount" bundle="ProductDefUIResources" />
+										</td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.mininst" bundle="ProductDefUIResources" /></td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.maxinst" bundle="ProductDefUIResources" /></td>
+										<td width="25%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.definst" bundle="ProductDefUIResources" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange1}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange1}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment1}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment1}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment1}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange2}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange2}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment2}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment2}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment2}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange3}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange3}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment3}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment3}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment3}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange4}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange4}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment4}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment4}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment4}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange5}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange5}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment5}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment5}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment5}" /></td>
+									</tr>
+									<tr>
+										<td class="fontnormal"><c:out
+											value="${sessionScope.loanproductactionform.startInstallmentRange6}" />
+										- <c:out
+											value="${sessionScope.loanproductactionform.endInstallmentRange6}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minLoanInstallment6}" /></td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxLoanInstallment6}" />
+										</td>
+										<td class="fontnormal" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defLoanInstallment6}" /></td>
+									</tr>
+
+								</table>
+							</c:if> <c:if
+								test="${sessionScope.loanproductactionform.calcInstallmentType=='3'}">
+								<mifos:mifoslabel name="product.calcInstallment"
+									bundle="ProductDefUIResources" />:<span class="fontnormal">
+								<mifos:mifoslabel name="product.installbyloancycle"
+									bundle="ProductDefUIResources" /></span>
+								<br>
+								<table width="90%" border="0" cellspacing="0" cellpadding="3">
+									<tr>
+										<td width="15%" class="drawtablehd"><mifos:mifoslabel
+											name="product.loancycleno" bundle="ProductDefUIResources" />
+										</td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.mininst" bundle="ProductDefUIResources" /></td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.maxinst" bundle="ProductDefUIResources" /></td>
+										<td width="30%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.definst" bundle="ProductDefUIResources" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="0" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment1}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment1}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment1}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="1" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment2}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment2}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment2}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="2" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment3}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment3}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment3}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="3" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment4}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment4}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment4}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value="4" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment5}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment5}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment5}" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="10%"><c:out value=">4" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.minCycleInstallment6}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxCycleInstallment6}" /></td>
+										<td class="fontnormal" width="30%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defCycleInstallment6}" /></td>
+									</tr>
+								</table>
+							</c:if> <c:if
+								test="${sessionScope.loanproductactionform.calcInstallmentType=='1'}">
+								<mifos:mifoslabel name="product.calcInstallment"
+									bundle="ProductDefUIResources" />:<span class="fontnormal">
+								<mifos:mifoslabel name="product.sameforallinstallment"
+									bundle="ProductDefUIResources" /></span>
+								<br>
+								<table width="80%" border="0" cellspacing="0" cellpadding="3">
+									<tr>
+										<td width="20%" class="drawtablehd"><mifos:mifoslabel
+											name="product.mininst" bundle="ProductDefUIResources" /></td>
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.maxinst" bundle="ProductDefUIResources" /></td>
+										<td width="20%" class="drawtablehd" align="right"><mifos:mifoslabel
+											name="product.definst" bundle="ProductDefUIResources" /></td>
+									</tr>
+
+									<tr>
+										<td class="fontnormal" width="20%"><c:out
+											value="${sessionScope.loanproductactionform.minNoInstallments}" /></td>
+										<td class="fontnormal" width="20%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.maxNoInstallments}" /></td>
+										<td class="fontnormal" width="20%" align="right"><c:out
+											value="${sessionScope.loanproductactionform.defNoInstallments}" /></td>
+									</tr>
+
+								</table>
+							</c:if> <br>
+							<mifos:mifoslabel name="product.gracepertype"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanGracePeriodTypeList')}"
+								var="LoanGracePeriodType">
+								<c:if
+									test="${LoanGracePeriodType.id eq sessionScope.loanproductactionform.gracePeriodType}">
+									<c:out value="${LoanGracePeriodType.name}" />
+								</c:if>
+							</c:forEach> </span> <br>
+							<mifos:mifoslabel name="product.graceperdur"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+								value="${sessionScope.loanproductactionform.gracePeriodDuration}" />
+							<mifos:mifoslabel name="product.installments"
+								bundle="ProductDefUIResources" /></span> <br>
+							<mifos:mifoslabel name="product.prinlastinst"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:choose>
+								<c:when
+									test="${sessionScope.loanproductactionform.intDedDisbursementFlag==1}">
+									<mifos:mifoslabel name="product.yes"
+										bundle="ProductDefUIResources" />
+								</c:when>
+								<c:otherwise>
+									<mifos:mifoslabel name="product.no"
+										bundle="ProductDefUIResources" />
+								</c:otherwise>
+							</c:choose> </span> <br>
+							<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> <mifos:mifoslabel
+								name="product.deductedatdis" bundle="ProductDefUIResources" />
+							: <span class="fontnormal"> <c:choose>
+								<c:when
+									test="${sessionScope.loanproductactionform.prinDueLastInstFlag==1}">
+									<mifos:mifoslabel name="product.yes"
+										bundle="ProductDefUIResources" />
+								</c:when>
+								<c:otherwise>
+									<mifos:mifoslabel name="product.no"
+										bundle="ProductDefUIResources" />
+								</c:otherwise>
+							</c:choose> </span></td>
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.fees&pen" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><span
+								class="fontnormal"><c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfeeselectedlist')}"
+								var="prdOfferingFees">
+								<c:out value="${prdOfferingFees.feeName}" />
+								<br>
+							</c:forEach></span> <br>
+							</td>
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="100%" height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.accounting" bundle="ProductDefUIResources" /></td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormalbold"><mifos:mifoslabel
+								name="product.srcfunds" bundle="ProductDefUIResources" /> : <br>
+							<span class="fontnormal"><br>
+							<c:forEach
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfundselectedlist')}"
+								var="loanOffeingFund">
+								<c:out value="${loanOffeingFund.fundName}" />
+								<br>
+							</c:forEach></span> <br>
+							<mifos:mifoslabel name="product.productglcode"
+								bundle="ProductDefUIResources" /> : <br>
+							<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:forEach var="glCode"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
+								<c:if
+									test="${glCode.glcodeId == sessionScope.loanproductactionform.interestGLCode}">
+									<c:out value="${glCode.glcode}" />
+								</c:if>
+							</c:forEach></span> <br>
+							<mifos:mifoslabel name="product.principal"
+								bundle="ProductDefUIResources" /> : <span class="fontnormal">
+							<c:forEach var="glCode"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}">
+								<c:if
+									test="${glCode.glcodeId == sessionScope.loanproductactionform.principalGLCode}">
+									<c:out value="${glCode.glcode}" />
+								</c:if>
+							</c:forEach></span> <br>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<table width="93%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="blueline"><span class="fontnormal"> <html-el:button
+								property="edit" styleClass="insidebuttn"
+								onclick="fnEdit(this.form)">
+								<mifos:mifoslabel name="product.prdedit"
+									bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel
+									name="${ConfigurationConstants.LOAN}"
+									bundle="ProductDefUIResources" />&nbsp;<mifos:mifoslabel
+									name="product.info" bundle="ProductDefUIResources" />
+							</html-el:button> <br>
+							<br>
+							<br>
+							</span></td>
+						</tr>
+					</table>
+					<span class="fontnormal"> </span> <br>
+					<table width="93%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="center">&nbsp; <html-el:submit styleClass="buttn"
+								style="width:70px" property="submitBut">
+								<mifos:mifoslabel name="product.butsubmit"
+									bundle="ProductDefUIResources" />
+							</html-el:submit> &nbsp; <html-el:button property="cancel"
+								styleClass="cancelbuttn" style="width:70px"
+								onclick="javascript:fnCancel(this.form)">
+								<mifos:mifoslabel name="product.cancel"
+									bundle="ProductDefUIResources" />
+							</html-el:button></td>
+						</tr>
+					</table>
+					<br>
 					</td>
 				</tr>
 			</table>
 			<html-el:hidden property="method" value="update" />
 			<html-el:hidden property="prdOfferName" value="${param.prdOfferName}" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="currentFlowKey"
+				value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

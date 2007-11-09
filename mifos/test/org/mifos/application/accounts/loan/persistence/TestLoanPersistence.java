@@ -1,9 +1,5 @@
 package org.mifos.application.accounts.loan.persistence;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -27,6 +23,8 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
@@ -40,6 +38,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestLoanPersistence extends MifosTestCase {
 
@@ -235,6 +234,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
@@ -248,6 +248,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", customer, state, startDate, loanOffering,
 				1);
@@ -262,6 +263,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
 				startDate, loanOffering);
@@ -307,6 +309,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142323", group,
 				AccountState.LOANACC_BADSTANDING, 
 				startDate, loanOffering);
@@ -319,6 +322,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142342", group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
 				startDate, loanOffering);

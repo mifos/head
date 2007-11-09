@@ -1,9 +1,5 @@
 package org.mifos.application.bulkentry.business.service;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +8,6 @@ import java.util.Map;
 
 import junitx.framework.ObjectAssert;
 import junitx.framework.StringAssert;
-
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
@@ -30,6 +25,8 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -43,6 +40,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestBulkEntryBusinessService extends MifosTestCase {
 	private BulkEntryBusinessService bulkEntryBusinessService;
@@ -476,6 +474,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);

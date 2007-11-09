@@ -1,10 +1,9 @@
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
-import static junitx.framework.StringAssert.assertContains;
-
 import java.util.Date;
 import java.util.List;
 
+import static junitx.framework.StringAssert.assertContains;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
@@ -75,6 +74,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);

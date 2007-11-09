@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class
+		name="org.mifos.application.productdefinition.business.LoanAmountFromLastLoanAmountBO"
+		table="LOAN_AMOUNT_FROM_LAST_LOAN">
+		<id name="loanAmountFromLastLoanID"
+			column="LOAN_AMOUNT_FROM_LAST_LOAN_ID" access="field"
+			unsaved-value="-1">
+			<generator class="native" />
+		</id>
+		<property name="endRange" column="END_RANGE" />
+		<property name="startRange" column="START_RANGE" />
+		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
+		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" />
+		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" />
+		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
+			class="org.mifos.application.productdefinition.business.LoanOfferingBO"
+			unique="true" lazy="false" cascade="none" insert="true" update="true"
+			access="field" />
+	</class>
+</hibernate-mapping>

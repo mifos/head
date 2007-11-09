@@ -416,7 +416,7 @@
 					bundle="ProductDefUIResources" />
 				<arg0 key="product.applfor" />
 			</field>
-			<field property="minLoanAmount" depends="required,double">
+			<!--<field property="minLoanAmount" depends="required,double">
 				<msg name="required" key="errors.mandatory"
 					bundle="ProductDefUIResources" />
 				<msg name="double" key="errors.double"
@@ -451,7 +451,7 @@
 					<var-value>((*this* ==null) or ((*this* >= minLoanAmount) and (maxLoanAmount >=*this* )))</var-value>
 				</var>
 			</field>
-			<field property="prdStatus.offeringStatusId"
+			--><field property="prdStatus.offeringStatusId"
 				depends="required">
 				<msg name="required" key="errors.mandatory"
 					bundle="ProductDefUIResources" />
@@ -537,7 +537,7 @@
 					<var-value>((freqOfInstallments != 2) or (*this* > 0 ))</var-value>
 				</var>
 			</field>
-			<field property="maxNoInstallments"
+			<!--<field property="maxNoInstallments"
 				depends="required,validwhen,integer">
 				<msg name="required" key="errors.mandatory"
 					bundle="ProductDefUIResources" />
@@ -552,7 +552,7 @@
 					<var-value>(*this* >=minNoInstallments)</var-value>
 				</var>
 			</field>
-			<!--bug id 25794  added valid when validation-->
+			bug id 25794  added valid when validation
 			<field property="minNoInstallments"
 				depends="required,validwhen,integer">
 				<msg name="required" key="errors.mandatory"
@@ -583,7 +583,7 @@
 					<var-value>((*this* >= minNoInstallments) and (maxNoInstallments >=*this* ))</var-value>
 				</var>
 			</field>
-			<field property="gracePeriodDuration" depends="validwhen,integer">
+			--><field property="gracePeriodDuration" depends="validwhen,integer">
 				<msg name="validwhen" key="errors.mandatory"
 					bundle="ProductDefUIResources" />
 				<msg name="integer" key="errors.integer"

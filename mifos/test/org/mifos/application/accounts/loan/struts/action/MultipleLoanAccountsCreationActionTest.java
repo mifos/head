@@ -8,6 +8,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -34,6 +35,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -318,6 +320,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -350,6 +353,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -385,6 +389,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -437,6 +442,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()

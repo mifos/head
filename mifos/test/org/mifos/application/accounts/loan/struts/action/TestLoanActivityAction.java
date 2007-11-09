@@ -1,7 +1,6 @@
 package org.mifos.application.accounts.loan.struts.action;
 
 import java.util.Date;
-
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -71,6 +70,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);

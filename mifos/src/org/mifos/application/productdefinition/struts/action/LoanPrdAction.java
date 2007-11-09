@@ -39,6 +39,7 @@ package org.mifos.application.productdefinition.struts.action;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,9 +66,15 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.application.productdefinition.business.LoanAmountFromLastLoanAmountBO;
+import org.mifos.application.productdefinition.business.LoanAmountFromLoanCycleBO;
+import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.application.productdefinition.business.NoOfInstallFromLastLoanAmountBO;
+import org.mifos.application.productdefinition.business.NoOfInstallFromLoanCycleBO;
+import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
@@ -105,7 +112,7 @@ public class LoanPrdAction extends BaseAction {
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-	
+
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("loanproductaction");
 		security.allow("load",
@@ -202,8 +209,9 @@ public class LoanPrdAction extends BaseAction {
 								.getPrdCategoryValue()),
 				(PrdApplicableMasterEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANAPPLFORLIST,
-						loanPrdActionForm.getPrdApplicableMasterEnum().getValue()),
-				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
+						loanPrdActionForm.getPrdApplicableMasterEnum()
+								.getValue()), loanPrdActionForm
+						.getStartDateValue(locale), loanPrdActionForm
 						.getEndDateValue(locale), loanPrdActionForm
 						.getDescription(),
 				(GracePeriodTypeEntity) findMasterEntity(request,
@@ -213,15 +221,9 @@ public class LoanPrdAction extends BaseAction {
 				(InterestTypesEntity) findMasterEntity(request,
 						ProductDefinitionConstants.INTERESTTYPESLIST,
 						loanPrdActionForm.getInterestTypesValue()),
-				loanPrdActionForm.getMinLoanAmountValue(), loanPrdActionForm
-						.getMaxLoanAmountValue(), loanPrdActionForm
-						.getDefaultLoanAmountValue(), loanPrdActionForm
-						.getMaxInterestRateValue(), loanPrdActionForm
+				loanPrdActionForm.getMaxInterestRateValue(), loanPrdActionForm
 						.getMinInterestRateValue(), loanPrdActionForm
 						.getDefInterestRateValue(), loanPrdActionForm
-						.getMaxNoInstallmentsValue(), loanPrdActionForm
-						.getMinNoInstallmentsValue(), loanPrdActionForm
-						.getDefNoInstallmentsValue(), loanPrdActionForm
 						.isLoanCounterValue(), loanPrdActionForm
 						.isIntDedAtDisbValue(), loanPrdActionForm
 						.isPrinDueLastInstValue(), getFundsFromList(
@@ -236,13 +238,14 @@ public class LoanPrdAction extends BaseAction {
 								.getFreqOfInstallmentsValue()),
 						loanPrdActionForm.getRecurAfterValue(),
 						loanPrdActionForm.getStartDateValue(locale),
-						MeetingType.LOAN_INSTALLMENT),
-				findGLCodeEntity(request,
+						MeetingType.LOAN_INSTALLMENT), findGLCodeEntity(
+						request,
 						ProductDefinitionConstants.LOANPRICIPALGLCODELIST,
 						loanPrdActionForm.getPrincipalGLCode()),
 				findGLCodeEntity(request,
 						ProductDefinitionConstants.LOANINTERESTGLCODELIST,
-						loanPrdActionForm.getInterestGLCode()));
+						loanPrdActionForm.getInterestGLCode()),
+				loanPrdActionForm);
 		loanOffering.save();
 		request.setAttribute(ProductDefinitionConstants.LOANPRODUCTID,
 				loanOffering.getPrdOfferingId());
@@ -276,9 +279,9 @@ public class LoanPrdAction extends BaseAction {
 		for (LoanOfferingFeesEntity prdOfferingFees : loanOffering
 				.getLoanOfferingFees()) {
 			FeeBO fee = prdOfferingFees.getFees();
-			fee = new LoanPrdBusinessService().getfee(fee.getFeeId(),fee.getFeeType());
-			feeSelected.add(new FeeView(getUserContext(request),fee
-					));
+			fee = new LoanPrdBusinessService().getfee(fee.getFeeId(), fee
+					.getFeeType());
+			feeSelected.add(new FeeView(getUserContext(request), fee));
 		}
 		loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
 		loadStatusList(request);
@@ -341,11 +344,12 @@ public class LoanPrdAction extends BaseAction {
 						request)), loanPrdActionForm.getPrdCategoryValue()),
 				(PrdApplicableMasterEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANAPPLFORLIST,
-						loanPrdActionForm.getPrdApplicableMasterEnum().getValue()),
-				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
+						loanPrdActionForm.getPrdApplicableMasterEnum()
+								.getValue()), loanPrdActionForm
+						.getStartDateValue(locale), loanPrdActionForm
 						.getEndDateValue(locale), loanPrdActionForm
-						.getDescription(), PrdStatus
-						.fromInt(loanPrdActionForm.getPrdStatusValue()),
+						.getDescription(), PrdStatus.fromInt(loanPrdActionForm
+						.getPrdStatusValue()),
 				(GracePeriodTypeEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
 						loanPrdActionForm.getGracePeriodTypeValue()),
@@ -353,15 +357,9 @@ public class LoanPrdAction extends BaseAction {
 						ProductDefinitionConstants.INTERESTTYPESLIST,
 						loanPrdActionForm.getInterestTypesValue()),
 				loanPrdActionForm.getGracePeriodDurationValue(),
-				loanPrdActionForm.getMaxLoanAmountValue(), loanPrdActionForm
-						.getMinLoanAmountValue(), loanPrdActionForm
-						.getDefaultLoanAmountValue(), loanPrdActionForm
-						.getMaxInterestRateValue(), loanPrdActionForm
+				loanPrdActionForm.getMaxInterestRateValue(), loanPrdActionForm
 						.getMinInterestRateValue(), loanPrdActionForm
 						.getDefInterestRateValue(), loanPrdActionForm
-						.getMaxNoInstallmentsValue(), loanPrdActionForm
-						.getMinNoInstallmentsValue(), loanPrdActionForm
-						.getDefNoInstallmentsValue(), loanPrdActionForm
 						.isLoanCounterValue(), loanPrdActionForm
 						.isIntDedAtDisbValue(), loanPrdActionForm
 						.isPrinDueLastInstValue(), getFundsFromList(
@@ -372,9 +370,9 @@ public class LoanPrdAction extends BaseAction {
 				getFeeList((List<FeeBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFEE, request),
 						loanPrdActionForm.getPrdOfferinFees()),
-				loanPrdActionForm.getRecurAfterValue(), RecurrenceType
-						.fromInt(loanPrdActionForm
-								.getFreqOfInstallmentsValue()));
+				loanPrdActionForm.getRecurAfterValue(),
+				RecurrenceType.fromInt(loanPrdActionForm
+						.getFreqOfInstallmentsValue()), loanPrdActionForm);
 		prdDefLogger.debug("update method of Loan Product Action called"
 				+ loanPrdActionForm.getPrdOfferingId());
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -392,7 +390,12 @@ public class LoanPrdAction extends BaseAction {
 						BusinessServiceName.LoanProduct)).getLoanOffering(
 				loanPrdActionForm.getPrdOfferingIdValue(), getUserContext(
 						request).getLocaleId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanOffering,request);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANAMOUNTTYPE,
+				loanOffering.checkLoanAmountType(loanOffering), request);
+		SessionUtils.setAttribute(ProductDefinitionConstants.INSTALLTYPE,
+				loanOffering.checkNoOfInstallType(loanOffering), request);
+		SessionUtils
+				.setAttribute(Constants.BUSINESS_KEY, loanOffering, request);
 		loanPrdActionForm.clear();
 		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering
 				.getPrdOfferingId()));
@@ -407,7 +410,8 @@ public class LoanPrdAction extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		prdDefLogger
 				.debug("start viewAllLoanProducts method of Loan Product Action");
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.LOANPRODUCTLIST,
 				((LoanPrdBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.LoanProduct))
 						.getAllLoanOfferings(getUserContext(request)
@@ -427,23 +431,27 @@ public class LoanPrdAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
 						.getActiveLoanProductCategories(), request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST,
-				service.getLoanApplicableCustomerTypes(localeId), request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.LOANAPPLFORLIST, service
+						.getLoanApplicableCustomerTypes(localeId), request);
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
 				getMasterEntities(GracePeriodTypeEntity.class, localeId),
 				request);
 		SessionUtils
-				.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST,
+				.setCollectionAttribute(
+						ProductDefinitionConstants.INTERESTTYPESLIST,
 						getMasterEntities(InterestTypesEntity.class, localeId),
 						request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
-				getMasterEntities(InterestCalcTypeEntity.class, localeId),
-				request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
-				fundService.getSourcesOfFund(), request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANFEESLIST,
-				getFeeViewList(getUserContext(request), fees), request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.INTCALCTYPESLIST, getMasterEntities(
+						InterestCalcTypeEntity.class, localeId), request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.SRCFUNDSLIST, fundService
+						.getSourcesOfFund(), request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.LOANFEESLIST, getFeeViewList(
+						getUserContext(request), fees), request);
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
 						FinancialActionConstants.PRINCIPALPOSTING,
@@ -452,8 +460,8 @@ public class LoanPrdAction extends BaseAction {
 				ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
 						FinancialActionConstants.INTERESTPOSTING,
 						FinancialConstants.CREDIT), request);
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees,
-				request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.LOANPRDFEE, fees, request);
 		prdDefLogger
 				.debug("Load master data method of Loan Product Action called");
 	}
@@ -480,14 +488,16 @@ public class LoanPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct);
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDSTATUSLIST,
-				service.getApplicablePrdStatus(localeId), request);
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.LOANPRDSTATUSLIST, service
+						.getApplicablePrdStatus(localeId), request);
 		prdDefLogger
 				.debug("Load Status list method of Loan Product Action called");
 	}
 
-	private List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction,
-			Short debitCredit) throws Exception {
+	private List<GLCodeEntity> getGLCodes(
+			FinancialActionConstants financialAction, Short debitCredit)
+			throws Exception {
 		prdDefLogger.debug("getGLCodes method of Loan Product Action called");
 		return new FinancialBusinessService().getGLCodes(financialAction,
 				debitCredit);
@@ -570,7 +580,7 @@ public class LoanPrdAction extends BaseAction {
 		}
 		prdDefLogger
 				.debug("getFeeViewList method of Loan Product Action called");
-		return feeViews.size()>0?feeViews:null;
+		return feeViews.size() > 0 ? feeViews : null;
 	}
 
 	private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {
@@ -609,14 +619,18 @@ public class LoanPrdAction extends BaseAction {
 				.getPrdOfferingShortName());
 		loanPrdActionForm.setPrdCategory(getStringValue(loanProduct
 				.getPrdCategory().getProductCategoryID()));
-		loanPrdActionForm.setPrdStatus(getStringValue(loanProduct
-				.getStatus().getValue()));
-		loanPrdActionForm.setPrdApplicableMaster(
-				loanProduct.getPrdApplicableMasterEnum());
-		loanPrdActionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), DateUtils.toDatabaseFormat(loanProduct.getStartDate())));
+		loanPrdActionForm.setPrdStatus(getStringValue(loanProduct.getStatus()
+				.getValue()));
+		loanPrdActionForm.setPrdApplicableMaster(loanProduct
+				.getPrdApplicableMasterEnum());
+		loanPrdActionForm.setStartDate(DateUtils.getUserLocaleDate(
+				getUserContext(request).getPreferredLocale(), DateUtils
+						.toDatabaseFormat(loanProduct.getStartDate())));
 		loanPrdActionForm
-				.setEndDate(loanProduct.getEndDate() != null ? DateUtils.getUserLocaleDate(getUserContext(request)
-				.getPreferredLocale(), DateUtils.toDatabaseFormat(loanProduct.getEndDate()))
+				.setEndDate(loanProduct.getEndDate() != null ? DateUtils
+						.getUserLocaleDate(getUserContext(request)
+								.getPreferredLocale(), DateUtils
+								.toDatabaseFormat(loanProduct.getEndDate()))
 						: null);
 		loanPrdActionForm.setDescription(loanProduct.getDescription());
 		loanPrdActionForm.setGracePeriodType(getStringValue(loanProduct
@@ -625,24 +639,12 @@ public class LoanPrdAction extends BaseAction {
 				.getGracePeriodDuration()));
 		loanPrdActionForm.setInterestTypes(getStringValue(loanProduct
 				.getInterestTypes().getId()));
-		loanPrdActionForm.setMaxLoanAmount(getStringValue(loanProduct
-				.getMaxLoanAmount()));
-		loanPrdActionForm.setMinLoanAmount(getStringValue(loanProduct
-				.getMinLoanAmount()));
-		if (!(loanProduct.getDefaultLoanAmount().getAmountDoubleValue() == 0.0 && loanProduct
-				.getMinLoanAmount().getAmountDoubleValue() != 0.0))
-			loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanProduct
-					.getDefaultLoanAmount()));
-		loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(loanProduct.getMaxInterestRate()).toString());
-		loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(loanProduct.getMinInterestRate()).toString());
-		loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(loanProduct.getDefInterestRate()).toString());
-		loanPrdActionForm.setMaxNoInstallments(getStringValue(loanProduct
-				.getMaxNoInstallments()));
-		loanPrdActionForm.setMinNoInstallments(getStringValue(loanProduct
-				.getMinNoInstallments()));
-		loanPrdActionForm.setDefNoInstallments(getStringValue(loanProduct
-				.getDefNoInstallments()));
-
+		loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(
+				loanProduct.getMaxInterestRate()).toString());
+		loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(
+				loanProduct.getMinInterestRate()).toString());
+		loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(
+				loanProduct.getDefInterestRate()).toString());
 		loanPrdActionForm.setIntDedDisbursementFlag(getStringValue(loanProduct
 				.isIntDedDisbursement()));
 		loanPrdActionForm.setPrinDueLastInstFlag(getStringValue(loanProduct
@@ -659,9 +661,409 @@ public class LoanPrdAction extends BaseAction {
 				.getPrincipalGLcode().getGlcodeId()));
 		loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct
 				.getInterestGLcode().getGlcodeId()));
+
+		if (loanProduct.checkLoanAmountType(loanProduct) == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN) {
+			loanPrdActionForm
+					.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN));
+			Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllItr = loanProduct
+					.getLoanAmountSameForAllLoan().iterator();
+			while (loanAmountSameForAllItr.hasNext()) {
+				LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = loanAmountSameForAllItr
+						.next();
+				loanPrdActionForm.setMaxLoanAmount(loanAmountSameForAllLoanBO
+						.getMaxLoanAmount());
+				loanPrdActionForm.setMinLoanAmount(loanAmountSameForAllLoanBO
+						.getMinLoanAmount());
+				loanPrdActionForm
+						.setDefaultLoanAmount(loanAmountSameForAllLoanBO
+								.getDefaultLoanAmount());
+
+			}
+		}
+		if (loanProduct.checkLoanAmountType(loanProduct) == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
+			loanPrdActionForm
+					.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN));
+			Iterator<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoanAmountItr = loanProduct
+					.getLoanAmountFromLastLoan().iterator();
+			while (loanAmountFromLastLoanAmountItr.hasNext()) {
+				LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt1(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt1(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt1(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt1(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt1(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+				loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt2(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt2(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt2(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt2(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt2(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+				loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt3(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt3(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt3(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt3(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt3(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+				loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt4(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt4(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt4(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt4(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt4(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+				loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt5(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt5(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt5(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt5(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt5(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+				loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountItr
+						.next();
+				loanPrdActionForm
+						.setLastLoanMinLoanAmt6(loanAmountFromLastLoanAmountBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setLastLoanMaxLoanAmt6(loanAmountFromLastLoanAmountBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setLastLoanDefaultLoanAmt6(loanAmountFromLastLoanAmountBO
+								.getDefaultLoanAmount());
+				loanPrdActionForm
+						.setStartRangeLoanAmt6(loanAmountFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndRangeLoanAmt6(loanAmountFromLastLoanAmountBO
+								.getEndRange());
+			}
+		}
+		if (loanProduct.checkLoanAmountType(loanProduct) == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE) {
+			loanPrdActionForm
+					.setLoanAmtCalcType(getStringValue(ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE));
+			Iterator<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycleItr = loanProduct
+					.getLoanAmountFromLoanCycle().iterator();
+			while (loanAmountFromLoanCycleItr.hasNext()) {
+				LoanAmountFromLoanCycleBO loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr
+						.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt1(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt1(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt1(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+				loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt2(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt2(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt2(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+				loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt3(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt3(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt3(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+				loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt4(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt4(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt4(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+				loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt5(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt5(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt5(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+				loanAmountFromLoanCycleBO = loanAmountFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setCycleLoanMinLoanAmt6(loanAmountFromLoanCycleBO
+								.getMinLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanMaxLoanAmt6(loanAmountFromLoanCycleBO
+								.getMaxLoanAmount());
+				loanPrdActionForm
+						.setCycleLoanDefaultLoanAmt6(loanAmountFromLoanCycleBO
+								.getDefaultLoanAmount());
+			}
+		}
+
+		if (loanProduct.checkNoOfInstallType(loanProduct) == ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN) {
+			loanPrdActionForm
+					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN));
+			Iterator<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoanItr = loanProduct
+					.getNoOfInstallSameForAllLoan().iterator();
+			while (noOfInstallSameForAllLoanItr.hasNext()) {
+				NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = noOfInstallSameForAllLoanItr
+						.next();
+				loanPrdActionForm
+						.setMaxNoInstallments(getStringValue(noOfInstallSameForAllLoanBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setMinNoInstallments(getStringValue(noOfInstallSameForAllLoanBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setDefNoInstallments(getStringValue(noOfInstallSameForAllLoanBO
+								.getDefaultNoOfInstall()));
+			}
+		}
+		if (loanProduct.checkNoOfInstallType(loanProduct) == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN) {
+			loanPrdActionForm
+					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN));
+			Iterator<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastAmountItr = loanProduct
+					.getNoOfInstallFromLastLoan().iterator();
+			while (noOfInstallFromLastAmountItr.hasNext()) {
+				NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment1(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment1(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment1(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange1(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange1(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+				noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment2(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment2(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment2(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange2(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange2(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+				noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment3(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment3(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment3(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange3(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange3(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+				noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment4(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment4(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment4(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange4(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange4(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+				noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment5(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment5(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment5(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange5(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange5(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+				noOfInstallFromLastLoanAmountBO = noOfInstallFromLastAmountItr
+						.next();
+				loanPrdActionForm
+						.setMinLoanInstallment6(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxLoanInstallment6(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefLoanInstallment6(getStringValue(noOfInstallFromLastLoanAmountBO
+								.getDefaultNoOfInstall()));
+				loanPrdActionForm
+						.setStartInstallmentRange6(noOfInstallFromLastLoanAmountBO
+								.getStartRange());
+				loanPrdActionForm
+						.setEndInstallmentRange6(noOfInstallFromLastLoanAmountBO
+								.getEndRange());
+			}
+		}
+		if (loanProduct.checkNoOfInstallType(loanProduct) == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE) {
+			loanPrdActionForm
+					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE));
+			Iterator<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycleItr = loanProduct
+					.getNoOfInstallFromLoanCycle().iterator();
+			while (noOfInstallFromLoanCycleItr.hasNext()) {
+				NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr
+						.next();
+				loanPrdActionForm
+						.setMinCycleInstallment1(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment1(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment1(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+				noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setMinCycleInstallment2(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment2(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment2(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+				noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setMinCycleInstallment3(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment3(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment3(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+				noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setMinCycleInstallment4(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment4(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment4(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+				noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setMinCycleInstallment5(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment5(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment5(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+				noOfInstallFromLoanCycleBO = noOfInstallFromLoanCycleItr.next();
+				loanPrdActionForm
+						.setMinCycleInstallment6(getStringValue(noOfInstallFromLoanCycleBO
+								.getMinNoOfInstall()));
+				loanPrdActionForm
+						.setMaxCycleInstallment6(getStringValue(noOfInstallFromLoanCycleBO
+								.getMaxNoOfInstall()));
+				loanPrdActionForm
+						.setDefCycleInstallment6(getStringValue(noOfInstallFromLoanCycleBO
+								.getDefaultNoOfInstall()));
+
+			}
+
+		}
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
 				loanProduct.getStartDate(), request);
 		prdDefLogger
 				.debug("setDataIntoActionForm method of Loan Product Action called");
+
 	}
 }

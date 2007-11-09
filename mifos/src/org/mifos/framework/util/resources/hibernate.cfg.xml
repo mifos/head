@@ -91,6 +91,13 @@
 		<mapping resource="org/mifos/application/productdefinition/business/InterestCalcTypeEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/productdefinition/business/RecommendedAmntUnitEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/productdefinition/business/PrdApplicableMasterEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountFromLastLoanAmountBO.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallFromLastLoanAmountBO.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountFromLoanCycleBO.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallFromLoanCycleBO.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/LoanAmountSameForAllLoanBO.hbm.xml" />
+		<mapping resource="org/mifos/application/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
+			
 		<!--M2 style object for GLCODE-->
 		<mapping resource="org/mifos/application/accounts/financial/business/GLCodeEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/accounts/business/AccountBO.hbm.xml" />
@@ -208,6 +215,9 @@
     	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
 		<mapping resource="org/mifos/application/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 			 
+		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
+		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 
+			
 	</session-factory>
 
 </hibernate-configuration>

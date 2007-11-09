@@ -84,7 +84,7 @@
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<arg0 key="product.applfor" />
 			</field>
-			<field property="minLoanAmount" depends="required,double,decimalFormat">
+			<!--<field property="minLoanAmount" depends="required,double,decimalFormat">
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<msg name="double" key="errors.double" bundle="ProductDefUIResources" />
 				<msg name="decimalFormat" key="errors.decimalFormat" bundle="ProductDefUIResources" />
@@ -126,7 +126,7 @@
 					<var-value>(10,3)</var-value>
 				</var>
 			</field>
-			<field property="freqOfInstallments" depends="required">
+			--><field property="freqOfInstallments" depends="required">
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<arg key="product.freqofinst" />
 			</field>
@@ -139,7 +139,7 @@
 					<var-value>(*this* > 0)</var-value>
 				</var>
 			</field>
-			<field property="maxNoInstallments" depends="required,validwhen,integer,decimalFormat">
+			<!--<field property="maxNoInstallments" depends="required,validwhen,integer,decimalFormat">
 				<msg name="required" key="errors.mandatory" bundle="ProductDefUIResources" />
 				<msg name="validwhen" key="errors.maxMin" bundle="ProductDefUIResources" />
 				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
@@ -187,7 +187,7 @@
 					<var-value>(4,0)</var-value>
 				</var>
 			</field>
-			<field property="gracePeriodDuration" depends="validwhen,integer">
+			--><field property="gracePeriodDuration" depends="validwhen,integer">
 				<msg name="validwhen" key="errors.graceperioddur" bundle="ProductDefUIResources" />
 				<msg name="integer" key="errors.integer" bundle="ProductDefUIResources" />
 				<arg0 key="product.graceperdur" />

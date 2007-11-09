@@ -153,11 +153,18 @@ public interface ProductDefinitionConstants {
 	public String LOANPRDACTIONMAXAMOUNT="max amount";
 	public String LOANPRDACTIONDEFINTERESTRATE="Default interest rate";
 	public String LOANPRDACTIONMAXINTERESTRATE="max interest rate";
+	public String LOANAMOUNTTYPE = "loanAmountType";
+	public String INSTALLTYPE = "installType";
 	
 	public Short LOANFRQINSTID =1;
 	public Short LOANFEESINACTIVEID=1;
 	public Short LOANCATEGORYIDVALUE=5;
-
+	public Short LOANAMOUNTSAMEFORALLLOAN =1;
+	public Short LOANAMOUNTFROMLASTLOAN = 2;
+	public Short LOANAMOUNTFROMLOANCYCLE =3;
+	public Short NOOFINSTALLSAMEFORALLLOAN =1;
+	public Short NOOFINSTALLFROMLASTLOAN = 2;
+	public Short NOOFINSTALLFROMLOANCYCLLE =3;
 	//Savings Product
 
 	public String GETPATHSAVINGSPRODUCT="SavingsProduct";
@@ -181,6 +188,7 @@ public interface ProductDefinitionConstants {
 	
 	//Exceptions 
 	public String ERRORMAXMINLOANAMOUNT="errors.maxminLoanAmount";
+	public String ERRORMAXMINNOOFINSTALL="errors.maxminnoofinstall";
 	public String ERRORDEFLOANAMOUNT="errors.defLoanAmount";
 	public String ERRORMAXMININTRATE="errors.maxminIntRate";
 	public String ERRORDEFINTRATE="errors.defIntRate";
@@ -249,6 +257,27 @@ public interface ProductDefinitionConstants {
 	
 	public String PRODUCT_TYPE="product type";
 	public String PRODUCT_INSTANCE_NAME = "product instance name";
+	
+	public String ERRORMINIMUMLOANAMOUNT="errors.minloanamount";
+	public String ERRORMAXIMUMLOANAMOUNT="errors.maxloanamount";
+	public String ERRORDEFAULTLOANAMOUNT="errors.defaultloanamount";
+	public String ERRORSTARTRANGELOANAMOUNT="errors.startloanamount";
+	public String ERRORENDLOANAMOUNT="errors.endloanamount";
+	public String ERRORCALCLOANAMOUNTTYPE="errors.calcloanamounttype";
+	public String ERRORSTARTENDLOANAMOUNT="errors.startendrangeloanamount";	
+	
+	public String ERRORMINIMUMINSTALLMENT="errors.mininstallments";
+	public String ERRORMAXIMUMINSTALLMENT="errors.maxinstallments";
+	public String ERRORDEFAULTINSTALLMENT="errors.definstallments";
+	public String ERRORSTARTRANGEINSTALLMENT="errors.startinstallment";
+	public String ERRORENDINSTALLMENT="errors.endinstallment";
+	public String ERRORCALCINSTALLMENTTYPE="errors.calcinstallmenttype";
+	public String ERRORSTARTENDINSTALLMENT="errors.startendinstallment";
+	public String ERRORMINMAXDEFINSTALLMENT="errors.defaultinstallments";
 	public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE="errors.principallast_invalidgrace";
 }
+
+
+
+
 
