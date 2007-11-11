@@ -57,6 +57,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.util.helpers.Money;
 
@@ -479,8 +480,7 @@ public class BulkEntryDisplayHelper {
 			}
 		}
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
-			if (Configuration.getInstance().getCustomerConfig(officeId)
-					.isCenterHierarchyExists()) {
+			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						amountToBeShown, rows, columns, size, initialAccNo,
@@ -530,8 +530,7 @@ public class BulkEntryDisplayHelper {
 			else
 				enteredAmount = accountViewBO.getDisBursementAmountEntered();
 
-			if (Configuration.getInstance().getCustomerConfig(officeId)
-					.isCenterHierarchyExists()) {
+			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance().generateTextInput(builder,
 						"enteredAmount[" + rows + "][" + columns + "]",
 						enteredAmount, rows, columns, size, initialAccNo,
@@ -618,8 +617,7 @@ public class BulkEntryDisplayHelper {
 		if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
 				|| method.equals(BulkEntryConstants.GETMETHOD)) {
-			if (Configuration.getInstance().getCustomerConfig(officeId)
-					.isCenterHierarchyExists()) {
+			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance().generateSavingsTextInput(
 						builder, name + "[" + rows + "][" + columns + "]",
 						amount, rows, columns, size, initialAccNo,
@@ -696,8 +694,7 @@ public class BulkEntryDisplayHelper {
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
 				|| method.equals(BulkEntryConstants.GETMETHOD)) {
 
-			if (Configuration.getInstance().getCustomerConfig(officeId)
-					.isCenterHierarchyExists()) {
+			if (ClientRules.getCenterHierarchyExists()) {
 				BulkEntryTagUIHelper.getInstance()
 						.generateCustomerAccountTextInput(
 								builder,

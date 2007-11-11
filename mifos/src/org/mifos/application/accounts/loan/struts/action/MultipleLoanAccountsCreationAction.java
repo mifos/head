@@ -92,6 +92,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.ClientRules;
 
 public class MultipleLoanAccountsCreationAction extends BaseAction {
 
@@ -135,11 +136,10 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches,
 				request);
+		
 		SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
-				Configuration.getInstance().getCustomerConfig(
-						new OfficePersistence().getHeadOffice().getOfficeId())
-						.isCenterHierarchyExists() ? Constants.YES
-						: Constants.NO, request);
+						ClientRules.getCenterHierarchyExists() ? Constants.YES
+								: Constants.NO, request); 
 		request.getSession().setAttribute(
 				LoanConstants.MULTIPLE_LOANS_ACTION_FORM, null);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
@@ -178,8 +178,9 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		Short officeId = getShortValue(loanActionForm.getBranchOfficeId());
 		List<CustomerView> parentCustomerList = loadCustomers(loanOfficerId,
 				officeId);
-		boolean isCenterHeirarchyExists = Configuration.getInstance()
-				.getCustomerConfig(officeId).isCenterHierarchyExists();
+		
+		boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
+			
 		SessionUtils.setCollectionAttribute(
 				LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, parentCustomerList,
 				request);
@@ -337,8 +338,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside loadCustomers method");
 		CustomerLevel customerLevel = CustomerLevel.CENTER;
-		if (!Configuration.getInstance().getCustomerConfig(officeId)
-				.isCenterHierarchyExists())
+		if (!ClientRules.getCenterHierarchyExists())
 			customerLevel = CustomerLevel.GROUP;
 		List<CustomerView> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory
 				.getInstance().getBusinessService(

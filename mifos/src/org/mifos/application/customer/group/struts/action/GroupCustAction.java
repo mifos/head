@@ -96,6 +96,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.ClientRules;
 
 public class GroupCustAction extends CustAction {
 
@@ -141,9 +142,7 @@ public class GroupCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ActionForwards actionForward = null;
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.isCenterHierarchyExists(); 
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists(); 
 		if(isCenterHierarchyExists){
 			CenterSearchInput searchInputs = new CenterSearchInput(getUserContext(request).getBranchId(), GroupConstants.CREATE_NEW_GROUP);
 			SessionUtils.setAttribute(GroupConstants.CENTER_SEARCH_INPUT, searchInputs, request.getSession());
@@ -168,9 +167,7 @@ public class GroupCustAction extends CustAction {
 			throws Exception {
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		doCleanUp(actionForm, request);
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.isCenterHierarchyExists();
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 		if(isCenterHierarchyExists){
 			actionForm.setParentCustomer(getCustomerBusinessService().findBySystemId(actionForm.getCenterSystemId()));
 			actionForm.getParentCustomer().getCustomerMeeting().getMeeting().isMonthly();
@@ -228,9 +225,7 @@ public class GroupCustAction extends CustAction {
 		actionForm.setCustomerId(group.getCustomerId().toString());
 		actionForm.setGlobalCustNum(group.getGlobalCustNum());
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,
-				Configuration.getInstance().getCustomerConfig(
-						group.getOffice().getOfficeId())
-						.canGroupApplyForLoan(), request);
+				ClientRules.getGroupCanApplyLoans(), request);
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}	
 
@@ -344,9 +339,7 @@ public class GroupCustAction extends CustAction {
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		actionForm.setSearchString(null);
 		cleanUpSearch(request);
-		if (Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.canClientExistOutsideGroup())
+		if (ClientRules.getCenterHierarchyExists())
 			SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED,
 					CustomerConstants.NO,request);
 		else
@@ -400,13 +393,9 @@ public class GroupCustAction extends CustAction {
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			GroupBO groupBO, Short localeId) throws Exception{
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,
-				Configuration.getInstance().getCustomerConfig(
-						groupBO.getOffice().getOfficeId())
-						.canGroupApplyForLoan(), request);
+				ClientRules.getGroupCanApplyLoans(), request);
 		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
-				Configuration.getInstance().getCustomerConfig(
-						groupBO.getOffice().getOfficeId())
-						.isCenterHierarchyExists(), request);
+				ClientRules.getCenterHierarchyExists(), request);
 		SessionUtils.setCollectionAttribute(ClientConstants.LOANCYCLECOUNTER,
 				getCustomerBusinessService().fetchLoanCycleCounter(
 						groupBO.getCustomerId()), request);
@@ -470,12 +459,8 @@ public class GroupCustAction extends CustAction {
 
 	private void loadUpdateMasterData(HttpServletRequest request, GroupBO group)
 			throws ApplicationException, SystemException {
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.isCenterHierarchyExists();
-		if (!Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.isCenterHierarchyExists()) {
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+		if (!ClientRules.getCenterHierarchyExists()) {
 			loadLoanOfficers(group.getOffice().getOfficeId(), request);
 			SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
 					isCenterHierarchyExists, request);	

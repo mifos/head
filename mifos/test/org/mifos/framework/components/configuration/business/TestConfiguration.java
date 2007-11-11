@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -60,9 +61,9 @@ public class TestConfiguration extends MifosTestCase{
 	}
 
 	private void assertForCustomerConfig(CustomerConfig customerConfig){
-		assertEquals(true,customerConfig.isCenterHierarchyExists());
-		assertEquals(true,customerConfig.canClientExistOutsideGroup());
-		assertEquals(true,customerConfig.canGroupApplyForLoan());
+		assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
+		assertEquals(true,ClientRules.getClientCanExistOutsideGroup().booleanValue());
+		assertEquals(true,ClientRules.getGroupCanApplyLoans().booleanValue());
 		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForClient());
 		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForGroup());
 		assertEquals("first_name,middle_name,last_name,second_last_name",customerConfig.getNameSequence());

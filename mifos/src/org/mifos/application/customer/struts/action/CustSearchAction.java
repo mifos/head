@@ -37,6 +37,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.ClientRules;
 
 public class CustSearchAction extends SearchAction {
 	
@@ -78,10 +79,7 @@ public class CustSearchAction extends SearchAction {
 		SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName,
 				request);
 
-		SessionUtils.setAttribute("isCenterHeirarchyExists", Configuration
-				.getInstance().getCustomerConfig(
-						getUserContext(request).getBranchId())
-				.isCenterHierarchyExists(), request);
+		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
 		SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
 				CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
@@ -113,10 +111,7 @@ public class CustSearchAction extends SearchAction {
 		SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, officeName,
 				request);
 
-		SessionUtils.setAttribute("isCenterHeirarchyExists", Configuration
-				.getInstance().getCustomerConfig(
-						getUserContext(request).getBranchId())
-				.isCenterHierarchyExists(), request);
+		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 		SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
 				CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
 
@@ -133,9 +128,7 @@ public class CustSearchAction extends SearchAction {
 		actionForm.setOfficeId("0");
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
-		SessionUtils.setAttribute("isCenterHeirarchyExists", Configuration
-				.getInstance().getCustomerConfig(userContext.getBranchId())
-				.isCenterHierarchyExists(), request);
+		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
 		loadMasterData(userContext.getId(), request, actionForm);
 		return mapping
@@ -153,9 +146,7 @@ public class CustSearchAction extends SearchAction {
 		cleanUpSearch(request);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
-		SessionUtils.setAttribute("isCenterHeirarchyExists", Configuration
-				.getInstance().getCustomerConfig(userContext.getBranchId())
-				.isCenterHierarchyExists(), request);
+		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 		loadMasterData(userContext.getId(), request, actionForm);
 		return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
 	}
@@ -184,10 +175,7 @@ public class CustSearchAction extends SearchAction {
 		actionForm.setOfficeId("0");
 		cleanUpSearch(request);
 		UserContext userContext = getUserContext(request);
-		SessionUtils.setAttribute("isCenterHeirarchyExists", Configuration
-				.getInstance().getCustomerConfig(
-						getUserContext(request).getBranchId())
-				.isCenterHierarchyExists(), request);
+		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 
 		forward = loadMasterData(userContext.getId(), request, actionForm);
 		return mapping.findForward(forward);
@@ -269,9 +257,7 @@ public class CustSearchAction extends SearchAction {
 
 		List<CustomerBO> customerList = null;
 
-		boolean isCenterHierarchyExist = Configuration.getInstance()
-				.getCustomerConfig(personnel.getOffice().getOfficeId())
-				.isCenterHierarchyExists();
+		boolean isCenterHierarchyExist = ClientRules.getCenterHierarchyExists();
 
 		if (isCenterHierarchyExist)
 			customerList = getCustomerBusinessService()

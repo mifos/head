@@ -26,7 +26,7 @@ public class MifosConfiguration {
 	private Map<LabelKey, String> labelCache;
 
 
-	private boolean centerHierarchyExist;
+	//private boolean centerHierarchyExist;
 
 	private static final MifosConfiguration configuration = 
 		new MifosConfiguration();
@@ -39,13 +39,13 @@ public class MifosConfiguration {
 		labelCache = new ConcurrentHashMap<LabelKey, String>();
 	}
 
-	public boolean isCenterHierarchyExist() {
-		return centerHierarchyExist;
-	}
+	//public boolean isCenterHierarchyExist() {
+	//	return centerHierarchyExist;
+	//}
 
-	public void setCenterHierarchyExist(boolean centerHierarchyExist) {
-		this.centerHierarchyExist = centerHierarchyExist;
-	}
+	//public void setCenterHierarchyExist(boolean centerHierarchyExist) {
+	//	this.centerHierarchyExist = centerHierarchyExist;
+	//}
 
 	public Short getMFILocaleId() {
 		return Localization.getInstance().getLocaleId();

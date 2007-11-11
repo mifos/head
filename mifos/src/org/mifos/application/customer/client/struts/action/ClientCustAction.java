@@ -89,6 +89,7 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -201,9 +202,7 @@ public class ClientCustAction extends CustAction {
 		}
 		loadCreateMasterData(actionForm, request);
 		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
-				Configuration.getInstance().getCustomerConfig(
-						getUserContext(request).getBranchId())
-						.isCenterHierarchyExists(), request);
+						ClientRules.getCenterHierarchyExists(), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -709,9 +708,7 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
-				Configuration.getInstance().getCustomerConfig(
-						getUserContext(request).getBranchId())
-						.isCenterHierarchyExists(), request);
+				ClientRules.getCenterHierarchyExists(), request);
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(

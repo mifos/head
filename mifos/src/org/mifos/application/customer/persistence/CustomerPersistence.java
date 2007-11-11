@@ -80,6 +80,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -297,9 +298,7 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
 		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
-				Configuration.getInstance().getCustomerConfig(
-						personnel.getOffice().getOfficeId())
-						.canGroupApplyForLoan() == true ? Boolean.valueOf(true)
+				ClientRules.getGroupCanApplyLoans() == true ? Boolean.valueOf(true)
 						: Boolean.valueOf(false)));
 
 		String[] aliasNames = { "clientName", "clientId", "groupName",

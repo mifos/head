@@ -61,6 +61,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.config.ClientRules;
 
 public class BulkEntryTag extends BodyTagSupport {
 
@@ -116,8 +117,8 @@ public class BulkEntryTag extends BodyTagSupport {
 		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
 		Double[] totals = null;
 		Locale locale = getCurrentLocale(pageContext);
-		if (Configuration.getInstance().getCustomerConfig(
-				bulkEntry.getOffice().getOfficeId()).isCenterHierarchyExists()) {
+		boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
+		if (centerHierachyExists) {
 			totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView,
 					loanProducts, savingsProducts, custAttTypes, builder,
 					method, locale, bulkEntry.getOffice().getOfficeId());

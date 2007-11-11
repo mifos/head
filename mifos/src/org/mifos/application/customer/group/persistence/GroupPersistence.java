@@ -19,6 +19,7 @@ import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -86,7 +87,8 @@ public class GroupPersistence extends Persistence {
 		
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
 		String officeSearchId = personnel.getOffice().getSearchId();
-		if(Configuration.getInstance().getCustomerConfig(personnel.getOffice().getOfficeId()).isCenterHierarchyExists()){
+		if (ClientRules.getCenterHierarchyExists())
+		{
 			namedQuery[0]=NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER;
 			namedQuery[1]=NamedQueryConstants.GROUP_SEARCHWITH_CENTER;
 			String[] aliasNames = {"officeName" , "groupName" , "centerName","groupId" };

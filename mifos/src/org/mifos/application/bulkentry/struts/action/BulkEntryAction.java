@@ -94,6 +94,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.ClientRules;
 
 public class BulkEntryAction extends BaseAction {
 
@@ -158,10 +159,8 @@ public class BulkEntryAction extends BaseAction {
 					.getActiveBranches(userContext.getBranchId());
 			SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
 					activeBranches, request);
-			boolean isCenterHeirarchyExists = Configuration.getInstance()
-					.getCustomerConfig(
-							new OfficePersistence().getHeadOffice()
-									.getOfficeId()).isCenterHierarchyExists();
+			
+			boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
 			SessionUtils.setAttribute(
 					BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 					isCenterHeirarchyExists ? Constants.YES : Constants.NO,
@@ -264,8 +263,7 @@ public class BulkEntryAction extends BaseAction {
 				officeId);
 		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,
 				parentCustomerList, request);
-		boolean isCenterHeirarchyExists = Configuration.getInstance()
-				.getCustomerConfig(officeId).isCenterHierarchyExists();
+		boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
 		SessionUtils
 				.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
@@ -512,8 +510,7 @@ public class BulkEntryAction extends BaseAction {
 	private List<CustomerView> loadCustomers(Short personnelId, Short officeId)
 			throws Exception {
 		Short customerLevel;
-		if (Configuration.getInstance().getCustomerConfig(officeId)
-				.isCenterHierarchyExists())
+		if (ClientRules.getCenterHierarchyExists())
 			customerLevel = Short.valueOf(CustomerLevel.CENTER.getValue());
 		else
 			customerLevel = Short.valueOf(CustomerLevel.GROUP.getValue());

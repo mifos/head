@@ -65,6 +65,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -173,8 +174,8 @@ public class GroupBO extends CustomerBO {
 		else
 			setTrained(YesNoFlag.NO.getValue());
 		setTrainedDate(trainedDate);
-		if (!Configuration.getInstance().getCustomerConfig(
-				userContext.getBranchId()).isCenterHierarchyExists()) {
+		if (ClientRules.getCenterHierarchyExists())
+		{
 			updateLoanOfficer(loanOfficerId);
 		}
 		setDisplayName(displayName);

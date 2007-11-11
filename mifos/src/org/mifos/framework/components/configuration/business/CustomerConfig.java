@@ -54,17 +54,18 @@ public class CustomerConfig extends BaseConfig{
 		  super(cacheRepo,officeConf);
 	  }
 
-	  public boolean isCenterHierarchyExists() {
-		  return getBooleanValueFromCache(OfficeConfigConstants.CENTER_HIERARCHY_EXIST,true);
-	  }
+	  // kim commented out to replace by ClientRules
+	  //public boolean isCenterHierarchyExists() {
+		//  return getBooleanValueFromCache(OfficeConfigConstants.CENTER_HIERARCHY_EXIST,true);
+	  //}
 
-	  public boolean canGroupApplyForLoan() {
-		  return getBooleanValueFromCache(OfficeConfigConstants.GROUP_CAN_APPLY_LOANS,true);
-	  }
+	  //public boolean canGroupApplyForLoan() {
+	  //	  return getBooleanValueFromCache(OfficeConfigConstants.GROUP_CAN_APPLY_LOANS,true);
+	  //}
 	  
-	  public boolean canClientExistOutsideGroup() {
-		  return getBooleanValueFromCache(OfficeConfigConstants.CLIENT_CAN_EXIST_OUTSIDE_GROUP,true);	  
-	  }
+	  //public boolean canClientExistOutsideGroup() {
+	//	  return getBooleanValueFromCache(OfficeConfigConstants.CLIENT_CAN_EXIST_OUTSIDE_GROUP,true);	  
+	  //}
 
 	  public boolean isPendingApprovalStateDefinedForClient() {
 		  return getBooleanValueFromCache(ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT,true);

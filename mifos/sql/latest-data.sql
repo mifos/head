@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(156);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(157);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4786,6 +4786,10 @@ INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID) VALUES(2,'Icel
 /* and the Iceland locale is inserted */
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE) VALUES(2,7,2,'IS',0);
 
+/* Client Rules */
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CenterHierarchyExists',1);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('ClientCanExistOutsideGroup',0);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('GroupCanApplyLoans',0);
 	
 
 

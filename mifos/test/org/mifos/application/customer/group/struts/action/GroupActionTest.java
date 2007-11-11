@@ -71,6 +71,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -155,7 +156,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 		if(isCenterHierarchyExists)
 			verifyForward(ActionForwards.loadCenterSearch.toString());
 		else
@@ -174,7 +175,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 		
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 		if(!isCenterHierarchyExists){
 			assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));	
 		}
@@ -200,7 +201,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 		
-		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 		if(!isCenterHierarchyExists){
 			assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));	
 		}

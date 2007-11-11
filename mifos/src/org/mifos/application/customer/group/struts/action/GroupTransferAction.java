@@ -38,6 +38,7 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -213,10 +214,8 @@ public class GroupTransferAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(
 				OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches,
 				request);
-		boolean isCenterHeirarchyExists = Configuration.getInstance()
-				.getCustomerConfig(
-						new OfficePersistence().getHeadOffice().getOfficeId())
-				.isCenterHierarchyExists();
+		
+		boolean isCenterHeirarchyExists = ClientRules.getCenterHierarchyExists();
 		SessionUtils
 				.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
