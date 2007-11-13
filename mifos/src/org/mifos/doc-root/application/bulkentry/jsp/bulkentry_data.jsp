@@ -223,7 +223,7 @@
 														</html-el:submit>
 													</c:when>
 													<c:otherwise>
-														<html-el:submit styleClass="buttn" style="width:70px">
+														<html-el:submit styleClass="buttn" onclick="this.disabled=true;" style="width:70px">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:otherwise>
