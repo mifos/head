@@ -39,6 +39,7 @@
 package org.mifos.application.customer.group.struts.action;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
@@ -407,13 +409,17 @@ public class GroupCustAction extends CustAction {
 				loanAccounts, request);
 		SessionUtils.setCollectionAttribute(GroupConstants.GROUPSAVINGSACCOUNTSINUSE,
 				savingsAccounts, request);
-			SessionUtils
-					.setCollectionAttribute(
-							GroupConstants.CLIENT_LIST,
-							groupBO
-									.getChildren(CustomerLevel.CLIENT,ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
-							request);
-			loadCustomFieldDefinitions(EntityType.GROUP, request);
+		List<CustomerBO> allChildNodes = groupBO.getChildren(
+				CustomerLevel.CLIENT,
+				ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
+
+		// bug #1417 - wrong client sort order. Client sort order on bulk
+		// entry screens should match ordering on group details page.
+		Collections.sort(allChildNodes, CustomerBO.searchIdComparator());
+
+		SessionUtils.setCollectionAttribute(GroupConstants.CLIENT_LIST,
+				allChildNodes, request);
+		loadCustomFieldDefinitions(EntityType.GROUP, request);
 	}
 
 	private void loadCreateMasterData(GroupCustActionForm actionForm,

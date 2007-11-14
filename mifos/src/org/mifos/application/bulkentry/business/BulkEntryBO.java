@@ -38,6 +38,8 @@
 package org.mifos.application.bulkentry.business;
 
 import java.sql.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -213,6 +215,10 @@ public class BulkEntryBO extends BusinessObject {
                         transactionDate, office.getOfficeId() );
         
         logger.debug("bulkEntryClientAttendanceViews" + bulkEntryClientAttendanceViews.size());
+        
+        // bug #1417 - wrong client sort order. Client sort order on bulk
+        // entry screens should match ordering on group details page.
+        Collections.sort(allChildNodes, CustomerBO.searchIdComparator());
         
 		totalCustomers = allChildNodes.size();
 		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,

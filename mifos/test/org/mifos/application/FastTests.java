@@ -36,7 +36,6 @@ package org.mifos.application;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import org.mifos.application.accounts.business.AccountBOTest;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
@@ -68,6 +67,7 @@ import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
+import org.mifos.framework.util.helpers.ChapterNumSortTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.DateUtilsTest;
@@ -147,6 +147,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(TestXmlPPIParser.class);
 		
 		suite.addTest(StringUtilsTest.suite());
+		suite.addTest(ChapterNumSortTest.suite());
 		return suite;
 	}
 

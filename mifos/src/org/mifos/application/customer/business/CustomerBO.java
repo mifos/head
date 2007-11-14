@@ -39,6 +39,8 @@
 package org.mifos.application.customer.business;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -79,6 +81,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -1306,4 +1309,20 @@ public abstract class CustomerBO extends BusinessObject {
                 customerId + ", " +
                 displayName + "}";
     }
+
+	/**
+	 * <code>searchId</code> should indicate the order in which clients became
+	 * part of a group. Originally created for use in fixing <a
+	 * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1417">bug #1417</a>.
+	 * 
+	 * @return A {@link java.util.Comparator} useful for comparing customers by
+	 *         searchId.
+	 */
+	public static Comparator<CustomerBO> searchIdComparator() {
+		return new Comparator<CustomerBO>() {
+			public int compare(CustomerBO o1, CustomerBO o2) {
+				return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
+			}
+		};
+	}
 }
