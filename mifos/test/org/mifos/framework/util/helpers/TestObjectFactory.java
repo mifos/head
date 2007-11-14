@@ -37,6 +37,9 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -619,8 +622,7 @@ public class TestObjectFactory {
 							defLnAmnt.toString()), new Money(defLnAmnt
 							.toString()), new Money(defLnAmnt.toString()),
 					defIntRate, defIntRate, defIntRate, defInstallments,
-					defInstallments, defInstallments, true,
-					interestDeductedAtDisbursement,
+					defInstallments, defInstallments, true, interestDeductedAtDisbursement,
 					principalDueInLastInstallment, new ArrayList<FundBO>(),
 					new ArrayList<FeeBO>(), meeting, glCodePrincipal,
 					glCodeInterest);
@@ -745,6 +747,23 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
+	
+
+	public static LoanBO createIndividualLoanAccount(String globalNum, 
+			CustomerBO customer, AccountState state, Date startDate, 
+			LoanOfferingBO offering) {
+		LoanBO loan = TestLoanBO.createIndividualLoanAccount(globalNum, customer,
+				state, startDate, offering);
+		try {
+			loan.save();
+		} catch (AccountException e) {
+			throw new RuntimeException(e);
+		}
+		HibernateUtil.commitTransaction();
+		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
+	}
+
+	
 
 	public static SavingsOfferingBO createSavingsProduct(String name,
 			ApplicableTo applicableTo, Date startDate, PrdStatus status,
@@ -1648,7 +1667,7 @@ public class TestObjectFactory {
 			holidayBO = null;
 		}
 	}
-
+	
 	public static void deleteHoliday(HolidayBO holidayBO) {
 		Session session = HibernateUtil.getSessionTL();
 		session.lock(holidayBO, LockMode.UPGRADE);
@@ -2238,52 +2257,50 @@ public class TestObjectFactory {
 			meeting = null;
 		}
 	}
-
+	
 	public static void cleanUp(ProductMixBO prdmix) {
 		if (null != prdmix) {
 			deleteProductMix(prdmix);
 			prdmix = null;
 		}
 	}
-
+	
 	private static void deleteProductMix(ProductMixBO prdmix) {
-		Session session = HibernateUtil.getSessionTL();
-		session.lock(prdmix, LockMode.UPGRADE);
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.delete(prdmix);
-		transaction.commit();
-	}
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(prdmix, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(prdmix);
+ 		transaction.commit();
+ 	}
+ 	private static void deleteSavingProduct(SavingsOfferingBO savingPrdBO) {
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(savingPrdBO, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(savingPrdBO);
+ 		transaction.commit();
+ 	}
+ 	
+ 	private static void deleteMeeting(MeetingBO meeting) {
+ 		Session session = HibernateUtil.getSessionTL();
+ 		session.lock(meeting, LockMode.UPGRADE);
+ 		Transaction transaction = HibernateUtil.startTransaction();
+ 		session.delete(meeting);
+ 		transaction.commit();
+ 	}
+ 	
+ 	public static ProductMixBO createAllowedProductsMix(SavingsOfferingBO saving1,SavingsOfferingBO saving2) {
+ 		ProductMixBO prdmix;
+ 		try {
+ 			prdmix = new ProductMixBO(saving1, saving2);
+ 			addObject(testObjectPersistence.persist(prdmix));
+ 			HibernateUtil.commitTransaction();
+ 		}
+ 		catch (Exception e) {
+ 			throw new RuntimeException(e);
+ 		}
+ 		return prdmix;
+ 	}
 
-	private static void deleteSavingProduct(SavingsOfferingBO savingPrdBO) {
-		Session session = HibernateUtil.getSessionTL();
-		session.lock(savingPrdBO, LockMode.UPGRADE);
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.delete(savingPrdBO);
-		transaction.commit();
-	}
-
-	private static void deleteMeeting(MeetingBO meeting) {
-		Session session = HibernateUtil.getSessionTL();
-		session.lock(meeting, LockMode.UPGRADE);
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.delete(meeting);
-		transaction.commit();
-	}
-
-	public static ProductMixBO createAllowedProductsMix(
-			SavingsOfferingBO saving1, SavingsOfferingBO saving2) {
-		ProductMixBO prdmix;
-		try {
-			prdmix = new ProductMixBO(saving1, saving2);
-			addObject(testObjectPersistence.persist(prdmix));
-			HibernateUtil.commitTransaction();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		return prdmix;
-	}
-
-	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
-
+ 	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
+	
 }

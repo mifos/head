@@ -769,4 +769,10 @@
 				 where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID 
 				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
 	</query>
+	<query name="Customer.getActiveClientsUnderGroup">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.parentCustomer  = :GROUP_ID 
+				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
+	</query>
+
 </hibernate-mapping>

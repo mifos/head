@@ -156,7 +156,14 @@ public class ClientPersistence extends Persistence {
 				queryParameters);
 		return queryResult;
 	}
-
+		public List<ClientBO> getActiveClientsUnderGroup(Short groupId)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("GROUP_ID", groupId);
+		List<ClientBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.ACTIVE_CLIENTS_UNDER_GROUP, queryParameters);
+		return queryResult;
+	}
     public CustomerPersistence getCustomerPersistence() {
         return customerPersistence;
     }

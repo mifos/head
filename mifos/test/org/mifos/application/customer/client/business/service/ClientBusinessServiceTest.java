@@ -110,6 +110,29 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	
+	
+	public void testGetActiveClientsUnderGroup() throws ServiceException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getTypicalMeeting());
+		CenterBO center = TestObjectFactory.createCenter("Center", meeting);
+		GroupBO group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		ClientBO client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
+		ClientBO client1 = TestObjectFactory.createClient("Client Two",
+				CustomerStatus.CLIENT_ACTIVE, group);
+		List<ClientBO> clients = new ClientBusinessService()
+				.getActiveClientsUnderGroup(group.getCustomerId().shortValue());
+		assertEquals(2, clients.size());
+
+		TestObjectFactory.cleanUp(client);
+		TestObjectFactory.cleanUp(client1);
+		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);
+	}
+
+
 	public void testGetActiveClientsUnderParent() throws ServiceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());

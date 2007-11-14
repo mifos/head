@@ -56,6 +56,12 @@
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	
+																													var="loanIndividualMonitoringIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}"
+																													 var="loanaccountownerisagroup" />
+				
+				
 			<td height="822" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -103,6 +109,23 @@
 								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 								name="loan.loan_acc_details" /> <br>
 							<br>
+							
+							
+					</tr>
+					<!-- Loan Account Details -->
+					 <c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
+							 <c:if test="${loanaccountownerisagroup == 'yes'}">
+					    <tr>
+							<td valign="top">
+	                          	  <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="accounts/loan" passLocale="true" />	                       
+							</td>
+						</tr>
+						<br>						<br>
+						     </c:if>
+	                 </c:if>
+						<!--  -->
+						<tr>						
+								
 							<span class="fontnormal"> <mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
 								name="loan.amt" />:&nbsp; <span class="fontnormal"> <c:out

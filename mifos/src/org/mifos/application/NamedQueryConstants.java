@@ -373,6 +373,7 @@ public interface NamedQueryConstants {
 	//accounts
 	public String GET_MAX_ACCOUNT_ID="accounts.getMaxAccountId";
 	public String FIND_ACCOUNT_BY_SYSTEM_ID="accounts.findBySystemId";
+	public String FIND_INDIVIDUAL_LOANS="accounts.findIndividualLoans";
 	public String RETRIEVE_LAST_TRXN="accounts.retrieveLastTrxn";
 	public String RETRIEVE_FIRST_TRXN="accounts.retrieveFirstTrxn";
 	
@@ -633,6 +634,7 @@ public interface NamedQueryConstants {
 	public String FETCH_ALL_RECURRENCE_TYPES="meeting.fetchAllReccurenceTypes";
 	
 	public String ACTIVE_CLIENTS_UNDER_PARENT="Customer.getActiveClientsUnderParent";
+	public String ACTIVE_CLIENTS_UNDER_GROUP="Customer.getActiveClientsUnderGroup";
 	public String LAST_LOAN_AMOUNT_CUSTOMER="account.lastLoanAmountForCustomer";
 	
 //  holiday handling

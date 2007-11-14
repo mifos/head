@@ -82,6 +82,7 @@
 									&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="loan.congo1_1" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.congo1_2" /> <c:out value='${customer.displayName}' /> <mifos:mifoslabel
 											name="loan.congo2" /> <c:out value='${requestScope.globalAccountNum}' /> <mifos:mifoslabel name="loan.congo3" /> <br> <br> <br> </span>
 									<html-el:link href="loanAccountAction.do?method=get
+									&customerId=${customer.customerId}
 									&globalAccountNum=${requestScope.globalAccountNum}
 									&recordOfficeId=${requestScope.loan.office.officeId}
 									&recordLoanOfficerId=${requestScope.loan.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">

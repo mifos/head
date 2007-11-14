@@ -48,6 +48,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -89,8 +90,16 @@ public class LoanAccountActionForm extends BaseActionForm {
 		defaultFees = new ArrayList<FeeView>();
 		additionalFees = new ArrayList<FeeView>();
 		customFields = new ArrayList<CustomFieldView>();
+		clients = new ArrayList<String>();
+		clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
     }
 
+//	For individual monitoring
+    
+    private List<String> clients; 
+    
+    private List<LoanAccountDetailsViewHelper> clientDetails;
+    
     private String perspective;
 
 	private String accountId;
@@ -500,6 +509,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 		checkValidationForPreviewBefore(errors, request);
 		validateFees(request, errors);
 		validateCustomFields(request, errors);
+		validateIndividualLoanFields(request, errors);
+		validateNumberOfSelectedMembers(request, errors);
+		validateSumOfTheAmountsSpecified(request, errors);
 	}
 
     private void checkValidationForPreview(ActionErrors errors,
@@ -640,6 +652,129 @@ public class LoanAccountActionForm extends BaseActionForm {
 					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
 	}
+	
+	private  void validateNumberOfSelectedMembers(HttpServletRequest request, ActionErrors errors) {
+		try {
+			CustomerBO customer = getCustomer(request);
+		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);      
+			if (null != loanIndividualMonitoringIsEnabled
+					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+					&& customer.getCustomerLevel().isGroup()) {
+				List<String> ids_clients_selected = getClients();
+				List<String> selected_clients = new ArrayList();
+				for (String id : ids_clients_selected) {
+					if (null != id && !"".equals(id)) {
+						selected_clients.add(id);
+
+					}
+				}
+				if (selected_clients.size() < 2) {
+					addError(errors,"",LoanExceptionConstants.NUMBEROFSELECTEDMEMBERSISNOTATLEASTTWO,"");
+				}
+
+
+			}
+		}
+		catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
+		catch (ServiceException e) {
+			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+		}
+	}
+
+	private  void validateSumOfTheAmountsSpecified(HttpServletRequest request, ActionErrors errors) {
+		try {
+			CustomerBO customer = getCustomer(request);
+		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);            
+            
+			if (null != loanIndividualMonitoringIsEnabled
+					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+					&& customer.getCustomerLevel().isGroup()) {
+
+				List<String> ids_clients_selected = getClients();
+				List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+			
+				double totalAmout=new Double(0);
+				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+					if (ids_clients_selected.contains(tempAccount
+							.getClientId())) {
+						if (tempAccount.getLoanAmount() != null){
+							totalAmout = totalAmout
+									+ tempAccount.getLoanAmount().doubleValue();							
+						}
+					}
+				
+				}
+				LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
+				.getAttribute(LoanConstants.LOANOFFERING, request);
+				if (StringUtils.isNullOrEmpty(Double.valueOf(totalAmout).toString())
+					   	|| getDoubleValue(Double.valueOf(totalAmout).toString()).doubleValue() > loanOffering.getMaxLoanAmount()
+								.getAmountDoubleValue()
+						|| getDoubleValue(Double.valueOf(totalAmout).toString()).doubleValue() < loanOffering.getMinLoanAmount()
+								.getAmountDoubleValue()) {
+					addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS, getStringValue(loanOffering.getMinLoanAmount()
+									.getAmountDoubleValue()), getStringValue(loanOffering.getMaxLoanAmount()
+											.getAmountDoubleValue()));
+					
+				}
+			
+
+			}
+		}
+		catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
+		catch (ServiceException e) {
+			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+		}
+	}
+
+	
+	private  void validateIndividualLoanFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			CustomerBO customer = getCustomer(request);
+		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);            
+            
+			if (null != loanIndividualMonitoringIsEnabled
+					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+					&& customer.getCustomerLevel().isGroup()) {
+
+				List<String> ids_clients_selected = getClients();
+				List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+					if (!ids_clients_selected.contains(tempAccount
+							.getClientId())) {
+						if (tempAccount.getLoanAmount() != null
+								|| !tempAccount.getBusinessActivity()
+										.equals("")){
+							addError(errors, "", LoanExceptionConstants.LOANANDPURPOSEENTREDWITHOUTSELECTINGINDIVIDUAL,
+									"");
+						}
+					}
+				
+				}
+			}
+		}
+		catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
+		catch (ServiceException e) {
+			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+		}
+	}
 
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
         try {
@@ -708,4 +843,33 @@ public class LoanAccountActionForm extends BaseActionForm {
     public void setPerspective(String perspective) {
         this.perspective = perspective;
     }
+
+    	public List<String> getClients() {
+		return clients;
+	}
+
+	public void setClients(List<String> clients) {
+		this.clients = clients;
+	}
+
+	public String getClients(int i) {
+		while (i >= clients.size())
+			clients.add("");
+		return clients.get(i).toString();
+	}
+
+	public void setClients(int i, String string) {
+		while (this.clients.size() <= i)
+			this.clients.add(new String());
+		this.clients.set(i, string);
+	}
+
+	public List<LoanAccountDetailsViewHelper> getClientDetails() {
+		return clientDetails;
+	}
+
+	public void setClientDetails(List<LoanAccountDetailsViewHelper> clientDetails) {
+		this.clientDetails = clientDetails;
+	}
+    	
 }

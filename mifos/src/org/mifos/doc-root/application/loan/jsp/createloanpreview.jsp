@@ -86,6 +86,8 @@
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}" var="loanIndividualMonitoringIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />			
 			
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -249,6 +251,22 @@
 												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.gracePeriodType.name}" /><br> <br> <br> </span>
 											</td>
 										</tr>
+										<!-- Loan Account Details -->
+
+
+								 <c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
+									<c:if test="${loanaccountownerisagroup == 'yes'}">
+									    <tr>
+											<td valign="top">
+	                                            
+                                                <mifoscustom:mifostabletag source="loanAccountDetailsView" scope="session" xmlFileName="LoanAccountDetails.xml" moduleName="accounts/loan" passLocale="true" />
+
+											</td>
+										</tr>
+										<br><br>
+                                    </c:if>
+                                 </c:if>										
+										<!--  -->
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />

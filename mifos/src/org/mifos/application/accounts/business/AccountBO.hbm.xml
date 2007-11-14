@@ -171,6 +171,19 @@
 				<one-to-many
 					class="org.mifos.application.accounts.loan.business.LoanScheduleEntity" />
 			</set>
+			
+			<set name="loanAccountDetails" cascade="all" inverse="true"
+				lazy="false" table="LOAN_ACCOUNT" order-by="PARENT_ACCOUNT_ID asc"
+				access="field">
+				<key column="ACCOUNT_ID" />
+				<one-to-many
+					class="org.mifos.application.accounts.loan.business.LoanBO" />
+			</set>
+			<many-to-one name="parentAccount" column="PARENT_ACCOUNT_ID"
+				class="org.mifos.application.accounts.loan.business.LoanBO" not-null="false">
+			</many-to-one>
+		
+
 		</joined-subclass>
 		<!-- This is for savings account-->
 		<joined-subclass
@@ -294,7 +307,13 @@
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO account 
 			where account.globalAccountNum = :globalAccountNumber ]]>
 	</query>
-
+		<query name="accounts.findIndividualLoans">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account
+			where 
+			account.parentAccount.accountId =:accountId
+			group by account.accountId]]>
+	</query>
+	
 	<query name="accounts.retrieveLastTrxn">
 		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn 
 			where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId) 

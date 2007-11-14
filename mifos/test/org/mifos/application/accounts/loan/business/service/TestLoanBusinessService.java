@@ -68,7 +68,13 @@ public class TestLoanBusinessService extends MifosTestCase {
 				.getGlobalAccountNum());
 		assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
 	}
-
+	public void testFindIndividualLoans() throws Exception {
+		accountBO = getLoanAccount();
+		loanBusinessService = new LoanBusinessService();
+		List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO
+				.getAccountId().toString());
+		assertEquals(0,listLoanBO.size());
+	}	
 	public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
 		accountBO = getLoanAccount();
 		loanBusinessService = new LoanBusinessService();

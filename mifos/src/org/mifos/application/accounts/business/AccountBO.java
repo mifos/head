@@ -122,7 +122,6 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 		super(userContext);
 		validate(userContext, customer, accountType, accountState);
-
 		accountFees = new HashSet<AccountFeesEntity>();
         // TODO: Need an ordered collection here - this generalized Set attribute should ultimately be a List
         accountPayments = new LinkedHashSet<AccountPaymentEntity>();
@@ -139,7 +138,7 @@ public class AccountBO extends BusinessObject {
 		this.personnel = customer.getPersonnel();
 		this.setAccountState(new AccountStateEntity(accountState));
 		setCreateDetails();
-	}
+		}
 
 	public Integer getAccountId() {
 		return accountId;

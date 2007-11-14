@@ -1,5 +1,9 @@
 package org.mifos.application.accounts.loan.persistence;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -83,6 +87,8 @@ public class TestLoanPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 	}
+	
+
 
 	public void testGetLoanAccountsInArrears() throws Exception {
 		Calendar currentDate = new GregorianCalendar();
@@ -135,7 +141,14 @@ public class TestLoanPersistence extends MifosTestCase {
 				.getGlobalAccountNum());
 		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
 	}
-
+	
+	public void testFindIndividualLoans() throws Exception {
+		LoanPersistence loanPersistance = new LoanPersistence();
+		List<LoanBO> listLoanBO = loanPersistance.findIndividualLoans(loanAccount
+				.getAccountId().toString());
+		
+		assertEquals(0,listLoanBO.size());
+	}
 	public void testGetFeeAmountAtDisbursement() throws Exception {
 		loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting,
 				AccountState.LOANACC_APPROVED);

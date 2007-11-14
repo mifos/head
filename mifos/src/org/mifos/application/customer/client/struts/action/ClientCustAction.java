@@ -54,6 +54,7 @@ import org.apache.struts.action.ActionMapping;
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
@@ -94,6 +95,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -568,6 +570,13 @@ public class ClientCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger("loanIndividualMonitoringIsEnabled").getValue();
+        if ( null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue()!=0) 
+            SessionUtils.setAttribute(LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+    				loanIndividualMonitoringIsEnabled.intValue(),request);
+           
 		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
 				.findBySystemId(actionForm.getGlobalCustNum(),
 						CustomerLevel.CLIENT.getValue());
@@ -906,11 +915,17 @@ public class ClientCustAction extends CustAction {
 				getCustomerBusinessService().fetchLoanCycleCounter(
 						clientBO.getCustomerId()), request);
 		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
+		List<LoanBO> individualLoanAccounts = clientBO.getOpenIndividualLoanAccounts();
 		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
+		setLocaleIdToLoanStatus(individualLoanAccounts, localeId);
+			
 		SessionUtils.setCollectionAttribute(
 				ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts,
+				request);		
+		SessionUtils.setCollectionAttribute(
+				ClientConstants.CUSTOMERLOANACCOUNTSINUSE, individualLoanAccounts,
 				request);
 		SessionUtils.setCollectionAttribute(
 				ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, savingsAccounts,

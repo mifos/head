@@ -165,7 +165,12 @@ public class AccountAppAction extends BaseAction {
 	protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		return getCustomerBusinessService().getCustomer(customerId);
 	}
-
+	
+	protected CustomerBO getCustomerBySystemId(String systemId) throws ServiceException {
+		return getCustomerBusinessService().findBySystemId(systemId);
+	}
+	
+	
 	protected CustomerBusinessService getCustomerBusinessService() {
 		return (CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer);

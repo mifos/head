@@ -153,6 +153,36 @@ public class TestLoanBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	
+	public void testCreateIndividualLoan()
+			throws Exception {
+		createInitialCustomers();
+		MeetingBO meeting = TestObjectFactory.createLoanMeeting(group
+				.getCustomerMeeting().getMeeting());
+
+		Date startDate = new Date(System.currentTimeMillis());
+		loanOffering = TestObjectFactory.createLoanOffering("Loan",
+				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0,
+				1.2, 1, InterestType.FLAT, true, true, meeting);
+		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
+		MifosCurrency currency = TestObjectFactory.getCurrency();
+		try {
+
+			LoanBO.createIndividualLoan(userContext,loanOffering,group,AccountState.LOANACC_PARTIALAPPLICATION,
+					new Money(
+							currency, "300.0"), Short.valueOf("1"),
+					meetingDates.get(0), true, 10.0, (short) 0, new FundBO(),
+					new ArrayList<FeeView>(), null);
+
+			
+			fail();
+		}
+		catch (AccountException e) {
+			assertTrue(true);
+		}
+	}
+
+	
 	public void testWaiveMiscFeeAfterPayment() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -500,6 +530,56 @@ public class TestLoanBO extends MifosTestCase {
 							.getMinLoanAmount().toString()), loanOfering
 							.getMaxNoInstallments(), loanOfering
 							.getMinNoInstallments());
+		}
+		catch (ApplicationException e) {
+			throw new RuntimeException(e);
+		}
+		FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee(
+				"Mainatnence Fee", FeeCategory.LOAN, "100",
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
+		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,
+				maintanenceFee, ((AmountFeeBO) maintanenceFee).getFeeAmount()
+						.getAmountDoubleValue());
+		TestAccountFeesEntity.addAccountFees(accountPeriodicFee, loan);
+		loan.setLoanMeeting(meeting);
+		short i = 0;
+		for (Date date : meetingDates) {
+			LoanScheduleEntity actionDate = (LoanScheduleEntity) loan
+					.getAccountActionDate(++i);
+			actionDate.setPrincipal(new Money(currency, "100.0"));
+			actionDate.setInterest(new Money(currency, "12.0"));
+			actionDate.setActionDate(new java.sql.Date(date.getTime()));
+			actionDate.setPaymentStatus(PaymentStatus.UNPAID);
+			TestAccountActionDateEntity.addAccountActionDate(actionDate, loan);
+
+			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
+					actionDate, maintanenceFee, accountPeriodicFee, new Money(
+							currency, "100.0"));
+			setFeeAmountPaid(accountFeesaction, new Money(currency, "0.0"));
+			actionDate.addAccountFeesAction(accountFeesaction);
+		}
+		loan.setCreatedBy(Short.valueOf("1"));
+		loan.setCreatedDate(new Date(System.currentTimeMillis()));
+
+		setLoanSummary(loan, currency);
+		return loan;
+	}
+	public static LoanBO createIndividualLoanAccount(String globalNum,
+			CustomerBO customer, AccountState state, Date startDate,
+			LoanOfferingBO loanOfering) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(startDate);
+		MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer
+				.getCustomerMeeting().getMeeting());
+		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
+
+		LoanBO loan;
+		MifosCurrency currency = TestObjectFactory.getCurrency();
+		try {
+			loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer,
+					state, new Money(currency, "300.0"), Short.valueOf("6"),
+					meetingDates.get(0), true, 0.0, (short) 0, new FundBO(),
+					new ArrayList<FeeView>(), null);
 		}
 		catch (ApplicationException e) {
 			throw new RuntimeException(e);

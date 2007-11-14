@@ -34,6 +34,17 @@ public class LoanBusinessService extends BusinessService {
 		}
 	}
 
+
+	public List<LoanBO>  findIndividualLoans(String accountId)
+			throws ServiceException {
+		try {
+			return new LoanPersistence().findIndividualLoans(accountId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(
+					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
+					new Object[] { accountId });
+		}
+	}
 	public List<LoanActivityView> getRecentActivityView(
 			String globalAccountNumber, Short localeId) throws ServiceException {
 		LoanBO loanBO = findBySystemId(globalAccountNumber);

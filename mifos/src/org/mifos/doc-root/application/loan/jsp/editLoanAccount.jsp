@@ -51,11 +51,69 @@
 	<tiles:put name="body" type="string">
 		<body onload="disableFields()">
 		<SCRIPT SRC="pages/application/loan/js/EditLoanAccount.js"></SCRIPT>
+		
+		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
+		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+		
+		
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+				<script>
+			function selectAll(x) {
+				for(var i=0,l=x.form.length; i<l; i++)
+				{
+					if(x.form[i].type == 'checkbox' && x.form[i].name != 'selectAll1'){
+						x.form[i].checked=x.checked
+					}
+				}
+			}
+	
+			function selectAllCheck(x){
+				var checked = true;
+				for(var i=0,l=x.form.length; i<l; i++){
+					if(x.form[i].type == 'checkbox' && x.form[i].name != 'selectAll1'){
+						if(x.form[i].checked == false){
+							checked = false;
+						}
+					}
+				}
+				for(var i=0,l=x.form.length; i<l; i++){
+					if(x.form[i].type == 'checkbox' && x.form[i].name == 'selectAll1'){
+						x.form[i].checked = checked;
+					}
+				}
+			}
+			function fun_saveForLater(form) {
+				form.method.value="create";
+				form.stateSelected.value="1";
+				form.action="multipleloansaction.do";
+				form.submit();
+				func_disableSubmitBtn("saveForLaterButton");
+			}
+			function fun_submitForApproval(form) {
+				form.method.value="create";
+				form.stateSelected.value="2";
+				form.action="multipleloansaction.do";
+				form.submit();
+				func_disableSubmitBtn("submitForApprovalButton");
+				
+			}
+			function fun_approved(form) {
+				form.method.value="create";
+				form.stateSelected.value="3";
+				form.action="multipleloansaction.do";
+				form.submit();
+				func_disableSubmitBtn("approvedButton");
+				
+			}
+ 		</script>
+		
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	var="loanIndividualMonitoringIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
+			
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
@@ -94,6 +152,73 @@
 							<br>
 							</td>
 						</tr>
+						
+		
+					<!-- Prerequisites : create loan account for Group / When Group loan with individual Monitoring is enabled -->
+					<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
+						<c:if test="${loanaccountownerisagroup == 'yes'}">
+
+							
+								<tr>
+									<td width="5%" valign="top"
+										class="drawtablerowboldnolinebg"><input
+										type="checkbox" onclick="for(var i=0,l=this.form.length; i<l; i++){if(this.form[i].type == 'checkbox' && this.form[i].name != 'selectAll1'){this.form[i].checked=this.checked}}"
+										name="selectAll1"></td>
+									<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+										name="loan.acc_owner" /></td>
+									<td width="31%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+										name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
+										name="loan.amt" /></td>
+									<td width="35%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+										name="loan.business_work_act" /> <mifos:mifoslabel
+										name="${ConfigurationConstants.LOAN}" /></td>
+								</tr>
+								<c:forEach var="client" varStatus="loopStatus1"
+									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
+									<bean:define id="indice" toScope="request">
+										<c:out value="${loopStatus1.index}" />
+									</bean:define>
+									<tr>
+										<td valign="top" class="drawtablerow"><html-el:checkbox
+											property="clients[${indice}]"
+											value="${client.customerId}"
+											onclick="selectAllCheck(this)" /></td>
+										<td width="29%" valign="top" class="drawtablerow"><span
+											class="fontnormalbold"><mifos:mifoslabel
+											name="${ConfigurationConstants.CLIENT}"
+											isColonRequired="Yes" /></span> <c:out
+											value="${client.displayName}" /> <br>
+										<span class="fontnormalbold"><mifos:mifoslabel
+											name="${ConfigurationConstants.CLIENT_ID}"
+											isColonRequired="Yes" /></span> <c:out
+											value="${client.globalCustNum}" /> <br>
+										<span class="fontnormalbold"><c:out
+											value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
+											value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
+											value="${client.governmentId}" />
+										<br>
+										</td>
+										<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
+											property="clientDetails[${indice}].loanAmount" /></td>
+										<td width="35%" valign="top" class="drawtablerow"><mifos:select
+											property="clientDetails[${indice}].businessActivity"
+											style="width:136px;">
+											<c:forEach var="BusinessActivity"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
+												<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+											</c:forEach>
+										</mifos:select></td>
+									</tr>
+								</c:forEach>
+							
+							<br>	<br>		<br>	
+
+						</c:if>
+					</c:if> 
+					<!--  -->
+					
+						
+						
 						<tr class="fontnormal">
 							<td width="30%" align="right" class="fontnormal"><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" mandatory="yes" /> <mifos:mifoslabel

@@ -29,6 +29,7 @@ import org.mifos.application.accounts.loan.business.MaxMinNoOfInstall;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
@@ -39,6 +40,8 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.LoanCounter;
@@ -47,6 +50,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
@@ -72,6 +76,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -196,10 +201,108 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		String globalAccountNum = request.getParameter("globalAccountNum");
-
+		String customerId = request.getParameter("customerId");
+		if(customerId==null)
+			customerId = (String)request.getAttribute("customerId");
+		
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
+		
+		CustomerBO customer =null;
+		if (null != customerId) 
+			customer = getCustomer(Integer.valueOf(customerId));
+		
+	    ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+      
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
+			SessionUtils.setAttribute(
+					LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+					loanIndividualMonitoringIsEnabled.intValue(), request);
+			if (customer!=null && customer.getCustomerLevel().isGroup()) {
+				SessionUtils.setAttribute(
+						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
+			}
+		}
+		SessionUtils
+		.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
+				((MasterDataService) ServiceFactory.getInstance()
+						.getBusinessService(
+								BusinessServiceName.MasterDataService))
+						.retrieveMasterEntities(
+								MasterConstants.LOAN_PURPOSES,
+								getUserContext(request).getLocaleId()),
+				request);
+
+		if (null != loanIndividualMonitoringIsEnabled
+				&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+				&& customer.getCustomerLevel().isGroup()) {
+			
+			List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(loanBO.getAccountId()).toString());
+			
+			List<LoanAccountDetailsViewHelper> loanAccountDetailsViewList=new ArrayList<LoanAccountDetailsViewHelper>();
+			
+			for(LoanBO individualLoan:individualLoans){
+								
+				LoanAccountDetailsViewHelper loandetails = new LoanAccountDetailsViewHelper();
+				loandetails.setClientName(individualLoan.getCustomer().getDisplayName());
+				loandetails.setLoanAmount((null != individualLoan
+						.getLoanAmount() && !"".equals(individualLoan
+						.getLoanAmount())) ? individualLoan.getLoanAmount()
+						.getAmountDoubleValue() : Double.valueOf(0.0));
+				
+				
+				if(null!=individualLoan.getBusinessActivityId())
+				{
+					loandetails.setBusinessActivity(individualLoan
+						.getBusinessActivityId().toString());
+				
+					
+				List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
+						"BusinessActivities", request);
+				
+				for (BusinessActivityEntity busact : businessActEntity) {
+
+						if (busact.getId().toString().equals(
+								individualLoan.getBusinessActivityId()
+										.toString())) {
+							loandetails.setBusinessActivityName(busact
+									.getName());
+						}
+					}
+
+				
+				}
+				
+				
+				
+				loandetails
+						.setGovermentId((!StringUtils
+								.isNullOrEmpty(((ClientBusinessService) ServiceFactory
+										.getInstance().getBusinessService(
+												BusinessServiceName.Client))
+										.getClient(individualLoan
+												.getCustomer().getCustomerId()).getGovernmentId()) ? ((ClientBusinessService) ServiceFactory
+														.getInstance().getBusinessService(
+																BusinessServiceName.Client))
+														.getClient(individualLoan
+																.getCustomer().getCustomerId()).getGovernmentId()
+								: "-").toString());
+				
+				
+				
+				
+				loanAccountDetailsViewList.add(loandetails);
+			}
+			SessionUtils.setAttribute("customerId",customerId, request);
+			SessionUtils.setCollectionAttribute("loanAccountDetailsView",
+					loanAccountDetailsViewList, request);
+			
+		}
+		
 		loanBusinessService.initialize(loanBO.getLoanMeeting());
 		for (AccountActionDateEntity accountActionDateEntity : loanBO
 				.getAccountActionDates()) {
@@ -305,14 +408,62 @@ public class LoanAccountAction extends AccountAppAction {
 				request);
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, customer
 				.getCustomerAccount().getNextMeetingDate(), request);
-		if (request.getParameter("perspective") != null) {
-			request.setAttribute("perspective", request
-					.getParameter("perspective"));
-		}
-		return mapping.findForward(ActionForwards.getPrdOfferigs_success
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
+                ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+                Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+                if ( null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue()!=0) {
+                    SessionUtils.setAttribute(LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+            				loanIndividualMonitoringIsEnabled.intValue(),request);
+                    if (customer.getCustomerLevel().isGroup()) {
+        				SessionUtils.setAttribute(
+        						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
+        				SessionUtils.setCollectionAttribute(
+        						MasterConstants.BUSINESS_ACTIVITIES,
+        						((MasterDataService) ServiceFactory.getInstance()
+        								.getBusinessService(
+        										BusinessServiceName.MasterDataService))
+        								.retrieveMasterEntities(
+        										MasterConstants.LOAN_PURPOSES,
+        										getUserContext(request).getLocaleId()),
+        						request);
+        	
+        				List<ClientBO> clients = new ClientBusinessService()
+        				.getActiveClientsUnderGroup(customer.getCustomerId().shortValue());
+        		if (clients == null || clients.size() == 0) {
+        			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
+        		}
+        				
+        				setClientDetails(loanActionForm,clients);
+        				SessionUtils.setCollectionAttribute(LoanConstants.CLIENT_LIST,
+        						clients, request);
+        
+        			}
+                }
+                
+                
+        
+        return mapping.findForward(ActionForwards.getPrdOfferigs_success
 				.toString());
 	}
+		private void setClientDetails(LoanAccountActionForm loanActionForm,
+			List<ClientBO> clients) {
+		logger.debug("inside setClientDetails method");
+		List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+		if (clients != null && clients.size() > 0) {
+			for (ClientBO client : clients) {
+				LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
+				clientDetail
+						.setClientId(getStringValue(client.getCustomerId()));
+				clientDetail.setClientName(client.getDisplayName());
 
+				clientDetails.add(clientDetail);
+			}
+		}
+		loanActionForm.setClientDetails(clientDetails);
+		logger.debug("outside setClientDetails method");
+	}
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -514,14 +665,106 @@ public class LoanAccountAction extends AccountAppAction {
 			if (perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
 				LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 
-				LoanBO loan = redoLoan(loanActionForm, request);
-				SessionUtils
-						.setAttribute(Constants.BUSINESS_KEY, loan, request);
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		CustomerBO customer = getCustomer(loanActionForm.getCustomerIdValue());
+		Integer loanIndividualMonitoringIsEnabled;
+		try {
+			loanIndividualMonitoringIsEnabled = configurationPersistence
+					.getConfigurationKeyValueInteger(
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+		}
+		catch (PersistenceException e) {
+			throw new RuntimeException(e);
+		}
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
+			SessionUtils.setAttribute(
+					LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+					loanIndividualMonitoringIsEnabled.intValue(), request);
+			if (customer.getCustomerLevel().isGroup()) {
+				SessionUtils.setAttribute(
+						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
 			}
 		}
 
+		if (perspective != null) {
+			request.setAttribute("perspective", perspective);
+
+			if (null != loanIndividualMonitoringIsEnabled
+					&& loanIndividualMonitoringIsEnabled.intValue() != 0
+					&& customer.getCustomerLevel().isGroup()) {
+
+				List<String> ids_clients_selected = loanAccountForm
+						.getClients();
+
+				List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
+				List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm
+						.getClientDetails();
+				for (String index : ids_clients_selected) {
+					if (null != index && !index.equals("")) {
+						LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
+						ClientBO clt = ((ClientBusinessService) ServiceFactory
+								.getInstance().getBusinessService(
+										BusinessServiceName.Client))
+								.getClient(getIntegerValue(index));
+						LoanAccountDetailsViewHelper account = null;
+						for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+							if (tempAccount.getClientId().equals(index)) {
+								account = tempAccount;
+							}
+						}
+						tempLoanAccount.setClientId(clt.getGlobalCustNum()
+								.toString());
+						tempLoanAccount.setClientName(clt.getDisplayName());
+						tempLoanAccount.setLoanAmount(((null != account
+								.getLoanAmount() && !"".equals(account
+								.getLoanAmount())) ? account.getLoanAmount()
+								: Double.valueOf(0.0)));
+
+						List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
+									"BusinessActivities", request);
+					
+						String businessActName=null;
+						for(BusinessActivityEntity busact:businessActEntity){
+							
+							
+							if(busact.getId().toString().equals(account
+										.getBusinessActivity()))
+							{
+								businessActName=busact.getName();
+								
+										
+							}
+						}
+						tempLoanAccount
+								.setBusinessActivity(account.getBusinessActivity());			
+						tempLoanAccount
+								.setBusinessActivityName((!StringUtils
+										.isNullOrEmpty(businessActName) ? businessActName
+										: "-").toString());
+						tempLoanAccount.setGovermentId((!StringUtils
+								.isNullOrEmpty(clt.getGovernmentId()) ? clt
+								.getGovernmentId() : "-").toString());
+						loanAccountDetailsView.add(tempLoanAccount);
+					}
+				}
+				SessionUtils.setCollectionAttribute("loanAccountDetailsView",
+						loanAccountDetailsView, request);
+			}
+			if (perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
+
+				LoanBO loan = redoLoan(loanActionForm, request);
+				SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,
+								request);
+					}
+				}
+
+			}
+		}
 		return mapping.findForward(ActionForwards.preview_success.toString());
+
 	}
+    
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
@@ -541,23 +784,58 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
-		LoanBO loan;
-		if (perspective != null
-				&& perspective
-						.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
-			loan = redoLoan(loanActionForm, request);
-			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-			loan.save();
+        LoanBO loan;
+        if (perspective != null &&
+                perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
+            loan = redoLoan(loanActionForm, request);
+            SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+            loan.save();
+        }
+        else {
+            checkPermissionForCreate(loanActionForm.getState().getValue(),
+                    getUserContext(request), null, customer.getOffice()
+                            .getOfficeId(), customer.getPersonnel()
+                            .getPersonnelId());
+            loan = (LoanBO) SessionUtils.getAttribute(
+                    Constants.BUSINESS_KEY, request);
+                     
+            loan.save(loanActionForm.getState());
+            
+   		}
+
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		
+		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
+				.getConfigurationKeyValueInteger(
+						LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0
+				&& customer.getCustomerLevel().isGroup()) {
+		List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
+        for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
+			LoanBO individualLoan = LoanBO.createIndividualLoan(loan
+					.getUserContext(), loan.getLoanOffering(),
+					getCustomerBySystemId(loanAccountDetail.getClientId()),
+					loanActionForm.getState(), new Money(loanAccountDetail
+					.getLoanAmount().toString()), loan
+					.getNoOfInstallments(), loan.getDisbursementDate(),
+					false, loan.getInterestRate(), loan
+							.getGracePeriodDuration(), loan.getFund(),
+					new ArrayList<FeeView>(),
+					new ArrayList<CustomFieldView>());
+			individualLoan.setParentAccount(loan);
+
+			if (null != loanAccountDetail.getBusinessActivity())
+					individualLoan.setBusinessActivityId(Integer
+							.valueOf(loanAccountDetail.getBusinessActivity()));
+			
+			individualLoan.save();
+		
 		}
-		else {
-			checkPermissionForCreate(loanActionForm.getState().getValue(),
-					getUserContext(request), null, customer.getOffice()
-							.getOfficeId(), customer.getPersonnel()
-							.getPersonnelId());
-			loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
-					request);
-			loan.save(loanActionForm.getState());
-		}
+    }
+
+		
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
 		request.setAttribute("globalAccountNum", loan.getGlobalAccountNum());
@@ -569,13 +847,71 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
-		LoanBO loanBO = loanBusinessService.getAccount(loanBOInSession
-				.getAccountId());
+		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		String globalAccountNum = request.getParameter("globalAccountNum");
+		
+		String customerId = request.getParameter("customerId");
+		
+		CustomerBO customer =null;
+		if (null != customerId && !"".equals(customerId)) {
+			customer = getCustomer(Integer.valueOf(customerId));
+		}
+		
+		
+        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+      
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
+			SessionUtils.setAttribute(
+					LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+					loanIndividualMonitoringIsEnabled.intValue(), request);
+			if (customer.getCustomerLevel().isGroup()) {
+				SessionUtils.setAttribute(
+						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
+			}
+		}
+
+
+		if (null != loanIndividualMonitoringIsEnabled
+				&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+				&& customer.getCustomerLevel().isGroup()) {
+			
+			
+			
+			LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
+			List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(loanBO.getAccountId()).toString());
+					
+			List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+			List<ClientBO> clients=new ArrayList<ClientBO>() ;
+			
+				for (LoanBO temploan : individualLoans) {
+					LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
+					clients.add(new ClientBusinessService()
+					.getClient(temploan.getCustomer().getCustomerId().intValue()));
+					clientDetail
+							.setClientId(getStringValue(temploan.getCustomer().getCustomerId()));
+					clientDetail.setClientName(temploan.getCustomer().getDisplayName());
+					clientDetail.setBusinessActivity(""+temploan.getBusinessActivityId());
+					clientDetail.setLoanAmount(temploan.getLoanAmount()!=null?temploan.getLoanAmount().getAmountDoubleValue():new Double(0));
+
+					clientDetails.add(clientDetail);
+				}
+				
+			loanActionForm.setClientDetails(clientDetails);
+
+	
+			SessionUtils.setCollectionAttribute(LoanConstants.CLIENT_LIST,
+					clients, request);
+			
+		}
+
+		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		LoanBO loanBO = loanBusinessService.getAccount(loanBOInSession.getAccountId());
 		loanBO.setUserContext(getUserContext(request));
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loanBO
 				.getDisbursementDate(), request);
+		
 		SessionUtils.removeAttribute(LoanConstants.LOANOFFERING, request);
 		LoanOfferingBO loanOffering = getLoanOffering(loanBO.getLoanOffering()
 				.getPrdOfferingId(), getUserContext(request).getLocaleId());
@@ -603,8 +939,89 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward managePreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		System.out.println("managePreview");
+		LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
+		System.out.println("managePreview");
+		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
+				.getConfigurationKeyValueInteger(
+						LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+		
+		System.out.println("managePreview");
 
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
+			
+			SessionUtils.setAttribute(
+					LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+					loanIndividualMonitoringIsEnabled.intValue(), request);
+			if (customer.getCustomerLevel().isGroup()) {
+				SessionUtils.setAttribute(
+						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
+				
+
+			}
+		}
+
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0
+				&& customer.getCustomerLevel().isGroup()) {
+
+			List<String> ids_clients_selected = loanAccountForm
+					.getClients();
+
+			List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
+			List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm
+					.getClientDetails();
+			for (String index : ids_clients_selected) {
+				if (null != index && !index.equals("")) {
+					LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
+					ClientBO clt = ((ClientBusinessService) ServiceFactory
+							.getInstance().getBusinessService(
+									BusinessServiceName.Client))
+							.getClient(getIntegerValue(index));
+					LoanAccountDetailsViewHelper account = null;
+					for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+						if (tempAccount.getClientId().equals(index)) {
+							account = tempAccount;
+						}
+					}
+					tempLoanAccount.setClientId(clt.getGlobalCustNum()
+							.toString());
+					tempLoanAccount.setClientName(clt.getDisplayName());
+					tempLoanAccount.setLoanAmount(((null != account
+							.getLoanAmount() && !"".equals(account
+							.getLoanAmount())) ? account.getLoanAmount()
+							: Double.valueOf(0.0)));
+
+					
+					List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
+							"BusinessActivities", request);
+						
+					
+					for(BusinessActivityEntity busact:businessActEntity){
+						
+						if(busact.getId().toString().equals(account.getBusinessActivity()))
+						{
+							tempLoanAccount.setBusinessActivity(busact.getId().toString());
+							tempLoanAccount.setBusinessActivityName(busact.getName());
+						}
+					}
+					
+					tempLoanAccount.setGovermentId((!StringUtils
+							.isNullOrEmpty(clt.getGovernmentId()) ? clt
+							.getGovernmentId() : "-").toString());
+					loanAccountDetailsView.add(tempLoanAccount);
+				}
+			}
+			SessionUtils.setCollectionAttribute("loanAccountDetailsView",
+					loanAccountDetailsView, request);
+		}
+	
+
+		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		System.out.println("managePreviewmanagePreview");
 		SessionUtils.removeAttribute(MasterConstants.COLLATERAL_TYPE_NAME,
 				request);
 		SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
@@ -625,6 +1042,8 @@ public class LoanAccountAction extends AccountAppAction {
 							request).getLocaleId()), request);
 
 		}
+		System.out.println("managePreviewmanagePreview");
+		
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
 	}
@@ -640,6 +1059,7 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		LoanBO loanBO = loanBusinessService.findBySystemId(loanBOInSession
@@ -660,10 +1080,40 @@ public class LoanAccountAction extends AccountAppAction {
 						.getGracePeriodDurationValue(), loanAccountActionForm
 						.getBusinessActivityIdValue(), loanAccountActionForm
 						.getCollateralNote(), getCollateralTypeEntity(form,
-						request), loanAccountActionForm.getCustomFields());
+						request),loanAccountActionForm.getCustomFields());
+		
+		
+	      
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		
+		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
+				.getConfigurationKeyValueInteger(
+						LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+		  
+		if (null != loanIndividualMonitoringIsEnabled
+				&& loanIndividualMonitoringIsEnabled.intValue() != 0
+				&& loanBO.getCustomer().getCustomerLevel().isGroup()) {
+		
+		List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
+		
+        for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
+        	
+        	loanBO.updateLoan(
+        			new Money(!loanAccountDetail
+        					.getLoanAmount().toString().equals("-")?loanAccountDetail
+					.getLoanAmount().longValue()+"":"0"),
+    				!loanAccountDetail.getBusinessActivity().equals("-")?Integer.valueOf(loanAccountDetail.getBusinessActivity()):0);
+       	request.setAttribute("customerId",loanBO.getCustomer().getCustomerId().toString());
+
+		}
+    }
+
+		
 		loanBOInSession = null;
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
+		
+		
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

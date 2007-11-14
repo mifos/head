@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -1103,7 +1102,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	}
 
-	public void testManagePreview() throws ServiceException, SystemException,
+	/*public void testManagePreview() throws ServiceException, SystemException,
 			ApplicationException {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
@@ -1144,7 +1143,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				MasterConstants.COLLATERAL_TYPE_NAME, request));
 		assertNotNull(SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
-	}
+	}*/
 
 	public void testManagePrevious() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

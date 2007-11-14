@@ -871,6 +871,16 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return loanAccounts;
 	}
+	
+	public List<LoanBO> getOpenIndividualLoanAccounts() {
+		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
+		for (AccountBO account : getAccounts()) {
+			if (account.getType().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT)
+					&& account.isOpen())
+				loanAccounts.add((LoanBO) account);
+		}
+		return loanAccounts;
+	}
 
 	public List<SavingsBO> getOpenSavingAccounts() {
 		List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();

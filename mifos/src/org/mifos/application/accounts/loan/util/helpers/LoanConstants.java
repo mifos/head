@@ -61,6 +61,7 @@ public interface LoanConstants {
 	public final String LOANACCOUNTSTAES = "loanAccountStates";
 	public final String APPLICALEFEES = "applicableFees";
 	public final String LOANACCGLOBALNUM = "loanAccGlobalNum";
+	public final String LOANACCOUNTID = "accountId";
 	public final String INTDEDATDISBFLAG = "interestDedAtDisbFlag";
 	public final String INPUTPAGE = "inputPage";
 	public final String LOANMEETING = "loanMeeting";
@@ -73,7 +74,8 @@ public interface LoanConstants {
 	public final String TOTAL_AMOUNT_OVERDUE = "totalAmountOverDue";
 	public final String CURRENT_DATE = "currentDate";
 	public final String NEXTMEETING_DATE = "nextMeetingDate";
-	public final String FEEFORMULALIST = "feeFormulaList"; 
+	public final String FEEFORMULALIST = "feeFormulaList";
+	public final String CLIENT_LIST = "clientList";
 		
 	//account status
 	
@@ -108,7 +110,7 @@ public interface LoanConstants {
 	public static final String CHANGELOGLIST="changeLogList";
 	public static final short LOAN_ENTITY_TYPE=7;
 	public static final String INCOMPLETE_CHECKLIST="error.incompletechecklist";
-	
+	public static final String LOANACCOUNTOWNERISAGROUP = "loanaccountownerisagroup";
 	
 	//disburse loan
 	public static final String GET_LOAD_DISBURSEMENT_DATA="getDataOnLoadOfDisbursment";
@@ -161,7 +163,8 @@ public interface LoanConstants {
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.loan.specifyFeeAmount";
 	public static final String FEE ="Fee";
 	public static final String PROPOSEDDISBDATE ="proposedDisbDate";
-	
+	public static final String LOANINDIVIDUALMONITORINGENABLED ="loanIndividualMonitoringIsEnabled";
+ 	
 	public static final String NOSEARCHRESULTS ="errors.nosearchresults";
 	public final String FEE_WAIVED = "Fee waived";
 	public final String PENALTY_WAIVED = "Penalty waived";
@@ -189,5 +192,6 @@ public interface LoanConstants {
 	public static final String BRANCHID="branchId";
 	public static final String LOANOFFICERID="loanOfficerId";
 	public static final String LOANPRODUCTID="loanProductId";
-	 
+	static final String LOAN_INDIVIDUAL_MONITORING_IS_ENABLED="loanIndividualMonitoringIsEnabled";
+
 }

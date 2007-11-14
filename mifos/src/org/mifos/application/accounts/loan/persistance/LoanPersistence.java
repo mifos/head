@@ -60,6 +60,15 @@ public class LoanPersistence extends Persistence {
 		return queryResult == null ? null : (LoanBO) queryResult;
 	}
 
+	public List<LoanBO> findIndividualLoans(String accountId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		queryParameters.put(LoanConstants.LOANACCOUNTID, accountId);
+		List<LoanBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.FIND_INDIVIDUAL_LOANS, queryParameters);
+		return queryResult == null ? null : (List<LoanBO>) queryResult;
+	}
+		
 	public List<Integer> getLoanAccountsInArrearsInGoodStanding(
 			Short latenessDays) throws PersistenceException {
 

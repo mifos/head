@@ -378,7 +378,29 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
+	
+	public void testGetOpenIndividualLoanAccounts() throws PersistenceException {
+		createInitialObjects();
+		accountBO = getIndividualLoanAccount(group, meeting);
+		TestObjectFactory.flushandCloseSession();
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		List<LoanBO> loans = group.getOpenIndividualLoanAccounts();
+		assertEquals(0, loans.size());
+		
+		TestObjectFactory.flushandCloseSession();
 
+		center = TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+	}
+
+	
 	public void testGetLoanAccountInUse() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
@@ -775,7 +797,15 @@ public class TestCustomerBO extends MifosTestCase {
 				startDate, loanOffering);
 
 	}
+	private AccountBO getIndividualLoanAccount(CustomerBO customer, MeetingBO meeting) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				startDate, meeting);
+		return TestObjectFactory.createIndividualLoanAccount("42423142341", customer,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
+	}
 	private void createPersonnel(PersonnelLevel personnelLevel)
 			throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
