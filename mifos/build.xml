@@ -55,7 +55,7 @@
 		</fileset>
 		<pathelement location="${build.classes}"/>
 	</path>
-    <property name="mifos.password" value="mifostest"/>
+    <property name="mifos.password" value="testmifos"/>
 
     <echo level="debug">CLASSPATH - ${java.class.path}</echo>
 
