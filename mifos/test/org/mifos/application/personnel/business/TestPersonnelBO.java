@@ -660,7 +660,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		}
 	}
 	
-	public void testUpdatePassword() throws Exception{
+	public void testUpdatePasswordWithOldPassword() throws Exception{
 		personnel = createPersonnel();
 		assertNull(personnel.getLastLogin());
 		personnel.updatePassword("ABCD","NEW_PASSWORD", Short.valueOf("1"));
@@ -670,8 +670,18 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertTrue(personnel.isPasswordChanged());
 		assertNotNull(personnel.getLastLogin());
 	}
-	
-	public void testUpdatePasswordWithWrongOldPassword() throws Exception{
+
+    public void testUpdatePassword()
+            throws Exception {
+        personnel = createPersonnel();
+        Short mifosId = new Short((short)1);
+        personnel.updatePassword("testPassword", mifosId);
+        assertEquals(personnel.getUpdatedBy(), mifosId);
+        assertNotNull(personnel.getLastLogin());
+        assertEquals(personnel.getPasswordChanged(), LoginConstants.PASSWORDCHANGEDFLAG);
+    }
+
+    public void testUpdatePasswordWithWrongOldPassword() throws Exception{
 		personnel = createPersonnel();
 		assertNull(personnel.getLastLogin());
 		try {

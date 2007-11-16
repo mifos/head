@@ -21,6 +21,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -33,11 +34,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.config.Localization;
 
 public class PersonnelBO extends BusinessObject {
 
@@ -698,7 +697,19 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	public void unlockPersonnel(Short updatedById) throws PersonnelException {
+    public void updatePassword(String newPassword, Short updatedById)
+            throws PersistenceException {
+        byte[] encryptedPassword = getEncryptedPassword(newPassword);
+        this.setEncriptedPassword(encryptedPassword);
+        this.setPasswordChanged(LoginConstants.PASSWORDCHANGEDFLAG);
+        if (this.getLastLogin() == null) {
+			this.setLastLogin(new Date());
+		}
+        setUpdateDetails(updatedById);
+		new PersonnelPersistence().createOrUpdate(this);
+    }
+
+    public void unlockPersonnel(Short updatedById) throws PersonnelException {
 		logger.info("Trying to unlock Personnel");
 		if(isLocked()){
 			this.unLock();
