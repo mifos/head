@@ -29,7 +29,7 @@ import org.junit.Test;
 
 public class StringUtilsTest {
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(MoneyTest.class);
+		return new JUnit4TestAdapter(StringUtilsTest.class);
 	}
 
 	@Test

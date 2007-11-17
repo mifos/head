@@ -102,9 +102,11 @@ public class TestFiscalCalendarRules {
 			//			 get the supported ids for GMT-08:00 (Pacific Standard Time)
 			 String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
 			 // if no ids were returned, something is wrong. get out.
+			 // Otherwise get an id for Pacific Standard Time
+			 String pstId = ids[0];
 
 			 // create a Pacific Standard Time time zone
-			 SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
+			 SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, pstId);
 
 			 // set up rules for daylight savings time
 			 pdt.setStartRule(Calendar.APRIL, 1, Calendar.SUNDAY, 2 * 60 * 60 * 1000);
@@ -116,6 +118,10 @@ public class TestFiscalCalendarRules {
 			 try
 			 {
 				 SimpleDateFormat df = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
+				 //Keith: DateFormat must be set to the same timezone as the calendar
+				 //Otherwise dates don't roll over at the same exact time, causing
+				 //this and several other unit tests to fail
+				 df.setTimeZone(TimeZone.getTimeZone(pstId));
 				 df.applyPattern("yyyy/MM/dd");
 				 Date thursday = df.parse("2007/10/11");
 				 calendar.setTime(thursday);

@@ -6,7 +6,6 @@ import junit.framework.JUnit4TestAdapter;
 import org.hibernate.Query;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.application.accounts.business.AddAccountActionTest;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -37,7 +36,7 @@ public class TestFinancialActionConstants {
 	}
 
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(AddAccountActionTest.class);
+		return new JUnit4TestAdapter(TestFinancialActionConstants.class);
 	}
 	
 }
