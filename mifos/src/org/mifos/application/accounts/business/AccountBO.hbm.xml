@@ -183,6 +183,9 @@
 				class="org.mifos.application.accounts.loan.business.LoanBO" not-null="false">
 			</many-to-one>
 		
+		<property name="recurMonth" column="RECUR_MONTH" type="short" />
+  		<many-to-one name="monthWeek" column="MONTH_WEEK" class="org.mifos.application.meeting.business.WeekDaysEntity"/>
+  		<many-to-one name="monthRank" column="MONTH_RANK"  class="org.mifos.application.meeting.business.RankOfDaysEntity"/>
 
 		</joined-subclass>
 		<!-- This is for savings account-->

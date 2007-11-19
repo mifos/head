@@ -52,6 +52,7 @@
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<script src="pages/application/meeting/js/meeting.js" >
 
         <c:if test="${requestScope.perspective == 'redoLoan'}">
             <SCRIPT>
@@ -189,6 +190,7 @@
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}" var="loanIndividualMonitoringIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 			
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -524,6 +526,37 @@
 												<date:datetag property="disbursementDate" />
 											</td>
 										</tr>
+								
+								<!--  For Repayment day  -->
+								<c:if test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
+				   				  <tr class="fontnormal">
+
+											<td align="right" class="fontnormal">
+												<span class="mandatorytext"></span>
+												<mifos:mifoslabel name="loan.repayment_date" mandatory="yes" />:
+											</td>
+											<td valign="top">
+											<mifos:mifoslabel name="meeting.labelThe"	bundle="MeetingResources" /> 
+												<mifos:select	property="monthRank" >
+													<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
+															<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+													</c:forEach>
+											</mifos:select>
+											<mifos:select property="monthWeek" >
+												<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
+												</c:forEach>
+											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext
+												property="recurMonth" size="3" maxlength="3" disabled="true"/> <mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" />
+											</td>
+									</tr>
+													
+								</c:if>
+										
+									<!-- -->
+										
 																												
 										<!-- TODO: Change the property of checkbox -->
 										<tr class="fontnormal">
@@ -535,6 +568,8 @@
 												<html-el:checkbox property="intDedDisbursement" value="1" onclick="intDedAtDisb()" />
 											</td>
 										</tr>
+										
+										
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<span class="mandatorytext"></span>

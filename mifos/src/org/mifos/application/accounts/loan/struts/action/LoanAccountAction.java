@@ -57,9 +57,14 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.RankOfDaysEntity;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -413,6 +418,7 @@ public class LoanAccountAction extends AccountAppAction {
         }
                 ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
                 Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+                Integer repaymentIndepOfMeetingIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
                 if ( null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue()!=0) {
                     SessionUtils.setAttribute(LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
             				loanIndividualMonitoringIsEnabled.intValue(),request);
@@ -441,9 +447,20 @@ public class LoanAccountAction extends AccountAppAction {
         
         			}
                 }
+              
+              
+                if ( null != repaymentIndepOfMeetingIsEnabled && repaymentIndepOfMeetingIsEnabled.intValue()!=0) {
+                	 SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+                			 repaymentIndepOfMeetingIsEnabled.intValue(),request);
+                		SessionUtils.setAttribute(
+         						LoanConstants.LOANACCOUNTOWNERISACLIENT, "yes", request);
+         				 loadDataForRepaymentDate(request);
+         				 loanActionForm.setRecurMonth(customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString());
+         				
+                	
+                }
                 
-                
-        
+       
         return mapping.findForward(ActionForwards.getPrdOfferigs_success
 				.toString());
 	}
@@ -789,6 +806,28 @@ public class LoanAccountAction extends AccountAppAction {
                 perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
             loan = redoLoan(loanActionForm, request);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+           
+            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
+					.getConfigurationKeyValueInteger(
+							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
+					.getValue();
+			if (null != repaymentIndepOfMeetingIsEnabled
+					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
+
+				loan
+						.setMonthRank((RankOfDaysEntity) new MasterPersistence()
+								.retrieveMasterEntity(
+										Short.valueOf(loanActionForm
+												.getMonthRank()),
+										RankOfDaysEntity.class, null));
+				loan.setMonthWeek((WeekDaysEntity) new MasterPersistence()
+						.retrieveMasterEntity(Short.valueOf(loanActionForm
+								.getMonthWeek()), WeekDaysEntity.class, null));
+				loan
+						.setRecurMonth(Short.valueOf(loanActionForm
+								.getRecurMonth()));
+			}
             loan.save();
         }
         else {
@@ -798,7 +837,27 @@ public class LoanAccountAction extends AccountAppAction {
                             .getPersonnelId());
             loan = (LoanBO) SessionUtils.getAttribute(
                     Constants.BUSINESS_KEY, request);
-                     
+            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
+					.getConfigurationKeyValueInteger(
+							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
+					.getValue();
+    					if (null != repaymentIndepOfMeetingIsEnabled
+					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
+
+				loan
+						.setMonthRank((RankOfDaysEntity) new MasterPersistence()
+								.retrieveMasterEntity(
+										Short.valueOf(loanActionForm
+												.getMonthRank()),
+										RankOfDaysEntity.class, null));
+				loan.setMonthWeek((WeekDaysEntity) new MasterPersistence()
+						.retrieveMasterEntity(Short.valueOf(loanActionForm
+								.getMonthWeek()), WeekDaysEntity.class, null));
+				loan
+						.setRecurMonth(Short.valueOf(loanActionForm
+								.getRecurMonth()));
+			}        
             loan.save(loanActionForm.getState());
             
    		}
@@ -1749,4 +1808,15 @@ public class LoanAccountAction extends AccountAppAction {
 		return Integer.parseInt(Collections.max(listLoanCounter).toString());
 	}
 
+	private void loadDataForRepaymentDate(HttpServletRequest request) throws Exception {
+		Short localeId = getUserContext(request).getLocaleId();
+		SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST,
+				getMeetingBusinessService().getWorkingDays(), request);
+		SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST,
+				getMasterEntities(RankOfDaysEntity.class, localeId), request);
+	}
+	private MeetingBusinessService getMeetingBusinessService()
+			throws ServiceException {
+		return new MeetingBusinessService();
+	}
 }

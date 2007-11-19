@@ -148,7 +148,60 @@ public class LoanAccountActionForm extends BaseActionForm {
 
     private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList();
 
-    public List<PaymentDataHtmlBean> getPaymentDataBeans() {
+    // For Repayment day
+    
+	private String monthRank;
+	
+	private String weekRank;
+	
+	private String monthWeek;
+	
+	private String weekDay;
+	
+	private String recurMonth;
+		
+	
+    public String getMonthRank() {
+		return monthRank;
+	}
+
+	public void setMonthRank(String monthRank) {
+		this.monthRank = monthRank;
+	}
+
+	public String getMonthWeek() {
+		return monthWeek;
+	}
+
+	public void setMonthWeek(String monthWeek) {
+		this.monthWeek = monthWeek;
+	}
+
+	public String getRecurMonth() {
+		return recurMonth;
+	}
+
+	public void setRecurMonth(String recurMonth) {
+		this.recurMonth = recurMonth;
+	}
+
+	public String getWeekDay() {
+		return weekDay;
+	}
+
+	public void setWeekDay(String weekDay) {
+		this.weekDay = weekDay;
+	}
+
+	public String getWeekRank() {
+		return weekRank;
+	}
+
+	public void setWeekRank(String weekRank) {
+		this.weekRank = weekRank;
+	}
+
+	public List<PaymentDataHtmlBean> getPaymentDataBeans() {
         return this.paymentDataBeans;
     }
 
@@ -512,6 +565,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		validateIndividualLoanFields(request, errors);
 		validateNumberOfSelectedMembers(request, errors);
 		validateSumOfTheAmountsSpecified(request, errors);
+		validateRepaymentDayRequired(request, errors);
 	}
 
     private void checkValidationForPreview(ActionErrors errors,
@@ -737,8 +791,33 @@ public class LoanAccountActionForm extends BaseActionForm {
 							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
 		}
 	}
-
 	
+
+	private  void validateRepaymentDayRequired(HttpServletRequest request, ActionErrors errors) {
+		try {
+
+		    Integer repaymentSchudlesIndepOfMetingIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, request);            
+            
+			if (null != repaymentSchudlesIndepOfMetingIsEnabled
+					&& 0 != repaymentSchudlesIndepOfMetingIsEnabled.intValue()) {
+
+				if (StringUtils.isNullOrEmpty(this.getMonthRank())
+						|| StringUtils.isNullOrEmpty(this.getMonthWeek())
+						|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
+					addError(errors, "",
+							LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
+
+				}
+			}
+		}
+		catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
+
+	}
+
 	private  void validateIndividualLoanFields(HttpServletRequest request, ActionErrors errors) {
 		try {
 			CustomerBO customer = getCustomer(request);

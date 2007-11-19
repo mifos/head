@@ -102,9 +102,13 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.RankOfDaysEntity;
+import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
@@ -192,6 +196,14 @@ public class LoanBO extends AccountBO {
 
 	private Set<LoanBO> loanAccountDetails;
 
+	// For Repayment Day
+	
+	private WeekDaysEntity monthWeek;
+
+	private RankOfDaysEntity monthRank;
+
+	private Short recurMonth;
+	
 	protected LoanBO() {
 		super();
 		this.loanOffering = null;
@@ -3353,4 +3365,36 @@ public class LoanBO extends AccountBO {
 	public MaxMinNoOfInstall getMaxMinNoOfInstall() {
 		return maxMinNoOfInstall;
 	}
+
+	public RankOfDaysEntity getMonthRank() {
+		return monthRank;
+	}
+
+	public void setMonthRank(RankOfDaysEntity monthRank) {
+		this.monthRank = monthRank;
+	}
+
+	public WeekDaysEntity getMonthWeek() {
+		return monthWeek;
+	}
+
+	public void setMonthWeek(WeekDaysEntity monthWeek) {
+		this.monthWeek = monthWeek;
+	}
+
+	public Short getRecurMonth() {
+		return recurMonth;
+	}
+
+	public void setRecurMonth(Short recurMonth) {
+		this.recurMonth = recurMonth;
+	}
+	
+	public WeekDay getMonthWeekValue() {
+		return monthWeek!=null ? WeekDay.getWeekDay(monthWeek.getId()) : null;
+	}
+	public RankType getWeekRank() {
+		return monthRank!=null ? RankType.getRankType(monthRank.getId()) : null;
+	}
+	
 }

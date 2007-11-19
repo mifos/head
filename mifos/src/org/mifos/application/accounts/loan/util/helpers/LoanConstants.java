@@ -111,6 +111,7 @@ public interface LoanConstants {
 	public static final short LOAN_ENTITY_TYPE=7;
 	public static final String INCOMPLETE_CHECKLIST="error.incompletechecklist";
 	public static final String LOANACCOUNTOWNERISAGROUP = "loanaccountownerisagroup";
+	public static final String LOANACCOUNTOWNERISACLIENT = "loanaccountownerisaclient";
 	
 	//disburse loan
 	public static final String GET_LOAD_DISBURSEMENT_DATA="getDataOnLoadOfDisbursment";
@@ -193,5 +194,7 @@ public interface LoanConstants {
 	public static final String LOANOFFICERID="loanOfficerId";
 	public static final String LOANPRODUCTID="loanProductId";
 	static final String LOAN_INDIVIDUAL_MONITORING_IS_ENABLED="loanIndividualMonitoringIsEnabled";
+	static final String REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED="repaymentSchedulesIndependentOfMeetingIsEnabled";
+	
 
 }
