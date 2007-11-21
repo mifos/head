@@ -52,6 +52,7 @@ import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.surveys.business.QuestionTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.ProperlyAdaptedJUnit4Test;
 import org.mifos.framework.components.batchjobs.business.TaskTest;
 import org.mifos.framework.components.configuration.cache.TestKey;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
@@ -148,6 +149,7 @@ public class FastTests extends TestSuite {
 		
 		suite.addTest(StringUtilsTest.suite());
 		suite.addTest(ChapterNumSortTest.suite());
+		suite.addTest(ProperlyAdaptedJUnit4Test.suite());
 		return suite;
 	}
 
