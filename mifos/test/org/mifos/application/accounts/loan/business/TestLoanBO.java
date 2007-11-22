@@ -86,6 +86,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -4324,7 +4325,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.getTransaction().commit();
 	}
 
-	public void testUpdateLoanFailure() {
+	public void testUpdateLoanFailure() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -4344,8 +4345,17 @@ public class TestLoanBO extends MifosTestCase {
 			fail("The Loan object is created for invalid disbursement date");
 		}
 		catch (AccountException expected) {
-			assertEquals("exceptions.application.loan.invalidDisbursementDate",
+		    ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+            Integer repaymentIndepOfMeetingIsEnabled=null;
+		    repaymentIndepOfMeetingIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
+				
+            if ( null != repaymentIndepOfMeetingIsEnabled && repaymentIndepOfMeetingIsEnabled.intValue()!=0) {
+            	assertEquals("exceptions.application.loan.invalidDisbursement",
+    					expected.getKey());
+            }else 
+			assertEquals("errors.invalidDisbursementDate",
 					expected.getKey());
+			
 		}
 	}
 
