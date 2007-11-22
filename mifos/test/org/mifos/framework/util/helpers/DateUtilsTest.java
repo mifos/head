@@ -1,5 +1,6 @@
 package org.mifos.framework.util.helpers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -20,6 +21,28 @@ public class DateUtilsTest extends TestCase {
 		assertTrue("expected 2001-09-12 or 13 but got " + databaseFormat,
 			databaseFormat.startsWith("2001-09-1")
 		);
+	}
+	
+	
+	public void testGetNumberOfDaysBetweenTwoDates() throws Exception {
+		SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date1 = userFormat.parse("2007-01-01");
+		java.util.Date date2 = userFormat.parse("2006-01-01");
+		java.util.Date date3 = userFormat.parse("2006-01-01");
+		assertEquals(365, DateUtils
+				.getNumberOfDaysBetweenTwoDates(date1, date2));
+		assertEquals(0, DateUtils.getNumberOfDaysBetweenTwoDates(date2, date3));
+		date3 = userFormat.parse("2006-01-02");
+		assertEquals(1, DateUtils.getNumberOfDaysBetweenTwoDates(date3, date2));
+	}
+	
+	public void testGetDatePlusXDays() throws Exception {
+		SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date1 = userFormat.parse("2007-01-01");
+		assertEquals(userFormat.parse("2007-01-06"), DateUtils
+				.getDatePlusXDays(date1,5));
+		assertEquals(date1, DateUtils
+				.getDatePlusXDays(date1,0));
 	}
 	
 	public void testParseBrowserDateFields() throws Exception {
@@ -117,5 +140,5 @@ public class DateUtilsTest extends TestCase {
 			assertEquals(input, e.getDateString());
 		}
 	}
-	
+
 }

@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(158);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(159);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3850,6 +3850,8 @@ INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VAL
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('jasperReportIsHidden',1);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('loanIndividualMonitoringIsEnabled',0);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('repaymentSchedulesIndependentOfMeetingIsEnabled',0);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('minDaysBetweenDisbursalAndFirstRepaymentDay',1);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('maxDaysBetweenDisbursalAndFirstRepaymentDay',31);
 
 /*Added Table Personnel_Role */
 /* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */

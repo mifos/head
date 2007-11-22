@@ -44,7 +44,8 @@ package org.mifos.application.accounts.loan.util.helpers;
  */
 public interface LoanExceptionConstants {
 	public final String INVALIDDISBURSEMENTDATE = "exceptions.application.loan.invalidDisbursementDate";
-    public final String INVALIDTRANSACTIONDATE = "exceptions.application.loan.invalidTransactionDate";
+	public final String ERROR_INVALIDDISBURSEMENTDATE = "errors.invalidDisbursementDate";
+	public final String INVALIDTRANSACTIONDATE = "exceptions.application.loan.invalidTransactionDate";
     public final String INVALIDNOOFINSTALLMENTS = "exceptions.application.loan.invalidNoOfInstallments";
 	public final String INCOMPATIBLERECCURENCE = "exceptions.application.loan.incompatibleMeetingrecurrence";
 	public final String INCOMPATIBLEFEERECCURENCE = "exceptions.application.loan.incompatibleFeerecurrence";

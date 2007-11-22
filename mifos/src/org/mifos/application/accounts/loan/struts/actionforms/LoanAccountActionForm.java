@@ -160,6 +160,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	
 	private String recurMonth;
 		
+	private String firstRepaymentDay;
 	
     public String getMonthRank() {
 		return monthRank;
@@ -416,7 +417,12 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public Date getDisbursementDateValue(Locale locale) {
 		return DateUtils.getLocaleDate(locale, getDisbursementDate());
 	}
-
+	
+	public Date getFirstRepaymentDayValue(Locale locale) {
+		return DateUtils.getLocaleDate(locale, getFirstRepaymentDay());
+	}
+	
+	
 	public boolean isInterestDedAtDisbValue() {
 		return getBooleanValue(getIntDedDisbursement());
 	}
@@ -530,6 +536,7 @@ public class LoanAccountActionForm extends BaseActionForm {
                 checkValidationForPreview(errors, request);
         } catch (ApplicationException ae) {
 			// Discard other errors (is that right?)
+        	ae.printStackTrace();
 			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));
@@ -949,6 +956,14 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	public void setClientDetails(List<LoanAccountDetailsViewHelper> clientDetails) {
 		this.clientDetails = clientDetails;
+	}
+
+	public String getFirstRepaymentDay() {
+		return firstRepaymentDay;
+	}
+
+	public void setFirstRepaymentDay(String firstRepaymentDay) {
+		this.firstRepaymentDay = firstRepaymentDay;
 	}
     	
 }

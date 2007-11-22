@@ -8,6 +8,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -169,6 +170,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAccountFlags().size());
 	}
 
+	
 	public void testPrevious() {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

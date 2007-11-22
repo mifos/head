@@ -74,9 +74,7 @@ import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
@@ -492,7 +490,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 
 			fail();
 		}
@@ -529,7 +527,7 @@ public class TestLoanBO extends MifosTestCase {
 							.toString()), Double.parseDouble(loanOfering
 							.getMinLoanAmount().toString()), loanOfering
 							.getMaxNoInstallments(), loanOfering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 		}
 		catch (ApplicationException e) {
 			throw new RuntimeException(e);
@@ -650,7 +648,7 @@ public class TestLoanBO extends MifosTestCase {
 							.toString()), Double.parseDouble(loanOfering
 							.getMinLoanAmount().toString()), loanOfering
 							.getMaxNoInstallments(), loanOfering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 		}
 		catch (ApplicationException e) {
 			throw new RuntimeException(e);
@@ -1208,7 +1206,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 		assertEquals(1, accountBO.getAccountCustomFields().size());
@@ -1343,7 +1341,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -2820,7 +2818,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			fail("The Loan object is created for inactive loan offering");
 		}
 		catch (AccountException ae) {
@@ -2848,7 +2846,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertFalse("The Loan object is created for null customer", true);
 		}
 		catch (AccountException ae) {
@@ -2906,7 +2904,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertFalse(
 					"The Loan object is created even if meetings do not match",
 					true);
@@ -2937,7 +2935,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 		assertTrue(
 				"The Loan object is created if meeting recurrence of loan offering is in multiples of customer",
 				true);
@@ -2960,7 +2958,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertFalse("The Loan object is created for null customer", true);
 		}
 		catch (AccountException ae) {
@@ -2985,7 +2983,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertFalse(
 					"The Loan object is created for grace period greather than max installments",
 					true);
@@ -3010,7 +3008,7 @@ public class TestLoanBO extends MifosTestCase {
 				new ArrayList<CustomFieldView>(), Double.parseDouble(product
 						.getMaxLoanAmount().toString()), Double
 						.parseDouble(product.getMinLoanAmount().toString()),
-				product.getMaxNoInstallments(), product.getMinNoInstallments());
+				product.getMaxNoInstallments(), product.getMinNoInstallments(),false,null);
 		assertEquals(product.getGraceType(), loan.getGraceType());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
 		assertNotSame(new java.sql.Date(DateUtils
@@ -3033,7 +3031,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 		assertEquals(
 				"For interest ded at disb, grace period type should be none",
 				GraceType.NONE, loan.getGraceType());
@@ -3062,7 +3060,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertTrue(
 					"The Loan object is created for valid disbursement date",
 					true);
@@ -3119,7 +3117,7 @@ public class TestLoanBO extends MifosTestCase {
 							.parseDouble(loanOffering.getMinLoanAmount()
 									.toString()), loanOffering
 							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments());
+							.getMinNoInstallments(),false,null);
 			assertFalse(
 					"The Loan object is created for invalid disbursement date",
 					true);
@@ -3145,7 +3143,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 
 		assertEquals(2, loan.getAccountFees().size());
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
@@ -3191,7 +3189,7 @@ public class TestLoanBO extends MifosTestCase {
 				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 
 		assertNotNull(loan.getLoanSummary());
 		assertNotNull(loan.getPerformanceHistory());
@@ -5410,7 +5408,7 @@ public class TestLoanBO extends MifosTestCase {
 						.getMaxLoanAmount().toString()),
 				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
 				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments());
+						.getMinNoInstallments(),false,null);
 		loan.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

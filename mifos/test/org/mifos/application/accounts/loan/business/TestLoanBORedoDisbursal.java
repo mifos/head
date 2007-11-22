@@ -150,7 +150,7 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         LoanBO loan = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group,
 				AccountState.LOANACC_APPROVED, new Money(currency, "300.0"),
                 numberOfInstallments, meetingDates.get(0), true, 0.0, (short) 0,
-                new FundBO(), new ArrayList<FeeView>(), null);
+                new FundBO(), new ArrayList<FeeView>(), null,false,null);
         loan.save();
 
         return loan;

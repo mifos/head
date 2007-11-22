@@ -585,4 +585,33 @@ public class DateUtils {
 		dateCalendar = new GregorianCalendar(year, month, day);
 		return dateCalendar;
 	}
+	
+	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+
+		cal1.setTime(date1);
+		cal2.setTime(date2);
+		cal1.set(Calendar.HOUR_OF_DAY, 0);
+		cal1.set(Calendar.MINUTE, 0);
+		cal1.set(Calendar.SECOND, 0);
+		cal1.set(Calendar.MILLISECOND, 0);
+		cal2.set(Calendar.HOUR_OF_DAY, 0);
+		cal2.set(Calendar.MINUTE, 0);
+		cal2.set(Calendar.SECOND, 0);
+		cal2.set(Calendar.MILLISECOND, 0);
+
+		return ((cal1.getTime().getTime() - cal2.getTime().getTime()) / (24 * 60 * 60 * 1000));
+
+	}
+	
+	public static Date getDatePlusXDays(Date date, int dayNombre) {
+		Date dateplus;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, dayNombre);
+		dateplus = cal.getTime();
+		return dateplus;
+	}
+
 }

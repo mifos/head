@@ -204,6 +204,7 @@ public class LoanBO extends AccountBO {
 
 	private Short recurMonth;
 	
+
 	protected LoanBO() {
 		super();
 		this.loanOffering = null;
@@ -224,7 +225,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields) throws AccountException {
+			List<CustomFieldView> customFields,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		if (loanOffering == null || loanAmount == null
 				|| noOfinstallments == null || disbursementDate == null
 				|| interestRate == null)
@@ -247,13 +248,14 @@ public class LoanBO extends AccountBO {
 					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
 		}
 
-		if (!isDisbursementDateValid(customer, disbursementDate)) {
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-		}            
+		if (isRepaymentIndepOfMeetingEnabled == false)
+			if (!isDisbursementDateValid(customer, disbursementDate)) {
+				throw new AccountException(
+						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+			}            
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount,
                 noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
-                interestRate, gracePeriodDuration, fund, feeViews, customFields, true);
+                interestRate, gracePeriodDuration, fund, feeViews, customFields, true,isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
     }
 
     public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering,
@@ -282,7 +284,7 @@ public class LoanBO extends AccountBO {
 
         if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
         
 
         if (! isDisbursementDateValid(customer, disbursementDate))          
@@ -297,7 +299,7 @@ public class LoanBO extends AccountBO {
     
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, 
                 noOfinstallments, disbursementDate, interestDeductedAtDisbursement,
-                interestRate, gracePeriodDuration, fund, feeViews, customFields, false);
+                interestRate, gracePeriodDuration, fund, feeViews, customFields, false,false,null);
     }
 
 
@@ -332,7 +334,7 @@ public class LoanBO extends AccountBO {
 
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
 
 
 		if (!isDisbursementDateValid(customer, disbursementDate))
@@ -348,7 +350,7 @@ public class LoanBO extends AccountBO {
 		return new LoanBO(userContext, loanOffering, customer, accountState,
 				loanAmount, noOfinstallments, disbursementDate,
 				interestDeductedAtDisbursement, interestRate,
-				gracePeriodDuration, fund, feeViews, customFields, false,AccountTypes.INDIVIDUAL_LOAN_ACCOUNT);
+				gracePeriodDuration, fund, feeViews, customFields, false,AccountTypes.INDIVIDUAL_LOAN_ACCOUNT,false,null);
 	}
 
     
@@ -360,7 +362,8 @@ public class LoanBO extends AccountBO {
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields, Double maxLoanAmount,
-			Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall)
+			Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall,
+			boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay)
 			throws AccountException {
 		if (loanOffering == null || loanAmount == null
 				|| noOfinstallments == null || disbursementDate == null
@@ -377,16 +380,17 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
 		}
-
+		
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-		}
-
-		if (!isDisbursementDateValid(customer, disbursementDate)) {
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-		}
+				throw new AccountException(
+						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+			}
+		
+		if (isRepaymentIndepOfMeetingEnabled == false)
+			if (!isDisbursementDateValid(customer, disbursementDate)) {
+				throw new AccountException(
+						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+			}
 
 		if (interestDeductedAtDisbursement == true
 				&& noOfinstallments.shortValue() <= 1) {
@@ -398,7 +402,7 @@ public class LoanBO extends AccountBO {
 				loanAmount, noOfinstallments, disbursementDate,
 				interestDeductedAtDisbursement, interestRate,
 				gracePeriodDuration, fund, feeViews, customFields, false,
-				maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall);
+				maxLoanAmount, minLoanAmount, maxNoOfInstall, minNoOfInstall,isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 	}
         
     private LoanBO(UserContext userContext, LoanOfferingBO loanOffering,
@@ -406,7 +410,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields, Boolean isRedone)
+			List<CustomFieldView> customFields, Boolean isRedone,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay)
 			throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 
@@ -431,7 +435,7 @@ public class LoanBO extends AccountBO {
 		this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-	    generateMeetingSchedule();
+	    generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 	    this.loanSummary = buildLoanSummary();
 	    this.maxMinLoanAmount = null;
 		this.maxMinNoOfInstall = null;
@@ -443,7 +447,7 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields, Boolean isRedone,AccountTypes accountType) throws AccountException {
+			List<CustomFieldView> customFields, Boolean isRedone,AccountTypes accountType,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		super(userContext, customer, accountType, accountState);
 
         setCreateDetails();
@@ -468,7 +472,7 @@ public class LoanBO extends AccountBO {
 	    this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-	    generateMeetingSchedule();
+	    generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 	    this.loanSummary = buildLoanSummary();
 		this.maxMinLoanAmount = null;
 		this.maxMinNoOfInstall = null;
@@ -484,7 +488,7 @@ public class LoanBO extends AccountBO {
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields, Boolean isRedone,
 			Double maxLoanAmount, Double minLoanAmount, Short maxNoOfInstall,
-			Short minNoOfInstall) throws AccountException {
+			Short minNoOfInstall,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 
 		setCreateDetails();
@@ -507,7 +511,7 @@ public class LoanBO extends AccountBO {
 		this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-		generateMeetingSchedule();
+		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 		this.loanSummary = buildLoanSummary();
 		this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount,
 				minLoanAmount, this);
@@ -1006,7 +1010,7 @@ public class LoanBO extends AccountBO {
 						DateUtils.getDateWithoutTimeStamp(transactionDate
 								.getTime()))) {
 			this.disbursementDate = transactionDate;
-			regeneratePaymentSchedule();
+			regeneratePaymentSchedule(false,null);
 		}
 		this.disbursementDate = transactionDate;
 		AccountStateEntity newState;
@@ -1418,8 +1422,8 @@ public class LoanBO extends AccountBO {
 						AccountState.LOANACC_PENDINGAPPROVAL.getValue())) {
 			if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 				throw new AccountException(
-						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-			regeneratePaymentSchedule();
+						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+			regeneratePaymentSchedule(false,null);
 		}
 		updateCustomFields(customFields);
 		loanSummary.setOriginalPrincipal(loanAmount);
@@ -1894,9 +1898,13 @@ public class LoanBO extends AccountBO {
 		return rateAmount.toString();
 	}
 
-	private void generateMeetingSchedule() throws AccountException {
+	private void generateMeetingSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
+		if(isRepaymentIndepOfMeetingEnabled){
+			setLoanMeeting(newMeetingForRepaymentDay);
+		}
+		
 		List<InstallmentDate> installmentDates = getInstallmentDates(
 				getLoanMeeting(), noOfInstallments,
 				getInstallmentSkipToStartRepayment());
@@ -2115,7 +2123,6 @@ public class LoanBO extends AccountBO {
 					new java.sql.Date(installmentDate.getInstallmentDueDate()
 							.getTime()), PaymentStatus.UNPAID, em
 							.getPrincipal(), em.getInterest());
-
 			addAccountActionDate(loanScheduleEntity);
 			for (FeeInstallment feeInstallment : feeInstallmentList) {
 				if (feeInstallment.getInstallmentId().shortValue() == installmentDate
@@ -2878,7 +2885,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void regeneratePaymentSchedule() throws AccountException {
+	private void regeneratePaymentSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		Money miscFee = getMiscFee();
 		Money miscPenalty = getMiscPenalty();
 		try {
@@ -2892,7 +2899,7 @@ public class LoanBO extends AccountBO {
 		Calendar date = new GregorianCalendar();
 		date.setTime(disbursementDate);
 		loanMeeting.setMeetingStartDate(date);
-		generateMeetingSchedule();
+		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate(Short
 				.valueOf("1"));
 		loanScheduleEntity.setMiscFee(miscFee);
@@ -3396,5 +3403,7 @@ public class LoanBO extends AccountBO {
 	public RankType getWeekRank() {
 		return monthRank!=null ? RankType.getRankType(monthRank.getId()) : null;
 	}
+	
+
 	
 }
