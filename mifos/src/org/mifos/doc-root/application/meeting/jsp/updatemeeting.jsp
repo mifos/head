@@ -123,7 +123,7 @@ function goToCancelPage(){
 						class="heading">
 						<c:out value="${BusinessKey.displayName}" /> - </span>
 						<span class="headingorange">
-							<mifos:mifoslabel name="meeting.labelMeetingSchedule" bundle="MeetingResources" />
+							<mifos:mifoslabel name="meeting.labelmeetingschedule&groupMembership" bundle="MeetingResources" />
 						</span>
 					</td>
 				</tr>
@@ -139,6 +139,7 @@ function goToCancelPage(){
 					<td align="left" valign="top" class="paddingL15T15"><span
 						class="fontnormal"> 
 						<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
+						<br>
 						<mifos:mifoslabel
 						name="meeting.labelCreateInstruction" mandatory="yes"
 						bundle="MeetingResources">
