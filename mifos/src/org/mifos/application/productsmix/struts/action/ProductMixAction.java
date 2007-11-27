@@ -420,6 +420,8 @@ public class ProductMixAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ProductMixActionForm prdMixActionForm = (ProductMixActionForm) form;
+		
+		loadDefaultAllowedProduct(mapping,form,request,response);
 		checkBeforeUpdate(form, request);
 		if (!StringUtils.isNullOrEmpty(prdMixActionForm.getProductType())) {
 			List<PrdOfferingBO> prdOfferingList = ((ProductMixBusinessService) getService())
@@ -620,7 +622,9 @@ public class ProductMixAction extends BaseAction {
 				product.update();
 			}
 		}
-
+		
+		request.setAttribute(ProductDefinitionConstants.PRDOFFERINGBO, prdOfferingBO);
+		
 		prdOfferingBO = null;
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}

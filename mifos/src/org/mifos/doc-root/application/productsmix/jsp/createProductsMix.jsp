@@ -132,7 +132,8 @@
 												<span class="heading"> <mifos:mifoslabel name="product.addnew" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.pro"
 														bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.mix" bundle="ProductDefUIResources" /> - </span>
 												<mifos:mifoslabel name="product.enter" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" /> 	
+												<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
+												<mifos:mifoslabel name="product.mix" bundle="ProductDefUIResources" /> 	 	
 												<mifos:mifoslabel name="product.inf" bundle="ProductDefUIResources" />
 											</td>
 										</tr>

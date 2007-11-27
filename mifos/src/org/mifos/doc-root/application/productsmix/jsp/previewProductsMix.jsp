@@ -191,8 +191,8 @@
 							</c:forEach> </span> <br>
 							<mifos:mifoslabel name="product.prodinstname"
 								bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
-								value="${BusinessKey.prdOfferingName}" /></span> <br>
-							<span class="fontnormalbold"> <mifos:mifoslabel
+								value="${BusinessKey.prdOfferingName}" /></span> <br><br>
+							<span class="fontnormal"> <mifos:mifoslabel
 								name="product.allowedProducts" bundle="ProductDefUIResources" />
 							:</span> <span class="fontnormal"> <br>
 							<c:forEach
@@ -201,7 +201,7 @@
 								<c:out value="${allowedProduct.prdOfferingName}" />
 								<br>
 							</c:forEach> <br>
-							<span class="fontnormalbold"> <mifos:mifoslabel
+							<span class="fontnormal"> <mifos:mifoslabel
 								name="product.notAllowedProducts" bundle="ProductDefUIResources" />
 							:</span> <span class="fontnormal"> <br>
 							<c:forEach

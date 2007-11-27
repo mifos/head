@@ -155,6 +155,7 @@ public interface ProductDefinitionConstants {
 	public String LOANPRDACTIONMAXINTERESTRATE="max interest rate";
 	public String LOANAMOUNTTYPE = "loanAmountType";
 	public String INSTALLTYPE = "installType";
+	public String PRDOFFERINGBO = "prdOfferingBO";
 	
 	public Short LOANFRQINSTID =1;
 	public Short LOANFEESINACTIVEID=1;

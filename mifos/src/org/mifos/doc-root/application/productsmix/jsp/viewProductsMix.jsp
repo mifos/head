@@ -75,7 +75,7 @@
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 								name="product.clickToViewMixDetails" bundle="ProductDefUIResources" />&nbsp;<html-el:link
 								href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="product.defineMixForNewProduct"
+								<mifos:mifoslabel name="product.DefineMixForNewProduct"
 									bundle="ProductDefUIResources" />
 							</html-el:link>
 							<br> <br>

@@ -46,6 +46,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -64,16 +65,14 @@
 						<tr>
 							<td class="fontnormalbold">
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link href="productMixAction.do?method=viewAllProductMix&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link href="productMixAction.do?method=get&prdOfferingId=${requestScope.prdOfferingBO.prdOfferingId}&productType=${requestScope.prdOfferingBO.prdType.productTypeID}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="product.view" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.pro"  bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.mix" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="product.prdmixdetailsnow" bundle="ProductDefUIResources" />
 								</html-el:link>
 								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-									<mifos:mifoslabel name="product.prdmixdefinedanew" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.product"  bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.mix" bundle="ProductDefUIResources" />
+									<mifos:mifoslabel name="product.DefineMixForNewProduct" bundle="ProductDefUIResources" />
 									</html-el:link></span>
 							</td>
 						</tr>

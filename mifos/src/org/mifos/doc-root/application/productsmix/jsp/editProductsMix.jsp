@@ -77,8 +77,12 @@
 								<html-el:link
 								href="productMixAction.do?method=viewAllProductMix&randomNUm=${sessionScope.randomNUm}">
 								 <mifos:mifoslabel name="product.viewprdmix" bundle="ProductDefUIResources" />
-								 </html-el:link> /
-								<span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>	
+								 </html-el:link> /</span>
+								 
+								<span class="fontnormal8pt">
+								<html-el:link href="productMixAction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&productType=${BusinessKey.prdType.productTypeID}&randomNUm=${sessionScope.randomNUm}">
+								<c:out value="${BusinessKey.prdOfferingName}" />
+								</html-el:link>	</span>
 								</td>
 					</tr>
 	
