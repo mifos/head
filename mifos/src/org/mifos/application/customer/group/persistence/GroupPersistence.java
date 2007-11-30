@@ -20,7 +20,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
@@ -118,7 +117,48 @@ public class GroupPersistence extends Persistence {
 		}
 		return queryResult;
 	}
-
+	public QueryResult searchForAddingClientToGroup(String searchString,
+			Short userId) throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.GROUPLIST);
+		
+		
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+		String officeSearchId = personnel.getOffice().getSearchId();
+		if (ClientRules.getCenterHierarchyExists())
+		{
+			namedQuery[0]=NamedQueryConstants.GROUP_SEARCH_COUNT_WITH_CENTER_FOR_ADDING_GROUPMEMBER;
+			namedQuery[1]=NamedQueryConstants.GROUP_SEARCHWITH_CENTER_FOR_ADDING_GROUPMEMBER;
+			String[] aliasNames = {"officeName" , "groupName" , "centerName","groupId" };
+			queryInputs.setAliasNames(aliasNames);
+		}
+		else
+		{
+			namedQuery[0]=NamedQueryConstants.GROUP_SEARCH_COUNT_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER;
+			namedQuery[1]=NamedQueryConstants.GROUP_SEARCH_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER;
+			String[] aliasNames = {"officeName" , "groupName" ,"groupId" };
+			queryInputs.setAliasNames(aliasNames);
+		}						
+		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
+		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
+		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerLevel.GROUP.getValue()));
+		paramList.add(typeNameValue("Short","USER_ID",userId));
+		paramList.add(typeNameValue("Short","USER_LEVEL_ID",
+				personnel.getLevelEnum().getValue()));
+		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelLevel.LOAN_OFFICER.getValue()));
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setPath("org.mifos.application.customer.group.util.helpers.GroupSearchResults");
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+		return queryResult;
+	}
     public CenterPersistence getCenterPersistence() {
         return centerPersistence;
     }

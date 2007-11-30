@@ -374,8 +374,15 @@ public class GroupCustAction extends CustAction {
 		if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
 			return mapping.findForward(ActionForwards.transferSearch_success.toString());
 		else
-			if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS))
-				return mapping.findForward(ActionForwards.addGroupSearch_success.toString());
+			if (actionForm.getInput() != null
+				&& actionForm.getInput().equals(
+						GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS)) {
+			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
+					new GroupBusinessService().searchForAddingClientToGroup(searchString, userContext
+							.getId()), request);
+			return mapping.findForward(ActionForwards.addGroupSearch_success
+					.toString());
+		}
 			else
 
 	 return actionForward;

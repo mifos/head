@@ -158,6 +158,15 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 	}
 	
+	public void testSearchForAddingClientToGroup() throws Exception{
+		center = createCenter("Center_Active_test");
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		QueryResult queryResult = groupBusinessService.searchForAddingClientToGroup(group.getDisplayName(),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+	}
 	public void testFailureSearch() throws Exception {
 		center = createCenter("Center_Active_test");
 		String groupName = "Group_Active_test";

@@ -101,6 +101,15 @@ public class GroupPersistenceTest extends MifosTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 	}
 	
+	
+	public void testSearchForAddingClientToGroup() throws Exception{
+		createGroup_ON_HOLD_STATUS();
+		QueryResult queryResult = groupPersistence.searchForAddingClientToGroup(group.getDisplayName(),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(0,queryResult.getSize());
+		assertEquals(0,queryResult.get(0,10).size());
+	}
+		
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}
@@ -117,7 +126,12 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 		
 	}
-
+	private void createGroup_ON_HOLD_STATUS(){
+		center = createCenter();
+		group = TestObjectFactory.createGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD, center);
+		HibernateUtil.closeSession();
+	
+	}
     public OfficePersistence getOfficePersistence() {
         return officePersistence;
     }

@@ -41,4 +41,14 @@ public class GroupBusinessService extends BusinessService {
 		}
 		
 	}
+	public QueryResult searchForAddingClientToGroup(String searchString,
+			Short userId) throws ServiceException {
+		
+		try {
+			return new GroupPersistence().searchForAddingClientToGroup(searchString,userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		
+	}
 }

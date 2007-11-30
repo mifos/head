@@ -304,6 +304,7 @@ public interface NamedQueryConstants {
 	public String GROUP_SEARCH_WITH_CENTER="groupSearchWithCenter";
 	public String COUNT_GROUP_SEARCH_WITH_CENTER="count_groupSearchWithCenter";
 	public String GROUP_SEARCH_WITHOUT_CENTER="group_SearchWithoutCenter";
+	public String GROUP_SEARCH_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER="group_SearchWithoutCenterForAddingGroupMember";
 	public String COUNT_GROUP_SEARCH_WITHOUT_CENTER="count_groupSearchWithoutCenter";
 	
 	public String ACCOUNTSEARCH ="accounts.accountSearch";
@@ -603,8 +604,11 @@ public interface NamedQueryConstants {
 	public String CENTER_SEARCH="search_Centers";
 	public String CENTER_SEARCH_COUNT="count_search_Centers";
 	public String GROUP_SEARCHWITH_CENTER="group_SearchWithCenter";
+	public String GROUP_SEARCHWITH_CENTER_FOR_ADDING_GROUPMEMBER="group_SearchWithCenterForAddingGroupMember";
 	public String GROUP_SEARCH_COUNT_WITH_CENTER="count_group_SearchWithCenter";
+	public String GROUP_SEARCH_COUNT_WITH_CENTER_FOR_ADDING_GROUPMEMBER="count_group_SearchWithCenterForAddingGroupMember";
 	public String GROUP_SEARCH_COUNT_WITHOUT_CENTER="count_group_SearchWithoutCenter";
+	public String GROUP_SEARCH_COUNT_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER="count_group_SearchWithoutCenterForAddingGroupMember";
 	public String GROUP_SEARCHWITHOUT_CENTER="group_SearchWithoutCenter";
 	public String SEARCH_GROUP_CLIENT_COUNT_LO="Customer.count_cust_for_account";
 	public String SEARCH_GROUP_CLIENT_LO="Customer.cust_for_account";
