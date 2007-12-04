@@ -206,7 +206,8 @@ public class LabelTagUtils {
 		if (null != userContext) {
 			Locale locale = userContext.getPreferredLocale();
 			if (null == locale) {
-				locale = userContext.getMfiLocale();
+				//locale = userContext.getMfiLocale();
+				locale = userContext.getCurrentLocale();
 			}
 			if (null != locale) {
 				userPreferredLocale = locale.getLanguage() + "_"

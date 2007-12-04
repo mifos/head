@@ -22,12 +22,12 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.Localization;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -133,8 +133,8 @@ public class PersonActionForm extends BaseActionForm {
 		if (StringUtils.isNullAndEmptySafe(dateOfJoiningMFIDD)
 				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIMM)
 				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIYY)) {
-			//	kim temporarily implemented this
-			String dateSeparator = Localization.getInstance().getDateSeparator();
+		
+			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 			return dateOfJoiningMFIDD + dateSeparator+ dateOfJoiningMFIMM + dateSeparator
 				+ dateOfJoiningMFIYY;
 
@@ -163,7 +163,7 @@ public class PersonActionForm extends BaseActionForm {
 		}
 		else {
 			//			kim temporarily implemented this
-			String dateSeparator = Localization.getInstance().getDateSeparator();
+			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 			return dobDD + dateSeparator + dobMM + dateSeparator + dobYY;
 			
 		}

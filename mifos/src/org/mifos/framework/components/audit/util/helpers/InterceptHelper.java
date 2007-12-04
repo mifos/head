@@ -133,8 +133,10 @@ public class InterceptHelper {
 		Type[] propertyTypes = customMeta.getPropertyTypes();
 		
 		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
-			locale=((BusinessObject)object).getUserContext().getMfiLocale();
-			localeId=((BusinessObject)object).getUserContext().getMfiLocaleId();
+			//locale=((BusinessObject)object).getUserContext().getMfiLocale();
+			locale = ((BusinessObject)object).getUserContext().getCurrentLocale();
+			//localeId=((BusinessObject)object).getUserContext().getMfiLocaleId();
+			localeId=((BusinessObject)object).getUserContext().getLocaleId();
 			logger.debug("initial path class: "+ AuditConfigurtion.getEntityToClassPath(object.getClass().getName()));
 			entityName = AuditConfigurtion.getEntityToClassPath(object.getClass().getName());
 			entityId = Integer.valueOf(customMeta.getIdentifier(object,EntityMode.POJO).toString());

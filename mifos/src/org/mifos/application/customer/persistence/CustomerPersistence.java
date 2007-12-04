@@ -603,10 +603,8 @@ public class CustomerPersistence extends Persistence {
 		Query query = null;
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
 		session = HibernateUtil.getSessionTL();
-		String systemDate = DateUtils.getCurrentDate(Configuration
-		.getInstance().getSystemConfig().getMFILocale());
-		Date localDate = DateUtils.getLocaleDate(Configuration.getInstance()
-		.getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate();
+		Date localDate = DateUtils.getLocaleDate(systemDate);
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.setTime(localDate);
 		currentDate.add(currentDate.YEAR, -1);

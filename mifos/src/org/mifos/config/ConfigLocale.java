@@ -48,6 +48,7 @@ public class ConfigLocale {
 		configMgr.addProperty(LocalizationLanguageCode, languageCode);
 	}
 
+	// save to the configuration object in memory, not write to file
 	public void save()
 	{
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();

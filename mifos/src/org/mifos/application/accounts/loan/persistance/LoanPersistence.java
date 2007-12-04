@@ -72,10 +72,8 @@ public class LoanPersistence extends Persistence {
 	public List<Integer> getLoanAccountsInArrearsInGoodStanding(
 			Short latenessDays) throws PersistenceException {
 
-		String systemDate = DateUtils.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		Date localDate = DateUtils.getLocaleDate(Configuration.getInstance()
-				.getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate();
+		Date localDate = DateUtils.getLocaleDate(systemDate);
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.setTime(localDate);
 		int year = currentDate.get(Calendar.YEAR);

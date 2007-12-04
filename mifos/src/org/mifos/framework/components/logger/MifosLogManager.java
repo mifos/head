@@ -35,6 +35,7 @@ import org.apache.log4j.varia.NullAppender;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.config.Localization;
 
 /**	
  *  A class with static methods to obtain instances of the logger. It also keeps a HashMap of the actual logger instances per module
@@ -182,7 +183,8 @@ public class MifosLogManager {
 	}
 
 	public static Locale getMFILocale(){
-		return ApplicationConfig.getMFILocale();
+		//return ApplicationConfig.getMFILocale();
+		return Localization.getInstance().getMainLocale();
 	}
 
 }

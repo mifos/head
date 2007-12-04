@@ -132,11 +132,9 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 			UserContext userContext = (UserContext) session
 					.getAttribute(LoginConstants.USERCONTEXT);
 			if (null != userContext) {
-				locale = userContext.getPreferredLocale();
-				if (null == locale) {
-					locale = userContext.getMfiLocale();
+				locale = userContext.getCurrentLocale();
+				
 				}
-			}
 		}
 		return locale;
 	}

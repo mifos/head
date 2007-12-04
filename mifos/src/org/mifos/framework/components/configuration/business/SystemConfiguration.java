@@ -11,7 +11,7 @@ import org.mifos.config.Localization;
 public class SystemConfiguration {
 	
 	  private final MifosCurrency currency;
-	  private final SupportedLocalesEntity mfiLocale;
+	  //private final SupportedLocalesEntity mfiLocale;
 	  private final Locale locale;
 	  private final Integer sessionTimeOut;
 	  private final TimeZone timeZone;
@@ -22,11 +22,11 @@ public class SystemConfiguration {
 	  public SystemConfiguration( 
 					  MifosCurrency currency, int sessionTimeOut, 
 					  int timeZoneOffSet) {
-		  this.mfiLocale = Localization.getInstance().getSupportedLocale();
+		  //this.mfiLocale = Localization.getInstance().getSupportedLocale();
 		  this.currency = currency;
 		  this.sessionTimeOut = sessionTimeOut;
 		  this.timeZone = new SimpleTimeZone(timeZoneOffSet,SimpleTimeZone.getAvailableIDs(timeZoneOffSet)[0]);
-		  this.locale = Localization.getInstance().getLocale();
+		  this.locale = Localization.getInstance().getMainLocale();
 	  }
 
 	  public Locale getMFILocale() {
@@ -34,7 +34,8 @@ public class SystemConfiguration {
 	  }
 	  
 	  public Short getMFILocaleId(){
-		  return mfiLocale.getLocaleId();
+		  //return mfiLocale.getLocaleId();
+		  return Localization.getInstance().getLocaleId();
 	  }
 	  
 	  public MifosCurrency getCurrency() {

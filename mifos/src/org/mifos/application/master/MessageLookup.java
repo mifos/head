@@ -64,7 +64,7 @@ public class MessageLookup implements MessageSourceAware {
 	 * TODO: this will need to change in order to support per user Locale selection
 	 */
 	public String lookup(LocalizedTextLookup namedObject) {
-		Locale locale = Localization.getInstance().getLocale();
+		Locale locale = Localization.getInstance().getMainLocale();
 		return messageSource.getMessage(namedObject.getPropertiesKey(), null, namedObject.getPropertiesKey(), locale);		
 	}
 	

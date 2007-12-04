@@ -1,12 +1,11 @@
 package org.mifos.config;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+
 
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -15,12 +14,11 @@ import org.mifos.application.configuration.persistence.ApplicationConfigurationP
 public class Localization {
 	
 	private static Map<String, SupportedLocalesEntity> localeCache;
-	private static SupportedLocalesEntity supportedLocaleEntity;
-	private static Locale currentLocale;
+	private static Locale mainLocale;  // the Java locale to match with the config defined locale
 	private static Short localeId = -1;
-	private static ConfigLocale configLocale;
-	private static String dateSeparator; 
-	private static DecimalFormat decimalFormat;
+	private static ConfigLocale configLocale;  // class with country code and language defined in the config file
+	
+	
 	
 	private Localization() {
 		localeCache = new ConcurrentHashMap<String, SupportedLocalesEntity>();	
@@ -35,17 +33,22 @@ public class Localization {
 	
 	private void loadMembers()
 	{
-		supportedLocaleEntity = getSupportedLocaleFromConfig();
-		currentLocale = getLocaleFromConfig();
-		localeId = getLocaleIdFromConfigAndCache();
-		dateSeparator = getDateSeparatorForCurrentLocale();
-		decimalFormat = getDecimalFormatForCurrentLocale();
+		mainLocale = getLocaleFromConfig();
+		//localeId = getConfiguredLocaleId();
 	}
 	
+	// this init has to be called when Mifos starts
 	public void init()
 	{
 		initializeLocaleCache();
 		loadMembers();
+	}
+	
+	public  Locale getMainLocale()
+	{
+		if (mainLocale == null)
+			mainLocale = getLocaleFromConfig();
+		return mainLocale;
 	}
 	
 	private static final Localization localization = 
@@ -57,12 +60,12 @@ public class Localization {
 	
 	public  String getCountryCode()
 	{
-		if (configLocale != null)
-			return configLocale.getCountryCode();
+		if (mainLocale != null)
+			return mainLocale.getCountry();
 		else
 		{
-			configLocale = new ConfigLocale();
-			return configLocale.getCountryCode();
+			mainLocale = getConfiguredLocale();
+			return mainLocale.getCountry();
 		}
 		
 	}
@@ -75,7 +78,7 @@ public class Localization {
 		configLocale.clearLanguageCode();
 		configLocale = null;
 	}
-	
+	//	 for the testing purpose
 	public void setCountryCodeLanguageCodeToConfigFile(ConfigLocale locale)
 	{
 		configLocale = locale;
@@ -87,12 +90,12 @@ public class Localization {
 	
 	public String getLanguageCode()
 	{
-		if (configLocale != null)
-			return configLocale.getLanguageCode();
+		if (mainLocale != null)
+			return mainLocale.getLanguage();
 		else
 		{
-			configLocale = new ConfigLocale();
-			return configLocale.getLanguageCode();
+			mainLocale = getConfiguredLocale();
+			return mainLocale.getLanguage();
 		}
 		
 	}
@@ -100,86 +103,69 @@ public class Localization {
 	public String getLanguageName()
 	{
 		
-		if (currentLocale != null)
-			return currentLocale.getDisplayLanguage();
+		if (mainLocale != null)
+			return mainLocale.getDisplayLanguage();
 		else
 		{
-			currentLocale = getLocale();
-			return currentLocale.getDisplayLanguage();
+			mainLocale = getConfiguredLocale();
+			return mainLocale.getDisplayLanguage();
 		}
 	}
 	
 	public String getCountryName()
 	{
 		
-		if (currentLocale != null)
-			return currentLocale.getDisplayCountry();
+		if (mainLocale != null)
+			return mainLocale.getDisplayCountry();
 		else
 		{
-			currentLocale = getLocale();
-			return currentLocale.getDisplayCountry();
+			mainLocale = getConfiguredLocale();
+			return mainLocale.getDisplayCountry();
 		}
 		
 	}
 	
-	// get the language code and country code from config file and search cache for the matched localeId
-	// return the localeId from table Supported_Locale
-	private Short getLocaleIdFromConfigAndCache() {
-		
-		if (supportedLocaleEntity != null)
-			return supportedLocaleEntity.getLocaleId();
-		else
-		{
-			supportedLocaleEntity = getSupportedLocale();
-			return supportedLocaleEntity.getLocaleId();
-		}
-	
-	}
 	
 	public Short getLocaleId()
 	{
 		if (localeId > -1)
 			return localeId;
-		localeId = getLocaleIdFromConfigAndCache();
+		localeId = getConfiguredLocaleId();
 		return localeId;
 	}
 	
-	public SupportedLocalesEntity getSupportedLocale()
+	
+	
+	public Locale getConfiguredLocale()
 	{
-		if (supportedLocaleEntity != null)
-			return supportedLocaleEntity;
+		if (mainLocale != null)
+			return mainLocale;
 		else
 		{
-			supportedLocaleEntity = getSupportedLocaleFromConfig();
-			return supportedLocaleEntity;
+			mainLocale = getLocaleFromConfig();
+			return mainLocale;
 		}
 			
 	}
 	
-	private SupportedLocalesEntity getSupportedLocaleFromConfig()
+	private short getConfiguredLocaleId()
 	{
-		
-		if (configLocale == null)
-			configLocale = new ConfigLocale();
-		String localeKey = configLocale.getLanguageCode().toLowerCase() + "_" + 
-		configLocale.getCountryCode().toUpperCase();
-		supportedLocaleEntity = localeCache.get(localeKey);
-		if (supportedLocaleEntity == null)
-			throw new RuntimeException("Failed to find the supported locale to match with the country code and language code defined in the config file.");
-		return supportedLocaleEntity;
-		
-	}
-	
-	public Locale getLocale()
-	{
-		if (currentLocale != null)
-			return currentLocale;
-		else
+		short localeId = -1;
+		Object[] locales = localeCache.values().toArray();
+		if (locales.length == 0)
+			localeId = 1; // default to English at the beginning when cache is not ready
+		for (int i=0; i < locales.length; i++)
 		{
-			currentLocale = getLocaleFromConfig();
-			return currentLocale;
+			SupportedLocalesEntity localeEntity = (SupportedLocalesEntity)locales[i];
+			if (localeEntity.getCountryCode().equalsIgnoreCase(configLocale.getCountryCode())
+					&& localeEntity.getLanguageCode().equalsIgnoreCase(configLocale.getLanguageCode()))
+			{
+				localeId = localeEntity.getLocaleId();
+				break;
+			}
 		}
-			
+		return localeId;
+		
 	}
 	
 	// from the language code and country code defined in the config return the java Locale class
@@ -189,6 +175,10 @@ public class Localization {
 		
 		if (configLocale == null)
 			configLocale = new ConfigLocale();
+		// need to check if this configLocale is supported by Mifos
+		if ((localeId = getConfiguredLocaleId()) == -1)
+			throw new RuntimeException("This configured locale: language code " + configLocale.getLanguageCode() +
+					", country code " + configLocale.getCountryCode() + " is not supported by Mifos.");
 		Locale locale = new Locale(configLocale.getLanguageCode().toLowerCase(), 
 				configLocale.getCountryCode().toUpperCase());
 		return locale;
@@ -207,107 +197,6 @@ public class Localization {
 		return localeIds;
 	}
 	
-	private DecimalFormat getDecimalFormatForCurrentLocale()
-	{
-		if (currentLocale == null)
-			currentLocale = getLocaleFromConfig();
-		Locale[] locales = NumberFormat.getInstance().getAvailableLocales();
-		Locale tempLocale = null;
-		boolean find = false;
-		DecimalFormat decimalFormat = null;
-		for (int i=0; i < locales.length; i++)
-		{
-			tempLocale = locales[i];
-			if (tempLocale.getCountry().equals(currentLocale.getCountry()) && 
-					(tempLocale.getLanguage().equals(currentLocale.getLanguage())))
-			{
-				find = true;
-				break;
-			}
-		}
-		if (find == false)
-			throw new RuntimeException("NumberFormat doesn't support this country code: " +
-					currentLocale.getCountry() + " and language code: " + currentLocale.getLanguage());
-		NumberFormat format = NumberFormat.getInstance(currentLocale);
-		format = DecimalFormat.getInstance(currentLocale);
-		if (format instanceof DecimalFormat) 
-			decimalFormat = (DecimalFormat)format;
-		return decimalFormat;
-	}
-	
-	public Double getDoubleValueForCurrentLocale(String doubleValueString)
-	{
-		if (decimalFormat == null)
-			decimalFormat = getDecimalFormatForCurrentLocale();
-		Double dNum = null;
-		try
-		{
-			Number num = decimalFormat.parse(doubleValueString);
-			dNum = num.doubleValue();
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e.getMessage());
-		}
-		return dNum;
-	}
-	
-	public String getDoubleValueStringForCurrentLocale(Double dNumber)
-	{
-		if (decimalFormat == null)
-			decimalFormat = getDecimalFormatForCurrentLocale();
-		
-		return decimalFormat.format(dNumber);
-		
-	}
-	
-	public String getDateSeparatorForCurrentLocale()
-	{
-		if (currentLocale == null)
-			currentLocale = getLocaleFromConfig();
-		Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-		Locale tempLocale = null;
-		boolean find = false;
-		for (int i=0; i < locales.length; i++)
-		{
-			tempLocale = locales[i];
-			if (tempLocale.getCountry().equals(currentLocale.getCountry()) && 
-					(tempLocale.getLanguage().equals(currentLocale.getLanguage())))
-			{
-				find = true;
-				break;
-			}
-		}
-		if (find == false)
-			throw new RuntimeException("DateFormat doesn't support this country code: " +
-					currentLocale.getCountry() + " and language code: " + currentLocale.getLanguage());
-		
-		String separator = "";
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
-		String now = format.format(new java.util.Date());
-		char chArray[] = now.toCharArray();
-		for (int i = 0; i < chArray.length; i++) 
-		{
-			if (Character.isDigit(chArray[i]) == false)
-			{
-				separator = String.valueOf(chArray[i]);
-				break;
-			}
-		}
-		return separator;
-		
-	}
-	
-	public String getDateSeparator()
-	{
-		if (dateSeparator != null)
-			return dateSeparator;
-		else
-		{
-			dateSeparator = getDateSeparatorForCurrentLocale();
-			return dateSeparator;
-		}
-	}
 	
 	private void initializeLocaleCache() {
 		List<SupportedLocalesEntity> locales = 

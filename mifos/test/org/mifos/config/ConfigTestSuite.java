@@ -6,6 +6,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 import org.mifos.config.TestLocalization;
 import org.mifos.config.TestFiscalCalendarRules;
+import org.mifos.framework.util.LocalizationConverter;
 
 
 
@@ -25,6 +26,7 @@ public class ConfigTestSuite extends TestSuite {
 		suite.addTest(TestAccountingRules.suite());
 		suite.addTestSuite(TestLocalization.class);
 		suite.addTest(TestFiscalCalendarRules.suite());
+
 		
 		return suite;
 	}

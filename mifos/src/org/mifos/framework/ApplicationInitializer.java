@@ -33,6 +33,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import java.util.Locale;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.
@@ -72,7 +73,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					(new MifosScheduler()).registerTasks();
 					
 					Configuration.getInstance();
-					configureAuditLogValues();
+					configureAuditLogValues(Localization.getInstance().getMainLocale());
 					MifosConfiguration.getInstance().init();
 					
 				}
@@ -179,8 +180,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 		persistance.upgradeDatabase();
 	}
 
-	private void configureAuditLogValues() throws SystemException {
-		AuditConfigurtion.init();
+	private void configureAuditLogValues(Locale locale) throws SystemException {
+		AuditConfigurtion.init(locale);
 	}
 	
 	public void contextDestroyed(ServletContextEvent ctx) {

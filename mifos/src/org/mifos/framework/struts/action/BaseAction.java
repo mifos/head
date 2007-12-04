@@ -51,6 +51,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.LocalizationConverter;
 
 public abstract class BaseAction extends DispatchAction {
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
@@ -246,10 +247,8 @@ public abstract class BaseAction extends DispatchAction {
 	protected Locale getLocale(UserContext userContext) {
 		Locale locale = null;
 		if (userContext != null)
-			locale = userContext.getPreferredLocale();
-		else
-			locale = Configuration.getInstance().getSystemConfig()
-					.getMFILocale();
+			locale = userContext.getCurrentLocale();
+		
 		return locale;
 	}
 
@@ -293,7 +292,8 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected Double getDoubleValue(String str) {
-		return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
+		//return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
+		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) :null;
 	}
 
 	protected Money getMoney(String str) {

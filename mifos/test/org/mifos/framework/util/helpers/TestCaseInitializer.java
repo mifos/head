@@ -66,7 +66,7 @@ public class TestCaseInitializer {
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();
 			MifosConfiguration.getInstance().init();
-			AuditConfigurtion.init();
+			AuditConfigurtion.init(Localization.getInstance().getMainLocale());
 			
 			TestUtils.initializeSpring();
 

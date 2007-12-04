@@ -235,10 +235,8 @@ public class HolidayActionForm extends BaseActionForm {
 		UserContext userContext = (UserContext) request.getSession()
 				.getAttribute(LoginConstants.USERCONTEXT);
 		if (null != userContext) {
-			locale = userContext.getPreferredLocale();
-			if (null == locale) {
-				locale = userContext.getMfiLocale();
-			}
+			locale = userContext.getCurrentLocale();
+			
 		}
 
 		return locale;

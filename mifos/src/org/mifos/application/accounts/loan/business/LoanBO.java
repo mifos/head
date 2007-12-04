@@ -1176,10 +1176,12 @@ public class LoanBO extends AccountBO {
 				this.getAccountState(), stateEntity, this.getPersonnel(), this);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(stateEntity);
-		String systemDate = DateUtils.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		Date currrentDate = DateUtils.getLocaleDate(Configuration.getInstance()
-				.getSystemConfig().getMFILocale(), systemDate);
+		//String systemDate = DateUtils.getCurrentDate(Configuration
+		//		.getInstance().getSystemConfig().getMFILocale());
+		//Date currrentDate = DateUtils.getLocaleDate(Configuration.getInstance()
+		//		.getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate();
+		Date currrentDate = DateUtils.getLocaleDate(systemDate);
 		this.setUpdatedDate(currrentDate);
 
 		// Client performance entry

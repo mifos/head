@@ -72,7 +72,7 @@ public class AuditConfigurtion {
 	public final static Map<Object,EntitiesToLog> entitiesToLog=new HashMap<Object,EntitiesToLog>();
 
 	private PropertyResourceBundle columnNames;
-	private Locale locale;
+	static private Locale locale;
 	private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
 	
 	private List<Short> locales;
@@ -88,11 +88,13 @@ public class AuditConfigurtion {
 		
 		locales = Localization.getInstance().getSupportedLocaleIds();
 		columnNames = (PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/framework/util/resources/audit/ColumnMappingBundle");
-		locale =Configuration.getInstance().getSystemConfig().getMFILocale();
+		locale = Localization.getInstance().getMainLocale();
 	}
+
 	
-	public static  void init() throws SystemException{
+	public static  void init(Locale currentLocale) throws SystemException{
 		auditConfigurtion.createEntityValueMap();
+		locale = currentLocale;
 	}
 	
 

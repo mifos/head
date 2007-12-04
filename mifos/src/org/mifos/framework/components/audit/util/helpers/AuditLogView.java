@@ -27,7 +27,8 @@ public class AuditLogView {
 		this.field = field;
 	}
 	public String getMfiDate() {
-		return DateUtils.getUserLocaleDate(getMfiLocale(), getDate().toString());
+		//return DateUtils.getUserLocaleDate(getMfiLocale(), getDate().toString());
+		return DateUtils.getUserLocaleDate(getDate().toString());
 	}
 
 	public Locale getMfiLocale() {

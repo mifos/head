@@ -2060,10 +2060,8 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void getSavingPerformanceHistory() throws AccountException {
-		String systemDate = DateUtils.getCurrentDate(Configuration
-		.getInstance().getSystemConfig().getMFILocale());
-		java.sql.Date currentDate = DateUtils.getLocaleDate(Configuration
-		.getInstance().getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate();
+		java.sql.Date currentDate = DateUtils.getLocaleDate(systemDate);
 		try {
 			getSavingsPerformance().addMissedDeposits(
 					(new SavingsPersistence()).getMissedDeposits(

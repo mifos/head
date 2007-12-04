@@ -51,7 +51,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.config.Localization;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class DateTag extends BaseInputTag {
 
@@ -140,7 +140,8 @@ public class DateTag extends BaseInputTag {
 			String currentDateValue = returnValue();
             Locale locale = userContext.getPreferredLocale();
             if (null == locale) {
-                locale = userContext.getMfiLocale();
+                //locale = userContext.getMfiLocale();
+            	locale = userContext.getCurrentLocale();
             }
             String output = render(locale, currentDateValue);
 			
@@ -259,7 +260,7 @@ public class DateTag extends BaseInputTag {
 	
 		dateFunction.append("onBlur,");
 		dateFunction.append("makeDateString(");
-		String dateSeparator = Localization.getInstance().getDateSeparator(); 
+		String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 		StringTokenizer tokenizer = new StringTokenizer(format, dateSeparator);
 		while (tokenizer.hasMoreTokens()) {
 			String ch = tokenizer.nextToken();

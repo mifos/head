@@ -46,6 +46,10 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.Localization;
+import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.framework.util.LocalizationConverter;
 
 /**
  * Information about a user, including ID's of their roles.
@@ -81,9 +85,9 @@ public class UserContext implements Serializable {
 
 	private Locale preferredLocale;
 
-	private Short mfiLocaleId;
+	//private Short mfiLocaleId;
 	
-	private Locale mfiLocale;
+	//private Locale mfiLocale;
 
 	/**
 	 * Last login time of the user
@@ -100,11 +104,17 @@ public class UserContext implements Serializable {
 	 */
 	private Short officeLevelId;
 	
+	
 	public UserContext() {
+		preferredLocale = Localization.getInstance().getConfiguredLocale();
+		localeId = Localization.getInstance().getLocaleId();
 	}
 	
-	public UserContext(Locale preferredLocale) {
-		this.preferredLocale = preferredLocale;
+	// this constructor to be used when user can choose a locale at runtime
+	public UserContext(SupportedLocalesEntity localeEntity) {
+		this.preferredLocale = new Locale(localeEntity.getLanguageCode().toLowerCase(), 
+				localeEntity.getCountryCode().toUpperCase());
+		localeId = localeEntity.getLocaleId();
 	}
 
 	public Short getOfficeLevelId() {
@@ -202,6 +212,11 @@ public class UserContext implements Serializable {
 	public void setPreferredLocale(Locale preferredLocale) {
 		this.preferredLocale = preferredLocale;
 	}
+	
+	// we can have more business rules for this
+	public Locale getCurrentLocale() {
+		return preferredLocale;
+	}
 
 	public String getUserGlobalNo() {
 		return userGlobalNo;
@@ -212,26 +227,30 @@ public class UserContext implements Serializable {
 	}
 
 	public Short getMfiLocaleId() {
-		return mfiLocaleId;
+		return localeId;
 	}
 
 	public void setMfiLocaleId(Short mfiLocaleId) {
-		this.mfiLocaleId = mfiLocaleId;
+		//this.mfiLocaleId = mfiLocaleId;
+		this.localeId = mfiLocaleId;
 	}
 
 	public Locale getMfiLocale() {
-		return mfiLocale;
+		//return mfiLocale;
+		return preferredLocale;
 	}
 
 	public void setMfiLocale(Locale mfiLocale) {
-		this.mfiLocale = mfiLocale;
+		//this.mfiLocale = mfiLocale;
+		this.preferredLocale = mfiLocale;
+		
 	}
 	
 	public void dump(PrintStream out) throws IOException {
 		out.print("User " + name + ", id=" + id + 
 			", global=" + userGlobalNo + "\n");
-		out.print("MFI locale ID=" + mfiLocaleId + 
-			", locale=" + mfiLocale + "\n");
+		//out.print("MFI locale ID=" + mfiLocaleId + 
+		//	", locale=" + mfiLocale + "\n");
 		out.print("Locale ID=" + localeId +
 			", locale=" + preferredLocale + "\n");
 	}

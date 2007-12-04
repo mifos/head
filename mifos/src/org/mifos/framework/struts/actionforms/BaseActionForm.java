@@ -25,7 +25,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.config.Localization;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -54,8 +54,7 @@ public class BaseActionForm extends ValidatorActionForm {
 	}
 
 	protected Double getDoubleValue(String str) {
-		//return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
-		return StringUtils.isNullAndEmptySafe(str) ? Localization.getInstance().getDoubleValueForCurrentLocale(str) : null;
+		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) : null;
 	}
 
 	protected boolean getBooleanValue(String value) {

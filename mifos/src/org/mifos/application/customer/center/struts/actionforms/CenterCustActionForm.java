@@ -55,7 +55,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import java.text.DateFormat;
-import org.mifos.config.Localization;
+import org.mifos.framework.util.LocalizationConverter;
 import java.util.Locale;
 
 public class CenterCustActionForm extends CustomerActionForm{
@@ -69,9 +69,8 @@ public class CenterCustActionForm extends CustomerActionForm{
 		if (StringUtils.isNullOrEmpty(mfiJoiningDateDD) || StringUtils.isNullOrEmpty(mfiJoiningDateMM)
 			|| StringUtils.isNullOrEmpty(mfiJoiningDateYY))
 			return null;
-			//return super.getMfiJoiningDate();
-		//kim temporarily commented out return mfiJoiningDateDD + "/" + mfiJoiningDateMM + "/" + mfiJoiningDateYY;
-		String dateSeparator = Localization.getInstance().getDateSeparator();
+			
+		String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 		return mfiJoiningDateDD + dateSeparator + mfiJoiningDateMM + dateSeparator + mfiJoiningDateYY;
 	}
 	

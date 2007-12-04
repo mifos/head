@@ -65,7 +65,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.Localization;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
@@ -452,7 +452,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		if (StringUtils.isNullAndEmptySafe(dateOfBirthDD)
 				&& StringUtils.isNullAndEmptySafe(dateOfBirthMM)
 				&& StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
-			String dateSeparator = Localization.getInstance().getDateSeparator();
+			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 			return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator
 				+ dateOfBirthYY;
 			// kim for I18n return dateOfBirthDD + "/" + dateOfBirthMM + "/"

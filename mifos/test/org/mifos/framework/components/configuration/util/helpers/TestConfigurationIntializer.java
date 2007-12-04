@@ -34,7 +34,7 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		assertNotNull(configuration.getSessionTimeOut());
 		assertNotNull(configuration.getCurrency());
 		assertNotNull(configuration.getMifosTimeZone());
-		assertNotNull(configuration.getMFILocale());
+		//assertNotNull(configuration.getMFILocale());
 		assertNotNull(configuration.getMFILocaleId());
 	}
 

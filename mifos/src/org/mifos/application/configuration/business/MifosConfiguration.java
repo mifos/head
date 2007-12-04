@@ -47,9 +47,9 @@ public class MifosConfiguration {
 	//	this.centerHierarchyExist = centerHierarchyExist;
 	//}
 
-	public Short getMFILocaleId() {
-		return Localization.getInstance().getLocaleId();
-	}
+	//public Short getMFILocaleId() {
+	//	return Localization.getInstance().getLocaleId();
+	//}
 
 	public void init() {
 		initializeLabelCache();

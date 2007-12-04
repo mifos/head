@@ -679,7 +679,8 @@ public class TableTag extends BodyTagSupport {
 			if (null != userContext) {
 				userPreferredLocale = userContext.getPreferredLocale();
 				if (null == userPreferredLocale) {
-					userPreferredLocale = userContext.getMfiLocale();
+					//userPreferredLocale = userContext.getMfiLocale();
+					userPreferredLocale = userContext.getCurrentLocale();
 				}
 			}
 		}

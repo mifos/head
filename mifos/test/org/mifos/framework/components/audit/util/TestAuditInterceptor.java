@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -98,7 +97,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 		Date date = new Date(currentTime);
 		auditLogView.setDate(date.toString());
 		auditLogView.setField("field");
-		auditLogView.setMfiLocale(new Locale("1"));
+		//auditLogView.setMfiLocale(new Locale("1"));
 		auditLogView.setNewValue("new value");
 		auditLogView.setOldValue("old value");
 		auditLogView.setUser("user");
@@ -106,8 +105,8 @@ public class TestAuditInterceptor extends MifosTestCase {
 				new Date(currentTime).toString(), 
 				auditLogView.getDate());
 		assertEquals("value of field", "field", auditLogView.getField());
-		assertEquals("value of Locale", new Locale("1"), auditLogView
-				.getMfiLocale());
+		//assertEquals("value of Locale", new Locale("1"), auditLogView
+		//		.getMfiLocale());
 		assertEquals("value of new value", "new value", auditLogView
 				.getNewValue());
 		assertEquals("value of old value", "old value", auditLogView

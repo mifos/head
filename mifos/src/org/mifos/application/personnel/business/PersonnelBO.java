@@ -776,6 +776,8 @@ public class PersonnelBO extends BusinessObject {
 
 	private UserContext setUserContext() throws PersonnelException {
 		logger.info("Setting  usercontext");
+		// the locales will be set when the UserContext is instantiated
+		// and if the user chooses a locale UserContext will be instantiated with his locale
 		UserContext userContext = new UserContext();
 		userContext.setId(getPersonnelId());
 		userContext.setName(getDisplayName());
@@ -786,19 +788,19 @@ public class PersonnelBO extends BusinessObject {
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
 			updateLastPersonnelLoggedin();
 		}
-		
-		SupportedLocalesEntity supportedLocales = Localization.getInstance().getSupportedLocale();
-		if (null != supportedLocales) {
-			userContext.setLocaleId(supportedLocales.getLocaleId());
-			Locale preferredLocale = Localization.getInstance().getLocale();
-			userContext.setPreferredLocale(preferredLocale);
+		// the commented out code is moved to UserContext constructor
+		//SupportedLocalesEntity supportedLocales = Localization.getInstance().getSupportedLocale();
+		//if (null != supportedLocales) {
+		//	userContext.setLocaleId(supportedLocales.getLocaleId());
+		//	Locale preferredLocale = Localization.getInstance().getCurrentLocale();
+		//	userContext.setPreferredLocale(preferredLocale);
 			
-		}
+		//}
 		userContext.setBranchId(getOffice().getOfficeId());
 		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
 		userContext.setOfficeLevelId(getOffice().getLevel().getId());
-		userContext.setMfiLocaleId(Configuration.getInstance().getSystemConfig().getMFILocaleId());
-		userContext.setMfiLocale(Configuration.getInstance().getSystemConfig().getMFILocale());
+		//userContext.setMfiLocaleId(Configuration.getInstance().getSystemConfig().getMFILocaleId());
+		//userContext.setMfiLocale(Configuration.getInstance().getSystemConfig().getMFILocale());
 		logger.info("got usercontext");
 		return userContext;
 	}
