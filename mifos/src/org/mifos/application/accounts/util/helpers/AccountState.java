@@ -37,27 +37,34 @@
  */
 package org.mifos.application.accounts.util.helpers;
 
+import org.mifos.config.LocalizedTextLookup;
 
-public enum AccountState {
+/*
+ * AccountState corresponds to {@link AccountStateEntity} instances.
+ */
+public enum AccountState implements LocalizedTextLookup {
 
-	LOANACC_PARTIALAPPLICATION(1), 
-	LOANACC_PENDINGAPPROVAL(2), 
-	LOANACC_APPROVED(3), 
-	LOANACC_DBTOLOANOFFICER(4), 
-	LOANACC_ACTIVEINGOODSTANDING(5), 
-	LOANACC_OBLIGATIONSMET(6), 
-	LOANACC_WRITTENOFF(7), 
-	LOANACC_RESCHEDULED(8), 
-	LOANACC_BADSTANDING(9), 
-	LOANACC_CANCEL(10), 
-	CUSTOMERACCOUNT_ACTIVE(11), 
-	CUSTOMERACCOUNT_INACTIVE(12), 
-	SAVINGS_ACC_PARTIALAPPLICATION(13), 
-	SAVINGS_ACC_PENDINGAPPROVAL(14), 
-	SAVINGS_ACC_CANCEL(15), 
-	SAVINGS_ACC_APPROVED(16), 
-	SAVINGS_ACC_CLOSED(17), 
-	SAVINGS_ACC_INACTIVE(18);
+	// AccountState Entity Values
+	LOAN_PARTIAL_APPLICATION(1), 
+	LOAN_PENDING_APPROVAL(2), 
+	LOAN_APPROVED(3), 
+	LOAN_DISBURSED_TO_LOAN_OFFICER(4), 
+	LOAN_ACTIVE_IN_GOOD_STANDING(5), 
+	LOAN_CLOSED_OBLIGATIONS_MET(6), 
+	LOAN_CLOSED_WRITTEN_OFF(7), 
+	LOAN_CLOSED_RESCHEDULED(8), 
+	LOAN_ACTIVE_IN_BAD_STANDING(9), 
+	LOAN_CANCELLED(10), 
+	// CustomerStatus Entity Values
+	CUSTOMER_ACCOUNT_ACTIVE(11), 
+	CUSTOMER_ACCOUNT_INACTIVE(12), 
+	// SavingsStatus Entity Values
+	SAVINGS_PARTIAL_APPLICATION(13), 
+	SAVINGS_PENDING_APPROVAL(14), 
+	SAVINGS_CANCELLED(15), 
+	SAVINGS_ACTIVE(16), 
+	SAVINGS_CLOSED(17), 
+	SAVINGS_INACTIVE(18);
 
 	Short value;
 
@@ -79,4 +86,8 @@ public enum AccountState {
 		   IllegalArgumentException would make more sense. */
 		return null;
 	}
+	
+	public String getPropertiesKey() {
+		return "AccountState." + toString();
+	}	
 }

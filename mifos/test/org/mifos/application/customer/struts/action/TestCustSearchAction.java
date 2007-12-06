@@ -252,7 +252,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}	
 	private void createParentCustomer() {

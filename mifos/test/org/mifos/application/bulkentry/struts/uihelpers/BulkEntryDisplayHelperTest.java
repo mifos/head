@@ -173,9 +173,9 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loan2345", "313f", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);
-		clientAccount = getLoanAccount(AccountState.LOANACC_APPROVED, 
+		clientAccount = getLoanAccount(AccountState.LOAN_APPROVED, 
 				startDate, 1,
 				loanOffering2);
 		java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());

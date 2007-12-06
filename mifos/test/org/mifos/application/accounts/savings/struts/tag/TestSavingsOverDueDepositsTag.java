@@ -67,7 +67,7 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountState.SAVINGS_ACC_APPROVED, 
+				AccountState.SAVINGS_ACTIVE, 
 				TestUtils.makeUser());
 
 	}

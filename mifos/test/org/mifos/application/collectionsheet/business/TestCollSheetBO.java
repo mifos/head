@@ -101,7 +101,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	public void testCollSheetForLoanDisbursal() throws Exception {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
@@ -121,7 +121,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	public void testCollSheetForLoanDisbursalInterestDeducted()
 	throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 2);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 2);
 		LoanBO loan = (LoanBO) accountBO;
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
@@ -426,7 +426,7 @@ public class TestCollSheetBO extends MifosTestCase {
 				name, shortName, currentTime, 
 				customerBO.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, currentTime,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, currentTime,
 				loanOffering);
 
 	}

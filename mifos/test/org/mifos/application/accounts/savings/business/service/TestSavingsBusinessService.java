@@ -187,7 +187,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
 			meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
-				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
+				AccountState.SAVINGS_CLOSED.getValue(), startDate,
 				savingsOffering);
 		List<SavingsBO> savingsAccounts = service.getAllClosedAccounts(center
 				.getCustomerId());
@@ -211,7 +211,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
-				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
+				AccountState.SAVINGS_CLOSED.getValue(), startDate,
 				savingsOffering);
 		TestObjectFactory.simulateInvalidConnection();
 		try {

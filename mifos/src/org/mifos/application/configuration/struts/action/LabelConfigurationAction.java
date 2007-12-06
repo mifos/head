@@ -408,62 +408,62 @@ public class LabelConfigurationAction extends BaseAction {
 						.retrieveAllAccountStateList(AccountTypes.SAVINGS_ACCOUNT));
 		for (AccountStateEntity accountState : accountStateEntityList) {
 			if (accountState.getId().equals(
-					AccountState.LOANACC_PARTIALAPPLICATION.getValue())) {
+					AccountState.LOAN_PARTIAL_APPLICATION.getValue())) {
 				labelConfigurationActionForm.setPartialApplication(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_PENDINGAPPROVAL.getValue())) {
+					AccountState.LOAN_PENDING_APPROVAL.getValue())) {
 				labelConfigurationActionForm.setPendingApproval(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_APPROVED.getValue())) {
+					AccountState.LOAN_APPROVED.getValue())) {
 				labelConfigurationActionForm.setApproved(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_CANCEL.getValue())) {
+					AccountState.LOAN_CANCELLED.getValue())) {
 				labelConfigurationActionForm.setCancel(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue())) {
+					AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
 				labelConfigurationActionForm
 						.setActiveInGoodStanding(accountState.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_BADSTANDING.getValue())) {
+					AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
 				labelConfigurationActionForm
 						.setActiveInBadStanding(accountState.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_OBLIGATIONSMET.getValue())) {
+					AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
 				labelConfigurationActionForm
 						.setClosedObligationMet(accountState.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_WRITTENOFF.getValue())) {
+					AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
 				labelConfigurationActionForm.setClosedWrittenOff(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.LOANACC_RESCHEDULED.getValue())) {
+					AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
 				labelConfigurationActionForm.setClosedRescheduled(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.SAVINGS_ACC_CLOSED.getValue())) {
+					AccountState.SAVINGS_CLOSED.getValue())) {
 				labelConfigurationActionForm.setClosed(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.SAVINGS_ACC_INACTIVE.getValue())) {
+					AccountState.SAVINGS_INACTIVE.getValue())) {
 				labelConfigurationActionForm.setInActive(accountState
 						.getName(localeId));
 			}
 			else if (accountState.getId().equals(
-					AccountState.SAVINGS_ACC_APPROVED.getValue())) {
+					AccountState.SAVINGS_ACTIVE.getValue())) {
 				labelConfigurationActionForm.setActive(accountState
 						.getName(localeId));
 			}

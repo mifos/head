@@ -1151,7 +1151,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				offeringName, shortName, startDate,
 				center.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 

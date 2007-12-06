@@ -298,7 +298,7 @@ public class TestAccountBO extends TestAccount {
 		LoanBO loan = accountBO;
 
 		loan.setAccountState(new AccountStateEntity(
-				AccountState.LOANACC_OBLIGATIONSMET));
+				AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
 		loan.setUserContext(TestUtils.makeUser());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());

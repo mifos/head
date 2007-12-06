@@ -445,21 +445,21 @@ public class AccountBO extends BusinessObject {
 			if (accountStateFlagEntity != null) {
 				setFlag(accountStateFlagEntity);
 			}
-			if (newStatusId.equals(AccountState.LOANACC_CANCEL.getValue())
-					|| newStatusId.equals(AccountState.LOANACC_OBLIGATIONSMET
+			if (newStatusId.equals(AccountState.LOAN_CANCELLED.getValue())
+					|| newStatusId.equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET
 							.getValue())
-					|| newStatusId.equals(AccountState.LOANACC_RESCHEDULED
+					|| newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED
 							.getValue())
-					|| newStatusId.equals(AccountState.LOANACC_WRITTENOFF
+					|| newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF
 							.getValue())
-					|| newStatusId.equals(AccountState.SAVINGS_ACC_CANCEL
+					|| newStatusId.equals(AccountState.SAVINGS_CANCELLED
 							.getValue()))
 				this.setClosedDate(new Date(System.currentTimeMillis()));
-			if(newStatusId.equals(AccountState.LOANACC_WRITTENOFF
+			if(newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF
 					.getValue())) {
 				writeOff();
 			}
-			if(newStatusId.equals(AccountState.LOANACC_RESCHEDULED.getValue())) {
+			if(newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
 				updateClientPerformanceOnRescheduleLoan();
 			}
 			MifosLogManager

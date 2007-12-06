@@ -68,7 +68,7 @@ public class TestCheckListPersistence extends MifosTestCase {
 	public void testRetreiveAllAccountCheckLists() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), (short) 1);
@@ -86,7 +86,7 @@ public class TestCheckListPersistence extends MifosTestCase {
 						.getValue(), (short) 1);
 		CheckListBO checkList1 = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		List<CustomerCheckListBO> checkLists = new CheckListPersistence()
 				.retreiveAllCustomerCheckLists();
 		assertNotNull(checkLists);

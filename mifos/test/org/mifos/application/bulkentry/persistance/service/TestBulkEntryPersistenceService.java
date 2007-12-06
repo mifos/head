@@ -72,7 +72,7 @@ public class TestBulkEntryPersistenceService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -90,7 +90,7 @@ public class TestBulkEntryPersistenceService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());

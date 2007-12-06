@@ -27,6 +27,7 @@ import org.mifos.application.accounts.struts.action.TestApplyChargeAction;
 import org.mifos.application.accounts.struts.action.TestApplyPaymentAction;
 import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
+import org.mifos.application.accounts.util.helper.TestAccountState;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
 
 public class AccountTestSuite extends TestSuite {
@@ -64,6 +65,7 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestApplyChargeAction.class);
 		
 		testSuite.addTest(AddAccountStateFlagTest.suite());
+		testSuite.addTestSuite(TestAccountState.class);
 		return testSuite;
 		
 	}

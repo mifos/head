@@ -84,11 +84,11 @@ public class TestBulkEntryView extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
@@ -135,10 +135,10 @@ public class TestBulkEntryView extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", group, AccountState.LOANACC_APPROVED, 
+				"42423142341", group, AccountState.LOAN_APPROVED, 
 				startDate, loanOffering, 1);
 		HibernateUtil.closeSession();
 
@@ -185,10 +185,10 @@ public class TestBulkEntryView extends MifosTestCase {
 				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", group, 
-				AccountState.LOANACC_APPROVED, 
+				AccountState.LOAN_APPROVED, 
 				new Date(System.currentTimeMillis()), loanOffering, 1);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", group, AccountState.LOANACC_APPROVED, 
+				"42423142341", group, AccountState.LOAN_APPROVED, 
 				new Date(System
 						.currentTimeMillis()), loanOffering, 1);
 		HibernateUtil.closeSession();

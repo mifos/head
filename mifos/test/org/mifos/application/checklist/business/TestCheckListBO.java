@@ -66,7 +66,7 @@ public class TestCheckListBO extends MifosTestCase {
 		ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory
 				.getObject(ProductTypeEntity.class, (short) 2);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		accountCheckList = new AccountCheckListBO(productTypeEntity,
 				accountStateEntity, "Account CheckList", Short.valueOf("1"),
 				getCheckListDetails(), Short.valueOf("1"), (short) 1);
@@ -168,7 +168,7 @@ public class TestCheckListBO extends MifosTestCase {
 	public void testUpdateAccountCheckList() throws Exception {
 		accountCheckList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				CheckListConstants.STATUS_ACTIVE);
 		HibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
@@ -195,7 +195,7 @@ public class TestCheckListBO extends MifosTestCase {
 		ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory
 				.getObject(ProductTypeEntity.class, (short) 2);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		AccountCheckListBO accountCheckList = new AccountCheckListBO(productTypeEntity,
 				accountStateEntity, "Account CheckList", Short.valueOf("1"),
 				getCheckListDetails(), Short.valueOf("1"), (short) 1);
@@ -249,14 +249,14 @@ public class TestCheckListBO extends MifosTestCase {
 	public void testUpdateAccountCheckListInvalidState() throws Exception {
 		AccountCheckListBO accountCheckList1 = TestObjectFactory
 				.createAccountChecklist(ProductType.LOAN.getValue(),
-						AccountState.LOANACC_APPROVED,
+						AccountState.LOAN_APPROVED,
 						CheckListConstants.STATUS_ACTIVE);
 		accountCheckList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				CheckListConstants.STATUS_ACTIVE);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountState.LOANACC_APPROVED);
+				AccountState.LOAN_APPROVED);
 		HibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());

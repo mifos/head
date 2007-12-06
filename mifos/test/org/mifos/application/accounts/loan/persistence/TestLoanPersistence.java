@@ -151,7 +151,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 	public void testGetFeeAmountAtDisbursement() throws Exception {
 		loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting,
-				AccountState.LOANACC_APPROVED);
+				AccountState.LOAN_APPROVED);
 		assertEquals(30.0, loanPersistence
 				.getFeeAmountAtDisbursement(loanAccountForDisbursement
 						.getAccountId()));
@@ -206,7 +206,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetLastPaymentAction() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		loanAccountForDisbursement = getLoanAccount(
-				AccountState.LOANACC_APPROVED, startDate, 1);
+				AccountState.LOAN_APPROVED, startDate, 1);
 		disburseLoan(startDate);
 		assertEquals("Last payment action should be 'PAYMENT'",
 				AccountActionTypes.DISBURSAL.getValue(), loanPersistence
@@ -226,7 +226,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetLastLoanAmountForCustomer() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		loanAccountForDisbursement = getLoanAccount(
-				AccountState.LOANACC_APPROVED, startDate, 1);
+				AccountState.LOAN_APPROVED, startDate, 1);
 		disburseLoan(startDate);
 		assertEquals(((LoanBO) loanAccountForDisbursement).getLoanAmount(),
 				loanPersistence.getLastLoanAmountForCustomer(group
@@ -278,7 +278,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				meeting);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -324,7 +324,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				meeting);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142323", group,
-				AccountState.LOANACC_BADSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_BAD_STANDING, 
 				startDate, loanOffering);
 	}
 	private LoanBO getGoodAccount() {
@@ -337,7 +337,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				meeting);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142342", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 	}
 

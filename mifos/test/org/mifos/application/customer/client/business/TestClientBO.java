@@ -192,7 +192,7 @@ public class TestClientBO extends MifosTestCase {
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
-				center, AccountState.SAVINGS_ACC_APPROVED, 
+				center, AccountState.SAVINGS_ACTIVE, 
 				new java.util.Date(), savingsOffering, 
 				TestObjectFactory.getContext());
 		client = createClient(CustomerStatus.CLIENT_PENDING);
@@ -226,7 +226,7 @@ public class TestClientBO extends MifosTestCase {
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount(
-				"globalNum", group, AccountState.SAVINGS_ACC_APPROVED, 
+				"globalNum", group, AccountState.SAVINGS_ACTIVE, 
 				new java.util.Date(), savingsOffering, 
 				TestObjectFactory.getContext());
 		client = createClient(CustomerStatus.CLIENT_PENDING);
@@ -259,7 +259,7 @@ public class TestClientBO extends MifosTestCase {
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
-				center, AccountState.SAVINGS_ACC_APPROVED, 
+				center, AccountState.SAVINGS_ACTIVE, 
 				new java.util.Date(), savingsOffering, 
 				TestObjectFactory.getContext());
 		assertEquals(0,accountBO.getAccountActionDates().size());

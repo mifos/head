@@ -330,7 +330,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 
-		account = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		account = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		HibernateUtil.closeSession();
 		LoanAccountsProductView loanAccountsProductView = getAccountView(account);
 		loanAccountsProductView.setDisBursementAmountEntered(account.getLoanAmount().toString());
@@ -341,7 +341,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 		account = TestObjectFactory.getObject(LoanBO.class, account
 				.getAccountId());
-		assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(),
+		assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(),
 				account.getAccountState().getId());
 	}
 
@@ -358,7 +358,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				currentDate,
 				center.getCustomerMeeting().getMeeting());
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				currentDate, loanOffering);
 		HibernateUtil.closeSession();
 

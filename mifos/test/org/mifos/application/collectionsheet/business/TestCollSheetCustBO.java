@@ -226,7 +226,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 		return accountBO;

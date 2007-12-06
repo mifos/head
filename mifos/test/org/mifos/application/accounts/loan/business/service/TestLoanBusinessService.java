@@ -97,7 +97,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
@@ -137,7 +137,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 
@@ -179,7 +179,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 

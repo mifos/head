@@ -101,7 +101,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		return TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
@@ -196,8 +196,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan =TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
-				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
 				personnel, loan);
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
@@ -207,7 +207,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		for (AccountStatusChangeHistoryEntity accountStatus : loan.getAccountStatusChangeHistory()) {
 			assertEquals(loan.getAccountId(),accountStatus.getAccount().getAccountId());
 			assertNotNull(accountStatus.getAccountStatusChangeId());
-			assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(),accountStatus.getNewStatus().getId());
+			assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(),accountStatus.getNewStatus().getId());
 			assertEquals(personnel.getPersonnelId(),accountStatus.getPersonnel().getPersonnelId());
 			assertEquals(personnel.getDisplayName(),accountStatus.getPersonnel().getDisplayName());
 			assertEquals("-",accountStatus.getOldStatusName());
@@ -240,16 +240,16 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		applyPayment(loan,700);
 		loan=TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
-				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
 				personnel, loan);
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		loan=TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());		
 		historyEntity = new AccountStatusChangeHistoryEntity(
-				new AccountStateEntity(AccountState.LOANACC_BADSTANDING),
-				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_BAD_STANDING),
+				new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
 				personnel, loan);
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
@@ -266,7 +266,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
-		assertEquals(AccountState.LOANACC_BADSTANDING.getValue(),loan.getAccountState().getId());
+		assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),loan.getAccountState().getId());
 		verifyForward("applyadj_success");
 	}
 
@@ -347,7 +347,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 	

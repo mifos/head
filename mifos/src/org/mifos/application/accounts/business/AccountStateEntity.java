@@ -4,13 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.config.LocalizedTextLookup;
 
 /**
  * Should be replaced by {@link AccountState}
  */
-public class AccountStateEntity extends StateEntity {
+public class AccountStateEntity extends StateEntity implements LocalizedTextLookup {
 
 	private ProductTypeEntity prdType;
 
@@ -45,4 +47,10 @@ public class AccountStateEntity extends StateEntity {
 	public void setOptional(Short optional) {
 		this.optional = optional;
 	}
+	
+	public String getPropertiesKey() {
+		return getLookUpValue().getLookUpEntity().getEntityType() + "." + getLookUpValue().getLookUpName();
+	}	
+
+	
 }

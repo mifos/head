@@ -106,7 +106,7 @@ public class CustomerAccountBO extends AccountBO {
 	public CustomerAccountBO(UserContext userContext, CustomerBO customer,
 			List<FeeView> fees) throws AccountException {
 		super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT,
-				AccountState.CUSTOMERACCOUNT_ACTIVE);
+				AccountState.CUSTOMER_ACCOUNT_ACTIVE);
 		if (fees != null) {
 			for (FeeView feeView : fees) {
 				FeeBO fee = new FeePersistence()

@@ -1471,7 +1471,7 @@ public class GroupBOTest extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loandsdasd", "fsad", startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd",
 				ApplicableTo.CLIENTS, startDate, 
@@ -1479,7 +1479,7 @@ public class GroupBOTest extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 

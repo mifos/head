@@ -275,7 +275,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		try {
 			masterService.getMasterDataEntity(
 				AccountStateEntity.class,
-				AccountState.LOANACC_PARTIALAPPLICATION.getValue());
+				AccountState.LOAN_PARTIAL_APPLICATION.getValue());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);

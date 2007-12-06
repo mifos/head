@@ -202,6 +202,6 @@ public class EditStatusActionForm extends BaseActionForm {
 	}
 	
 	private boolean isNewStatusHasFlag() {
-		return (Short.valueOf(newStatusId).equals(AccountState.LOANACC_CANCEL.getValue())) || (Short.valueOf(newStatusId).equals(AccountState.SAVINGS_ACC_CANCEL.getValue()));
+		return (Short.valueOf(newStatusId).equals(AccountState.LOAN_CANCELLED.getValue())) || (Short.valueOf(newStatusId).equals(AccountState.SAVINGS_CANCELLED.getValue()));
 	}
 }

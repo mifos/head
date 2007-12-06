@@ -143,8 +143,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetForCancelledLoanAccount() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
-		accountBO.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+		accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed");
 		accountBO.update();
 		HibernateUtil.commitTransaction();
@@ -237,7 +237,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetAllActivity() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getAllActivity");
@@ -253,7 +253,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetInstallmentDetails() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		for (AccountActionDateEntity accountActionDateEntity : loan
 				.getAccountActionDates()) {
@@ -288,7 +288,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testGet() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 
 		setRequestPathInfo("/loanAccountAction.do");
@@ -311,7 +311,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testGetWithPayment() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		disburseLoan(startDate);
 		LoanBO loan = (LoanBO) accountBO;
 
@@ -341,7 +341,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testGetLoanRepaymentSchedule() {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getLoanRepaymentSchedule");
@@ -354,7 +354,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testViewStatusHistory() {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 
 		setRequestPathInfo("/loanAccountAction.do");
@@ -1054,7 +1054,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		try {
 			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(AccountState.LOANACC_APPROVED,
+			accountBO = getLoanAccount(AccountState.LOAN_APPROVED,
 					startDate, 1);
 			LoanBO loan = (LoanBO) accountBO;
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
@@ -1083,7 +1083,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		try {
 			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(AccountState.LOANACC_APPROVED,
+			accountBO = getLoanAccount(AccountState.LOAN_APPROVED,
 					startDate, 1);
 			LoanBO loan = (LoanBO) accountBO;
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
@@ -1167,9 +1167,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		String newDate = offSetCurrentDate(14, userContext.getPreferredLocale());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		((LoanBO) accountBO).setBusinessActivityId(1);
-		accountBO.changeStatus(AccountState.LOANACC_APPROVED.getValue(), null,
+		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
 				"status changed");
 		accountBO.update();
 
@@ -1583,7 +1583,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 
@@ -1664,7 +1664,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 

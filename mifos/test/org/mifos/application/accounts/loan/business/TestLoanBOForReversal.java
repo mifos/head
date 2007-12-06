@@ -90,7 +90,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		loan = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_APPROVED, startDate, loanOffering);
+				AccountState.LOAN_APPROVED, startDate, loanOffering);
         long numberOfTransactions =
             getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         // TODO: numberOfTransactions needs to be 0, but is 8
@@ -186,7 +186,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 				noOfFinancialTransactionsAfterReversal);
 		assertEquals(2 * noOfTransactions, noOfTransactionsAfterReversal);
 		assertEquals(2 * noOfActivities, loan.getLoanActivityDetails().size());
-		assertEquals(AccountState.LOANACC_CANCEL, loan.getState());
+		assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
 		assertEquals(1, loan.getAccountFlags().size());
 		for (AccountFlagMapping accountFlagMapping : loan.getAccountFlags()) {
 			assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),
@@ -240,7 +240,7 @@ public class TestLoanBOForReversal extends MifosTestCase {
 		assertEquals((3 * noOfTransactions) - 1, noOfTransactionsAfterReversal);
 		assertEquals((3 * noOfActivities) - 1, loan.getLoanActivityDetails()
 				.size());
-		assertEquals(AccountState.LOANACC_CANCEL, loan.getState());
+		assertEquals(AccountState.LOAN_CANCELLED, loan.getState());
 		assertEquals(1, loan.getAccountFlags().size());
 		for (AccountFlagMapping accountFlagMapping : loan.getAccountFlags()) {
 			assertEquals(AccountStateFlag.LOAN_REVERSAL.getValue(),

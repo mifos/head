@@ -280,7 +280,7 @@ public class CenterBOTest extends MifosTestCase {
 				.getMfiJoiningDate().getTime()));
 		assertEquals(officeId, center.getOffice().getOfficeId());
 		assertEquals(2, center.getCustomFields().size());
-		assertEquals(AccountState.CUSTOMERACCOUNT_ACTIVE.getValue(), center
+		assertEquals(AccountState.CUSTOMER_ACCOUNT_ACTIVE.getValue(), center
 				.getCustomerAccount().getAccountState().getId());
 		// check if values in account fees are entered.
 		assertNotNull(center.getCustomerAccount().getAccountFees(

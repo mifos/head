@@ -154,7 +154,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 	}
@@ -338,7 +338,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			for (AccountTrxnEntity trxn : payment.getAccountTrxns())
 				accountTrxn = (SavingsTrxnDetailEntity) trxn;
 			savings.setUserContext(TestObjectFactory.getContext());
-			savings.changeStatus(AccountState.SAVINGS_ACC_CLOSED.getValue(),
+			savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(),
 					AccountStateFlag.SAVINGS_REJECTED.getValue(), "");
 			financialBusinessService.buildAccountingEntries(accountTrxn);
 			Set<FinancialTransactionBO> financialTrxns = accountTrxn

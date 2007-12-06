@@ -158,8 +158,8 @@ public class LoanAccountView extends View {
 
 	public boolean isDisbursalAccount() {
 		return getAccountSate()
-				.equals(AccountState.LOANACC_APPROVED.getValue())
+				.equals(AccountState.LOAN_APPROVED.getValue())
 				|| getAccountSate().equals(
-						AccountState.LOANACC_DBTOLOANOFFICER.getValue());
+						AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue());
 	}
 }

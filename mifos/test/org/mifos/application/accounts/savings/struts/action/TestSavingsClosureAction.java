@@ -102,7 +102,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsProduct(
 			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				client1, AccountState.SAVINGS_ACC_APPROVED);
+				client1, AccountState.SAVINGS_ACTIVE);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsClosureAction.do");
@@ -140,7 +140,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		createClients();
 		savingsOffering = createSavingsOffering();
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountState.SAVINGS_ACC_APPROVED);
+				group, AccountState.SAVINGS_ACTIVE);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsClosureAction.do");
@@ -348,7 +348,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				savings.getAccountId());
 		
 		assertEquals(new Money(), savings.getSavingsBalance());
-		assertEquals(AccountState.SAVINGS_ACC_CLOSED.getValue(), savings.getAccountState().getId());
+		assertEquals(AccountState.SAVINGS_CLOSED.getValue(), savings.getAccountState().getId());
 	}
 
 	

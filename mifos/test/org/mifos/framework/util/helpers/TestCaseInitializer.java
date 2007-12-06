@@ -66,9 +66,13 @@ public class TestCaseInitializer {
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();
 			MifosConfiguration.getInstance().init();
+			
+			/* initializeSpring needs to come before AuditConfiguration.init
+			 * in order for MasterDataEntity data to be loaded.
+			 */
+			TestUtils.initializeSpring();
 			AuditConfigurtion.init(Localization.getInstance().getMainLocale());
 			
-			TestUtils.initializeSpring();
 
 		} catch (Exception e) {
 			e.printStackTrace();

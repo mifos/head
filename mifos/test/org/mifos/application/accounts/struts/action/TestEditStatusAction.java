@@ -95,7 +95,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "loan");
@@ -119,7 +119,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
@@ -161,7 +161,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
@@ -195,7 +195,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "previous");
 		addRequestParameter("input", "loan");
@@ -226,7 +226,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
@@ -296,7 +296,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
-				AccountState.LOANACC_PARTIALAPPLICATION);
+				AccountState.LOAN_PARTIAL_APPLICATION);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
@@ -304,7 +304,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("notes", "Test");
 		addRequestParameter("accountTypeId", accountBO.getType()
 				.getValue().toString());
-		addRequestParameter("newStatusId", AccountState.LOANACC_CANCEL
+		addRequestParameter("newStatusId", AccountState.LOAN_CANCELLED
 				.getValue().toString());
 		addRequestParameter("flagId", AccountStateFlag.LOAN_WITHDRAW.getValue()
 				.toString());
@@ -322,7 +322,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_PARTIAL_APPLICATION);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
@@ -371,7 +371,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
@@ -380,7 +380,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("accountTypeId", accountBO.getType()
 				.getValue().toString());
 		addRequestParameter("input", "savings");
-		addRequestParameter("newStatusId", AccountState.SAVINGS_ACC_CANCEL
+		addRequestParameter("newStatusId", AccountState.SAVINGS_CANCELLED
 				.getValue().toString());
 		addRequestParameter("flagId", AccountStateFlag.SAVINGS_BLACKLISTED
 				.getValue().toString());
@@ -397,7 +397,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_PARTIAL_APPLICATION);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request
 				.getSession());

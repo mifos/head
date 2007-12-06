@@ -314,7 +314,7 @@ public class AccountStateMachines {
 		if (accountStateEntityListForLoan != null
 				&& accountStateEntityListForLoan.size() > 0) {
 			for (AccountStateEntity accountState : accountStateEntityListForLoan) {
-				if (accountState.getId().equals(AccountState.LOANACC_CANCEL.getValue())) {
+				if (accountState.getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
 					for (Iterator<AccountStateFlagEntity> iter = accountState
 							.getFlagSet().iterator(); iter.hasNext();) {
 						AccountStateFlagEntity accountStateFlag = iter.next();

@@ -75,7 +75,7 @@ public class LoanArrearsHelper extends TaskHelper {
 				LoanBO loanBO = (LoanBO) accountPersistence
 						.getAccount(accountId);
 				if (loanBO.getAccountState().equals(
-						AccountState.LOANACC_PENDINGAPPROVAL))
+						AccountState.LOAN_PENDING_APPROVAL))
 					throw new Exception("Loan was peding approval");
 				loanBO.handleArrears();
 				HibernateUtil.commitTransaction();

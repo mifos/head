@@ -171,13 +171,13 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		savingsOffering4 = createSavingsOffering("prd4", "wsas", 
 				InterestCalcType.AVERAGE_BALANCE);
 		savings1 = helper.createSavingsAccount(savingsOffering1, group,
-				AccountState.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACTIVE, userContext);
 		savings2 = helper.createSavingsAccount(savingsOffering2, group,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
+				AccountState.SAVINGS_PARTIAL_APPLICATION, userContext);
 		savings3 = helper.createSavingsAccount(savingsOffering3, group,
-				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
+				AccountState.SAVINGS_PENDING_APPROVAL, userContext);
 		savings4 = helper.createSavingsAccount(savingsOffering4, group,
-				AccountState.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACTIVE, userContext);
 	}
 
 	private SavingsOfferingBO createSavingsOffering(String offeringName,

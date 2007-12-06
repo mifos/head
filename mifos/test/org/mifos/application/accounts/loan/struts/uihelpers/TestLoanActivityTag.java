@@ -47,7 +47,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 	public void testBuildLeftHeaderRows()throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(
-			AccountState.LOANACC_APPROVED, startDate, 1);
+			AccountState.LOAN_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
 		assertContains("100.0",new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)).toString());
@@ -57,7 +57,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 	public void testBuildRightHeaderRows()throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(
-			AccountState.LOANACC_APPROVED, startDate, 1);
+			AccountState.LOAN_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
 		assertContains("100.0",new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)).toString());

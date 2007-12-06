@@ -157,7 +157,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
 				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
@@ -185,7 +185,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
 				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
@@ -213,7 +213,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
 				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
@@ -259,7 +259,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
-		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+		accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
 				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
@@ -311,7 +311,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 				startDate, meeting);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 }

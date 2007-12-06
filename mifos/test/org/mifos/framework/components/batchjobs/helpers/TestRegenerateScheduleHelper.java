@@ -546,7 +546,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
 			meetingIntCalc, meetingIntPost);
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering, group,
-				AccountState.SAVINGS_ACC_APPROVED, savingsOffering
+				AccountState.SAVINGS_ACTIVE, savingsOffering
 						.getRecommendedAmount(), TestObjectFactory
 						.getCustomFields());
 		savings.save();
@@ -564,7 +564,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		loanOfferingBO = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOfferingBO);
 	}
 

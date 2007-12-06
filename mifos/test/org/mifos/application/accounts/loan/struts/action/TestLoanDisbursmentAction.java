@@ -210,9 +210,9 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	private void createInitialObjects(int disbursalType) {
 	//	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	//	String date = sdf.format(currentDate);
-		loanBO = getLoanAccount(AccountState.LOANACC_APPROVED,
+		loanBO = getLoanAccount(AccountState.LOAN_APPROVED,
 				currentDate, disbursalType);
-		secondLoanBO = getLoanAccountInGoodStanding(AccountState.LOANACC_ACTIVEINGOODSTANDING,
+		secondLoanBO = getLoanAccountInGoodStanding(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				currentDate, disbursalType);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());

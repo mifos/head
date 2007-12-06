@@ -211,7 +211,7 @@ public class TestAccountService extends MifosTestCase {
 		incrementInstallmentDate(accountBO, 1, Short.valueOf("1"));
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(
-				AccountState.LOANACC_DBTOLOANOFFICER.getValue(),null,"");
+				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(),null,"");
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,
@@ -284,14 +284,14 @@ public class TestAccountService extends MifosTestCase {
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
 				Short.valueOf("1"), AccountTypes.SAVINGS_ACCOUNT, null);
 		String statusNameForSavings = service.getStatusName(Short.valueOf("1"),
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION,
+				AccountState.SAVINGS_PARTIAL_APPLICATION,
 				AccountTypes.SAVINGS_ACCOUNT);
 		assertNotNull(statusNameForSavings);
 
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
 				Short.valueOf("1"), AccountTypes.LOAN_ACCOUNT, null);
 		String statusNameForLoan = service.getStatusName(Short.valueOf("1"),
-				AccountState.LOANACC_PARTIALAPPLICATION,
+				AccountState.LOAN_PARTIAL_APPLICATION,
 				AccountTypes.LOAN_ACCOUNT);
 		assertNotNull(statusNameForLoan);
 	}
@@ -315,7 +315,7 @@ public class TestAccountService extends MifosTestCase {
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
 				Short.valueOf("1"), AccountTypes.SAVINGS_ACCOUNT, null);
 		List<AccountStateEntity> statusListForSavings = service.getStatusList(
-				new AccountStateEntity(AccountState.SAVINGS_ACC_PARTIALAPPLICATION),
+				new AccountStateEntity(AccountState.SAVINGS_PARTIAL_APPLICATION),
 				AccountTypes.SAVINGS_ACCOUNT, TestUtils.makeUser()
 						.getLocaleId());
 		assertEquals(2, statusListForSavings.size());
@@ -324,7 +324,7 @@ public class TestAccountService extends MifosTestCase {
 				Short.valueOf("1"), AccountTypes.LOAN_ACCOUNT, null);
 		List<AccountStateEntity> statusListForLoan = service
 				.getStatusList(new AccountStateEntity(
-						AccountState.LOANACC_PARTIALAPPLICATION),
+						AccountState.LOAN_PARTIAL_APPLICATION),
 						AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		assertEquals(2, statusListForLoan.size());
 		HibernateUtil.closeSession();
@@ -359,7 +359,7 @@ public class TestAccountService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate,
 				loanOffering);
 	}

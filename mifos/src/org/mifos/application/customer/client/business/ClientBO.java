@@ -811,7 +811,7 @@ public class ClientBO extends CustomerBO {
 					SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering.getSavingsOffering().getPrdOfferingId());
 					if(savingsOffering.isActive()){
 						List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACC_APPROVED,savingsOffering.getRecommendedAmount(), createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
+						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACTIVE,savingsOffering.getRecommendedAmount(), createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
 					}
 				} catch (PersistenceException pe) {
 					throw new CustomerException(pe);

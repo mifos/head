@@ -152,7 +152,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 	public void testGetStatusChecklist() throws Exception {
 		accountCheckList = TestObjectFactory
 				.createAccountChecklist(AccountTypes.SAVINGS_ACCOUNT.getValue(),
-						AccountState.SAVINGS_ACC_PARTIALAPPLICATION, Short
+						AccountState.SAVINGS_PARTIAL_APPLICATION, Short
 								.valueOf("1"));
 		List statusCheckList = accountPersistence.getStatusChecklist(Short
 				.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT.getValue());
@@ -181,7 +181,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 					.getPersonnel(userContext.getId());
 			savingsOffering = helper.createSavingsOffering("effwe", "231");
 			savings = new SavingsBO(userContext, savingsOffering, group,
-					AccountState.SAVINGS_ACC_APPROVED, savingsOffering
+					AccountState.SAVINGS_ACTIVE, savingsOffering
 							.getRecommendedAmount(), null);
 
 			AccountPaymentEntity payment = helper
@@ -281,7 +281,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
-		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
 				null, "");
 
 		savings1 = helper.createSavingsAccount("000100000000022",
@@ -328,7 +328,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings.setUserContext(TestObjectFactory.getContext());
-		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+		savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
 				null, "");
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
@@ -439,7 +439,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, 
+				AccountState.SAVINGS_PENDING_APPROVAL, 
 				new Date(), savingsOffering, userContext);
 	}
 

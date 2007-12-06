@@ -1,8 +1,11 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-
+/*
+ * ProductType corresponds to ProductTypeEntity instances.
+ */
 public enum ProductType {
-	LOAN((short) 1), SAVINGS((short) 2);
+	LOAN((short) 1), 
+	SAVINGS((short) 2);
 
 	Short value;
 

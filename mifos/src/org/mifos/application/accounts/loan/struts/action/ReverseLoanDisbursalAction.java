@@ -131,9 +131,9 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
 		}
 		if (!(loan.getAccountState().getId().equals(
-				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue()) || loan
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue()) || loan
 				.getAccountState().getId().equals(
-						AccountState.LOANACC_BADSTANDING.getValue()))) {
+						AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()))) {
 			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
 		}
 		List<LoanActivityView> payments = getApplicablePayments(loan);

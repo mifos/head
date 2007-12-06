@@ -799,12 +799,12 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	public void testGetAllClosedAccounts() throws Exception {
 		getCustomer();
-		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
-		clientAccount.changeStatus(AccountState.LOANACC_WRITTENOFF.getValue(),
+		clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(),
 				null, "WITHDRAW LOAN ACCOUNT");
-		clientSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+		clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED
 				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
 		TestObjectFactory.updateObject(groupAccount);
@@ -820,12 +820,12 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	
 	public void testFailureGetAllClosedAccounts() throws Exception {
 		getCustomer();
-		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
-		clientAccount.changeStatus(AccountState.LOANACC_WRITTENOFF.getValue(),
+		clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(),
 				null, "WITHDRAW LOAN ACCOUNT");
-		clientSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+		clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED
 				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
 		TestObjectFactory.updateObject(groupAccount);
@@ -922,7 +922,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -1004,7 +1004,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 
@@ -1025,10 +1025,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering2);
 		clientSavingsAccount = getSavingsAccount(client, "SavingPrd11", "abc2");
 	}

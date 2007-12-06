@@ -660,10 +660,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);
 		clientAccount = getLoanAccount(
-				AccountState.LOANACC_APPROVED, startDate, 1,
+				AccountState.LOAN_APPROVED, startDate, 1,
 				loanOffering2);
 		Date currentDate = new Date(System.currentTimeMillis());
 		SavingsOfferingBO savingsOffering1 = 
@@ -770,10 +770,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loan2345", "313f", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory
@@ -920,7 +920,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 	}
 

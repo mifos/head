@@ -161,24 +161,24 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO, 
-			AccountState.LOANACC_APPROVED, startDate, loanOffering);
+			AccountState.LOAN_APPROVED, startDate, loanOffering);
 	}
 
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue(), 
+				AccountState.SAVINGS_PARTIAL_APPLICATION.getValue(), 
 				startDate, savingsOffering);
 	}
 	
 	private void createAccounts() throws Exception  {
 		savings1 = getSavingsAccount(group,"fsaf6","ads6");
-		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_BLACKLISTED.getValue(),"status changed for savings");
+		savings1.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),AccountStateFlag.SAVINGS_BLACKLISTED.getValue(),"status changed for savings");
 		savings1.update();
 		loan1 = getLoanAccount(group,"fdsfsdf","2cvs");
 		loan1.update();
-		loan1.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_OTHER.getValue(),"status changed for loan");
+		loan1.changeStatus(AccountState.LOAN_CANCELLED.getValue(),AccountStateFlag.LOAN_OTHER.getValue(),"status changed for loan");
 		HibernateUtil.commitTransaction();
 		savings2 = getSavingsAccount(group,"fsaf65","ads5");
 		loan2 = getLoanAccount(client,"rtwetrtwert","5rre");

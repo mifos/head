@@ -187,7 +187,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -346,7 +346,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		UserContext user = new UserContext();
 		user.setId(PersonnelConstants.SYSTEM_USER);
 		account = TestObjectFactory.createSavingsAccount("000100000000020",
-				group, AccountState.SAVINGS_ACC_APPROVED, currentDate,
+				group, AccountState.SAVINGS_ACTIVE, currentDate,
 				savingsOffering, user);
 		HibernateUtil.closeSession();
 		List<SavingsBO> savingsList = customerPersistence
@@ -466,14 +466,14 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
-				client, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		account = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				loanBO.getAccountId());
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountState.LOANACC_OBLIGATIONSMET);
+				AccountState.LOAN_CLOSED_OBLIGATIONS_MET);
 		account.setUserContext(TestObjectFactory.getContext());
 		account.changeStatus(accountStateEntity.getId(), null, "");
 		TestObjectFactory.updateObject(account);
@@ -834,12 +834,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testGetAllClosedAccounts() throws Exception {
 		getCustomer();
-		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
-		clientAccount.changeStatus(AccountState.LOANACC_WRITTENOFF.getValue(),
+		clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(),
 				null, "WITHDRAW LOAN ACCOUNT");
-		clientSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+		clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED
 				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
 		TestObjectFactory.updateObject(groupAccount);
@@ -971,7 +971,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testSearchWithCancelLoanAccounts() throws Exception {
 		groupAccount = getLoanAccount();
-		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
 				"WITHDRAW LOAN ACCOUNT");
 		TestObjectFactory.updateObject(groupAccount);
@@ -1138,7 +1138,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testSearchForActiveInBadStandingLoanAccount() throws Exception {
 		groupAccount = getLoanAccount();
-		groupAccount.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+		groupAccount.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
 				null, "Changing to badStanding");
 		TestObjectFactory.updateObject(groupAccount);
 		HibernateUtil.closeSession();
@@ -1174,10 +1174,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -1239,7 +1239,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 }

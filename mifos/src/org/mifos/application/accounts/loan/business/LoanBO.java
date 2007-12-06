@@ -704,12 +704,12 @@ public class LoanBO extends AccountBO {
 	@Override
 	public boolean isOpen() {
 		return !(getAccountState().getId().equals(
-				AccountState.LOANACC_CANCEL.getValue())
+				AccountState.LOAN_CANCELLED.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_RESCHEDULED.getValue())
+						AccountState.LOAN_CLOSED_RESCHEDULED.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_OBLIGATIONSMET.getValue()) || getAccountState()
-				.getId().equals(AccountState.LOANACC_WRITTENOFF.getValue()));
+						AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()) || getAccountState()
+				.getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()));
 	}
 
 	@Override
@@ -734,9 +734,9 @@ public class LoanBO extends AccountBO {
 		// 3. Closed - Obligation Met : Check permisssion first ; Can adjust payment when account status is "closed-obligation met"
 
 		if (!(getAccountState().getId().equals(
-				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue())
-			|| getAccountState().getId().equals(AccountState.LOANACC_BADSTANDING.getValue()) || getAccountState()
-				.getId().equals(AccountState.LOANACC_OBLIGATIONSMET.getValue()))) {
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())
+			|| getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) || getAccountState()
+				.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))) {
 
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"State is not active hence adjustment is not possible");
@@ -1358,8 +1358,8 @@ public class LoanBO extends AccountBO {
 	}
 
 	public boolean isAccountActive() {
-		return getState() == AccountState.LOANACC_ACTIVEINGOODSTANDING
-				|| getState() == AccountState.LOANACC_BADSTANDING;
+		return getState() == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
+				|| getState() == AccountState.LOAN_ACTIVE_IN_BAD_STANDING;
 	}
 
 	public void save() throws AccountException {
@@ -1415,13 +1415,13 @@ public class LoanBO extends AccountBO {
 		setCollateralNote(collateralNote);
 		setCollateralType(collateralTypeEntity);
 		if (getAccountState().getId().equals(
-				AccountState.LOANACC_APPROVED.getValue())
+				AccountState.LOAN_APPROVED.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_DBTOLOANOFFICER.getValue())
+						AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_PARTIALAPPLICATION.getValue())
+						AccountState.LOAN_PARTIAL_APPLICATION.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_PENDINGAPPROVAL.getValue())) {
+						AccountState.LOAN_PENDING_APPROVAL.getValue())) {
 			if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 				throw new AccountException(
 						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
@@ -1476,7 +1476,7 @@ public class LoanBO extends AccountBO {
 
 	public final void reverseLoanDisbursal(final PersonnelBO loggedInUser,
 			final String note) throws AccountException {
-		changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+		changeStatus(AccountState.LOAN_CANCELLED.getValue(),
 				AccountStateFlag.LOAN_REVERSAL.getValue(), note);
 		if (getAccountPayments() != null && getAccountPayments().size() > 0) {
 			for (AccountPaymentEntity accountPayment : getAccountPayments()) {
@@ -1539,17 +1539,17 @@ public class LoanBO extends AccountBO {
 			if (accountAction.getInstallmentId().equals(
 					lastAccountAction.getInstallmentId())
 					&& accountPaymentData.isPaid()) {
-				changeLoanStatus(AccountState.LOANACC_OBLIGATIONSMET,
+				changeLoanStatus(AccountState.LOAN_CLOSED_OBLIGATIONS_MET,
 						paymentData.getPersonnel());
 				this.setClosedDate(new Date(System.currentTimeMillis()));
 				// Client performance entry
 				updateCustomerHistoryOnLastInstlPayment(paymentData
 						.getTotalAmount());
 			}
-			if (getState().equals(AccountState.LOANACC_BADSTANDING)
+			if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
 					&& (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT) || loanPaymentTypes
 							.equals(LoanPaymentTypes.FUTURE_PAYMENT))) {
-				changeLoanStatus(AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				changeLoanStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 						paymentData.getPersonnel());
 				// Client performance entry
 				updateCustomerHistoryOnPayment();
@@ -1654,15 +1654,15 @@ public class LoanBO extends AccountBO {
 			if (getAccountStatusChangeHistory() != null
 					&& getAccountStatusChangeHistory().size() > 0
 					&& !getAccountState().getId().equals(
-							AccountState.LOANACC_CANCEL.getValue())) {
+							AccountState.LOAN_CANCELLED.getValue())) {
 				List<Object> objectList = Arrays
 						.asList(getAccountStatusChangeHistory().toArray());
 				AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
 						.get(objectList.size() - 1);
 				if (accountStatusChangeHistoryEntity.getOldStatus().getId()
-						.equals(AccountState.LOANACC_BADSTANDING.getValue())) {
+						.equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
 					setAccountState(new AccountStateEntity(
-							AccountState.LOANACC_BADSTANDING));
+							AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
 				}
 			}
 			PersonnelBO personnel;
@@ -1684,11 +1684,11 @@ public class LoanBO extends AccountBO {
 	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if ((!this.getAccountState().getId().equals(
-				AccountState.LOANACC_OBLIGATIONSMET.getValue()))
+				AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))
 				&& (!this.getAccountState().getId().equals(
-						AccountState.LOANACC_WRITTENOFF.getValue()))
+						AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()))
 				&& (!this.getAccountState().getId().equals(
-						AccountState.LOANACC_CANCEL.getValue()))) {
+						AccountState.LOAN_CANCELLED.getValue()))) {
 			List<Date> meetingDates = null;
 			int installmentSize = getLastInstallmentId();
 			int totalInstallmentDatesToBeChanged = installmentSize

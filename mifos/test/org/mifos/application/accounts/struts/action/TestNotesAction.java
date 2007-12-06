@@ -385,7 +385,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 				startDate, meeting);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", client, 
-			AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+			AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 			startDate, loanOffering);
 	}
 }

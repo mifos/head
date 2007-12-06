@@ -861,7 +861,7 @@ public class TestObjectFactory {
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, AccountState.SAVINGS_ACC_PARTIALAPPLICATION,
+				customer, AccountState.SAVINGS_PARTIAL_APPLICATION,
 				new Money(currency, "300.0"), null);
 		savings.save();
 		savings.setUserContext(TestObjectFactory.getContext());

@@ -73,7 +73,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 
 		loanAccount = new AccountPersistence().getAccount(loanAccount
 				.getAccountId());
-		assertEquals(AccountState.LOANACC_BADSTANDING,
+		assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
 				loanAccount.getState());
 		assertEquals(statusChangeHistorySize + 1, loanAccount
 				.getAccountStatusChangeHistory().size());
@@ -85,7 +85,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				currentdate, meeting);
 		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
-				customer, AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				customer, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);
 		loanAccount.update();

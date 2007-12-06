@@ -99,7 +99,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("personnelId", account.getPersonnel()
 				.getPersonnelId().toString());
 		addRequestParameter("currentStatus",
-				AccountState.LOANACC_PARTIALAPPLICATION.getValue().toString());
+				AccountState.LOAN_PARTIAL_APPLICATION.getValue().toString());
 		actionPerform();
 		verifyInputForward();
 	}
@@ -116,7 +116,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 				.getPersonnelId().toString());
 		addRequestParameter("type", "loan");
 		addRequestParameter("currentStatus",
-				AccountState.LOANACC_PARTIALAPPLICATION.getValue().toString());
+				AccountState.LOAN_PARTIAL_APPLICATION.getValue().toString());
 		actionPerform();
 		verifyForward(ActionForwards.noresultfound.toString());
 		assertNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
@@ -189,7 +189,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				AccountState.LOANACC_PENDINGAPPROVAL, startDate,
+				AccountState.LOAN_PENDING_APPROVAL, startDate,
 				loanOffering);
 
 	}

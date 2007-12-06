@@ -516,7 +516,7 @@ public class TestHolidayUtils extends MifosTestCase {
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		SavingsBO savings = new SavingsTestHelper()
 			.createSavingsAccount(savingsProduct, group, 
-				AccountState.SAVINGS_ACC_APPROVED,
+				AccountState.SAVINGS_ACTIVE,
 				TestUtils.makeUser());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

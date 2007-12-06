@@ -195,11 +195,11 @@ public class AccountStatusAction extends BaseAction {
 					.isPendingApprovalStateDefinedForLoan()) {
 				accountStateEntity = (AccountStateEntity) new MasterDataService()
 						.getMasterDataEntity(AccountStateEntity.class,
-								AccountState.LOANACC_PENDINGAPPROVAL.getValue());
+								AccountState.LOAN_PENDING_APPROVAL.getValue());
 			} else {
 				accountStateEntity = (AccountStateEntity) new MasterDataService()
 						.getMasterDataEntity(AccountStateEntity.class,
-								AccountState.LOANACC_PARTIALAPPLICATION
+								AccountState.LOAN_PARTIAL_APPLICATION
 										.getValue());
 			}
 			accountStateEntity.setLocaleId(getUserContext(request)

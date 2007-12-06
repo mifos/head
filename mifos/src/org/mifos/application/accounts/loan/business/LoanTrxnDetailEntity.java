@@ -234,7 +234,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
 	private boolean isAccountCancelled() {
 		if (getAccount().getAccountState().getId().equals(
-				AccountState.LOANACC_CANCEL.getValue())) {
+				AccountState.LOAN_CANCELLED.getValue())) {
 			Set<AccountFlagMapping> accountFlags = getAccount()
 					.getAccountFlags();
 			if (accountFlags != null && accountFlags.size() > 0) {

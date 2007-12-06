@@ -67,7 +67,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
 		}
 
-		if (savings.getState() == AccountState.SAVINGS_ACC_CLOSED) {
+		if (savings.getState() == AccountState.SAVINGS_CLOSED) {
 			handleRoundingForWithdrawal(savings,savingsTrxn);
 		}
 		

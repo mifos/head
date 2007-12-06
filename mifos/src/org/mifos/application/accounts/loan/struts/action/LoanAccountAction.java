@@ -647,7 +647,7 @@ public class LoanAccountAction extends AccountAppAction {
         }
   		if (perspective != null && perspective.equalsIgnoreCase("redoloan")) {
 			loan = LoanBO.redoLoan(getUserContext(request), loanOffering,
-					customer, AccountState.LOANACC_PARTIALAPPLICATION,
+					customer, AccountState.LOAN_PARTIAL_APPLICATION,
 					loanActionForm.loanAmountValue(), loanActionForm
 							.getNoOfInstallmentsValue(), loanActionForm
 							.getDisbursementDateValue(getUserContext(request)
@@ -661,7 +661,7 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		else {
 				loan = LoanBO.createLoan(getUserContext(request), loanOffering,
-					customer, AccountState.LOANACC_PARTIALAPPLICATION,
+					customer, AccountState.LOAN_PARTIAL_APPLICATION,
 					loanActionForm.loanAmountValue(), loanActionForm
 							.getNoOfInstallmentsValue(), loanActionForm
 							.getDisbursementDateValue(getUserContext(request)
@@ -692,7 +692,7 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanBO loan = constructLoan(loanActionForm, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
-		loan.changeStatus(AccountState.LOANACC_ACTIVEINGOODSTANDING, null,
+		loan.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null,
 				"Automatic Status Update (Redo Loan)");
 
 		PersonnelBO personnel = null;

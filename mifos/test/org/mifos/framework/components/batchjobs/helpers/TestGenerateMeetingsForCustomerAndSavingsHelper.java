@@ -95,7 +95,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, 
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountState.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACTIVE, userContext);
 		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()
 				.getMeeting().getStartDate();
 		int noOfInstallments = savings.getAccountActionDates().size();
@@ -150,7 +150,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,
-				AccountState.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACTIVE, userContext);
 	}
 	
 	private SavingsOfferingBO createSavingsOffering(String offeringName,

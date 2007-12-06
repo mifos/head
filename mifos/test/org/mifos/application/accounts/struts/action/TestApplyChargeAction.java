@@ -156,7 +156,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer, 
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate, loanOffering);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
 
 	}
 	

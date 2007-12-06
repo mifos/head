@@ -98,7 +98,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", "LOAN", startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan123", "LOAP",
 				ApplicableTo.CLIENTS, startDate, 
@@ -106,7 +106,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
 

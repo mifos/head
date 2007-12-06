@@ -511,11 +511,11 @@ public abstract class CustomerBO extends BusinessObject {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				AccountState state = account.getState();
 				LoanBO loan = (LoanBO) account;
-				if (state == AccountState.LOANACC_ACTIVEINGOODSTANDING
-						|| state == AccountState.LOANACC_BADSTANDING) {
+				if (state == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
+						|| state == AccountState.LOAN_ACTIVE_IN_BAD_STANDING) {
 					loanAccounts.add(loan);
-				} else if (state == AccountState.LOANACC_APPROVED
-						|| state == AccountState.LOANACC_DBTOLOANOFFICER) {
+				} else if (state == AccountState.LOAN_APPROVED
+						|| state == AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER) {
 					if (transactionDate.compareTo(loan.getDisbursementDate()) >= 0)
 						loanAccounts.add(loan);
 				}
@@ -528,7 +528,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : accounts) {
 			if (account.getType() == AccountTypes.SAVINGS_ACCOUNT
-				&& account.getState() == AccountState.SAVINGS_ACC_APPROVED) {
+				&& account.getState() == AccountState.SAVINGS_ACTIVE) {
 				savingsAccounts.add((SavingsBO) account);
 			}
 		}

@@ -34,7 +34,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 				AccountTypes.LOAN_ACCOUNT, null);
 		List<AccountStateEntity> stateList = service.getStatusList(
 				new AccountStateEntity(
-						AccountState.LOANACC_ACTIVEINGOODSTANDING),
+						AccountState.LOAN_ACTIVE_IN_GOOD_STANDING),
 				AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		assertEquals(2, stateList.size());
 	}
@@ -43,7 +43,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
 				AccountTypes.LOAN_ACCOUNT, null);
 		assertNotNull(service.getStatusName((short) 1,
-				AccountState.LOANACC_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
+				AccountState.LOAN_CLOSED_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
 	}
 
 	public void testGetFlagName() throws Exception {
@@ -80,11 +80,11 @@ public class TestAccountStateMachine extends MifosTestCase {
 		HibernateUtil.closeSession();
 		List<AccountStateEntity> stateList = service
 				.getStatusList(new AccountStateEntity(
-						AccountState.LOANACC_PARTIALAPPLICATION),
+						AccountState.LOAN_PARTIAL_APPLICATION),
 						AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		for (AccountStateEntity accountState : stateList) {
 			if (accountState.getId().equals(
-					AccountState.LOANACC_CANCEL.getValue())) {
+					AccountState.LOAN_CANCELLED.getValue())) {
 				assertEquals(3, accountState.getFlagSet().size());
 				for (AccountStateFlagEntity accountStateFlag : accountState
 						.getFlagSet()) {

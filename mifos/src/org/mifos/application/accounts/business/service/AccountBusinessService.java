@@ -245,10 +245,10 @@ public class AccountBusinessService extends BusinessService {
 				if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT
 						.getValue())) {
 					AccountState accountState = account.getState();
-					if (accountState == AccountState.LOANACC_PARTIALAPPLICATION
-						|| accountState == AccountState.LOANACC_PENDINGAPPROVAL
-						|| accountState == AccountState.LOANACC_APPROVED 
-						|| accountState == AccountState.LOANACC_DBTOLOANOFFICER
+					if (accountState == AccountState.LOAN_PARTIAL_APPLICATION
+						|| accountState == AccountState.LOAN_PENDING_APPROVAL
+						|| accountState == AccountState.LOAN_APPROVED 
+						|| accountState == AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER
 						) {
 						continue;
 					} else {

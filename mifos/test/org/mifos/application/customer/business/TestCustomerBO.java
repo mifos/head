@@ -660,7 +660,7 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testValidateStatusForClientSavingsAccountInactive()
 			throws Exception {
 		accountBO = getSavingsAccount("fsaf6", "ads6");
-		accountBO.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+		accountBO.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(),
 				null, "changed status");
 		accountBO.update();
 		HibernateUtil.commitTransaction();
@@ -793,7 +793,7 @@ public class TestCustomerBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -802,7 +802,7 @@ public class TestCustomerBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createIndividualLoanAccount("42423142341", customer,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}

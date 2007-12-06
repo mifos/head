@@ -52,7 +52,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(
-			AccountState.LOANACC_APPROVED, startDate, 1);
+			AccountState.LOAN_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getAllActivity");

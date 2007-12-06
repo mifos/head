@@ -55,10 +55,10 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	public void testLoadAllChecklist() throws Exception {
 		CheckListBO checkList1 = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		CheckListBO checkList2 = TestObjectFactory.createAccountChecklist(
 				ProductType.SAVINGS.getValue(),
-				AccountState.SAVINGS_ACC_APPROVED, (short) 1);
+				AccountState.SAVINGS_ACTIVE, (short) 1);
 		CheckListBO checkList3 = TestObjectFactory.createCustomerChecklist(
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), (short) 1);
@@ -116,7 +116,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	public void testGetForAccountChecklist() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 
 		setRequestPathInfo("/chkListAction");
 		addRequestParameter("method", "get");
@@ -324,7 +324,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	public void testManage_accountLoan() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/chkListAction");
 		addRequestParameter("method", "manage");
@@ -344,7 +344,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	public void testManage_accountSaving() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.SAVINGS.getValue(),
-				AccountState.SAVINGS_ACC_APPROVED, (short) 1);
+				AccountState.SAVINGS_ACTIVE, (short) 1);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/chkListAction");
 		addRequestParameter("method", "manage");
@@ -454,7 +454,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	public void testUpdate_product() throws Exception{
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		HibernateUtil.closeSession();
 		checkList = (CheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, checkList.getChecklistId());

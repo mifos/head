@@ -68,13 +68,13 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	
 	public void testExecute() throws Exception {
 		loanAccount1 = getLoanAccount(group, meeting,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, "off1");
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, "off1");
 		loanAccount2 = getLoanAccount(group, meeting,
-				AccountState.LOANACC_BADSTANDING,"off2");
+				AccountState.LOAN_ACTIVE_IN_BAD_STANDING,"off2");
 		loanAccount3 = getLoanAccount(group, meeting,
-				AccountState.LOANACC_DBTOLOANOFFICER,"off3");
+				AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER,"off3");
 		loanAccount4 = getLoanAccount(group, meeting,
-				AccountState.LOANACC_PENDINGAPPROVAL,"off4");
+				AccountState.LOAN_PENDING_APPROVAL,"off4");
 
 		assertNull(loanAccount1.getLoanArrearsAgingEntity());
 		assertNull(loanAccount2.getLoanArrearsAgingEntity());

@@ -63,7 +63,7 @@ public class TestCheckListBusinessService extends MifosTestCase {
 	public void testRetreiveAllAccountCheckLists() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), (short) 1);
@@ -88,7 +88,7 @@ public class TestCheckListBusinessService extends MifosTestCase {
 	public void testRetreiveAllCustomerCheckLists() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), (short) 1);
@@ -152,7 +152,7 @@ public class TestCheckListBusinessService extends MifosTestCase {
 	public void testGetCheckList() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		HibernateUtil.closeSession();
 		checkList = new CheckListBusinessService().getCheckList(checkList
 				.getChecklistId());
@@ -166,7 +166,7 @@ public class TestCheckListBusinessService extends MifosTestCase {
 	public void testGetCheckListForInvalidConnection() throws Exception {
 		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
 				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {

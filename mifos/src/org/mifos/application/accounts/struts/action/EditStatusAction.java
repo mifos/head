@@ -215,8 +215,8 @@ public class EditStatusAction extends BaseAction {
 	}
 
 	private boolean isNewStatusIsCancel(Short newStatusId) {
-		return newStatusId.equals(AccountState.SAVINGS_ACC_CANCEL.getValue())
-				|| newStatusId.equals(AccountState.LOANACC_CANCEL.getValue());
+		return newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())
+				|| newStatusId.equals(AccountState.LOAN_CANCELLED.getValue());
 	}
 
 	private void setFormAttributes(ActionForm form, AccountBO accountBO)

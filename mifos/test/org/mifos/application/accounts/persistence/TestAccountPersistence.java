@@ -242,7 +242,7 @@ public class TestAccountPersistence extends TestAccount {
 	public void testSuccessLoadBusinessObject() throws Exception {
 		AccountBO readAccount = 
 			accountPersistence.getAccount(accountBO.getAccountId());
-		assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING,
+		assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 			readAccount.getState());
 	}
 
@@ -280,7 +280,7 @@ public class TestAccountPersistence extends TestAccount {
 
 	public void testGetActiveCustomerAndSavingsAccounts() throws Exception {
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount(
-				"12345678910", group, AccountState.SAVINGS_ACC_APPROVED, 
+				"12345678910", group, AccountState.SAVINGS_ACTIVE, 
 				new Date(),
 				createSavingsOffering("qqqqq"), 
 				TestUtils.makeUser());
@@ -320,7 +320,7 @@ public class TestAccountPersistence extends TestAccount {
 	
 	private SavingsBO createSavingsAccount() throws Exception {
 		return TestObjectFactory.createSavingsAccount("12345678910", group,
-				AccountState.SAVINGS_ACC_APPROVED, new Date(), 
+				AccountState.SAVINGS_ACTIVE, new Date(), 
 				createSavingsOffering("qqqqq"),
 				TestUtils.makeUser());
 	}

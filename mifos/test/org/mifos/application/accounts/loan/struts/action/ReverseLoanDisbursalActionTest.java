@@ -280,7 +280,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		loan = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_APPROVED, startDate, loanOffering);
+				AccountState.LOAN_APPROVED, startDate, loanOffering);
 	}
 
 	private void disburseLoan() throws AccountException {

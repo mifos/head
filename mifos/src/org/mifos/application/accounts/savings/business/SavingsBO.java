@@ -303,8 +303,8 @@ public class SavingsBO extends AccountBO {
 	@Override
 	public boolean isOpen() {
 		return !(getAccountState().getId().equals(
-				AccountState.SAVINGS_ACC_CANCEL.getValue()) || getAccountState()
-				.getId().equals(AccountState.SAVINGS_ACC_CLOSED.getValue()));
+				AccountState.SAVINGS_CANCELLED.getValue()) || getAccountState()
+				.getId().equals(AccountState.SAVINGS_CLOSED.getValue()));
 	}
 
 	private void setSavingsOfferingDetails() throws AccountException {
@@ -1174,11 +1174,11 @@ public class SavingsBO extends AccountBO {
 				amountAdjustedTo, adjustmentComment);
 		adjustInterest(oldInterest, trxnDate, newPayment);
 		if (this.getAccountState().getId().equals(
-				AccountState.SAVINGS_ACC_INACTIVE.getValue())) {
+				AccountState.SAVINGS_INACTIVE.getValue())) {
 			try {
 				this
 						.setAccountState((new SavingsPersistence())
-								.getAccountStatusObject(AccountState.SAVINGS_ACC_APPROVED
+								.getAccountStatusObject(AccountState.SAVINGS_ACTIVE
 										.getValue()));
 			} catch (PersistenceException pe) {
 				throw new AccountException(pe);

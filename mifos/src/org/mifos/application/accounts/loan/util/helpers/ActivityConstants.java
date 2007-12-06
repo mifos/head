@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.loan.util.helpers;
 
+/* TODO: remove this class.  None of these values appear to be used */
 public class ActivityConstants {
 	
 	public static final String NAME_FEE_WAIVE_OFF="FeeWaiveOff";
