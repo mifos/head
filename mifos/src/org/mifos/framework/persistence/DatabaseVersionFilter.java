@@ -69,7 +69,7 @@ public class DatabaseVersionFilter implements Filter {
         xml.text("The system was not able to automatically upgrade the database. ");
         xml.text("Correct the error and restart the application. ");
 
-        xml.startTag("a", "href", "http://wiki.java.net/bin/view/Javatools/DatabaseStandards");
+        xml.startTag("a", "href", "http://mifos.org/developers/technical-orientation/coding-standards#databasestandards");
         xml.text("More about database upgrades.");
         xml.endTag("a");
         

@@ -39,6 +39,7 @@ public class DatabaseVersionFilterTest extends TestCase {
 		StringAssert.assertContains(
 			"<p>Here are details of what went wrong:</p>", output);
 		StringAssert.assertContains("bletch ick sputter die", output);
+		StringAssert.assertContains("http://mifos.org/developers/technical-orientation/coding-standards#databasestandards", output);
 	}
 
 	public void testInexplicableFailure() throws Exception {
