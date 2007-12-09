@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import org.mifos.config.Localization;
+import java.text.DecimalFormatSymbols;
+
 import java.text.SimpleDateFormat;
 
 public class LocalizationConverter {
@@ -12,6 +14,7 @@ public class LocalizationConverter {
 	private static DecimalFormat currentDecimalFormat;
 	private static String dateSeparator;
 	private static Locale currentLocale;
+	private static char decimalFormatSymbol;
 	
 	private static final LocalizationConverter localizationConverter = 
 		new LocalizationConverter();
@@ -24,9 +27,19 @@ public class LocalizationConverter {
 		currentLocale = Localization.getInstance().getMainLocale();
 		currentDecimalFormat = getDecimalFormatForCurrentLocale();
 		dateSeparator = getDateSeparator();
+		decimalFormatSymbol = loadDecimalFormatSymbol();
 	}
 	
-	
+	// for testing purpose only
+	public void setCurrentLocale(Locale locale)
+	{
+		if (currentLocale.equals(locale))
+			return;
+		currentLocale = locale;
+		currentDecimalFormat = getDecimalFormatForCurrentLocale();
+		dateSeparator = getDateSeparator();
+		decimalFormatSymbol = loadDecimalFormatSymbol();
+	}
 	
 	private boolean supportThisLocale(Locale[] locales)
 	{
@@ -64,9 +77,22 @@ public class LocalizationConverter {
 		return decimalFormat;
 	}
 	
+	private char loadDecimalFormatSymbol()
+	{
+		DecimalFormatSymbols symbols = currentDecimalFormat.getDecimalFormatSymbols();
+		char symbol = symbols.getDecimalSeparator();
+		return symbol;
+	}
+	
+	public char getDecimalFormatSymbol()
+	{
+		return decimalFormatSymbol;
+	}
+	
 	
 	public Double getDoubleValueForCurrentLocale(String doubleValueString)
 	{
+		
 		if (currentDecimalFormat == null)
 			currentDecimalFormat = getDecimalFormatForCurrentLocale();
 		Double dNum = null;
@@ -77,7 +103,7 @@ public class LocalizationConverter {
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(e.getMessage());
+			throw new NumberFormatException(e.getMessage() + " .Number " + doubleValueString);
 		}
 		return dNum;
 	}

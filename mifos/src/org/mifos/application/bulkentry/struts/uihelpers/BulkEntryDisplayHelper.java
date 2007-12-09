@@ -58,8 +58,9 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class BulkEntryDisplayHelper {
 
@@ -457,6 +458,9 @@ public class BulkEntryDisplayHelper {
 			builder.append("</td>");
 		}
 	}
+	protected Double getDoubleValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) : null;
+	}
 
 	private void generateLoanValues(StringBuilder builder, int rows,
 			int columns, LoanAccountsProductView accountViewBO,
@@ -503,12 +507,12 @@ public class BulkEntryDisplayHelper {
 			if (isShowingDue) {
 				enteredAmount = accountViewBO.getEnteredAmount();
 				if (accountViewBO.isValidAmountEntered()) {
-					totalAmount = Double.valueOf(enteredAmount);
+					totalAmount = getDoubleValue(enteredAmount);
 				}
 			} else {
 				enteredAmount = accountViewBO.getDisBursementAmountEntered();
 				if (accountViewBO.isValidDisbursementAmount()) {
-					totalAmount = Double.valueOf(enteredAmount);
+					totalAmount = getDoubleValue(enteredAmount);
 				}
 			}
 			if (totalAmount.doubleValue() < amountToBeShown.doubleValue()) {
@@ -551,10 +555,10 @@ public class BulkEntryDisplayHelper {
 						.isValidDisbursementAmount();
 			if (isValidAmountEntered) {
 				if (isShowingDue)
-					totalAmount = Double.valueOf(accountViewBO
+					totalAmount = getDoubleValue(accountViewBO
 							.getEnteredAmount());
 				else
-					totalAmount = Double.valueOf(accountViewBO
+					totalAmount = getDoubleValue(accountViewBO
 							.getDisBursementAmountEntered());
 			}
 			groupTotals[columns] = groupTotals[columns] == null ? 0.0 + totalAmount

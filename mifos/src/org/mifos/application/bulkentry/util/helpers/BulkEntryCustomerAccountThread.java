@@ -7,6 +7,7 @@ import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class BulkEntryCustomerAccountThread implements Runnable {
 
@@ -49,7 +50,7 @@ public class BulkEntryCustomerAccountThread implements Runnable {
 				if (null != customerAccountView) {
 					String amount = customerAccountView
 							.getCustomerAccountAmountEntered();
-					if (null != amount && !Double.valueOf(amount).equals(0.0)) {
+					if (null != amount && !LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount).equals(0.0)) {
 						try {
 							bulkEntryBusinessService
 									.saveCustomerAccountCollections(

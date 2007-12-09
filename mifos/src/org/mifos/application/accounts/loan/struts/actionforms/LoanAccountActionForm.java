@@ -775,9 +775,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 				LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
 				.getAttribute(LoanConstants.LOANOFFERING, request);
 				if (StringUtils.isNullOrEmpty(Double.valueOf(totalAmout).toString())
-					   	|| getDoubleValue(Double.valueOf(totalAmout).toString()).doubleValue() > loanOffering.getMaxLoanAmount()
+					   	|| totalAmout > loanOffering.getMaxLoanAmount()
 								.getAmountDoubleValue()
-						|| getDoubleValue(Double.valueOf(totalAmout).toString()).doubleValue() < loanOffering.getMinLoanAmount()
+						|| totalAmout < loanOffering.getMinLoanAmount()
 								.getAmountDoubleValue()) {
 					addError(errors, LoanConstants.LOANAMOUNT, LoanExceptionConstants.SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS, getStringValue(loanOffering.getMinLoanAmount()
 									.getAmountDoubleValue()), getStringValue(loanOffering.getMaxLoanAmount()

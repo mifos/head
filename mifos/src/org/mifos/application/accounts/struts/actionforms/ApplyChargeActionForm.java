@@ -6,12 +6,12 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class ApplyChargeActionForm extends ValidatorActionForm {
+public class ApplyChargeActionForm extends BaseActionForm {
 
 	private String accountId;
 
@@ -85,7 +85,7 @@ public class ApplyChargeActionForm extends ValidatorActionForm {
 	}
 
 	private void validateRate(ActionErrors errors,HttpServletRequest request) {
-		if(Double.valueOf(chargeAmount) > Double.valueOf("999")){
+		if(getDoubleValue(chargeAmount) > Double.valueOf("999")){
 			errors.add(AccountConstants.RATE,
 					new ActionMessage(AccountConstants.RATE_ERROR));
 			request.setAttribute("selectedChargeFormula" ,selectedChargeFormula);

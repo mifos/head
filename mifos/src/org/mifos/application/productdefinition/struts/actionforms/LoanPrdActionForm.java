@@ -1758,7 +1758,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		logger.debug("start Loan prd Action Form validateForRange :"
 				+ value);
 		if (StringUtils.isNullAndEmptySafe(value)) {
-			double valueToBeChecked = Double.valueOf(value);
+			double valueToBeChecked = getDoubleValue(value);
 			if (valueToBeChecked < min || valueToBeChecked > max) {
 				addError(errors, property, key, arg);
 			}
@@ -1774,8 +1774,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ maxInterestRate + "---" + minInterestRate);
 		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())) {
-			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
-			double minimumInterestRate = Double.valueOf(getMinInterestRate());
+			double maximumInterestRate = getDoubleValue(getMaxInterestRate());
+			double minimumInterestRate = getDoubleValue(getMinInterestRate());
 			if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
 					&& maximumInterestRate < minimumInterestRate)
 				addError(errors, "MinMaxInterestRate",
@@ -1802,9 +1802,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())
 				&& StringUtils.isNullAndEmptySafe(getDefInterestRate())) {
-			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
-			double minimumInterestRate = Double.valueOf(getMinInterestRate());
-			double defaultInterestRate = Double.valueOf(getDefInterestRate());
+			double maximumInterestRate = getDoubleValue(getMaxInterestRate());
+			double minimumInterestRate = getDoubleValue(getMinInterestRate());
+			double defaultInterestRate = getDoubleValue(getDefInterestRate());
 			if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
 					&& defaultInterestRate <= 999.0) {
 				if (defaultInterestRate < minimumInterestRate
@@ -2028,12 +2028,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 		}		
 
 		if(StringUtils.isNullAndEmptySafe(maxlnamt)&& StringUtils.isNullAndEmptySafe(minlnamt)) {
-			if (Double.valueOf(minlnamt) > Double.valueOf(maxlnamt))
+			if (getDoubleValue(minlnamt) >getDoubleValue(maxlnamt))
 				addError(errors,ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT,
 						ProductDefinitionConstants.ERRORMAXMINLOANAMOUNT,rownum);				
 		}		
 		if (StringUtils.isNullAndEmptySafe(deflnamt) && StringUtils.isNullAndEmptySafe(maxlnamt)&& StringUtils.isNullAndEmptySafe(minlnamt)) {				
-			if (Double.valueOf(deflnamt) < Double.valueOf(minlnamt) || Double.valueOf(deflnamt) > Double.valueOf(maxlnamt)) {
+			if (getDoubleValue(deflnamt) < getDoubleValue(minlnamt) || getDoubleValue(deflnamt) > getDoubleValue(maxlnamt)) {
 				addError(errors,ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
 						ProductDefinitionConstants.ERRORDEFLOANAMOUNT,rownum);
 			}
@@ -2196,12 +2196,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 		}		
 		
 		if(StringUtils.isNullAndEmptySafe(maxNoOfInstall)&& StringUtils.isNullAndEmptySafe(minNoOfInstall)) {
-			if (Double.valueOf(minNoOfInstall) > Double.valueOf(maxNoOfInstall))
+			if (getDoubleValue(minNoOfInstall) > getDoubleValue(maxNoOfInstall))
 				addError(errors,ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,
 								ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,rownum);				
 			}		
 			if (StringUtils.isNullAndEmptySafe(defNoOfInstall) && StringUtils.isNullAndEmptySafe(maxNoOfInstall)&& StringUtils.isNullAndEmptySafe(minNoOfInstall)) {				
-				if (Double.valueOf(defNoOfInstall) < Double.valueOf(minNoOfInstall) || Double.valueOf(defNoOfInstall) > Double.valueOf(maxNoOfInstall)) {
+				if (getDoubleValue(defNoOfInstall) < getDoubleValue(minNoOfInstall) || getDoubleValue(defNoOfInstall) > getDoubleValue(maxNoOfInstall)) {
 					addError(errors,ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,
 									ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,rownum);
 				}

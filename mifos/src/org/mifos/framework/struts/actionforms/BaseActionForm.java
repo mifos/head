@@ -69,7 +69,8 @@ public class BaseActionForm extends ValidatorActionForm {
 	}
 
 	protected String getStringValue(Double value) {
-		return value != null ? String.valueOf(value) : null;
+		//return value != null ? String.valueOf(value) : null;
+		return value != null ? LocalizationConverter.getInstance().getDoubleValueStringForCurrentLocale(value) : null;
 	}
 
 	protected String getStringValue(Short value) {

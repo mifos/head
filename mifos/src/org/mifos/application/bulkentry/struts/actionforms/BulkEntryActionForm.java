@@ -46,7 +46,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
@@ -70,8 +69,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class BulkEntryActionForm extends ActionForm {
+public class BulkEntryActionForm extends BaseActionForm {
     
     private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
     
@@ -371,12 +371,12 @@ public class BulkEntryActionForm extends ActionForm {
 				Double enteredAmount = 0.0;
 				if (null != accountView.getEnteredAmount()
 						&& accountView.isValidAmountEntered())
-					enteredAmount = Double.valueOf(accountView
+					enteredAmount = getDoubleValue(accountView
 							.getEnteredAmount());
 				Double enteredDisbursalAmount = 0.0;
 				if (null != accountView.getDisBursementAmountEntered()
 						&& accountView.isValidDisbursementAmount())
-					enteredDisbursalAmount = Double.valueOf(accountView
+					enteredDisbursalAmount = getDoubleValue(accountView
 							.getDisBursementAmountEntered());
 				Double totalDueAmount = accountView.getTotalAmountDue();
 				Double totalDisburtialAmount = accountView
@@ -475,7 +475,7 @@ public class BulkEntryActionForm extends ActionForm {
 		Double customerAccountAmountEntered = 0.0;
 		if (null != customerAccountView.getCustomerAccountAmountEntered()
 				&& customerAccountView.isValidCustomerAccountAmountEntered())
-			customerAccountAmountEntered = Double.valueOf(customerAccountView
+			customerAccountAmountEntered = getDoubleValue(customerAccountView
 					.getCustomerAccountAmountEntered());
 		if (!customerAccountView.isValidCustomerAccountAmountEntered()
 				|| ((!customerAccountAmountEntered.equals(customerAccountView

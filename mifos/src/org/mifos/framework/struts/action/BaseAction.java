@@ -292,7 +292,6 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected Double getDoubleValue(String str) {
-		//return StringUtils.isNullAndEmptySafe(str) ? Double.valueOf(str) : null;
 		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) :null;
 	}
 
@@ -304,6 +303,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected String getStringValue(Double value) {
 		return value != null ? String.valueOf(value) : null;
+		
 	}
 
 	protected String getStringValue(Integer value) {

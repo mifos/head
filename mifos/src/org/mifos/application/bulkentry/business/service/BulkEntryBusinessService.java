@@ -79,6 +79,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class BulkEntryBusinessService extends BusinessService {
 
@@ -141,6 +143,10 @@ public class BulkEntryBusinessService extends BusinessService {
 			}
 		}
 	}
+	
+	private Double getDoubleValue(String str) {
+		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) :null;
+	}
 
 	private void setSavingsWithdrawalsDetails(
 			List<SavingsAccountView> accountViews, Short personnelId,
@@ -151,7 +157,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			for (SavingsAccountView accountView : accountViews) {
 				String amount = accountView.getWithDrawalAmountEntered();
 				if (null != amount && !"".equals(amount.trim())
-						&& !Double.valueOf(amount).equals(0.0)) {
+						&& !getDoubleValue(amount).equals(0.0)) {
 					try {
 						setSavingsWithdrawalAccountDetails(accountView,
 								personnelId, recieptId, paymentId, receiptDate,
@@ -185,7 +191,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		if (null != accountViews) {
 			for (SavingsAccountView accountView : accountViews) {
 				String amount = accountView.getDepositAmountEntered();
-				if (null != amount && !Double.valueOf(amount).equals(0.0)) {
+				if (null != amount && !getDoubleValue(amount).equals(0.0)) {
 					if ((!savings.containsKey(accountView.getAccountId()))
 							|| (savings.containsKey(accountView.getAccountId()) && (!savings
 									.get(accountView.getAccountId())
@@ -455,7 +461,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			String recieptId, Short paymentId, Date transactionDate,
 			String disbursementAmountEntered, Date receiptDate)
 			throws ServiceException {
-		if (Double.valueOf(disbursementAmountEntered).doubleValue() > 0) {
+		if (getDoubleValue(disbursementAmountEntered).doubleValue() > 0) {
 			LoanBO account = null;
 			try {
 				account = (LoanBO) getAccount(accountId,
@@ -474,7 +480,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			Date transactionDate,
 			LoanAccountsProductView loanAccountsProductView,
 			LoanAccountView loanAccountView) throws ServiceException {
-		Double amount = Double.valueOf(loanAccountsProductView
+		Double amount = getDoubleValue(loanAccountsProductView
 				.getEnteredAmount());
 		if (amount > 0.0) {
 			Money enteredAmount;

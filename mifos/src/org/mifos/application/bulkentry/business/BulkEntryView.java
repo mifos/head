@@ -62,6 +62,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class BulkEntryView extends View {
 
@@ -439,7 +440,7 @@ public class BulkEntryView extends View {
 				try {
 					if (depositAmountEnteredValue != null
 							&& !"".equals(depositAmountEnteredValue.trim())) {
-						Double.valueOf(depositAmountEnteredValue);
+						LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(depositAmountEnteredValue);
 						savingsAccountView.setValidDepositAmountEntered(true);
 					}
 				} catch (NumberFormatException nfe) {
@@ -448,7 +449,7 @@ public class BulkEntryView extends View {
 				try {
 					if (withDrawalAmountEnteredValue != null
 							&& !"".equals(withDrawalAmountEnteredValue.trim())) {
-						Double.valueOf(withDrawalAmountEnteredValue);
+						LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(withDrawalAmountEnteredValue);
 						savingsAccountView
 								.setValidWithDrawalAmountEntered(true);
 					}
@@ -468,7 +469,7 @@ public class BulkEntryView extends View {
 						.setDisBursementAmountEntered(disbursementAmount);
 				try {
 					if (null != enteredAmountValue) {
-						Double.valueOf(enteredAmountValue);
+						LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(enteredAmountValue);
 					}
 					loanAccountView.setValidAmountEntered(true);
 				} catch (NumberFormatException ne) {
@@ -476,7 +477,7 @@ public class BulkEntryView extends View {
 				}
 				try {
 					if (null != disbursementAmount) {
-						Double.valueOf(disbursementAmount);
+						LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(disbursementAmount);
 					}
 					loanAccountView.setValidDisbursementAmount(true);
 				} catch (NumberFormatException ne) {
@@ -492,7 +493,7 @@ public class BulkEntryView extends View {
 		customerAccountDetails
 				.setCustomerAccountAmountEntered(customerAccountAmountEntered);
 		try {
-			Double.valueOf(customerAccountAmountEntered);
+			LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(customerAccountAmountEntered);
 			customerAccountDetails.setValidCustomerAccountAmountEntered(true);
 		} catch (NumberFormatException nfe) {
 			customerAccountDetails.setValidCustomerAccountAmountEntered(false);

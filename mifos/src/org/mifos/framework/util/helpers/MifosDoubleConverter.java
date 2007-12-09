@@ -4,6 +4,7 @@
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class MifosDoubleConverter implements Converter {
 
@@ -15,10 +16,10 @@ public class MifosDoubleConverter implements Converter {
 		if(value!=null && type!=null && !"".equals(value)){
 			try {
 			if(value instanceof String) {
-				returnValue=Double.valueOf((String)value);
+				returnValue=LocalizationConverter.getInstance().getDoubleValueForCurrentLocale((String)value);
 			}
 			else {
-				returnValue=Double.valueOf(value.toString());
+				returnValue=LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(value.toString());
 			}
 			}catch(NumberFormatException ne) {
 				ne.printStackTrace();

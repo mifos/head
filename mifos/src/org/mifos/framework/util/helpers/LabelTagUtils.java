@@ -51,6 +51,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
+import org.mifos.config.Localization;
 
 /**
  * This Util class is a singleton class used by the MifosLabelTag to obtain the
@@ -204,21 +205,12 @@ public class LabelTagUtils {
 		UserContext userContext = getUserContextFromSession(pageContext
 				.getSession());
 		if (null != userContext) {
-			Locale locale = userContext.getPreferredLocale();
-			if (null == locale) {
-				//locale = userContext.getMfiLocale();
-				locale = userContext.getCurrentLocale();
-			}
+			Locale locale = userContext.getCurrentLocale();
 			if (null != locale) {
 				userPreferredLocale = locale.getLanguage() + "_"
 						+ locale.getCountry();
 			}
 
-		}
-
-		// TODO remove this
-		if (null == userPreferredLocale) {
-			userPreferredLocale = "en_GB";
 		}
 		return userPreferredLocale;
 
@@ -227,20 +219,14 @@ public class LabelTagUtils {
 	public static String getUserPreferredLocaleHelper(UserContext userContext) {
 		String userPreferredLocale = null;
 		if (null != userContext) {
-			Locale locale = userContext.getPreferredLocale();
-			if (null == locale) {
-				locale = userContext.getMfiLocale();
-			}
+			Locale locale = userContext.getCurrentLocale();
 			if (null != locale) {
 				userPreferredLocale = locale.getLanguage() + "_"
 						+ locale.getCountry();
 			}
 
 		}
-		// TODO remove this
-		if (null == userPreferredLocale) {
-			userPreferredLocale = "en_GB";
-		}
+		
 		return userPreferredLocale;
 
 	}
@@ -250,13 +236,9 @@ public class LabelTagUtils {
 		UserContext userContext = getUserContextFromSession(pageContext
 				.getSession());
 		if (null != userContext) {
-			locale = userContext.getPreferredLocale();
-
-			if (null == locale) {
-				locale = userContext.getMfiLocale();
-			}
+			locale = userContext.getCurrentLocale();
 		} else {
-			locale = Configuration.getInstance().getSystemConfig().getMFILocale();
+			locale = Localization.getInstance().getMainLocale();
 		}
 
 		return locale;
