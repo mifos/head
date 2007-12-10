@@ -335,7 +335,9 @@ public interface NamedQueryConstants {
 	public String CUSTOMERS_WITH_SPECIFIED_MEETING_DATE=
 		"CollectionSheetCustomer.customersWithSpecifiedMeetingDate";
 	public String CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate";
-	
+	public String CUSTOMERS_LOANS_WITH_SPECIFIED_MEETING_DATE = "CollectionSheetCustomer.loansWithSpecifiedMeetingDate";
+	public String CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE = "CollectionSheetCustomer.savingssWithSpecifiedMeetingDate";
+
 	public String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";
 	public String GET_FIELD_TYPE = "getFieldType";
 	/**M2 queries*/
@@ -684,5 +686,4 @@ public interface NamedQueryConstants {
 	public String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
 	public String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
 	public String GET_ALL_COA = "COABO.getAllCoa";
-
 }

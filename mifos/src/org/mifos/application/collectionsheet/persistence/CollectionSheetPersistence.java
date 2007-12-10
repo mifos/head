@@ -70,10 +70,10 @@ public class CollectionSheetPersistence extends Persistence {
 				NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_MEETING_DATE,
 				queryParameters);
 		accountActionDate.addAll(executeNamedQuery(
-			"CollectionSheetCustomer.loansWithSpecifiedMeetingDate",
+				NamedQueryConstants.CUSTOMERS_LOANS_WITH_SPECIFIED_MEETING_DATE,
 			queryParameters));
 		accountActionDate.addAll(executeNamedQuery(
-			"CollectionSheetCustomer.savingssWithSpecifiedMeetingDate",
+			NamedQueryConstants.CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE,
 			queryParameters));
 		return accountActionDate;
 	}
