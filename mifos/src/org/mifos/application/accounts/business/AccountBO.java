@@ -94,6 +94,8 @@ public class AccountBO extends BusinessObject {
 	private Set<AccountCustomFieldEntity> accountCustomFields;
 
 	private Date closedDate;
+	
+	private Integer offsettingAllowable;
 
 	protected AccountBO() {
 		this(null);
@@ -115,6 +117,7 @@ public class AccountBO extends BusinessObject {
 		accountNotes = new HashSet<AccountNotesEntity>();
 		accountStatusChangeHistory = new HashSet<AccountStatusChangeHistoryEntity>();
 		accountFlags = new HashSet<AccountFlagMapping>();
+		offsettingAllowable = new Integer(1);
 	}
 
 	protected AccountBO(UserContext userContext, CustomerBO customer,
@@ -137,6 +140,7 @@ public class AccountBO extends BusinessObject {
 		this.office = customer.getOffice();
 		this.personnel = customer.getPersonnel();
 		this.setAccountState(new AccountStateEntity(accountState));
+		offsettingAllowable = new Integer(1);
 		setCreateDetails();
 		}
 
@@ -1344,6 +1348,14 @@ public class AccountBO extends BusinessObject {
 				
 			}
 		}
+	}
+
+	public Integer getOffsettingAllowable() {
+		return offsettingAllowable;
+	}
+
+	public void setOffsettingAllowable(Integer offsettingAllowable) {
+		this.offsettingAllowable = offsettingAllowable;
 	}
 
 }

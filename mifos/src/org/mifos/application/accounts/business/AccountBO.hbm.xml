@@ -13,6 +13,7 @@
 		<version name="versionNo" column="VERSION_NO" type="integer"
 			unsaved-value="null" />
 
+        <property name="offsettingAllowable" column="OFFSETTING_ALLOWABLE" type="integer" />
 		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM"
 			access="field" />
 		<property name="createdBy" column="CREATED_BY" not-null="true"

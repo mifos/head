@@ -20,6 +20,7 @@ import org.mifos.application.accounts.business.TestAccountStateMachine;
 import org.mifos.application.accounts.business.TestLoanTrxnDetailEntity;
 import org.mifos.application.accounts.business.service.TestAccountService;
 import org.mifos.application.accounts.financial.business.service.TestFinancialBusinessService;
+import org.mifos.application.accounts.offsetting.TestOffsetAccountBO;
 import org.mifos.application.accounts.persistence.TestAccountPersistence;
 import org.mifos.application.accounts.struts.action.TestAccountAction;
 import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
@@ -62,9 +63,10 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestNotesAction.class);
 		testSuite.addTestSuite(TestAccountStateMachine.class);
 		testSuite.addTestSuite(TestEditStatusAction.class);
-		testSuite.addTestSuite(TestApplyChargeAction.class);
-		
+		testSuite.addTestSuite(TestApplyChargeAction.class);		
+		testSuite.addTestSuite(TestOffsetAccountBO.class);	
 		testSuite.addTest(AddAccountStateFlagTest.suite());
+		
 		testSuite.addTestSuite(TestAccountState.class);
 		return testSuite;
 		
