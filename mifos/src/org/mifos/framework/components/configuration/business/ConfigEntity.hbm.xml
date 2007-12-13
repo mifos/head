@@ -13,9 +13,6 @@
 		        </generator>
 		    </id>
 			<one-to-one name="office" class="org.mifos.application.office.business.OfficeBO" constrained="false"/>	 
-	        <property name="scheduleMeetingOnHoliday" column="SCHEDULE_MEETING_ON_HOLIDAY" type="string" />
-	        <property name="daysForCalDefinition" column="DAYS_FOR_CAL_DEFINITION" type="short" />
-	        <property name="nameSequence" column="NAME_SEQUENCE" type="string" />
 			<property name="backDatedTrxnAllowed" column="BACK_DATED_TXN_ALLOWED" type="short" />
 	        <property name="centerHierarchyExist" column="CENTER_HIERARCHY_EXIST" type="short" />
 	        <property name="groupCanApplyLoans" column="GROUP_CAN_APPLY_LOANS" type="short" />

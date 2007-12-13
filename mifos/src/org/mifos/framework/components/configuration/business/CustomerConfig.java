@@ -40,7 +40,6 @@ package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants;
 
 /**
  *  This class defines methods that tells configuration details about Customer (Center/Group/Client). 
@@ -54,28 +53,11 @@ public class CustomerConfig extends BaseConfig{
 		  super(cacheRepo,officeConf);
 	  }
 
-	  // kim commented out to replace by ClientRules
-	  //public boolean isCenterHierarchyExists() {
-		//  return getBooleanValueFromCache(OfficeConfigConstants.CENTER_HIERARCHY_EXIST,true);
-	  //}
-
-	  //public boolean canGroupApplyForLoan() {
-	  //	  return getBooleanValueFromCache(OfficeConfigConstants.GROUP_CAN_APPLY_LOANS,true);
-	  //}
-	  
-	  //public boolean canClientExistOutsideGroup() {
-	//	  return getBooleanValueFromCache(OfficeConfigConstants.CLIENT_CAN_EXIST_OUTSIDE_GROUP,true);	  
-	  //}
-
 	  public boolean isPendingApprovalStateDefinedForClient() {
 		  return getBooleanValueFromCache(ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT,true);
 	  }
 
 	  public boolean isPendingApprovalStateDefinedForGroup() {
 		  return getBooleanValueFromCache(ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_GROUP,true);
-	  }
-
-	  public String getNameSequence() {
-		  return getStringValueFromCache(OfficeConfigConstants.NAME_SEQUENCE,ConfigConstants.NAME_SEQUENCE_DEFAULT);
 	  }
 }

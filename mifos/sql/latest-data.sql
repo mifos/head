@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(162);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(163);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3843,11 +3843,13 @@ VALUES(73,'PovertyStatus',1,1,0);
 
 
 /*Master data for table SYSTEM_CONFIGURATION */
-/* The table System Configuration will contain the different configuration 
-items required for MFI like CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS 
-etc - Configuration */
-INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SCHEDULE_MEETING_ON_HOLIDAY,DAYS_FOR_CAL_DEFINITION,NAME_SEQUENCE,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP)
-VALUES(1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1,1);
+/* DEPRECATION WARNING:
+ This table will eventually be deleted.
+ For NAME_SEQUENCE, see ClientRules.getNameSequence()
+ -Adam Monsen, 2007-12-12
+ */
+INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP)
+VALUES(1,1,1,1,1);
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);

@@ -44,10 +44,8 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		assertNotNull(officeCache);
 		OfficeBO headOffice = new OfficePersistence().getHeadOffice();
 		
-		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.NAME_SEQUENCE);
-		key.setKey(OfficeConfigConstants.NAME_SEQUENCE);
-		assertNotNull(officeCache.getElement(key));
-
+		Key key = new Key(headOffice.getOfficeId(),
+				OfficeConfigConstants.CENTER_HIERARCHY_EXIST);
 		key.setKey(OfficeConfigConstants.CENTER_HIERARCHY_EXIST);
 		assertNotNull(officeCache.getElement(key));
 
@@ -76,10 +74,8 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		//check values of officeCache
 		OfficeBO headOffice = new OfficePersistence().getHeadOffice();
 		
-		Key key = new Key(headOffice.getOfficeId(),OfficeConfigConstants.NAME_SEQUENCE);
-		key.setKey(OfficeConfigConstants.NAME_SEQUENCE);
-		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
-
+		Key key = new Key(headOffice.getOfficeId(),
+				OfficeConfigConstants.CENTER_HIERARCHY_EXIST);
 		key.setKey(OfficeConfigConstants.CENTER_HIERARCHY_EXIST);
 		assertNotNull(cacheRepo.getValueFromOfficeCache(key));
 

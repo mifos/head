@@ -66,7 +66,6 @@ public class TestConfiguration extends MifosTestCase{
 		assertEquals(true,ClientRules.getGroupCanApplyLoans().booleanValue());
 		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForClient());
 		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForGroup());
-		assertEquals("first_name,middle_name,last_name,second_last_name",customerConfig.getNameSequence());
 	}
 	
 	private void assertForAccountConfig(AccountConfig accountConfig){

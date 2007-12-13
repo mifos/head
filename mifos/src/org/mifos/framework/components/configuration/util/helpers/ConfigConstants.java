@@ -70,7 +70,6 @@ public interface ConfigConstants {
 	 public static final  Short LATENESS_DAYS_DEFAULT = 30;
 	 public static final  Short INTEREST_DAYS_DEFAULT = 365;
 	 public static final  Short FISCAL_START_OF_WEEK_DEFAULT = 2;
-	 public static final  String NAME_SEQUENCE_DEFAULT = "first_name,middle_name,last_name,second_last_name";
 	 public static final  String MEETING_SCHEDULE_TYPE_DEFAULT = "same_day";
 	 
 	 public static final String OFFICE_CONFIG_CONSTANTS = "org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants";

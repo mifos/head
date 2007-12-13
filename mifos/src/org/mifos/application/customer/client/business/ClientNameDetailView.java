@@ -40,10 +40,9 @@ package org.mifos.application.customer.client.business;
 
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.config.ClientRules;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientNameDetailView {
 
@@ -108,12 +107,7 @@ public class ClientNameDetailView {
 
 	public String getDisplayName() {
 		displayName = new StringBuilder();
-		String nameSequence = Configuration.getInstance().getCustomerConfig(
-				Short.valueOf("1")).getNameSequence();
-		if (StringUtils.isNullOrEmpty(nameSequence)) {
-			nameSequence = ConfigConstants.NAME_SEQUENCE_DEFAULT;
-		}
-		String[] names = nameSequence.split("\\,");
+		String[] names = ClientRules.getNameSequence();
 		addToName(displayName, names[0], false);
 		for (int i = 1; i < names.length; i++) {
 			addToName(displayName, names[i], true);
