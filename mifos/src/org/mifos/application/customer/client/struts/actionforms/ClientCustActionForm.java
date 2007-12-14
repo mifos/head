@@ -455,8 +455,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 			return dateOfBirthDD + dateSeparator + dateOfBirthMM + dateSeparator
 				+ dateOfBirthYY;
-			// kim for I18n return dateOfBirthDD + "/" + dateOfBirthMM + "/"
-			//	+ dateOfBirthYY;
+			
 		}
 		else {
 			return null;

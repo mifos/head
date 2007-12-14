@@ -151,7 +151,8 @@ public class LabelTagUtils {
 	 */
 	public String getCurrency(String locale) {
 		// TODO get the currency based on locale from a utility class.
-		return "Rs";
+		//return "Rs";
+		return Configuration.getInstance().getSystemConfig().getCurrency().getDisplaySymbol();
 	}
 
 	/**

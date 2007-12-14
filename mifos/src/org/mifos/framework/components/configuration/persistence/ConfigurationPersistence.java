@@ -39,6 +39,7 @@ package org.mifos.framework.components.configuration.persistence;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
@@ -91,25 +92,38 @@ public class ConfigurationPersistence extends Persistence {
 			throw logAndThrow("No Default Currency Specified");
 		}
 	}
+	
+	public MifosCurrency getCurrency(String currencyCode) throws RuntimeException
+	{
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("currencyCode", currencyCode);
+		List queryResult;
+		try
+		{
+			queryResult=  executeNamedQuery(
+				NamedQueryConstants.GET_CURRENCY,
+				queryParameters);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e.getMessage());
+		}
+		
+		if (queryResult.size() == 0) {
+			return null;
+		}
+		if (queryResult.size() > 1) {
+			throw new RuntimeException("Multiple currencies found for currency code: " + currencyCode);			
+		}
+		return (MifosCurrency)queryResult.get(0);
+	}
 
 	private FrameworkRuntimeException logAndThrow(String message) {
 		logger.error(message);
 		return new FrameworkRuntimeException(null, message);
 	}
 
-	/* kim commented out on 10/02 will remove soon
-	 * this method is replace by Localization getSupportedLocale
-	 * public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
-	 List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
-	 if (supportedLocaleList==null || supportedLocaleList.size()==0) {
-	 logger.error("No Default Locale Specified");
-	 throw new FrameworkRuntimeException(null, "No Default Locale Specified");
-	 }
-	 SupportedLocalesEntity locale = supportedLocaleList.get(0);
-	 
-	 return locale;
-	 }*/
-
+	
 	public List<ConfigEntity> getOfficeConfiguration()
 			throws PersistenceException {
 		List<ConfigEntity> queryResult = executeNamedQuery(
@@ -122,15 +136,7 @@ public class ConfigurationPersistence extends Persistence {
 		return queryResult;
 	}
 
-	// kim commented out for FiscalCalendarRules
-	//public List<WeekDaysEntity> getWeekDaysList()throws PersistenceException{
-	//	List<WeekDaysEntity> queryResult = executeNamedQuery(NamedQueryConstants.GETWEEKDAYS, null);
-	//	if (queryResult==null || queryResult.size()==0) {
-	//		logger.error("WeekDays List Not Specified");
-	//		throw new FrameworkRuntimeException(null, "WeekDays List Not Specified");
-	//	}
-	//	return queryResult;
-	//}
+	
 
 	/**
 	 * Lookup an integer valued, persistent configuration key-value pair based on the key.

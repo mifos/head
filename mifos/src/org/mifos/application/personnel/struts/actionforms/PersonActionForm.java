@@ -162,7 +162,7 @@ public class PersonActionForm extends BaseActionForm {
 			return null;
 		}
 		else {
-			//			kim temporarily implemented this
+			
 			String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
 			return dobDD + dateSeparator + dobMM + dateSeparator + dobYY;
 			

@@ -17,8 +17,12 @@
         <property name="roundingAmount" column="ROUNDING_AMOUNT" />
         <property name="defaultCurrency" column="DEFAULT_CURRENCY" type="short" />
  		<property name="defaultDigitsAfterDecimal" column="DEFAULT_DIGITS_AFTER_DECIMAL" type="short" />
+ 		<property name="currencyCode" column="CURRENCY_CODE" type="string" />
     </class>
     <query name="getDefaultCurrency"><![CDATA[
         from org.mifos.application.master.business.MifosCurrency currency 
         where currency.defaultCurrency = 1 ]]></query>
+    <query name="getCurrency"><![CDATA[
+        from org.mifos.application.master.business.MifosCurrency currency 
+        where currency.currencyCode = :currencyCode ]]></query>
 </hibernate-mapping>

@@ -53,9 +53,9 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		try {
 			List currencies = new ArrayList();
 			currencies.add(new MifosCurrency((short)8, "Franc", "Fr",
-				MifosCurrency.CEILING_MODE, 0.0f, (short)1, (short)0));
+				MifosCurrency.CEILING_MODE, 0.0f, (short)1, (short)0,"FRC"));
 			currencies.add(new MifosCurrency((short)9, "Euro", "\u20ac",
-					MifosCurrency.CEILING_MODE, 0.0f, (short)1, (short)0));
+					MifosCurrency.CEILING_MODE, 0.0f, (short)1, (short)0,"ERO"));
 
 			configurationPersistence.defaultCurrencyFromList(currencies);
 			fail();
@@ -72,19 +72,5 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		assertEquals(1, configList.size());
 	}
 
-	//kim commented out on 10/02 will remove soon this test is removed because
-	// this method is removed 
-	//public void testGetSupportedLocale() throws Exception {
-	//	SupportedLocalesEntity locale =
-	//		configurationPersistence.getSupportedLocale();
-	//	assertEquals(Short.valueOf("1"),locale.getLocaleId());
-	//}
-
-	//kim remove this testcase because it is replaced by FiscalCalendarRules
-	//public void testGetWeekDaysList() throws Exception{
-	//	List<WeekDay> weekDaysList =
-	//		configurationPersistence.getWeekDaysList();
-	//	assertEquals(7, weekDaysList.size());
-	//}
-
+	
 }

@@ -110,7 +110,7 @@ public class ClientRules {
 	{
 		if (clientCanExistOutsideGroup == null)
 			clientCanExistOutsideGroup = getClientCanExistOutsideGroupFromConfig();
-		return getClientCanExistOutsideGroupFromConfig();
+		return clientCanExistOutsideGroup;
 	}
 	
 	private static Boolean getCenterHierarchyExistsFromConfig()

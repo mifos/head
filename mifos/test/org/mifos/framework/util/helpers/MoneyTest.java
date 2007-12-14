@@ -185,7 +185,7 @@ public class MoneyTest {
 	// TODO: This test is broken and needs to be fixed!
 	@Test @Ignore
 	public void testRoundRepeating() {
-		MifosCurrency currency = new MifosCurrency((short)1,"test", "$", (short)1, (float)3.0, (short)1, (short)1 );
+		MifosCurrency currency = new MifosCurrency((short)1,"test", "$", (short)1, (float)3.0, (short)1, (short)1,"USD" );
 		Money money = new Money(currency, "1");		
 		// need to figure out what the actual result should be.  
 		// this case was constructed just to generate the exception

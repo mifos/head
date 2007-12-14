@@ -76,13 +76,16 @@ public final class MifosCurrency extends PersistentObject {
 	
 	private Short defaultDigitsAfterDecimal;
 	
+	private String currencyCode;
+	
+
 	/**
 	 * This constructor will be used if the currency has to be 
 	 * created through the UI.
 	 */
 	public MifosCurrency(Short currencyId, String currencyName, 
 		String displaySymbol, Short roundingMode, Float roundingAmount,
-		Short defaultCurrency, Short defaultDigitsAfterDecimal) {
+		Short defaultCurrency, Short defaultDigitsAfterDecimal, String currencyCode) {
 		this.currencyId = currencyId;
 		this.currencyName = currencyName;
 		this.displaySymbol = displaySymbol;
@@ -90,7 +93,9 @@ public final class MifosCurrency extends PersistentObject {
 		this.roundingAmount = roundingAmount;
 		this.defaultCurrency = defaultCurrency;
 		this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
+		this.currencyCode = currencyCode;
 	}
+
 
 	protected MifosCurrency() {
 	}
@@ -113,8 +118,7 @@ public final class MifosCurrency extends PersistentObject {
 		this.currencyName = currencyName;
 	}
 
-	@SuppressWarnings("unused") // See .hbm.xml file
-	private Short getDefaultCurrency() {
+	public Short getDefaultCurrency() {
 		return defaultCurrency;
 	}
 
@@ -138,22 +142,21 @@ public final class MifosCurrency extends PersistentObject {
 
 	public RoundingMode getRoundingModeEnum() {
 		
-		RoundingMode defaultValue;
 		if (roundingMode == CEILING_MODE) {
-			defaultValue =  RoundingMode.CEILING;
+			return RoundingMode.CEILING;
 		}
 		else if (roundingMode == FLOOR_MODE) {
-			defaultValue = RoundingMode.FLOOR;
+			return RoundingMode.FLOOR;
 		}
 		else {
 			throw new IllegalStateException(
 				"bad rounding mode " + roundingMode);
 		}
-		return AccountingRules.getRoundingRule(defaultValue);
+		
 	}
 	
-	@SuppressWarnings("unused") // see .hbm.xml file
-	private Short getRoundingMode() {
+
+	public Short getRoundingMode() {
 		return roundingMode;
 	}
 
@@ -161,6 +164,13 @@ public final class MifosCurrency extends PersistentObject {
 		this.roundingMode = roundingMode;
 	}
 	
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -183,8 +193,7 @@ public final class MifosCurrency extends PersistentObject {
 	}
 
 	public Float getRoundingAmount() {
-		
-		return AccountingRules.getAmountToBeRoundedTo(roundingAmount);
+		return roundingAmount;
 	}
 	
 	@SuppressWarnings("unused") // See .hbm.xml file
@@ -193,8 +202,7 @@ public final class MifosCurrency extends PersistentObject {
 	}
 	
 	public Short getDefaultDigitsAfterDecimal() {
-		
-		return AccountingRules.getDigitsAfterDecimal(defaultDigitsAfterDecimal);
+		return defaultDigitsAfterDecimal;
 	}
 	
 	@SuppressWarnings("unused") // See .hbm.xml file

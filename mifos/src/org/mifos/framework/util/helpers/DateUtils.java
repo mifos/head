@@ -151,7 +151,7 @@ public class DateUtils {
 	public static java.util.Date getDate(String value) {
 		if (value != null && !value.equals("")) {
 			try {
-				// kim temporarily put in
+				
 				String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatStr);
 				// Enable this once we've taken a bit more of a look

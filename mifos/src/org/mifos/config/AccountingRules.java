@@ -1,15 +1,45 @@
 package org.mifos.config;
 
 import java.math.RoundingMode;
+import java.util.Currency;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.master.business.MifosCurrency;
 
 
 public class AccountingRules {
 	
-	private static final String AccountingRulesDigitsAfterDecimal = "AccountingRules.DigitsAfterDecimal";
-	private static final String AccountingRulesRoundingRule = "AccountingRules.RoundingRule";
-	private static final String AccountingRulesNumberOfInterestDays = "AccountingRules.NumberOfInterestDays";
-	private static final String AccountingRulesAmountToBeRoundedTo="AccountingRules.AmountToBeRoundedTo";
+	public static final String AccountingRulesDigitsAfterDecimal = "AccountingRules.DigitsAfterDecimal";
+	public static final String AccountingRulesRoundingRule = "AccountingRules.RoundingRule";
+	public static final String AccountingRulesNumberOfInterestDays = "AccountingRules.NumberOfInterestDays";
+	public static final String AccountingRulesAmountToBeRoundedTo="AccountingRules.AmountToBeRoundedTo";
+	public static final String AccountingRulesCurrencyCode="AccountingRules.CurrencyCode";
 	
+	
+	public static MifosCurrency getMifosCurrency()
+	{
+		String currencyCode = getCurrencyCode();
+		MifosCurrency currency = new ConfigurationPersistence().getCurrency(getCurrencyCode());
+		if (currency == null)
+			throw new RuntimeException("Can't find in the database the currency define in the config file " + currencyCode);
+		Short digitsAfterDecimal = getDigitsAfterDecimal(currency.getDefaultDigitsAfterDecimal());
+		Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
+		Short roundingMode = getRoundingMode(currency.getRoundingMode());
+		return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), currency.getDisplaySymbol(),
+				roundingMode, amountToBeRoundedTo, currency.getDefaultCurrency(), digitsAfterDecimal, currencyCode);
+	
+	}
+	
+	
+	public static String getCurrencyCode()
+	{
+		String currencyCode;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesCurrencyCode))
+			currencyCode = configMgr.getString(AccountingRulesCurrencyCode);
+		else
+			throw new RuntimeException("The currency code is not defined in the config file.");
+		return currencyCode;
+	}
 	
 	public static Short getDigitsAfterDecimal(Short defaultValue)
 	{
@@ -38,6 +68,26 @@ public class AccountingRules {
 			amount = defaultValue;
 		return amount;
 		
+	}
+	
+	public static Short getRoundingMode(Short defaultValue)
+	{
+		Short mode;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesRoundingRule))
+		{
+			String returnStr = configMgr.getString(AccountingRulesRoundingRule);
+			if (returnStr.equals("FLOOR"))
+				mode = MifosCurrency.FLOOR_MODE;
+			else if (returnStr.equals("CEILING"))
+				mode = MifosCurrency.CEILING_MODE;
+			else
+				throw new RuntimeException("The rounding mode defined in the config file is not CEILING nor FLOOR. It is " 
+						+ returnStr);
+		}
+		else
+			mode = defaultValue;
+		return mode;
 	}
 	
 	//	the defaultValue passed in should be the value from database

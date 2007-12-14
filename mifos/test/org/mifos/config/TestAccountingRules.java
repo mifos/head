@@ -1,27 +1,37 @@
 package org.mifos.config;
 
-import static org.junit.Assert.assertEquals;
 import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import junit.framework.JUnit4TestAdapter;
 import org.mifos.config.AccountingRules;
+import org.mifos.application.master.business.MifosCurrency;
 
 
-public class TestAccountingRules {
+public class TestAccountingRules  extends MifosTestCase {
 	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(TestAccountingRules.class);
 	}
 	
 	Configuration configuration;
-	private static final String AccountingRulesDigitsAfterDecimal = "AccountingRules.DigitsAfterDecimal";
-	private static final String AccountingRulesRoundingRule = "AccountingRules.RoundingRule";
-	private static final String AccountingRulesNumberOfInterestDays = "AccountingRules.NumberOfInterestDays";
-	private static final String AccountingRulesAmountToBeRoundedTo="AccountingRules.AmountToBeRoundedTo";
+	
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
 	
 	
 	
@@ -29,6 +39,29 @@ public class TestAccountingRules {
 	@BeforeClass
 	public static void init() throws Exception {
 		MifosLogManager.configure(FilePaths.LOGFILE);
+	}
+	
+	@Test
+	public void testGetMifosCurrency()
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String currencyCode = configMgr.getString(AccountingRules.AccountingRulesCurrencyCode);
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "INR");
+		MifosCurrency currency = AccountingRules.getMifosCurrency();
+		assertEquals(currency.getCurrencyCode(), "INR");
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "EUR");
+		currency = AccountingRules.getMifosCurrency();
+		assertEquals(currency.getCurrencyCode(), "EUR");
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "UUU");
+		try
+		{
+			currency = AccountingRules.getMifosCurrency();
+		}
+		catch (Exception e)
+		{
+			
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, currencyCode);
 		
 	}
 	
@@ -37,11 +70,11 @@ public class TestAccountingRules {
 		Short defaultValue = 0;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		Short digitsAfterDecimal = 1;
-		configMgr.addProperty(AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
+		configMgr.addProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
 		// return value from accounting rules class has to be the value defined in the config file
 		assertEquals(digitsAfterDecimal, AccountingRules.getDigitsAfterDecimal(defaultValue));
 		// clear the DigitsAfterDecimal property from the config file
-		configMgr.clearProperty(AccountingRulesDigitsAfterDecimal);
+		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
 		// now the return value from accounting rules class has to be the default value (value from db)
 		assertEquals(defaultValue, AccountingRules.getDigitsAfterDecimal(defaultValue));
 		// value not defined in config and defaultValue is null
@@ -55,7 +88,7 @@ public class TestAccountingRules {
 		{
 			assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file nor database.");
 		}
-		configMgr.clearProperty(AccountingRulesDigitsAfterDecimal);
+		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
 		
 	}
 
@@ -65,11 +98,11 @@ public class TestAccountingRules {
 		Float defaultValue = (float)0.5;
 		Float amountToBeRoundedTo = (float)0.01;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		configMgr.addProperty(AccountingRulesAmountToBeRoundedTo, amountToBeRoundedTo);
+		configMgr.addProperty(AccountingRules.AccountingRulesAmountToBeRoundedTo, amountToBeRoundedTo);
 		// return value from accounting rules class has to be the value defined in the config file
 		assertEquals(amountToBeRoundedTo, AccountingRules.getAmountToBeRoundedTo(defaultValue));
 		// clear the AmountToBeRoundedTo property from the config file
-		configMgr.clearProperty(AccountingRulesAmountToBeRoundedTo);
+		configMgr.clearProperty(AccountingRules.AccountingRulesAmountToBeRoundedTo);
 		// now the return value from accounting rules class has to be the default value (value from db)
 		assertEquals(defaultValue, AccountingRules.getAmountToBeRoundedTo(defaultValue));
 	}
@@ -80,16 +113,16 @@ public class TestAccountingRules {
 		String roundingMode = "FLOOR";
 		RoundingMode configRoundingMode = RoundingMode.FLOOR;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		configMgr.addProperty(AccountingRulesRoundingRule, roundingMode);
+		configMgr.addProperty(AccountingRules.AccountingRulesRoundingRule, roundingMode);
 		// return value from accounting rules class has to be the value defined in the config file
 		assertEquals(configRoundingMode, AccountingRules.getRoundingRule(defaultValue));
 		// clear the RoundingRule property from the config file
-		configMgr.clearProperty(AccountingRulesRoundingRule);
+		configMgr.clearProperty(AccountingRules.AccountingRulesRoundingRule);
 		// now the return value from accounting rules class has to be the default value (value from db)
 		assertEquals(defaultValue, AccountingRules.getRoundingRule(defaultValue));
 		// now set a wrong rounding mode in config
 		roundingMode = "UP";
-		configMgr.addProperty(AccountingRulesRoundingRule, roundingMode);
+		configMgr.addProperty(AccountingRules.AccountingRulesRoundingRule, roundingMode);
 		try
 		{
 			AccountingRules.getRoundingRule(defaultValue);
@@ -99,7 +132,7 @@ public class TestAccountingRules {
 			assertEquals(e.getMessage(), "The rounding mode defined in the config file is not CEILING nor FLOOR. It is "
 					+ roundingMode);
 		}
-		configMgr.clearProperty(AccountingRulesRoundingRule);
+		configMgr.clearProperty(AccountingRules.AccountingRulesRoundingRule);
 	}
 	
 	
@@ -108,15 +141,15 @@ public class TestAccountingRules {
 		Short interestDaysInConfig = AccountingRules.getNumberOfInterestDays();
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		Short insertedDays = 365;
-		configMgr.setProperty(AccountingRulesNumberOfInterestDays, insertedDays);
+		configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
 		assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
 		insertedDays = 360;
 		// set new value
-		configMgr.setProperty(AccountingRulesNumberOfInterestDays, insertedDays);
+		configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
 		// return value from accounting rules class has to be the value defined in the config file
 		assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
 		insertedDays = 355;
-		configMgr.setProperty(AccountingRulesNumberOfInterestDays, insertedDays);
+		configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays, insertedDays);
 		// throw exception because the invalid value 355
 		try
 		{
@@ -128,7 +161,7 @@ public class TestAccountingRules {
 					+ insertedDays.shortValue());
 		}
 		// clear the NumberOfInterestDays property from the config file
-		configMgr.clearProperty(AccountingRulesNumberOfInterestDays);
+		configMgr.clearProperty(AccountingRules.AccountingRulesNumberOfInterestDays);
 		// throw exception because no interest days defined in config file
 		try
 		{
@@ -139,7 +172,7 @@ public class TestAccountingRules {
 			assertEquals(e.getMessage(), "The number of interest days is not defined in the config file ");
 		}
 		
-		configMgr.addProperty(AccountingRulesNumberOfInterestDays, interestDaysInConfig);
+		configMgr.addProperty(AccountingRules.AccountingRulesNumberOfInterestDays, interestDaysInConfig);
 	}
 	
 	

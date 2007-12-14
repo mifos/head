@@ -788,19 +788,10 @@ public class PersonnelBO extends BusinessObject {
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
 			updateLastPersonnelLoggedin();
 		}
-		// the commented out code is moved to UserContext constructor
-		//SupportedLocalesEntity supportedLocales = Localization.getInstance().getSupportedLocale();
-		//if (null != supportedLocales) {
-		//	userContext.setLocaleId(supportedLocales.getLocaleId());
-		//	Locale preferredLocale = Localization.getInstance().getCurrentLocale();
-		//	userContext.setPreferredLocale(preferredLocale);
-			
-		//}
+		
 		userContext.setBranchId(getOffice().getOfficeId());
 		userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
 		userContext.setOfficeLevelId(getOffice().getLevel().getId());
-		//userContext.setMfiLocaleId(Configuration.getInstance().getSystemConfig().getMFILocaleId());
-		//userContext.setMfiLocale(Configuration.getInstance().getSystemConfig().getMFILocale());
 		logger.info("got usercontext");
 		return userContext;
 	}
