@@ -58,7 +58,7 @@ public interface MasterConstants {
 	public static final String INTERESTTYPES="InterestTypes";
 	public static final String INTERESTCALCRULE="InterestCalcRule";
 	public static final String GRACEPERIODTYPES="GracePeriodTypes";
-	public static final String STATUS_FLAG="Group Flag";
+	public static final String STATUS_FLAG="GroupFlag";
 	public static final String LOAN_STATUS="LoanStatus";
 	public static final String ACCOUNT_STATES="AccountStates";
 	public static final String ACCOUNT_STATE_FLAGS = "AccountFlags";
@@ -68,7 +68,7 @@ public interface MasterConstants {
 	public static final String RECOMMENDED_AMOUNT_UNIT ="RecommendedAmtUnit";
 	public static final String ATTENDENCETYPES = "CustomerAttendance";
 	public static final String PAYMENT_TYPE ="PaymentType";
-	public static final String LOAN_PURPOSES ="Loan Purposes";
+	public static final String LOAN_PURPOSES ="LoanPurposes";
 	public static final String OFFICER_TITLES = "Titles";
 	public static final short CUSTOMFIELD_NUMBER = 1;
 	public static final short CUSTOMFIELD_ALPHANUMBER = 2;

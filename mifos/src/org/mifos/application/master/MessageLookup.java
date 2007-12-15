@@ -6,6 +6,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
+import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -72,13 +73,35 @@ public class MessageLookup implements MessageSourceAware {
 		return lookup(namedObject, user.getPreferredLocale());
 	}
 
+	public String lookup(String lookupKey, Locale locale) {
+		return messageSource.getMessage(lookupKey, null, lookupKey, locale);		
+	} 
+	
+	public String lookup(String lookupKey, UserContext userContext) {
+		Locale locale = userContext.getPreferredLocale();
+		return lookup(lookupKey, locale);
+	}
+	
+	public String lookupLabel(String labelKey) {
+		return lookupLabel(labelKey, Localization.getInstance().getMainLocale());
+	}
+	
 	/*
 	 * Return a label for given label key.  Label keys are listed in
 	 * {@link ConfigurationConstants}.
 	 */
 	public String lookupLabel(String labelKey, Locale locale) {
 		try {
-			return MifosConfiguration.getInstance().getLabel(labelKey, locale);
+			String labelText = MifosConfiguration.getInstance().getLabel(labelKey, locale);
+			
+			// if we don't find a label here, then it means that it has not been customized and
+			// we should return the default label from the properties file
+			if (labelText == null) {
+				labelText = lookup(labelKey + ".Label", locale);
+			}
+			
+			return labelText;
+			
 		}
 		catch (ConfigurationException e) {
 			throw new RuntimeException(e);

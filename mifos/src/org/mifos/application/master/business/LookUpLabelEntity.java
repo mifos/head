@@ -38,6 +38,7 @@
 
 package org.mifos.application.master.business;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.PersistentObject;
 
 public class LookUpLabelEntity extends PersistentObject {
@@ -52,8 +53,19 @@ public class LookUpLabelEntity extends PersistentObject {
 
 	private MifosLookUpEntity lookUpEntity;
 
+	public String getLabelKey() {
+		return lookUpEntity.getEntityType();
+	}
+	
 	public String getLabelName() {
-		return labelName;
+		if (labelName != null) {
+			return labelName;
+		} else {
+
+		// if we don't find a label here, then it means that it has not been customized and
+		// we should return the default label from the properties file
+			return MessageLookup.getInstance().lookupLabel(getLabelKey());
+		}
 	}
 
 	public void setLabelName(String labelName) {

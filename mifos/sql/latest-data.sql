@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(164);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(165);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -39,21 +39,21 @@ need to be configured like center to be called kendra by mfi,
 ethnicity to be called something by the MFI, 
 salutation to be called something by the MFI etc - Configuration */
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(1,'Client Status','Client Status');
+VALUES(1,'ClientStatus','Client Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(2,'Group Status','Group Status');
+VALUES(2,'GroupStatus','Group Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(3,'Center Status','Center Status');
+VALUES(3,'CenterStatus','Center Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(4,'Office Status','Office Status');
+VALUES(4,'OfficeStatus','Office Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(5,'AccountState','Account States');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(6,'Personnel Status','Personnel Status');
+VALUES(6,'PersonnelStatus','Personnel Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(7,'Group Flag','Group Flag');
+VALUES(7,'GroupFlag','Group Flag');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(8,'Fee Type','Fee Type');
+VALUES(8,'FeeType','Fee Type');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(9,'Titles','Customer Position');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -83,11 +83,11 @@ VALUES(21,'BusinessActivities','BusinessActivities');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(22,'Handicapped','Handicaped');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(23,'Client Formed By','CustomField ClientFormedBy for client');
+VALUES(23,'ClientFormedBy','CustomField ClientFormedBy for client');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(24,'PostalCode','ZipCode');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(25,'Product State','Product State');
+VALUES(25,'ProductState','Product State');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(26,'Loan','Loan');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -151,25 +151,25 @@ VALUES(56,'PersonnelStatus','PersonnelStatus');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(57,'Personnel','Personnel');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(58,'Replacement Status','Custom Field ReplacementStatus for Client');
+VALUES(58,'ReplacementStatus','Custom Field ReplacementStatus for Client');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(59,'GRT StaffId','Custom Field GRTStaffId for Group');
+VALUES(59,'GRTStaffId','Custom Field GRTStaffId for Group');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(60,'Meeting Time','Custom Field Meeting Time for Center');
+VALUES(60,'MeetingTime','Custom Field Meeting Time for Center');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(61,'Distance from BO To Center','Custom Field Distance from BO To Center');
+VALUES(61,'DistanceFromBoToCenter','Custom Field Distance from BO To Center');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(62,'ExternalId','Custom Field external ID for Personnel and office');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(63,'No of Clients per Group','Custom Field  No. of Clients per Group');
+VALUES(63,'NoOfClientsPerGroup','Custom Field  No. of Clients per Group');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(64,'No of Clients per Center','Custom Field No. of Clients per Center');
+VALUES(64,'NoOfClientsPerCenter','Custom Field No. of Clients per Center');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(65,'Distance From HO To BO','Custom Field Distance from HO To BO for office');
+VALUES(65,'DistanceFromHoToBO','Custom Field Distance from HO To BO for office');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(66,'External Loan Id','Custom Field ExternalID for office');
+VALUES(66,'ExternalLoanId','Custom Field ExternalID for office');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(67,'External Savings Id','Custom Field ExternalSavingsId');
+VALUES(67,'ExternalSavingsId','Custom Field ExternalSavingsId');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(68,'FeeStatus','FeeStatus');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -187,11 +187,11 @@ VALUES(74,'Language','Language');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(75,'CustomerAttendance','CustomerAttendance');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(76,'Financial Action','Financial Action');
+VALUES(76,'FinancialAction','Financial Action');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(77,'BulkEntry','BulkENtry');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(78,'SavingsAccountFlag ','SavingsAccountFlag');
+VALUES(78,'SavingsAccountFlag','SavingsAccountFlag');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(79,'Address3','Address3');
 INSERT INTO LOOKUP_ENTITY 
@@ -199,7 +199,7 @@ VALUES(80,'City','City');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(81,'Interest','Interest');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(82,'Loan Purposes','Loan Purposes');
+VALUES(82,'LoanPurposes','Loan Purposes');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(83,'State','State');
 INSERT INTO LOOKUP_ENTITY 
@@ -211,12 +211,12 @@ VALUES(86,'GovernmentId','GovernmentId');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(87,'Permissions','Permissions');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(88,'Service Charge','Interest');
+VALUES(88,'ServiceCharge','Interest');
 
 INSERT INTO LOOKUP_ENTITY 
 VALUES(89,'feeUpdationType',' fee updation can to applied to existing accounts or future accounts');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(90,'Fee Frequency','Fee Frequency');
+VALUES(90,'FeeFrequency','Fee Frequency');
 
 /* fee_type */
 INSERT INTO FEE_TYPE(FEE_TYPE_ID,FEE_LOOKUP_ID,FLAT_OR_RATE,FORMULA)
@@ -1306,9 +1306,10 @@ VALUES(19,10,1,'Poverty Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(21,11,1,'Center');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(23,12,1,'Group');
+VALUES(23,12,1,'Group')
+/* 'Client' */;
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(25,13,1,'Client');
+VALUES(25,13,1,'Client'); 
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(27,14,1,'Office');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
@@ -1420,16 +1421,11 @@ INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(132,70,1,'AccountFlags');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(134,71,1,'PaymentType');
+
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(136,72,1,'Partial Application');
-INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(138,72,1,'Application Pending Approval');
-INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(140,72,1,'Cancelled');
-INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(142,72,1,'Active');
-INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(144,72,1,'Closed');
+VALUES(136,72,1,'Savings Status');
+
+
 /*language*/
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(151,74,1,'Language');
@@ -4638,7 +4634,7 @@ INSERT INTO ROLES_ACTIVITY VALUES (204,1);
 
 
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(91,'Repayment Rule','Repayment Rule Types');
+VALUES(91,'RepaymentRule','Repayment Rule Types');
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME)
 VALUES(576,91,' ');
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME)

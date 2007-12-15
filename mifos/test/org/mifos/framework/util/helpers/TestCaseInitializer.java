@@ -65,12 +65,12 @@ public class TestCaseInitializer {
 			FinancialInitializer.initialize();
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();
-			MifosConfiguration.getInstance().init();
 			
 			/* initializeSpring needs to come before AuditConfiguration.init
 			 * in order for MasterDataEntity data to be loaded.
 			 */
 			TestUtils.initializeSpring();
+			MifosConfiguration.getInstance().init();
 			AuditConfigurtion.init(Localization.getInstance().getMainLocale());
 			
 
