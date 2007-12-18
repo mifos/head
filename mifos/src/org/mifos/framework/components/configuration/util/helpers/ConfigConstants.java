@@ -41,9 +41,6 @@ package org.mifos.framework.components.configuration.util.helpers;
  * This interface will hold the constants related to configurable items.
  */
 public interface ConfigConstants {
-	 // constants for System configuration
-	 public static final String SESSION_TIMEOUT = "sessionTimeout";
-	 
 	 //constants for Customer configuration
 	 public static final String PENDING_APPROVAL_DEFINED_FOR_CLIENT =
 		 "PendingApprovalDefinedForClient";

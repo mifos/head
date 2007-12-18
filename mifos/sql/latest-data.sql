@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(165);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(166);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3849,7 +3849,7 @@ VALUES(1,1,1,1,1);
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);
-INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('sessionTimeout',60);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES (' ',0);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('jasperReportIsHidden',1);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('loanIndividualMonitoringIsEnabled',0);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('repaymentSchedulesIndependentOfMeetingIsEnabled',0);

@@ -90,22 +90,20 @@ public class ConfigurationInitializer {
 		return headOffice;
 	}
 
-	protected SystemConfiguration createSystemConfiguration() throws SystemException,
-			ApplicationException {
+	protected SystemConfiguration createSystemConfiguration()
+		throws SystemException {
 
-		int sessionTimeout = configurationPersistence.getConfigurationValueInteger(
-						configurationPersistence.CONFIGURATION_KEY_SESSION_TIMEOUT);
+		MifosCurrency defaultCurrency = null;
+		try {
+			defaultCurrency = AccountingRules.getMifosCurrency();
+		} catch (RuntimeException re) {
+			throw new SystemException("cannot fetch default currency", re);
+		}
 
-		
-		MifosCurrency defaultCurrency = AccountingRules.getMifosCurrency();
-					
-		
 		// TODO: pick timezone offset from database
 		int timeZone = 19800000;
-		
 
-		return new SystemConfiguration(defaultCurrency, 
-				sessionTimeout, timeZone);
+		return new SystemConfiguration(defaultCurrency, timeZone);
 	}
 
 	protected OfficeCache createOfficeCache() throws SystemException,
