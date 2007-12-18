@@ -33,7 +33,7 @@ public static final String PERSONNEL="Personnel";
 
 public static final String KEY_NO_MESSAGE_FOR_THIS_KEY=
 	"No message exist for this key";
-public static final String SERVICE_CHARGE="Service Charge";
+public static final String SERVICE_CHARGE="ServiceCharge";
 public static final short INTEREST_DAYS=360;
 
 public static final String SURVEY="Survey";
