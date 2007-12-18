@@ -788,7 +788,7 @@ public class CustomerPersistence extends Persistence {
 				initialize(customerStatusFlagEntity.getNames());
 			}
 			initialize(customerStatus.getLookUpValue());
-		}
+		}		
 		return queryResult;
 	}
 
@@ -943,4 +943,48 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER,
 				queryParameters);
 	}
+	
+	// for moratorium [start]
+	public QueryResult searchCenterGroupClient(String searchString, Short userId)
+	throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+		if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
+			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
+			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT_LO;
+			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
+		}
+		else {
+			namedQuery[0] = NamedQueryConstants.MORATORIUM_SEARCH_GROUP_CLIENT_COUNT;
+			namedQuery[1] = NamedQueryConstants.MORATORIUM_SEARCH_GROUP_CLIENT;
+		}
+		
+		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+				.getOffice().getSearchId()
+				+ "%"));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+        paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
+				ClientRules.getGroupCanApplyLoans() == true ? Boolean.valueOf(true)
+						: Boolean.valueOf(false)));
+
+        String[] aliasNames = { "clientName", "clientId", "groupName",
+				"centerName", "officeName", "globelNo" };
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs
+				.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
+		queryInputs.setAliasNames(aliasNames);
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}		
+		return queryResult;		
+		}
+	//  for moratorium [end]
 }

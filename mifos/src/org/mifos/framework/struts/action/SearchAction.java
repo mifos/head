@@ -8,6 +8,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.struts.actionforms.CustSearchActionForm;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
@@ -83,6 +84,18 @@ public class SearchAction extends BaseAction {
 		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
+	
+//	 added for moratorium [start]
+	public ActionForward searchForMoratorium(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		cleanUpSearch(request);
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
+		CustSearchActionForm actionForm = (CustSearchActionForm) form;
+		//if(actionForm.getInput() != null && actionForm.getInput().equals("moratorium"))
+			return mapping.findForward(ActionForwards.moratorium_search_success.toString());
+		//else
+			//return mapping.findForward(ActionForwards.search_success.toString());
+	}
+	// added for moratorium [end]
 	
 	protected QueryResult getSearchResult(ActionForm form) throws Exception{
 		return null;

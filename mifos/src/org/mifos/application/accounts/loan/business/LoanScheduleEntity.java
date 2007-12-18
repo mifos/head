@@ -45,12 +45,14 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanScheduleEntity extends AccountActionDateEntity {
@@ -457,5 +459,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 		return false;
 	}
-
+	
+	// for moratorium
+	public void save() throws ApplicationException {
+		new LoanPersistence().createOrUpdate(this);	
+	}
 }

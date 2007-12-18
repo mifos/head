@@ -33,6 +33,13 @@
 			<key column="PARENT_OFFICE_ID"  />
 			<one-to-many class="org.mifos.application.office.business.OfficeBO"   />
 		</set>
+		
+		<!-- added for moratorium -->
+		<set name="clients"  inverse="true"  lazy="true" >
+			<key column="BRANCH_ID"  />
+			<one-to-many class="org.mifos.application.customer.business.CustomerBO"   />
+		</set>
+		<!-- added for moratorium -->
 
 		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" />
 	</class>

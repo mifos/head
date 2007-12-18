@@ -306,7 +306,7 @@ public interface NamedQueryConstants {
 	public String GROUP_SEARCH_WITHOUT_CENTER="group_SearchWithoutCenter";
 	public String GROUP_SEARCH_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER="group_SearchWithoutCenterForAddingGroupMember";
 	public String COUNT_GROUP_SEARCH_WITHOUT_CENTER="count_groupSearchWithoutCenter";
-	
+
 	public String ACCOUNTSEARCH ="accounts.accountSearch";
 	public String COUNT_ACCOUNTSEARCH ="accounts.count_accountSearch";
 	public String ACCOUNTSEARCH_NOCLIENTS ="accounts.accountSearch_noclients";
@@ -317,21 +317,21 @@ public interface NamedQueryConstants {
 	public String LEVEL_COUNT_ACCOUNTSEARCH_NOCLIENTS ="accounts.count_levelaccountSearch_noclients";
 	public String ACCOUNTIDSEARCH ="accounts.accountIdSearch";
 	public String ACCOUNTIDSEARCH_WITHOUTOFFICE ="accounts.accountIdSearch_withoutoffice";
-	
+
 	public String CUSTOMERSEARCH="Customer.search";
 	public String COUNT_CUSTOMERSEARCH="Customer.count_search";
-	
+
 	public String CUSTOMERSEARCH_NOOFFICEID="Customer.search_noofficeid";
 	public String COUNT_CUSTOMERSEARCH_NOCLIENTS="Customer.count_search_noclients";
 	public String CUSTOMERSEARCH_NOCLIENTS="Customer.search_noclients";
-	
+
 	public String COUNT_CUSTOMERSEARCH_NOOFFICEID="Customer.count_search_noofficeid";
 	public String CUSTOMER_IDSEARCH="Customer.idsearch";
 	public String CUSTOMER_IDSEARCH_WITHOUTOFFICE="Customer.idsearch_withoutoffice";
 	public String CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS="Customer.search_noofficeid_noclients";
 	public String COUNT_CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS="Customer.count_search_noofficeid_noclients";
 	// for collection sheet
-	
+
 	public String CUSTOMERS_WITH_SPECIFIED_MEETING_DATE=
 		"CollectionSheetCustomer.customersWithSpecifiedMeetingDate";
 	public String CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate";
@@ -357,15 +357,15 @@ public interface NamedQueryConstants {
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID="office.getOfficeSearchId";
 	public String OFFICE_GET_HEADOFFICE="office.getHeadOffice";
-	
+
 	/**Account*/
 	public String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
 	public String BULKENTRYPRODUCTS = "Customer.getLoanProductForCustomer";
 	public String GET_LAST_MEETINGDATE_FOR_CUSTOMER="accounts.getLastMeetingDateforCustomer";
-	
+
 	public String ACCOUNT_GETNEXTINSTALLMENTIDS="account.GetNextInstallmentIds";
 	public String ACCOUNT_GETACTIVEFEES="Account.getActiveFees";
-	
+
 	public String GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS="accounts.getApplicableSavingsProductOfferings";
 	public String RETRIEVE_SAVINGS_ACCCOUNT="accounts.retrieveSavingsAccounts";
 	public String RETRIEVE_ACCCOUNTS_FOR_INT_CALC="accounts.retrieveSavingsAccountsIntCalc";
@@ -379,7 +379,7 @@ public interface NamedQueryConstants {
 	public String FIND_INDIVIDUAL_LOANS="accounts.findIndividualLoans";
 	public String RETRIEVE_LAST_TRXN="accounts.retrieveLastTrxn";
 	public String RETRIEVE_FIRST_TRXN="accounts.retrieveFirstTrxn";
-	
+
 	/*Savings Search Queries*/
 	public String  CUSTOMERSFORSAVINGSACCOUNT="accounts.customersForSavingsAccount";
 	public String COUNT_CUSTOMERSFORSAVINGSACCOUNT="accounts.count_customersForSavingsAccount";
@@ -389,7 +389,7 @@ public interface NamedQueryConstants {
 	public String COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO="accounts.count_customersForSavingsAccountNonLO";
 	public String CUSTOMERSFORSAVINGSACCOUNTNONLO_NOCLIENTS="accounts.customersForSavingsAccount_noclientsNonLO";
 	public String COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO_NOCLIENTS="accounts.count_customersForSavingsAccount_noclientsNonLO";
-	
+
 	/*Configuration Queries*/
 	public String GET_DEFAULT_CURRENCY = "getDefaultCurrency";
 	public String ACCOUNT_ISCURRENTDATEGREATERTHENFIRSTINSTALLMENTDATE="Account.isCurrentDateGreaterThenFirstInstallmentDate";
@@ -397,7 +397,7 @@ public interface NamedQueryConstants {
 	public String GET_LOOKUPVALUES="lookupvalues";
 	public String SUPPORTED_LOCALE_LIST="supportedlocales";
 	public String GET_CURRENCY="getCurrency";
-	
+
 	//	BulkEntry 
 	public String BULKENTRYSAVINGSPRODUCTS = "Customer.getSavingsProductForCustomer";
 	public String GET_FEE_AMOUNT_AT_DISBURSEMENT="accounts.getFeeAmountAtDisbursement";
@@ -406,13 +406,13 @@ public interface NamedQueryConstants {
 	public String RETRIEVE_CUSTOM_FIELDS="retrieveCustomFields";
 	public String RETRIEVE_ALL_CUSTOM_FIELDS="retrieveAllCustomFields";
 	public String RETRIEVE_ONE_CUSTOM_FIELD="retrieveOneCustomField";
-	
+
 	public String LISTOFSAVINGSANDLOANACCOUNTS="accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";
-	
+
 	public String FETCH_LOANCOUNTERS = "Customer.fetchLoanCounters";
-	
-	
+
+
 	//Customer Accounts Quries
 	public String CUSTOMER_ACTIVE_LOAN_ACCOUNTS="Customer.getActiveLoanAccounts";
 	public String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS="Customer.getActiveSavingsAccounts";
@@ -423,31 +423,31 @@ public interface NamedQueryConstants {
 	public String GET_GROUP_BY_SYSTEMID="customer.findGroupSystemId";
 	public String GET_CLIENT_BY_SYSTEMID="customer.findClientSystemId";
 	public String GETACTIVELOANOFFICER="customer.findActiveLoanOfficef";
-	
-	
+
+
 	//number of meetings attended and missed
 	public String NUMBEROFMEETINGSATTENDED="numberOfMeetingsAttended";
 	public String NUMBEROFMEETINGSMISSED="numberOfMeetingsMissed";
 	public String GETLASTLOANAMOUNT="accounts.getLastLoanAmount";
-	
-	
+
+
 	// configuration
 	public String GET_MFI_LOCALE="getMFILocale";
 	public String GET_OFFICE_CONFIG = "getOfficeConfig";
 	public final String GET_CONFIGURATION_KEYVALUE_BY_KEY = "getConfigurationKeyValueByKey";
-	
+
 
 	//Fething fees with formula
 	public String GET_FEES_WITH_FORMULA_FOR_LOAN="getFeesWithFormmulaForLoan";
-	
+
 	//Fetch approved state entity for loan account
 	public String GET_APPROVED_ACCOUNT_STATE="accounts.getApprovedAccountState";
-	
+
 	public String GET_LASTPAIDINSTALLMNENT_ON_CURRENTDATE="account.GetLastPaidInstallmentOnCurrentDate";
-	
+
 	//To get customer account
 	public String CUSTOMER_ACCOUNT_ACTIONS_DATE="accounts.getCustomerAccountActionDates";
-	
+
 	public String GET_LOAN_ACOUNTS_IN_ARREARS="accounts.GetLoanArrears";
 	public String GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING="accounts.GetLoanArrearsInGoodStanding";
 	public String GET_LATENESS_FOR_LOANS="productdefenition.GetLatenessDaysForLoans";
@@ -457,45 +457,45 @@ public interface NamedQueryConstants {
 	public String GET_ALL_OFFICES = "office.getAllOffices";
 	public final String GET_OFFICES_TILL_BRANCHOFFICE="office.getOfficesTillBranchOffice";
 	public final String GET_BRANCH_OFFICES="office.getBranchOffices";
-	
+
 	public String GET_MANDATORY_FIELD_List="getMandatoryFieldList";
 	public String GET_FIELD_LIST="getFieldList";
 	public String GET_ENTITY_MASTER="getEntityMaster";
-	
+
 	public String GET_PAYMENT_TYPES="getPaymentTypes";
 	public String GET_YESTERDAYS_INSTALLMENT_FOR_ACTIVE_CUSTOMERS="getYesterdaysInstallmentForActiveCustomers";
 	public String GET_UPDATED_CUSTOMER_MEETINGS="getUpdatedMeetings";
 	public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE="accounts.countOfMissedDepositsPaidAfterDueDate";
 	public String GET_CENTER_COUNT_BY_NAME="Customer.getCenterCount";
 	public String GET_GROUP_COUNT_BY_NAME="Customer.getGroupCountByGroupNameAndOffice";
-	 
+
 	//fee related m2
 	public String GET_UPDATED_FEES_FOR_CUSTOMERS="getUpdatedFeesForCustomers";
 	public String GET_CUSTOMER_ACCOUNTS_FOR_FEE="getCustomerAccountsForFee";
-	
+
 	// Seems not to be used by anything
 	public String GET_FEE_UPDATETYPE="getFeeUpdateType";
-	
+
 	public String GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS=
 		"getActiveCustomerAndSavingsAccounts";
-	
+
 	public String GET_LASTINSTALLMENT="getLastInstallment";
-	
+
 	public String ACTIVE_CUSTOMERS_UNDER_PARENT = "Customer.getActiveCustomerUnderParent";
 	public String RETRIEVE_CUSTOMER_FEES_BY_CATEGORY_TYPE="retrieveCustomerFeesByCategoryType";
 	public String RETRIEVE_CUSTOMER_FEES="retrieveCustomerFees";
 	public String RETRIEVE_PRODUCT_FEES="retrieveProductFees";
 	public String ACTIVE_CUSTOMERS_WITH_SEARCH_ID = "Customer.getActiveCustomerWithSearchId";
-	
+
 	public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
 	public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";
 	public String ALL_CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllCustomerAcounts";
 	public String CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForCustomerAcount";
-	
+
 	public String ALL_LOAN_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllLoanAcounts";
 	public String ALL_CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForAllCustomerAccounts";
 	public String CUSTOMER_FEE_SCHEDULE_DETAILS = "account.getAllAccountFeeForAllInstallmentsForCustomerAccount";
-	
+
 	public String APPLICABLE_LOAN_OFFERINGS = "loanOffering.getApplicableProduts";
 
 	public String GET_ALL_APPLICABLE_CUSTOMER_FEE="getAllApplicableFeesForCustomer";
@@ -503,7 +503,7 @@ public interface NamedQueryConstants {
 
 	public String GETALLCUSTOMERNOTES = "notes.getAllCustomerNotes";
 
-	
+
 	public String GET_ALL_APPLICABLE_FEE_FOR_LOAN_CREATION="getAllApplicableFeesForLoanCreation";
 	public String MASTERDATA_MIFOS_ENTITY_VALUE="masterdata.mifosEntityValue";
 
@@ -527,19 +527,19 @@ public interface NamedQueryConstants {
 	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
 	public String GETOFFICEINACTIVE="getCountInactiveOffice";
 	public String GET_PRD_TYPES="productdefenition.getProductTypes";
-	public String GET_PRD_TYPES_BY_ID="productmix.getProductTypesByID";	
+	public String GET_PRD_TYPES_BY_ID="productmix.getProductTypesByID";
 	public String GET_PRODUCTCATEGORY="productdefenition.getProductCategory";
 	public String GET_PRDCATEGORYSTATUS="productdefenition.prdcategorystatus";
 	public String GET_OFFICES_TILL_BRANCH="office.getOfficesTillBranchOfficeActive";
 	public String GET_BRANCH_PARENTS="office.getBranchParents";
-	
+
 	//M2 center
 	public String GET_LO_FOR_CUSTOMER="Customer.getLOForCustomer";
 	public String GET_OFFICE_LEVELS="officeLevel.getOfficeLevels";
 	//Change Account Status
 	public String GET_ALL_BRANCHES="office.getAllBranches";
 	public String GET_SEARCH_RESULTS="account.getSearchResults";
-	
+
 	//M2 personnel
 	public String GET_PERSONNEL_WITH_NAME="getCountByName";
 	public String GETPERSONNELBYNAME="getPersonnelByName";
@@ -556,12 +556,12 @@ public interface NamedQueryConstants {
 
 	public String PRDAPPLICABLE_CATEGORIES="product.createapplicableproductcat";
 	public String SAVINGS_APPL_RECURRENCETYPES="product.savingsapplicablerecurrencetypes";
-	
+
 	public String GET_ROLE_FOR_GIVEN_NAME="getRoleForGivenName";
 	public String GET_ALL_ACTIVITIES="getAllActivities";
 	public String GET_ALL_ROLES="getAllRoles";
 	public String GET_PERSONNEL_ROLE_COUNT="getPersonnelRoleCount";
-	
+
 	public String PRODUCT_STATUS="product.status";
 	public String ALL_PRD_STATES="product.getAllPrdStates";
 	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
@@ -570,10 +570,10 @@ public interface NamedQueryConstants {
 
 	public String PRODUCT_NOTMIXED_SAVING_PRODUCTS="product.getSavingOfferingsNotMixed";
 
-	//m2 search quaries 
+	//m2 search quaries
 	public String CUSTOMER_SEARCH_COUNT_FIRST_AND_LAST_NAME="Customer.cust_count_search_first_and_last_name";
 	public String CUSTOMER_SEARCH_COUNT="Customer.cust_count_search";
-	
+
 	public String CUSTOMER_SEARCH_FIRST_AND_LAST_NAME="Customer.cust_search_first_and_last_name";
 	public String CUSTOMER_SEARCH="Customer.cust_search";
 	public String CUSTOMER_SEARCH_NOOFFICEID="Customer.cust_search_noofficeid";
@@ -581,29 +581,29 @@ public interface NamedQueryConstants {
 
 	public String CUSTOMER_SEARCH_NOOFFICEID_FIRST_AND_LAST_NAME="Customer.cust_search_noofficeid_first_and_last_name";
 	public String CUSTOMER_SEARCH_COUNT_NOOFFICEID_FIRST_AND_LAST_NAME="Customer.cust_count_search_noofficeid_first_and_last_name";
-	
-	
+
+
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID="Customer.cust_idsearch_withoutoffice";
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT="Customer.cust_idsearch_withoutoffice_count";
-	
+
 	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
 	public String CUSTOMER_ID_SEARCH_COUNT="Customer.cust_idsearch_count";
-	
+
 	public String CUSTOMER_ID_SEARCH_NONLO="Customer.cust_idsearch_nonLo";
 	public String CUSTOMER_ID_SEARCH_COUNT_NONLO="Customer.cust_idsearch_count_nonLo";
-	
+
 	public String ACCOUNT_ID_SEARCH="accounts.account_IdSearch";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID="accounts.account_IdSearch_withoutoffice";
 	public String ACCOUNT_ID_SEARCH_COUNT="accounts.account_IdSearch_count";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID_COUNT="accounts.account_IdSearch_withoutoffice_count";
-	
+
 	public String ACCOUNT_LIST_ID_SEARCH="accounts.account_list_IdSearch";
 	public String PERSONNEL_SEARCH_COUNT="count_search_Personnel";
 	public String PERSONNEL_SEARCH="search_Personnel";
-	
+
 	public String PERSONNEL_SEARCH_COUNT_FIRST_NAME_AND_LAST_NAME="count_search_Personnel_first_and_last_name";
 	public String PERSONNEL_SEARCH_FIRST_NAME_AND_LAST_NAME="search_Personnel_first_and_last_name";
-	
+
 	public String CENTER_SEARCH="search_Centers";
 	public String CENTER_SEARCH_COUNT="count_search_Centers";
 	public String GROUP_SEARCHWITH_CENTER="group_SearchWithCenter";
@@ -625,7 +625,7 @@ public interface NamedQueryConstants {
 	public String SEARCH_GROUPS_FOR_LOAN_OFFICER="Customer.get_loanofficer_groups";
 	public String GET_ACTIVE_LOAN_OFFICER_UNDER_USER="get_active_loanofficers_under_office";
 	public String GET_ACTIVE_BRANCHES="get_active_offices";
-	
+
 	public String RETRIEVE_AUDIT_LOG_RECORD="retrieveAuditLogRecords";
 
 //	check List M2
@@ -639,20 +639,20 @@ public interface NamedQueryConstants {
 	public String CHECKLIST_GET_VALID_CUSTOMER_STATES="checklist.getStatusForCustomer";
 	public String CHECKLIST_GET_VALID_ACCOUNT_STATES="checklist.getStatusForAccount";
 	public String FETCH_ALL_RECURRENCE_TYPES="meeting.fetchAllReccurenceTypes";
-	
+
 	public String ACTIVE_CLIENTS_UNDER_PARENT="Customer.getActiveClientsUnderParent";
 	public String ACTIVE_CLIENTS_UNDER_GROUP="Customer.getActiveClientsUnderGroup";
 	public String LAST_LOAN_AMOUNT_CUSTOMER="account.lastLoanAmountForCustomer";
-	
+
 //  holiday handling
 	public String GET_HOLIDAYS = "holiday.getHolidays";
 	public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
 	public String ALL_LOAN_SCHEDULE = "account.getAllLoanSchedules";
 	public String ALL_SAVING_SCHEDULE = "account.getAllSavingSchedules";
 	public String GET_HOLIDAYS_BY_FLAG = "holiday.getHoildaysByFlag";
-	
+
 	public String GET_ALL_FIELD_CONFIGURATION_LIST = "getAllFieldConfigurationList";
-	
+
 //	surveys
 	public String SURVEYS_RETRIEVE_ALL = "surveys.retrieveAllSurveys";
 	public String RESPONSES_RETRIEVE_ALL = "surveys.retrieveAllResponses";
@@ -674,12 +674,12 @@ public interface NamedQueryConstants {
 	public String SURVEYINSTANCE_RETRIEVE_BY_ACCOUNT = "surveys.retrieveInstancesByAccount";
 	public String SURVEYINSTANCE_RETRIEVE_BY_SURVEY = "surveys.retrieveInstancesBySurvey";
 	public String RESPONSES_RETRIEVE_BY_INSTANCE = "surveys.retrieveResponsesByInstance";
-	
+
 // products mix
 	public String LOAD_ALL_DEFINED_PRODUCTS_MIX = "productsmix.retrieveAll";
 	public String LOAD_NOT_ALLOWED_PRODUCTS = "productsmix.loadnotallowedproducts";
 	public String LOAD_DEFINED_PRODUCTS_MIX_BY_PRDOFFERING_ID = "productsmix.retrieveByProductID";
-	
+
 //	 accepted payment type
 	public String GET_ACCEPTED_PAYMENT_TYPE ="acceptedpaymenttype.getAcceptedPaymentType";
 	public String GET_ACCEPTED_PAYMENT_TYPES_FOR_A_TRANSACTION="acceptedpaymenttype.getAcceptedPaymentTypesForATransaction";
@@ -687,4 +687,12 @@ public interface NamedQueryConstants {
 	public String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
 	public String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
 	public String GET_ALL_COA = "COABO.getAllCoa";
+
+	// for moratorium
+	public String GET_MORATORIUMS = "moratorium.getMoratoriums";
+	public String GET_MORATORIUM_BY_ID = "moratorium.getMoratoriumById";
+	public String GET_MORATORIUM_BY_CUSTOMER_ID = "moratorium.getMoratoriumByCustomerId";
+	public String GET_MORATORIUM_BY_OFFICE_ID = "moratorium.getMoratoriumByOfficeId";
+	public String MORATORIUM_SEARCH_GROUP_CLIENT_COUNT="Moratorium.cust_count_account_Search";
+	public String MORATORIUM_SEARCH_GROUP_CLIENT="Moratorium.cust_account_Search";
 }

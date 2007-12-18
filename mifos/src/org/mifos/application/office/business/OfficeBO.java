@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.exceptions.OfficeException;
@@ -58,6 +59,9 @@ public class OfficeBO extends BusinessObject {
 	private OfficeAddressEntity address;
 
 	private Set<OfficeBO> children;
+	
+	// added for moratorium
+	private Set<CustomerBO> clients;
 
 	public OfficeBO() {
 		super();
@@ -645,5 +649,13 @@ public class OfficeBO extends BusinessObject {
 			}
 		}
 		return isParent;
+	}
+
+	public Set<CustomerBO> getClients() {
+		return clients;
+	}
+
+	public void setClients(Set<CustomerBO> clients) {
+		this.clients = clients;
 	}
 }

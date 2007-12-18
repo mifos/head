@@ -145,6 +145,9 @@
 		<!--  Accepted Payment Type Form -->
 		<form-bean name="acceptedpaymenttypeactionform" type="org.mifos.application.acceptedpaymenttype.struts.actionform.AcceptedPaymentTypeActionForm"></form-bean>
 
+		<!-- Moratorium module -->
+		<form-bean name="moratoriumActionForm" type="org.mifos.application.moratorium.struts.actionforms.MoratoriumActionForm"></form-bean>
+
 	</form-beans>
 
 	<global-exceptions>
@@ -227,7 +230,7 @@
 			<forward name="mainSearch_failure" path="/pages/application/customer/jsp/search_result.jsp" />
 			<forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp" />
 			<forward name="loadallbranches_success" path="/custSearchAction.do?method=mainSearch" />
-
+			<forward name="moratorium_search_success" 	path="/pages/application/moratorium/jsp/moratoriumSearchResults.jsp"/>
     </action>
 	<action path="/customerAccountAction"
 				type="org.mifos.application.customer.struts.action.CustomerAccountAction"
@@ -892,8 +895,8 @@
 			<forward name="schedulePreview_success" path="/pages/application/loan/jsp/schedulePreview.jsp" />
 			<forward name="schedulePreview_failure" path="/pages/application/loan/jsp/loancreationdetails.jsp" />
 			<forward name="preview_success" path="/pages/application/loan/jsp/createloanpreview.jsp" />
-            <forward name="preview_failure" path="/pages/application/loan/jsp/schedulePreview.jsp" />
-            <forward name="create_failure" path="/pages/application/loan/jsp/createloanpreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/loan/jsp/schedulePreview.jsp" />
+			<forward name="create_failure" path="/pages/application/loan/jsp/createloanpreview.jsp" />
 			<forward name="create_success" path="/pages/application/loan/jsp/CreateLoanAccountConfirmation.jsp" />
 			<forward name="manage_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
 			<forward name="managepreview_success" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
@@ -1363,6 +1366,35 @@
              <forward name="get_success" path="/pages/application/ppi/jsp/get.jsp"/>             
         </action>
 
+		<action path="/moratoriumAction"
+          type="org.mifos.application.moratorium.struts.action.MoratoriumAction"
+          parameter="method"
+          scope="session"
+          validate="true"
+          input="/moratoriumAction.do?method=validate" 
+          name="moratoriumActionForm">
+             <forward name="configure" path="/pages/application/moratorium/jsp/configureMoratorium.jsp"/>
+             <forward name="loadSearch" path="/pages/application/moratorium/jsp/configureClientMoratorium.jsp"/>             
+             <forward name="loadSearchForBranch" path="/pages/application/moratorium/jsp/configureBranchMoratorium.jsp"/>
+             <forward name="load" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+             <forward name="loadForBranch" path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+             <forward name="create" path="/pages/application/moratorium/jsp/applyMoratoriumConfirm.jsp"/>
+             <forward name="createForBranch" path="/pages/application/moratorium/jsp/applyBranchMoratoriumConfirm.jsp"/>             
+             <forward name="previewCreateMoratorium_failure" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"/>
+             <forward name="previewCreateBranchMoratorium_failure" path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"/>
+             <forward name="get_success" path="/pages/application/moratorium/jsp/viewMoratoriums.jsp"/>
+             <forward name="edit_success" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+             <forward name="editpreview_success" path="/pages/application/moratorium/jsp/editMoratoriumsPreview.jsp"/>                          
+             <forward name="update_success" path="/moratoriumAction.do?method=get"/>
+             <forward name="editPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"/>
+             <forward name="liftPreviewMoratorium_failure" path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"/>
+             <forward name="create_success" path="/AdminAction.do?method=load"></forward>
+             <forward name="previous_success" path="/pages/application/moratorium/jsp/applyMoratorium.jsp"></forward>
+             <forward name="previous_success_for_branch" path="/pages/application/moratorium/jsp/applyMoratoriumForBranch.jsp"></forward>
+             <forward name="edit_previous_success" path="/pages/application/moratorium/jsp/editMoratoriums.jsp"></forward>
+             <forward name="lift_previous_success" path="/pages/application/moratorium/jsp/liftMoratoriums.jsp"></forward>             
+        </action>
+
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
@@ -1414,6 +1446,9 @@
 	<message-resources key="configurationUIResources" parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"></message-resources>
 	<!--  Holidays resources -->
     <message-resources key="HolidayUIResources" parameter="org.mifos.application.holiday.util.resources.HolidayUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+    
+    <!-- Moratorium resources -->
+    <message-resources key="moratoriumUIResources" parameter="org.mifos.application.moratorium.util.resources.MoratoriumUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
     
     <message-resources key="SurveysUIResources" parameter="org.mifos.application.surveys.util.resources.SurveysUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="PPIUIResources" parameter="org.mifos.application.ppi.util.resources.PPIUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>

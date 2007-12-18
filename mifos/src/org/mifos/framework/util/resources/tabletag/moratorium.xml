@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table class="org.mifos.xyz" name="center" resourcebundle="resource"
+		xmlns="http://www.aditi.com" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
+<path key="moratoriumSearch" forwardkey="moratorium_search_success" action="custSearchAction.do"/> 
+<pagerequirements numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false" bottombluelinerequired="true"/>  
+<row>
+	<column label="" labeltype="string" boldlabel="false" type="text" >
+		<displayname>
+			<fragment-name name="officeName" type="method"/>
+		</displayname>
+	</column>
+	
+	<column label="/" labeltype="string" boldlabel="true" type="text" >
+		<displayname>
+			<fragment-name name="centerName" type="method"/>
+		</displayname>
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="text">
+		<displayname>
+			<fragment-name name="groupName" type="method"/>
+		</displayname>
+		
+		<parameters>
+			<parameter name="method" value="load" valuetype="string"/>
+			<parameter name="customer.customerId" value="clientId" valuetype="method"/>
+			
+		</parameters>
+		
+	</column>
+	<column label="/" labeltype="string" boldlabel="true" type="link" action="moratoriumAction.do">
+		<displayname bold="true">
+			<fragment-name name="clientName" type="method" bold="true"/>
+			<fragment-name name=":ID" type="string" bold="true"/>
+			<fragment-name name="globelNo" type="method" bold="true"/>
+		</displayname>	
+		<parameters>
+			<parameter name="method" value="load" valuetype="string"/>
+			<parameter name="customerId" value="clientId" valuetype="method"/>
+			<parameter name="customerLevelId" value="levelId" valuetype="method"/>
+			<parameter name="clientName" value="clientName" valuetype="method"/>
+            <parameter name="perspective" value="perspective" valuetype="parameter"/>
+		</parameters>
+		
+	</column>
+	
+	
+	
+</row>
+  
+</table>

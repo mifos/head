@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.application.moratorium.business.MoratoriumBO" table="MORATORIUM">
+		<id name="moratoriumId" column="ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
+
+	    <property name="appliedTo" column="APPLIED_TO" type="string" />
+		<property name="startDate" column="START_DATE" type="date" />
+		<property name="endDate" column="END_DATE" type="date"/>
+		<property name="liftDate" column="LIFT_DATE" type="date"/>
+		<property name="morCreatedBy" column="CREATED_BY" type="string" />
+		<property name="notes" column="NOTES" type="string"/>
+		<property name="customerId" column="CUSTOMER_ID" type="string"/>
+		<property name="officeId" column="OFFICE_ID" type="string"/>
+	</class>
+	
+	<query name="moratorium.getMoratoriums">
+			<![CDATA[from org.mifos.application.moratorium.business.MoratoriumBO
+			]]>
+	</query>
+	
+	<query name="moratorium.getMoratoriumById">
+			<![CDATA[from org.mifos.application.moratorium.business.MoratoriumBO moratoriumBO
+	                  where moratoriumBO.moratoriumId = :moratoriumId
+			]]>
+	</query> 
+ 
+ 	<query name="moratorium.getMoratoriumByCustomerId">
+			<![CDATA[from org.mifos.application.moratorium.business.MoratoriumBO moratoriumBO
+	                  where moratoriumBO.customerId = :customerId
+			]]>
+	</query>
+	
+	<query name="moratorium.getMoratoriumByOfficeId">
+			<![CDATA[from org.mifos.application.moratorium.business.MoratoriumBO moratoriumBO
+	                  where moratoriumBO.officeId = :officeId
+			]]>
+	</query>
+</hibernate-mapping>

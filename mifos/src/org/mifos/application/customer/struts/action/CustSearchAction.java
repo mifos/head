@@ -309,8 +309,14 @@ public class CustSearchAction extends SearchAction {
 			throws Exception {
 		ActionForward actionForward = super.search(mapping, form, request,
 				response);
-		;
+		// changed for moratorium [start]
 		CustSearchActionForm actionForm = (CustSearchActionForm) form;
+		if(actionForm.getInput() != null && actionForm.getInput().equals("moratorium"))
+			actionForward = super.searchForMoratorium(mapping, form, request, response);
+		else
+			actionForward = super.search(mapping, form, request, response);
+		// changed for moratorium [end]
+		
 		UserContext userContext = getUserContext(request);
 		String searchString = actionForm.getSearchString();
 		if (searchString == null)
@@ -332,6 +338,24 @@ public class CustSearchAction extends SearchAction {
 			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 					getCustomerBusinessService().searchCustForSavings(
 							searchString, userContext.getId()), request);
+		// added for moratorium [start]
+		else if(actionForm.getInput() != null && actionForm.getInput().equals("moratorium"))
+		{
+			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService().searchCenterGroupClient(searchString, userContext.getId()), request);			
+			//SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService().searchGroupClient(searchString, userContext.getId()), request);
+			
+			/*Short officeId = getShortValue(actionForm.getOfficeId());
+			if (officeId != null && officeId != 0)
+				addSeachValues(searchString, officeId.toString(),
+						new OfficeBusinessService().getOffice(officeId)
+								.getOfficeName(), request);
+			else
+				addSeachValues(searchString, officeId.toString(),
+						new OfficeBusinessService().getOffice(
+								userContext.getBranchId()).getOfficeName(), request);			
+			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getCustomerBusinessService().search(searchString, officeId, userContext.getId(), userContext.getBranchId()), request);*/
+		}
+		// added for moratorium [end]
         if (request.getParameter("perspective") != null) {
             request.setAttribute("perspective", request.getParameter("perspective"));
         }

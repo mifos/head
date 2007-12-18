@@ -6,7 +6,7 @@ import junit.framework.TestSuite;
 import org.mifos.application.customer.business.CustomerViewTest;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
-import org.mifos.application.customer.business.service.TestCustomerBusinessService;
+import org.mifos.application.customer.business.service.CustomerBusinessServiceTest;
 import org.mifos.application.customer.center.business.CenterBOTest;
 import org.mifos.application.customer.center.business.service.TestCenterBusinessService;
 import org.mifos.application.customer.center.persistence.TestCenterPersistence;
@@ -22,10 +22,10 @@ import org.mifos.application.customer.group.persistence.GroupPersistenceTest;
 import org.mifos.application.customer.group.struts.action.AddGroupMembershipActionTest;
 import org.mifos.application.customer.group.struts.action.GroupActionTest;
 import org.mifos.application.customer.group.struts.action.GroupTransferActionTest;
-import org.mifos.application.customer.persistence.TestCustomerPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistenceTest;
 import org.mifos.application.customer.struts.action.CustActionTest;
 import org.mifos.application.customer.struts.action.CustHistoricalDataActionTest;
-import org.mifos.application.customer.struts.action.TestCustSearchAction;
+import org.mifos.application.customer.struts.action.CustSearchActionTest;
 import org.mifos.application.customer.struts.action.TestCustomerAccountAction;
 import org.mifos.application.customer.struts.action.TestCustomerAction;
 import org.mifos.application.customer.struts.action.TestCustomerApplyAdjustmentAction;
@@ -39,8 +39,8 @@ public class CustomerTestSuite extends TestSuite {
 	public static Test suite() throws Exception {
 		CustomerTestSuite testSuite = new CustomerTestSuite();
 		testSuite.addTestSuite(TestCenterPersistence.class);
-		testSuite.addTestSuite(TestCustomerPersistence.class);
-		testSuite.addTestSuite(TestCustomerBusinessService.class);
+		testSuite.addTestSuite(CustomerPersistenceTest.class);
+		testSuite.addTestSuite(CustomerBusinessServiceTest.class);
 		testSuite.addTestSuite(TestCustomerTrxnDetailEntity.class);
 		testSuite.addTestSuite(TestCustomerApplyAdjustmentAction.class);
 		testSuite.addTestSuite(TestCustomerAction.class);
@@ -65,7 +65,7 @@ public class CustomerTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestCustomerAccountAction.class);
 		testSuite.addTestSuite(ClientPersistenceTest.class);
 		testSuite.addTestSuite(ClientBusinessServiceTest.class);
-		testSuite.addTestSuite(TestCustSearchAction.class);
+		testSuite.addTestSuite(CustSearchActionTest.class);
 		testSuite.addTestSuite(CustomerViewTest.class);
 		testSuite.addTestSuite(TestCustomerHelpers.class);
 
