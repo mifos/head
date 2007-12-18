@@ -42,9 +42,9 @@ import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 
 /**
- *  This class defines methods that tells configuration details about Customer (Center/Group/Client).
- *  It has specific methods for specific type of configuration items related to Customer.
- *  This class restricts the interface of configuration items specific to Customers only.
+ *  This class defines methods that tells configuration details about Customer (Center/Group/Client). 
+ *  It has specific methods for specific type of configuration items related to Customer. 
+ *  This class restricts the interface of configuration items specific to Customers only.  
  *  e.g.  isCenterHierarchyExists(), isPendingApprovalStateDefinedForGroup() etc.
  */
 public class CustomerConfig extends BaseConfig{

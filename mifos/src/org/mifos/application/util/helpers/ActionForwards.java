@@ -194,6 +194,5 @@ public enum ActionForwards {
 	previewEdit_success,
 	previewEdit_failure,
 	confirm_delete,
-	download_success,
-	moratorium_search_success;
+	download_success;
 }

@@ -29,8 +29,7 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustSearchActionTest
-        extends MifosMockStrutsTestCase {
+public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	
 	private UserContext userContext;
 	private String flowKey;
@@ -262,18 +261,4 @@ public class CustSearchActionTest
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 	}
-	
-	// added for moratorium [start]
-	public void testSearchForMoratorium()throws Exception{
-		createGroupWithCenter();
-		addActionAndMethod(Methods.search.toString());
-		addRequestParameter("input", "moratorium");
-		addRequestParameter("searchString", "gr");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		verifyForward("moratorium_search_success");
-		veryfyResults();
-	}
-	// added for moratorium [end]
 }

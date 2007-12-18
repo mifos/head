@@ -135,9 +135,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.moratorium.business.MoratoriumBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
@@ -2299,24 +2300,7 @@ public class TestObjectFactory {
  		}
  		return prdmix;
  	}
- 	
- 	// added for moratorium [start]
- 	public static void cleanUp(MoratoriumBO moratoriumBO) {
-		if (null != moratoriumBO) {
-			deleteMoratorium(moratoriumBO);
-			moratoriumBO = null;
-		}
-	}
-	
-	public static void deleteMoratorium(MoratoriumBO moratoriumBO) {
-		Session session = HibernateUtil.getSessionTL();
-		session.lock(moratoriumBO, LockMode.UPGRADE);
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.delete(moratoriumBO);
-		transaction.commit();
-	}
- 	// added for moratorium [end]
- 	
+
  	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
 	
 }

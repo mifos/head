@@ -217,9 +217,6 @@
 			 
 		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
 		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 
-		
-		<!-- Mapping files for moratorium module -->
-		<mapping resource="org/mifos/application/moratorium/business/MoratoriumBO.hbm.xml" />
 			
 	</session-factory>
 

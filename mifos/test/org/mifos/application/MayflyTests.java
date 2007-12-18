@@ -28,7 +28,7 @@ public class MayflyTests extends TestSuite {
 		
 		// Hung up on SELECT DISTINCT vs ORDER BY
 		// Also has other failures - apparently unrelated
-		//CustomerPersistenceTest
+		//TestCustomerPersistence
 		
 		/* Failing in getMaxOfficeId.
 		   Perhaps Integer vs. Long as return from getObject (but that's

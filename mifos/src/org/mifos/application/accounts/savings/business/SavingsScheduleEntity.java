@@ -4,10 +4,8 @@ import java.sql.Date;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsScheduleEntity extends AccountActionDateEntity {
@@ -60,8 +58,4 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		setPaymentStatus(PaymentStatus.PAID);
 	}
 	
-//	 for moratorium
-	public void save() throws ApplicationException {
-		new SavingsPersistence().createOrUpdate(this);	
-	}
 }

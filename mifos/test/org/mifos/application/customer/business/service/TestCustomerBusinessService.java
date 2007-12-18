@@ -63,8 +63,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class CustomerBusinessServiceTest
-        extends MifosTestCase {
+public class TestCustomerBusinessService extends MifosTestCase {
 	private CustomerBO center;
 
 	private GroupBO group;
@@ -1033,13 +1032,4 @@ public class CustomerBusinessServiceTest
 				loanOffering2);
 		clientSavingsAccount = getSavingsAccount(client, "SavingPrd11", "abc2");
 	}
-	
-	// added for moratorium [start]
-	public void testSearchCenterGroupAndClient() throws Exception {
-		createInitialCustomers();
-		QueryResult queryResult = new CustomerBusinessService()
-				.searchCenterGroupClient("cl", Short.valueOf("1"));
-		assertNotNull(queryResult);
-	}
-	// added for moratorium [end]
 }

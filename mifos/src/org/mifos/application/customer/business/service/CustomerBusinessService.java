@@ -491,17 +491,4 @@ public class CustomerBusinessService extends BusinessService {
 			throw new ServiceException(pe);
 		}
 	}
-	
-	// for moratorium [start]
-	public QueryResult searchCenterGroupClient(String searchString, Short userId)
-			throws ServiceException {
-		try {
-			return new CustomerPersistence().searchCenterGroupClient(searchString,
-					userId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-		
-		}
-	// for moratorium [end]
 }

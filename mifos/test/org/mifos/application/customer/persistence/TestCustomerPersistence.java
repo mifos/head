@@ -1,5 +1,9 @@
 package org.mifos.application.customer.persistence;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,9 +46,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -60,10 +62,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-public class CustomerPersistenceTest
-        extends MifosTestCase {
+public class TestCustomerPersistence extends MifosTestCase {
 
 	private MeetingBO meeting;
 
@@ -187,7 +187,7 @@ public class CustomerPersistenceTest
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -204,7 +204,7 @@ public class CustomerPersistenceTest
 
 		Date startDate = new Date(System.currentTimeMillis());
 		center = createCenter();
-		SavingsOfferingBO savingsOffering =
+		SavingsOfferingBO savingsOffering = 
 			TestObjectFactory.createSavingsProduct("SavingPrd1", "S",
 				startDate,
 				meetingIntCalc, meetingIntPost);
@@ -530,10 +530,10 @@ public class CustomerPersistenceTest
 	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting,
 			String prdOfferingname, String shortName) throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		SavingsOfferingBO savingsOffering =
+		SavingsOfferingBO savingsOffering = 
 			TestObjectFactory.createSavingsProduct(
 				prdOfferingname, shortName, startDate);
-		return TestObjectFactory.createSavingsAccount("432434", customer,
+		return TestObjectFactory.createSavingsAccount("432434", customer, 
 				Short
 				.valueOf("16"), startDate, savingsOffering);
 
@@ -1183,13 +1183,13 @@ public class CustomerPersistenceTest
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering =
-			TestObjectFactory.createSavingsProduct("SavingPrd12", "abc1",
-				startDate,
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsProduct("SavingPrd12", "abc1", 
+				startDate, 
 				meetingIntCalc, meetingIntPost);
-		SavingsOfferingBO savingsOffering1 =
-			TestObjectFactory.createSavingsProduct("SavingPrd11", "abc2",
-				startDate,
+		SavingsOfferingBO savingsOffering1 = 
+			TestObjectFactory.createSavingsProduct("SavingPrd11", "abc2", 
+				startDate, 
 				meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), startDate, savingsOffering);
@@ -1238,19 +1238,8 @@ public class CustomerPersistenceTest
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
-
-	// added for moratorium [start]
-	public void testSearchCenterGropAndClient() throws Exception {
-		createCustomers(CustomerStatus.CENTER_ACTIVE,
-				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
-		HibernateUtil.commitTransaction();
-		QueryResult queryResult = new CustomerPersistence().searchCenterGroupClient(
-				"C", Short.valueOf("1"));
-		assertNotNull(queryResult);
-	}
-	// added for moratorium [end]
 }

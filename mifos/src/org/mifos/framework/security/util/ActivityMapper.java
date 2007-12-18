@@ -58,7 +58,6 @@ import org.mifos.application.fund.struts.action.FundAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.login.struts.action.LoginAction;
 import org.mifos.application.meeting.struts.action.MeetingAction;
-import org.mifos.application.moratorium.struts.action.MoratoriumAction;
 import org.mifos.application.personnel.struts.action.PersonAction;
 import org.mifos.application.personnel.struts.action.PersonnelNoteAction;
 import org.mifos.application.personnel.struts.action.PersonnelSettingsAction;
@@ -258,9 +257,6 @@ public class ActivityMapper {
 		parseActionSecurity(PPIAction.getSecurity());
 		parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
 		parseActionSecurity(ReportsCategoryAction.getSecurity());
-		
-		// for moratorium module
-		parseActionSecurity(MoratoriumAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {
