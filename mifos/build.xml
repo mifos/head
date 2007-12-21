@@ -24,7 +24,7 @@
 
 	<!-- Probably need about 550M for 64-bit systems 
 	     (instead of 350M for 32-bit). -->
-	<property name="test.memory" value="350M" />
+	<property name="test.memory" value="1024M" />
 	<!-- 550M wasn't enough for me, needs more experimentation -->
 	<property name="profile.memory" value="550M" />
 
