@@ -21,7 +21,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestSurveysAction extends MifosMockStrutsTestCase {
 	
@@ -35,11 +34,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/surveys/struts-config.xml")
-				.getPath());
 		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		ActivityContext ac = new ActivityContext((short) 0, userContext

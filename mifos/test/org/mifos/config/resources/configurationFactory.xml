@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<configuration>
-  <properties fileName="applicationConfiguration.custom.properties" optional="true"/>
-  <properties fileName="applicationConfiguration.default.properties"/>
-</configuration>

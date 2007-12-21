@@ -1,23 +1,21 @@
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-
 import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.application.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.meeting.business.MeetingBO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
 
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
@@ -31,9 +29,6 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/accounts/struts-config.xml").getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");

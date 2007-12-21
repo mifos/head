@@ -38,17 +38,12 @@
 
 package org.mifos.application.bulkentry.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -78,11 +73,12 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
-import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -104,9 +100,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	
@@ -166,12 +162,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/bulkentry/struts-config.xml")
-				.getPath());
-
 		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -396,21 +386,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		assertEquals("The value for isCenter Heirarchy Exists", SessionUtils
 				.getAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 						request), Constants.YES);
-	}
-
-	public void testLoadForNonLoanOfficerInBranch() throws PageExpiredException {
-		userContext.setBranchId(Short.valueOf("3"));
-		userContext.setId(Short.valueOf("2"));
-		userContext.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyForward("load_success");
-		assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
-				.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
-						request), Constants.NO);
 	}
 
 	public void testLoadPersonnel() throws PageExpiredException {

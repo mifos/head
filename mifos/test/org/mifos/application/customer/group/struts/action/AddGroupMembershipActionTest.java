@@ -61,7 +61,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -78,11 +77,6 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/customer/group/struts-config.xml")
-				.getPath());
 		UserContext userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
@@ -108,7 +102,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 	}
 		
 	public void testSuccessfulPrevious() throws Exception {
-		setRequestPathInfo("/addGroupMemberShipAction.do");
+		setRequestPathInfo("/addGroupMembershipAction.do");
 		addRequestParameter("method", "loadSearch");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -119,7 +113,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 	}
 	public void testCancel() throws Exception {
 		
-		setRequestPathInfo("/addGroupMemberShipAction.do");
+		setRequestPathInfo("/addGroupMembershipAction.do");
 		addRequestParameter("method", "cancel");
 	
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -130,7 +124,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 	}
 	public void testPreviewParentAddClient() throws Exception {
 		
-		setRequestPathInfo("/addGroupMemberShipAction.do");
+		setRequestPathInfo("/addGroupMembershipAction.do");
 		addRequestParameter("method", "previewParentAddClient");
 	
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -147,7 +141,7 @@ public class AddGroupMembershipActionTest extends MifosMockStrutsTestCase{
 		assertEquals(false, client.isClientUnderGroup());
 		assertNotSame(group.getCustomerMeeting().getMeeting().getMeetingId(),client.getCustomerMeeting().getMeeting().getMeetingId());
 
-		setRequestPathInfo("/addGroupMemberShipAction.do");
+		setRequestPathInfo("/addGroupMembershipAction.do");
 		addRequestParameter("method", "updateParent");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 		addRequestParameter("parentGroupId", group.getCustomerId().toString());

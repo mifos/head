@@ -7,7 +7,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.ReportSecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 	
@@ -16,11 +15,6 @@ public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/framework/util/helpers/struts-config.xml")
-				.getPath());
 		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		ActivityContext ac = new ActivityContext((short) 0, userContext

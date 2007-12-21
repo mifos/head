@@ -12,7 +12,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.EnumsNotLoadedException;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestEnumPlugin extends MifosMockStrutsTestCase {
@@ -22,8 +21,6 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 	@Override
 	public void setUp()throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-		setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
 		request.getSession(true);
 		createFlowAndAddToRequest(SavingsAction.class);
 		request.getSession().setAttribute(Constants.USERCONTEXT, 

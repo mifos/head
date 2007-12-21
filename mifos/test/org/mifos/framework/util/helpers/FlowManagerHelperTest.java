@@ -14,11 +14,6 @@ public class FlowManagerHelperTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/fees/struts-config.xml")
-				.getPath());
 		UserContext userContext = TestUtils.makeUserWithLocales();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");

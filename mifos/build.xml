@@ -53,7 +53,8 @@
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar"/>
 		</fileset>
-		<pathelement location="${build.classes}"/>
+        <pathelement location="${build.src.dir}"/>
+        <pathelement location="${build.classes}"/>
 	</path>
     <property name="mifos.password" value="testmifos"/>
 
@@ -294,7 +295,7 @@
 			</fileset>
 		</copy>
 
-		<copy todir="${test.classes}/org/mifos/WEB-INF">
+		<copy todir="${test.classes}/WEB-INF">
 			<fileset dir="${src.dir}/org/mifos/META-INF">
 				<exclude name="**/*.java"/>
 			</fileset>
@@ -373,7 +374,7 @@
 		<echo>Completed ${test.suite}</echo>
 	</target>
 
-	<target name ="covertTestReportToHTML" description="Convert test report to HTML format">
+	<target name ="convertTestReportToHTML" description="Convert test report to HTML format">
 		<junitreport todir="${dist.dir}">
 			<fileset dir="${dist.dir}">
 				<include name="TEST-*.xml"/>
@@ -408,7 +409,9 @@
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-	<target name="war" depends="clean,compile,copy_files,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports">
+    <target name="build" depends="clean,compile,copy_files,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
+
+    <target name="war" depends="build">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" 
 			webxml="${build.web-inf}/web.xml">

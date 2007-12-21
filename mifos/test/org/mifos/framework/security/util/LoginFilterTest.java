@@ -21,7 +21,6 @@ public class LoginFilterTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        loadAccountStrutsConfig();
     }
 
     /**

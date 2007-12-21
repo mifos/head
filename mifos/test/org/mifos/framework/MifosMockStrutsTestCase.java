@@ -38,12 +38,10 @@
 
 package org.mifos.framework;
 
-import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -54,10 +52,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
 import servletunit.struts.MockStrutsTestCase;
 
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
@@ -68,8 +64,38 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 			throw new Error("Failed to start up", e);
 		}
 	}
-	
-	protected void addRequestDateParameter(String param, String dateStr) {
+
+    private boolean strutsConfigSet = false;
+
+    private void setStrutsConfig() {
+        String className = this.getClass().getName();
+        if (className.startsWith("org.mifos.application.customer")) {
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
+        }
+        else if (className.startsWith("org.mifos.application.accounts")) {
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
+        }
+        else if (className.startsWith("org.mifos.application.reports")) {
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
+        }
+        else if (className.startsWith("org.mifos.application.productdefinition")) {
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
+        }
+        else {
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
+        }
+    }
+
+    @Override
+	protected void setUp() throws Exception {
+        super.setUp();
+        if (!strutsConfigSet) {
+            setStrutsConfig();
+            strutsConfigSet = true;
+        }
+    }
+
+    protected void addRequestDateParameter(String param, String dateStr) {
 		java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateStr);
 		if (date != null) {
 			Calendar cal = new GregorianCalendar();
@@ -167,13 +193,7 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		return key;
 	}
 
-	protected void loadAccountStrutsConfig() throws URISyntaxException {
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/accounts/struts-config.xml").getPath());
-	}
-
-	protected void performNoErrors() {
+    protected void performNoErrors() {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();

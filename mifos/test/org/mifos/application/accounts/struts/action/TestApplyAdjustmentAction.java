@@ -82,8 +82,6 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	@Override
 	public void setUp()throws Exception{
 		super.setUp();
-		setServletConfigFile("WEB-INF/web.xml");
-		setConfigFile("org/mifos/application/accounts/struts-config.xml");
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");

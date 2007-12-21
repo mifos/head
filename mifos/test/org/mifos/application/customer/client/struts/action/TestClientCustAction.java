@@ -90,7 +90,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -113,11 +112,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/customer/client/struts-config.xml")
-				.getPath());
 		userContext = TestObjectFactory.getContext();
 		userContext.setPreferredLocale(new Locale("en", "US"));
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -1160,8 +1154,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerDetail.povertyStatus", povertyStatusList.get(0).getId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Client salutation", 1,
-				getErrorSize(CustomerConstants.SALUTATION));
 		assertEquals("Client first Name", 1,
 				getErrorSize(CustomerConstants.FIRST_NAME));
 		assertEquals("Client last Name", 1,
@@ -1170,12 +1162,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
 		assertEquals("spouse last Name", 1,
 				getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
-		assertEquals("spouse type", 1,
-				getErrorSize(CustomerConstants.SPOUSE_TYPE));
-		assertEquals("Gender", 1, getErrorSize(CustomerConstants.GENDER));
 		assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
 		verifyInputForward();
-
 	}
 
 	public void testSuccessfulEditPreview() throws Exception {

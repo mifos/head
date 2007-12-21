@@ -19,7 +19,6 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 
 public class TestPPIAction extends MifosMockStrutsTestCase {
@@ -37,11 +36,6 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		SessionHolder holder = new SessionHolder(session);
 		holder.setInterceptor(interceptor);
 		HibernateUtil.setThreadLocal(holder);
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/ppi/struts-config.xml")
-				.getPath());
 		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		ActivityContext ac = new ActivityContext((short) 0, userContext

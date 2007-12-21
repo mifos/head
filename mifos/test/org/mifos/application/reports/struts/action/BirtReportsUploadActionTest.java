@@ -23,15 +23,12 @@ import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/reports/struts-config.xml").getPath());
 	}
 
 	public void testGetBirtReportsUploadPage() {

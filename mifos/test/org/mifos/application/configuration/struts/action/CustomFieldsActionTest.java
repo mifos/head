@@ -40,29 +40,25 @@ package org.mifos.application.configuration.struts.action;
 
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.application.configuration.struts.action.CustomFieldsAction;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
-//import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.util.helpers.YesNoFlag;
 
 
 public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
@@ -83,10 +79,6 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/configuration/struts-config.xml")
-				.getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");

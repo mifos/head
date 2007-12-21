@@ -71,7 +71,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -92,12 +91,6 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/customer/struts-config.xml")
-				.getPath());
-		
 		UserContext userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,
 				userContext);
@@ -558,8 +551,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.updateStatus.toString());
 		actionPerform();
 		verifyActionErrors(new String[] { ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION });
-		verifyInputForward();
-		client = TestObjectFactory.getObject(CustomerBO.class,
+		verifyForward(ActionForwards.updateStatus_failure.toString());
+        client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		assertFalse(client.isActive());
 	}
@@ -605,8 +598,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.updateStatus.toString());
 		actionPerform();
 		verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
-		verifyInputForward();
-		HibernateUtil.closeSession();
+		verifyForward(ActionForwards.updateStatus_failure.toString());
+        HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		group = TestObjectFactory.getObject(CustomerBO.class,
@@ -718,7 +711,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.updateStatus.toString());
 		actionPerform();
 		verifyActionErrors(new String[] { ClientConstants.CLIENT_LOANOFFICER_NOT_ASSIGNED });
-		verifyInputForward();
+		verifyForward(ActionForwards.updateStatus_failure.toString());
 	}
 
 	public void testChangeStatusToActiveForClientForMeetingNull()
@@ -752,7 +745,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.updateStatus.toString());
 		actionPerform();
 		verifyActionErrors(new String[] { GroupConstants.MEETING_NOT_ASSIGNED });
-		verifyInputForward();
+		verifyForward(ActionForwards.updateStatus_failure.toString());
 	}
 
 	public void testLoadSuccessForGroup() throws PageExpiredException {

@@ -44,8 +44,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	protected void setUp() throws Exception {
 
 		super.setUp();
-		loadAccountStrutsConfig();
-
+		
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
