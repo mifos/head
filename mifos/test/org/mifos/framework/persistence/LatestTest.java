@@ -47,10 +47,10 @@ public class LatestTest {
 		loadRealLatest(database);
 		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION,
 				version(database));
-		String latestDump = new SqlDumper().dump(database.dataStore());
+		String latestDump = new SqlDumper(false).dump(database.dataStore());
 
 		DataStore upgraded = applyRealUpgrades();
-		String upgradeDump = new SqlDumper().dump(upgraded);
+		String upgradeDump = new SqlDumper(false).dump(upgraded);
 		assertEquals(latestDump, upgradeDump);
 	}
 
