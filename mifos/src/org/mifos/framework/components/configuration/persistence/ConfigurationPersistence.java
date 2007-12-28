@@ -43,9 +43,6 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.meeting.business.WeekDaysEntity;
-import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -53,7 +50,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 /**
@@ -66,7 +62,6 @@ public class ConfigurationPersistence extends Persistence {
 
 	private static final String KEY_QUERY_PARAMETER = "KEY";
 
-	public static final String CONFIGURATION_KEY_DAYS_IN_ADVANCE = "CollectionSheetHelper.daysInAdvance";
 	public static final String CONFIGURATION_KEY_JASPER_REPORT_IS_HIDDEN = ConfigConstants.JASPER_REPORT_IS_HIDDEN;
 
 	public MifosCurrency getDefaultCurrency() throws PersistenceException {
@@ -121,21 +116,6 @@ public class ConfigurationPersistence extends Persistence {
 		logger.error(message);
 		return new FrameworkRuntimeException(null, message);
 	}
-
-	
-	public List<ConfigEntity> getOfficeConfiguration()
-			throws PersistenceException {
-		List<ConfigEntity> queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_OFFICE_CONFIG, null);
-		if (queryResult == null || queryResult.size() == 0) {
-			logger.error("Office Configuration Not Specified");
-			throw new FrameworkRuntimeException(null,
-					"Office Configuration Not Specified");
-		}
-		return queryResult;
-	}
-
-	
 
 	/**
 	 * Lookup an integer valued, persistent configuration key-value pair based on the key.

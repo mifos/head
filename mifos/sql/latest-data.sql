@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(167);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(168);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3737,18 +3737,13 @@ INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_F
 VALUES(73,'PovertyStatus',1,1,0);
 
 
-
-/*Master data for table SYSTEM_CONFIGURATION */
-/* DEPRECATION WARNING:
- This table will eventually be deleted.
- For NAME_SEQUENCE, see ClientRules.getNameSequence()
- -Adam Monsen, 2007-12-12
- */
-INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP)
-VALUES(1,1,1,1,1);
-
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
-INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);
+-- this row was CollectionSheetHelper.daysInAdvance
+-- (value now stored in applicationConfiguration.default.properties)
+-- Adam [ Thu Dec 20 22:28:57 PST 2007 ]
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('x',0);
+-- this row was sessionTimeout (see web.xml for configured session timeout)
+-- Adam [ Thu Dec 20 22:28:58 PST 2007 ]
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES (' ',0);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('jasperReportIsHidden',1);
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('loanIndividualMonitoringIsEnabled',0);

@@ -48,11 +48,12 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -71,7 +72,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  * day and todays data would be lost.
  */
 public class CollectionSheetHelper extends TaskHelper {
-	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 
 	public CollectionSheetHelper(MifosTask mifosTask) {
 		super(mifosTask);
@@ -175,8 +175,13 @@ public class CollectionSheetHelper extends TaskHelper {
 
 	}
 
+	/**
+	 * Fetches number of days in advance the collection sheet should be
+	 * generated.
+	 */
 	public int getDaysInAdvance() throws PersistenceException {
-		return configurationPersistence.getConfigurationValueInteger(ConfigurationPersistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE);
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		return configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
 	}
 
 }

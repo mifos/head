@@ -433,7 +433,6 @@ public interface NamedQueryConstants {
 	
 	// configuration
 	public String GET_MFI_LOCALE="getMFILocale";
-	public String GET_OFFICE_CONFIG = "getOfficeConfig";
 	public final String GET_CONFIGURATION_KEYVALUE_BY_KEY = "getConfigurationKeyValueByKey";
 	
 

@@ -26,8 +26,9 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -40,18 +41,18 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 	private SavingsOfferingBO savingsOffering;
 	private LoanBO loanBO;
 	private SavingsBO savingsBO;
-	private ConfigurationPersistence persistence = new ConfigurationPersistence();
+	private ConfigurationManager configMgr = ConfigurationManager.getInstance();
 	private int initialDaysInAdvance;
 
 	@Override
 	protected void setUp() throws Exception {
-		initialDaysInAdvance = persistence.getConfigurationValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE);
+		initialDaysInAdvance = configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
 		super.setUp();
 	}
 
 	@Override
 	public void tearDown()throws Exception  {
-		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, initialDaysInAdvance);
+		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, initialDaysInAdvance);
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(group);
@@ -62,13 +63,13 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 	
 	public void testOneDayInAdvance() throws Exception {
 		int daysInAdvance = 1;
-		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, daysInAdvance);
+		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
 		basicTest(daysInAdvance);
 	}
 	
 	public void testFiveDaysInAdvance() throws Exception {
 		int daysInAdvance = 5;
-		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, daysInAdvance);
+		configMgr.setProperty(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE, daysInAdvance);
 		basicTest(daysInAdvance);
 	}
 	

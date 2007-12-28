@@ -5,10 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -66,11 +63,4 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		}
 	}
 
-	public void testGetOfficeConfiguration() throws Exception {
-		List<ConfigEntity> configList =
-			configurationPersistence.getOfficeConfiguration();
-		assertEquals(1, configList.size());
-	}
-
-	
 }

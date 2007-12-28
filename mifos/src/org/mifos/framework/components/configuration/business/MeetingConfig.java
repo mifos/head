@@ -40,9 +40,6 @@ package org.mifos.framework.components.configuration.business;
 
 import java.util.List;
 
-import org.mifos.framework.components.configuration.cache.CacheRepository;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants;
 import org.mifos.config.FiscalCalendarRules;
 
 /**
@@ -52,10 +49,6 @@ import org.mifos.config.FiscalCalendarRules;
  *  e.g.  getWeekOffDays(), getSchTypeForMeetingOnHoliday() etc.
  */
 public class MeetingConfig {
-	  
-	  public MeetingConfig() {
-
-	  }
 
 	  public Short getFiscalWeekStartDay() {
 		  return FiscalCalendarRules.getStartOfWeek();

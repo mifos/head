@@ -38,11 +38,8 @@
 package org.mifos.framework.components.configuration.util.helpers;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,29 +57,21 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.framework.components.configuration.business.ConfigEntity;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
-import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.config.FiscalCalendarRules;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.config.AccountingRules;
 
 public class ConfigurationInitializer {
-	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-
 	private OfficeBO headOffice;
-
-	private Map<String, String> officeConfigConstants;
 
 	private OfficeBO getHeadOffice() throws ApplicationException {
 		if (headOffice == null)
@@ -109,11 +98,6 @@ public class ConfigurationInitializer {
 	protected OfficeCache createOfficeCache() throws SystemException,
 			ApplicationException {
 		Map<Key, Object> officeConfigMap = new HashMap<Key, Object>();
-		List<ConfigEntity> systemConfigList = configurationPersistence
-				.getOfficeConfiguration();
-		for (int i = 0; i < systemConfigList.size(); i++) {
-			createOfficeCache(officeConfigMap, systemConfigList.get(i));
-		}
 
 		List<CustomerStatusEntity> customerOptionalStates;
 		try {
@@ -127,8 +111,6 @@ public class ConfigurationInitializer {
 		List<AccountStateEntity> accountOptionalStates = new AccountPersistence()
 				.getAccountStates(ConfigConstants.OPTIONAL_FLAG);
 		setAccountOptionalStates(officeConfigMap, accountOptionalStates);
-
-		List<WeekDay> weekDaysList = FiscalCalendarRules.getWeekDaysList();
 
 		setFiscalStartOfWeek(officeConfigMap);
 		setWeekOffList(officeConfigMap);
@@ -238,79 +220,15 @@ public class ConfigurationInitializer {
 					Constants.NO);
 	}
 
-	private void createOfficeCache(Map<Key, Object> officeConfigMap,
-			ConfigEntity config) throws SystemException {
-		Iterator keyIterator = officeConfigConstants.keySet().iterator();
-		while (keyIterator.hasNext()) {
-			String key = (String) keyIterator.next();
-			String methodName = "get" + officeConfigConstants.get(key);
-			try {
-				Method method = config.getClass().getMethod(methodName);
-				Object invocationResult = method.invoke(config);
-				if (invocationResult != null)
-					officeConfigMap.put(new Key(config.getOffice()
-							.getOfficeId(), officeConfigConstants.get(key)),
-							invocationResult);
-			} catch (NoSuchMethodException nsme) {
-				throw new SystemException(nsme);
-			} catch (InvocationTargetException ite) {
-				throw new SystemException(ite);
-			} catch (IllegalAccessException iae) {
-				throw new SystemException(iae);
-			}
-		}
-	}
-
 	public void initialize() {
 		try {
 			CacheRepository cacheRepository = CacheRepository.getInstance();
 			cacheRepository.setSystemConfiguration(createSystemConfiguration());
-			loadOfficeConfigConstants();
 			cacheRepository.setOfficeCache(createOfficeCache());
 		} catch (SystemException se) {
 			throw new StartUpException(se);
 		} catch (ApplicationException e) {
 			throw new StartUpException(e);
-		}
-	}
-
-	private void loadOfficeConfigConstants() throws SystemException {
-		try {
-			officeConfigConstants = ConstantMapBuilder.getInstance().buildMap(
-					Class.forName(ConfigConstants.OFFICE_CONFIG_CONSTANTS));
-		} catch (ClassNotFoundException cnfe) {
-			Object[] values = new Object[] { ConfigConstants.OFFICE_CONFIG_CONSTANTS };
-			throw new ConstantsNotLoadedException(
-					ExceptionConstants.CONSTANTSNOTLOADEDEXCEPTION, cnfe,
-					values);
-		}
-	}
-
-	private static class ConstantMapBuilder {
-		private static ConstantMapBuilder instance = new ConstantMapBuilder();
-
-		private ConstantMapBuilder() {
-		}
-
-		public static ConstantMapBuilder getInstance() {
-			return instance;
-		}
-
-		public Map<String, String> buildMap(Class constantClass)
-				throws ConstantsNotLoadedException {
-			Map<String, String> constantsMap = new HashMap<String, String>();
-			Field[] fields = constantClass.getDeclaredFields();
-			try {
-				for (int i = 0; i < fields.length; i++) {
-					checkModifiers(fields[i]);
-					String fieldName = fields[i].getName();
-					String fieldValue = (String) fields[i].get(null);
-					constantsMap.put(fieldName, fieldValue);
-				}
-			} catch (IllegalAccessException iae) {
-				throw new ConstantsNotLoadedException(iae);
-			}
-			return constantsMap;
 		}
 	}
 
