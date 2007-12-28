@@ -38,6 +38,36 @@
                    type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm"/>
     </form-beans>
 
+    <global-exceptions>
+        <exception type="org.mifos.framework.exceptions.SystemException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.SystemException"
+                   scope="request"
+                   path="/pages/framework/jsp/error.jsp"/>
+        <exception type="org.mifos.framework.exceptions.ApplicationException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.ApplicationException"
+                   scope="request"/>
+        <exception type="org.mifos.framework.exceptions.PageExpiredException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.PageExpiredException"
+                   scope="request"
+                   path="/pages/framework/jsp/pageexpirederror.jsp"/>
+        <exception type="org.mifos.framework.exceptions.ConnectionNotFoundException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.ConnectionNotFoundException"
+                   scope="request" path="/pages/framework/jsp/error.jsp"/>
+        <exception type="org.mifos.framework.exceptions.ServiceUnavailableException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.ServiceUnavailableException"
+                   scope="request" path="/pages/framework/jsp/error.jsp"/>
+    </global-exceptions>
+
+    <global-forwards>
+        <forward name="welcome" path="/loginAction.do?method=load"/>
+        <forward name="load_main_page" path="/pages/application/login/jsp/login.jsp"/>
+    </global-forwards>
+
     <action-mappings>
         <!-- Center Action -->
         <action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction"
@@ -229,36 +259,6 @@
         </action>
         <!-- Savings Accounts action end -->
     </action-mappings>
-
-    <global-exceptions>
-        <exception type="org.mifos.framework.exceptions.SystemException"
-                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
-                   key="exception.framework.SystemException"
-                   scope="request"
-                   path="/pages/framework/jsp/error.jsp"/>
-        <exception type="org.mifos.framework.exceptions.ApplicationException"
-                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
-                   key="exception.framework.ApplicationException"
-                   scope="request"/>
-        <exception type="org.mifos.framework.exceptions.PageExpiredException"
-                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
-                   key="exception.framework.PageExpiredException"
-                   scope="request"
-                   path="/pages/framework/jsp/pageexpirederror.jsp"/>
-        <exception type="org.mifos.framework.exceptions.ConnectionNotFoundException"
-                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
-                   key="exception.framework.ConnectionNotFoundException"
-                   scope="request" path="/pages/framework/jsp/error.jsp"/>
-        <exception type="org.mifos.framework.exceptions.ServiceUnavailableException"
-                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
-                   key="exception.framework.ServiceUnavailableException"
-                   scope="request" path="/pages/framework/jsp/error.jsp"/>
-    </global-exceptions>
-
-    <global-forwards>
-        <forward name="welcome" path="/loginAction.do?method=load"/>
-        <forward name="load_main_page" path="/pages/application/login/jsp/login.jsp"/>
-    </global-forwards>
 
     <controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor"
                 contentType="text/html; charset=UTF-8"></controller>
