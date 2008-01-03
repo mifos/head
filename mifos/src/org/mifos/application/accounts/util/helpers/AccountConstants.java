@@ -173,7 +173,7 @@ public interface AccountConstants {
 	public static int INTEREST_DAYS_360 = 360;
 	public static int INTEREST_DAYS_365 = 365;
 
-	public static final int INTEREST_DAYS=365;
+	//public static final int INTEREST_DAYS=365;
 	public static final int DAYS_IN_WEEK=7;
 	public static final int DAYS_IN_MONTH=30;
 	

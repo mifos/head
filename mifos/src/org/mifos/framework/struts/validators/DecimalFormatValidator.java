@@ -47,6 +47,7 @@ import org.apache.commons.validator.util.ValidatorUtils;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.validator.Resources;
 import org.mifos.framework.util.helpers.DecimalFieldHelper;
+import org.mifos.framework.util.LocalizationConverter;
 
 /**
  * This is a custom validator class used to validate the format of the decimal field.
@@ -84,7 +85,8 @@ public class DecimalFormatValidator {
 		// it could be null if the property is not being passed from the UI
 		if(null != fieldToBeValidated && fieldToBeValidated != ""){
 			try{
-				validatableField = new Double(fieldToBeValidated);
+				
+				validatableField = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(fieldToBeValidated);
 				validatableField = Math.abs(validatableField);
 				// get the format against which it has to be validated
 				format = field.getVarValue("format");

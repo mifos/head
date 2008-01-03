@@ -17,6 +17,7 @@ import org.mifos.framework.struts.tags.MifosNumberTextTagTest;
 import org.mifos.framework.struts.tags.MifosTextareaTagTest;
 import org.mifos.framework.struts.tags.RawButtonTest;
 import org.mifos.framework.struts.tags.RawSelectTest;
+import org.mifos.framework.util.TestLocalizationConverter;
 
 public class StrutsTestSuite extends TestSuite {
 
@@ -41,6 +42,7 @@ public class StrutsTestSuite extends TestSuite {
 		suite.addTestSuite(MifosFileTagTest.class);
 		suite.addTestSuite(MifosAlphaNumTextTagTest.class);
 		suite.addTestSuite(MifosNumberTextTagTest.class);
+		suite.addTestSuite(TestLocalizationConverter.class);
 		return suite;
 	}
 

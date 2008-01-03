@@ -44,6 +44,20 @@ public class BaseActionForm extends ValidatorActionForm {
 			}
 		}
 	}
+    
+    protected Double validateDouble(String doubleString)
+    {
+    	Double value = null;
+    	try
+    	{
+    		value = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(doubleString);
+    	}
+    	catch (Exception ex)
+    	{
+    	}
+    	// check format
+    	return value;
+    }
 
 	protected Short getShortValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;
@@ -70,7 +84,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
 	protected String getStringValue(Double value) {
 		//return value != null ? String.valueOf(value) : null;
-		return value != null ? LocalizationConverter.getInstance().getDoubleValueStringForCurrentLocale(value) : null;
+		return value != null ? LocalizationConverter.getInstance().getDoubleValueString(value) : null;
 	}
 
 	protected String getStringValue(Short value) {

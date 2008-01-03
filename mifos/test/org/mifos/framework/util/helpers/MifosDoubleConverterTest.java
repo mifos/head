@@ -19,6 +19,7 @@ public class MifosDoubleConverterTest extends MifosTestCase {
 			assertEquals(test, mifosDoubleConverter.convert(String.class, "2.0"));
 		converter.setCurrentLocale(new Locale("IS", "is"));
 		assertEquals(test, mifosDoubleConverter.convert(String.class, "2,0"));
+		converter.setCurrentLocale(locale);
 	}
 
 }

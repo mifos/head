@@ -1066,41 +1066,41 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountSameForAllLoan.clear();
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt1(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt1(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt1(),
-					loanPrdActionForm.getStartRangeLoanAmt1(),
-					loanPrdActionForm.getEndRangeLoanAmt1(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt1Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt1Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt1Value(),
+					loanPrdActionForm.getStartRangeLoanAmt1().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt1().doubleValue(), this));
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt2(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt2(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt2(),
-					loanPrdActionForm.getStartRangeLoanAmt2(),
-					loanPrdActionForm.getEndRangeLoanAmt2(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt2Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt2Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt2Value(),
+					loanPrdActionForm.getStartRangeLoanAmt2().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt2().doubleValue(), this));
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt3(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt3(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt3(),
-					loanPrdActionForm.getStartRangeLoanAmt3(),
-					loanPrdActionForm.getEndRangeLoanAmt3(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt3Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt3Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt3Value(),
+					loanPrdActionForm.getStartRangeLoanAmt3().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt3().doubleValue(), this));
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt4(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt4(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt4(),
-					loanPrdActionForm.getStartRangeLoanAmt4(),
-					loanPrdActionForm.getEndRangeLoanAmt4(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt4Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt4Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt4Value(),
+					loanPrdActionForm.getStartRangeLoanAmt4().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt4().doubleValue(), this));
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt5(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt5(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt5(),
-					loanPrdActionForm.getStartRangeLoanAmt5(),
-					loanPrdActionForm.getEndRangeLoanAmt5(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt5Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt5Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt5Value(),
+					loanPrdActionForm.getStartRangeLoanAmt5().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt5().doubleValue(), this));
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
-					loanPrdActionForm.getLastLoanMinLoanAmt6(),
-					loanPrdActionForm.getLastLoanMaxLoanAmt6(),
-					loanPrdActionForm.getLastLoanDefaultLoanAmt6(),
-					loanPrdActionForm.getStartRangeLoanAmt6(),
-					loanPrdActionForm.getEndRangeLoanAmt6(), this));
+					loanPrdActionForm.getLastLoanMinLoanAmt6Value(),
+					loanPrdActionForm.getLastLoanMaxLoanAmt6Value(),
+					loanPrdActionForm.getLastLoanDefaultLoanAmt6Value(),
+					loanPrdActionForm.getStartRangeLoanAmt6().doubleValue(),
+					loanPrdActionForm.getEndRangeLoanAmt6().doubleValue(), this));
 		}
 		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN)) {
 			this.noOfInstallFromLastLoan.clear();
@@ -1110,38 +1110,38 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment1()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment1()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment1()),
-					loanPrdActionForm.getStartInstallmentRange1(),
-					loanPrdActionForm.getEndInstallmentRange1(), this));
+					loanPrdActionForm.getStartInstallmentRange1().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange1().doubleValue(), this));
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment2()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment2()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment2()),
-					loanPrdActionForm.getStartInstallmentRange2(),
-					loanPrdActionForm.getEndInstallmentRange2(), this));
+					loanPrdActionForm.getStartInstallmentRange2().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange2().doubleValue(), this));
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment3()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment3()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment3()),
-					loanPrdActionForm.getStartInstallmentRange3(),
-					loanPrdActionForm.getEndInstallmentRange3(), this));
+					loanPrdActionForm.getStartInstallmentRange3().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange3().doubleValue(), this));
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment4()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment4()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment4()),
-					loanPrdActionForm.getStartInstallmentRange4(),
-					loanPrdActionForm.getEndInstallmentRange4(), this));
+					loanPrdActionForm.getStartInstallmentRange4().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange4().doubleValue(), this));
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment5()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment5()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment5()),
-					loanPrdActionForm.getStartInstallmentRange5(),
-					loanPrdActionForm.getEndInstallmentRange5(), this));
+					loanPrdActionForm.getStartInstallmentRange5().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange5().doubleValue(), this));
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment6()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment6()),
 					Short.valueOf(loanPrdActionForm.getDefLoanInstallment6()),
-					loanPrdActionForm.getStartInstallmentRange6(),
-					loanPrdActionForm.getEndInstallmentRange6(), this));
+					loanPrdActionForm.getStartInstallmentRange6().doubleValue(),
+					loanPrdActionForm.getEndInstallmentRange6().doubleValue(), this));
 
 		}
 		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE)) {
@@ -1149,34 +1149,34 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountSameForAllLoan.clear();
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt1(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt1(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt1(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt1Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt1Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt1Value(), new Short(
 							"0"), this));
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt2(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt2(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt2(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt2Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt2Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt2Value(), new Short(
 							"1"), this));
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt3(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt3(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt3(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt3Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt3Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt3Value(), new Short(
 							"2"), this));
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt4(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt4(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt4(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt4Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt4Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt4Value(), new Short(
 							"3"), this));
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt5(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt5(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt5(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt5Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt5Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt5Value(), new Short(
 							"4"), this));
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
-					loanPrdActionForm.getCycleLoanMinLoanAmt6(),
-					loanPrdActionForm.getCycleLoanMaxLoanAmt6(),
-					loanPrdActionForm.getCycleLoanDefaultLoanAmt6(), new Short(
+					loanPrdActionForm.getCycleLoanMinLoanAmt6Value(),
+					loanPrdActionForm.getCycleLoanMaxLoanAmt6Value(),
+					loanPrdActionForm.getCycleLoanDefaultLoanAmt6Value(), new Short(
 							"5"), this));
 
 		}
@@ -1220,9 +1220,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountFromLoanCycle.clear();
 			loanAmountSameForAllLoan.add(new LoanAmountSameForAllLoanBO(
-					loanPrdActionForm.getMinLoanAmount(), loanPrdActionForm
-							.getMaxLoanAmount(), loanPrdActionForm
-							.getDefaultLoanAmount(), this));
+					loanPrdActionForm.getMinLoanAmountValue(), loanPrdActionForm
+							.getMaxLoanAmountValue(), loanPrdActionForm
+							.getDefaultLoanAmountValue(), this));
 		}
 		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)) {
 			this.noOfInstallSameForAllLoan.clear();

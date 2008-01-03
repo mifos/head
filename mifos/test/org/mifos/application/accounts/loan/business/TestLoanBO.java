@@ -5102,7 +5102,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
 				.getAccountId());
-		assertEquals((float) 1.0, ((LoanBO) accountBO).getPaymentsInArrears());
+		assertEquals((double) 1.0, ((LoanBO) accountBO).getPaymentsInArrears());
 
 	}
 

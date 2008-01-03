@@ -1444,21 +1444,21 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				startDate, endDate, "1234", gracePeriodType, (short) 2,
 				interestTypes, 12.0, 2.0, 3.0, false, false, false, null, fees,
 				frequency, principalglCodeEntity, intglCodeEntity,
-				populateNoOfInstallFromLastLoanAmount("2", new Double("0"),
-						new Double("1000"), new Double("1001"), new Double(
-								"2000"), new Double("2001"),
-						new Double("3000"), new Double("3001"), new Double(
-								"4000"), new Double("4001"),
-						new Double("5000"), new Double("5001"), new Double(
+				populateNoOfInstallFromLastLoanAmount("2", new Integer("0"),
+						new Integer("1000"), new Integer("1001"), new Integer(
+								"2000"), new Integer("2001"),
+						new Integer("3000"), new Integer("3001"), new Integer(
+								"4000"), new Integer("4001"),
+						new Integer("5000"), new Integer("5001"), new Integer(
 								"6000"), "10", "30", "20", "20", "40", "30",
 						"30", "50", "40", "40", "60", "50", "50", "70", "60",
 						"60", "80", "70", populateLoanAmountFromLastLoanAmount(
-								"2", new Double("0"), new Double("1000"),
-								new Double("1001"), new Double("2000"),
-								new Double("2001"), new Double("3000"),
-								new Double("3001"), new Double("4000"),
-								new Double("4001"), new Double("5000"),
-								new Double("5001"), new Double("6000"),
+								"2", new Integer("0"), new Integer("1000"),
+								new Integer("1001"), new Integer("2000"),
+								new Integer("2001"), new Integer("3000"),
+								new Integer("3001"), new Integer("4000"),
+								new Integer("4001"), new Integer("5000"),
+								new Integer("5001"), new Integer("6000"),
 								new Double("1000"), new Double("3000"),
 								new Double("2000"), new Double("2000"),
 								new Double("4000"), new Double("3000"),
@@ -1809,9 +1809,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		if (loanAmtCalcType.equals("1")) {
 			loanPrdActionForm.setLoanAmtCalcType(loanAmtCalcType);
 			loanPrdActionForm.setCalcInstallmentType(calcInstallmentType);
-			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount);
-			loanPrdActionForm.setMinLoanAmount(minLoanAmount);
-			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount);
+			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount.toString());
+			loanPrdActionForm.setMinLoanAmount(minLoanAmount.toString());
+			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount.toString());
 			loanPrdActionForm.setMaxNoInstallments(maxNoOfInstall);
 			loanPrdActionForm.setMinNoInstallments(minNoOfInstall);
 			loanPrdActionForm.setDefNoInstallments(defNoOfInstall);
@@ -1824,9 +1824,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			Double defLoanAmount, LoanPrdActionForm loanPrdActionForm) {
 		if (loanAmtCalcType.equals("1")) {
 			loanPrdActionForm.setLoanAmtCalcType(loanAmtCalcType);
-			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount);
-			loanPrdActionForm.setMinLoanAmount(minLoanAmount);
-			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount);
+			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount.toString());
+			loanPrdActionForm.setMinLoanAmount(minLoanAmount.toString());
+			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount.toString());
 		}
 		return loanPrdActionForm;
 	}
@@ -1846,13 +1846,13 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public LoanPrdActionForm populateLoanAmountFromLastLoanAmount(
-			String loanAmtCalcType, Double startRangeLoanAmt1,
-			Double endRangeLoanAmt1, Double startRangeLoanAmt2,
-			Double endRangeLoanAmt2, Double startRangeLoanAmt3,
-			Double endRangeLoanAmt3, Double startRangeLoanAmt4,
-			Double endRangeLoanAmt4, Double startRangeLoanAmt5,
-			Double endRangeLoanAmt5, Double startRangeLoanAmt6,
-			Double endRangeLoanAmt6, Double lastLoanMinLoanAmt1,
+			String loanAmtCalcType, Integer startRangeLoanAmt1,
+			Integer endRangeLoanAmt1, Integer startRangeLoanAmt2,
+			Integer endRangeLoanAmt2, Integer startRangeLoanAmt3,
+			Integer endRangeLoanAmt3, Integer startRangeLoanAmt4,
+			Integer endRangeLoanAmt4, Integer startRangeLoanAmt5,
+			Integer endRangeLoanAmt5, Integer startRangeLoanAmt6,
+			Integer endRangeLoanAmt6, Double lastLoanMinLoanAmt1,
 			Double lastLoanMaxLoanAmt1, Double lastLoanDefaultLoanAmt1,
 			Double lastLoanMinLoanAmt2, Double lastLoanMaxLoanAmt2,
 			Double lastLoanDefaultLoanAmt2, Double lastLoanMinLoanAmt3,
@@ -1877,43 +1877,43 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			loanPrdActionForm.setEndRangeLoanAmt4(endRangeLoanAmt4);
 			loanPrdActionForm.setEndRangeLoanAmt5(endRangeLoanAmt5);
 			loanPrdActionForm.setEndRangeLoanAmt6(endRangeLoanAmt6);
-			loanPrdActionForm.setLastLoanMaxLoanAmt1(lastLoanMaxLoanAmt1);
-			loanPrdActionForm.setLastLoanMaxLoanAmt2(lastLoanMaxLoanAmt2);
-			loanPrdActionForm.setLastLoanMaxLoanAmt3(lastLoanMaxLoanAmt3);
-			loanPrdActionForm.setLastLoanMaxLoanAmt4(lastLoanMaxLoanAmt4);
-			loanPrdActionForm.setLastLoanMaxLoanAmt5(lastLoanMaxLoanAmt5);
-			loanPrdActionForm.setLastLoanMaxLoanAmt6(lastLoanMaxLoanAmt6);
-			loanPrdActionForm.setLastLoanMinLoanAmt1(lastLoanMinLoanAmt1);
-			loanPrdActionForm.setLastLoanMinLoanAmt2(lastLoanMinLoanAmt2);
-			loanPrdActionForm.setLastLoanMinLoanAmt3(lastLoanMinLoanAmt3);
-			loanPrdActionForm.setLastLoanMinLoanAmt4(lastLoanMinLoanAmt4);
-			loanPrdActionForm.setLastLoanMinLoanAmt5(lastLoanMinLoanAmt5);
-			loanPrdActionForm.setLastLoanMinLoanAmt6(lastLoanMinLoanAmt6);
+			loanPrdActionForm.setLastLoanMaxLoanAmt1(lastLoanMaxLoanAmt1.toString());
+			loanPrdActionForm.setLastLoanMaxLoanAmt2(lastLoanMaxLoanAmt2.toString());
+			loanPrdActionForm.setLastLoanMaxLoanAmt3(lastLoanMaxLoanAmt3.toString());
+			loanPrdActionForm.setLastLoanMaxLoanAmt4(lastLoanMaxLoanAmt4.toString());
+			loanPrdActionForm.setLastLoanMaxLoanAmt5(lastLoanMaxLoanAmt5.toString());
+			loanPrdActionForm.setLastLoanMaxLoanAmt6(lastLoanMaxLoanAmt6.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt1(lastLoanMinLoanAmt1.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt2(lastLoanMinLoanAmt2.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt3(lastLoanMinLoanAmt3.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt4(lastLoanMinLoanAmt4.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt5(lastLoanMinLoanAmt5.toString());
+			loanPrdActionForm.setLastLoanMinLoanAmt6(lastLoanMinLoanAmt6.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt1(lastLoanDefaultLoanAmt1);
+					.setLastLoanDefaultLoanAmt1(lastLoanDefaultLoanAmt1.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt2(lastLoanDefaultLoanAmt2);
+					.setLastLoanDefaultLoanAmt2(lastLoanDefaultLoanAmt2.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt3(lastLoanDefaultLoanAmt3);
+					.setLastLoanDefaultLoanAmt3(lastLoanDefaultLoanAmt3.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt4(lastLoanDefaultLoanAmt4);
+					.setLastLoanDefaultLoanAmt4(lastLoanDefaultLoanAmt4.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt5(lastLoanDefaultLoanAmt5);
+					.setLastLoanDefaultLoanAmt5(lastLoanDefaultLoanAmt5.toString());
 			loanPrdActionForm
-					.setLastLoanDefaultLoanAmt6(lastLoanDefaultLoanAmt6);
+					.setLastLoanDefaultLoanAmt6(lastLoanDefaultLoanAmt6.toString());
 
 		}
 		return loanPrdActionForm;
 	}
 
 	public LoanPrdActionForm populateNoOfInstallFromLastLoanAmount(
-			String calcInstallmentType, Double startInstallmentRange1,
-			Double endInstallmentRange1, Double startInstallmentRange2,
-			Double endInstallmentRange2, Double startInstallmentRange3,
-			Double endInstallmentRange3, Double startInstallmentRange4,
-			Double endInstallmentRange4, Double startInstallmentRange5,
-			Double endInstallmentRange5, Double startInstallmentRange6,
-			Double endInstallmentRange6, String minLoanInstallment1,
+			String calcInstallmentType, Integer startInstallmentRange1,
+			Integer endInstallmentRange1, Integer startInstallmentRange2,
+			Integer endInstallmentRange2, Integer startInstallmentRange3,
+			Integer endInstallmentRange3, Integer startInstallmentRange4,
+			Integer endInstallmentRange4, Integer startInstallmentRange5,
+			Integer endInstallmentRange5, Integer startInstallmentRange6,
+			Integer endInstallmentRange6, String minLoanInstallment1,
 			String maxLoanInstallment1, String defLoanInstallment1,
 			String minLoanInstallment2, String maxLoanInstallment2,
 			String defLoanInstallment2, String minLoanInstallment3,
@@ -1973,30 +1973,30 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			Double cycleLoanDefaultLoanAmt6, LoanPrdActionForm loanPrdActionForm) {
 		if (loanAmtCalcType.equals("3")) {
 			loanPrdActionForm.setLoanAmtCalcType(loanAmtCalcType);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt1(cycleLoanMaxLoanAmt1);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt2(cycleLoanMaxLoanAmt2);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt3(cycleLoanMaxLoanAmt3);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt4(cycleLoanMaxLoanAmt4);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt5(cycleLoanMaxLoanAmt5);
-			loanPrdActionForm.setCycleLoanMaxLoanAmt6(cycleLoanMaxLoanAmt6);
-			loanPrdActionForm.setCycleLoanMinLoanAmt1(cycleLoanMinLoanAmt1);
-			loanPrdActionForm.setCycleLoanMinLoanAmt2(cycleLoanMinLoanAmt2);
-			loanPrdActionForm.setCycleLoanMinLoanAmt3(cycleLoanMinLoanAmt3);
-			loanPrdActionForm.setCycleLoanMinLoanAmt4(cycleLoanMinLoanAmt4);
-			loanPrdActionForm.setCycleLoanMinLoanAmt5(cycleLoanMinLoanAmt5);
-			loanPrdActionForm.setCycleLoanMinLoanAmt6(cycleLoanMinLoanAmt6);
+			loanPrdActionForm.setCycleLoanMaxLoanAmt1(cycleLoanMaxLoanAmt1.toString());
+			loanPrdActionForm.setCycleLoanMaxLoanAmt2(cycleLoanMaxLoanAmt2.toString());
+			loanPrdActionForm.setCycleLoanMaxLoanAmt3(cycleLoanMaxLoanAmt3.toString());
+			loanPrdActionForm.setCycleLoanMaxLoanAmt4(cycleLoanMaxLoanAmt4.toString());
+			loanPrdActionForm.setCycleLoanMaxLoanAmt5(cycleLoanMaxLoanAmt5.toString());
+			loanPrdActionForm.setCycleLoanMaxLoanAmt6(cycleLoanMaxLoanAmt6.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt1(cycleLoanMinLoanAmt1.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt2(cycleLoanMinLoanAmt2.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt3(cycleLoanMinLoanAmt3.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt4(cycleLoanMinLoanAmt4.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt5(cycleLoanMinLoanAmt5.toString());
+			loanPrdActionForm.setCycleLoanMinLoanAmt6(cycleLoanMinLoanAmt6.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt1(cycleLoanDefaultLoanAmt1);
+					.setCycleLoanDefaultLoanAmt1(cycleLoanDefaultLoanAmt1.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt2(cycleLoanDefaultLoanAmt2);
+					.setCycleLoanDefaultLoanAmt2(cycleLoanDefaultLoanAmt2.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt3(cycleLoanDefaultLoanAmt3);
+					.setCycleLoanDefaultLoanAmt3(cycleLoanDefaultLoanAmt3.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt4(cycleLoanDefaultLoanAmt4);
+					.setCycleLoanDefaultLoanAmt4(cycleLoanDefaultLoanAmt4.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt5(cycleLoanDefaultLoanAmt5);
+					.setCycleLoanDefaultLoanAmt5(cycleLoanDefaultLoanAmt5.toString());
 			loanPrdActionForm
-					.setCycleLoanDefaultLoanAmt6(cycleLoanDefaultLoanAmt6);
+					.setCycleLoanDefaultLoanAmt6(cycleLoanDefaultLoanAmt6.toString());
 		}
 		return loanPrdActionForm;
 	}

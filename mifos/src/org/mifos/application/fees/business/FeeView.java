@@ -9,6 +9,7 @@ import org.mifos.framework.business.View;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class FeeView extends View {
 	private String feeId;
@@ -70,7 +71,8 @@ public class FeeView extends View {
 	}
 
 	public Double getAmountMoney() {
-		return new Double(amount);
+		
+		return LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(amount);
 	}
 
 	public void setAmount(String amount) {

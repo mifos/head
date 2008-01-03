@@ -73,7 +73,7 @@ public class ApplyChargeAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 		Short chargeType = Short.valueOf(applyChargeActionForm.getChargeType());
-		Double chargeAmount = new Double(request.getParameter("charge"));
+		Double chargeAmount = getDoubleValue(request.getParameter("charge"));
 		AccountBO accountBO = getAccountBusinessService().getAccount(
 				Integer.valueOf(applyChargeActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);

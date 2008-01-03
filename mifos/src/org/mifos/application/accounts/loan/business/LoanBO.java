@@ -129,6 +129,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.config.AccountingRules;
+import java.math.BigDecimal;
 
 public class LoanBO extends AccountBO {
 
@@ -3325,14 +3326,14 @@ public class LoanBO extends AccountBO {
 		return daysWithoutPayment;
 	}
 
-	public Float getPaymentsInArrears() throws PersistenceException {
-		float principalInArrearsAndOutsideLateness = getTotalPrincipalAmountInArrearsAndOutsideLateness()
-				.getAmount().floatValue();
-		float totalPrincipal = getTotalPrincipalAmount().getAmount()
-				.floatValue();
-		float numOfInstallments = getNoOfInstallments().floatValue();
-		return principalInArrearsAndOutsideLateness * numOfInstallments
-				/ totalPrincipal;
+	
+	
+	public double getPaymentsInArrears() throws PersistenceException {
+		Money principalInArrearsAndOutsideLateness = getTotalPrincipalAmountInArrearsAndOutsideLateness();
+		Money totalPrincipal = getTotalPrincipalAmount();
+		Money numOfInstallments = new Money(new BigDecimal(getNoOfInstallments()));
+		return principalInArrearsAndOutsideLateness.multiply(numOfInstallments).divide(totalPrincipal).getAmountDoubleValue();
+			
 	}
 
 	public Money getNetOfSaving() {

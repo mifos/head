@@ -66,6 +66,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.config.AccountingRules;
 
 public class SavingsBO extends AccountBO {
 
@@ -833,7 +834,7 @@ public class SavingsBO extends AccountBO {
 			int duration, String durationType) {
 		double intRate = interestRate;
 		if (durationType.equals(SavingsConstants.DAYS)) {
-			intRate = (intRate / (AccountConstants.INTEREST_DAYS)) * duration;
+			intRate = (intRate / (AccountingRules.getNumberOfInterestDays())) * duration;
 		} else {
 			intRate = (intRate / 12) * duration;
 		}

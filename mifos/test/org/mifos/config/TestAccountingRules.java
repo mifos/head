@@ -91,6 +91,69 @@ public class TestAccountingRules  extends MifosTestCase {
 		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
 		
 	}
+	
+	public void testGetDigitsBeforeDecimal() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Short digitsBeforeDecimal = 7;
+		configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal, digitsBeforeDecimal);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(digitsBeforeDecimal, AccountingRules.getDigitsBeforeDecimal());
+		// clear the DigitsBeforeDecimal property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal);
+		// should throw exception
+		try
+		{
+			AccountingRules.getDigitsBeforeDecimal();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "The number of digits before decimal is not defined in the config file nor database.");
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal, digitsBeforeDecimal);
+		
+	}
+	
+	public void testGetDigitsBeforeDecimalForInterest() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Short digitsBeforeDecimalForInterest = 10;
+		configMgr.addProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest, digitsBeforeDecimalForInterest);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(digitsBeforeDecimalForInterest, AccountingRules.getDigitsBeforeDecimalForInterest());
+		// clear the DigitsBeforeDecimalForInterest property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest);
+		// should throw exception
+		try
+		{
+			AccountingRules.getDigitsBeforeDecimalForInterest();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "The number of digits before decimal for interest is not defined in the config file nor database.");
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest, digitsBeforeDecimalForInterest);
+		
+	}
+	
+	public void testGetDigitsAfterDecimalForInterest() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Short digitsAfterDecimalForInterest = 5;
+		configMgr.addProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest, digitsAfterDecimalForInterest);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(digitsAfterDecimalForInterest, AccountingRules.getDigitsAfterDecimalForInterest());
+		// clear the DigitsBeforeDecimalForInterest property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest);
+		// should throw exception
+		try
+		{
+			AccountingRules.getDigitsAfterDecimalForInterest();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "The number of digits after decimal for interest is not defined in the config file nor database.");
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest, digitsAfterDecimalForInterest);
+		
+	}
 
 	
 	@Test

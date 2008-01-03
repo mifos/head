@@ -276,6 +276,11 @@ public interface ProductDefinitionConstants {
 	public String ERRORSTARTENDINSTALLMENT="errors.startendinstallment";
 	public String ERRORMINMAXDEFINSTALLMENT="errors.defaultinstallments";
 	public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE="errors.principallast_invalidgrace";
+	public String SAMEFORALLLOANS="product.sameforallloans";
+	public String FORBYLASTLOANATROW="product.forbylastloanatrow";
+	public String FORBYLOANCYCLEATROW="product.forbyloancycleatrow";
+	public String INVALIDRATE="errors.intRate";
+	public String FORNUMBEROFLASTLOLANINSTALLMENTATROW="product.fornumberoflastloaninstallmentatrow";
 }
 
 

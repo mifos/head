@@ -5,13 +5,15 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import org.mifos.config.Localization;
-import java.text.DecimalFormatSymbols;
+import java.text.ParsePosition;
+import org.mifos.config.AccountingRules;
 
 import java.text.SimpleDateFormat;
 
 public class LocalizationConverter {
-	
 	private static DecimalFormat currentDecimalFormat;
+	private static DecimalFormat currentDecimalFormatForMoney;
+	private static DecimalFormat currentDecimalFormatForInterest;
 	private static String dateSeparator;
 	private static Locale currentLocale;
 	private static char decimalFormatSymbol;
@@ -25,20 +27,16 @@ public class LocalizationConverter {
 	
 	private LocalizationConverter() {
 		currentLocale = Localization.getInstance().getMainLocale();
-		currentDecimalFormat = getDecimalFormatForCurrentLocale();
+		loadDecimalFormats();
 		dateSeparator = getDateSeparator();
-		decimalFormatSymbol = loadDecimalFormatSymbol();
 	}
 	
 	// for testing purpose only
 	public void setCurrentLocale(Locale locale)
 	{
-		if (currentLocale.equals(locale))
-			return;
 		currentLocale = locale;
-		currentDecimalFormat = getDecimalFormatForCurrentLocale();
+		loadDecimalFormats();
 		dateSeparator = getDateSeparator();
-		decimalFormatSymbol = loadDecimalFormatSymbol();
 	}
 	
 	private boolean supportThisLocale(Locale[] locales)
@@ -60,7 +58,19 @@ public class LocalizationConverter {
 		return find;
 	}
 	
-	private DecimalFormat getDecimalFormatForCurrentLocale()
+	private DecimalFormat buildDecimalFormat(Short digitsBefore, Short digitsAfter, DecimalFormat decimalFormat)
+	{
+		StringBuffer pattern = new StringBuffer();
+		for (short i=0; i < digitsBefore ; i++)
+			pattern.append('#');
+		pattern.append(decimalFormat.getDecimalFormatSymbols().getDecimalSeparator());
+		for (short i=0; i < digitsAfter ; i++)
+			pattern.append('#');
+		decimalFormat.applyLocalizedPattern(pattern.toString());
+		return decimalFormat;
+	}
+	
+	private void loadDecimalFormats()
 	{
 		if (currentLocale == null)
 			throw new RuntimeException("The current locale is not set for LocalizationConverter.");
@@ -69,20 +79,22 @@ public class LocalizationConverter {
 		if (find == false)
 			throw new RuntimeException("NumberFormat class doesn't support this country code: " +
 					currentLocale.getCountry() + " and language code: " + currentLocale.getLanguage());
-		DecimalFormat decimalFormat = null;
-		NumberFormat format = NumberFormat.getInstance(currentLocale);
-		format = DecimalFormat.getInstance(currentLocale);
-		if (format instanceof DecimalFormat) 
-			decimalFormat = (DecimalFormat)format;
-		return decimalFormat;
+		NumberFormat format = DecimalFormat.getInstance(currentLocale);
+		if (format instanceof DecimalFormat)
+		{
+			Short defaultValue = 1;
+			Short digitsBeforeDecimal = AccountingRules.getDigitsBeforeDecimal();
+			Short digitsAfterDecimal = AccountingRules.getDigitsAfterDecimal(defaultValue);
+			currentDecimalFormat = (DecimalFormat)format;
+			currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimal, digitsAfterDecimal, (DecimalFormat)currentDecimalFormat.clone());
+			//
+			digitsBeforeDecimal = AccountingRules.getDigitsBeforeDecimalForInterest();
+			digitsAfterDecimal = AccountingRules.getDigitsAfterDecimalForInterest();
+			currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimal, digitsAfterDecimal, (DecimalFormat)currentDecimalFormat.clone());
+			decimalFormatSymbol = currentDecimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
+		}
 	}
 	
-	private char loadDecimalFormatSymbol()
-	{
-		DecimalFormatSymbols symbols = currentDecimalFormat.getDecimalFormatSymbols();
-		char symbol = symbols.getDecimalSeparator();
-		return symbol;
-	}
 	
 	public char getDecimalFormatSymbol()
 	{
@@ -93,12 +105,18 @@ public class LocalizationConverter {
 	public Double getDoubleValueForCurrentLocale(String doubleValueString)
 	{
 		
-		if (currentDecimalFormat == null)
-			currentDecimalFormat = getDecimalFormatForCurrentLocale();
+		if (currentDecimalFormatForMoney == null)
+			loadDecimalFormats();
 		Double dNum = null;
 		try
 		{
-			Number num = currentDecimalFormat.parse(doubleValueString);
+			ParsePosition pp = new ParsePosition(0);
+			Number num = currentDecimalFormatForMoney.parse(doubleValueString, pp);
+			if ((doubleValueString.length() != pp.getIndex()) || (num == null))
+			{
+				throw new NumberFormatException("The format of the number is invalid. index " + pp.getIndex() +
+						" locale " + currentLocale.getCountry() + " " + currentLocale.getLanguage());
+			}
 			dNum = num.doubleValue();
 		}
 		catch (Exception e)
@@ -108,13 +126,36 @@ public class LocalizationConverter {
 		return dNum;
 	}
 	
-	public String getDoubleValueStringForCurrentLocale(Double dNumber)
+	public Double getDoubleValue(String doubleValueString)
+	{
+		
+		if (currentDecimalFormat == null)
+			loadDecimalFormats();
+		Double dNum = null;
+		try
+		{
+			ParsePosition pp = new ParsePosition(0);
+			Number num = currentDecimalFormat.parse(doubleValueString, pp);
+			if ((doubleValueString.length() != pp.getIndex()) || (num == null))
+			{
+				throw new NumberFormatException("The format of the number is invalid for locale " +
+						 currentLocale.getCountry() + " " + currentLocale.getLanguage());
+			}
+			dNum = num.doubleValue();
+		}
+		catch (Exception e)
+		{
+			throw new NumberFormatException(e.getMessage() + " .Number " + doubleValueString);
+		}
+		return dNum;
+	}
+	
+	
+	public String getDoubleValueString(Double dNumber)
 	{
 		if (currentDecimalFormat == null)
-			currentDecimalFormat = getDecimalFormatForCurrentLocale();
-		
+			loadDecimalFormats();
 		return currentDecimalFormat.format(dNumber);
-		
 	}
 	
 	public String getDateSeparatorForCurrentLocale()

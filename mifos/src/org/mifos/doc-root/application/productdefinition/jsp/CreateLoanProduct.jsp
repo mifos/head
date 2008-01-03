@@ -120,10 +120,14 @@
 				document.getElementById("install0").style.display = "none";
 				document.getElementById("install1").style.display = "block";
 				document.getElementById("install2").style.display = "none";			
-				if(document.getElementsByName("freqOfInstallments")[1].checked)
-						installments_as_month_value();
-				else
-						installments_as_week_value();
+				//if(document.getElementsByName("freqOfInstallments")[1].checked)
+				//{
+						//installments_as_month_value();
+				//}
+				//else
+				//{
+						//installments_as_week_value();
+				//}
 				}				
 			else if (document.loanproductactionform.calcInstallmentType[2].checked == true){
 				document.getElementById("install0").style.display = "none";
@@ -132,9 +136,12 @@
 				}				
 			}
 		
-			function changeValue(endvalue, rownum)
+			function changeValue(event, editbox, endvalue, rownum)
 			{
+				
 				if(!(endvalue=="")){
+				if (FnCheckNumber(event,'','',editbox) == false)
+					return false;
 				for(var i=rownum;i<rownum+1;i++)
 					{					
 						eval("document.loanproductactionform.startRangeLoanAmt"+(i+1)).value = parseFloat(endvalue) +1;	
@@ -142,9 +149,12 @@
 					}
 			}	
 			
-			function changeInstallmentValue(endvalue, rownum)
+			function changeInstallmentValue(event, editbox, endvalue, rownum)
 			{
+			   
 				if(!(endvalue=="")){
+				if (FnCheckNumber(event,'','',editbox) == false)
+					return false;
 				for(var i=rownum;i<rownum+1;i++)
 					{					
 						eval("document.loanproductactionform.startInstallmentRange"+(i+1)).value = parseFloat(endvalue) +1;			
@@ -169,6 +179,7 @@
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
+		<script src="pages/framework/js/func.js"></script>	
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -425,11 +436,11 @@
 											</tr>
 
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt1" style="border:0"
-													readonly="true" value="0" /> - <mifos:mifosdecimalinput
+													readonly="true" value="0" /> - <mifos:mifosnumbertext
 													size="10" property="endRangeLoanAmt1"
-													onblur="changeValue(this.value,1)" /></td>
+													onblur="changeValue(event, this, this.value,1)" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt1" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
@@ -438,11 +449,11 @@
 													size="10" property="lastLoanDefaultLoanAmt1" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt2" style="border:0"
-													readonly="true" /> - <mifos:mifosdecimalinput size="10"
+													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt2"
-													onblur="changeValue(this.value,2)" /></td>
+													onblur="changeValue(event, this, this.value,2)" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt2" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
@@ -451,11 +462,11 @@
 													size="10" property="lastLoanDefaultLoanAmt2" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt3" style="border:0"
-													readonly="true" /> - <mifos:mifosdecimalinput size="10"
+													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt3"
-													onblur="changeValue(this.value,3)" /></td>
+													onblur="changeValue(event, this, this.value,3)" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt3" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
@@ -464,11 +475,11 @@
 													size="10" property="lastLoanDefaultLoanAmt3" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt4" style="border:0"
-													readonly="true" /> - <mifos:mifosdecimalinput size="10"
+													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt4"
-													onblur="changeValue(this.value,4)" /></td>
+													onblur="changeValue(event, this, this.value,4)" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt4" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
@@ -477,11 +488,11 @@
 													size="10" property="lastLoanDefaultLoanAmt4" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt5" style="border:0"
-													readonly="true" /> - <mifos:mifosdecimalinput size="10"
+													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt5"
-													onblur="changeValue(this.value,5)" /></td>
+													onblur="changeValue(event, this, this.value,5)" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt5" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
@@ -490,9 +501,9 @@
 													size="10" property="lastLoanDefaultLoanAmt5" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:mifosdecimalinput
+												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt6" style="border:0"
-													readonly="true" /> - <mifos:mifosdecimalinput size="10"
+													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt6" /></td>
 												<td class="drawtablerow"><mifos:mifosdecimalinput
 													size="10" property="lastLoanMinLoanAmt6" /></td>
@@ -790,11 +801,11 @@
 																name="product.definst" bundle="ProductDefUIResources" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange1"
-																style="border:0" readonly="true" value="0" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" value="0" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange1"
-																onblur="changeInstallmentValue(this.value,1)" /></td>
+																onblur="changeInstallmentValue(event, this, this.value,1)" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment1" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -803,11 +814,11 @@
 																size="10" property="defLoanInstallment1" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange2"
-																style="border:0" readonly="true" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange2"
-																onblur="changeInstallmentValue(this.value,2)" /></td>
+																onblur="changeInstallmentValue(event, this, this.value,2)" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment2" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -816,11 +827,11 @@
 																size="10" property="defLoanInstallment2" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange3"
-																style="border:0" readonly="true" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange3"
-																onblur="changeInstallmentValue(this.value,3)" /></td>
+																onblur="changeInstallmentValue(event, this, this.value,3)" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment3" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -829,11 +840,11 @@
 																size="10" property="defLoanInstallment3" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange4"
-																style="border:0" readonly="true" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange4"
-																onblur="changeInstallmentValue(this.value,4)" /></td>
+																onblur="changeInstallmentValue(event, this, this.value,4)" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment4" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -842,11 +853,11 @@
 																size="10" property="defLoanInstallment4" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange5"
-																style="border:0" readonly="true" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange5"
-																onblur="changeInstallmentValue(this.value,5)" /></td>
+																onblur="changeInstallmentValue(event, this, this.value,5)" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment5" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
@@ -855,9 +866,9 @@
 																size="10" property="defLoanInstallment5" /></td>
 														</tr>
 														<tr>
-															<td class="drawtablerow"><mifos:mifosdecimalinput
+															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="startInstallmentRange6"
-																style="border:0" readonly="true" /> - <mifos:mifosdecimalinput
+																style="border:0" readonly="true" /> - <mifos:mifosnumbertext
 																size="10" property="endInstallmentRange6" /></td>
 															<td class="drawtablerow"><mifos:mifosnumbertext
 																size="10" property="minLoanInstallment6" /></td>

@@ -13,6 +13,9 @@ public class AccountingRules {
 	public static final String AccountingRulesNumberOfInterestDays = "AccountingRules.NumberOfInterestDays";
 	public static final String AccountingRulesAmountToBeRoundedTo="AccountingRules.AmountToBeRoundedTo";
 	public static final String AccountingRulesCurrencyCode="AccountingRules.CurrencyCode";
+	public static final String AccountingRulesDigitsBeforeDecimal = "AccountingRules.DigitsBeforeDecimal";
+	public static final String AccountingRulesDigitsAfterDecimalForInterest = "AccountingRules.DigitsAfterDecimalForInterest";
+	public static final String AccountingRulesDigitsBeforeDecimalForInterest = "AccountingRules.DigitsBeforeDecimalForInterest";
 	
 	
 	public static MifosCurrency getMifosCurrency()
@@ -55,6 +58,41 @@ public class AccountingRules {
 		return digits;
 	}
 	
+	public static Short getDigitsBeforeDecimal()
+	{
+
+		Short digits;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimal))
+			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimal);
+		else
+			throw new RuntimeException("The number of digits before decimal is not defined in the config file nor database.");
+		return digits;
+	}
+	
+	public static Short getDigitsBeforeDecimalForInterest()
+	{
+
+		Short digits;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimalForInterest))
+			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimalForInterest);
+		else
+			throw new RuntimeException("The number of digits before decimal for interest is not defined in the config file nor database.");
+		return digits;
+	}
+	
+	public static Short getDigitsAfterDecimalForInterest()
+	{
+
+		Short digits;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesDigitsAfterDecimalForInterest))
+			digits = configMgr.getShort(AccountingRulesDigitsAfterDecimalForInterest);
+		else
+			throw new RuntimeException("The number of digits after decimal for interest is not defined in the config file nor database.");
+		return digits;
+	}
 	
 	
 	// the defaultValue passed in should be the value from database

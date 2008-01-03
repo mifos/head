@@ -1464,22 +1464,22 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						MONDAY));
 		Date currentDate = new Date(System.currentTimeMillis());
 		loanPrdActionForm = loanOfferingBO
-				.populateNoOfInstallFromLastLoanAmount("2", new Double("0"),
-						new Double("100"), new Double("101"),
-						new Double("200"), new Double("201"),
-						new Double("300"), new Double("301"),
-						new Double("400"), new Double("401"),
-						new Double("500"), new Double("501"),
-						new Double("600"), "10", "30", "20", "20", "40", "30",
+				.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"),
+						new Integer("100"), new Integer("101"),
+						new Integer("200"), new Integer("201"),
+						new Integer("300"), new Integer("301"),
+						new Integer("400"), new Integer("401"),
+						new Integer("500"), new Integer("501"),
+						new Integer("600"), "10", "30", "20", "20", "40", "30",
 						"30", "50", "40", "40", "60", "50", "50", "70", "60",
 						"60", "80", "70", loanOfferingBO
 								.populateLoanAmountFromLastLoanAmount("2",
-										new Double("0"), new Double("100"),
-										new Double("101"), new Double("200"),
-										new Double("201"), new Double("300"),
-										new Double("301"), new Double("400"),
-										new Double("401"), new Double("500"),
-										new Double("501"), new Double("600"),
+										new Integer("0"), new Integer("100"),
+										new Integer("101"), new Integer("200"),
+										new Integer("201"), new Integer("300"),
+										new Integer("301"), new Integer("400"),
+										new Integer("401"), new Integer("500"),
+										new Integer("501"), new Integer("600"),
 										new Double("100"), new Double("300"),
 										new Double("200"), new Double("200"),
 										new Double("400"), new Double("300"),
@@ -1620,9 +1620,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 			Double defLoanAmount, LoanPrdActionForm loanPrdActionForm) {
 		if (loanAmtCalcType.equals("1")) {
 			loanPrdActionForm.setLoanAmtCalcType(loanAmtCalcType);
-			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount);
-			loanPrdActionForm.setMinLoanAmount(minLoanAmount);
-			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount);
+			loanPrdActionForm.setMaxLoanAmount(maxLoanAmount.toString());
+			loanPrdActionForm.setMinLoanAmount(minLoanAmount.toString());
+			loanPrdActionForm.setDefaultLoanAmount(defLoanAmount.toString());
 		}
 		return loanPrdActionForm;
 	}

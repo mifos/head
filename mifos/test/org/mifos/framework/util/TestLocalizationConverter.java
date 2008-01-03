@@ -1,4 +1,4 @@
-package org.mifos.framework.util;
+ package org.mifos.framework.util;
 
 
 import junit.framework.JUnit4TestAdapter;
@@ -30,7 +30,7 @@ public class TestLocalizationConverter extends MifosTestCase{
 
 	}
 	
-	public void testGetDoubleValueStringForCurrentLocale()
+	public void testGetDoubleValueString()
 	{
 		//long expectedDate = new DateMidnight(2005, 03, 04).getMillis();
 		//java.sql.Date result = DateUtils.getDateAsSentFromBrowser("04/03/2005");
@@ -40,12 +40,12 @@ public class TestLocalizationConverter extends MifosTestCase{
 		Double dValue = 2.59;
 		Locale locale = Localization.getInstance().getMainLocale();
 		LocalizationConverter converter = LocalizationConverter.getInstance();
-		String dString = converter.getDoubleValueStringForCurrentLocale(dValue);
+		String dString = converter.getDoubleValueString(dValue);
 		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
 			assertEquals(doubleValueString, dString);
 		converter.setCurrentLocale(new Locale("IS", "is"));
 		doubleValueString = "2,59";
-		dString = converter.getDoubleValueStringForCurrentLocale(dValue);
+		dString = converter.getDoubleValueString(dValue);
 		assertEquals(doubleValueString, dString);
 		converter.setCurrentLocale(locale);
 	}
@@ -65,8 +65,8 @@ public class TestLocalizationConverter extends MifosTestCase{
 		
 	}
 	
-
-	public void testGetDoubleValueForCurrentLocale()
+    /* get convert a string to a double to the config locale */
+	public void testGetDoubleValue()
 	{
 		String doubleValueString = "2.59";
 		Double dValue = 2.59;
@@ -74,11 +74,73 @@ public class TestLocalizationConverter extends MifosTestCase{
 		LocalizationConverter converter = LocalizationConverter.getInstance();
 		Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
 		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+		{
 			assertEquals(dNumber, dValue);
+			// if the wrong decimal separator is entered, it will throw exception
+			doubleValueString = "2,59";
+			try
+			{
+				dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+			}
+			catch (Exception ex)
+			{
+				assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+			}
+		}
 		converter.setCurrentLocale(new Locale("IS", "is"));
 		doubleValueString = "2,59";
-		dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+		dNumber = converter.getDoubleValue(doubleValueString);
 		assertEquals(dNumber, dValue);
+		//if the wrong decimal separator is entered, it will throw exception
+		doubleValueString = "2.59";
+		try
+		{
+			dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+		}
+		catch (Exception ex)
+		{
+			assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+		}
+		converter.setCurrentLocale(locale);
+		
+	}
+	
+	/* get convert a string to a double to the config locale and the format is the money format 7.1 */
+	public void testGetDoubleValueForCurrentLocale()
+	{
+		String doubleValueString = "223.59";
+		Double dValue = 223.59;
+		Locale locale = Localization.getInstance().getMainLocale();
+		LocalizationConverter converter = LocalizationConverter.getInstance();
+		Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+		{
+			assertEquals(dNumber, dValue);
+			// if the wrong decimal separator is entered, it will throw exception
+			doubleValueString = "223,59";
+			try
+			{
+				dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+			}
+			catch (Exception ex)
+			{
+				assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+			}
+		}
+		converter.setCurrentLocale(new Locale("IS", "is"));
+		doubleValueString = "223,59";
+		dNumber = converter.getDoubleValue(doubleValueString);
+		assertEquals(dNumber, dValue);
+		//if the wrong decimal separator is entered, it will throw exception
+		doubleValueString = "223.59";
+		try
+		{
+			dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+		}
+		catch (Exception ex)
+		{
+			assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
+		}
 		converter.setCurrentLocale(locale);
 		
 	}

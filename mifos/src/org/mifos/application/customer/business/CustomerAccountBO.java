@@ -93,6 +93,7 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class CustomerAccountBO extends AccountBO {
 
@@ -111,8 +112,10 @@ public class CustomerAccountBO extends AccountBO {
 			for (FeeView feeView : fees) {
 				FeeBO fee = new FeePersistence()
 						.getFee(feeView.getFeeIdValue());
+				
 				this.addAccountFees(new AccountFeesEntity(this, fee,
-						new Double(feeView.getAmount())));
+						LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(feeView.getAmount())));
+				
 			}
 			generateCustomerFeeSchedule(customer);
 		}
