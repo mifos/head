@@ -36,9 +36,9 @@
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="dist.dir" value="${basedir}/dist"/>
-	<!--property name="doc.dir" value="${basedir}/docs"/-->
 
 	<!--Helper path for building, copying resources etc-->
+	<property name="doc.dir" value="${dist.dir}/docs"/>
 	<property name="build.src.dir" value="${build.dir}/src_pkg"/>
 	<property name="build.test.dir" value="${build.dir}/test_pkg"/>
 	<property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
@@ -130,10 +130,6 @@
 	
 	<target name="clean_all" depends="clean">
 		<delete dir="${dist.dir}"/>
-		<!-- <delete dir="${doc.dir}/api"/> -->
-		<!--<delete dir="${src.dir}"/>
-		<delete dir="${test.dir}"/>
-		<delete dir="${sql.dir}"/>-->
 	</target>
 
 	<target name="compile" depends="init,make_dir" 
@@ -584,7 +580,6 @@
 	</target>
 
 	<target name="javadoc">
-		<!--
 		<mkdir dir="${doc.dir}/api"/>
 		<javadoc packagenames="org.*"
 			 sourcepath="${src.dir}" 
@@ -592,7 +587,6 @@
 			 author="true" version="true" use="true">
 			<classpath refid="class.path"/>
 		</javadoc>
-	-->
 	</target>
 
 	<!--<target name="src-zip" depends="compile" description="Creates source distribution">
