@@ -278,95 +278,95 @@ public class LabelConfigurationAction extends BaseAction {
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.GROUP)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
-					labelConfigurationActionForm.setGroup(label.getLabelName());
+					labelConfigurationActionForm.setGroup(label.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.CENTER)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm
-							.setCenter(label.getLabelName());
+							.setCenter(label.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.LOAN)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
-					labelConfigurationActionForm.setLoans(label.getLabelName());
+					labelConfigurationActionForm.setLoans(label.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.SAVINGS)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setSavings(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.STATE)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
-					labelConfigurationActionForm.setState(label.getLabelName());
+					labelConfigurationActionForm.setState(label.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.POSTAL_CODE)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setPostalCode(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.ETHINICITY)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setEthnicity(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.CITIZENSHIP)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setCitizenship(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.HANDICAPPED)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setHandicapped(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.GOVERNMENT_ID)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm
-							.setGovtId(label.getLabelName());
+							.setGovtId(label.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.ADDRESS1)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setAddress1(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.ADDRESS2)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setAddress2(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.ADDRESS3)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setAddress3(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.INTEREST)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setInterest(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.EXTERNALID)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setExternalId(label
-							.getLabelName());
+							.getLabelText());
 				}
 				else if (entity.getEntityType().equals(
 						ConfigurationConstants.BULKENTRY)
 						&& label.getLocaleId().equals(userContext.getLocaleId())) {
 					labelConfigurationActionForm.setBulkEntry(label
-							.getLabelName());
+							.getLabelText());
 				}
 			}
 		}

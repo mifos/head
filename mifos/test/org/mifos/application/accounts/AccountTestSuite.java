@@ -21,7 +21,7 @@ import org.mifos.application.accounts.business.TestLoanTrxnDetailEntity;
 import org.mifos.application.accounts.business.service.TestAccountService;
 import org.mifos.application.accounts.financial.business.service.TestFinancialBusinessService;
 import org.mifos.application.accounts.offsetting.TestOffsetAccountBO;
-import org.mifos.application.accounts.persistence.TestAccountPersistence;
+import org.mifos.application.accounts.persistence.AccountPersistenceTest;
 import org.mifos.application.accounts.struts.action.TestAccountAction;
 import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
 import org.mifos.application.accounts.struts.action.TestApplyChargeAction;
@@ -44,7 +44,7 @@ public class AccountTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new AccountTestSuite();
-		testSuite.addTestSuite(TestAccountPersistence.class);
+		testSuite.addTestSuite(AccountPersistenceTest.class);
 		testSuite.addTestSuite(TestAccountBO.class);
 		testSuite.addTestSuite(TestAccountFeesEntity.class);
 		testSuite.addTestSuite(TestAccountActionDateEntity.class);

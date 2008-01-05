@@ -43,11 +43,11 @@ import java.util.Map;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -102,15 +102,11 @@ public class TestFinancialRules {
 			financialActionToCategoryCredit.put(WRITEOFF, 						LOANTOCLIENTS);
 		}
 
+		DatabaseSetup.initializeHibernate();		
+		MifosLogManager.configure(FilePaths.LOGFILE);
+		
 		context = new ClassPathXmlApplicationContext(
 			"org/mifos/config/applicationContext.xml");
-		
-	}
-
-	@Before
-	public void initSpring() {
-		MifosLogManager.configure(FilePaths.LOGFILE);
-		//ApplicationInitializer.initializeSpring();
 		
 	}
 	
@@ -192,7 +188,7 @@ public class TestFinancialRules {
 		}
 	}
 	
-	public static junit.framework.Test suite() {
+	public static junit.framework.Test testSuite() {
 		return new JUnit4TestAdapter(TestFinancialRules.class);
 	}
 	

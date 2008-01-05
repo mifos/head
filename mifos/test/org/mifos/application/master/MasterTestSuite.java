@@ -14,7 +14,7 @@ public class MasterTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestMasterPersistence.class);
 		testSuite.addTestSuite(TestMasterBusinessService.class);
 		testSuite.addTest(CustomFieldDefinitionEntityTest.suite());
-		testSuite.addTest(TestMessageLookup.suite());
+		testSuite.addTest(MessageLookupTest.suite());
 		return testSuite;
 	}
 

@@ -36,7 +36,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestAccountPersistence extends TestAccount {
+public class AccountPersistenceTest extends TestAccount {
 
 	private AccountPersistence accountPersistence = new AccountPersistence();
 

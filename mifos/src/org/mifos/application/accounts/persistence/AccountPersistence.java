@@ -34,8 +34,11 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -232,22 +235,65 @@ public class AccountPersistence extends Persistence {
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 
+	/*
+	 * Execute a named query during initialization that does not include
+	 * logging or other dependencies.  This is a workaround for issues 
+	 * related to interdependencies between initialization routines in
+	 * {@link ApplicationInitializer}
+	 */
+	private List executeNamedQueryAtInit(String queryName, Map queryParameters)
+	throws PersistenceException {
+		Session session = null;
+		try {
+			session = HibernateUtil.openSession();
+			Query query = session.getNamedQuery(queryName);
+			setParametersInQuery(query, queryName, queryParameters);
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
+	}
+
 	/**
 	 * Return the COABO (general ledger account) id that corresponds to
 	 * the GLCode (general ledger code) passed in or return null if no
 	 * account is found for the glCode.
 	 */
 	public Short getAccountIdFromGlCode(String glCode) {
+		return getAccountIdFromGlCode(glCode, false);
+	}	
+
+	/*
+	 * This method is equivalent to {@link getAccountIdFromGlCode} and 
+	 * is only for use during initialization as a workaround
+	 * for avoiding dependencies on auditing & string resolution during
+	 * application startup.  We should try to refactor the startup code
+	 * so that this method can be eliminated.
+	 */
+	public Short getAccountIdFromGlCodeDuringInitialization(String glCode) {
+		return getAccountIdFromGlCode(glCode, true);
+	}	
+	
+	private Short getAccountIdFromGlCode(String glCode, boolean duringInitialization) {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.GL_CODE, glCode);
 		List queryResult;
 		try {
-			queryResult = executeNamedQuery(
+
+			if (duringInitialization) {
+				queryResult = executeNamedQueryAtInit(
 					NamedQueryConstants.GET_ACCOUNT_ID_FOR_GL_CODE, queryParameters);
+			} else {
+				queryResult = executeNamedQuery(
+						NamedQueryConstants.GET_ACCOUNT_ID_FOR_GL_CODE, queryParameters);				
+			}
 		}
 		catch (PersistenceException e) {
 			throw new RuntimeException(e);
-		}
+		} 
+
 		if (queryResult.size() == 0) {
 			return null;
 		}

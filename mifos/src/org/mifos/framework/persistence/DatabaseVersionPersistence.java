@@ -17,6 +17,7 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.master.persistence.Upgrade167;
+import org.mifos.application.master.persistence.Upgrade169;
 import org.mifos.application.productsmix.persistence.Upgrade127;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.persistence.AddReport;
@@ -28,7 +29,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 168;
+	public static final int APPLICATION_VERSION = 169;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
@@ -67,6 +68,7 @@ public class DatabaseVersionPersistence {
 		register145(register);
 		register146(register);
 		register(register, new Upgrade167());
+		register(register, new Upgrade169());
 		return Collections.unmodifiableMap(register);
 	}
 

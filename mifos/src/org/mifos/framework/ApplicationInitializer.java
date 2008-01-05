@@ -34,6 +34,9 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.util.Locale;
 
 /**
@@ -74,9 +77,17 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					initializeEntityMaster();
 					(new MifosScheduler()).registerTasks();
 					
+					// 1/4/08 Hopefully a temporary change to force Spring
+					// to initialize here (rather than in struts-config.xml
+					// prior to loading label values into a 
+					// cache in MifosConfiguration.  When the use of the 
+					// cache is refactored away, we should be able to move
+					// back to the struts based Spring initialization
+					initializeSpring();
+					
 					Configuration.getInstance();
-					configureAuditLogValues(Localization.getInstance().getMainLocale());
 					MifosConfiguration.getInstance().init();
+					configureAuditLogValues(Localization.getInstance().getMainLocale());
 					
 				}
 			}
@@ -197,4 +208,11 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void requestInitialized(ServletRequestEvent event) {
         
     }
+    
+	static ApplicationContext context = null;
+	public static void initializeSpring() {
+			context = new ClassPathXmlApplicationContext(
+				"org/mifos/config/applicationContext.xml");
+	}
+    
 }

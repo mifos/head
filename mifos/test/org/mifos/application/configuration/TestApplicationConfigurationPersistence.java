@@ -50,7 +50,7 @@ public class TestApplicationConfigurationPersistence extends MifosTestCase {
 			// Enforce that each entity has 0 or 1 labels and not more
 			assertTrue(labels.size() <= 1);
 			for (LookUpLabelEntity label : labels) {
-				if (entity.getEntityType().equals("Client")) assertEquals("Client",label.getLabelName());
+				if (entity.getEntityType().equals("Client")) assertEquals("Client",label.getLabelText());
 			}
 		}
 
@@ -62,7 +62,7 @@ public class TestApplicationConfigurationPersistence extends MifosTestCase {
 	/*
 	 * 2007/12/24 Code in progress to test dumping of database strings to properties files.
 	 */
-	/*
+/*
 	public void testDump() {
 		List<MifosLookUpEntity> entities=null;
 		try
@@ -74,38 +74,38 @@ public class TestApplicationConfigurationPersistence extends MifosTestCase {
 			for (MifosLookUpEntity entity : entities) {
 				Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 				for (LookUpLabelEntity label : labels) {
-					System.out.println(entity.getEntityType() + ".Label = " + label.getLabelName());
+					System.out.println(entity.getEntityType() + ".Label = " + label.getLabelText());
 				}
 			}
 
-			for (MifosLookUpEntity entity : entities) {
-				Set<LookUpValueEntity> values = entity.getLookUpValues();
-				List<LookUpValueEntity> valuesList = new ArrayList<LookUpValueEntity>(); 
-				valuesList.addAll(values);
-				Collections.sort(valuesList, new Comparator<LookUpValueEntity>() {
-					public int compare(LookUpValueEntity v1, LookUpValueEntity v2) {
-						return v1.getLookUpId().compareTo(v2.getLookUpId());
-					}
-				});
-				
-				int index = 0;
-				for (LookUpValueEntity lookupValue : valuesList) {
-					Set<LookUpValueLocaleEntity> localeValues = lookupValue.getLookUpValueLocales();
-					for (LookUpValueLocaleEntity locale : localeValues) {
-						if (locale.getLocaleId() == 1) {
-							String name = StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue().toLowerCase().replaceAll("\\W"," ")));
-							//System.out.println(entity.getEntityType() + "." + index++ + "." +  name + " = " + locale.getLookUpValue());						
-							System.out.println(entity.getEntityType() + "." + lookupValue.getLookUpName() + " = " + locale.getLookUpValue());						
-						}
-					}
-				}
-			}
+//			for (MifosLookUpEntity entity : entities) {
+//				Set<LookUpValueEntity> values = entity.getLookUpValues();
+//				List<LookUpValueEntity> valuesList = new ArrayList<LookUpValueEntity>(); 
+//				valuesList.addAll(values);
+//				Collections.sort(valuesList, new Comparator<LookUpValueEntity>() {
+//					public int compare(LookUpValueEntity v1, LookUpValueEntity v2) {
+//						return v1.getLookUpId().compareTo(v2.getLookUpId());
+//					}
+//				});
+//				
+//				int index = 0;
+//				for (LookUpValueEntity lookupValue : valuesList) {
+//					Set<LookUpValueLocaleEntity> localeValues = lookupValue.getLookUpValueLocales();
+//					for (LookUpValueLocaleEntity locale : localeValues) {
+//						if (locale.getLocaleId() == 1) {
+//							String name = StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue().toLowerCase().replaceAll("\\W"," ")));
+//							//System.out.println(entity.getEntityType() + "." + index++ + "." +  name + " = " + locale.getLookUpValue());						
+//							System.out.println(entity.getEntityType() + "." + lookupValue.getLookUpName() + " = " + locale.getLookUpValue());						
+//						}
+//					}
+//				}
+//			}
 
 		} finally {
 			HibernateUtil.closeSession();	
 		}
 			
 	}
-	*/
+*/
 }
 

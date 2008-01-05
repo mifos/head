@@ -1,17 +1,24 @@
 package org.mifos.application.master;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
+import java.util.Set;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.LocalizedTextLookup;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -96,7 +103,7 @@ public class MessageLookup implements MessageSourceAware {
 			
 			// if we don't find a label here, then it means that it has not been customized and
 			// we should return the default label from the properties file
-			if (labelText == null) {
+			if (labelText == null || labelText.length() == 0) {
 				labelText = lookup(labelKey + ".Label", locale);
 			}
 			
@@ -114,6 +121,32 @@ public class MessageLookup implements MessageSourceAware {
 	 */
 	public String lookupLabel(String labelKey, Short localeId) {
 		return MifosConfiguration.getInstance().getLabelValue(labelKey, localeId);
+	}
+	
+	/* 
+	 * Set a custom label value that will override resource bundle values.
+	 * 
+	 * TODO: we need to add a method for getting and/or setting a label
+	 * value directly rather than having to iterate. Also, we don't 
+	 * necessarily want to reinitialize the MifosConfiguration after
+	 * each update.  Ultimately, it would be cleaner to just use a key-value
+	 * lookup to implement these overrides.  
+	 */
+	public void setCustomLabel(String labelKey, String value) throws PersistenceException {
+		ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
+		for (MifosLookUpEntity entity : configurationPersistence.getLookupEntities()) {
+			if (entity.getEntityType().equals(labelKey)) {
+				Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+				assertEquals(labels.size(),1);
+				for (LookUpLabelEntity label : labels) {
+					label.setLabelName(value);
+					configurationPersistence.createOrUpdate(label);
+					HibernateUtil.commitTransaction();
+				}				
+			}
+		}
+		MifosConfiguration.getInstance().init();
+		
 	}
 	
 	/**

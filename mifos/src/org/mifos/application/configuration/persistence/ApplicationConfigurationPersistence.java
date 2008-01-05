@@ -71,7 +71,7 @@ public class ApplicationConfigurationPersistence extends Persistence {
 				Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 				entity.getEntityType();
 				for (LookUpLabelEntity label : labels) {
-					 label.getLabelName();
+					 label.getLabelText();
 					 label.getLocaleId();
 				}
 			}

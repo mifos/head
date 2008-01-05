@@ -26,9 +26,6 @@ public class MifosConfiguration {
 
 	private Map<LabelKey, String> labelCache;
 
-
-	//private boolean centerHierarchyExist;
-
 	private static final MifosConfiguration configuration = 
 		new MifosConfiguration();
 
@@ -63,6 +60,7 @@ public class MifosConfiguration {
 	}
 
 	private void initializeLabelCache() {
+		labelCache.clear();
 		ApplicationConfigurationPersistence configurationPersistence = 
 			new ApplicationConfigurationPersistence();
 		List<MifosLookUpEntity> entities = 
@@ -71,7 +69,7 @@ public class MifosConfiguration {
 			Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 			for (LookUpLabelEntity label : labels) {
 				labelCache.put(new LabelKey( entity
-						.getEntityType(),label.getLocaleId()), label.getLabelName());
+						.getEntityType(),label.getLocaleId()), label.getLabelText());
 			}
 		}
 		
@@ -104,13 +102,10 @@ public class MifosConfiguration {
 		if(locale==null || key==null)
 			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
 		
-		Short curLocaleId = Localization.getInstance().getLocaleId();
-		if(curLocaleId==null )
-			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
-		String labelText =getLabelValue(key, curLocaleId);
+		// we only use localeId 1 to store labels since it is an override for
+		// all locales
+		String labelText =getLabelValue(key, (short)1);
 		
-		//todo pass  properkey
-		//if ( null==labelText) throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
 		return labelText;
 	}
 

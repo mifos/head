@@ -32,7 +32,7 @@ public class AuditConfigurationPersistence extends Persistence {
 				for (LookUpLabelEntity lookUpLabel : lookUpLabelSet) {
 					if (lookUpLabel.getLocaleId().equals(localeId)) {
 						valueMap.put(field.getFieldId()
-								.toString(), lookUpLabel.getLabelName());
+								.toString(), lookUpLabel.getLabelText());
 					}
 				}
 			}

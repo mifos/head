@@ -301,14 +301,16 @@ public class DynamicFinancialRules {
 	public void setActionToGLCodeDebit(
 			HashMap<FinancialActionConstants, String> actionToGLCodeDebit) {
 		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeDebit.entrySet()) {
-			actionToCategoryDebit.put(entry.getKey(), accountPersistence.getAccountIdFromGlCode(entry.getValue()));
+			actionToCategoryDebit.put(entry.getKey(), 
+				accountPersistence.getAccountIdFromGlCodeDuringInitialization(entry.getValue()));
 		}
 	}
 
 	public void setActionToGLCodeCredit(
 			HashMap<FinancialActionConstants, String> actionToGLCodeCredit) {
 		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeCredit.entrySet()) {
-			actionToCategoryCredit.put(entry.getKey(), accountPersistence.getAccountIdFromGlCode(entry.getValue()));
+			actionToCategoryCredit.put(entry.getKey(), 
+				accountPersistence.getAccountIdFromGlCodeDuringInitialization(entry.getValue()));
 		}
 	}
 }

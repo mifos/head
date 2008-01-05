@@ -57,8 +57,8 @@ public class LookUpLabelEntity extends PersistentObject {
 		return lookUpEntity.getEntityType();
 	}
 	
-	public String getLabelName() {
-		if (labelName != null) {
+	public String getLabelText() {
+		if (labelName != null && labelName.length() > 0) {
 			return labelName;
 		} else {
 
@@ -68,6 +68,14 @@ public class LookUpLabelEntity extends PersistentObject {
 		}
 	}
 
+	/*
+	 * This method is only for use by Hibernate to persist this class.
+	 * To get the label text back use {@link getLabelText()}
+	 */
+	protected String getLabelName() {
+		return labelName;
+	}
+	
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
 	}

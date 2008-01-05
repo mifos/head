@@ -107,7 +107,7 @@ public class MifosLookUpEntity extends PersistentObject {
 	public String getLabelForLocale(Short localeId) {
 		for (LookUpLabelEntity lookUpLabel : lookUpLabels) {
 			if (lookUpLabel.getLocaleId().equals(localeId)) {
-				return lookUpLabel.getLabelName();
+				return lookUpLabel.getLabelText();
 			}
 		}
 		throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");

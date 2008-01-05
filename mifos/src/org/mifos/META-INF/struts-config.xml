@@ -304,9 +304,10 @@
 		org.mifos.application.accounts.util.helpers.AccountState,
 		org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit"/>
     </plug-in>
+    <!--
     <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
         <set-property property="contextConfigLocation"
                       value="/WEB-INF/classes/org/mifos/config/applicationContext.xml"/>
     </plug-in>
-
+	-->
 </struts-config>
