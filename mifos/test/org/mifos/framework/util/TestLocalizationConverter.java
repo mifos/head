@@ -67,7 +67,8 @@ public class TestLocalizationConverter extends MifosTestCase{
 	{
 		String doubleValueString = "2.5";
 		Double dValue = 2.5;
-		Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal();
+		Short defaultValue = 1;
+		Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal(defaultValue);
 		Short digitsBeforeForMoneySaved = AccountingRules.getDigitsBeforeDecimal();
 		Short digitsAfterForMoney = 1;
 		Short digitsBeforeForMoney = 7;

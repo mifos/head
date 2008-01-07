@@ -69,9 +69,10 @@ public class TestAccountingRules  extends MifosTestCase {
 	
 	@Test 
 	public void testGetDigitsAfterDecimal() {
-		Short defaultValue = 0;
+		Short defaultValue = 1;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		Short digitsAfterDecimal = 1;
+		Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal(defaultValue);
 		configMgr.addProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
 		// return value from accounting rules class has to be the value defined in the config file
 		assertEquals(digitsAfterDecimal, AccountingRules.getDigitsAfterDecimal(defaultValue));
@@ -90,8 +91,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		{
 			assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file nor database.");
 		}
-		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
-		
+		configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimalSaved);
 	}
 	
 	public void testGetDigitsBeforeDecimal() {
