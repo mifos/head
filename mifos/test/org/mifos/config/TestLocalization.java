@@ -1,6 +1,5 @@
 package org.mifos.config;
 
-import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.MifosTestCase;
@@ -26,7 +25,6 @@ public class TestLocalization extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
 	
 	
 	

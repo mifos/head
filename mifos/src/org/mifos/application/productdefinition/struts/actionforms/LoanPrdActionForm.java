@@ -64,9 +64,10 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.ConversionError;
 
 public class LoanPrdActionForm extends BaseActionForm {
 	private final MifosLogger logger;
@@ -249,201 +250,368 @@ public class LoanPrdActionForm extends BaseActionForm {
 
 	private String calcInstallmentType;
 	
+	private Double minLoanAmountValue;
+	private Double maxLoanAmountValue;
+	private Double defaultLoanAmountValue;
+	
+	private Double  lastLoanMinLoanAmt1Value;
+	private Double  lastLoanMinLoanAmt2Value;
+	private Double  lastLoanMinLoanAmt3Value;
+	private Double  lastLoanMinLoanAmt4Value;
+	private Double  lastLoanMinLoanAmt5Value;
+	private Double  lastLoanMinLoanAmt6Value;	
+
+	private Double  lastLoanMaxLoanAmt1Value;
+	private Double  lastLoanMaxLoanAmt2Value;
+	private Double  lastLoanMaxLoanAmt3Value;
+	private Double  lastLoanMaxLoanAmt4Value;
+	private Double  lastLoanMaxLoanAmt5Value;
+	private Double  lastLoanMaxLoanAmt6Value;
+
+	private Double  lastLoanDefaultLoanAmt1Value;
+	private Double  lastLoanDefaultLoanAmt2Value;
+	private Double  lastLoanDefaultLoanAmt3Value;
+	private Double  lastLoanDefaultLoanAmt4Value;
+	private Double  lastLoanDefaultLoanAmt5Value;
+	private Double  lastLoanDefaultLoanAmt6Value;
+
+	private Double  cycleLoanMinLoanAmt1Value;
+	private Double  cycleLoanMinLoanAmt2Value;
+	private Double  cycleLoanMinLoanAmt3Value;
+	private Double  cycleLoanMinLoanAmt4Value;
+	private Double  cycleLoanMinLoanAmt5Value;
+	private Double  cycleLoanMinLoanAmt6Value;
+
+	private Double  cycleLoanMaxLoanAmt1Value; 
+	private Double  cycleLoanMaxLoanAmt2Value;
+	private Double  cycleLoanMaxLoanAmt3Value;
+	private Double  cycleLoanMaxLoanAmt4Value;
+	private Double  cycleLoanMaxLoanAmt5Value;
+	private Double  cycleLoanMaxLoanAmt6Value;
+
+	private Double  cycleLoanDefaultLoanAmt1Value;
+	private Double  cycleLoanDefaultLoanAmt2Value;
+	private Double  cycleLoanDefaultLoanAmt3Value;
+	private Double  cycleLoanDefaultLoanAmt4Value;
+	private Double  cycleLoanDefaultLoanAmt5Value;
+	private Double  cycleLoanDefaultLoanAmt6Value;
+	
+	private Double maxInterestRateValue;
+	private Double minInterestRateValue;
+	private Double defInterestRateValue;
+	
 	
 	public Double  getLastLoanDefaultLoanAmt1Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt1);
+		if (lastLoanDefaultLoanAmt1Value != null)
+			return lastLoanDefaultLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt1);
 	}
 	
 	public Double  getLastLoanDefaultLoanAmt2Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt2);
+		if (lastLoanDefaultLoanAmt2Value != null)
+			return lastLoanDefaultLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt2);
 	}
 	
 	public Double  getLastLoanDefaultLoanAmt3Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt3);
+		if (lastLoanDefaultLoanAmt3Value != null)
+			return lastLoanDefaultLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt3);
 	}
 	
 	public Double  getLastLoanDefaultLoanAmt4Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt4);
+		if (lastLoanDefaultLoanAmt4Value != null)
+			return lastLoanDefaultLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt4);
 	}
 	
 	public Double  getLastLoanDefaultLoanAmt5Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt5);
+		if (lastLoanDefaultLoanAmt5Value != null)
+			return lastLoanDefaultLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt5);
 	}
 	
 	public Double  getLastLoanDefaultLoanAmt6Value()
 	{
-		return getDoubleValue(lastLoanDefaultLoanAmt6);
+		if (lastLoanDefaultLoanAmt6Value != null)
+			return lastLoanDefaultLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(lastLoanDefaultLoanAmt6);
 	}
 	
 	public Double  getMinLoanAmountValue()
 	{
-		return getDoubleValue(minLoanAmount);
+		if (minLoanAmountValue != null)
+			return minLoanAmountValue;
+		else
+			return getDoubleValueForMoney(minLoanAmount);
 	}
 	
 	public Double  getMaxLoanAmountValue()
 	{
-		return getDoubleValue(maxLoanAmount);
+		if (maxLoanAmountValue != null)
+			return maxLoanAmountValue;
+		else
+			return getDoubleValueForMoney(maxLoanAmount);
 	}
 	
 	public Double  getDefaultLoanAmountValue()
 	{
-		return getDoubleValue(defaultLoanAmount);
+		if (defaultLoanAmountValue != null)
+			return defaultLoanAmountValue;
+		else
+			return getDoubleValueForMoney(defaultLoanAmount);
 	}
 
 	
 	public Double  getLastLoanMinLoanAmt1Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt1);
+		if (lastLoanMinLoanAmt1Value != null)
+			return lastLoanMinLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt1);
 	}
 	
 	public Double  getLastLoanMinLoanAmt2Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt2);
+		if (lastLoanMinLoanAmt2Value != null)
+			return lastLoanMinLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt2);
 	}
 	
 	public Double  getLastLoanMinLoanAmt3Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt3);
+		if (lastLoanMinLoanAmt3Value != null)
+			return lastLoanMinLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt3);
 	}
 	
 	public Double  getLastLoanMinLoanAmt4Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt4);
+		if (lastLoanMinLoanAmt4Value != null)
+			return lastLoanMinLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt4);
 	}
 	
 	public Double  getLastLoanMinLoanAmt5Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt5);
+		if (lastLoanMinLoanAmt5Value != null)
+			return lastLoanMinLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt5);
 	}
 	
 	public Double  getLastLoanMinLoanAmt6Value()
 	{
-		return getDoubleValue(lastLoanMinLoanAmt6);
+		if (lastLoanMinLoanAmt6Value != null)
+			return lastLoanMinLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(lastLoanMinLoanAmt6);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt1Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt1);
+		if (lastLoanMaxLoanAmt1Value != null)
+			return lastLoanMaxLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt1);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt2Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt2);
+		if (lastLoanMaxLoanAmt2Value != null)
+			return lastLoanMaxLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt2);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt3Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt3);
+		if (lastLoanMaxLoanAmt3Value != null)
+			return lastLoanMaxLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt3);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt4Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt4);
+		if (lastLoanMaxLoanAmt4Value != null)
+			return lastLoanMaxLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt4);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt5Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt5);
+		if (lastLoanMaxLoanAmt5Value != null)
+			return lastLoanMaxLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt5);
 	}
 	
 	public Double  getLastLoanMaxLoanAmt6Value()
 	{
-		return getDoubleValue(lastLoanMaxLoanAmt6);
+		if (lastLoanMaxLoanAmt6Value != null)
+			return lastLoanMaxLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(lastLoanMaxLoanAmt6);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt1Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt1);
+		if (cycleLoanMinLoanAmt1Value != null)
+			return cycleLoanMinLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt1);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt2Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt2);
+		if (cycleLoanMinLoanAmt2Value != null)
+			return cycleLoanMinLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt2);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt3Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt3);
+		if (cycleLoanMinLoanAmt3Value != null)
+			return cycleLoanMinLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt3);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt4Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt4);
+		if (cycleLoanMinLoanAmt4Value != null)
+			return cycleLoanMinLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt4);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt5Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt5);
+		if (cycleLoanMinLoanAmt5Value != null)
+			return cycleLoanMinLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt5);
 	}
 	
 	public Double  getCycleLoanMinLoanAmt6Value()
 	{
-		return getDoubleValue(cycleLoanMinLoanAmt6);
+		if (cycleLoanMinLoanAmt6Value != null)
+			return cycleLoanMinLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMinLoanAmt6);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt1Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt1);
+		if (cycleLoanMaxLoanAmt1Value != null)
+			return cycleLoanMaxLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt1);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt2Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt2);
+		if (cycleLoanMaxLoanAmt2Value != null)
+			return cycleLoanMaxLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt2);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt3Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt3);
+		if (cycleLoanMaxLoanAmt3Value != null)
+			return cycleLoanMaxLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt3);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt4Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt4);
+		if (cycleLoanMaxLoanAmt4Value != null)
+			return cycleLoanMaxLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt4);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt5Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt5);
+		if (cycleLoanMaxLoanAmt5Value != null)
+			return cycleLoanMaxLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt5);
 	}
 	
 	public Double  getCycleLoanMaxLoanAmt6Value()
 	{
-		return getDoubleValue(cycleLoanMaxLoanAmt6);
+		if (cycleLoanMaxLoanAmt6Value != null)
+			return cycleLoanMaxLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(cycleLoanMaxLoanAmt6);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt1Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt1);
+		if (cycleLoanDefaultLoanAmt1Value != null)
+			return cycleLoanDefaultLoanAmt1Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt1);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt2Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt2);
+		if (cycleLoanDefaultLoanAmt2Value != null)
+			return cycleLoanDefaultLoanAmt2Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt2);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt3Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt3);
+		if (cycleLoanDefaultLoanAmt3Value != null)
+			return cycleLoanDefaultLoanAmt3Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt3);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt4Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt4);
+		if (cycleLoanDefaultLoanAmt4Value != null)
+			return cycleLoanDefaultLoanAmt4Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt4);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt5Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt5);
+		if (cycleLoanDefaultLoanAmt5Value != null)
+			return cycleLoanDefaultLoanAmt5Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt5);
 	}
 	
 	public Double  getCycleLoanDefaultLoanAmt6Value()
 	{
-		return getDoubleValue(cycleLoanDefaultLoanAmt6);
+		if (cycleLoanDefaultLoanAmt6Value != null)
+			return cycleLoanDefaultLoanAmt6Value;
+		else
+			return getDoubleValueForMoney(cycleLoanDefaultLoanAmt6);
 	}
 
 	public String getCalcInstallmentType() {
@@ -1513,29 +1681,24 @@ public class LoanPrdActionForm extends BaseActionForm {
 		return getShortValue(getInterestTypes());
 	}
 
-	/*public Money getMaxLoanAmountValue() {
-		return getMoney(getMaxLoanAmount());
-	}
-
-	public Money getMinLoanAmountValue() {
-		return getMoney(getMinLoanAmount());
-	}
-
-	public Money getDefaultLoanAmountValue() {
-		return (StringUtils.isNullAndEmptySafe(getDefaultLoanAmount()) && !getDefaultLoanAmount()
-				.trim().equals(".")) ? new Money(getDefaultLoanAmount()) : null;
-	}*/
+	
 
 	public Double getMaxInterestRateValue() {
-		return getDoubleValue(getMaxInterestRate());
+		if (maxInterestRateValue != null)
+			return maxInterestRateValue;
+		return getDoubleValueForInterest(maxInterestRate);
 	}
 
 	public Double getMinInterestRateValue() {
-		return getDoubleValue(getMinInterestRate());
+		if (minInterestRateValue != null)
+			return minInterestRateValue;
+		return getDoubleValueForInterest(minInterestRate);
 	}
 
 	public Double getDefInterestRateValue() {
-		return getDoubleValue(getDefInterestRate());
+		if (defInterestRateValue != null)
+			return defInterestRateValue;
+		return getDoubleValueForInterest(defInterestRate);
 	}
 
 	public Short getMaxNoInstallmentsValue() {
@@ -1633,6 +1796,22 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ errors.size());
 		return errors;
 	}
+	
+	private Double getDoubleValueForMoney(String doubleStr)
+	{
+		ConversionResult result = parseDoubleForMoney(doubleStr);
+		if (result != null)
+			return result.getDoubleValue();
+		return null;
+	}
+	
+	private Double getDoubleValueForInterest(String doubleStr)
+	{
+		ConversionResult result = parseDoubleForInterest(doubleStr);
+		if (result != null)
+			return result.getDoubleValue();
+		return null;
+	}
 
 	public void clear() {
 		logger
@@ -1685,6 +1864,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		String forByLoanCycleAtRow = resources.getString(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
 		String forNumberOfLastLoanInstallmentAtRow =
 			resources.getString(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
+	
 		validateStartDate(request, errors);
  		validateEndDate(request, errors);
 		validateLoanAmmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
@@ -1694,7 +1874,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
 							ConfigurationConstants.INTEREST, request),
 					ProductDefinitionConstants.RATETYPE);
-		validateMinMaxDefInterestRates(errors, request);
+		validateMinMaxDefInterestRates(errors, locale, request);
 		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
 				request);
 		validatePrincDueOnLastInstAndPrincGraceType(errors);
@@ -1730,7 +1910,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 			addError(errors, "prdStatus",
 					ProductDefinitionConstants.ERROR_SELECT,
 					ProductDefinitionConstants.STATUS);
-		validateMinMaxDefInterestRates(errors, request);
+		validateMinMaxDefInterestRates(errors, locale, request);
 		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
 				request);
 		validatePrincDueOnLastInstAndPrincGraceType(errors);
@@ -1906,160 +2086,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ fee);
 	}
 
-	private void validateMinMaxDefInterestRates(ActionErrors errors,
-			HttpServletRequest request) {
-		logger
-				.debug("start Loan prd Action Form validateMinMaxDefInterestRates :"
-						+ maxInterestRate
-						+ "---"
-						+ minInterestRate
-						+ "---"
-						+ defInterestRate);
-		validateForMand(getMaxInterestRate(), errors, "maxInterestRate",
-				ProductDefinitionConstants.ERRORSENTERCONFIG,
-				ProductDefinitionConstants.MAX, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE);
-		validateForMand(getMinInterestRate(), errors, "minInterestRate",
-				ProductDefinitionConstants.ERRORSENTERCONFIG,
-				ProductDefinitionConstants.MIN, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE);
-		validateForMand(getDefInterestRate(), errors, "defInterestRate",
-				ProductDefinitionConstants.ERRORSENTERCONFIG,
-				ProductDefinitionConstants.DEFAULT, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE);
-		validateForRange(getMaxInterestRate(), 0, 999, errors,
-				"maxInterestRate",
-				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
-				ProductDefinitionConstants.MAX, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE, "0", "999");
-		validateForRange(getMinInterestRate(), 0, 999, errors,
-				"minInterestRate",
-				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
-				ProductDefinitionConstants.MIN, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE, "0", "999");
-		validateForRange(getDefInterestRate(), 0, 999, errors,
-				"defInterestRate",
-				ProductDefinitionConstants.ERRORSDEFMINMAXCONFIG,
-				ProductDefinitionConstants.DEFAULT, getLabel(
-						ConfigurationConstants.INTEREST, request),
-				ProductDefinitionConstants.RATE, "0", "999");
-		vaildateMinMaxInterestRate(errors, request);
-		vaildateDefMinMaxInterestRate(errors, request);
-		logger
-				.debug("Loan prd Action Form validateMinMaxDefInterestRates called:"
-						+ maxInterestRate
-						+ "---"
-						+ minInterestRate
-						+ "---"
-						+ defInterestRate);
-	}
-
-	private void validateForMand(String value, ActionErrors errors,
-			String property, String key, String... arg) {
-		logger.debug("Start Loan prd Action Form validateForMand :"
-				+ value);
-		if (StringUtils.isNullOrEmpty(value))
-			addError(errors, property, key, arg);
-		logger.debug("Loan prd Action Form validateForMand called:"
-				+ value);
-	}
-
-	private void validateForRange(String value, double min, double max,
-			ActionErrors errors, String property, String key, String... arg) {
-		logger.debug("start Loan prd Action Form validateForRange :"
-				+ value);
-		if (StringUtils.isNullAndEmptySafe(value)) {
-			Double valueToBeChecked = validateDouble(value);
-			if (valueToBeChecked != null)
-			{
-				if (valueToBeChecked.doubleValue() < min || valueToBeChecked.doubleValue() > max) {
-					addError(errors, property, key, arg);
-				}
-			}
-			else
-			{
-				addError(errors,
-						ProductDefinitionConstants.INVALIDRATE,
-						ProductDefinitionConstants.INVALIDRATE);
-			}
-		}
-		logger.debug("Loan prd Action Form validateForRange called:"
-				+ value);
-	}
-
-	private void vaildateMinMaxInterestRate(ActionErrors errors,
-			HttpServletRequest request) {
-		logger
-				.debug("start Loan prd Action Form vaildateMinMaxInterestRate :"
-						+ maxInterestRate + "---" + minInterestRate);
-		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
-				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())) {
-			Double maximumInterestRate = validateDouble(getMaxInterestRate());
-			Double minimumInterestRate = validateDouble(getMinInterestRate());
-			if ((maximumInterestRate != null) && (minimumInterestRate != null))
-			{
-				if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
-					&& maximumInterestRate < minimumInterestRate)
-				addError(errors, "MinMaxInterestRate",
-						ProductDefinitionConstants.ERRORSMINMAXINTCONFIG,
-						ProductDefinitionConstants.MAX, getLabel(
-								ConfigurationConstants.INTEREST, request),
-						ProductDefinitionConstants.RATE,
-						ProductDefinitionConstants.MIN);
-			}
-		}
-		logger
-				.debug("Loan prd Action Form vaildateMinMaxInterestRate called:"
-						+ maxInterestRate + "---" + minInterestRate);
-	}
-
-	private void vaildateDefMinMaxInterestRate(ActionErrors errors,
-			HttpServletRequest request) {
-		logger
-				.debug("start Loan prd Action Form vaildateDefMinMaxInterestRate :"
-						+ maxInterestRate
-						+ "---"
-						+ minInterestRate
-						+ "---"
-						+ defInterestRate);
-		if (StringUtils.isNullAndEmptySafe(getMaxInterestRate())
-				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())
-				&& StringUtils.isNullAndEmptySafe(getDefInterestRate())) {
-			
-			Double maximumInterestRate = validateDouble(getMaxInterestRate());
-			Double minimumInterestRate = validateDouble(getMinInterestRate());
-			Double defaultInterestRate = validateDouble(getDefInterestRate());
-			if ((maximumInterestRate != null) && (minimumInterestRate != null) && (defaultInterestRate != null))
-			{
-				if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
-					&& defaultInterestRate <= 999.0) 
-				{
-					if (defaultInterestRate < minimumInterestRate
-						|| defaultInterestRate > maximumInterestRate)
-					addError(errors, "DefInterestRate",
-							ProductDefinitionConstants.ERRORSDEFINTCONFIG,
-							ProductDefinitionConstants.DEFAULT, getLabel(
-									ConfigurationConstants.INTEREST, request),
-							ProductDefinitionConstants.RATE,
-							ProductDefinitionConstants.MIN,
-							ProductDefinitionConstants.MAX);
-				}
-			}
-
-		}
-		logger
-				.debug("Loan prd Action Form vaildateDefMinMaxInterestRate called :"
-						+ maxInterestRate
-						+ "---"
-						+ minInterestRate
-						+ "---"
-						+ defInterestRate);
-	}
+	
 
 	private void vaildateDecliningInterestSvcChargeDeductedAtDisbursement(
 			ActionErrors errors, HttpServletRequest request) {
@@ -2118,11 +2145,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 	public void setLoanAmtCalcType(String loanAmtCalcType) {
 		this.loanAmtCalcType = loanAmtCalcType;
 	}
-	
-	private String getError(String error, int rowNum)
-	{
-		return error + rowNum;
-	}
+
 
 	private void validateLoanAmmount(ActionErrors errors, Locale locale, String sameForAllLoans, 
 			String forByLastLoanAtRow, String forByLoanCycleAtRow){
@@ -2141,7 +2164,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 			if(calctype.equals("1"))
 			{
 				// same for all loans
-				validateMinMaxDefLoanAmounts(errors,getMaxLoanAmount(),getMinLoanAmount(),getDefaultLoanAmount(),sameForAllLoans, "");
+				validateMinMaxDefLoanAmounts(errors,getMaxLoanAmount(),getMinLoanAmount(),getDefaultLoanAmount(),
+						 sameForAllLoans, "", locale);
 				
 			}
 			else if(calctype.equals("2"))
@@ -2154,7 +2178,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt1();
 					maxLoanAmt = getLastLoanMaxLoanAmt1();
 					defLoanAmt = getLastLoanDefaultLoanAmt1();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "1");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLastLoanAtRow, "1", locale);
 
 					//Second Row
 					startRange = getStartRangeLoanAmt2();
@@ -2163,7 +2188,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt2();
 					maxLoanAmt = getLastLoanMaxLoanAmt2();
 					defLoanAmt = getLastLoanDefaultLoanAmt2();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "2");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							 forByLastLoanAtRow, "2", locale);
 
 					// Third Row
 					startRange = getStartRangeLoanAmt3();
@@ -2173,7 +2199,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt3();
 					maxLoanAmt = getLastLoanMaxLoanAmt3();
 					defLoanAmt = getLastLoanDefaultLoanAmt3();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "3");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+						forByLastLoanAtRow, "3", locale);
 
 					//Fourth Row
 					startRange = getStartRangeLoanAmt4();
@@ -2183,7 +2210,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt4();
 					maxLoanAmt = getLastLoanMaxLoanAmt4();
 					defLoanAmt = getLastLoanDefaultLoanAmt4();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "4");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLastLoanAtRow, "4", locale);
 
 					//Fifth Row
 					startRange = getStartRangeLoanAmt5();
@@ -2193,7 +2221,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt5();
 					maxLoanAmt = getLastLoanMaxLoanAmt5();
 					defLoanAmt = getLastLoanDefaultLoanAmt5();					
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "5");					
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLastLoanAtRow, "5", locale);					
 
 					//Six Row
 					startRange = getStartRangeLoanAmt6();
@@ -2203,7 +2232,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getLastLoanMinLoanAmt6();
 					maxLoanAmt = getLastLoanMaxLoanAmt6();
 					defLoanAmt = getLastLoanDefaultLoanAmt6();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLastLoanAtRow, "6");							
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLastLoanAtRow, "6", locale);							
 
 				}	
 				else if(calctype.equals("3"))			
@@ -2213,45 +2243,259 @@ public class LoanPrdActionForm extends BaseActionForm {
 					minLoanAmt = getCycleLoanMinLoanAmt1();
 					maxLoanAmt = getCycleLoanMaxLoanAmt1();
 					defLoanAmt = getCycleLoanDefaultLoanAmt1();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow, "1");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLoanCycleAtRow, "1", locale);
 
 					//second row
 					minLoanAmt = getCycleLoanMinLoanAmt2();
 					maxLoanAmt = getCycleLoanMaxLoanAmt2();
 					defLoanAmt = getCycleLoanDefaultLoanAmt2();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow, "2");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+						forByLoanCycleAtRow, "2", locale);
 
 					//third row
 					minLoanAmt = getCycleLoanMinLoanAmt3();
 					maxLoanAmt = getCycleLoanMaxLoanAmt3();
 					defLoanAmt = getCycleLoanDefaultLoanAmt3();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow,"3");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							 forByLoanCycleAtRow,"3", locale);
 
 					//fourth row
 					minLoanAmt = getCycleLoanMinLoanAmt4();
 					maxLoanAmt = getCycleLoanMaxLoanAmt4();
 					defLoanAmt = getCycleLoanDefaultLoanAmt4();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow,"4");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLoanCycleAtRow,"4", locale);
 
 					//fifth row
 					minLoanAmt = getCycleLoanMinLoanAmt5();
 					maxLoanAmt = getCycleLoanMaxLoanAmt5();
 					defLoanAmt = getCycleLoanDefaultLoanAmt5();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow,"5");
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+							forByLoanCycleAtRow,"5", locale);
 
 					//six row(>5)
 					minLoanAmt = getCycleLoanMinLoanAmt6();
 					maxLoanAmt = getCycleLoanMaxLoanAmt6();
 					defLoanAmt = getCycleLoanDefaultLoanAmt6();
-					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,forByLoanCycleAtRow,"6");			
+					validateMinMaxDefLoanAmounts(errors,maxLoanAmt,minLoanAmt,defLoanAmt,
+						 forByLoanCycleAtRow,"6", locale);			
 				}
 		}
 	}
-	private void validateMinMaxDefLoanAmounts(ActionErrors errors,String maxLoanAmountStr, 
-			String minLoanAmountStr, String defLoanAmountStr, String error, String rownum) {
+	
+	private void setLoanAmounts(Double minLoanAmt, Double maxLoanAmt, Double defLoanAmt, String rownum)
+	{
+		String calctype = getLoanAmtCalcType();
+		
+			if (calctype.equals("1"))
+			{
+				minLoanAmountValue = minLoanAmt;
+				maxLoanAmountValue = maxLoanAmt;
+				defaultLoanAmountValue = defLoanAmt;
+			}
+			else if (calctype.equals("1"))
+			{
+				if (rownum.equals("1"))
+				{
+					lastLoanMinLoanAmt1Value = minLoanAmt;
+					lastLoanMaxLoanAmt1Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt1Value = defLoanAmt;
+				}
+				else if (rownum.equals("2"))
+				{
+					lastLoanMinLoanAmt2Value = minLoanAmt;
+					lastLoanMaxLoanAmt2Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt2Value = defLoanAmt;
+				}
+				else if (rownum.equals("3"))
+				{
+					lastLoanMinLoanAmt3Value = minLoanAmt;
+					lastLoanMaxLoanAmt3Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt3Value = defLoanAmt;
+				}
+				else if (rownum.equals("4"))
+				{
+					lastLoanMinLoanAmt4Value = minLoanAmt;
+					lastLoanMaxLoanAmt4Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt4Value = defLoanAmt;
+				}
+				else if (rownum.equals("5"))
+				{
+					lastLoanMinLoanAmt5Value = minLoanAmt;
+					lastLoanMaxLoanAmt5Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt5Value = defLoanAmt;
+				}
+				else if (rownum.equals("6"))
+				{
+					lastLoanMinLoanAmt6Value = minLoanAmt;
+					lastLoanMaxLoanAmt6Value = maxLoanAmt;
+					lastLoanDefaultLoanAmt6Value = defLoanAmt;
+				}
+			}
+			else if (calctype.equals("3"))
+			{
+				if (rownum.equals("1"))
+				{
+					cycleLoanMinLoanAmt1Value = minLoanAmt;
+					cycleLoanMaxLoanAmt1Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt1Value = defLoanAmt;
+				}
+				else if (rownum.equals("2"))
+				{
+					cycleLoanMinLoanAmt2Value = minLoanAmt;
+					cycleLoanMaxLoanAmt2Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt2Value = defLoanAmt;
+				}
+				else if (rownum.equals("3"))
+				{
+					cycleLoanMinLoanAmt3Value = minLoanAmt;
+					cycleLoanMaxLoanAmt3Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt3Value = defLoanAmt;
+				}
+				else if (rownum.equals("4"))
+				{
+					cycleLoanMinLoanAmt4Value = minLoanAmt;
+					cycleLoanMaxLoanAmt4Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt4Value = defLoanAmt;
+				}
+				else if (rownum.equals("5"))
+				{
+					cycleLoanMinLoanAmt5Value = minLoanAmt;
+					cycleLoanMaxLoanAmt5Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt5Value = defLoanAmt;
+				}
+				else if (rownum.equals("6"))
+				{
+					cycleLoanMinLoanAmt6Value = minLoanAmt;
+					cycleLoanMaxLoanAmt6Value = maxLoanAmt;
+					cycleLoanDefaultLoanAmt6Value = defLoanAmt;
+				}
+			}
+	}
+	private void validateMinMaxDefInterestRates(ActionErrors errors, Locale locale, HttpServletRequest request) {
 
-		Double minLoanAmt = null;
+		ConversionResult  minInterestResult = null;
+		ConversionResult maxInterestResult = null;
+		ConversionResult defInterestResult = null;
+		List<ConversionError> errorList = null;
+		Double maxInterest = null;
+		Double minInterest = null;
+		Double defInterest = null;
+		String label = getLabel(ConfigurationConstants.INTEREST, request);
+		
+		if(!StringUtils.isNullAndEmptySafe(minInterestRate))
+		{
+			addError(errors, "minInterestRate", 
+					ProductDefinitionConstants.ERRORSENTERCONFIG,
+					ProductDefinitionConstants.MIN, label,
+					ProductDefinitionConstants.RATE);	
+		}
+		else 
+		{
+			minInterestResult = parseDoubleForInterest(minInterestRate);
+			errorList = minInterestResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORMININTERESTINVALIDFORMAT, getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+			{
+				minInterest = minInterestResult.getDoubleValue();
+			}
+		}
+			
+		if(!StringUtils.isNullAndEmptySafe(maxInterestRate))
+		{
+			addError(errors, "maxInterestRate", 
+					ProductDefinitionConstants.ERRORSENTERCONFIG,
+					ProductDefinitionConstants.MAX, label,
+					ProductDefinitionConstants.RATE);	
+		}		
+		else 
+		{
+			maxInterestResult = parseDoubleForInterest(maxInterestRate);
+			errorList = maxInterestResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT,getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+				maxInterest = maxInterestResult.getDoubleValue();
+		}
+		
+		if (!StringUtils.isNullAndEmptySafe(defInterestRate))
+		{
+			addError(errors, "defInterestRate",
+					ProductDefinitionConstants.ERRORSENTERCONFIG,
+					ProductDefinitionConstants.DEFAULT, label,
+					ProductDefinitionConstants.RATE);	
+		}
+		else 
+		{
+			defInterestResult = parseDoubleForInterest(defInterestRate);
+			errorList = defInterestResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORDEFINTERESTINVALIDFORMAT,getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+				defInterest = defInterestResult.getDoubleValue();
+			
+		}	
+		if ((minInterest != null) && (maxInterest != null))
+		{
+			if (minInterest > maxInterest)
+			{
+				addError(errors, "MinMaxInterestRate",
+						ProductDefinitionConstants.ERRORSMINMAXINTCONFIG,
+						ProductDefinitionConstants.MAX, label,
+						ProductDefinitionConstants.RATE,
+						ProductDefinitionConstants.MIN);
+			}
+			if (defInterest != null)
+			{
+				if ((defInterest < minInterest) ||(defInterest > maxInterest))
+				{
+					addError(errors, "DefInterestRate",
+						ProductDefinitionConstants.ERRORSDEFINTCONFIG,
+						ProductDefinitionConstants.DEFAULT, label,
+						ProductDefinitionConstants.RATE,
+						ProductDefinitionConstants.MIN,
+						ProductDefinitionConstants.MAX);
+				}
+				else
+				{
+					minInterestRateValue = minInterest;
+					maxInterestRateValue = maxInterest;
+					defInterestRateValue = defInterest;
+				}
+
+			}
+			
+		}
+				
+	}
+	
+	private void validateMinMaxDefLoanAmounts(ActionErrors errors,String maxLoanAmountStr, 
+			String minLoanAmountStr, String defLoanAmountStr, 
+			 String error, String rownum, Locale locale) {
+
+		ConversionResult  minLoanResult = null;
+		ConversionResult maxLoanResult = null;
+		ConversionResult defaultLoanResult = null;
+		List<ConversionError> errorList = null;
 		Double maxLoanAmt = null;
+		Double minLoanAmt = null;
 		Double defLoanAmt = null;
 		
 		if(!StringUtils.isNullAndEmptySafe(minLoanAmountStr))
@@ -2260,19 +2504,39 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT,
 					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT,error, rownum);	
 		}
-		else if ((minLoanAmt = validateDouble(minLoanAmountStr)) == null)
-			addError(errors,
-					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT,
-					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNT,error, rownum);
+		else 
+		{
+			minLoanResult = parseDoubleForMoney(minLoanAmountStr);
+			errorList = minLoanResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORMINIMUMLOANAMOUNTINVALIDFORMAT,error, rownum, getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+				minLoanAmt = minLoanResult.getDoubleValue();
+		}
+			
 		if(!StringUtils.isNullAndEmptySafe(maxLoanAmountStr))
 		{
 			addError(errors,ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT,
 					ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT,error, rownum);	
 		}		
-		else if ((maxLoanAmt = validateDouble(maxLoanAmountStr)) == null)
+		else 
 		{
-			addError(errors,ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT,
-					ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNT,error, rownum);	
+			maxLoanResult = parseDoubleForMoney(maxLoanAmountStr);
+			errorList = maxLoanResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT,error, rownum, getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+				maxLoanAmt = maxLoanResult.getDoubleValue();
 		}
 		
 		if (!StringUtils.isNullAndEmptySafe(defLoanAmountStr))
@@ -2281,11 +2545,20 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
 					ProductDefinitionConstants.ERRORDEFLOANAMOUNT, error, rownum);
 		}
-		else if ((defLoanAmt = validateDouble(defLoanAmountStr)) == null)
+		else 
 		{
-			addError(errors,
-					ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
-					ProductDefinitionConstants.ERRORDEFLOANAMOUNT, error, rownum);
+			defaultLoanResult = parseDoubleForMoney(defLoanAmountStr);
+			errorList = defaultLoanResult.getErrors();
+			if (errorList.size() > 0)
+			{
+				for (int i=0; i < errorList.size(); i++)
+					addError(errors,
+					ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT,
+					ProductDefinitionConstants.ERRORDEFAULTLOANAMOUNTINVALIDFORMAT,error, rownum, getConversionErrorText(errorList.get(i), locale));
+			}
+			else
+				defLoanAmt = defaultLoanResult.getDoubleValue();
+			
 		}	
 		if ((minLoanAmt != null) && (maxLoanAmt != null))
 		{
@@ -2297,6 +2570,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 				if ((defLoanAmt < minLoanAmt) || (defLoanAmt > maxLoanAmt)) 
 					addError(errors,ProductDefinitionConstants.ERRORDEFLOANAMOUNT,
 							ProductDefinitionConstants.ERRORDEFLOANAMOUNT,error, rownum);
+				else
+					setLoanAmounts(minLoanAmt, maxLoanAmt, defLoanAmt, rownum);
+
 			}
 		}
 				
@@ -2461,12 +2737,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 		}
 		
 		if(StringUtils.isNullAndEmptySafe(maxNoOfInstall)&& StringUtils.isNullAndEmptySafe(minNoOfInstall)) {
-			if (getDoubleValue(minNoOfInstall) > getDoubleValue(maxNoOfInstall))
+			if (Integer.parseInt(minNoOfInstall) > Integer.parseInt(maxNoOfInstall))
 				addError(errors,ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,
 								ProductDefinitionConstants.ERRORMAXMINNOOFINSTALL,error, rownum);				
 			}		
 			if (StringUtils.isNullAndEmptySafe(defNoOfInstall) && StringUtils.isNullAndEmptySafe(maxNoOfInstall)&& StringUtils.isNullAndEmptySafe(minNoOfInstall)) {				
-				if (getDoubleValue(defNoOfInstall) < getDoubleValue(minNoOfInstall) || getDoubleValue(defNoOfInstall) > getDoubleValue(maxNoOfInstall)) {
+				if (Integer.parseInt(defNoOfInstall) < Integer.parseInt(minNoOfInstall) || Integer.parseInt(defNoOfInstall) > Integer.parseInt(maxNoOfInstall)) {
 					addError(errors,ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,
 									ProductDefinitionConstants.ERRORMINMAXDEFINSTALLMENT,error, rownum);
 				}

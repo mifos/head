@@ -2,13 +2,13 @@
 
 
 import junit.framework.JUnit4TestAdapter;
-
-import org.joda.time.DateMidnight;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.config.Localization;
 import java.util.Locale;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.config.AccountingRules;
 
 public class TestLocalizationConverter extends MifosTestCase{
 	
@@ -32,9 +32,6 @@ public class TestLocalizationConverter extends MifosTestCase{
 	
 	public void testGetDoubleValueString()
 	{
-		//long expectedDate = new DateMidnight(2005, 03, 04).getMillis();
-		//java.sql.Date result = DateUtils.getDateAsSentFromBrowser("04/03/2005");
-		//assertEquals(expectedDate, result.getTime());
 		
 		String doubleValueString = "2.59";
 		Double dValue = 2.59;
@@ -65,42 +62,77 @@ public class TestLocalizationConverter extends MifosTestCase{
 		
 	}
 	
-    /* get convert a string to a double to the config locale */
-	public void testGetDoubleValue()
+   
+	public void testParseDoubleForMoney()
 	{
-		String doubleValueString = "2.59";
-		Double dValue = 2.59;
+		String doubleValueString = "2.5";
+		Double dValue = 2.5;
+		Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal();
+		Short digitsBeforeForMoneySaved = AccountingRules.getDigitsBeforeDecimal();
+		Short digitsAfterForMoney = 1;
+		Short digitsBeforeForMoney = 7;
+		AccountingRules.setDigitsAfterDecimal(digitsAfterForMoney);
+		AccountingRules.setDigitsBeforeDecimal(digitsBeforeForMoney);
 		Locale locale = Localization.getInstance().getMainLocale();
 		LocalizationConverter converter = LocalizationConverter.getInstance();
-		Double dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+		ConversionResult result = converter.parseDoubleForMoney(doubleValueString);
 		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
 		{
-			assertEquals(dNumber, dValue);
-			// if the wrong decimal separator is entered, it will throw exception
+			assertEquals(result.getDoubleValue(), dValue);
+			// if the wrong decimal separator is entered, error will be returned
 			doubleValueString = "2,59";
-			try
-			{
-				dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
-			}
-			catch (Exception ex)
-			{
-				assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
-			}
+			result = converter.parseDoubleForMoney(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);	
+			doubleValueString = "2a59";
+			result = converter.parseDoubleForMoney(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);	
+			doubleValueString = "123456789.59";
+			result = converter.parseDoubleForMoney(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY);
+			assertEquals(result.getErrors().get(1), ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);	
+			doubleValueString = "222222222.5";
+			result = converter.parseDoubleForMoney(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY);	
 		}
-		converter.setCurrentLocale(new Locale("IS", "is"));
-		doubleValueString = "2,59";
-		dNumber = converter.getDoubleValue(doubleValueString);
-		assertEquals(dNumber, dValue);
-		//if the wrong decimal separator is entered, it will throw exception
-		doubleValueString = "2.59";
-		try
+		AccountingRules.setDigitsAfterDecimal(digitsAfterForMoneySaved);
+		AccountingRules.setDigitsBeforeDecimal(digitsBeforeForMoneySaved);
+		converter.setCurrentLocale(locale);
+		
+	}
+	
+	public void testParseDoubleForInterest()
+	{
+		String doubleValueString = "222.59562";
+		Double dValue = 222.59562;
+		Short digitsAfterForInterestSaved = AccountingRules.getDigitsAfterDecimalForInterest();
+		Short digitsBeforeForInterestSaved = AccountingRules.getDigitsBeforeDecimalForInterest();
+		Short digitsAfterForInterest = 5;
+		Short digitsBeforeForInterest = 10;
+		
+		AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterest);
+		AccountingRules.setDigitsBeforeDecimalForInterest(digitsBeforeForInterest);
+		Locale locale = Localization.getInstance().getMainLocale();
+		LocalizationConverter converter = LocalizationConverter.getInstance();
+		ConversionResult result = converter.parseDoubleForInterest(doubleValueString);
+		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
 		{
-			dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
+			assertEquals(result.getDoubleValue(), dValue);
+			// if the wrong decimal separator is entered, error will be returned
+			doubleValueString = "222,59562";
+			result = converter.parseDoubleForInterest(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);	
+			doubleValueString = "2a5922";
+			result = converter.parseDoubleForInterest(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.NOT_ALL_NUMBER);	
+			doubleValueString = "222.595690";
+			result = converter.parseDoubleForInterest(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST);	
+			doubleValueString = "22222222222.5";
+			result = converter.parseDoubleForInterest(doubleValueString);
+			assertEquals(result.getErrors().get(0), ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST);	
 		}
-		catch (Exception ex)
-		{
-			assertTrue(ex.getMessage().startsWith("The format of the number is invalid."));
-		}
+		AccountingRules.setDigitsAfterDecimalForInterest(digitsAfterForInterestSaved);
+		AccountingRules.setDigitsBeforeDecimalForInterest(digitsBeforeForInterestSaved);
 		converter.setCurrentLocale(locale);
 		
 	}
@@ -129,7 +161,7 @@ public class TestLocalizationConverter extends MifosTestCase{
 		}
 		converter.setCurrentLocale(new Locale("IS", "is"));
 		doubleValueString = "223,59";
-		dNumber = converter.getDoubleValue(doubleValueString);
+		dNumber = converter.getDoubleValueForCurrentLocale(doubleValueString);
 		assertEquals(dNumber, dValue);
 		//if the wrong decimal separator is entered, it will throw exception
 		doubleValueString = "223.59";

@@ -281,6 +281,19 @@ public interface ProductDefinitionConstants {
 	public String FORBYLOANCYCLEATROW="product.forbyloancycleatrow";
 	public String INVALIDRATE="errors.intRate";
 	public String FORNUMBEROFLASTLOLANINSTALLMENTATROW="product.fornumberoflastloaninstallmentatrow";
+	
+	public String ERRORMINIMUMLOANAMOUNTINVALIDFORMAT="errors.minloanamountinvalidformat";
+	public String ERRORMAXIMUMLOANAMOUNTINVALIDFORMAT="errors.maxloanamountinvalidformat";
+	public String ERRORDEFAULTLOANAMOUNTINVALIDFORMAT="errors.defaultloanamountinvalidformat";
+	
+	public String ERRORMININTERESTINVALIDFORMAT="errors.mininterestinvalidformat";
+	public String ERRORMAXINTERESTINVALIDFORMAT="errors.maxinterestinvalidformat";
+	public String ERRORDEFINTERESTINVALIDFORMAT="errors.definterestinvalidformat";
+	
+	public String EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR="EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR";
+	public String EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR="EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR";
+	public String NOT_ALL_NUMBER="NOT_ALL_NUMBER";
+	public String CONVERSION_ERROR="CONVERSION_ERROR";
 }
 
 

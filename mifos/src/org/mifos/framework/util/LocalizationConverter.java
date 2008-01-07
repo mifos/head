@@ -3,12 +3,16 @@ package org.mifos.framework.util;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import org.mifos.config.Localization;
 import java.text.ParsePosition;
 import org.mifos.config.AccountingRules;
 
 import java.text.SimpleDateFormat;
+import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.ConversionError;
+import java.util.List;
 
 public class LocalizationConverter {
 	private static DecimalFormat currentDecimalFormat;
@@ -17,6 +21,13 @@ public class LocalizationConverter {
 	private static String dateSeparator;
 	private static Locale currentLocale;
 	private static char decimalFormatSymbol;
+	private static short digitsAfterDecimalForMoney;
+	private static short digitsBeforeDecimalForMoney;
+	private static short digitsAfterDecimalForInterest;
+	private static short digitsBeforeDecimalForInterest;
+	
+	
+	
 	
 	private static final LocalizationConverter localizationConverter = 
 		new LocalizationConverter();
@@ -27,9 +38,16 @@ public class LocalizationConverter {
 	
 	private LocalizationConverter() {
 		currentLocale = Localization.getInstance().getMainLocale();
+		Short defaultValue = 1;
+		digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(defaultValue);
+		digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
+		digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
+		digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
 		loadDecimalFormats();
 		dateSeparator = getDateSeparator();
 	}
+	
+	
 	
 	// for testing purpose only
 	public void setCurrentLocale(Locale locale)
@@ -82,26 +100,145 @@ public class LocalizationConverter {
 		NumberFormat format = DecimalFormat.getInstance(currentLocale);
 		if (format instanceof DecimalFormat)
 		{
-			Short defaultValue = 1;
-			Short digitsBeforeDecimal = AccountingRules.getDigitsBeforeDecimal();
-			Short digitsAfterDecimal = AccountingRules.getDigitsAfterDecimal(defaultValue);
 			currentDecimalFormat = (DecimalFormat)format;
-			currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimal, digitsAfterDecimal, (DecimalFormat)currentDecimalFormat.clone());
+			currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney, (DecimalFormat)currentDecimalFormat.clone());
 			//
-			digitsBeforeDecimal = AccountingRules.getDigitsBeforeDecimalForInterest();
-			digitsAfterDecimal = AccountingRules.getDigitsAfterDecimalForInterest();
-			currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimal, digitsAfterDecimal, (DecimalFormat)currentDecimalFormat.clone());
+			currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimalForInterest, digitsAfterDecimalForInterest, (DecimalFormat)currentDecimalFormat.clone());
 			decimalFormatSymbol = currentDecimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
 		}
 	}
 	
+	
+	public ConversionResult parseDoubleForMoney(String doubleStr)
+	{
+		ConversionResult result = new ConversionResult();
+		List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney, 
+				ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
+				ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr);
+		result.setErrors(errors);
+		if (errors.size() > 0)
+		{
+			return result;
+		}
+		try
+		{
+			result.setDoubleValue(getDoubleValueForCurrentLocale(doubleStr));
+		}
+		catch (Exception ex)
+		{
+			// after all the checkings this is not likely to happen, but just in case
+			ConversionError error = ConversionError.CONVERSION_ERROR;
+			result.getErrors().add(error);
+		}
+		return result;
+	}
+	
+	public ConversionResult parseDoubleForInterest(String doubleStr)
+	{
+		ConversionResult result = new ConversionResult();
+		List<ConversionError> errors = checkDigits(digitsBeforeDecimalForInterest, digitsAfterDecimalForInterest,
+				ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST,
+				ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST,doubleStr);
+		result.setErrors(errors);
+		if (errors.size() > 0)
+		{
+			return result;
+		}
+		try
+		{
+			Double interest = getDoubleValueForInterest(doubleStr);
+			if ((interest > AccountingRules.getMaxInterest()) || (interest < AccountingRules.getMinInterest()))
+			{
+				errors.add(ConversionError.INTEREST_OUT_OF_RANGE);
+			}
+			else
+				result.setDoubleValue(interest);
+		}
+		catch (Exception ex)
+		{
+			ConversionError error = ConversionError.CONVERSION_ERROR;
+			result.getErrors().add(error);
+		}
+		return result;
+	}
 	
 	public char getDecimalFormatSymbol()
 	{
 		return decimalFormatSymbol;
 	}
 	
+	private List<ConversionError> checkDigits(Short digitsBefore, Short digitsAfter, 
+			ConversionError errorDigitsBefore, ConversionError errorDigitsAfter, String number)
+	{
+		List<ConversionError> errors = new ArrayList();;
+		char temp;
+		ConversionError error = null;
+		for (int i=0 ; i < number.length(); i++)
+			if (Character.isDigit(number.charAt(i)) == false)
+			{
+				temp = number.charAt(i);
+				if (temp != decimalFormatSymbol)
+				{
+					error = ConversionError.NOT_ALL_NUMBER;
+					errors.add(error);
+					return errors;
+				}
+				
+			}
+		int index = number.indexOf(decimalFormatSymbol);
+		if (index < 0)
+		{
+			if (number.length() > digitsBefore)
+			{
+				error = errorDigitsBefore;
+				errors.add(error);
+			}
+		}
+		else
+		{
+			String digitsAfterNum = number.substring(index + 1, number.length());
+			if (digitsAfterNum.length() > digitsAfter)
+			{
+				error =  errorDigitsAfter;
+				errors.add(error);
+			}
+			
+		    String digitsBeforeNum = number.substring(0, index);
+		    if (digitsBeforeNum.length() > digitsBefore)
+		    {
+		    	error =  errorDigitsBefore;
+		    	errors.add(error);
+		    }
+			
+		}
+		return errors;
+	}
 	
+
+	private Double getDoubleValueForInterest(String doubleValueString)
+	{
+		
+		if (currentDecimalFormatForInterest == null)
+			loadDecimalFormats();
+		Double dNum = null;
+		try
+		{
+			ParsePosition pp = new ParsePosition(0);
+			Number num = currentDecimalFormatForInterest.parse(doubleValueString, pp);
+			if ((doubleValueString.length() != pp.getIndex()) || (num == null))
+			{
+				throw new NumberFormatException("The format of the number is invalid. index " + pp.getIndex() +
+						" locale " + currentLocale.getCountry() + " " + currentLocale.getLanguage());
+			}
+			dNum = num.doubleValue();
+		}
+		catch (Exception e)
+		{
+			throw new NumberFormatException(e.getMessage() + " .Number " + doubleValueString);
+		}
+		return dNum;
+	}
+	// this method will become private after all the validation is done in struct
 	public Double getDoubleValueForCurrentLocale(String doubleValueString)
 	{
 		
@@ -126,29 +263,6 @@ public class LocalizationConverter {
 		return dNum;
 	}
 	
-	public Double getDoubleValue(String doubleValueString)
-	{
-		
-		if (currentDecimalFormat == null)
-			loadDecimalFormats();
-		Double dNum = null;
-		try
-		{
-			ParsePosition pp = new ParsePosition(0);
-			Number num = currentDecimalFormat.parse(doubleValueString, pp);
-			if ((doubleValueString.length() != pp.getIndex()) || (num == null))
-			{
-				throw new NumberFormatException("The format of the number is invalid for locale " +
-						 currentLocale.getCountry() + " " + currentLocale.getLanguage());
-			}
-			dNum = num.doubleValue();
-		}
-		catch (Exception e)
-		{
-			throw new NumberFormatException(e.getMessage() + " .Number " + doubleValueString);
-		}
-		return dNum;
-	}
 	
 	
 	public String getDoubleValueString(Double dNumber)

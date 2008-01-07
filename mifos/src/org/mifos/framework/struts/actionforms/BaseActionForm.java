@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +27,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.ConversionResult;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.config.AccountingRules;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -45,19 +49,51 @@ public class BaseActionForm extends ValidatorActionForm {
 		}
 	}
     
-    protected Double validateDouble(String doubleString)
+    protected ConversionResult parseDoubleForMoney(String doubleString)
     {
-    	Double value = null;
-    	try
-    	{
-    		value = LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(doubleString);
-    	}
-    	catch (Exception ex)
-    	{
-    	}
-    	// check format
-    	return value;
+    	return LocalizationConverter.getInstance().parseDoubleForMoney(doubleString);
+    
     }
+    
+    protected String getConversionErrorText(ConversionError error, Locale locale)
+    {
+    	
+    	ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.framework.util.resources.UIResources", 
+				locale);
+    	String errorText = resources.getString(error.toString());
+    	if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST))
+    	{
+    		errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimalForInterest().toString());
+    	}
+    	else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST))
+    	{
+    		errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimalForInterest().toString());
+    	}
+    	else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY))
+    	{
+    		errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsBeforeDecimal().toString());
+    	}
+    	else if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY))
+    	{
+    		errorText = errorText.replaceFirst("%s", AccountingRules.getDigitsAfterDecimal().toString());
+    	}
+    	else if (error.equals(ConversionError.INTEREST_OUT_OF_RANGE))
+    	{
+    		errorText = errorText.replaceFirst("%s1", AccountingRules.getMinInterest().toString());
+    		errorText = errorText.replaceFirst("%s2", AccountingRules.getMaxInterest().toString());
+    	}
+    	return errorText;
+
+    }
+    
+    
+    protected ConversionResult parseDoubleForInterest(String doubleString)
+    {
+    	return LocalizationConverter.getInstance().parseDoubleForInterest(doubleString);
+    	
+    }
+    
+   
 
 	protected Short getShortValue(String str) {
 		return StringUtils.isNullAndEmptySafe(str) ? Short.valueOf(str) : null;

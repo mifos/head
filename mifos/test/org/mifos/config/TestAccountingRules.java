@@ -41,9 +41,11 @@ public class TestAccountingRules  extends MifosTestCase {
 		MifosLogManager.configure(FilePaths.LOGFILE);
 	}
 	
+	
 	@Test
 	public void testGetMifosCurrency()
 	{
+
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		String currencyCode = configMgr.getString(AccountingRules.AccountingRulesCurrencyCode);
 		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyCode, "INR");
@@ -113,6 +115,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		
 	}
 	
+	@Test
 	public void testGetDigitsBeforeDecimalForInterest() {
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		Short digitsBeforeDecimalForInterest = 10;
@@ -134,6 +137,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		
 	}
 	
+	@Test
 	public void testGetDigitsAfterDecimalForInterest() {
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		Short digitsAfterDecimalForInterest = 5;
@@ -154,6 +158,53 @@ public class TestAccountingRules  extends MifosTestCase {
 		configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest, digitsAfterDecimalForInterest);
 		
 	}
+	
+	@Test
+	public void testGetMinInterests() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Double minInterestSaved = AccountingRules.getMinInterest();
+		Double minInterest = 0.0;
+		configMgr.addProperty(AccountingRules.AccountingRulesMinInterest, minInterest);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(minInterest, AccountingRules.getMinInterest());
+		// clear the DigitsBeforeDecimalForInterest property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesMinInterest);
+		// should throw exception
+		try
+		{
+			AccountingRules.getMinInterest();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "Min interest is not defined in the config file.");
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesMinInterest, minInterestSaved);
+		
+	}
+	
+	@Test
+	public void testGetMaxInterests() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Double maxInterestSaved = AccountingRules.getMaxInterest();
+		Double maxInterest = 999.0;
+		configMgr.addProperty(AccountingRules.AccountingRulesMaxInterest, maxInterest);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(maxInterest, AccountingRules.getMaxInterest());
+		// clear the DigitsBeforeDecimalForInterest property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesMaxInterest);
+		// should throw exception
+		try
+		{
+			AccountingRules.getMaxInterest();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "Max interest is not defined in the config file.");
+		}
+		configMgr.setProperty(AccountingRules.AccountingRulesMaxInterest, maxInterestSaved);
+		
+	}
+
 
 	
 	@Test

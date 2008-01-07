@@ -1,7 +1,6 @@
 package org.mifos.application.meeting.util.helpers;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.LocalizedTextLookup;
 
 public enum WeekDay implements LocalizedTextLookup {

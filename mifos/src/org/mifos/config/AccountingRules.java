@@ -16,6 +16,8 @@ public class AccountingRules {
 	public static final String AccountingRulesDigitsBeforeDecimal = "AccountingRules.DigitsBeforeDecimal";
 	public static final String AccountingRulesDigitsAfterDecimalForInterest = "AccountingRules.DigitsAfterDecimalForInterest";
 	public static final String AccountingRulesDigitsBeforeDecimalForInterest = "AccountingRules.DigitsBeforeDecimalForInterest";
+	public static final String AccountingRulesMaxInterest = "AccountingRules.MaxInterest";
+	public static final String AccountingRulesMinInterest = "AccountingRules.MinInterest";
 	
 	
 	public static MifosCurrency getMifosCurrency()
@@ -31,7 +33,7 @@ public class AccountingRules {
 				roundingMode, amountToBeRoundedTo, currency.getDefaultCurrency(), digitsAfterDecimal, currencyCode);
 	
 	}
-	
+
 	
 	public static String getCurrencyCode()
 	{
@@ -44,6 +46,28 @@ public class AccountingRules {
 		return currencyCode;
 	}
 	
+	public static Double getMaxInterest()
+	{
+		Double maxInterest = null;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesMaxInterest))
+			maxInterest = configMgr.getDouble(AccountingRulesMaxInterest);
+		else
+			throw new RuntimeException("Max interest is not defined in the config file.");
+		return maxInterest;
+	}
+	
+	public static Double getMinInterest()
+	{
+		Double maxInterest = null;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesMinInterest))
+			maxInterest = configMgr.getDouble(AccountingRulesMinInterest);
+		else
+			throw new RuntimeException("Min interest is not defined in the config file.");
+		return maxInterest;
+	}
+	
 	public static Short getDigitsAfterDecimal(Short defaultValue)
 	{
 
@@ -53,6 +77,17 @@ public class AccountingRules {
 			digits = configMgr.getShort(AccountingRulesDigitsAfterDecimal);
 		else if (defaultValue != null)
 			digits = defaultValue;
+		else
+			throw new RuntimeException("The number of digits after decimal is not defined in the config file nor database.");
+		return digits;
+	}
+	
+	public static Short getDigitsAfterDecimal()
+	{
+		Short digits;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		if (configMgr.containsKey(AccountingRulesDigitsAfterDecimal))
+			digits = configMgr.getShort(AccountingRulesDigitsAfterDecimal);
 		else
 			throw new RuntimeException("The number of digits after decimal is not defined in the config file nor database.");
 		return digits;
@@ -165,5 +200,32 @@ public class AccountingRules {
 			
 		return days;
 	}
+	
+	// these methods below are for testing purpose and not used by Mifos
+	public static void setDigitsAfterDecimal(Short value)
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesDigitsAfterDecimal, value);
+	}
+	
+	public static void setDigitsBeforeDecimal(Short value)
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesDigitsBeforeDecimal, value);
+	}
+	
+	public static void setDigitsBeforeDecimalForInterest(Short value)
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesDigitsBeforeDecimalForInterest, value);
+	}
+	
+	public static void setDigitsAfterDecimalForInterest(Short value)
+	{
+
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesDigitsAfterDecimalForInterest, value);
+	}
+	
 
 }
