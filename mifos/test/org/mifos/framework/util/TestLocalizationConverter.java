@@ -30,6 +30,40 @@ public class TestLocalizationConverter extends MifosTestCase{
 
 	}
 	
+	public void testGetDoubleStringForMoney()
+	{
+		
+		String doubleValueString = "2.5";
+		Double dValue = 2.5000000000;
+		Locale locale = Localization.getInstance().getMainLocale();
+		LocalizationConverter converter = LocalizationConverter.getInstance();
+		String dString = converter.getDoubleStringForMoney(dValue);
+		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+			assertEquals(doubleValueString, dString);
+		converter.setCurrentLocale(new Locale("IS", "is"));
+		doubleValueString = "2,5";
+		dString = converter.getDoubleStringForMoney(dValue);
+		assertEquals(doubleValueString, dString);
+		converter.setCurrentLocale(locale);
+	}
+	
+	public void testGetDoubleStringForInterest()
+	{
+		
+		String doubleValueString = "2123.12345";
+		Double dValue = 2123.12345000000;
+		Locale locale = Localization.getInstance().getMainLocale();
+		LocalizationConverter converter = LocalizationConverter.getInstance();
+		String dString = converter.getDoubleStringForInterest(dValue);
+		if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN"))
+			assertEquals(doubleValueString, dString);
+		converter.setCurrentLocale(new Locale("IS", "is"));
+		doubleValueString = "2123,12345";
+		dString = converter.getDoubleStringForInterest(dValue);
+		assertEquals(doubleValueString, dString);
+		converter.setCurrentLocale(locale);
+	}
+	
 	public void testGetDoubleValueString()
 	{
 		
@@ -67,8 +101,7 @@ public class TestLocalizationConverter extends MifosTestCase{
 	{
 		String doubleValueString = "2.5";
 		Double dValue = 2.5;
-		Short defaultValue = 1;
-		Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal(defaultValue);
+		Short digitsAfterForMoneySaved = AccountingRules.getDigitsAfterDecimal();
 		Short digitsBeforeForMoneySaved = AccountingRules.getDigitsBeforeDecimal();
 		Short digitsAfterForMoney = 1;
 		Short digitsBeforeForMoney = 7;

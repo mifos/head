@@ -38,8 +38,7 @@ public class LocalizationConverter {
 	
 	private LocalizationConverter() {
 		currentLocale = Localization.getInstance().getMainLocale();
-		Short defaultValue = 1;
-		digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal(defaultValue);
+		digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
 		digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
 		digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
 		digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
@@ -263,6 +262,20 @@ public class LocalizationConverter {
 		return dNum;
 	}
 	
+	
+	public String getDoubleStringForMoney(Double dNumber)
+	{
+		if (currentDecimalFormatForMoney == null)
+			loadDecimalFormats();
+		return currentDecimalFormatForMoney.format(dNumber);
+	}
+	
+	public String getDoubleStringForInterest(Double dNumber)
+	{
+		if (currentDecimalFormatForInterest == null)
+			loadDecimalFormats();
+		return currentDecimalFormatForInterest.format(dNumber);
+	}
 	
 	
 	public String getDoubleValueString(Double dNumber)

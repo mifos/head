@@ -324,6 +324,16 @@ public abstract class BaseAction extends DispatchAction {
 		return "0";
 
 	}
+	
+	protected String getDoubleStringForMoney(Double dNumber)
+	{
+		return LocalizationConverter.getInstance().getDoubleStringForMoney(dNumber);
+	}
+	
+	protected String getDoubleStringForInterest(Double dNumber)
+	{
+		return LocalizationConverter.getInstance().getDoubleStringForInterest(dNumber);
+	}
 
 	protected Date getDateFromString(String strDate, Locale locale) {
 		Date date = null;

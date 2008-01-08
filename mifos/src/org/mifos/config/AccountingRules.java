@@ -26,7 +26,7 @@ public class AccountingRules {
 		MifosCurrency currency = new ConfigurationPersistence().getCurrency(getCurrencyCode());
 		if (currency == null)
 			throw new RuntimeException("Can't find in the database the currency define in the config file " + currencyCode);
-		Short digitsAfterDecimal = getDigitsAfterDecimal(currency.getDefaultDigitsAfterDecimal());
+		Short digitsAfterDecimal = getDigitsAfterDecimal();
 		Float amountToBeRoundedTo = getAmountToBeRoundedTo(currency.getRoundingAmount());
 		Short roundingMode = getRoundingMode(currency.getRoundingMode());
 		return new MifosCurrency(currency.getCurrencyId(), currency.getCurrencyName(), currency.getDisplaySymbol(),
@@ -68,7 +68,7 @@ public class AccountingRules {
 		return maxInterest;
 	}
 	
-	public static Short getDigitsAfterDecimal(Short defaultValue)
+	/*public static Short getDigitsAfterDecimal(Short defaultValue)
 	{
 
 		Short digits;
@@ -80,7 +80,7 @@ public class AccountingRules {
 		else
 			throw new RuntimeException("The number of digits after decimal is not defined in the config file nor database.");
 		return digits;
-	}
+	}*/
 	
 	public static Short getDigitsAfterDecimal()
 	{
@@ -89,7 +89,7 @@ public class AccountingRules {
 		if (configMgr.containsKey(AccountingRulesDigitsAfterDecimal))
 			digits = configMgr.getShort(AccountingRulesDigitsAfterDecimal);
 		else
-			throw new RuntimeException("The number of digits after decimal is not defined in the config file nor database.");
+			throw new RuntimeException("The number of digits after decimal is not defined in the config file.");
 		return digits;
 	}
 	
@@ -101,7 +101,7 @@ public class AccountingRules {
 		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimal))
 			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimal);
 		else
-			throw new RuntimeException("The number of digits before decimal is not defined in the config file nor database.");
+			throw new RuntimeException("The number of digits before decimal is not defined in the config file.");
 		return digits;
 	}
 	
@@ -113,7 +113,7 @@ public class AccountingRules {
 		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimalForInterest))
 			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimalForInterest);
 		else
-			throw new RuntimeException("The number of digits before decimal for interest is not defined in the config file nor database.");
+			throw new RuntimeException("The number of digits before decimal for interest is not defined in the config file.");
 		return digits;
 	}
 	
@@ -125,7 +125,7 @@ public class AccountingRules {
 		if (configMgr.containsKey(AccountingRulesDigitsAfterDecimalForInterest))
 			digits = configMgr.getShort(AccountingRulesDigitsAfterDecimalForInterest);
 		else
-			throw new RuntimeException("The number of digits after decimal for interest is not defined in the config file nor database.");
+			throw new RuntimeException("The number of digits after decimal for interest is not defined in the config file.");
 		return digits;
 	}
 	

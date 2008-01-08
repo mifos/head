@@ -69,27 +69,22 @@ public class TestAccountingRules  extends MifosTestCase {
 	
 	@Test 
 	public void testGetDigitsAfterDecimal() {
-		Short defaultValue = 1;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal();
 		Short digitsAfterDecimal = 1;
-		Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal(defaultValue);
 		configMgr.addProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
 		// return value from accounting rules class has to be the value defined in the config file
-		assertEquals(digitsAfterDecimal, AccountingRules.getDigitsAfterDecimal(defaultValue));
+		assertEquals(digitsAfterDecimal, AccountingRules.getDigitsAfterDecimal());
 		// clear the DigitsAfterDecimal property from the config file
 		configMgr.clearProperty(AccountingRules.AccountingRulesDigitsAfterDecimal);
-		// now the return value from accounting rules class has to be the default value (value from db)
-		assertEquals(defaultValue, AccountingRules.getDigitsAfterDecimal(defaultValue));
-		// value not defined in config and defaultValue is null
-		defaultValue = null;
 		// should throw exception
 		try
 		{
-			AccountingRules.getDigitsAfterDecimal(defaultValue);
+			AccountingRules.getDigitsAfterDecimal();
 		}
 		catch (RuntimeException e)
 		{
-			assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file nor database.");
+			assertEquals(e.getMessage(), "The number of digits after decimal is not defined in the config file.");
 		}
 		configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimalSaved);
 	}
@@ -109,7 +104,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		}
 		catch (RuntimeException e)
 		{
-			assertEquals(e.getMessage(), "The number of digits before decimal is not defined in the config file nor database.");
+			assertEquals(e.getMessage(), "The number of digits before decimal is not defined in the config file.");
 		}
 		configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimal, digitsBeforeDecimal);
 		
@@ -131,7 +126,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		}
 		catch (RuntimeException e)
 		{
-			assertEquals(e.getMessage(), "The number of digits before decimal for interest is not defined in the config file nor database.");
+			assertEquals(e.getMessage(), "The number of digits before decimal for interest is not defined in the config file.");
 		}
 		configMgr.setProperty(AccountingRules.AccountingRulesDigitsBeforeDecimalForInterest, digitsBeforeDecimalForInterest);
 		
@@ -153,7 +148,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		}
 		catch (RuntimeException e)
 		{
-			assertEquals(e.getMessage(), "The number of digits after decimal for interest is not defined in the config file nor database.");
+			assertEquals(e.getMessage(), "The number of digits after decimal for interest is not defined in the config file.");
 		}
 		configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimalForInterest, digitsAfterDecimalForInterest);
 		
