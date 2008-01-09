@@ -1,7 +1,5 @@
 package org.mifos.application.master;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.Locale;
 import java.util.Set;
 
@@ -9,20 +7,19 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
-import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
-import org.mifos.config.Localization;
 
 /**
  * This class looks up messages
@@ -52,7 +49,7 @@ import org.mifos.config.Localization;
  * a localized text string for each instance of the enumerated type.
  * 
  * Text strings for enumerated types can currently be found in
- * org.mifos.config.resources.enumerations.properties (and 
+ * org.mifos.config.resources.MessageLookupMessages.properties (and 
  * associated versions for different locales).
  */
 public class MessageLookup implements MessageSourceAware {
@@ -98,11 +95,15 @@ public class MessageLookup implements MessageSourceAware {
 		return lookupLabel(labelKey, Localization.getInstance().getMainLocale());
 	}
 	
+	public String lookupLabel(String labelKey, UserContext userContext) {
+		return lookupLabel(labelKey, userContext.getPreferredLocale());
+	}
+	
 	/*
 	 * Return a label for given label key.  Label keys are listed in
 	 * {@link ConfigurationConstants}.
 	 */
-	public String lookupLabel(String labelKey, Locale locale) {
+	protected String lookupLabel(String labelKey, Locale locale) {
 		try {
 			String labelText = MifosConfiguration.getInstance().getLabel(labelKey, locale);
 			
@@ -119,15 +120,7 @@ public class MessageLookup implements MessageSourceAware {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	/*
-	 * Return a label for given label key.  Label keys are listed in
-	 * {@link ConfigurationConstants}.
-	 */
-	public String lookupLabel(String labelKey, Short localeId) {
-		return MifosConfiguration.getInstance().getLabelValue(labelKey, localeId);
-	}
-	
+		
 	/* 
 	 * Set a custom label value that will override resource bundle values.
 	 * 
@@ -137,20 +130,30 @@ public class MessageLookup implements MessageSourceAware {
 	 * each update.  Ultimately, it would be cleaner to just use a key-value
 	 * lookup to implement these overrides.  
 	 */
-	public void setCustomLabel(String labelKey, String value) throws PersistenceException {
+	public void setCustomLabel(String labelKey, String value, UserContext userContext, boolean updateCache) throws PersistenceException {
 		ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
-		for (MifosLookUpEntity entity : configurationPersistence.getLookupEntities()) {
-			if (entity.getEntityType().equals(labelKey)) {
-				Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
-				assertEquals(labels.size(),1);
-				for (LookUpLabelEntity label : labels) {
-					label.setLabelName(value);
-					configurationPersistence.createOrUpdate(label);
-					HibernateUtil.commitTransaction();
-				}				
+		
+		// only update the value if there is a change
+		if (lookupLabel(labelKey, userContext).compareTo(value) != 0) { 
+			// getLookupEntities currently closes the Hibernate session (which is bad)
+			for (MifosLookUpEntity entity : configurationPersistence.getLookupEntities()) {
+				if (entity.getEntityType().equals(labelKey)) {
+					Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
+					for (LookUpLabelEntity label : labels) {
+						label.setLabelName(value);
+						configurationPersistence.createOrUpdate(label);
+						// because the session is closed at the beginning of 
+						// this method, we need to make sure we commit
+						// this is bad too, and should go away with some
+						// refactoring
+						HibernateUtil.commitTransaction();
+					}				
+				}
 			}
 		}
-		MifosConfiguration.getInstance().init();
+		if (updateCache) {
+			MifosConfiguration.getInstance().init();
+		}
 		
 	}
 	

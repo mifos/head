@@ -94,7 +94,7 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 				html.text(Integer.toString(index));
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "22%", "class", "drawtablerow");
-				html.text(customField.getLookUpEntity().getLabelForLocale(userContext.getLocaleId()));
+				html.text(customField.getLookUpEntity().getLabel());
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "21%", "class", "drawtablerow");
 				html.text(MessageLookup.getInstance().lookup(

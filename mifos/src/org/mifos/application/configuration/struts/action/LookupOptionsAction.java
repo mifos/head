@@ -109,7 +109,8 @@ public class LookupOptionsAction extends BaseAction {
 	{
 		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
 				getUserLocale(request));
-		Short localeId = getUserContext(request).getLocaleId();
+		UserContext userContext = getUserContext(request);
+		Short localeId = userContext.getLocaleId();
 
 		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
@@ -128,7 +129,7 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY))
 		{
-			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, localeId);
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, userContext);
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ETHNICITY);
 		}
@@ -139,7 +140,7 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
 		{
-			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, localeId);
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, userContext);
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
 		}
@@ -155,7 +156,7 @@ public class LookupOptionsAction extends BaseAction {
 		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
 		{
-			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, localeId);
+			String label = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, userContext);
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
 		}
@@ -366,11 +367,11 @@ public class LookupOptionsAction extends BaseAction {
 	   
 	}
 	
-	private void setSpecialLables(Short localeId, LookupOptionsActionForm lookupOptionsActionForm)
+	private void setSpecialLables(UserContext userContext, LookupOptionsActionForm lookupOptionsActionForm)
 	{
-		lookupOptionsActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, localeId));
-		lookupOptionsActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, localeId));
-		lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, localeId));
+		lookupOptionsActionForm.setCitizenship(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CITIZENSHIP, userContext));
+		lookupOptionsActionForm.setHandicapped(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.HANDICAPPED, userContext));
+		lookupOptionsActionForm.setEthnicity(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.ETHINICITY, userContext));
 		
 	}
 
@@ -384,7 +385,7 @@ public class LookupOptionsAction extends BaseAction {
 		setHiddenFields(request);
 		
 		Short localeId = getUserContext(request).getLocaleId();
-		setSpecialLables(localeId, lookupOptionsActionForm);
+		setSpecialLables(getUserContext(request), lookupOptionsActionForm);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		PopulateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_SALUTATION);

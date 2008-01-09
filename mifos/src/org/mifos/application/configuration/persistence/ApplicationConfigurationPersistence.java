@@ -58,6 +58,12 @@ import org.mifos.application.master.persistence.MasterPersistence;
  */
 public class ApplicationConfigurationPersistence extends Persistence {
 	
+	/*
+	 * TODO: the HibernateUtil.closeSession() calls here are bad
+	 * If these methods are called as part of another operation,
+	 * the closing of the session can be unexpected and interrupt
+	 * an ongoing transaction
+	 */
 	public List<MifosLookUpEntity> getLookupEntities(){
 		
 		List<MifosLookUpEntity> entities=null;

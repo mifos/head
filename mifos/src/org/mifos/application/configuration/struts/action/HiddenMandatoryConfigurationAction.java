@@ -18,6 +18,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -72,8 +73,7 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 		logger.debug("Inside load method");
 		HiddenMandatoryConfigurationActionForm actionForm = (HiddenMandatoryConfigurationActionForm) form;
 		actionForm.clear();
-		List<FieldConfigurationEntity> confFieldList = ((ConfigurationBusinessService) getService())
-				.getAllConfigurationFieldList();
+		List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
 		populateActionForm(actionForm, confFieldList);
 		logger.debug("Outside load method");
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -112,8 +112,7 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside update method");
 		HiddenMandatoryConfigurationActionForm actionForm = (HiddenMandatoryConfigurationActionForm) form;
-		List<FieldConfigurationEntity> confFieldList = ((ConfigurationBusinessService) getService())
-				.getAllConfigurationFieldList();
+		List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence().getAllConfigurationFieldList();
 		updateFieldConfiguration(actionForm, confFieldList);
 		HibernateUtil.commitTransaction();
 		initializeFieldConfiguration(servlet);

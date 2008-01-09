@@ -54,6 +54,8 @@ import org.mifos.framework.business.PersistentObject;
 
 public class MifosLookUpEntity extends PersistentObject {
 
+	public static final Short DEFAULT_LOCALE_ID = 1;
+	
 	public static final int ETHNICITY = 19;
 	public static final int ACCOUNT_ACTION = 69;
 	public static final int ACCOUNT_STATE_FLAG = 70;
@@ -104,7 +106,11 @@ public class MifosLookUpEntity extends PersistentObject {
 		this.lookUpValues = lookUpValues;
 	}
 
-	public String getLabelForLocale(Short localeId) {
+	public String getLabel() {
+		return getLabelForLocale(DEFAULT_LOCALE_ID);
+	}
+	
+	private String getLabelForLocale(Short localeId) {
 		for (LookUpLabelEntity lookUpLabel : lookUpLabels) {
 			if (lookUpLabel.getLocaleId().equals(localeId)) {
 				return lookUpLabel.getLabelText();

@@ -22,6 +22,7 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigConstants
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
@@ -76,12 +77,13 @@ public class MessageLookupTest {
 	public void testLabelLookup() throws PersistenceException {
 		Localization localization = Localization.getInstance();
 		ConfigLocale originalConfig = localization.getConfigLocale();
-
+		UserContext userContext = TestUtils.makeUserWithLocales();
+		
 		try {
 			// make sure that the GROUP label has not been set
 			// currently there is some test that is doing this and not cleaning up,
 			// so this test will fail unless the GROUP label is cleared
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "");
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
 
 			// Get the default label from the English resource bundle
 			assertEquals("Group",messageLookup.lookupLabel(ConfigurationConstants.GROUP, Locale.US));
@@ -96,7 +98,7 @@ public class MessageLookupTest {
 
 			// Override the resource bundle text with a custom label
 			String TEST_GROUP_NAME = "TestGroup";
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME);
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME, userContext, true);
 						
 			// The custom label should come back for each locale
 			assertEquals(TEST_GROUP_NAME,messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
@@ -105,11 +107,11 @@ public class MessageLookupTest {
 
 			// Reset the custom label and then we should get the locale
 			// specific label again
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "");
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
 			assertEquals("Grupo",messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
 			
 		} finally {
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "");
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
 			localization.setCountryCodeLanguageCodeToConfigFile(originalConfig);
 		}
 	}

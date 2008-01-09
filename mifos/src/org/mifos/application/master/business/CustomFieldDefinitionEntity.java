@@ -54,6 +54,8 @@ import java.util.HashSet;
 
 public class CustomFieldDefinitionEntity extends PersistentObject {
 
+	private static final Short DEFAULT_LOCALE_ID = 1;
+
 	private final Short fieldId;
 
 	/*
@@ -104,14 +106,25 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 	}
 	
 	/*
+	 * Create all custom fields with values stored in the default (1) locale
+	 */
+	public CustomFieldDefinitionEntity(String label, Short levelId, CustomFieldType fieldType, 
+			EntityType entityType, String defaultValue, YesNoFlag mandatory) {
+		this(label, levelId, fieldType, entityType, defaultValue, mandatory, DEFAULT_LOCALE_ID);
+	}
+	/*
 	 * This constructor is used to create a custom field and after that it will be saved to the 
 	 * database using addCustomField of ApplicationConfigurationPersistence
 	 */
-	public CustomFieldDefinitionEntity(String label, Short levelId, CustomFieldType fieldType, 
+	private CustomFieldDefinitionEntity(String label, Short levelId, CustomFieldType fieldType, 
 		EntityType entityType, String defaultValue, YesNoFlag mandatory, Short localeId) {
 		
 		MifosLookUpEntity lookupEntity = new MifosLookUpEntity();
-		lookupEntity.setEntityType(label);
+		// add a timestamp so that we get a unique identifier
+		// the label that someone enters can potentially collide with
+		// the name of another unrelated entity, causing problems with
+		// label lookup in the MifosConfiguration class
+		lookupEntity.setEntityType(label + " " + System.currentTimeMillis());
 		
 		Set<LookUpLabelEntity> lookUpLabels = new HashSet<LookUpLabelEntity>();
 		LookUpLabelEntity lookupLabel = new LookUpLabelEntity();
@@ -213,17 +226,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		}
 	}
 	
-	public String getLabel(Short localeId)
+	public String getLabel()
 	{
-		/*String label = null;
-		for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
-			if (entity.getLocaleId().equals(localeId))
-			{
-				label = entity.getLabelName();
-				break;
-			}
-		}*/
-		return lookUpEntity.getLabelForLocale(localeId);
+		return lookUpEntity.getLabel();
 	}
 
 	/*

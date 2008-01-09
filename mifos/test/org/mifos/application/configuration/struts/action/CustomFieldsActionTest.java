@@ -109,7 +109,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 			if (listboxDataType.getId().equals(category.mapToEntityType().getValue()))
 			{
 				String name1 = listboxDataType.getName().toUpperCase();
-				String name2 = MessageLookup.getInstance().lookupLabel(category.name(), DEFAULT_LOCALE).toUpperCase();
+				String name2 = MessageLookup.getInstance().lookupLabel(category.name()).toUpperCase();
 				if (name1.equals(name2))
 					return true;
 			}
@@ -410,7 +410,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
 		assertTrue(customField.getDefaultValue().equals(newDefaultValue));
 		assertTrue(customField.isMandatory() == true);
-		assertTrue(customField.getLabel(DEFAULT_LOCALE).equals(newLabelName));
+		assertTrue(customField.getLabel().equals(newLabelName));
 	}
 	
 	

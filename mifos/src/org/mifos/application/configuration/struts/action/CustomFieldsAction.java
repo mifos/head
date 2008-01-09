@@ -178,14 +178,14 @@ public class CustomFieldsAction extends BaseAction {
 
 	}
 
-	private void loadCategories(Short localeId,
+	private void loadCategories(
 			CustomFieldsActionForm actionForm, HttpServletRequest request)
 			throws Exception {
 		List<CustomFieldsListBoxData> allCategories = new ArrayList<CustomFieldsListBoxData>();
 		CustomFieldsListBoxData data = null;
 		for (CustomFieldCategory category : CustomFieldCategory.values()) {
 			EntityType entityType = category.mapToEntityType();
-			String entityName = MessageLookup.getInstance().lookupLabel(category.name(), localeId);
+			String entityName = MessageLookup.getInstance().lookupLabel(category.name(), getUserContext(request));
 			data = new CustomFieldsListBoxData();
 			data.setName(entityName);
 			data.setId(entityType.getValue());
@@ -220,8 +220,7 @@ public class CustomFieldsAction extends BaseAction {
 		actionForm.clear();
 		Locale locale = getUserLocale(request);
 		loadDataTypes(locale, actionForm, request);
-		Short localeId = getUserContext(request).getLocaleId();
-		loadCategories(localeId, actionForm, request);
+		loadCategories(actionForm, request);
 
 		logger.debug("Outside load define fields method");
 		return mapping.findForward(ActionForwards.loadDefineCustomFields_success
@@ -328,7 +327,7 @@ public class CustomFieldsAction extends BaseAction {
 			flag = YesNoFlag.NO;
 		Short localeId = getUserContext(request).getLocaleId();
 		CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity(label, levelId,fieldType, categoryTypeEntity,
-				defaultValue, flag, localeId );
+				defaultValue, flag );
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.addCustomField(customField);
 		MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(), label, localeId);
@@ -385,14 +384,14 @@ public class CustomFieldsAction extends BaseAction {
 				BusinessServiceName.Configuration);
 	}
 	
-	private String getEntityTypeName(Short entityTypeId, Short localeId)
+	private String getEntityTypeName(Short entityTypeId, UserContext userContext)
 	{
 		String entityTypeName = null;
 		for (CustomFieldCategory category : CustomFieldCategory.values()) {
 			EntityType entityType = category.mapToEntityType();
 			if (entityType.getValue().equals(entityTypeId))
 			{
-				entityTypeName = MessageLookup.getInstance().lookupLabel(category.name(), localeId);
+				entityTypeName = MessageLookup.getInstance().lookupLabel(category.name(), userContext);
 				break;
 			}
 		}
@@ -417,14 +416,14 @@ public class CustomFieldsAction extends BaseAction {
 			HttpServletRequest request)
 			throws Exception
 	{
-		Short localeId = getUserContext(request).getLocaleId();
+		UserContext userContext = getUserContext(request);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		CustomFieldDefinitionEntity customField = masterPersistence.retrieveOneCustomFieldDefinition(editedCustomFieldId);
 		actionForm.setCategoryType(customField.getEntityType().toString()); // entity type id
 		
-		String label = customField.getLookUpEntity().getLabelForLocale(localeId);
-		actionForm.setLabelName(label);
-		String entityTypeName = getEntityTypeName(customField.getEntityType(), localeId);
+		String label = customField.getLabel();
+		actionForm.setLabelName(label);		
+		String entityTypeName = getEntityTypeName(customField.getEntityType(), userContext);
 		actionForm.setCategoryTypeName(entityTypeName);
 		request.setAttribute("category", entityTypeName);
 		Locale locale = getUserLocale(request);
