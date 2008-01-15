@@ -1322,7 +1322,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	/**
 	 * <code>searchId</code> should indicate the order in which clients became
-	 * part of a group. Originally created for use in fixing <a
+	 * part of a group. This method was originally created for use in fixing <a
 	 * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1417">bug #1417</a>.
 	 * 
 	 * @return A {@link java.util.Comparator} useful for comparing customers by
