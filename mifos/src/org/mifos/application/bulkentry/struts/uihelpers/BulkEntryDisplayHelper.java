@@ -52,12 +52,14 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ClientRules;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -145,7 +147,7 @@ public class BulkEntryDisplayHelper {
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
 			List<CustomValueListElement> custAttTypes, StringBuilder builder,
-			String method, Locale locale, Short officeId) throws JspException {
+			String method, UserContext userContext, Short officeId) throws JspException {
 		int rowIndex = 0;
 		int totalProductsSize = (2 * (loanProducts.size() + savingsProducts
 				.size()));
@@ -163,14 +165,14 @@ public class BulkEntryDisplayHelper {
 		}
 		buildCompleteRow(parent, loanProducts, savingsProducts, parent
 				.getBulkEntryChildren().size(), 0, rowIndex, groupTotals,
-				centerTotals, getLocaleLabel(ConfigurationConstants.GROUP,
-						locale)
+				centerTotals, getLabel(ConfigurationConstants.GROUP,
+						userContext)
 						+ " account", builder, method, 2, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 		rowIndex++;
 		getTotalForRow(builder, parent, totalProductsSize, groupTotals,
-				rowIndex, method, locale, loanProducts.size(), savingsProducts
+				rowIndex, method, userContext, loanProducts.size(), savingsProducts
 						.size());
 		return groupTotals;
 	}
@@ -179,7 +181,7 @@ public class BulkEntryDisplayHelper {
 			List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts,
 			List<CustomValueListElement> custAttTypes, StringBuilder builder,
-			String method, Locale locale, Short officeId) throws JspException {
+			String method, UserContext userContext, Short officeId) throws JspException {
 
 		int rowIndex = 0;
 		int totalProductsSize = (2 * (loanProducts.size() + savingsProducts
@@ -209,26 +211,26 @@ public class BulkEntryDisplayHelper {
 			}
 			buildCompleteRow(child, loanProducts, savingsProducts,
 					groupChildSize, groupInitialAccNum, rowIndex, groupTotals,
-					centerTotals, getLocaleLabel(ConfigurationConstants.GROUP,
-							locale)
+					centerTotals, getLabel(ConfigurationConstants.GROUP,
+							userContext)
 							+ " account", builder, method, 2, currency,
 					officeId);
 			BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 			BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 			rowIndex++;
 			getTotalForRow(builder, child, totalProductsSize, groupTotals,
-					rowIndex, method, locale, loanProducts.size(),
+					rowIndex, method, userContext, loanProducts.size(),
 					savingsProducts.size());
 
 		}
 		buildCompleteRow(parent, loanProducts, savingsProducts, 0, 0, rowIndex,
-				groupTotals, centerTotals, getLocaleLabel(
-						ConfigurationConstants.CENTER, locale)
+				groupTotals, centerTotals, getLabel(
+						ConfigurationConstants.CENTER, userContext)
 						+ " account", builder, method, 3, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 		getTotalForRow(builder, parent, totalProductsSize, centerTotals,
-				rowIndex, method, locale, loanProducts.size(), savingsProducts
+				rowIndex, method, userContext, loanProducts.size(), savingsProducts
 						.size());
 		return centerTotals;
 	}
@@ -732,7 +734,7 @@ public class BulkEntryDisplayHelper {
 
 	private void getTotalForRow(StringBuilder builder,
 			BulkEntryView bulkEntryView, int productsSize, Double[] totals,
-			int rows, String method, Locale locale, int loanProductsSize,
+			int rows, String method, UserContext userContext, int loanProductsSize,
 			int savingsProductSize) {
 		Short customerLevel = bulkEntryView.getCustomerDetail()
 				.getCustomerLevelId();
@@ -743,8 +745,8 @@ public class BulkEntryDisplayHelper {
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 								+ "<span class=\"fontnormal8pt\"><em>"
-								+ getLocaleLabel(ConfigurationConstants.GROUP,
-										locale) + " Total </em></span></td>");
+								+ getLabel(ConfigurationConstants.GROUP,
+										userContext) + " Total </em></span></td>");
 				builder
 						.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
@@ -794,8 +796,8 @@ public class BulkEntryDisplayHelper {
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 								+ "<span class=\"fontnormal8pt\"><em>"
-								+ getLocaleLabel(ConfigurationConstants.CENTER,
-										locale) + " Total </em></span></td>");
+								+ getLabel(ConfigurationConstants.CENTER,
+										userContext) + " Total </em></span></td>");
 				builder
 						.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 
@@ -847,12 +849,12 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 					+ "<span class=\"fontnormal8pt\"><em>");
 			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
-				builder.append(getLocaleLabel(ConfigurationConstants.GROUP,
-						locale)
+				builder.append(getLabel(ConfigurationConstants.GROUP,
+						userContext)
 						+ " Total ");
 			} else if (customerLevel.equals(CustomerLevel.CENTER.getValue())) {
-				builder.append(getLocaleLabel(ConfigurationConstants.CENTER,
-						locale)
+				builder.append(getLabel(ConfigurationConstants.CENTER,
+						userContext)
 						+ " Total ");
 			}
 			builder.append("</em></span></td>");
@@ -1042,12 +1044,8 @@ public class BulkEntryDisplayHelper {
 		return builder;
 	}
 
-	private String getLocaleLabel(String key, Locale locale) {
-		try {
-			return MifosConfiguration.getInstance().getLabel(key, locale);
-		} catch (ConfigurationException ce) {
-		}
-		return null;
+	private String getLabel(String key, UserContext userContext) {
+			return MessageLookup.getInstance().lookupLabel(key, userContext);
 	}
 
 }

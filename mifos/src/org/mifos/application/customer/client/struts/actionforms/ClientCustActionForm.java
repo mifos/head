@@ -369,8 +369,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 		for (FieldConfigurationEntity fieldConfigurationEntity : mandatoryfieldList) {
 			String propertyName = request.getParameter(fieldConfigurationEntity
 					.getLabel());
-			Locale locale = ((UserContext) request.getSession().getAttribute(
-					LoginConstants.USERCONTEXT)).getPreferredLocale();
+			UserContext userContext = ((UserContext) request.getSession().getAttribute(
+					LoginConstants.USERCONTEXT));
+			Locale locale = userContext.getPreferredLocale();
 			if (propertyName != null && !propertyName.equals("")
 					&& !propertyName.equalsIgnoreCase("picture")) {
 				String propertyValue = request.getParameter(propertyName);
@@ -384,7 +385,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 													.getLocalSpecificFieldNames(
 															fieldConfigurationEntity
 																	.getLabel(),
-															locale)));
+															userContext)));
 			} else if (propertyName != null && !propertyName.equals("")
 					&& propertyName.equalsIgnoreCase("picture")) {
 				try {
@@ -399,7 +400,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 														.getLocalSpecificFieldNames(
 																fieldConfigurationEntity
 																		.getLabel(),
-																locale)));
+																userContext)));
 
 					}
 					getCustomerPicture().reset();

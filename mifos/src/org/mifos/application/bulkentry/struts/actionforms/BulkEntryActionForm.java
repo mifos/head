@@ -331,7 +331,6 @@ public class BulkEntryActionForm extends BaseActionForm {
 
 		} else if (request.getParameter(BulkEntryConstants.METHOD)
 				.equalsIgnoreCase(BulkEntryConstants.GETMETHOD)) {
-			Locale userLocale = getUserLocale(request);
 			java.sql.Date meetingDate = null;
 			try {
 				meetingDate = (Date) SessionUtils.getAttribute(
@@ -345,7 +344,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 						.getAttribute(
 								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 								request);
-				return mandatoryCheck(meetingDate, userLocale,
+				return mandatoryCheck(meetingDate, getUserContext(request),
 						isCenterHeirarchyExists);
 			} catch (PageExpiredException e) {
 				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
@@ -498,10 +497,10 @@ public class BulkEntryActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	private ActionErrors mandatoryCheck(Date meetingDate, Locale userLocale,
+	private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext,
 			short isCenterHeirarchyExists) {
 		ActionErrors errors = receiptDateValidate(new ActionErrors());
-		java.sql.Date currentDate = DateUtils.getLocaleDate(userLocale, DateUtils.getCurrentDate(userLocale));
+		java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		java.sql.Date trxnDate = null;
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
@@ -511,7 +510,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 		if (officeId == null || "".equals(officeId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
 					BulkEntryConstants.MANDATORYFIELDS, getLabel(
-							ConfigurationConstants.BRANCHOFFICE, userLocale)));
+							ConfigurationConstants.BRANCHOFFICE, userContext)));
 		}
 		if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
@@ -521,7 +520,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 		if (customerId == null || "".equals(customerId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
 					BulkEntryConstants.MANDATORYFIELDS, getLabel(customerLabel,
-							userLocale)));
+							userContext)));
 		}
 		if (paymentId == null || "".equals(paymentId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
@@ -552,27 +551,6 @@ public class BulkEntryActionForm extends BaseActionForm {
 		}
 		
 		return errors;
-	}
-
-	protected Locale getUserLocale(HttpServletRequest request) {
-		Locale locale = null;
-
-		UserContext userContext = (UserContext) request.getSession()
-				.getAttribute(LoginConstants.USERCONTEXT);
-		if (null != userContext) {
-			locale = userContext.getCurrentLocale();
-			
-		}
-
-		return locale;
-	}
-
-	private String getLabel(String key, Locale locale) {
-		try {
-			return MifosConfiguration.getInstance().getLabel(key, locale);
-		} catch (ConfigurationException e) {
-		}
-		return null;
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
 import org.mifos.application.ApplicationTestSuite;
+import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 
@@ -16,23 +17,27 @@ public class TestFieldConfigurationHelper extends MifosTestCase {
 	public void testGetConfiguredFieldName() throws Exception{
 		String fieldName=FieldConfigurationHelper.getConfiguredFieldName(
 			"Center.Address3",
-			TestUtils.ukLocale());
+			TestUtils
+			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
 		assertEquals("Village",fieldName);
 		fieldName=FieldConfigurationHelper.getConfiguredFieldName(
 			"Center.SomeField",
-			TestUtils.ukLocale());
+			TestUtils
+			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
 		assertEquals(null,fieldName);
 	}
 	
 	public void testGetLocalSpecificFieldNames() throws Exception{
 		String fieldName=FieldConfigurationHelper.getLocalSpecificFieldNames(
 			"Center.Address3",
-			TestUtils.ukLocale());
+			TestUtils
+			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
 		assertEquals("Village",fieldName);
 
 		fieldName=FieldConfigurationHelper.getLocalSpecificFieldNames(
 			"Center.SomeField",
-			TestUtils.ukLocale());
+			TestUtils
+			.makeUser(RolesAndPermissionConstants.ADMIN_ROLE));
 		assertEquals("Center.SomeField",fieldName);
 	}
 

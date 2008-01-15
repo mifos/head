@@ -14,6 +14,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -54,8 +55,7 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 		String method = request.getParameter(Methods.method.toString());
 		ActionErrors errors = new ActionErrors();
 		if (method.equals(Methods.load.toString())) {
-			checkValidationForLoad(errors, getUserContext(request)
-					.getPreferredLocale());
+			checkValidationForLoad(errors, getUserContext(request));
 		} else if (method.equals(Methods.preview.toString())) {
 			checkValidationForPreview(errors, getUserContext(request)
 					.getPreferredLocale());
@@ -67,11 +67,11 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	private void checkValidationForLoad(ActionErrors errors, Locale userLocale) {
+	private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
 		if (StringUtils.isNullOrEmpty(getSearchString())) {
 			addError(errors, "SearchString",
 					LoanConstants.ERROR_LOAN_ACCOUNT_ID, getLabel(
-							ConfigurationConstants.LOAN, userLocale));
+							ConfigurationConstants.LOAN, userContext));
 		}
 	}
 
@@ -86,12 +86,4 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 							.valueOf(LoanConstants.COMMENT_LENGTH));
 	}
 
-	private String getLabel(String key, Locale locale) {
-		try {
-			return MifosConfiguration.getInstance().getLabel(key, locale);
-		} catch (ConfigurationException e) {
-			return null;
-		}
-
-	}
 }

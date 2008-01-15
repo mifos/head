@@ -14,6 +14,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
@@ -47,8 +48,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 			if (loanBO != null) {
 				List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
 				list.addAll(loanBO.getAccountActionDates());
-				locale = ((UserContext) pageContext.getSession().getAttribute(
-						LoginConstants.USERCONTEXT)).getPreferredLocale();
+				UserContext userContext = (UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
+				locale = userContext.getPreferredLocale();
 				if (list != null && list.size() != 0) {
 					// topmost table
 					html.startTag("table", "width","100%","border","0","cellspacing","0","cellpadding","0");
@@ -68,11 +69,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					htmlHeader1.text(getLabel("loan.principal", locale));
 					htmlHeader1.endTag("td");
 					htmlHeader1.startTag("td", "width" ,"14%","align","right","class","drawtablerowbold");
-					htmlHeader1.text(MifosConfiguration
-							.getInstance()
-							.getLabel(
-									ConfigurationConstants.INTEREST,
-									locale));
+					htmlHeader1.text(MessageLookup.getInstance().lookupLabel(ConfigurationConstants.INTEREST,userContext));
 					htmlHeader1.endTag("td");
 					htmlHeader1.startTag("td", "width" ,"14%","align","right","class","drawtablerowbold");
 					htmlHeader1.text(getLabel("loan.fees", locale));
@@ -111,11 +108,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
 								locale));
 						htmlHeader2.endTag("td");
 						htmlHeader2.startTag("td", "width" ,"25%","align","right","class","drawtablerowbold");
-						htmlHeader2.text(MifosConfiguration
-								.getInstance()
-								.getLabel(
-										ConfigurationConstants.INTEREST,
-										locale));
+						htmlHeader2.text(MessageLookup.getInstance().lookupLabel(
+								ConfigurationConstants.INTEREST,userContext));
 						htmlHeader2.endTag("td");
 						htmlHeader2.startTag("td", "width" ,"25%","align","right","class","drawtablerowbold");
 						htmlHeader2.text(getLabel("loan.fees", locale));

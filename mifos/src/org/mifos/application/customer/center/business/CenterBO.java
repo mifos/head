@@ -21,6 +21,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.util.Address;
@@ -90,25 +91,19 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	protected void validateStatusChange(Short newStatusId)
-			throws CustomerException {
+	throws CustomerException {
 		logger.debug("In CenterBO::validateStatusChange(), customerId: " + getCustomerId());
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
 			if (isAnySavingsAccountOpen()) {
 				throw new CustomerException(
 						CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
 			}
-			try {
-				if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
-					throw new CustomerException(
-							CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-							new Object[] { MifosConfiguration.getInstance()
-									.getLabel(
-											ConfigurationConstants.GROUP,
-											this.getUserContext()
-													.getPreferredLocale()) });
-				}
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
+			if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {
+				throw new CustomerException(
+						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+						new Object[] { MessageLookup.getInstance().lookupLabel(
+								ConfigurationConstants.GROUP,
+								this.getUserContext()) });
 			}
 		} else if (newStatusId.equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
 			if (getPersonnel() == null

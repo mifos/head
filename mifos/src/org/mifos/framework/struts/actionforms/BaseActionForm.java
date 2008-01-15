@@ -14,6 +14,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -40,11 +41,11 @@ public class BaseActionForm extends ValidatorActionForm {
 			String propertyName=request.getParameter(fieldConfigurationEntity.getLabel());
 			if(propertyName!=null && !propertyName.equals("") ){
 				String propertyValue=request.getParameter(propertyName);
-				Locale locale=((UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT)).getPreferredLocale();
+				UserContext userContext=((UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT));
 				if(propertyValue==null || propertyValue.equals(""))
 					errors.add(fieldConfigurationEntity.getLabel(),
 							new ActionMessage(FieldConfigurationConstant.EXCEPTION_MANDATORY,
-									FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(),locale)));
+									FieldConfigurationHelper.getLocalSpecificFieldNames(fieldConfigurationEntity.getLabel(),userContext)));
 			}
 		}
 	}
@@ -152,13 +153,14 @@ public class BaseActionForm extends ValidatorActionForm {
 	}
 
 	protected String getLabel(String key, HttpServletRequest request) {
-		try {
-			return MifosConfiguration.getInstance().getLabel(key,
-					getUserContext(request).getPreferredLocale());
-		} catch (ConfigurationException e) {
-			return null;
-		}
+		return MessageLookup.getInstance().lookupLabel(key,
+				getUserContext(request));
 	}
+
+	protected String getLabel(String key, UserContext userContext) {
+		return MessageLookup.getInstance().lookupLabel(key, userContext);
+	}
+
 	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException
 	{
 		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());

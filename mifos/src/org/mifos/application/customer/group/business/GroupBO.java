@@ -60,6 +60,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -396,33 +397,24 @@ public class GroupBO extends CustomerBO {
 	}
 
 	private void checkGroupCanBeChangedFromCancelToPartialIfCenterIsActive()
-			throws CustomerException {
+	throws CustomerException {
 		if (!getParentCustomer().isActive()) {
-			try {
-				throw new CustomerException(
-						GroupConstants.CENTER_INACTIVE,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.CENTER,
-										getUserContext().getPreferredLocale()) });
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
-			}
+			throw new CustomerException(
+					GroupConstants.CENTER_INACTIVE,
+					new Object[] { MessageLookup.getInstance().lookupLabel(
+							ConfigurationConstants.CENTER,
+							getUserContext()) });
 		}
 	}
 
 	private void checkGroupCanBeChangedFromCancelToPartialIfOfficeIsActive()
-			throws CustomerException {
+	throws CustomerException {
 		try {
 			if (new OfficePersistence().isBranchInactive(getOffice().getOfficeId())) {
-				try {
-					throw new CustomerException(
-							GroupConstants.BRANCH_INACTIVE,
-							new Object[] { MifosConfiguration.getInstance()
-									.getLabel(ConfigurationConstants.GROUP,
-											getUserContext().getPreferredLocale()) });
-				} catch (ConfigurationException ce) {
-					throw new CustomerException(ce);
-				}
+				throw new CustomerException(
+						GroupConstants.BRANCH_INACTIVE,
+						new Object[] { MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
+								getUserContext()) });
 			}
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
@@ -430,19 +422,15 @@ public class GroupBO extends CustomerBO {
 	}
 
 	private void checkGroupCanBeChangedFromCancelToPartialIfPersonnelActive()
-			throws CustomerException {
+	throws CustomerException {
 		try {
 			if (new OfficePersistence()
-					.hasActivePeronnel(getOffice().getOfficeId())) {
-				try {
-					throw new CustomerException(
-							GroupConstants.LOANOFFICER_INACTIVE,
-							new Object[] { MifosConfiguration.getInstance()
-									.getLabel(ConfigurationConstants.BRANCHOFFICE,
-											getUserContext().getPreferredLocale()) });
-				} catch (ConfigurationException ce) {
-					throw new CustomerException(ce);
-				}
+			.hasActivePeronnel(getOffice().getOfficeId())) {
+				throw new CustomerException(
+						GroupConstants.LOANOFFICER_INACTIVE,
+						new Object[] { MessageLookup.getInstance().lookupLabel(
+								ConfigurationConstants.BRANCHOFFICE,
+								getUserContext()) });
 			}
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
@@ -454,19 +442,13 @@ public class GroupBO extends CustomerBO {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
-		try {
-			if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
-					.size() > 0)
-				throw new CustomerException(
-						CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(
-										ConfigurationConstants.CLIENT,
-										this.getUserContext()
-												.getPreferredLocale()) });
-		} catch (ConfigurationException ce) {
-			throw new CustomerException(ce);
-		}
+		if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
+				.size() > 0)
+			throw new CustomerException(
+					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION,
+					new Object[] { MessageLookup.getInstance().lookupLabel(
+							ConfigurationConstants.CLIENT,
+							this.getUserContext()) });
 	}
 
 	private String generateSearchId() throws CustomerException {

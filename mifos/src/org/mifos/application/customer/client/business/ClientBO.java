@@ -29,6 +29,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -546,17 +547,12 @@ public class ClientBO extends CustomerBO {
 	
 	private void validateForActiveAccounts() throws CustomerException {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
-			MifosConfiguration labelConfig = MifosConfiguration.getInstance();
-			try {
-				throw new CustomerException(
+			throw new CustomerException(
 					ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, 
 					new Object[] { 
-						labelConfig.getLabel(
-							ConfigurationConstants.GROUP, 
-							userContext.getPreferredLocale()) });
-			} catch (ConfigurationException ce) {
-				new CustomerException(ce);
-			}
+							MessageLookup.getInstance().lookupLabel(
+									ConfigurationConstants.GROUP, 
+									userContext) });
 		}
 	}
 
@@ -598,17 +594,13 @@ public class ClientBO extends CustomerBO {
 			throws CustomerException {
 		if (isGroupStatusLower(getStatus(), groupStatus)) {
 			MifosConfiguration labelConfig = MifosConfiguration.getInstance();
-			try {
 				throw new CustomerException(
 					ClientConstants.ERRORS_LOWER_GROUP_STATUS, 
 					new Object[] {
-						labelConfig.getLabel(ConfigurationConstants.GROUP,
-								userContext.getPreferredLocale()),
-						labelConfig.getLabel(ConfigurationConstants.CLIENT,
-								userContext.getPreferredLocale()) });
-			} catch (ConfigurationException ce) {
-				new CustomerException(ce);
-			}
+							MessageLookup.getInstance().lookupLabel(ConfigurationConstants.GROUP,
+								userContext),
+							MessageLookup.getInstance().lookupLabel(ConfigurationConstants.CLIENT,
+								userContext) });
 		}
 		if (groupStatus.equals(CustomerStatus.GROUP_CANCELLED)
 				|| groupStatus.equals(CustomerStatus.GROUP_CLOSED))
@@ -667,9 +659,9 @@ public class ClientBO extends CustomerBO {
 				if (clientPersistence.checkForDuplicacyOnGovtId(governmentId,
 						customerId) == true) {
 					String label = 
-						MifosConfiguration.getInstance().getLabel(
+						MessageLookup.getInstance().lookupLabel(
 							ConfigurationConstants.GOVERNMENT_ID,
-							userContext.getPreferredLocale());
+							userContext);
 					throw new CustomerException(
 							CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION,
 							new Object[] {
@@ -677,8 +669,6 @@ public class ClientBO extends CustomerBO {
 								label
 							});
 				}
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
@@ -723,31 +713,24 @@ public class ClientBO extends CustomerBO {
 		if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
 				&& this.isClientUnderGroup()) {
-			try {
-					if(groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
-						throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] {
-								MifosConfiguration.getInstance().getLabel(
+			if(groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
+				throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] {
+						MessageLookup.getInstance().lookupLabel(
+								ConfigurationConstants.GROUP,
+								this.getUserContext())});
+
+			if (isGroupStatusLower(clientStatusId, groupStatus)) {
+
+				throw new CustomerException(
+						ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
+						new Object[] {
+								MessageLookup.getInstance().lookupLabel(
 										ConfigurationConstants.GROUP,
-										this.getUserContext()
-												.getPreferredLocale())});
-					
-					if (isGroupStatusLower(clientStatusId, groupStatus)) {
-						
-							throw new CustomerException(
-									ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
-									new Object[] {
-											MifosConfiguration.getInstance().getLabel(
-													ConfigurationConstants.GROUP,
-													this.getUserContext()
-															.getPreferredLocale()),
-											MifosConfiguration.getInstance().getLabel(
-													ConfigurationConstants.CLIENT,
-													this.getUserContext()
-															.getPreferredLocale()) });
-					}
-				} catch (ConfigurationException ce) {
-					throw new CustomerException(ce);
-				}			
+										this.getUserContext()),
+								MessageLookup.getInstance().lookupLabel(
+										ConfigurationConstants.CLIENT,
+										this.getUserContext()) });
+			}
 		}
 	}
 
@@ -779,28 +762,18 @@ public class ClientBO extends CustomerBO {
 			throw new CustomerException(e);
 		}
 		if (loanOfficerActive == false) {
-			try {
-				throw new CustomerException(
-						CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.BRANCHOFFICE,
-										getUserContext().getPreferredLocale()) });
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
-			}
-
+			throw new CustomerException(
+					CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
+					new Object[] { MessageLookup.getInstance().lookupLabel(
+							ConfigurationConstants.BRANCHOFFICE,
+							getUserContext()) });
 		}
 		if (branchInactive == true) {
-			try {
-				throw new CustomerException(
-						CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.BRANCHOFFICE,
-										getUserContext().getPreferredLocale()) });
-			} catch (ConfigurationException ce) {
-				throw new CustomerException(ce);
-			}
-
+			throw new CustomerException(
+					CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
+					new Object[] { MessageLookup.getInstance().lookupLabel(
+							ConfigurationConstants.BRANCHOFFICE,
+							getUserContext()) });
 		}
 	}
 

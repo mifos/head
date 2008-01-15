@@ -6,13 +6,15 @@ import java.util.PropertyResourceBundle;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.framework.security.util.UserContext;
 
 public class FieldConfigurationHelper {
 
 	public static String getLocalSpecificFieldNames(String fieldName,
-			Locale locale) {
+			UserContext userContext) {
 		try {
-			String configuredLabel = getConfiguredFieldName(fieldName, locale);
+			String configuredLabel = getConfiguredFieldName(fieldName, userContext);
 			if (configuredLabel != null) {
 				return configuredLabel;
 			}
@@ -20,7 +22,7 @@ public class FieldConfigurationHelper {
 				(PropertyResourceBundle) PropertyResourceBundle
 					.getBundle(
 							FieldConfigurationConstant.FIELD_CONF_PROPERTYFILE,
-							locale);
+							userContext.getPreferredLocale());
 			return propertyString.getString(fieldName);
 		}
 		catch (MissingResourceException e) {
@@ -35,11 +37,11 @@ public class FieldConfigurationHelper {
 		}
 	}
 
-	public static String getConfiguredFieldName(String fieldName, Locale locale) {
+	public static String getConfiguredFieldName(String fieldName, UserContext userContext) {
 		try {
 			String labelName = fieldName.substring(fieldName.indexOf(".") + 1);
 			labelName = MifosConfiguration.getInstance().getLabel(labelName,
-					locale);
+					userContext.getPreferredLocale());
 			if (labelName != null) {
 				return labelName;
 			}
@@ -51,5 +53,6 @@ public class FieldConfigurationHelper {
 			throw new RuntimeException(e);
 		}
 	}
+	
 
 }

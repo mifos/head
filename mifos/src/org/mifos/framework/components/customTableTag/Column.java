@@ -9,6 +9,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -187,30 +188,23 @@ public class Column {
 			String bundle) throws JspException {
 
 		UserContext userContext = (UserContext) pageContext.getSession()
-				.getAttribute(Constants.USER_CONTEXT_KEY);
+			.getAttribute(Constants.USER_CONTEXT_KEY);
 		LabelTagUtils labelTagUtils = LabelTagUtils.getInstance();
-		String labelText = null;
-		try {
-			labelText = labelConfig.getLabel(key, userContext
-					.getPreferredLocale());
-		} catch (ConfigurationException e) {
-			// ignore
+		String labelText = MessageLookup.getInstance().lookupLabel(key, userContext);
 
-		}
-		
-			if (labelText == null)try {
-				labelText = labelTagUtils.getLabel(pageContext, bundle,
-						userContext.getPreferredLocale(), key, null);
+		if (labelText == null)try {
+			labelText = labelTagUtils.getLabel(pageContext, bundle,
+					userContext.getPreferredLocale(), key, null);
 		} catch (Exception e) {
 		}
-		
-			if (labelText == null)try {
-				char[] charArray = bundle.toCharArray();
-				charArray[0] = Character.toUpperCase(charArray[0]);
-				bundle = new String(charArray);
-				labelText = labelTagUtils.getLabel(pageContext, bundle,
-						userContext.getPreferredLocale(), key, null);
-			
+
+		if (labelText == null)try {
+			char[] charArray = bundle.toCharArray();
+			charArray[0] = Character.toUpperCase(charArray[0]);
+			bundle = new String(charArray);
+			labelText = labelTagUtils.getLabel(pageContext, bundle,
+					userContext.getPreferredLocale(), key, null);
+
 		} catch (Exception e) {
 			labelText = key;
 

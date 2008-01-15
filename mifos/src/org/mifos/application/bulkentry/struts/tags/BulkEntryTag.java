@@ -116,30 +116,23 @@ public class BulkEntryTag extends BodyTagSupport {
 				savingsProducts));
 		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
 		Double[] totals = null;
-		Locale locale = getCurrentLocale(pageContext);
+		UserContext userContext = ((UserContext) pageContext.getSession()
+				.getAttribute(Constants.USERCONTEXT));
 		boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
 		if (centerHierachyExists) {
 			totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView,
 					loanProducts, savingsProducts, custAttTypes, builder,
-					method, locale, bulkEntry.getOffice().getOfficeId());
+					method, userContext, bulkEntry.getOffice().getOfficeId());
 		} else {
 			totals = bulkEntryDisplayHelper.buildForGroup(bulkEntryParentView,
 					loanProducts, savingsProducts, custAttTypes, builder,
-					method, locale, bulkEntry.getOffice().getOfficeId());
+					method, userContext, bulkEntry.getOffice().getOfficeId());
 
 		}
 		int columnSize = (2 * (loanProducts.size() + savingsProducts.size())) + 7;
 		builder.append(bulkEntryDisplayHelper.getEndTable(columnSize));
 		builder.append(bulkEntryDisplayHelper.buildTotals(totals, loanProducts
 				.size(), savingsProducts.size(), method));
-	}
-
-	private static Locale getCurrentLocale(PageContext pageContext) {
-		UserContext userContext = ((UserContext) pageContext.getSession()
-				.getAttribute(Constants.USERCONTEXT));
-		
-		Locale preferredLocale = userContext.getCurrentLocale();
-		return preferredLocale;
 	}
 
 }

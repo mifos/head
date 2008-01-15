@@ -60,6 +60,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -221,9 +222,8 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			if (method.equals(Methods.get.toString())) {
 				request.setAttribute(Constants.CURRENTFLOWKEY, request
 						.getParameter(Constants.CURRENTFLOWKEY));
-				checkValidationForLoad(errors, getUserContext(request)
-						.getPreferredLocale(), (Short) SessionUtils
-						.getAttribute(
+				checkValidationForLoad(errors, getUserContext(request), 
+						(Short) SessionUtils.getAttribute(
 								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 								request));
 			} else if (method.equals(Methods.create.toString())) {
@@ -231,20 +231,17 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 						.getParameter(Constants.CURRENTFLOWKEY));
 				checkValidationForCreate(errors, request);
 			} else if (method.equals(Methods.getLoanOfficers.toString())) {
-				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPreferredLocale());
+				checkValidationForBranchOffice(errors, getUserContext(request));
 			} else if (method.equals(Methods.getCenters.toString())) {
-				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPreferredLocale());
+				checkValidationForBranchOffice(errors, getUserContext(request));
 				checkValidationForLoanOfficer(errors);
 			} else if (method.equals(Methods.getPrdOfferings.toString())) {
 				request.setAttribute(Constants.CURRENTFLOWKEY, request
 						.getParameter(Constants.CURRENTFLOWKEY));
-				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPreferredLocale());
+				checkValidationForBranchOffice(errors, getUserContext(request));
 				checkValidationForLoanOfficer(errors);
-				checkValidationForCenter(errors, getUserContext(request)
-						.getPreferredLocale(), (Short) SessionUtils
+				checkValidationForCenter(errors, getUserContext(request),
+						(Short) SessionUtils
 						.getAttribute(
 								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 								request));
@@ -287,27 +284,27 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			addError(errors, LoanConstants.APPL_RECORDS,
 					LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
 							ConfigurationConstants.CLIENT, getUserContext(
-									request).getPreferredLocale()));
+									request)));
 		}
 		logger.debug("outside checkValidationForCreate method");
 	}
 
-	private void checkValidationForLoad(ActionErrors errors, Locale userLocale,
+	private void checkValidationForLoad(ActionErrors errors, UserContext userContext,
 			short isCenterHeirarchyExists) {
 		logger.debug("Inside checkValidationForLoad method");
-		checkValidationForBranchOffice(errors, userLocale);
+		checkValidationForBranchOffice(errors, userContext);
 		checkValidationForLoanOfficer(errors);
-		checkValidationForCenter(errors, userLocale, isCenterHeirarchyExists);
-		checkValidationForPrdOfferingId(errors, userLocale);
+		checkValidationForCenter(errors, userContext, isCenterHeirarchyExists);
+		checkValidationForPrdOfferingId(errors, userContext);
 		logger.debug("outside checkValidationForLoad method");
 	}
 
 	private void checkValidationForBranchOffice(ActionErrors errors,
-			Locale userLocale) {
+			UserContext userContext) {
 		if (StringUtils.isNullOrEmpty(branchOfficeId)) {
 			addError(errors, ConfigurationConstants.BRANCHOFFICE,
 					LoanConstants.MANDATORY_SELECT, getLabel(
-							ConfigurationConstants.BRANCHOFFICE, userLocale));
+							ConfigurationConstants.BRANCHOFFICE, userContext));
 		}
 	}
 
@@ -319,33 +316,24 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 	}
 
 	private void checkValidationForCenter(ActionErrors errors,
-			Locale userLocale, short isCenterHeirarchyExists) {
+			UserContext userContext, short isCenterHeirarchyExists) {
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
 		if (StringUtils.isNullOrEmpty(centerId)) {
 			addError(errors, ConfigurationConstants.CENTER,
 					LoanConstants.MANDATORY_SELECT, getLabel(customerLabel,
-							userLocale));
+							userContext));
 		}
 	}
 
 	private void checkValidationForPrdOfferingId(ActionErrors errors,
-			Locale userLocale) {
+			UserContext userContext) {
 		if (StringUtils.isNullOrEmpty(prdOfferingId)) {
 			addError(errors, LoanConstants.PRDOFFERINGID,
 					LoanConstants.LOANOFFERINGNOTSELECTEDERROR, getLabel(
-							ConfigurationConstants.LOAN, userLocale),
+							ConfigurationConstants.LOAN, userContext),
 					LoanConstants.INSTANCENAME);
 		}
-	}
-
-	private String getLabel(String key, Locale locale) {
-		try {
-			return MifosConfiguration.getInstance().getLabel(key, locale);
-		} catch (ConfigurationException e) {
-			return null;
-		}
-
 	}
 
 }
