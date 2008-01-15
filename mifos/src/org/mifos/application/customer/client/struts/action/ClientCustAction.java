@@ -920,13 +920,12 @@ public class ClientCustAction extends CustAction {
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
 		setLocaleIdToLoanStatus(individualLoanAccounts, localeId);
-			
+		//		 add individualLoanAccounts to loanAccounts
+		for (int i=0; i < individualLoanAccounts.size(); i++)
+			loanAccounts.add(individualLoanAccounts.get(i));	
 		SessionUtils.setCollectionAttribute(
 				ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts,
 				request);		
-		SessionUtils.setCollectionAttribute(
-				ClientConstants.CUSTOMERLOANACCOUNTSINUSE, individualLoanAccounts,
-				request);
 		SessionUtils.setCollectionAttribute(
 				ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, savingsAccounts,
 				request);
