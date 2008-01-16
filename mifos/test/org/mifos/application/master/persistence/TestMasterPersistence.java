@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -103,7 +103,7 @@ public class TestMasterPersistence extends MifosTestCase {
 	public void testRetrieveMasterEntities() throws NumberFormatException,
 			PersistenceException {
 		MasterPersistence masterPersistence = new MasterPersistence();
-		List<BusinessActivityEntity> masterEntity = masterPersistence
+		List<ValueListElement> masterEntity = masterPersistence
 				.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, Short
 						.valueOf("1"));
 		assertEquals(129, masterEntity.size());
@@ -176,10 +176,10 @@ public class TestMasterPersistence extends MifosTestCase {
 	private boolean foundStringInCustomValueList(MasterPersistence masterPersistence, 
 			String CustomValueListName, String searchString, short localId) 
 			throws PersistenceException {
-		List<BusinessActivityEntity> salutations = 
+		List<ValueListElement> salutations = 
 			masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
 		boolean foundString = false;
-		for (BusinessActivityEntity entity : salutations) {
+		for (ValueListElement entity : salutations) {
 			if (entity.getName().compareTo(searchString)== 0) {
 				foundString = true;
 			}
@@ -190,10 +190,10 @@ public class TestMasterPersistence extends MifosTestCase {
 	private Integer findValueListElementId(MasterPersistence masterPersistence, 
 			String CustomValueListName, String searchString, short localId) 
 			throws PersistenceException {
-		List<BusinessActivityEntity> salutations = 
+		List<ValueListElement> salutations = 
 			masterPersistence.retrieveMasterEntities(CustomValueListName, localId);
 		Integer elementId = null;
-		for (BusinessActivityEntity entity : salutations) {
+		for (ValueListElement entity : salutations) {
 			if (entity.getName().compareTo(searchString)== 0) {
 				elementId = entity.getId();
 			}
@@ -232,8 +232,8 @@ public class TestMasterPersistence extends MifosTestCase {
 	public void testUpdateValueListElement() throws Exception {
 		// get a CustomValueListElement (as a BusinessActivityEntity)
 		MasterPersistence masterPersistence = new MasterPersistence();
-		List<BusinessActivityEntity> salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
-		BusinessActivityEntity first = salutations.get(0);
+		List<ValueListElement> salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
+		ValueListElement first = salutations.get(0);
 		Integer id = first.getId();
 		String originalName = first.getName();
 		
@@ -249,7 +249,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		// and verify that it has the new value
 		salutations.clear();
 		salutations = masterPersistence.retrieveMasterEntities(MasterConstants.SALUTATION, DEFAULT_LOCALE);
-		for (BusinessActivityEntity entity : salutations) {
+		for (ValueListElement entity : salutations) {
 			if (entity.getId() == id) {
 				assertEquals(entity.getName(), UPDATED_NAME);
 			}

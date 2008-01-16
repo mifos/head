@@ -3,6 +3,9 @@ package org.mifos.framework.struts.tags;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.PropertyMessageResourcesFactory;
 
+/*
+ * This is used in the struts-config.xml files.
+ */
 public class MifosPropertyMessageResourcesFactory extends PropertyMessageResourcesFactory{
     
    

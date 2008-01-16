@@ -73,19 +73,35 @@ public class MifosConfiguration {
 			}
 		}
 		
-		
-		List<LookUpValueEntity> values = configurationPersistence.getLookupValues();
-		for (LookUpValueEntity value : values) {
-			Set<LookUpValueLocaleEntity> localeValues = value
+/*		
+ * Jan 16, 2008 This code block appears to be unused.  Commenting it out
+ * with the plan to remove it as long as no problems result from its removal
+ *  
+		List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
+		for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
+			Set<LookUpValueLocaleEntity> localeValues = lookupValueEntity
 					.getLookUpValueLocales();
 			for (LookUpValueLocaleEntity locale : localeValues) {
-				String keyString = value.getLookUpName();
+				String keyString = lookupValueEntity.getLookUpName();
 				if (keyString == null) keyString = " ";
-				labelCache.put(new LabelKey( keyString,locale.getLocaleId()), locale.getLookUpValue());
-
+				
+				String lookUpValue = locale.getLookUpValue();
+				
+				// if there is no lookupvalue text associated with the lookupvalue
+				// then use the default localized text from a resource bundle
+				// this should be encapsulated in one place
+				if (lookUpValue == null || 
+						(lookUpValue != null && lookUpValue.length() == 0)) {
+					String key = keyString + "." + locale.getLookUpId();
+					String localizedValue = MessageLookup.getInstance().lookup(key);
+					lookUpValue = localizedValue;
+				}
+				
+				labelCache.put(new LabelKey( keyString,locale.getLocaleId()), lookUpValue);
 			}
-		
+	
 		}
+*/
 	}
 
 	

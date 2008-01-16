@@ -22,6 +22,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -125,8 +126,27 @@ public class MasterPersistence extends Persistence {
 						+ " and lookup.lookUpId = lookupvalue.lookUpId"
 						+ " and lookupvalue.localeId = ?");
 		queryEntity.setString(0, entityName);
-		queryEntity.setShort(1, localeId);
+		
+		// Jan 16, 2008 work in progress
+		// all override or custom values are now stored in locale 1
+		// queryEntity.setShort(1, localeId);
+		queryEntity.setShort(1, (short)1);
 		List<CustomValueListElement> entityList = queryEntity.list();
+		
+		/*
+		 * Now go through the list and if there is no text value for the element
+		 * then use the default localized value.
+		 */
+		
+		for (CustomValueListElement valueListElement : entityList) {
+			String lookupValue = valueListElement.getLookUpValue();
+			if (lookupValue == null || 
+				(lookupValue != null && lookupValue.length() == 0)) {
+				String key = entityName + "." + valueListElement.getLookUpId();
+				String localizedValue = MessageLookup.getInstance().lookup(key);
+				valueListElement.setLookupValue(localizedValue);
+			}
+		}
 		return entityList;
 	}
 
@@ -220,14 +240,25 @@ public class MasterPersistence extends Persistence {
 	/**
 	 * This method is used to retrieve both custom and fixed value list elements.
 	 */
-	public List<BusinessActivityEntity> retrieveMasterEntities(
+	public List<ValueListElement> retrieveMasterEntities(
 			String entityName, Short localeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("entityType", entityName);
 		queryParameters.put("localeId", localeId);
-		return executeNamedQuery(
+		List<ValueListElement> elements = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
 				queryParameters);
+		for (ValueListElement valueListElement : elements) {
+			String name = valueListElement.getName();
+			if (name == null || 
+				(name != null && name.length() == 0)) {
+				String key = entityName + "." + valueListElement.getValueKey();
+				String localizedValue = MessageLookup.getInstance().lookup(key);
+				valueListElement.setName(localizedValue);
+			}
+		}
+		return elements;
+
 	}
 
 	public String retrieveMasterEntities(Integer entityId, Short localeId)

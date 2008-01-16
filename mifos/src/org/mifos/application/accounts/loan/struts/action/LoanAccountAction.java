@@ -60,6 +60,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -274,7 +275,7 @@ public class LoanAccountAction extends AccountAppAction {
 				List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
 						"BusinessActivities", request);
 				
-				for (BusinessActivityEntity busact : businessActEntity) {
+				for (ValueListElement busact : businessActEntity) {
 
 						if (busact.getId().toString().equals(
 								individualLoan.getBusinessActivityId()
@@ -824,7 +825,7 @@ public class LoanAccountAction extends AccountAppAction {
 									"BusinessActivities", request);
 					
 						String businessActName=null;
-						for(BusinessActivityEntity busact:businessActEntity){
+						for(ValueListElement busact:businessActEntity){
 							
 							
 							if(busact.getId().toString().equals(account
@@ -1133,7 +1134,7 @@ public class LoanAccountAction extends AccountAppAction {
 							"BusinessActivities", request);
 						
 					
-					for(BusinessActivityEntity busact:businessActEntity){
+					for(ValueListElement busact:businessActEntity){
 						
 						if(busact.getId().toString().equals(account.getBusinessActivity()))
 						{

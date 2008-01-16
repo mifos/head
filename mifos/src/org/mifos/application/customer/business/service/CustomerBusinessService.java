@@ -63,6 +63,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -417,7 +418,7 @@ public class CustomerBusinessService extends BusinessService {
 		}
 	}
 
-	public List<BusinessActivityEntity> retrieveMasterEntities(
+	public List<ValueListElement> retrieveMasterEntities(
 			String entityName, Short localeId) throws ServiceException {
 		try {
 			return new MasterPersistence().retrieveMasterEntities(entityName,

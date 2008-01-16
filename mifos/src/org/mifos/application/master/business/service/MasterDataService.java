@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -156,7 +156,7 @@ public class MasterDataService extends BusinessService {
 		}
 	}
 
-	public List<BusinessActivityEntity> retrieveMasterEntities(
+	public List<ValueListElement> retrieveMasterEntities(
 			String entityName, Short localeId) throws ServiceException {
 		try {
 			return new MasterPersistence().retrieveMasterEntities(entityName,

@@ -29,7 +29,7 @@
     </query>
  	 <query name="masterdata.mifosEntityValue">
     	   <![CDATA[select new org.mifos.application.master.business.BusinessActivityEntity
-    	   (locale.lookUpId ,locale.lookUpValue)
+    	   (locale.lookUpId ,locale.lookUpValue, value.lookUpName)
     	    from org.mifos.application.master.business.MifosLookUpEntity entity, 
     	    org.mifos.application.master.business.LookUpValueEntity value,
     	    org.mifos.application.master.business.LookUpValueLocaleEntity locale

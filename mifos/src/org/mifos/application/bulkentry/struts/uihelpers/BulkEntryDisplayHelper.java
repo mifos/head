@@ -416,8 +416,8 @@ public class BulkEntryDisplayHelper {
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
-				builder.append("<option value=\"" + attendence.getId() + "\"");
-                if (bulkEntryView.getAttendence() != null && (attendence.getId().intValue()== bulkEntryView.getAttendence().intValue()))
+				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
+                if (bulkEntryView.getAttendence() != null && (attendence.getAssociatedId().intValue()== bulkEntryView.getAttendence().intValue()))
                 {
                     builder.append(" selected=\"selected\"");
                 }
@@ -430,7 +430,7 @@ public class BulkEntryDisplayHelper {
 			for (CustomValueListElement attendence : custAttTypes) {
 
 				if (null != bulkEntryView.getAttendence()
-						&& attendence.getId().equals(
+						&& attendence.getAssociatedId().equals(
 								Integer.valueOf(bulkEntryView.getAttendence()))) {
 					if (!bulkEntryView.getAttendence().toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
@@ -448,9 +448,9 @@ public class BulkEntryDisplayHelper {
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
-				builder.append("<option value=\"" + attendence.getId() + "\"");
+				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
 				if (null != bulkEntryView.getAttendence()
-						&& attendence.getId().equals(
+						&& attendence.getAssociatedId().equals(
 								Integer.valueOf(bulkEntryView.getAttendence()))) {
 					builder.append(" selected ");
 				}

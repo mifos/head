@@ -38,7 +38,6 @@
 package org.mifos.framework.components.audit.util.helpers;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,15 +47,13 @@ import java.util.PropertyResourceBundle;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.Localization;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.config.Localization;
 
 public class AuditConfigurtion {
 
@@ -299,9 +296,9 @@ public class AuditConfigurtion {
 	private void fetchMasterData(String entityName, Short localeId)
 			throws SystemException {
 		try {
-			List<BusinessActivityEntity> businessActivityList = masterPersistence
+			List<ValueListElement> businessActivityList = masterPersistence
 					.retrieveMasterEntities(entityName, localeId);
-			for (BusinessActivityEntity businessActivityEntity : businessActivityList) {
+			for (ValueListElement businessActivityEntity : businessActivityList) {
 				valueMap.put(businessActivityEntity.getId().toString(),
 						businessActivityEntity.getName());
 			}

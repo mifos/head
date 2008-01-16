@@ -1,5 +1,7 @@
 package org.mifos.application.master.business;
 
+import java.io.Serializable;
+
 import org.mifos.framework.business.View;
 
 /**
@@ -12,14 +14,14 @@ import org.mifos.framework.business.View;
  * 
  * A better name for this class might be ValueListElementForLocale.
  */
-public class CustomValueListElement extends View {
+public class CustomValueListElement extends View implements Serializable {
 
 	/**
 	 * The id of an associated object linked to this list element.
 	 * This only appears to be used with {@link CustomerAttendence} for use
 	 * related to bulk entry.  
 	 */
-	private Integer id;
+	private Integer associatedId;
 
 	/**
 	 * The id of the {@link LookUpValueEntity} corresponding to this value list element
@@ -48,7 +50,7 @@ public class CustomValueListElement extends View {
 
 		this.lookUpId = lookUpId;
 		this.lookUpValue = lookUpValue;
-		this.id = id.intValue();
+		this.associatedId = id.intValue();
 	}
 
 	/**
@@ -59,15 +61,15 @@ public class CustomValueListElement extends View {
 
 		this.lookUpId = lookUpId;
 		this.lookUpValue = lookUpValue;
-		this.id = id;
+		this.associatedId = id;
 	}
 
 	/**
 	 * This method is used in some places, but it is unclear if the id value 
 	 * is ever set.
 	 */
-	public java.lang.Integer getId() {
-		return id;
+	public java.lang.Integer getAssociatedId() {
+		return associatedId;
 	}
 
 	public java.lang.Integer getLookUpId() {
@@ -80,5 +82,21 @@ public class CustomValueListElement extends View {
 
 	public void setLookupValue(String newValue) {
 		lookUpValue = newValue;
+	}
+
+	public String getName() {
+		return lookUpValue;
+	}
+	
+	public Integer getId() {
+		return lookUpId;
+	}
+
+	public void setId(Integer id) {
+		lookUpId = id;
+	}
+
+	public void setName(String name) {
+		lookUpValue = name;
 	}
 }
