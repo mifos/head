@@ -440,7 +440,9 @@ public interface SecurityConstants {
     
     //Limiting product combination
     public final short PRODUCT_MIX = 209;
+    
     public final short CAN_DEFINE_PRODUCT_MIX = 210;
+    
     public final short CAN_EDIT_PRODUCT_MIX = 211;
     
 	public final short CAN_VIEW_ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
@@ -464,7 +466,13 @@ public interface SecurityConstants {
 	public final short VIEW_REPORT_CATEGORY = 221;
 	
 	public final short DELETE_REPORT_CATEGORY = 222;
+	
 	public final short DOWNLOAD_REPORT_TEMPLATE = 223;
+	
 	public final short CAN_DEFINE_CUSTOM_FIELD = 224;
+	
+	public final short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
+	
+	public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
 	
 }

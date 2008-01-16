@@ -110,6 +110,10 @@ public interface ProductDefinitionConstants {
 	public String PRODUCTTYPELIST="ProductTypeList";
 	public String PRODUCTINSTANCELIST="ProductInstanceList";
 	public String ALLOWEDPRODUCTLIST="AllowedProductList";
+	public String SELECTEDACCOUNTSTATUS="SelectedAccountStatus";
+	public String NOTSELECTEDACCOUNTSTATUS="NotSelectedAccountStatus";
+	public String STATUS_LIST="statusList";
+		
 	public String NOTALLOWEDPRODUCTLIST="NotAllowedProductList";
 	public String OLDNOTALLOWEDPRODUCTLIST="OldNotAllowedProductList";
 	

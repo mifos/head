@@ -197,6 +197,7 @@ public interface LoanConstants {
 	static final String REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED="repaymentSchedulesIndependentOfMeetingIsEnabled";
 	static final String MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY="minDaysBetweenDisbursalAndFirstRepaymentDay";
 	static final String MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY="maxDaysBetweenDisbursalAndFirstRepaymentDay";
+	static final String ADMINISTRATIVE_DOCUMENT_IS_ENABLED="AdministrativeDocumentsIsEnabled";
 	public static final String MIN_RANGE_IS_NOT_MET="errors.minrangeisnotmet";
 	public static final String MAX_RANGE_IS_NOT_MET="errors.maxrangeisnotmet";
 	

@@ -35,6 +35,11 @@
  
  -->
 
+<%@ page
+	import="org.mifos.framework.components.configuration.persistence.ConfigurationPersistence"%>
+<%@ page
+	import="org.mifos.application.accounts.loan.util.helpers.LoanConstants"%>
+
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -47,6 +52,10 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
+<%
+boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger(LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED) == 1);
+%>
+     	
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/loanAccountAction.do">
@@ -59,8 +68,8 @@
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"
 				var="loanIndividualMonitoringIsEnabled" />
-			<c:set 
-				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" 
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}"
 				var="loanaccountownerisagroup" />
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerId')}"
@@ -150,6 +159,7 @@
 							</html-el:link></td>
 						</tr>
 					</table>
+
 					<c:if
 						test="${BusinessKey.accountState.id == 5 || BusinessKey.accountState.id == 9}">
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
@@ -370,8 +380,7 @@
 								</tr>
 							</table>
 						</c:if>
-					</c:if> 
-					<!--  -->
+					</c:if> <!--  -->
 
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr id="collateral">
@@ -397,6 +406,47 @@
 								document.getElementById("Loan.CollateralNotes").style.display=="none")
 									document.getElementById("collateral").style.display="none";
 						</script>
+						
+									
+					<!-- Administrative documents -->
+	              	<%
+					 if(isDisplay) {
+				    %>
+	   				<tr>
+						<td class="fontnormal"><br>
+						 <span class="fontnormalbold"> 
+						<mifos:mifoslabel
+							name="reports.administrativedocuments" /> 
+							<br></span>
+						<c:forEach var="adminDoc"
+							items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'administrativeDocumentsList')}">
+
+								<c:forEach var="adminDocMixed" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'administrativeDocumentsAccStateMixList')}">
+											<c:if test="${adminDocMixed.adminDocumentID.admindocId==adminDoc.admindocId}">
+												<c:if test="${adminDocMixed.accountStateID.id==BusinessKey.accountState.id}">
+												<span class="fontnormal"> 
+									  <html-el:link
+										href="reportsUserParamsAction.do?method=loadAdminReport&admindocId=${adminDoc.admindocId}&globalAccountNum=${BusinessKey.globalAccountNum}">
+										 <c:out value="${adminDoc.adminDocumentName}" />
+								      </html-el:link>
+								  				</span>
+												<br>
+												</c:if>
+											</c:if>
+								</c:forEach>
+
+						</c:forEach>
+						</td>
+
+					</tr>
+			            			               		              	
+	              	<%
+	              	}
+	              	%>  
+	         						
+
+
+
 						<tr>
 							<td class="fontnormal"><br>
 							<c:if

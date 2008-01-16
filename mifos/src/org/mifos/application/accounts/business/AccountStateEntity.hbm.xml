@@ -18,6 +18,8 @@
 			<key column="STATUS_ID" />
 			<one-to-many class="org.mifos.application.accounts.business.AccountStateFlagEntity" />
 		</set>
+		<property name="description" column="STATUS_DESCRIPTION" type="java.lang.String" />
+	
 	</class>
 
 	<!--Gets all possible states-->
@@ -25,6 +27,7 @@
 		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
     	where  accountStateEntity.prdType.productTypeID = :prdTypeId]]>
 	</query>
+
 	<query name="accounts.getStates">
 		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity where accountStateEntity.optional=:OPTIONAL_FLAG]]>
 	</query>

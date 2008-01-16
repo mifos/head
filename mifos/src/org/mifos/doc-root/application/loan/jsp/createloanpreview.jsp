@@ -253,6 +253,8 @@
 										</tr>
 										<!-- Loan Account Details -->
 
+xx:<c:out value="${loanIndividualMonitoringIsEnabled}" />
+yy:<c:out value="${loanaccountownerisagroup}" />
 
 								 <c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
 									<c:if test="${loanaccountownerisagroup == 'yes'}">

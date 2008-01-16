@@ -1,6 +1,6 @@
 /**
 
- * TestReportsAction.java    version: 1.0
+ * ReportsContants.java    version: 1.0
 
  
 
@@ -66,6 +66,7 @@ public interface ReportsConstants {
 	public String VIEW_PARAMETER="viewParameter";
 ///ENDED BY MFTECH
 	public String BIRTREPORTPATH = "birtreport_path";
+	public String ADMINDOCBIRTREPORTPATH = "admindocumentreport_path";
 	
 	public static final String ERROR_TITLE="error.titleName";
 	public static final String ERROR_CATEGORYID="error.categoryId";

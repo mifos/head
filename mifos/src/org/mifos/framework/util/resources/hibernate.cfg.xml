@@ -216,7 +216,12 @@
 			 
 		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinLoanAmount.hbm.xml" />
 		<mapping resource="org/mifos/application/accounts/loan/business/MaxMinNoOfInstall.hbm.xml" />		 
-			
+		
+		<!-- Administratives Documents  -->
+		<mapping resource="org/mifos/application/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
+		<mapping resource="org/mifos/application/admindocuments/business/AdminDocument.hbm.xml" />
+		<!--  -->
+				
 	</session-factory>
 
 </hibernate-configuration>

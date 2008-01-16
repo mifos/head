@@ -686,4 +686,12 @@ public interface NamedQueryConstants {
 	public String GET_TOP_LEVEL_ACCOUNTS = "COABO.getTopLevelAccounts";
 	public String GET_ACCOUNT_ID_FOR_GL_CODE = "COABO.getAccountIdForGLCode";
 	public String GET_ALL_COA = "COABO.getAllCoa";
+
+	// Administrative documents
+	
+	public String GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT="admindocument.getAllActiveAdministrativeDocument";
+	public String GET_MIX_BY_ADMINISTRATIVE_DOCUMENT="admindocument.getMixByAdministrativeDocument";
+	public String GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT="admindocument.getAllMixedAdministrativeDocument";
+	
+
 }

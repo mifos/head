@@ -157,6 +157,8 @@
             <forward name="reportuserparamslist_path" path="/pages/application/reports/jsp/report_user_params.jsp"/>
             <forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp"/>
             <forward name="birtreport_path" path="/pages/application/reports/jsp/birtReport.jsp"/>
+            <forward name="admindocumentreport_path" path="/pages/application/admindocument/jsp/admindocumentReport.jsp" />
+			
         </action>
         <!--  Reports UserParams Action End -->
     </action-mappings>

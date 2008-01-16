@@ -81,9 +81,12 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         else if (className.startsWith("org.mifos.application.productdefinition")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
         }
+        else if (className.startsWith("org.mifos.application.admindocuments")){
+            setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/admindocument-struts-config.xml");
+        }
         else {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
-        }
+        }       
     }
 
     @Override

@@ -11,16 +11,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.application.reports.business.ReportsBO;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReportTemplateDownloadServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		File dir = new File(getServletContext().getRealPath("/") + "report");
-		String reportFileName = ((ReportsBO) request.getSession().getAttribute(
+		String realPath=request.getParameter("realPath");
+		boolean isReportAnAdminDocument = false;
+		if (StringUtils.isNullOrEmpty(realPath))
+			realPath = "report";
+		else isReportAnAdminDocument = true; 
+			
+		File dir = new File(getServletContext().getRealPath("/") + realPath);
+		String reportFileName = "";
+		if (isReportAnAdminDocument)
+			reportFileName = ((AdminDocumentBO) request.getSession().getAttribute(
+					"reportsBO")).getAdminDocumentIdentifier();
+		else reportFileName = ((ReportsBO) request.getSession().getAttribute(
 				"reportsBO")).getReportsJasperMap().getReportJasper();
+		
 		File file = new File(dir, reportFileName);
 
 		BufferedInputStream is = new BufferedInputStream(new FileInputStream(

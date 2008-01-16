@@ -29,7 +29,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 169;
+	public static final int APPLICATION_VERSION = 171;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
@@ -69,6 +69,7 @@ public class DatabaseVersionPersistence {
 		register146(register);
 		register(register, new Upgrade167());
 		register(register, new Upgrade169());
+		register170(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -234,7 +235,16 @@ public class DatabaseVersionPersistence {
 				SecurityConstants.CONFIGURATION_MANAGEMENT, ENGLISH_LOCALE,
 				"Can define custom fields"));
 	}
-
+	private static void register170(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(new AddActivity(170,
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS,
+				SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
+				"Can upload admin documents"), new AddActivity(170,
+				SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS,
+				SecurityConstants.REPORTS_MANAGEMENT, ENGLISH_LOCALE,
+				"Can view admin documents")));
+		
+	}
 	private final Connection connection;
 	private final Map<Integer, Upgrade> registeredUpgrades;
 

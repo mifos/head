@@ -330,6 +330,14 @@
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
+								href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.admin" /> <mifos:mifoslabel name="admin.documents" />
+								</a> | <html-el:link
+								href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.upload" /> <mifos:mifoslabel name="admin.admin" /> <mifos:mifoslabel name="admin.documents" /></html-el:link></td>
+                  </tr>
+                  
+                  <tr class="fontnormal">
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   <td width="97%"><a
 								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.templates" />
 								</a> | <html-el:link
 								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>

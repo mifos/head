@@ -44,6 +44,8 @@
 	<property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
 	<property name="build.classes" value="${build.web-inf}/classes"/>
 	<property name="build.lib" value="${build.dir}/lib"/>
+	<property name="build.adminReport" value="${build.src.dir}/adminReport"/>
+
 	<property name="test.classes" value="${build.test.dir}/classes"/>
 
 	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
@@ -95,6 +97,7 @@
 	<target name="make_dir">
 		<mkdir dir="${dist.dir}"/>
 		<mkdir dir="${build.classes}"/>
+		<mkdir dir="${build.adminReport}"/>
 		<mkdir dir="${build.web-inf}"/>
 		<mkdir dir="${build.web-inf}/services/MifosService/META-INF"/>
 		<mkdir dir="${build.web-inf}/services/MifosService/modules"/>

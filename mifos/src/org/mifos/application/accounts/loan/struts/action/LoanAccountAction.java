@@ -40,6 +40,9 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistence;
+import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.application.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
@@ -334,6 +337,22 @@ public class LoanAccountAction extends AccountAppAction {
 		request.setAttribute(CustomerConstants.SURVEY_KEY, surveys);
 		request.setAttribute(CustomerConstants.SURVEY_COUNT, activeSurveys);
 		request.setAttribute(AccountConstants.SURVEY_KEY, surveys);
+		
+        Integer administrativeDocumentsIsEnabled = configurationPersistence
+				.getConfigurationKeyValueInteger(
+						LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED)
+				.getValue();
+      
+		if (null != administrativeDocumentsIsEnabled
+				&& administrativeDocumentsIsEnabled.intValue() == 1) {
+			SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSLIST,
+					new AdminDocumentPersistence().getAllAdminDocuments(),request); 
+			
+			SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
+					new AdminDocAccStateMixPersistence().getAllMixedAdminDocuments(),request);  
+					
+		}
+			
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
@@ -773,10 +792,10 @@ public class LoanAccountAction extends AccountAppAction {
 			if (null != loanIndividualMonitoringIsEnabled
 					&& loanIndividualMonitoringIsEnabled.intValue() != 0
 					&& customer.getCustomerLevel().isGroup()) {
-
+				
 				List<String> ids_clients_selected = loanAccountForm
 						.getClients();
-
+				
 				List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
 				List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm
 						.getClientDetails();
@@ -864,10 +883,10 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
-        LoanBO loan;
+		LoanBO loan;
         if (perspective != null &&
                 perspective.equals(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN)) {
-            loan = redoLoan(loanActionForm, request);
+        	loan = redoLoan(loanActionForm, request);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
            
             ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
@@ -890,6 +909,7 @@ public class LoanAccountAction extends AccountAppAction {
 				loan
 						.setRecurMonth(Short.valueOf(loanActionForm
 								.getRecurMonth()));
+				
 			}
             loan.save();
         }
@@ -921,22 +941,20 @@ public class LoanAccountAction extends AccountAppAction {
 						.setRecurMonth(Short.valueOf(loanActionForm
 								.getRecurMonth()));
 			}        
-            loan.save(loanActionForm.getState());
+    		loan.save(loanActionForm.getState());
             
    		}
-
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		
 		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
 				.getConfigurationKeyValueInteger(
 						LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
-
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0
 				&& customer.getCustomerLevel().isGroup()) {
 		List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
         for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-			LoanBO individualLoan = LoanBO.createIndividualLoan(loan
+        	LoanBO individualLoan = LoanBO.createIndividualLoan(loan
 					.getUserContext(), loan.getLoanOffering(),
 					getCustomerBySystemId(loanAccountDetail.getClientId()),
 					loanActionForm.getState(), new Money(loanAccountDetail
@@ -947,17 +965,14 @@ public class LoanAccountAction extends AccountAppAction {
 					new ArrayList<FeeView>(),
 					new ArrayList<CustomFieldView>());
 			individualLoan.setParentAccount(loan);
-
+	     		    	
 			if (null != loanAccountDetail.getBusinessActivity())
 					individualLoan.setBusinessActivityId(Integer
 							.valueOf(loanAccountDetail.getBusinessActivity()));
-			
 			individualLoan.save();
-		
-		}
-    }
+			}
+        }
 
-		
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
 		request.setAttribute("globalAccountNum", loan.getGlobalAccountNum());

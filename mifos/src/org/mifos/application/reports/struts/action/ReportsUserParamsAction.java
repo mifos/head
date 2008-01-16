@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParamsMap;
@@ -74,6 +75,7 @@ public class ReportsUserParamsAction extends BaseAction {
 	private final ReportsBusinessService reportsBusinessService;
 
 	private final ReportsPersistence reportsPersistence;
+	
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
@@ -132,14 +134,46 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("loadAdminReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		
 		return security;
 	}
 
 	/**
+	 * To allow loading Administrative documents
+	 */
+	
+	public ActionForward loadAdminReport(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+	request.getSession().setAttribute("listOfAllParameters",
+			new ReportsPersistence().getAllReportParams());
+
+	String strReportId = request.getParameter("admindocId");
+	String account_id = request.getParameter("globalAccountNum");
+	if (strReportId == null || strReportId.equals("")) {
+		strReportId = "0";
+	}
+	int reportId = Integer.parseInt(strReportId);
+	String reportName = new AdminDocumentPersistence().getAdminDocumentById((short)reportId).getAdminDocumentName();
+	String filename = new AdminDocumentPersistence().getAdminDocumentById((short)reportId).getAdminDocumentIdentifier();
+		if (filename.endsWith(".rptdesign")) {
+			request.setAttribute("reportFile", filename);
+			request.setAttribute("reportName", reportName);
+			request.setAttribute("account_id", account_id);
+			return mapping.findForward(ReportsConstants.ADMINDOCBIRTREPORTPATH);
+		}
+		return mapping.findForward(ReportsConstants.ADMINDOCBIRTREPORTPATH);
+	}
+
+
+		
+
+	/**
 	 * Loads the Parameter Add page
 	 */
-	public ActionForward loadAddList(ActionMapping mapping, ActionForm form,
+	 	public ActionForward loadAddList(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In ReportsUserParamsAction:load Method: ");
@@ -199,6 +233,7 @@ public class ReportsUserParamsAction extends BaseAction {
 	public ActionForward processReport(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		logger.debug("In ReportsUserParamsAction:processReport Method: ");
 		ReportsUserParamsActionForm actionForm = (ReportsUserParamsActionForm) form;
 		int reportId = actionForm.getReportId();

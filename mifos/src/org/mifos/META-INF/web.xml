@@ -62,7 +62,7 @@
 		</servlet-class>
 		<init-param>
 			<param-name>config</param-name>
-			<param-value>/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml,/WEB-INF/customer-struts-config.xml,/WEB-INF/reports-struts-config.xml,/WEB-INF/accounts-struts-config.xml,/WEB-INF/productdefinition-struts-config.xml</param-value>
+			<param-value>/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml,/WEB-INF/customer-struts-config.xml,/WEB-INF/reports-struts-config.xml,/WEB-INF/accounts-struts-config.xml,/WEB-INF/productdefinition-struts-config.xml,/WEB-INF/admindocument-struts-config.xml</param-value>
 		</init-param>
 		<init-param>
 			<param-name>convertNull</param-name>

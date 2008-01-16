@@ -6,13 +6,13 @@ public class RoleTestUtil {
 	 * Whenever a new activity is added to the role this number must
 	 * be increased by one.
 	 */
-	public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 179;
+	public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 181;
 	/**
 	 * The total number of activities.
 	 * Whenever a new activity is added to the role this number must
 	 * be increased by one.
 	 */
-	public static final int EXPECTED_ACTIVITY_COUNT = 200;
+	public static final int EXPECTED_ACTIVITY_COUNT = 202;
 	
 
 }

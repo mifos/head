@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+        "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+    <form-beans>
+         
+        <!-- Birt Admin Documents action form  -->
+		<form-bean name="birtAdminDocumentUploadActionForm" type="org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm" />
+		<!-- End Birt Admin Documents action form  -->
+		
+    </form-beans>
+
+    <action-mappings>
+    	
+		    <!-- Birt Admin Documents Action -->
+		<action path="/birtAdminDocumentUploadAction" type="org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction" 
+			name="birtAdminDocumentUploadActionForm" parameter="method" scope="session"
+			input="/birtAdminDocumentUploadAction.do?method=validate" validate="true">
+			<forward name="load_success" path="/pages/application/admindocument/jsp/birtAdminDocumentUpload.jsp" />
+			<forward name="preview_success" path="/pages/application/admindocument/jsp/previewBirtAdminDocumentUpload.jsp" />
+			<forward name="get_success" path="/pages/application/admindocument/jsp/viewAdministrativeDocuments.jsp" />
+		    <forward name="download_success" path="/reportTemplateDownload?realPath=adminReport" />
+		    <forward name="edit_success" path="/pages/application/admindocument/jsp/editBirtAdminDocumentUpload.jsp" />
+		    
+		   	<forward name="edit_preview_success" path="/pages/application/admindocument/jsp/editPreviewBirtAdminDocumentUpload.jsp" />
+		    <!--  _failure -->
+		</action>
+		<!-- End Birt Admin Documents Action-->
+		
+   </action-mappings>
+   		
+    <!-- Administrative documents -->
+    <message-resources key="admindocumentsUIResources" parameter="org.mifos.application.admindocuments.util.resources.AdmindocumentsUIResources.properties"  />
+    
+
+	
+		
+</struts-config>

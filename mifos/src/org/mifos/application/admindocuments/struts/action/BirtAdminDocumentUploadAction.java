@@ -1,0 +1,404 @@
+/**
+
+ * BirtAdminDocumentUploadAction.java    version: xxx
+
+
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
+
+package org.mifos.application.admindocuments.struts.action;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
+import org.mifos.application.admindocuments.business.AdminDocumentBO;
+import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistence;
+import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
+import org.mifos.application.admindocuments.util.helpers.AdminDocumentsContants;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
+
+import org.mifos.application.reports.business.service.ReportsBusinessService;
+
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
+
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
+
+
+public class BirtAdminDocumentUploadAction extends BaseAction {
+
+	private ReportsBusinessService reportsBusinessService;
+
+	public BirtAdminDocumentUploadAction() {
+		reportsBusinessService = new ReportsBusinessService();
+	}
+
+	@Override
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity(
+				"birtAdminDocumentUploadAction");
+		security.allow("getBirtAdminDocumentUploadPage",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("preview", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("loadProductInstance",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		
+		security.allow("getProductTypes",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security
+				.allow("previous", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("upload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("getViewBirtAdminDocumentPage",
+				SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
+		security.allow("edit", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("editpreview",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("editprevious",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("editThenUpload",
+				SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+		security.allow("downloadAdminDocument",
+				SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
+		return security;
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward getBirtAdminDocumentUploadPage(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		uploadForm.clear();
+		SessionUtils.setCollectionAttribute(
+						ProductDefinitionConstants.PRODUCTTYPELIST,
+						getProductTypes(getUserContext(request)), request);
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	private List<ProductTypeEntity> getProductTypes(UserContext userContext)
+			throws Exception {
+		List<ProductTypeEntity> productTypeList = ((ProductMixBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.PrdMix))
+				.getProductTypes();
+		for (ProductTypeEntity productTypeEntity : productTypeList)
+			productTypeEntity.setUserContext(userContext);
+		return productTypeList;
+	}
+
+	@Override
+	protected BusinessService getService() throws ServiceException {
+		return reportsBusinessService;
+	}
+
+	
+	public ActionForward loadProductInstance(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		SessionUtils.removeAttribute(
+				ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
+		SessionUtils.removeAttribute(
+				ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS, request);
+		SessionUtils.removeAttribute(
+				ProductDefinitionConstants.STATUS_LIST, request);
+		if (!StringUtils.isNullOrEmpty(uploadForm.getAccountTypeId())) {
+			SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,
+					new AccountBusinessService()
+			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);
+		
+		}
+
+		return mapping.findForward(ActionForwards.load_success
+				.toString());
+	}
+	private void updateSelectedStatus(HttpServletRequest request,
+			BirtAdminDocumentUploadActionForm uploadForm) throws PageExpiredException, ServiceException {
+		List<AccountStateEntity> selectList = new ArrayList<AccountStateEntity>();
+		if (uploadForm.getStatusList() != null) {
+			List<AccountStateEntity> masterList = new AccountBusinessService()
+			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId())));
+			for (AccountStateEntity product : masterList) {
+				for (String productStatusId : uploadForm.getStatusList()) {
+					if (productStatusId != null
+							&& product.getId().intValue() == Integer
+									.valueOf(productStatusId).intValue()) {
+						
+				
+						selectList.add(product);
+						
+					}
+				}
+			}
+			masterList.removeAll(selectList);
+			SessionUtils.setCollectionAttribute("SelectedStatus",
+					masterList, request);
+			
+
+		}
+		
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		if (uploadForm.getAccountTypeId().equals(
+				ProductType.LOAN.getValue().toString()))
+			uploadForm.setAccountTypeName("LOAN");
+		else uploadForm.setAccountTypeName("SAVINGS");
+
+		updateSelectedStatus(request, uploadForm);
+
+		return mapping.findForward(ActionForwards.preview_success
+					.toString());
+
+	}
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward editpreview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		if (uploadForm.getAccountTypeId().equals(
+				ProductType.LOAN.getValue().toString()))
+			uploadForm.setAccountTypeName("LOAN");
+		else uploadForm.setAccountTypeName("SAVINGS");
+		
+		updateSelectedStatus(request, uploadForm);
+
+		return mapping.findForward("edit_preview_success");
+
+	}
+	
+	
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward upload(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils
+				.getAttribute("SelectedStatus", request);
+
+		FormFile formFile = uploadForm.getFile();
+		uploadFile(formFile);
+		AdminDocumentBO admindocBO = createOrUpdateAdminDocument(uploadForm
+				.getAdminiDocumentTitle(), Short.valueOf("1"), formFile
+				.getFileName());
+		AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
+		for (AccountStateEntity acc : masterList) {
+			admindocaccstatemixBO = new AdminDocAccStateMixBO();
+			admindocaccstatemixBO.setAccountStateID(acc);
+			admindocaccstatemixBO.setAdminDocumentID(admindocBO);
+			new AdminDocAccStateMixPersistence()
+					.createOrUpdate(admindocaccstatemixBO);
+
+		}
+		request.setAttribute("report", admindocBO);
+		return getViewBirtAdminDocumentPage(mapping, form, request, response);
+
+	}
+
+	private void uploadFile(FormFile formFile) throws FileNotFoundException,
+			IOException {
+		String dirPath = getServlet().getServletContext().getRealPath("/");
+		File dir = new File(dirPath + "adminReport");
+		File file = new File(dir, formFile.getFileName());
+		InputStream is = formFile.getInputStream();
+		OutputStream os;
+		/*
+		 * for test purposes, if the real path does not exist (if we're
+		 * operating outside a deployed environment) the file is just written to
+		 * a ByteArrayOutputStream which is not actually stored. !! This does
+		 * not produce any sort of file that can be retirieved. !! it only
+		 * allows us to perform the upload action.
+		 */
+		if (dirPath != null)
+			os = new FileOutputStream(file);
+		else os = new ByteArrayOutputStream();
+		byte[] buffer = new byte[4096];
+		int bytesRead = 0;
+		while ((bytesRead = is.read(buffer, 0, 4096)) != -1) {
+			os.write(buffer, 0, bytesRead);
+		}
+		os.close();
+		is.close();
+		formFile.destroy();
+	}
+
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		return mapping.findForward(method + "_failure");
+	}
+
+	public ActionForward getViewBirtAdminDocumentPage(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
+				new AdminDocumentPersistence().getAllAdminDocuments());
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+	
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
+		List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
+				.valueOf(request.getParameter("admindocId")));
+		SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(),request);
+
+		birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID().getAdminDocumentName());
+		birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().toString());
+		
+		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.PRODUCTTYPELIST,
+				getProductTypes(getUserContext(request)), request);
+		List<AccountStateEntity> selectedlist= new ArrayList<AccountStateEntity>();
+		for(AdminDocAccStateMixBO admindoc : admindoclist){
+			selectedlist.add(admindoc.getAccountStateID());
+		}
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,selectedlist,request);
+		List<AccountStateEntity> masterList = new AccountBusinessService()
+		.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
+		masterList.removeAll(selectedlist);
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS,masterList,request);
+		request.setAttribute(Constants.BUSINESS_KEY, admindoclist.get(0).getAdminDocumentID());
+	
+		return mapping.findForward(ActionForwards.edit_success.toString());
+	}
+	
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward editThenUpload(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
+		List<AccountStateEntity> masterList = (List<AccountStateEntity>) SessionUtils
+		.getAttribute("SelectedStatus", request);
+		FormFile formFile = uploadForm.getFile();
+
+		if (StringUtils.isEmpty(formFile.getFileName()))
+			formFile.destroy();
+		uploadFile(formFile);
+		
+		AdminDocumentBO admindoc =  new AdminDocumentPersistence().getAdminDocumentById(
+				Short.valueOf(SessionUtils.getAttribute("admindocId",request).toString()));
+		admindoc.setAdminDocumentName(uploadForm.getAdminiDocumentTitle());
+		admindoc.setIsActive(Short.valueOf("1"));
+		admindoc.setAdminDocumentIdentifier(formFile.getFileName());
+		new AdminDocumentPersistence().createOrUpdate(admindoc);
+		List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(
+				Short.valueOf(SessionUtils.getAttribute("admindocId",request).toString()));
+		for(AdminDocAccStateMixBO temp:admindoclist){
+			new AdminDocAccStateMixPersistence()
+			.delete(temp);
+		}
+		
+		AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
+		for (AccountStateEntity acc : masterList) {
+			admindocaccstatemixBO = new AdminDocAccStateMixBO();
+			admindocaccstatemixBO.setAccountStateID(acc);
+			admindocaccstatemixBO.setAdminDocumentID(admindoc);
+			new AdminDocAccStateMixPersistence()
+					.createOrUpdate(admindocaccstatemixBO);
+
+		}
+		return getViewBirtAdminDocumentPage(mapping, form, request, response);
+	}
+	
+	
+	
+	
+	public ActionForward downloadAdminDocument(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		request.getSession().setAttribute(
+				"reportsBO",
+				new AdminDocumentPersistence().getAdminDocumentById(Short.valueOf(request
+						.getParameter("admindocId"))));
+		return mapping.findForward(ActionForwards.download_success.toString());
+	}
+
+	private AdminDocumentBO createOrUpdateAdminDocument(String admindocTitle,
+			Short isActive, String fileName)
+			throws PersistenceException {
+		AdminDocumentBO admindocBO = new AdminDocumentBO();
+		admindocBO.setAdminDocumentName(admindocTitle);
+		admindocBO.setIsActive(isActive);
+		admindocBO.setAdminDocumentIdentifier(fileName);
+		new AdminDocumentPersistence().createOrUpdate(admindocBO);
+		return admindocBO;
+	}
+}
