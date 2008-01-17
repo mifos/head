@@ -34,7 +34,6 @@ public class Localization {
 	private void loadMembers()
 	{
 		mainLocale = getLocaleFromConfig();
-		//localeId = getConfiguredLocaleId();
 	}
 	
 	// this init has to be called when Mifos starts
@@ -42,6 +41,7 @@ public class Localization {
 	{
 		initializeLocaleCache();
 		loadMembers();
+		setDefaultLocaleToConfigLocale();
 	}
 	
 	public  Locale getMainLocale()
@@ -68,6 +68,12 @@ public class Localization {
 			return mainLocale.getCountry();
 		}
 		
+	}
+	
+	// default locale is the machine locale
+	private void setDefaultLocaleToConfigLocale()
+	{
+		Locale.setDefault(mainLocale);
 	}
 	
 	

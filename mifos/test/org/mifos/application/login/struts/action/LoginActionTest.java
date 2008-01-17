@@ -22,6 +22,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import org.mifos.config.Localization;
 
 public class LoginActionTest extends MifosMockStrutsTestCase {
 
@@ -86,8 +89,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("userName", "");
 		addRequestParameter("password", "PASSWORD");
 		actionPerform();
+		assertEquals(1, getErrorSize());
 		verifyInputForward();
-		verifyActionErrors(new String[] { "Please specify the value for Username." });
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
@@ -101,8 +104,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("userName", personnel.getUserName());
 		addRequestParameter("password", "");
 		actionPerform();
+		assertEquals(1, getErrorSize());
 		verifyInputForward();
-		verifyActionErrors(new String[] { "Please specify the value for Password." });
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
@@ -168,8 +171,8 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
+		assertEquals(1, getErrorSize());
 		verifyInputForward();
-		verifyActionErrors(new String[] { "Please specify the value for Username." });
 	}
 
 	public void testUpdatePasswordWithOldPasswordNotMatching() throws Exception {
