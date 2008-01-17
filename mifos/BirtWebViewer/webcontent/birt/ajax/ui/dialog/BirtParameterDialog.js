@@ -541,8 +541,14 @@ BirtParameterDialog.prototype = Object.extend( new AbstractParameterDialog( ),
 				param.value = this.__parameter[i].value;
 				
 				//replace the URL parameter			
-				var reg = new RegExp( "&" + param.name + "[^&]*&*", "g" );
-				action = action.replace( reg, "&" );
+				// commented - let's not remove query param from URL even if
+				// the same param exists as POST param, because the cascade param
+				// dropdown does not send the userId if it's only a hidden param
+				
+				//var reg = new RegExp( "&" + param.name + "[^&]*&*", "g" );
+				//action = action.replace( reg, "&" );
+				
+				// end comment
 			}
 		}
 

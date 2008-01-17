@@ -60,10 +60,7 @@ public class OfficeBO extends BusinessObject {
 	private Set<OfficeBO> children;
 
 	public OfficeBO() {
-		super();
-		maxChildCount = null;
-		officeId = null;
-		operationMode = null;
+		this(null, null, null, null);
 		status = new OfficeStatusEntity(OfficeStatus.ACTIVE);
 		address = new OfficeAddressEntity();
 	}
@@ -143,6 +140,14 @@ public class OfficeBO extends BusinessObject {
 				officeName, shortName, address, operationMode, 
 				OfficeStatus.ACTIVE);
 		verifyFields(officeName, shortName, level, operationMode, parentOffice);
+	}
+
+	public OfficeBO(Short officeId, String officeName, Integer maxChildCount, Short operationMode) {
+		super();
+		this.officeId = officeId;
+		this.officeName = officeName;
+		this.maxChildCount = maxChildCount;
+		this.operationMode = operationMode;
 	}
 
 	@Override

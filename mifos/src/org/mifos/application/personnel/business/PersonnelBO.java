@@ -1,5 +1,7 @@
 package org.mifos.application.personnel.business;
 
+import static org.mifos.application.reports.util.helpers.ReportsConstants.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,6 +22,7 @@ import org.mifos.application.personnel.util.helpers.LockStatus;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
+import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.config.Localization;
 import org.mifos.framework.business.BusinessObject;
@@ -85,7 +88,7 @@ public class PersonnelBO extends BusinessObject {
 	private Set<PersonnelNotesEntity> personnelNotes;
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.PERSONNEL_LOGGER);
-	
+
 	public static PersonnelBO ALL_PERSONNEL = new PersonnelBO();
 	static {
 		ALL_PERSONNEL.setDisplayName("ALL");
@@ -139,13 +142,18 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	PersonnelBO() {
-		this.level = null;
+		this(null, null, null, null);
 		this.personnelDetails = new PersonnelDetailsEntity();
 		this.preferredLocale = new SupportedLocalesEntity();
 		this.customFields = new HashSet<PersonnelCustomFieldEntity>();
 		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
-		this.personnelId = null;
-		this.userName = null;
+	}
+
+	public PersonnelBO(Short personnelId, String userName, String displayName, PersonnelLevelEntity level) {
+		this.personnelId = personnelId;
+		this.userName = userName;
+		this.displayName = displayName;
+		this.level = level;
 	}
 
 	public String getAge() {

@@ -83,6 +83,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	private MifosLogger prdLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
+	public SavingsOfferingBO(){
+		this(null, null, null, new HashSet<PrdOfferingMeetingEntity>());
+	}
+	
 	public SavingsOfferingBO(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
@@ -137,10 +141,16 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				+ getGlobalPrdOfferingNum());
 	}
 
-	protected SavingsOfferingBO() {
-		depositGLCode = null;
-		interestGLCode = null;
-		savingsOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
+	protected SavingsOfferingBO(Short prdOfferingId, GLCodeEntity depositGLCode, 
+			GLCodeEntity interestGLCode, HashSet<PrdOfferingMeetingEntity> savingsOfferingMeetings) {
+		super(prdOfferingId);
+		this.depositGLCode = depositGLCode;
+		this.interestGLCode = interestGLCode;
+		this.savingsOfferingMeetings = savingsOfferingMeetings;
+	}
+	
+	public static SavingsOfferingBO createInstanceForTest(Short prdOfferingId){
+		return new SavingsOfferingBO(prdOfferingId, null, null, new HashSet<PrdOfferingMeetingEntity>());
 	}
 
 	private Set<PrdOfferingMeetingEntity> getSavingsOfferingMeetings() {

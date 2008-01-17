@@ -38,6 +38,8 @@
 
 package org.mifos.application.reports.util.helpers;
 
+import java.util.Date;
+
 public interface ReportsConstants {
 	public String GETPATH_REPORTS="reportsAction";
 	public String GETREPORTPAGE="getReportPage";
@@ -82,6 +84,13 @@ public interface ReportsConstants {
 	public static final String ERROR_REPORTALREADYEXIST="error.reportAlreadyExist";
 	public static final String ERROR_REPORTACTIVITYIDISNULL="error.reportActivityIdIsNull";
 	public static final String ERROR_NOMOREDYNAMICACTIVITYID="error.noMoreDynamicActivityId";
-	
-	
+//added by collection sheet report module
+	public static final String SELECT_DISPLAY_NAME = "---Select---";
+	public static final String NOT_APPLICABLE_DISPLAY_NAME = "---N/A---";
+	public static final String ALL_DISPLAY_NAME = "ALL";
+	public static final Short NOT_APPLICABLE_ID = new Short("-3");
+	public static final Short SELECT_ID = new Short("-2");
+	public static final Short ALL_ID = new Short("-1");
+	public static final Date NA_DATE = new Date(0l);
+//ended by collection sheet report module
 }

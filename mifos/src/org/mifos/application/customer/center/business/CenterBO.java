@@ -10,6 +10,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
@@ -24,6 +25,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -34,7 +36,6 @@ import org.mifos.framework.security.util.UserContext;
 public class CenterBO extends CustomerBO {
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CENTERLOGGER);
-	
 	public CenterBO(UserContext userContext, String displayName,
 			Address address, List<CustomFieldView> customFields,
 			List<FeeView> fees, String externalId, Date mfiJoiningDate,
@@ -58,6 +59,14 @@ public class CenterBO extends CustomerBO {
 
 	protected CenterBO() {
 		super();
+	}
+	
+	public static CenterBO createInstanceForTest(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+		return new CenterBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
+	}
+	
+	private CenterBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+		super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
 	}
 	
 	@Override

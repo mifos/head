@@ -37,6 +37,8 @@
  */
 package org.mifos.application.collectionsheet.business;
 
+import java.io.Serializable;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
@@ -49,6 +51,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyUtils;
 
 public class CollSheetLnDetailsEntity extends PersistentObject {
 
@@ -290,7 +293,8 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	public void addAccountDetails(AccountActionDateEntity accountActionDate)
 			throws SystemException, ApplicationException {
 		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
-		LoanBO loan = new LoanPersistence().getAccount(loanSchedule.getAccount().getAccountId());
+		LoanBO loan = new LoanPersistence().getAccount(loanSchedule
+				.getAccount().getAccountId());
 		this.accountId = loanSchedule.getAccount().getAccountId();
 		this.currentInstallmentNo = loanSchedule.getInstallmentId();
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
@@ -333,7 +337,8 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 				&& null != collectionSheetLoanDetailsObj.getLoanDetailsId()) {
 			return loanDetailsId.equals(collectionSheetLoanDetailsObj
 					.getLoanDetailsId());
-		} else if (null != this.collectionSheetCustomer
+		}
+		else if (null != this.collectionSheetCustomer
 				&& null != collectionSheetLoanDetailsObj
 						.getCollectionSheetCustomer()) {
 			return this.accountId.equals(collectionSheetLoanDetailsObj
@@ -341,7 +346,8 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 					&& this.collectionSheetCustomer
 							.equals(collectionSheetLoanDetailsObj
 									.getCollectionSheetCustomer());
-		} else {
+		}
+		else {
 			return super.equals(collectionSheetLoanDetailsObj);
 		}
 
@@ -356,15 +362,17 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	 * This sets accountId,amntToBeDisbursed and sets installment id to null
 	 * because installments haven't begun yet.
 	 */
-    public void addDisbursalDetails(LoanBO loan) {
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("inside add disbursaldetails");
-		
+	public void addDisbursalDetails(LoanBO loan) {
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
+				"inside add disbursaldetails");
+
 		this.accountId = loan.getAccountId();
 		// TODO check in case of interest deducted at disbursement this should
 		// show the loan amount to be disbursed.
 		this.amntToBeDisbursed = loan.getLoanAmount();
-		if(loan.isInterestDeductedAtDisbursement()){
-			LoanScheduleEntity loanSchedule = (LoanScheduleEntity)loan.getAccountActionDate(CollectionSheetConstants.FIRST_INSTALLMENT);
+		if (loan.isInterestDeductedAtDisbursement()) {
+			LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loan
+					.getAccountActionDate(CollectionSheetConstants.FIRST_INSTALLMENT);
 			this.interestDue = loanSchedule.getInterestDue();
 			this.feesDue = loanSchedule.getTotalFeeDue();
 		}
@@ -372,5 +380,13 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 		this.totalNoOfInstallments = loan.getNoOfInstallments();
 		this.originalLoanAmnt = loan.getLoanAmount();
 		this.totalPrincipalDue = this.originalLoanAmnt;
+	}
+
+	public Money getTotalFees() {
+		return MoneyUtils.add(getFeesDue(), getFeesOverDue());
+	}
+
+	public Money getTotalPenalty() {
+		return MoneyUtils.add(getPenaltyDue(), getPenaltyOverDue());
 	}
 }

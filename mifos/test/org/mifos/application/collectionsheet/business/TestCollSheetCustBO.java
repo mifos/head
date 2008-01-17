@@ -231,5 +231,4 @@ public class TestCollSheetCustBO extends MifosTestCase {
 				loanOffering);
 		return accountBO;
 	}
-
 }

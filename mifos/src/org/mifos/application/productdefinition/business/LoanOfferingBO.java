@@ -55,6 +55,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
@@ -358,18 +359,40 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	}
 
 	protected LoanOfferingBO() {
-		principalGLcode = null;
-		interestGLcode = null;
-		loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
-		loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
-		loanAmountFromLastLoan = new HashSet<LoanAmountFromLastLoanAmountBO>();
-		loanAmountFromLoanCycle = new HashSet<LoanAmountFromLoanCycleBO>();
-		noOfInstallFromLastLoan = new HashSet<NoOfInstallFromLastLoanAmountBO>();
-		noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
-		loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
-		noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
+		this(null, null, null, null, null, null, new HashSet<LoanOfferingFundEntity>(), 
+				new HashSet<LoanOfferingFeesEntity>(), new HashSet<LoanAmountFromLastLoanAmountBO>(), 
+				new HashSet<LoanAmountFromLoanCycleBO>(), new HashSet<NoOfInstallFromLastLoanAmountBO>(), 
+				new HashSet<NoOfInstallFromLoanCycleBO>(), new HashSet<LoanAmountSameForAllLoanBO>(), 
+				new HashSet<NoOfInstallSameForAllLoanBO>());
+	}
 
+	private LoanOfferingBO(Short prdOfferingId, String globalPrdOfferingNum, 
+			ProductTypeEntity prdType, OfficeBO office,
+			GLCodeEntity principalGLcode, 
+			GLCodeEntity interestGLcode, 
+			Set<LoanOfferingFundEntity> loanOfferingFunds, 
+			Set<LoanOfferingFeesEntity> loanOfferingFees, 
+			Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan, 
+			Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle, Set<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoan, Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle, Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan, Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan) {
+		super(prdOfferingId, globalPrdOfferingNum, prdType, office);
+		this.principalGLcode = principalGLcode;
+		this.interestGLcode = interestGLcode;
+		this.loanOfferingFunds = loanOfferingFunds;
+		this.loanOfferingFees = loanOfferingFees;
+		this.loanAmountFromLastLoan = loanAmountFromLastLoan;
+		this.loanAmountFromLoanCycle = loanAmountFromLoanCycle;
+		this.noOfInstallFromLastLoan = noOfInstallFromLastLoan;
+		this.noOfInstallFromLoanCycle = noOfInstallFromLoanCycle;
+		this.loanAmountSameForAllLoan = loanAmountSameForAllLoan;
+		this.noOfInstallSameForAllLoan = noOfInstallSameForAllLoan;
+	}
 
+	public static LoanOfferingBO createInstanceForTest(Short prdOfferingId) {
+		return new LoanOfferingBO(prdOfferingId, null, null, null, null, null, new HashSet<LoanOfferingFundEntity>(), 
+				new HashSet<LoanOfferingFeesEntity>(), new HashSet<LoanAmountFromLastLoanAmountBO>(), 
+				new HashSet<LoanAmountFromLoanCycleBO>(), new HashSet<NoOfInstallFromLastLoanAmountBO>(), 
+				new HashSet<NoOfInstallFromLoanCycleBO>(), new HashSet<LoanAmountSameForAllLoanBO>(), 
+				new HashSet<NoOfInstallSameForAllLoanBO>());
 	}
 
 	public GracePeriodTypeEntity getGracePeriodType() {

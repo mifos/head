@@ -152,12 +152,20 @@ public abstract class CustomerBO extends BusinessObject {
 	private Set<CustomerBO> children;
 
 	protected CustomerBO() {
-		super();
-		this.customerId = null;
+		this(null, null, null, null, null);
 		this.globalCustNum = null;
-		this.customerLevel = null;
-		this.formedByPersonnel = null;
 	}
+
+	
+	protected CustomerBO(Integer customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+		super();
+		this.customerId = customerId;
+		this.customerLevel = customerLevel;
+		this.formedByPersonnel = formedByPersonnel;
+		this.personnel = personnel;
+		this.displayName = displayName;
+	}
+
 
 	protected CustomerBO(UserContext userContext, String displayName,
 			CustomerLevel customerLevel, CustomerStatus customerStatus,

@@ -32,6 +32,7 @@
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
 	<property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
+	<property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
 	<property name="test.dir" value="${basedir}/test"/>
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/build"/>
@@ -220,6 +221,7 @@
                 	unless="my.hibernate.properties.present" />
 			</fileset>
 		</copy>
+		<copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/conf"/>
 		<copy todir="${build.web-inf}/services/MifosService/META-INF">
 			<fileset dir="${src.dir}/org/mifos/api/resources">
 				<include name="services.xml"/>
@@ -260,6 +262,9 @@
 		<copy todir="${build.src.dir}/report">
 			<fileset dir="${birt.report.design.dir}" />
 		</copy>
+		<copy todir="${build.src.dir}/report/BirtReportResource">
+			<fileset dir="${birt.report.resource.dir}" />
+		</copy>	
 	</target>
 
 	<target name="lib" depends="compile" description="Build the mifos library">

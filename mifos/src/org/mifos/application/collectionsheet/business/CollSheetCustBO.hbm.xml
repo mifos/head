@@ -103,7 +103,32 @@
 						
 						
 		]]>
+	</query>	
+	<!--This query returns list of collection sheets for specified customer at given meeting date-->
+	<query name="CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDateAndLoanOfficer">
+		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
+					where collectionSheet.custLevel = :CUSTOMER_LEVEL
+					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.custId = :CUSTOMER_ID
+					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
+		]]>
 	</query>
-	
-	
+	<!--This query returns list of collection sheets for specified customer at given meeting date-->
+	<query name="CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDate">
+		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
+					where collectionSheet.custLevel = :CUSTOMER_LEVEL
+					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.custId = :CUSTOMER_ID
+					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
+		]]>
+	</query>
+	<!--This query returns list of collection sheets for childrens of specified customer at given meeting date-->
+	<query name="CollectionSheetCustomer.collectionSheetOfCustomersUnderAParentForSpecifiedMeetingDate">
+		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
+					where collectionSheet.custLevel = :CUSTOMER_LEVEL
+					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.parentCustomerId = :PARENT_CUSTOMER_ID
+					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
+		]]>
+	</query>
 </hibernate-mapping>

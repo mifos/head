@@ -9,10 +9,16 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.easymock.internal.ExpectedInvocation;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -45,6 +51,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import static org.easymock.classextension.EasyMock.createMock;
 
 public class TestCollSheetBO extends MifosTestCase {
 
@@ -520,5 +527,23 @@ public class TestCollSheetBO extends MifosTestCase {
 				(short) 16, startDate,
 				savingsOffering);
 	}
-
+	
+	public void testRetrieveCollectionSheetMeetingDateReturnsAllCollectionSheetsForSpecifiedMeeting() throws Exception {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = session.beginTransaction();
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2010, Calendar.JANUARY, 0, 0, 0, 0);
+		Date year2010 = new Date(calendar.getTimeInMillis());
+		CollectionSheetBO collectionSheet = new CollectionSheetBO();
+		collectionSheet.setCollSheetDate(year2010);
+		collectionSheet.setRunDate(new Date(System.currentTimeMillis()));
+		collectionSheet.create();
+		HashMap queryParameters = new HashMap();
+		queryParameters.put("MEETING_DATE", year2010);
+		List matchingCollectionSheets = new CollectionSheetPersistence().executeNamedQuery(NamedQueryConstants.COLLECTION_SHEETS_FOR_MEETING_DATE,queryParameters);
+		assertEquals(1, matchingCollectionSheets.size());
+		assertEquals(collectionSheet, matchingCollectionSheets.get(0));
+		transaction.rollback();
+		session.close();
+	}
 }

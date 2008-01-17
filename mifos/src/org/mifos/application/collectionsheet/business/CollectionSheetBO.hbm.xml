@@ -12,13 +12,29 @@
 		<property name="statusFlag" column="STATUS_FLAG" type="short"/>
 		<property name="runDate" column="RUN_DATE" type="date"/>
 		
-		<set name="collectionSheetCustomers"   cascade="all"  table="COLL_SHEET_CUSTOMER" inverse="true">
-			<key column="COLL_SHEET_ID"  />
-			
+		<set name="collectionSheetCustomers" cascade="all"  table="COLL_SHEET_CUSTOMER" inverse="true">
+			<key column="COLL_SHEET_ID"/>
 			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetCustBO" />
 		</set>
-		
 	</class>
-	
-	
+
+    <query name="collectionSheet.getCollectionSheetForMeetingDate">
+            <![CDATA[from org.mifos.application.collectionsheet.business.CollectionSheetBO 
+            collectionSheet where collectionSheet.collSheetDate = :MEETING_DATE]]>
+    </query>	   
+
+	<!-- Query to retrieve meeting date for specified center -->
+	<sql-query name="collectionSheet.getCollectionSheetForCenterWithSpecifiedMeetingDate">
+		<return alias="collectionSheet" class="org.mifos.application.collectionsheet.business.CollectionSheetBO"/>
+		<![CDATA[
+			SELECT {collectionSheet.*} from coll_sheet collectionSheet, coll_sheet_customer 
+				where coll_sheet_customer.cust_id=:CUSTOMER_ID 
+				and coll_sheet_customer.cust_level=:CUSTOMER_LEVEL 
+				and coll_sheet_customer.cust_office_id=:OFFICE_ID
+				and coll_sheet_customer.loan_officer_id=:LOAN_OFFICER_ID 
+				and collectionSheet.coll_sheet_date > :FROM_DATE
+				and collectionSheet.coll_sheet_id=coll_sheet_customer.coll_sheet_id
+				order by collectionSheet.coll_sheet_date desc
+		]]>
+	</sql-query>	
 </hibernate-mapping>

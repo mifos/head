@@ -340,6 +340,17 @@ public interface NamedQueryConstants {
 
 	public String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";
 	public String GET_FIELD_TYPE = "getFieldType";
+	
+	public static final String COLLECTION_SHEET_FOR_SPECIFIED_CUSTOMER = "collectionSheet.getCollectionSheetForCenterWithSpecifiedMeetingDate";
+	public static final String COLLECTION_SHEETS_FOR_MEETING_DATE = "collectionSheet.getCollectionSheetForMeetingDate";
+	public static final String COLLECTION_SHEET_CUSTOMERS_ON_MEETING_DATE_FOR_LOAN_OFFICER = "CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDateAndLoanOfficer";
+	public static final String COLLECTION_SHEET_CUSTOMERS_ON_MEETING_DATE = "CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDate";
+	public static final String COLLECTION_SHEETS_OF_CHILDREN_ON_MEETING_DATE = "CollectionSheetCustomer.collectionSheetOfCustomersUnderAParentForSpecifiedMeetingDate";
+	public static final String GET_ACTIVE_BRANCHES_AS_SELECTION_ITEM = "SelectionItem.get_active_offices";
+	public static final String GET_ACTIVE_LOAN_OFFICERS_UNDER_OFFICE_AS_SELECTION_ITEM = "SelectionItem.get_active_loanofficers_under_office";
+	public static final String GET_ACTIVE_CUSTOMERS_UNDER_LOAN_OFFICER_AS_SELECTION_ITEM = "SelectionItem.get_active_customers_under_loanofficers";
+	public static final String GET_MEETING_DATES_AS_SELECTION_ITEM = "DateSelectionItem.get_meeting_dates";
+	
 	/**M2 queries*/
 	/**Personnel Queries*/
 	public String MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH = "masterdata.activeloanofficers";

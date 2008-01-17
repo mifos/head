@@ -96,6 +96,35 @@ public class CollSheetCustBO extends BusinessObject {
 	
 	private Short loanOfficerId ;
 	
+	private CollSheetCustBO(Integer custId, String custDisplayName,
+			Short custLevel, Short custOfficeId, String searchId, Short loanOfficerId) {
+		super();
+        initFields(custId, custDisplayName,
+   			 custLevel, custOfficeId, searchId, loanOfficerId);
+	}
+
+	public CollSheetCustBO() {
+		this(null, null, null, null, null, null);
+	}
+	
+	private void initFields(Integer custId, String custDisplayName,
+			Short custLevel, Short custOfficeId, String searchId, Short loanOfficerId) {
+		this.custId = custId;
+		this.custDisplayName = custDisplayName;
+		this.custLevel = custLevel;
+		this.custOfficeId = custOfficeId;
+		this.searchId = searchId;
+		this.loanOfficerId = loanOfficerId;
+		collectionSheetLoanDetails = new HashSet<CollSheetLnDetailsEntity>();
+		collSheetSavingsDetails = new HashSet<CollSheetSavingsDetailsEntity>();
+	}
+
+	public void populateInstanceForTest(Integer custId, String custDisplayName,
+			Short custLevel, Short custOfficeId, String searchId, Short loanOfficerId) {
+         initFields(custId, custDisplayName,
+			 custLevel, custOfficeId, searchId, loanOfficerId);
+	}
+
 	public Long getCollSheetCustId() {
 		return collSheetCustId;
 	}

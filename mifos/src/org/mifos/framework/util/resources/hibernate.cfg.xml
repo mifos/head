@@ -133,6 +133,8 @@
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetCustBO.hbm.xml" />
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetLnDetailsEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/collectionsheet/business/CollSheetSavingsDetailsEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/reports/ui/SelectionItem.hbm.xml" />
+		<!--<mapping resource="org/mifos/application/reports/ui/DateSelectionItem.hbm.xml" />-->
 		<!-- Mapping files for Master Data -->
 		<mapping resource="org/mifos/application/master/business/MifosCurrency.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/CountryEntity.hbm.xml" />

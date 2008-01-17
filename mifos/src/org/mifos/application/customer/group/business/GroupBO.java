@@ -47,6 +47,7 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
+import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -65,10 +66,10 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -131,6 +132,14 @@ public class GroupBO extends CustomerBO {
 				externalId, null, address, customFields, fees, formedById,
 				officeId, parentCustomer, meeting, loanOfficerId);
 		validateFields(displayName, formedById, trained, trainedDate);
+	}
+	
+	private GroupBO(int customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+		super(customerId, customerLevel, formedByPersonnel, personnel, displayName);
+	}	
+	
+	public static GroupBO createInstanceForTest(int customerId, CustomerLevelEntity customerLevel, PersonnelBO formedByPersonnel, PersonnelBO personnel, String displayName) {
+		return new GroupBO(customerId, customerLevel, formedByPersonnel, personnel, displayName);
 	}
 
 	@Override

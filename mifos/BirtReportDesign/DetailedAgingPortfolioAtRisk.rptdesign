@@ -5,8 +5,8 @@
     <property name="units">in</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <parameters>
-        <scalar-parameter name="reportName" id="1626">
-            <property name="hidden">false</property>
+        <scalar-parameter name="mifosHiddenParam" id="1626">
+            <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">string</property>
             <property name="controlType">text-box</property>
@@ -73,10 +73,9 @@
     </parameters>
     <data-sources>
         <script-data-source name="Scripted Data Source" id="4">
-            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DS-OPEN");
+            <method name="open"><![CDATA[var logger = Packages.java.util.logging.Logger.getLogger("");
 Packages.org.mifos.application.productdefinition.persistence.LoanPrdPersistence.enableThreadCacheForReports();
 var userId = reportContext.getParameterValue("userId");
-
 reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
 reportsDataService.initialize(userId);]]></method>
             <method name="close"><![CDATA[reportsDataService = null;

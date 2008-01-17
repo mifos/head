@@ -57,13 +57,17 @@ import org.mifos.framework.util.LocalizationConverter;
 
 
 public class DateUtils {
-	
+
 	// three different types of date direction validation
-	public enum DIRECTION {FUTURE, PAST, NONE}
+	public enum DIRECTION {
+		FUTURE, PAST, NONE
+	}
 
 	private final static String dbFormat = "yyyy-MM-dd";
-	private final static Locale internalLocale = Localization.getInstance().getMainLocale(); 
-	private static String dateSeparator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
+	private final static Locale internalLocale = Localization.getInstance()
+			.getMainLocale();
+	private static String dateSeparator = LocalizationConverter.getInstance()
+			.getDateSeparatorForCurrentLocale();
 
 	public static String convertUserToDbFmt(String userDate, String userPattern) {
 		try {
@@ -76,9 +80,8 @@ public class DateUtils {
 			throw new InvalidDateException(userDate);
 		}
 	}
-	
-	public static String getDateSeparator()
-	{
+
+	public static String getDateSeparator() {
 		return dateSeparator;
 	}
 
@@ -89,15 +92,15 @@ public class DateUtils {
 			SimpleDateFormat userFormat = new SimpleDateFormat(userPattern);
 			return userFormat.format(date);
 		}
-		
+
 		catch (ParseException e) {
 			throw new InvalidDateException(dbDate);
 		}
 	}
-	
+
 	public static String getUserLocaleDate(Locale locale, Date databaseDate) {
 		SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
-			.getDateInstance(DateFormat.SHORT, locale);
+				.getDateInstance(DateFormat.SHORT, locale);
 		return shortFormat.format(databaseDate);
 	}
 
@@ -114,8 +117,8 @@ public class DateUtils {
 				throw e;
 			}
 			catch (Exception e) {
-				System.out.println("databaseDate=" + databaseDate
-						+ ", locale=" + locale);
+				System.out.println("databaseDate=" + databaseDate + ", locale="
+						+ locale);
 				throw new FrameworkRuntimeException(e);
 			}
 		}
@@ -123,9 +126,10 @@ public class DateUtils {
 			return "";
 		}
 	}
-	
+
 	public static String getUserLocaleDate(String databaseDate) {
-		if (internalLocale != null && databaseDate != null && !databaseDate.equals("")) {
+		if (internalLocale != null && databaseDate != null
+				&& !databaseDate.equals("")) {
 			try {
 				SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
 						.getDateInstance(DateFormat.SHORT, internalLocale);
@@ -137,8 +141,8 @@ public class DateUtils {
 				throw e;
 			}
 			catch (Exception e) {
-				System.out.println("databaseDate=" + databaseDate
-						+ ", locale=" + internalLocale);
+				System.out.println("databaseDate=" + databaseDate + ", locale="
+						+ internalLocale);
 				throw new FrameworkRuntimeException(e);
 			}
 		}
@@ -146,13 +150,14 @@ public class DateUtils {
 			return "";
 		}
 	}
-	
+
 
 	public static java.util.Date getDate(String value) {
 		if (value != null && !value.equals("")) {
 			try {
-				
-				String formatStr = "dd" + dateSeparator + "MM" + dateSeparator + "yyyy";
+
+				String formatStr = "dd" + dateSeparator + "MM" + dateSeparator
+						+ "yyyy";
 				SimpleDateFormat format = new SimpleDateFormat(formatStr);
 				// Enable this once we've taken a bit more of a look
 				// at where this gets called, run the tests, etc.
@@ -169,7 +174,7 @@ public class DateUtils {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Converts a string of a date in DB format ("yyyy-MM-dd") to a
 	 * {@link java.util.Date} object.
@@ -184,12 +189,12 @@ public class DateUtils {
 				return format.parse(date);
 			}
 			catch (ParseException e) {
-			throw new RuntimeException(e);
+				throw new RuntimeException(e);
 			}
-		} else
-			return null;
+		}
+		else return null;
 	}
-	
+
 	public static String getCurrentDate() {
 		Calendar currentCalendar = new GregorianCalendar();
 		int year = currentCalendar.get(Calendar.YEAR);
@@ -254,8 +259,9 @@ public class DateUtils {
 		String month = "";
 		String year = "";
 		String token;
-		String separator = LocalizationConverter.getInstance().getDateSeparatorForCurrentLocale();
-		
+		String separator = LocalizationConverter.getInstance()
+				.getDateSeparatorForCurrentLocale();
+
 		MFIfmt = convertToDateTagFormat(MFIfmt);
 		StringTokenizer stfmt = new StringTokenizer(format, separator);
 		StringTokenizer stdt = new StringTokenizer(date, separator);
@@ -276,15 +282,19 @@ public class DateUtils {
 	}
 
 	// parse new-style browser date format... separate m,d,y fields, no js assembling
-	public static java.sql.Date parseBrowserDateFields(HttpServletRequest request, String property) throws InvalidDateException {
+	public static java.sql.Date parseBrowserDateFields(
+			HttpServletRequest request, String property)
+			throws InvalidDateException {
 		String yearStr = request.getParameter(property + "YY");
 		String monthStr = request.getParameter(property + "MM");
 		String dayStr = request.getParameter(property + "DD");
 		return parseBrowserDateFields(yearStr, monthStr, dayStr);
 	}
-	
-	public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) {
-		return getDateAsSentFromBrowser(dayStr + dateSeparator + monthStr + dateSeparator + yearStr);
+
+	public static java.sql.Date parseBrowserDateFields(String yearStr,
+			String monthStr, String dayStr) {
+		return getDateAsSentFromBrowser(dayStr + dateSeparator + monthStr
+				+ dateSeparator + yearStr);
 	}
 
 	/**
@@ -298,12 +308,13 @@ public class DateUtils {
 		}
 		try {
 			String formatStr = "d" + dateSeparator + "M" + dateSeparator + "yy";
-			SimpleDateFormat format = new SimpleDateFormat(formatStr, internalLocale);
-			
+			SimpleDateFormat format = new SimpleDateFormat(formatStr,
+					internalLocale);
+
 			format.setLenient(false);
 			return new java.sql.Date(format.parse(value).getTime());
 		}
-		
+
 		catch (ParseException e) {
 			throw new InvalidDateException(value);
 		}
@@ -314,7 +325,7 @@ public class DateUtils {
 	public static boolean isValidDate(String value) {
 		try {
 			SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
-					.getDateInstance(DateFormat.SHORT, internalLocale); 
+					.getDateInstance(DateFormat.SHORT, internalLocale);
 			shortFormat.setLenient(false);
 			shortFormat.parse(value);
 			return true;
@@ -324,7 +335,7 @@ public class DateUtils {
 			return false;
 		}
 	}
-	
+
 	public static java.sql.Date getLocaleDate(String value) {
 		if (internalLocale != null && value != null && !value.equals("")) {
 			try {
@@ -372,20 +383,20 @@ public class DateUtils {
 	public static String getMFIFormat() {
 		// TODO change this to pick from app config
 		String formatStr = "dd" + dateSeparator + "mm" + dateSeparator + "yy";
-		
+
 		return formatStr;
 	}
 
 	public static String getMFIShortFormat() {
 		String formatStr = "dd" + dateSeparator + "mm" + dateSeparator + "yy";
-		
+
 		return formatStr;
 	}
 
 	public static String convertToDateTagFormat(String pattern) {
 		char chArray[] = pattern.toCharArray();
 		String separator = dateSeparator;
-		
+
 		StringBuilder fmt = new StringBuilder();
 		boolean d = false;
 		boolean m = false;
@@ -423,7 +434,7 @@ public class DateUtils {
 	public static String createDateString(String day, String month,
 			String year, String format) {
 		String separator = dateSeparator;
-		
+
 		StringTokenizer stfmt = new StringTokenizer(format, separator);
 		String token;
 		StringBuilder dt = new StringBuilder();
@@ -509,7 +520,7 @@ public class DateUtils {
 		int result = date.compareTo(currentDate);
 		return result;
 	}
-	
+
 	public static String makeDateAsSentFromBrowser() {
 		Date date = new Date();
 		return makeDateAsSentFromBrowser(date);
@@ -517,11 +528,12 @@ public class DateUtils {
 
 	public static String makeDateAsSentFromBrowser(Date date) {
 		String formatStr = "d" + dateSeparator + "M" + dateSeparator + "yyyy";
-		
+
 		SimpleDateFormat format = new SimpleDateFormat(formatStr,
 				internalLocale);
 		return format.format(date);
 	}
+
 
 	/**
 	 * Nothing to instantiate here.
@@ -537,7 +549,7 @@ public class DateUtils {
 		currentDateCalendar = new GregorianCalendar(year, month, day);
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
-	
+
 	public static Date getDateWithoutTimeStamp(long timeInMills) {
 		Calendar dateCalendar = new GregorianCalendar();
 		dateCalendar.setTimeInMillis(timeInMills);
@@ -547,67 +559,72 @@ public class DateUtils {
 		dateCalendar = new GregorianCalendar(year, month, day);
 		return new Date(dateCalendar.getTimeInMillis());
 	}
-	
+
 	public static Calendar getCalendarDate(long timeInMills) {
 		Calendar dateCalendar = new GregorianCalendar();
 		dateCalendar.setTimeInMillis(timeInMills);
 		return dateCalendar;
 	}
 
-	public static Date getLastDayOfCurrentYear(){
+	public static Date getLastDayOfCurrentYear() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MONTH,Calendar.DECEMBER);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return new Date(cal1.getTimeInMillis());
 	}
-	
-	public static Calendar getFistDayOfNextYear(Calendar cal){
-		cal.roll(Calendar.YEAR,1);
-		cal.set(Calendar.MONTH,Calendar.JANUARY);
+
+	public static Calendar getFistDayOfNextYear(Calendar cal) {
+		cal.roll(Calendar.YEAR, 1);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;
 	}
-	
-	public static Date getLastDayOfNextYear(){
+
+	public static Date getLastDayOfNextYear() {
 		Calendar cal = GregorianCalendar.getInstance();
-		cal.set(Calendar.MONTH,Calendar.DECEMBER);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR)+1,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR) + 1, cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return cal1.getTime();
 	}
-	
-	public static Calendar getLastDayOfYearAfterNextYear(){
+
+	public static Calendar getLastDayOfYearAfterNextYear() {
 		Calendar cal = GregorianCalendar.getInstance();
-		cal.set(Calendar.MONTH,Calendar.DECEMBER);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR)+2,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR) + 2, cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;
 	}
-	
-	public static Date getCurrentDateOfNextYearWithOutTimeStamp(){
+
+	public static Date getCurrentDateOfNextYearWithOutTimeStamp() {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year+1, month, day);
+		currentDateCalendar = new GregorianCalendar(year + 1, month, day);
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
-	
-	public static Calendar getFistDayOfYearAfterNextYear(){
+
+	public static Calendar getFistDayOfYearAfterNextYear() {
 		Calendar cal = GregorianCalendar.getInstance();
-		cal.set(Calendar.MONTH,Calendar.JANUARY);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR)+2,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR) + 2, cal.get(Calendar.MONTH), cal
+				.get(Calendar.DATE), 0, 0, 0);
 		return cal1;
 	}
-	
+
 	/**
 	 * Not sure why this is just copying over the year, month, and day.
 	 * Also see {@link #getCalendarDate(long)}.
@@ -621,7 +638,7 @@ public class DateUtils {
 		dateCalendar = new GregorianCalendar(year, month, day);
 		return dateCalendar;
 	}
-	
+
 	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -640,7 +657,7 @@ public class DateUtils {
 		return ((cal1.getTime().getTime() - cal2.getTime().getTime()) / (24 * 60 * 60 * 1000));
 
 	}
-	
+
 	public static Date getDatePlusXDays(Date date, int dayNombre) {
 		Date dateplus;
 		Calendar cal = Calendar.getInstance();
@@ -650,4 +667,42 @@ public class DateUtils {
 		return dateplus;
 	}
 
+	public static java.sql.Date getSqlDate(int year, int month, int date) {
+		return convertToSqlDate(getCalendarAsOn(year, month, date));
+	}
+
+	public static Calendar getCalendarAsOn(int year, int month, int date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month, date, 0, 0, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+
+	public static Date getDate(int year, int month, int date) {
+		return getCalendarAsOn(year, month, date).getTime();
+	}
+
+	public static Date currentDate() {
+		return new Date(System.currentTimeMillis());
+	}
+
+	public static java.sql.Date currentDateAsSqlDate() {
+		return convertToSqlDate(currentDate());
+	}
+
+	private static java.sql.Date convertToSqlDate(Calendar calendar) {
+		return new java.sql.Date(calendar.getTimeInMillis());
+	}
+
+	public static java.sql.Date convertToSqlDate(Date date) {
+		return new java.sql.Date(date.getTime());
+	}
+
+	public static java.sql.Date sqlToday() {
+		Calendar calendar = Calendar.getInstance();
+		Calendar calendarAsOnToday = getCalendarAsOn(calendar
+				.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+				.get(Calendar.DATE));
+		return convertToSqlDate(calendarAsOnToday);
+	}
 }

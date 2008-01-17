@@ -44,10 +44,12 @@ import junit.textui.TestRunner;
 
 import org.mifos.application.accounts.savings.SavingsTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
+import org.mifos.application.collectionsheet.business.CollectionSheetReportTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
 import org.mifos.application.office.OfficeTestSuite;
 import org.mifos.application.productsmix.ProductMixTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
+import org.mifos.application.reports.ui.SelectionItemTest;
 import org.mifos.config.ConfigTestSuite;
 import org.mifos.config.TestConfigurationManager;
 import org.mifos.framework.components.ComponentsTestSuite;
@@ -74,6 +76,7 @@ public class ApplicationTestSet1 extends TestSuite {
 		suite.addTest(FastTests.suite());
 		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
+		suite.addTest(CollectionSheetReportTestSuite.suite());
 
 		suite.addTest(SavingsTestSuite.suite());
 		suite.addTest(ReportsTestSuite.suite());

@@ -27,17 +27,11 @@
 	String encodedParameterName = ParameterAccessor.htmlEncode( parameterBean.getName( ) );
 %>
 <TR>
-	<TD NOWRAP>
-	<!-- For Mifos Birt reports hide
+	<!--<TD NOWRAP>
 		<IMG SRC="birt/images/parameter.gif" ALT="<%= parameterBean.getDisplayName( ) %>" TITLE="<%= parameterBean.getToolTip( ) %>"/>
-	-->	
-	</TD>
-	<TD NOWRAP>
-	    <!-- For Mifos Birt reports hide
-		<FONT TITLE="<%= parameterBean.getToolTip( ) %>">
-		
-		<LABEL FOR="<%= encodedParameterName %>"><%= parameterBean.getDisplayName( ) %>:</LABEL></FONT>
-		-->	
+	</TD>-->
+	<TD NOWRAP class = "fontnormal" align="right">
+		<FONT TITLE="<%= parameterBean.getToolTip( ) %>"><LABEL FOR="<%= encodedParameterName %>"><%= parameterBean.getDisplayName( ) %>:</LABEL></FONT>
 		<%-- is required --%>
 		<%
 		if ( parameterBean.isRequired( ) )
@@ -48,9 +42,9 @@
 		}
 		%>
 	</TD>
-</TR>
+<!--</TR>
 <TR>
-	<TD NOWRAP></TD>
+	<TD NOWRAP></TD>-->
 	<TD NOWRAP WIDTH="100%">
 <%
 	if ( parameterBean.allowNull( ) )
@@ -81,7 +75,6 @@
 <%
 	}
 %>
-<!-- For Mifos Birt reports hide
 		<INPUT CLASS="BirtViewer_parameter_dialog_Input"
 			TYPE="<%= parameterBean.isValueConcealed( )? "PASSWORD" : "TEXT" %>"
 			NAME="<%= encodedParameterName %>"
@@ -90,43 +83,7 @@
 			VALUE="<%= ParameterAccessor.htmlEncode( ( parameterBean.getValue( ) == null )? "" : parameterBean.getValue( ) ) %>" 
 			<%= ( parameterBean.allowNull( ) && parameterBean.getValue( ) == null )? "DISABLED='true'" : "" %>
             >
--->
-<!-- For Mifos Birt reports add-->
-        <table width="70%" cellspacing="0" cellpadding="0" border="0">
-             <tbody>
-                  <tr>
-                    <td class="headingorange" width="70%" valign="top" height="24" align="left">
-                        <LABEL><%= ParameterAccessor.htmlEncode( ( parameterBean.getValue( ) == null )? "" : parameterBean.getValue( ) ) %></LABEL>
-                        <br/>
-                    </td>
-                  </tr>
-             </tbody>
-         </table>
-         <div class="fontnormal">
-         <LABEL>Enter the parameters on which the report will be generated. The report will be generated as a pdf. 
-		     <FONT COLOR="red"><LABEL>*</LABEL></FONT><LABEL>Fields marked with an asterisk are required. </LABEL>
-             </br>
-         </div>
-         <div class="fontnormalbold">
-             </br>
-             <LABEL>&nbsp;Generate Report:</LABEL>
-         </div>
-         <!-- For Mifos Birt report -->
-	    <font class="fontnormalRedBold">
-	    <%
-		    String message = request.getParameter("message");
-		    if (message != null) {
-		    	String[] messages = message.split("~");
-		    	for(int i=0;i<messages.length;i++){
-	    %>
-	    <%
-		    		out.println("<li>" + messages[i] + "</li>");
-		    	}
-		    }
-	    %>
-	    </font>
-	    <!-- END -->
-<!-- End -->
+
 <%
 	if ( parameterBean.allowNull( ) && !parameterBean.allowBlank( ) )
 	{

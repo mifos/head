@@ -51,6 +51,7 @@ import org.mifos.application.admin.AdminTestSuite;
 import org.mifos.application.bulkentry.BulkEntryTestSuite;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
+import org.mifos.application.collectionsheet.business.CollectionSheetReportTestSuite;
 import org.mifos.application.configuration.ApplicationConfigurationTestSuite;
 import org.mifos.application.customer.CustomerTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
@@ -142,7 +143,8 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(SurveysTestSuite.suite());
 		suite.addTest(PPITestSuite.suite());
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
-		
+		suite.addTest(CollectionSheetTestSuite.suite());
+		suite.addTest(CollectionSheetReportTestSuite.suite());		
 		return suite;
 	}
 }

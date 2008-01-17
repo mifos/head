@@ -29,8 +29,9 @@
 %>
 <!--For Mifos Birt reports-->
 <TR>
-	<TD NOWRAP>
-	</TD>
+    <!-- below TD commented for alignment -->
+	<!-- <TD NOWRAP>
+	</TD>-->
 	<TD NOWRAP class = "fontnormal" align="right">
 	<%if ( parameterBean.isRequired( ) )
 		{
@@ -44,7 +45,8 @@
 		
 		
 	</TD>
-	<TD NOWRAP></TD>
+	<!-- below TD commented for alignment -->
+	<!-- <TD NOWRAP></TD> -->
 	<TD NOWRAP WIDTH="50%">
 		<INPUT TYPE="HIDDEN"
 			ID="<%= encodedParameterName + "_value" %>"

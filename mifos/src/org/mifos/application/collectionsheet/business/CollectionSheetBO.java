@@ -59,6 +59,7 @@ import org.mifos.framework.exceptions.SystemException;
 public class CollectionSheetBO extends BusinessObject {
 
 	public CollectionSheetBO() {
+		super();
 	}
 
 	private Integer collSheetID;
@@ -70,6 +71,18 @@ public class CollectionSheetBO extends BusinessObject {
 	private Date runDate;
 
 	private Set<CollSheetCustBO> collectionSheetCustomers;
+
+	
+	public void populateTestInstance(Date collSheetDate, Date runDate, Set<CollSheetCustBO> collectionSheetCustomers, 
+			Short statusFlag) {
+		this.collSheetDate = collSheetDate;
+		this.runDate = runDate;
+		this.collectionSheetCustomers = collectionSheetCustomers;
+		this.statusFlag = statusFlag;
+		for(CollSheetCustBO customer: collectionSheetCustomers) {
+			customer.setCollectionSheet(this);
+		}		
+	}
 
 	public Date getCollSheetDate() {
 		return collSheetDate;

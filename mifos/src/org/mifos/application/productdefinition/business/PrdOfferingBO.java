@@ -103,13 +103,18 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
 
 	protected PrdOfferingBO() {
-		prdOfferingId = null;
-		globalPrdOfferingNum = null;
-		prdType = null;
-		office = null;
+		this(null, null, null, null);
 		prdApplicableMaster = null;
 		collectionProductMix=null;
 		prdOfferingNotAllowedId=null;
+	}
+	
+	protected PrdOfferingBO(Short prdOfferingId, String globalPrdOfferingNum, ProductTypeEntity prdType,
+			OfficeBO office){
+		this.prdOfferingId = prdOfferingId;
+		this.globalPrdOfferingNum = globalPrdOfferingNum;
+		this.prdType = prdType;
+		this.office = office;		
 	}
 
 	protected PrdOfferingBO(UserContext userContext, String prdOfferingName,
@@ -152,6 +157,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			throw new ProductDefinitionException(e);
 		}
 		prdLogger.debug("creating product offering done");
+	}
+
+	public PrdOfferingBO(Short prdOfferingId) {
+		this(prdOfferingId, null, null, null);		
 	}
 
 	public Short getPrdOfferingId() {
@@ -457,5 +466,31 @@ public abstract class PrdOfferingBO extends BusinessObject {
 			throws PersistenceException {
 		this.setPrdMixFlag(YesNoFlag.YES.getValue());
 		new PrdOfferingPersistence().createOrUpdate(this);
+	}
+
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((prdOfferingId == null) ? 0 : prdOfferingId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final PrdOfferingBO other = (PrdOfferingBO) obj;
+		if (prdOfferingId == null) {
+			if (other.prdOfferingId != null)
+				return false;
+		}
+		else if (!prdOfferingId.equals(other.prdOfferingId))
+			return false;
+		return true;
 	}
 }

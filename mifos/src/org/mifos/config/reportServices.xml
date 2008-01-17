@@ -1,0 +1,89 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ehcache="http://www.springmodules.org/schema/ehcache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	http://www.springmodules.org/schema/ehcache http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
+	<bean id="cacheManager"
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+			<value>classpath:conf/ehcache.xml</value>
+		</property>
+	</bean>
+	<bean id="cacheProviderFacade"
+		class="org.springmodules.cache.provider.ehcache.EhCacheFacade">
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+	<bean id="collectionSheetService"
+		class="org.mifos.application.reports.business.service.CollectionSheetService" />
+	<bean id="officeBusinessService"
+		class="org.mifos.application.office.business.service.OfficeBusinessService" />
+	<bean id="personnelBusinessService"
+		class="org.mifos.application.personnel.business.service.PersonnelBusinessService" />
+	<bean id="customerBusinessService"
+		class="org.mifos.application.customer.business.service.CustomerBusinessService" />
+	<bean id="accountBusinessService"
+		class="org.mifos.application.accounts.business.service.AccountBusinessService" />
+	<bean id="loanPrdBusinessService"
+		class="org.mifos.application.productdefinition.business.service.LoanPrdBusinessService" />
+	<bean id="savingsPrdBusinessService"
+		class="org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService" />
+	<bean id="reportProductOfferingService"
+		class="org.mifos.application.reports.business.service.ReportProductOfferingService" />
+
+	<bean id="selectionItemPersistence"
+		class="org.mifos.application.reports.persistence.SelectionItemPersistence" />
+	<bean id="reportParameterService"
+		class="org.mifos.application.reports.business.service.ReportsParameterService">
+		<constructor-arg ref="selectionItemPersistence" />
+	</bean>
+	<bean id="reportParameterServiceProxy"
+		class="org.springmodules.cache.interceptor.proxy.CacheProxyFactoryBean">
+		<property name="cacheProviderFacade" ref="cacheProviderFacade" />
+		<property name="cachingModels">
+			<props>
+				<prop key="get*">
+					cacheName=org.mifos.application.reports.business.service.cache
+				</prop>
+			</props>
+		</property>
+		<property name="flushingModels">
+			<props>
+				<prop key="invalidate">
+					cacheNames=org.mifos.application.reports.business.service.cache
+				</prop>
+			</props>
+		</property>
+		<property name="target" ref="reportParameterService" />
+	</bean>
+	<bean id="defaultCollectionSheetReportService"
+		class="org.mifos.application.reports.business.service.CollectionSheetReportService">
+		<constructor-arg ref="collectionSheetService" />
+		<constructor-arg ref="officeBusinessService" />
+		<constructor-arg ref="personnelBusinessService" />
+		<constructor-arg ref="customerBusinessService" />
+		<constructor-arg ref="accountBusinessService" />
+		<constructor-arg ref="loanPrdBusinessService" />
+		<constructor-arg ref="savingsPrdBusinessService" />
+		<constructor-arg ref="reportProductOfferingService" />
+		<constructor-arg>
+			<bean factory-method="decorate"
+				class="org.mifos.framework.business.service.ServiceDecoratorFactory">
+				<constructor-arg
+					type="org.mifos.application.reports.business.service.IReportsParameterService"
+					ref="reportParameterServiceProxy" />
+			</bean>
+		</constructor-arg>
+	</bean>
+	<bean id="collectionSheetReportService" factory-method="decorate"
+		class="org.mifos.framework.business.service.ServiceDecoratorFactory">
+		<constructor-arg
+			type="org.mifos.application.reports.business.service.ICollectionSheetReportService"
+			ref="defaultCollectionSheetReportService" />
+		<constructor-arg>
+			<bean
+				class="org.mifos.framework.components.logger.ServiceLogger">
+				<constructor-arg value="CollectionSheetReportService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+</beans>

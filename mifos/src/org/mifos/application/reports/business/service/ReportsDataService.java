@@ -14,6 +14,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.NumberUtils;
 
 public class ReportsDataService {
 
@@ -36,7 +37,7 @@ public class ReportsDataService {
 
 	public void initialize(Integer userId) throws ServiceException {
 		this.personnel = personnelBusinessService
-				.getPersonnel(convertIntegerToShort(userId));
+				.getPersonnel(NumberUtils.convertIntegerToShort(userId));
 	}
 
 	public List<OfficeBO> getActiveBranchesUnderUser() throws ServiceException {
@@ -51,7 +52,7 @@ public class ReportsDataService {
 		}
 		else {
 			loanOfficers = personnelBusinessService
-					.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
+					.getActiveLoanOfficersUnderOffice(NumberUtils.convertIntegerToShort(branchId));
 			loanOfficers.add(PersonnelBO.ALL_PERSONNEL);
 		}
 		return loanOfficers;
@@ -69,18 +70,18 @@ public class ReportsDataService {
 			Integer loanOfficerId, Integer loanProductId)
 			throws PersistenceException {
 		return loanPersistence.getLoanAccountsInActiveBadStanding(
-				convertIntegerToShort(branchId),
-				convertIntegerToShort(loanOfficerId),
-				convertIntegerToShort(loanProductId));
+				NumberUtils.convertIntegerToShort(branchId),
+				NumberUtils.convertIntegerToShort(loanOfficerId),
+				NumberUtils.convertIntegerToShort(loanProductId));
 	}
 
 	public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
 			Integer branchId, Integer loanOfficerId, Integer loanProductId)
 			throws PersistenceException {
 		return loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(
-						convertIntegerToShort(branchId),
-						convertIntegerToShort(loanOfficerId),
-						convertIntegerToShort(loanProductId));
+						NumberUtils.convertIntegerToShort(branchId),
+						NumberUtils.convertIntegerToShort(loanOfficerId),
+						NumberUtils.convertIntegerToShort(loanProductId));
 	}
 
 	public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
@@ -88,9 +89,9 @@ public class ReportsDataService {
 			throws PersistenceException {
 		return loanPersistence
 				.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
-						convertIntegerToShort(branchId),
-						convertIntegerToShort(loanOfficerId),
-						convertIntegerToShort(loanProductId));
+						NumberUtils.convertIntegerToShort(branchId),
+						NumberUtils.convertIntegerToShort(loanOfficerId),
+						NumberUtils.convertIntegerToShort(loanProductId));
 	}
 
 
@@ -117,13 +118,6 @@ public class ReportsDataService {
 
 	PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	private Short convertIntegerToShort(Integer intValue) {
-		if (intValue == null) {
-			return null;
-		}
-		return intValue.shortValue();
 	}
 
 

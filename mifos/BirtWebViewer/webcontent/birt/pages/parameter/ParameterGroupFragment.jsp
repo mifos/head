@@ -22,7 +22,7 @@
 -----------------------------------------------------------------------------%>
 <jsp:useBean id="fragments" type="java.util.Collection" scope="request" />
 <jsp:useBean id="attributeBean" type="org.eclipse.birt.report.context.BaseAttributeBean" scope="request" />
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%-----------------------------------------------------------------------------
 	Content fragment
 -----------------------------------------------------------------------------%>
@@ -62,6 +62,17 @@
 	}
 %>	
 		<TABLE CLASS="birtviewer_parameter_dialog_Label">
+		<TR><TD COLSPAN="2" ALIGN="CENTER">
+
+		<c:if test="${reportErrors ne null}">
+			Error occurred while generating report
+			<div align="left"><ul class="fontnormalRedBold">
+			<c:forEach items="${reportErrors.allErrorMessages}" var="error">
+				<li><c:out value="${error}"/></li>
+			</c:forEach>
+			</ul></div>
+		</c:if>
+		</TD></TR>
 		<%
 			if ( fragments != null )
 			{

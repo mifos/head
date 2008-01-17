@@ -132,11 +132,15 @@ public class SavingsBO extends AccountBO {
 			setValuesForActiveState();
 
 	}
+	
+	public void populateInstanceForTest(SavingsOfferingBO savingsOffering) {
+		 this.savingsOffering = savingsOffering;
+	 }
 
-	protected SavingsBO() {
+	public SavingsBO() {
 		savingsActivityDetails = new HashSet<SavingsActivityEntity>();
 	}
-
+	
 	public Money getRecommendedAmount() {
 		return recommendedAmount;
 	}
@@ -2143,5 +2147,9 @@ public class SavingsBO extends AccountBO {
 			}			
 		}else
 			return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
+	}
+
+	public boolean isOfProductOffering(SavingsOfferingBO productOffering) {
+		return savingsOffering.equals(productOffering);
 	}
 }

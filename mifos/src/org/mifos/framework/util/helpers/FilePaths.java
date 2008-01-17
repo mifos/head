@@ -64,4 +64,6 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
 	public static final String CONFIGURABLEMIFOSDBPROPERTIESFILE = 
 		"deploymifosDB.properties";
+	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/reportproducts.properties";
+	public static final String REPORT_SERVICE_BEAN_FILE = "/org/mifos/config/reportServices.xml";
 }

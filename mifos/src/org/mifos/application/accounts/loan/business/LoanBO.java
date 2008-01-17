@@ -206,19 +206,24 @@ public class LoanBO extends AccountBO {
 	private Short recurMonth;
 	
 
-	protected LoanBO() {
-		super();
-		this.loanOffering = null;
-		this.loanSummary = null;
+	protected LoanBO() {		
+		this(null, null, null, null, null);
 		this.loanPrdPersistence = null;
-		this.performanceHistory = null;
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
         this.redone = false;
- 		this.maxMinLoanAmount = null;
-		this.maxMinNoOfInstall = null;
     	parentAccount=null;
     	loanAccountDetails=new HashSet<LoanBO>();
 	}
+	
+	private LoanBO(LoanOfferingBO loanOffering, LoanSummaryEntity loanSummary, MaxMinLoanAmount maxMinLoanAmount, 
+			MaxMinNoOfInstall maxMinNoOfInstall, LoanPerformanceHistoryEntity performanceHistory) {
+		this.loanOffering = loanOffering;
+		this.loanSummary = loanSummary;
+		this.maxMinLoanAmount = maxMinLoanAmount;
+		this.maxMinNoOfInstall = maxMinNoOfInstall;
+		this.performanceHistory = performanceHistory;		
+	}
+	
 
 	public static LoanBO redoLoan(UserContext userContext,
 			LoanOfferingBO loanOffering, CustomerBO customer,
@@ -519,6 +524,10 @@ public class LoanBO extends AccountBO {
 		this.maxMinNoOfInstall = new MaxMinNoOfInstall(maxNoOfInstall,
 				minNoOfInstall, this);
 		addcustomFields(customFields);
+	}
+	
+	public static LoanBO createInstanceForTest(LoanOfferingBO loanOffering) {
+		return new LoanBO(loanOffering, null, null, null, null);		
 	}
 
 	public Integer getBusinessActivityId() {
@@ -3406,7 +3415,8 @@ public class LoanBO extends AccountBO {
 	public RankType getWeekRank() {
 		return monthRank!=null ? RankType.getRankType(monthRank.getId()) : null;
 	}
-	
 
-	
+	public boolean isOfProductOffering(LoanOfferingBO loanOfferingBO) {
+		return this.loanOffering.equals(loanOfferingBO);
+	}
 }

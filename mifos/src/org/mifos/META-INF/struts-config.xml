@@ -304,7 +304,9 @@
 		org.mifos.application.accounts.util.helpers.AccountState,
 		org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit"/>
     </plug-in>
-    <!--
+    <!-- Jan 16, 2008 the Spring app context is no longer initialized here
+    	 because of initialization ordering issues.  It is currently 
+    	 initialized in the ApplicationInitializer class. 
     <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
         <set-property property="contextConfigLocation"
                       value="/WEB-INF/classes/org/mifos/config/applicationContext.xml"/>

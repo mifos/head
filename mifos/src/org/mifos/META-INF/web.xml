@@ -75,6 +75,16 @@
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 	
+	<!-- Birt Reports Validation Flow Servlet -->
+	<servlet>
+	    <servlet-name>BirtReportValidationController</servlet-name>
+	    <servlet-class>org.mifos.application.reports.action.BirtReportValidationAction</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>BirtReportValidationController</servlet-name>
+	    <url-pattern>/birtReports</url-pattern>
+	</servlet-mapping>
+	
 	<!-- pages/actions which don't go through struts -->
 	<servlet>
 	    <servlet-name>Dispatcher</servlet-name>

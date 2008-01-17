@@ -37,6 +37,19 @@
 		<INPUT TYPE="HIDDEN"
 			NAME="<%= encodedParameterName %>"
 			VALUE="<%= value %>"/>		
+		    <!-- For Mifos Birt report -->
+		    <font class="fontnormalRedBold">
+		    <%
+			    String message = request.getParameter("mifosErrorMessage");
+	 		    if (message != null && request.getAttribute("errorHasBeenShown") == null) { 
+	 		        request.setAttribute("errorHasBeenShown", "true");			    		 		    
+			    	String[] messages = message.split("~");
+			    	for(int i=0;i<messages.length;i++){	    
+			    		out.println("<li>" + messages[i] + "</li>");
+			    	}
+			    }
+		    %>
+		    </font>						
 	</TD>
 </TR>
 

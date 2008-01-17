@@ -8,4 +8,7 @@ public class OfficecFixture {
 		return office;
 	}
 
+	public static OfficeBO createOffice(Short officeId) {
+		return new OfficeBO(officeId, "Some Office", null, null);
+	}
 }
