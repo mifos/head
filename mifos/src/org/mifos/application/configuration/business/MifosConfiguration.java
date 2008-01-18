@@ -73,10 +73,6 @@ public class MifosConfiguration {
 			}
 		}
 		
-/*		
- * Jan 16, 2008 This code block appears to be unused.  Commenting it out
- * with the plan to remove it as long as no problems result from its removal
- *  
 		List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
 		for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
 			Set<LookUpValueLocaleEntity> localeValues = lookupValueEntity
@@ -101,7 +97,7 @@ public class MifosConfiguration {
 			}
 	
 		}
-*/
+
 	}
 
 	
