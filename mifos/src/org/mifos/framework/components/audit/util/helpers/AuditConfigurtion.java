@@ -54,6 +54,7 @@ import org.mifos.config.Localization;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class AuditConfigurtion {
 
@@ -84,7 +85,7 @@ public class AuditConfigurtion {
 		configurationPersistence=new ApplicationConfigurationPersistence();
 		
 		locales = Localization.getInstance().getSupportedLocaleIds();
-		columnNames = (PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/framework/util/resources/audit/ColumnMappingBundle");
+		columnNames = (PropertyResourceBundle)PropertyResourceBundle.getBundle(FilePaths.COLUMN_MAPPING_BUNDLE_PROPERTYFILE);
 		locale = Localization.getInstance().getMainLocale();
 	}
 

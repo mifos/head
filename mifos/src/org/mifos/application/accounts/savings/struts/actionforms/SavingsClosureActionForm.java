@@ -54,6 +54,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class SavingsClosureActionForm extends ValidatorActionForm {
 	private String receiptId;
@@ -136,7 +137,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 					Constants.USER_CONTEXT_KEY, request.getSession());
 			ResourceBundle resources = ResourceBundle
 					.getBundle(
-							"org.mifos.application.accounts.savings.util.resources.SavingsUIResources",
+							FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE,
 							userContext.getPreferredLocale());
 			
 			String amount = getAmount();

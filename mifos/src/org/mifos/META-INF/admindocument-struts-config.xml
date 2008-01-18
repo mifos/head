@@ -30,7 +30,7 @@
    </action-mappings>
    		
     <!-- Administrative documents -->
-    <message-resources key="admindocumentsUIResources" parameter="org.mifos.application.admindocuments.util.resources.AdmindocumentsUIResources.properties"  />
+    <message-resources key="admindocumentsUIResources" parameter="org.mifos.config.localizedResources.AdmindocumentsUIResources.properties"  />
     
 
 	

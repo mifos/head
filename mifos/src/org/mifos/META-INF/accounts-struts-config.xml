@@ -294,16 +294,16 @@
     </action-mappings>
 
     <message-resources key="loanUIResources"
-                       parameter="org.mifos.application.accounts.loan.util.resources.LoanUIResources"
+                       parameter="org.mifos.config.localizedResources.LoanUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="accountsUIResources"
-                       parameter="org.mifos.application.accounts.util.resources.accountsUIResources"
+                       parameter="org.mifos.config.localizedResources.accountsUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Savings resources -->
     <message-resources key="SavingsUIResources"
-                       parameter="org.mifos.application.accounts.savings.util.resources.SavingsUIResources"
+                       parameter="org.mifos.config.localizedResources.SavingsUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Change Account Status resources -->
     <message-resources key="accountStatusUIResources"
-                       parameter="org.mifos.application.accounts.loan.util.resources.AccountStatusUIResources"></message-resources>
+                       parameter="org.mifos.config.localizedResources.AccountStatusUIResources"></message-resources>
 </struts-config>

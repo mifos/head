@@ -577,19 +577,19 @@
 
     </action-mappings>
 
-    <message-resources key="UIResources" parameter="org.mifos.framework.util.resources.UIResources"
+    <message-resources key="UIResources" parameter="org.mifos.config.localizedResources.UIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="LoggerResources"
-                       parameter="org.mifos.framework.util.resources.loggerresources.LoggerStatements"
+                       parameter="org.mifos.config.localizedResources.LoggerStatements"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- ImageResources-->
     <message-resources key="ImageResources" parameter="org.mifos.framework.util.resources.ImageResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="Resources" parameter="org.mifos.framework.components.tabletag.Resources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="ExceptionResources" parameter="org.mifos.framework.util.resources.ExceptionResources"
+    <message-resources key="ExceptionResources" parameter="org.mifos.config.localizedResources.ExceptionResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="LoginUIResources" parameter="org.mifos.application.login.util.resources.LoginUIResources"
+    <message-resources key="LoginUIResources" parameter="org.mifos.config.localizedResources.LoginUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Personnel resources -->
     <message-resources key="PersonnelUIResources"
@@ -608,9 +608,9 @@
     <message-resources key="RolesAndPermissionResources"
                        parameter="org.mifos.application.rolesandpermission.util.resources.RolesAndPermission"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="MenuResources" parameter="org.mifos.framework.util.resources.menuresources.MenuResources"
+    <message-resources key="MenuResources" parameter="org.mifos.config.localizedResources.MenuResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="adminUIResources" parameter="org.mifos.application.admin.util.resources.adminUIResources"
+    <message-resources key="adminUIResources" parameter="org.mifos.config.localizedResources.adminUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- fees resources -->
     <message-resources key="FeesUIResources" parameter="org.mifos.application.fees.util.resources.FeesUIResources"/>
@@ -621,7 +621,7 @@
     <message-resources key="fundUIResources" parameter="org.mifos.application.fund.util.resources.FundUIResources"/>
     <!-- Bulk Entry resources -->
     <message-resources key="bulkEntryUIResources"
-                       parameter="org.mifos.application.bulkentry.util.resources.BulkEntryUIResources"/>
+                       parameter="org.mifos.config.localizedResources.BulkEntryUIResources"/>
     <!-- Configuration -->
     <message-resources key="configurationUIResources"
                        parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"/>
@@ -642,5 +642,5 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"
-                       parameter="org.mifos.application.acceptedpaymenttype.util.resources.AcceptedPaymentTypeUIResources"/>
+                       parameter="org.mifos.config.localizedResources.AcceptedPaymentTypeUIResources"/>
 </struts-config>

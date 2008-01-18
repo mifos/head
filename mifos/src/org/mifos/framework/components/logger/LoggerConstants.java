@@ -28,7 +28,7 @@ package org.mifos.framework.components.logger;
 
 public interface LoggerConstants {
 	/**Location of the resource bundle*/
-	public String LOGGERRESOURCEBUNDLE = "org.mifos.framework.util.resources.loggerresources.LoggerStatements";
+	public String LOGGERRESOURCEBUNDLE = "org.mifos.config.localizedResources.LoggerStatements";
 
 	public String ROOTLOGGER = "org.mifos";
 	public String FRAMEWORKLOGGER = "org.mifos.framework";

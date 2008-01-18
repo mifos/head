@@ -59,6 +59,7 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
 	private String input;
@@ -114,7 +115,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 		ActionErrors errors = null;
 		ResourceBundle resources = ResourceBundle
 				.getBundle(
-						"org.mifos.application.accounts.util.resources.accountsUIResources",
+						FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
 						getUserLocale(request));
 
 		if (methodCalled != null && methodCalled.equals("preview")) {

@@ -66,4 +66,13 @@ public interface FilePaths {
 		"deploymifosDB.properties";
 	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/reportproducts.properties";
 	public static final String REPORT_SERVICE_BEAN_FILE = "/org/mifos/config/reportServices.xml";
+	public static final String LOCALIZED_RESOURCE_PATH="org/mifos/config/localizedResources/";
+	public static final String COLUMN_MAPPING_BUNDLE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "ColumnMappingBundle";
+	public static String FIELD_CONF_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "FieldUIResources";
+	// org.mifos.config.localizedResources.
+	public static String LOAN_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "LoanUIResources";
+	//org.mifos.application.accounts.savings.util.resources.SavingsUIResources
+	public static String SAVING_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "SavingsUIResources";
+	// "org.mifos.application.accounts.util.resources.accountsUIResources"
+	public static String ACCOUNTS_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "accountsUIResources";
 }

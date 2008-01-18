@@ -15,6 +15,7 @@ import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActi
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
@@ -24,7 +25,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.accounts.loan.util.resources.LoanUIResources", getUserLocale(request));
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, getUserLocale(request));
 		
 		String methodCalled= request.getParameter(MethodNameConstants.METHOD);
 		ActionErrors errors =new ActionErrors();

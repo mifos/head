@@ -8,6 +8,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class FieldConfigurationHelper {
 
@@ -21,7 +22,7 @@ public class FieldConfigurationHelper {
 			PropertyResourceBundle propertyString = 
 				(PropertyResourceBundle) PropertyResourceBundle
 					.getBundle(
-							FieldConfigurationConstant.FIELD_CONF_PROPERTYFILE,
+							FilePaths.FIELD_CONF_PROPERTYFILE,
 							userContext.getPreferredLocale());
 			return propertyString.getString(fieldName);
 		}
