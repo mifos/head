@@ -88,6 +88,9 @@
 									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 									.
 									<mifos:mifoslabel name="loan.clickcanceladmin" />
+									<br />
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>
+									<mifos:mifoslabel name="loan.asterisk" />
 								</td>
 							</tr>
 							<tr>
@@ -176,9 +179,9 @@
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="6%" align="right" valign="top" class="fontnormal">
-									<mifos:mifoslabel name="loan.note" />
+									<mifos:mifoslabel mandatory="yes" name="loan.note" />
 								</td>
-								<td width="94%" align="left" valign="top" style="padding-left:4px;">
+								<td width="94%" align="left" valign="top" style="padding-left:4px;">									
 									<mifos:textarea property="note" style="width:320px; height:110px;"/>
 								</td>
 							</tr>
