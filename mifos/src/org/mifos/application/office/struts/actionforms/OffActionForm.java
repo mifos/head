@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -26,6 +27,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class OffActionForm extends BaseActionForm {
 
@@ -167,12 +169,12 @@ public class OffActionForm extends BaseActionForm {
 			try {
 
 				resourceBundle = ResourceBundle.getBundle(
-						OfficeConstants.OFFICERESOURCEPATH, userContext
+						FilePaths.OFFICERESOURCEPATH, userContext
 								.getPreferredLocale());
 			} catch (MissingResourceException e) {
 
 				resourceBundle = ResourceBundle
-						.getBundle(OfficeConstants.OFFICERESOURCEPATH);
+						.getBundle(FilePaths.OFFICERESOURCEPATH);
 
 			}
 		return resourceBundle.getString(key);

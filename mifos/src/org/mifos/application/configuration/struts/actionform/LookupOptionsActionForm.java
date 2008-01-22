@@ -57,6 +57,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class LookupOptionsActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -678,7 +679,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 
 private String getEntityType(String entity,  HttpServletRequest request)
 	{
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, 
 				getUserLocale(request));
 		String entityType = null;
 		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))

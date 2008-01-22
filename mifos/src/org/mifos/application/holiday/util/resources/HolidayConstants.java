@@ -105,7 +105,6 @@ public interface HolidayConstants {
 	public final String CHECKLIST_ITEMS="items";
 	public final String OLDCHECKLISTNAME="oldChecklistName";
 	
-	public static final String HOLIDAYSOURCEPATH = "org/mifos/application/holiday/util/resources/HolidayUIResources";
 	public final String HOLIDAYLIST1 = "holidayList1";
 	public final String HOLIDAYLIST2 = "holidayList2";
 	public final String REPAYMENTRULETYPES = "RepaymentRuleType";

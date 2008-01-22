@@ -138,6 +138,6 @@
     </action-mappings>
 
     <message-resources key="ProductDefUIResources"
-                       parameter="org.mifos.application.productdefinition.util.resources.ProductDefinitionResources"
+                       parameter="org.mifos.config.localizedResources.ProductDefinitionResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 </struts-config>

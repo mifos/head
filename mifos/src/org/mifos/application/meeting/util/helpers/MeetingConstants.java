@@ -138,7 +138,7 @@ public interface MeetingConstants {
 	public final String MONTH_SCHEDULE_SHORT="meeting.monthScheduleShort";
 	public final String WEEK_FREQUENCY="meeting.weekFrequency";
 	public final String MONTH_FREQUENCY="meeting.monthFrequency";
-	public final String MEETING_RESOURCE="org.mifos.application.meeting.util.resources.Meeting";
+	
 	
 	public final String KEYINVALIDRECURAFTER="meeting.error.invalidRecurAfter";
 	public final String INVALID_ENDDATE="errors.Meeting.invalidEndDate";

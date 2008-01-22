@@ -21,6 +21,7 @@ import org.mifos.framework.struts.tags.MifosValueList;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
@@ -326,7 +327,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
 			+ "0";
 		
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, 
 				request.getLocale());
 		
 		String errorTooShort = resources.getString("errors.novalue");

@@ -165,10 +165,10 @@
 
     <!-- Reports resources -->
     <message-resources key="reportsUIResources"
-                       parameter="org.mifos.application.reports.util.resources.ReportsUIResources"
+                       parameter="org.mifos.config.localizedResources.ReportsUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Reports Category resources -->
     <message-resources key="reportsCategoryUIResources"
-                       parameter="org.mifos.application.reports.util.resources.ReportsCategoryUIResources"
+                       parameter="org.mifos.config.localizedResources.ReportsCategoryUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 </struts-config>

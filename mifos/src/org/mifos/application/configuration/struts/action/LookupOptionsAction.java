@@ -73,6 +73,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.FilePaths;
 
 
 public class LookupOptionsAction extends BaseAction {
@@ -107,7 +108,7 @@ public class LookupOptionsAction extends BaseAction {
 	
 	private void setLookupType(String configurationEntity, HttpServletRequest request)
 	{
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.configuration.util.resources.ConfigurationUIResources", 
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, 
 				getUserLocale(request));
 		UserContext userContext = getUserContext(request);
 		Short localeId = userContext.getLocaleId();

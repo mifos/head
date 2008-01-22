@@ -238,19 +238,19 @@
     </action-mappings>
 
     <message-resources key="GroupUIResources"
-                       parameter="org.mifos.application.customer.group.util.resources.GroupUIResources"
+                       parameter="org.mifos.config.localizedResources.GroupUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="CustomerUIResources"
-                       parameter="org.mifos.application.customer.util.resources.CustomerUIResources"
+                       parameter="org.mifos.config.localizedResources.CustomerUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="CenterUIResources"
-                       parameter="org.mifos.application.customer.center.util.resources.CenterUIResources"
+                       parameter="org.mifos.config.localizedResources.CenterUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="ClientUIResources"
-                       parameter="org.mifos.application.customer.client.util.resources.ClientUIResources"
+                       parameter="org.mifos.config.localizedResources.ClientUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Personnel resources -->
     <message-resources key="CustomerSearchUIResources"
-                       parameter="org.mifos.application.customer.util.resources.CustomerSearchUIResources"
+                       parameter="org.mifos.config.localizedResources.CustomerSearchUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 </struts-config>

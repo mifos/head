@@ -64,6 +64,7 @@ import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 /**
  * This class renders the table list.
@@ -381,7 +382,7 @@ public class TableTag extends BodyTagSupport {
 	 */
 	String getSingleFile() throws JspException {
 		ResourceBundle resource = ResourceBundle
-				.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
 		String xmlPath = resource.getString(name + "_xml");
 		if (xmlPath != null) {
 			return xmlPath;
@@ -400,7 +401,7 @@ public class TableTag extends BodyTagSupport {
 		String forwardkey = (String) SessionUtils.getAttribute("forwardkey",
 				pageContext.getSession());
 		ResourceBundle resource = ResourceBundle
-				.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
 		if (null == action || null == forwardkey) {
 			Path pathVar = table.findPath(key);
 			action = pathVar.getAction();
@@ -450,7 +451,7 @@ public class TableTag extends BodyTagSupport {
 			IOException, PageExpiredException {
 		Locale locale = getLocale();
 		ResourceBundle resource = ResourceBundle
-				.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
 
 		String currentPage = ((HttpServletRequest) pageContext.getRequest())
 				.getParameter("current");
@@ -475,7 +476,7 @@ public class TableTag extends BodyTagSupport {
 		String xmlFilePath = getSingleFile();
 		Table table = helperCache(xmlFilePath, name);
 		ResourceBundle resource = ResourceBundle
-				.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
 		if (table != null) {
 			StringBuilder result = new StringBuilder();
 			JspWriter out = pageContext.getOut();
@@ -498,7 +499,7 @@ public class TableTag extends BodyTagSupport {
 		JspWriter out = pageContext.getOut();
 		createStartTable(result, true, false);
 		ResourceBundle resource = ResourceBundle
-				.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
 		out.write(result.toString());
 		int number = ((currentValue - 1) * pageSize);
 		for (Object object : list) {

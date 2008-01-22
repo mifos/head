@@ -68,6 +68,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class LoanPrdActionForm extends BaseActionForm {
 	private final MifosLogger logger;
@@ -1857,7 +1858,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		logger
 				.debug("start validateForPreview method of Loan Product Action form method :"
 						+ prdOfferingName);
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.productdefinition.util.resources.ProductDefinitionResources", 
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, 
 				locale);
 		String sameForAllLoans = resources.getString(ProductDefinitionConstants.SAMEFORALLLOANS);
 		String forByLastLoanAtRow = resources.getString(ProductDefinitionConstants.FORBYLASTLOANATROW);
@@ -1890,7 +1891,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		logger
 				.debug("start validateForEditPreview method of Loan Product Action form method :"
 						+ prdOfferingName);
-		ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.productdefinition.util.resources.ProductDefinitionResources", 
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, 
 				locale);
 		String sameForAllLoans = resources.getString(ProductDefinitionConstants.SAMEFORALLLOANS);
 		String forByLastLoanAtRow = resources.getString(ProductDefinitionConstants.FORBYLASTLOANATROW);

@@ -28,6 +28,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class OfficeBO extends BusinessObject {
 
@@ -327,7 +328,7 @@ public class OfficeBO extends BusinessObject {
 
 	private String getLocaleString(String key) {
 		ResourceBundle resourceBundle = ResourceBundle.getBundle(
-				OfficeConstants.OFFICERESOURCEPATH, userContext
+				FilePaths.OFFICERESOURCEPATH, userContext
 						.getPreferredLocale());
 		return resourceBundle.getString(key);
 	}

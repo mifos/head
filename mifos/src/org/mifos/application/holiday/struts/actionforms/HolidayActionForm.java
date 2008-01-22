@@ -21,6 +21,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths; 
 
 public class HolidayActionForm extends BaseActionForm {
 
@@ -126,13 +127,13 @@ public class HolidayActionForm extends BaseActionForm {
 			try {
 
 				resourceBundle = ResourceBundle.getBundle(
-						HolidayConstants.HOLIDAYSOURCEPATH, userContext
+						FilePaths.HOLIDAYSOURCEPATH, userContext
 								.getPreferredLocale());
 			}
 			catch (MissingResourceException e) {
 
 				resourceBundle = ResourceBundle
-						.getBundle(HolidayConstants.HOLIDAYSOURCEPATH);
+						.getBundle(FilePaths.HOLIDAYSOURCEPATH);
 
 			}
 		return resourceBundle.getString(key);

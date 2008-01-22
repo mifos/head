@@ -106,7 +106,7 @@ public interface TableTagConstants {
 	public static final String FLOWREQUIRED = "flowRequired";
 	public static final String TABLECACHE = "TableCache";
 	
-	public static final String PROPERTIESFILE = "org.mifos.framework.components.tabletag.Resources";
+	
 	
 	public static final String STYLECLASS = "styleClass";
 	public static final String UNEXPECTED_ERROR ="errors.unexpected";

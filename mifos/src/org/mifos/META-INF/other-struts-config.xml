@@ -585,7 +585,7 @@
     <!-- ImageResources-->
     <message-resources key="ImageResources" parameter="org.mifos.framework.util.resources.ImageResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="Resources" parameter="org.mifos.framework.components.tabletag.Resources"
+    <message-resources key="Resources" parameter="org.mifos.config.localizedResources.Resources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="ExceptionResources" parameter="org.mifos.config.localizedResources.ExceptionResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
@@ -593,41 +593,41 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Personnel resources -->
     <message-resources key="PersonnelUIResources"
-                       parameter="org.mifos.application.personnel.util.resources.PersonnelUIResources"
+                       parameter="org.mifos.config.localizedResources.PersonnelUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- office resources -->
-    <message-resources key="OfficeResources" parameter="org.mifos.application.office.util.resources.Office"
+    <message-resources key="OfficeResources" parameter="org.mifos.config.localizedResources.Office"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="OfficeUIResources" parameter="org.mifos.application.office.util.resources.OfficeUIResources"
+    <message-resources key="OfficeUIResources" parameter="org.mifos.config.localizedResources.OfficeUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
     <!-- meeting resources -->
-    <message-resources key="MeetingResources" parameter="org.mifos.application.meeting.util.resources.Meeting"
+    <message-resources key="MeetingResources" parameter="org.mifos.config.localizedResources.Meeting"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- Roles and permission resources -->
     <message-resources key="RolesAndPermissionResources"
-                       parameter="org.mifos.application.rolesandpermission.util.resources.RolesAndPermission"
+                       parameter="org.mifos.config.localizedResources.RolesAndPermission"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="MenuResources" parameter="org.mifos.config.localizedResources.MenuResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="adminUIResources" parameter="org.mifos.config.localizedResources.adminUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!-- fees resources -->
-    <message-resources key="FeesUIResources" parameter="org.mifos.application.fees.util.resources.FeesUIResources"/>
+    <message-resources key="FeesUIResources" parameter="org.mifos.config.localizedResources.FeesUIResources"/>
     <!-- CheckList resources -->
     <message-resources key="checklistUIResources"
-                       parameter="org.mifos.application.checklist.util.resources.CheckListUIResources"/>
+                       parameter="org.mifos.config.localizedResources.CheckListUIResources"/>
     <!-- Fund resources -->
-    <message-resources key="fundUIResources" parameter="org.mifos.application.fund.util.resources.FundUIResources"/>
+    <message-resources key="fundUIResources" parameter="org.mifos.config.localizedResources.FundUIResources"/>
     <!-- Bulk Entry resources -->
     <message-resources key="bulkEntryUIResources"
                        parameter="org.mifos.config.localizedResources.BulkEntryUIResources"/>
     <!-- Configuration -->
     <message-resources key="configurationUIResources"
-                       parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"/>
+                       parameter="org.mifos.config.localizedResources.ConfigurationUIResources"/>
     <!--  Holidays resources -->
     <message-resources key="HolidayUIResources"
-                       parameter="org.mifos.application.holiday.util.resources.HolidayUIResources"
+                       parameter="org.mifos.config.localizedResources.HolidayUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
     <!-- Moratorium resources -->
@@ -636,9 +636,9 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
     <message-resources key="SurveysUIResources"
-                       parameter="org.mifos.application.surveys.util.resources.SurveysUIResources"
+                       parameter="org.mifos.config.localizedResources.SurveysUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
-    <message-resources key="PPIUIResources" parameter="org.mifos.application.ppi.util.resources.PPIUIResources"
+    <message-resources key="PPIUIResources" parameter="org.mifos.config.localizedResources.PPIUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <!--  Accepted Payment Type resources -->
     <message-resources key="acceptedPaymentTypeUIResources"

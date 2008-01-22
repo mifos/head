@@ -146,7 +146,7 @@ public interface OfficeConstants {
 	//M2 keys 
 	
 	public static final String ERRORMANDATORYFIELD="error.office.mandatory_field";
-	public static final String OFFICERESOURCEPATH="org/mifos/application/office/util/resources/OfficeUIResources";
+	
 												   	
 	public static final String OFFICE_NAME="Office.officeName";
 	public static final String OFFICESHORTNAME="Office.officeShortName";

@@ -75,4 +75,18 @@ public interface FilePaths {
 	public static String SAVING_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "SavingsUIResources";
 	// "org.mifos.application.accounts.util.resources.accountsUIResources"
 	public static String ACCOUNTS_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "accountsUIResources";
+	//org.mifos.application.configuration.util.resources.ConfigurationUIResources
+	public static String CONFIGURATION_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "ConfigurationUIResources";
+	// "org/mifos/application/holiday/util/resources/HolidayUIResources"
+	public static String HOLIDAYSOURCEPATH = LOCALIZED_RESOURCE_PATH + "HolidayUIResources";
+	//"org.mifos.framework.components.tabletag.Resources"
+	public static final String TABLE_TAG_PROPERTIESFILE = LOCALIZED_RESOURCE_PATH + "Resources";
+	// "org.mifos.application.meeting.util.resources.Meeting"
+	public final String MEETING_RESOURCE = LOCALIZED_RESOURCE_PATH + "Meeting";
+	//"org/mifos/application/office/util/resources/OfficeUIResources"
+	public static final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";
+	//"org/mifos/application/personnel/util/resources/PersonnelUIResources"
+	public static final String PERSONNELUIRESOURCESPATH = LOCALIZED_RESOURCE_PATH + "PersonnelUIResources";
+	// "org.mifos.application.productdefinition.util.resources.ProductDefinitionResources"
+	public static final String PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ProductDefinitionResources";
 }

@@ -18,6 +18,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class OfficeListTag extends BodyTagSupport {
 	private String actionName;
@@ -167,7 +168,7 @@ public class OfficeListTag extends BodyTagSupport {
 		if (officeList == null) {
 			ResourceBundle resources = ResourceBundle
 					.getBundle(
-							"org.mifos.application.office.util.resources.OfficeUIResources",
+							FilePaths.OFFICERESOURCEPATH,
 							userContext.getPreferredLocale());
 			html.startTag("span", "class", "fontnormal");
 			html.text(resources.getString("Office.labelNo"));

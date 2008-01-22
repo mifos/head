@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.util.helpers.FilePaths;
 
 /**
  * This class renders text if display name is text only.
@@ -102,7 +103,7 @@ public class Text {
 			throw new TableTagException(ite);
 		}
 		
-		ResourceBundle resource = ResourceBundle.getBundle(TableTagConstants.PROPERTIESFILE);		
+		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);		
 		if(customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5")))
 		{
 			textValue = resource.getString("loanaccount_stateid_" + name);
