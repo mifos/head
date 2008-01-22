@@ -18,6 +18,7 @@
 			input="/birtAdminDocumentUploadAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/admindocument/jsp/birtAdminDocumentUpload.jsp" />
 			<forward name="preview_success" path="/pages/application/admindocument/jsp/previewBirtAdminDocumentUpload.jsp" />
+			<forward name="preview_failure" path="/pages/application/admindocument/jsp/birtAdminDocumentUpload.jsp" />
 			<forward name="get_success" path="/pages/application/admindocument/jsp/viewAdministrativeDocuments.jsp" />
 		    <forward name="download_success" path="/reportTemplateDownload?realPath=adminReport" />
 		    <forward name="edit_success" path="/pages/application/admindocument/jsp/editBirtAdminDocumentUpload.jsp" />
@@ -30,7 +31,7 @@
    </action-mappings>
    		
     <!-- Administrative documents -->
-    <message-resources key="admindocumentsUIResources" parameter="org.mifos.config.localizedResources.AdmindocumentsUIResources.properties"  />
+    <message-resources key="admindocumentsUIResources" parameter="org.mifos.config.localizedResources.AdmindocumentsUIResources"  />
     
 
 	

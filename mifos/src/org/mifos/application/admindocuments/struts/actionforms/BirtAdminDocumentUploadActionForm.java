@@ -111,8 +111,8 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 			}
 			if (StringUtils.isNullOrEmpty(accountTypeId)
 					|| this.getAccountTypeId().equals("-1")) {
-				errors.add(ReportsConstants.ERROR_CATEGORYID,
-						new ActionMessage(ReportsConstants.ERROR_CATEGORYID));
+				errors.add(ReportsConstants.ERROR_ACCOUNTTYPE,
+						new ActionMessage(ReportsConstants.ERROR_ACCOUNTTYPE));
 			}
 			if (StringUtils.isNullOrEmpty(isActive)
 					|| this.getIsActive().equals("-1")) {

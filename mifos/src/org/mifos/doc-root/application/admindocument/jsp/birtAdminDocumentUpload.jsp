@@ -149,7 +149,7 @@
 								<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors	bundle="reportsUIResources" />	
+											<html-el:errors	bundle="admindocumentsUIResources" />	
 										</font>
 									</td>
 								</tr>
