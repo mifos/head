@@ -62,7 +62,7 @@ public class MessageLookup implements MessageSourceAware {
 	}
 	
 	public String lookup(LocalizedTextLookup namedObject, Locale locale) {
-		return messageSource.getMessage(namedObject.getPropertiesKey(), null, namedObject.getPropertiesKey(), locale);		
+		return lookup(namedObject.getPropertiesKey(), locale);		
 	}
 	
 	/*
@@ -74,7 +74,7 @@ public class MessageLookup implements MessageSourceAware {
 	
 	public String lookup(String lookupKey) {
 		Locale locale = Localization.getInstance().getMainLocale();
-		return messageSource.getMessage(lookupKey, null, lookupKey, locale);				
+		return lookup(lookupKey, locale);				
 	}
 	
 	public String lookup(LocalizedTextLookup namedObject, Object[] params) {
@@ -87,7 +87,20 @@ public class MessageLookup implements MessageSourceAware {
 	}
 
 	public String lookup(String lookupKey, Locale locale) {
-		return messageSource.getMessage(lookupKey, null, lookupKey, locale);		
+		try {
+			String textMessage = MifosConfiguration.getInstance().getLabel(lookupKey, locale);
+			
+			// if we don't find a message above, then it means that it has not been customized and
+			// we should return the default message from the properties file
+			if (textMessage == null || textMessage.length() == 0) {
+				textMessage = messageSource.getMessage(lookupKey, null, lookupKey, locale);
+			}
+			
+			return textMessage;
+		}
+		catch (ConfigurationException e) {
+			throw new RuntimeException(e);
+		}	
 	} 
 	
 	public String lookup(String lookupKey, UserContext userContext) {

@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
-import org.mifos.application.productdefinition.business.TestPrdCategoryStatusEntity;
+import org.mifos.application.productdefinition.business.PrdCategoryStatusEntityTest;
 import org.mifos.application.productdefinition.business.TestProductCategoryBO;
 import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessServiceTest;
@@ -27,7 +27,7 @@ public class ProductDefinitionTestSuite extends TestSuite {
 		TestSuite testSuite = new ProductDefinitionTestSuite();
 		testSuite.addTestSuite(PrdOfferingPersistenceTest.class);
 		testSuite.addTestSuite(TestSavingsOfferingBO.class);
-		testSuite.addTestSuite(TestPrdCategoryStatusEntity.class);
+		testSuite.addTestSuite(PrdCategoryStatusEntityTest.class);
 		testSuite.addTestSuite(TestProductCategoryBO.class);
 		testSuite.addTestSuite(TestProductCategoryBusinessService.class);
 		testSuite.addTestSuite(TestProductCategoryPersistence.class);

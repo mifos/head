@@ -40,12 +40,17 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import org.mifos.application.master.MessageLookup;
+import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.business.PersistentObject;
 
-public class LookUpValueEntity extends PersistentObject {
+public class LookUpValueEntity extends PersistentObject implements LocalizedTextLookup {
 
 	private Integer lookUpId;
 
+	/*
+	 * The key used for retrieving localized resource bundle message text.
+	 */
 	private String lookUpName;
 
 	private MifosLookUpEntity lookUpEntity;
@@ -85,6 +90,30 @@ public class LookUpValueEntity extends PersistentObject {
 		this.lookUpValueLocales = lookUpValueLocales;
 	}
 
+	/*
+	 * Get the localized text for this object (or the override
+	 * value from the database if present)
+	 */
+	public String getMessageText() {
+		String messageText = null;
+		for (LookUpValueLocaleEntity lookUpValueLocale : getLookUpValueLocales()) {
+			if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
+				messageText = lookUpValueLocale.getLookUpValue();				
+			}
+		}
+	
+		if (messageText != null && messageText.length() > 0) {
+			return messageText;
+		} else {
+			return MessageLookup.getInstance().lookup(this);
+		}
+	}
 
+	/*
+	 * The key used to lookup localized properties text.
+	 */
+	public String getPropertiesKey() {
+		return getLookUpName();
+	}
 
 }

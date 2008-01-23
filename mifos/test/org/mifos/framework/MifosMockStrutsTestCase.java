@@ -38,6 +38,7 @@
 
 package org.mifos.framework;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -68,6 +69,13 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     private boolean strutsConfigSet = false;
 
     private void setStrutsConfig() {
+    	/*
+    	 * Add a pointer to the context directory so that the web.xml 
+    	 * file can be located when running test cases using the junit plugin
+    	 * inside eclipse.
+    	 */
+    	setContextDirectory(new File("src/org/mifos/"));
+    	
         String className = this.getClass().getName();
         if (className.startsWith("org.mifos.application.customer")) {
             setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");

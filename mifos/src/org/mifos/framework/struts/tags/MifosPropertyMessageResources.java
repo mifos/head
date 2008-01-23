@@ -55,7 +55,8 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 		if(returnVal == null){
 			//try to get from the local hashmap
 			try{
-			returnVal =MifosConfiguration.getInstance().getLabel(key,locale);
+
+				returnVal =MifosConfiguration.getInstance().getLabel(key,locale);
 			}catch( ConfigurationException ce){
 				//eat it
 				//TODO we may log it

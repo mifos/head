@@ -185,7 +185,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${build.web-inf}">
-			<fileset dir="${src.dir}/org/mifos/META-INF">
+			<fileset dir="${src.dir}/org/mifos/WEB-INF">
 				<exclude name="web.xml"/>
 			</fileset>
 		</copy>
@@ -252,7 +252,7 @@
 			<fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
 		</copy>
 		<concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
-			<fileset dir="${src.dir}/org/mifos/META-INF" includes="web.xml"/>
+			<fileset dir="${src.dir}/org/mifos/WEB-INF" includes="web.xml"/>
 			<fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
 		</concat>
 		<replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="	&lt;!-- section: birt web viewer --&gt;" />
@@ -300,7 +300,7 @@
 		</copy>
 
 		<copy todir="${test.classes}/WEB-INF">
-			<fileset dir="${src.dir}/org/mifos/META-INF">
+			<fileset dir="${src.dir}/org/mifos/WEB-INF">
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>

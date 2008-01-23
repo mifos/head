@@ -9,7 +9,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
-public class TestAccountStateEntity extends MifosTestCase {
+public class AccountStateEntityTest extends MifosTestCase {
 	
 	private AccountStateEntity accountStateEntity;
 	private Session session;
