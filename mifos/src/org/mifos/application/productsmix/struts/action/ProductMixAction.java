@@ -49,6 +49,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -564,6 +565,16 @@ public class ProductMixAction extends BaseAction {
 	public ActionForward viewAllProductMix(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		List<PrdOfferingBO> listPrdOfferingBO =getPrdMixBusinessService().getPrdOfferingMix();
+		if (listPrdOfferingBO != null) {
+			for (PrdOfferingBO prdOfferingBO : listPrdOfferingBO) {
+				prdOfferingBO.getPrdCategory().getPrdCategoryStatus().setLocaleId(
+						userContext.getLocaleId());
+				prdOfferingBO.getPrdCategory().getProductType().setUserContext(userContext);
+			}
+		}
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRODUCTMIXLIST,
 				getPrdMixBusinessService().getPrdOfferingMix(), request);

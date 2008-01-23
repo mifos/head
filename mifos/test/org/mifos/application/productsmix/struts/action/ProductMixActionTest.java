@@ -273,8 +273,10 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/productMixAction.do");
 		addRequestParameter("method", "viewAllProductMix");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		
 		actionPerform();
+		UserContext userContext2 = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		assertEquals(userContext, userContext2);
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.viewAllProductMix_success.toString());

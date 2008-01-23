@@ -84,7 +84,35 @@
 							</span>
 							<c:forEach var="productMix"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}">
-								<span class="fontnormalbold"> </span>
+								<c:if	test="${empty id}">
+									<c:set var="id"
+										value="${productMix.prdCategory.productType.productTypeID}" />
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+											   <span class="fontnormalbold">
+												 <c:out value="${productMix.prdCategory.productType.name}" />
+											   </span>
+											 </td>
+										</tr>
+									</table>
+								</c:if>
+								<c:if
+									test="${!empty id && id != productMix.prdCategory.productType.productTypeID}">
+									<c:set var="id"
+										value="${productMix.prdCategory.productType.productTypeID}" />
+									<br>
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+											   <span class="fontnormalbold">
+												 <c:out value="${productMix.prdCategory.productType.name}" />
+											   </span>
+											 </td>
+										</tr>
+									</table>
+								</c:if>
+								<span class="fontnormalbold"> </span>								
 								<table width="90%" border="0" cellspacing="0" cellpadding="0">
 									<tr class="fontnormal">
 										<td width="1%"><img
