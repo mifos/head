@@ -53,6 +53,32 @@ import org.apache.commons.configuration.ConfigurationFactory;
  * to be changed significantly as iterative development proceeds.
  */
 public class ConfigurationManager implements Configuration {
+	private static final String FACTORY_CONFIG = "resources/configurationFactory.xml";
+	
+	/**
+	 * Filename where default application-wide configuration values are stored.
+	 * This file should never be hand-edited, edit values in the custom config
+	 * file instead.
+	 * <p>
+	 * If the value of this constant is changed, modify the file
+	 * {@link #FACTORY_CONFIG} in tandem.
+	 * 
+	 * @see #CUSTOM_CONFIG_PROPS_FILENAME
+	 */
+	public static final String DEFAULT_CONFIG_PROPS_FILENAME = "applicationConfiguration.default.properties";
+
+	/**
+	 * Filename where custom overrides for application-wide configuration values
+	 * are stored. Keys in this file must exist in the default config file. This
+	 * file may be hand-edited.
+	 * <p>
+	 * If the value of this constant is changed, modify the file
+	 * {@link #FACTORY_CONFIG} in tandem.
+	 * 
+	 * @see #DEFAULT_CONFIG_PROPS_FILENAME
+	 */
+	public static final String CUSTOM_CONFIG_PROPS_FILENAME = "applicationConfiguration.custom.properties";
+	
 	private static ConfigurationManager configurationManagerInstance = new ConfigurationManager();
 		
 	private Configuration configuration;
@@ -66,7 +92,7 @@ public class ConfigurationManager implements Configuration {
 
 	public ConfigurationManager() {
 		ConfigurationFactory factory = new ConfigurationFactory();
-		URL configURL = getClass().getResource("resources/configurationFactory.xml");
+		URL configURL = getClass().getResource(FACTORY_CONFIG);
 		factory.setConfigurationURL(configURL);
 		
 		try {
@@ -262,6 +288,5 @@ public class ConfigurationManager implements Configuration {
 	public Configuration subset(String prefix) {
 		return configuration.subset(prefix);
 	}
-	
-	
+
 }
