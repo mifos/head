@@ -82,7 +82,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -99,6 +98,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.config.ClientRules;
+import org.mifos.config.ProcessFlowRules;
 
 public class GroupCustAction extends CustAction {
 
@@ -197,7 +197,7 @@ public class GroupCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		boolean isPendingApprovalDefined = Configuration.getInstance().getCustomerConfig(getUserContext(request).getBranchId()).isPendingApprovalStateDefinedForGroup();
+		boolean isPendingApprovalDefined = ProcessFlowRules.isGroupPendingApprovalStateEnabled();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}

@@ -13,6 +13,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialInitialize
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -69,7 +70,12 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					// this method is called so that supported locales will be loaded
 					// from db and stored in cache for later use
 					Localization.getInstance().init(); 
+					// Check ClientRules configuration in db and config file(s)
+					// for errors. Also caches ClientRules values.
 					ClientRules.init();
+					// Check ProcessFlowRules configuration in db and config
+					// file(s) for errors.
+					ProcessFlowRules.init();
 					initializeSecurity();
 
 					FinancialInitializer.initialize();

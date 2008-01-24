@@ -1,5 +1,6 @@
 package org.mifos.framework.persistence;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.GenericJDBCException;
@@ -139,22 +141,35 @@ public abstract class Persistence {
 
 	}
 
-	public Object getPersistentObject(Class clazz, Short persistentObjectId)
-			throws PersistenceException {
+	/**
+	 * Deleagtes to {@link Session#get(Class, Serializable)}.
+	 */
+	public Object getPersistentObject(Class clazz,
+			Serializable persistentObjectId) throws PersistenceException {
+		// keep current unit tests happy, they get confused with an
+		// IllegalArgumentException (thrown if get() is given a null ID, below)
+		// TODO: get rid of this. The default handling for null IDs of
+		// get() (throwing that IllegalArgumentException) should be fine.
+		if (null == persistentObjectId)
+			throw new PersistenceException("persistentObjectId is required for fetch");
+		
+		// TODO: it is probably cleaner to NOT catch the HibernateException
+		// since it is a RuntimeException. Let's eventually make this method
+		// more like loadPersistentObject(), below.
 		try {
 			return HibernateUtil.getSessionTL().get(clazz, persistentObjectId);
-		} catch (Exception e) {
+		}
+		catch (HibernateException e) {
 			throw new PersistenceException(e);
 		}
 	}
 
-	public Object getPersistentObject(Class clazz, Integer persistentObjectId)
-			throws PersistenceException {
-		try {
-			return HibernateUtil.getSessionTL().get(clazz, persistentObjectId);
-		} catch (Exception he) {
-			throw new PersistenceException(he);
-		}
+	/**
+	 * Deleagtes to {@link Session#load(Class, Serializable)}.
+	 */
+	public Object loadPersistentObject(Class clazz,
+			Serializable persistentObjectId) {
+		return HibernateUtil.getSessionTL().load(clazz, persistentObjectId);
 	}
 
 	protected Param typeNameValue(String type, String name, Object value) {

@@ -47,6 +47,10 @@ import org.mifos.config.FiscalCalendarRules;
  *  It has specific methods for specific type of configuration items related to Meeting. 
  *  This class restricts the interface of configuration items specific to Meeting only.  
  *  e.g.  getWeekOffDays(), getSchTypeForMeetingOnHoliday() etc.
+ *  <p>
+ * This class is a remnant of per-office configuration, which <a
+ * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
+ * deprecated and may be removed</a>.
  */
 public class MeetingConfig {
 

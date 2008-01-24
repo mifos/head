@@ -37,12 +37,17 @@
  */
 
 package org.mifos.framework.components.configuration.business;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.util.helpers.ConfigurationInitializer;
 
+/**
+ * This class is a remnant of per-office configuration, which <a
+ * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
+ * deprecated and may be removed</a> (-Adam 22-JAN-2008).
+ */
 public class Configuration {
   /**It is the map of instances of OfficeConfig stored based on officeid. It is cache of OfficeConfig instances */
   private Map<Short,OfficeConfig> officeConfigMap;
@@ -75,7 +80,7 @@ public class Configuration {
   
   private Configuration() {
 	  cacheRepo = CacheRepository.getInstance();
-	  officeConfigMap = new HashMap<Short,OfficeConfig>();
+	  officeConfigMap = new Hashtable<Short,OfficeConfig>();
   }
   
   /**
@@ -86,9 +91,7 @@ public class Configuration {
 	  if(officeConfigMap.containsKey(officeId))
 		  return officeConfigMap.get(officeId);
 	  OfficeConfig officeConfig = new OfficeConfig(cacheRepo,officeId);
-	  synchronized (officeConfigMap) {
-		  officeConfigMap.put(officeId, officeConfig);
-	  }
+	  officeConfigMap.put(officeId, officeConfig);
 	  return officeConfig;
   }
  
@@ -100,10 +103,12 @@ public class Configuration {
  	 return getOfficeConfig(officeId).getAccountConfig();
   }
   
+  // never called
   public CustomerConfig getCustomerConfig(Short officeId) {
 	  return getOfficeConfig(officeId).getCustomerConfig();
   }
   
+  // never called
   public MeetingConfig getMeetingConfig(Short officeId) {
 	  return getOfficeConfig(officeId).getMeetingConfig();
   }

@@ -82,8 +82,8 @@ import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -278,9 +278,7 @@ public class SavingsAction extends AccountAppAction {
 				SavingsConstants.CLIENT, request);
 		customer = getCustomer(customer.getCustomerId());
 		SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL,
-				Configuration.getInstance().getAccountConfig(
-						customer.getOffice().getOfficeId())
-						.isPendingApprovalStateDefinedForSavings(), request
+				ProcessFlowRules.isSavingsPendingApprovalStateEnabled(), request
 						.getSession());
 		return mapping.findForward("preview_success");
 	}

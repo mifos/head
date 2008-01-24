@@ -49,6 +49,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
@@ -102,6 +103,8 @@ public class CustomerBusinessService extends BusinessService {
 					userId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
+		} catch (ConfigurationException ce) {
+			throw new ServiceException(ce);
 		}
 
 	}

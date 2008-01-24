@@ -23,7 +23,6 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -67,6 +66,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ProcessFlowRules;
 
 public class SavingsBO extends AccountBO {
 
@@ -1149,9 +1149,7 @@ public class SavingsBO extends AccountBO {
 	@Override
 	protected void activationDateHelper(Short newStatusId)
 			throws AccountException {
-		if (Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId())
-				.isPendingApprovalStateDefinedForSavings()) {
+		if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled()) {
 			if (this.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_PENDINGAPPROVAL
 					&& newStatusId.shortValue() == AccountStates.SAVINGS_ACC_APPROVED) {
 				setValuesForActiveState();

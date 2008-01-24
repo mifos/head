@@ -83,10 +83,10 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -567,9 +567,8 @@ public class LoanAccountAction extends AccountAppAction {
 		loanActionForm.initializeTransactionFields(getUserContext(request),
 				installments);
 
-		boolean isPendingApprovalDefined = Configuration.getInstance()
-				.getAccountConfig(getUserContext(request).getBranchId())
-				.isPendingApprovalStateDefinedForLoan();
+		boolean isPendingApprovalDefined = ProcessFlowRules
+				.isLoanPendingApprovalStateEnabled();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
 				isPendingApprovalDefined, request);
 	    ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();

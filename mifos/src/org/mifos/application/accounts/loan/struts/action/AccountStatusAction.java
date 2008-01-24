@@ -61,9 +61,9 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
@@ -190,9 +190,7 @@ public class AccountStatusAction extends BaseAction {
 
 		if (officeId != null) {
 			AccountStateEntity accountStateEntity = null;
-			if (Configuration.getInstance().getAccountConfig(
-					getShortValue(accountStatusActionForm.getOfficeId()))
-					.isPendingApprovalStateDefinedForLoan()) {
+			if (ProcessFlowRules.isLoanPendingApprovalStateEnabled()) {
 				accountStateEntity = (AccountStateEntity) new MasterDataService()
 						.getMasterDataEntity(AccountStateEntity.class,
 								AccountState.LOAN_PENDING_APPROVAL.getValue());

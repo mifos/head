@@ -39,6 +39,11 @@ package org.mifos.framework.components.configuration.business;
 
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 
+/**
+ * This class is a remnant of per-office configuration, which <a
+ * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
+ * deprecated and may be removed</a> (-Adam 22-JAN-2008).
+ */
 public class OfficeConfig{
 	
 	  private CustomerConfig customerConfig;

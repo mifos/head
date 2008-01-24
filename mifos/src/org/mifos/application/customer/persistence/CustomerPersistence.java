@@ -1,41 +1,23 @@
 /**
-
- * CustomerPersistence.java    version: xxx
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
-
 package org.mifos.application.customer.persistence;
 
 import java.sql.Date;
@@ -56,6 +38,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -81,7 +64,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -275,7 +257,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public QueryResult searchGroupClient(String searchString, Short userId)
-			throws PersistenceException {
+			throws ConfigurationException, PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
@@ -298,8 +280,8 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
 		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
-				ClientRules.getGroupCanApplyLoans() == true ? Boolean.valueOf(true)
-						: Boolean.valueOf(false)));
+				ClientRules.getGroupCanApplyLoans() ? Boolean.TRUE
+						: Boolean.FALSE));
 
 		String[] aliasNames = { "clientName", "clientId", "groupName",
 				"centerName", "officeName", "globelNo" };

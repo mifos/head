@@ -55,23 +55,17 @@ public class TestClientRules {
 		ConfigurationKeyValueInteger savedDBValue = null;
 		savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey);
 		Boolean savedValue = ClientRules.getGroupCanApplyLoans();
-		short non_exists = Constants.NO;
-		configMgr.setProperty(ClientRules.ClientRulesGroupCanApplyLoans, non_exists);
-		configPersistence.updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, non_exists);
+		configMgr.setProperty(ClientRules.ClientRulesGroupCanApplyLoans, false);
+		configPersistence.updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, Constants.NO);
 		ClientRules.refresh();
 		// set db value to false, too
-		assertTrue(ClientRules.getGroupCanApplyLoans() == false);
-		// clear the property from the config file
-		configMgr.clearProperty(ClientRules.ClientRulesGroupCanApplyLoans);
+		assertFalse(ClientRules.getGroupCanApplyLoans());
 		// now the return value from accounting rules class has to be what is in the database (0)
 		ClientRules.refresh();
-		assertTrue(ClientRules.getGroupCanApplyLoans() == false);
+		assertFalse(ClientRules.getGroupCanApplyLoans());
 		//	set the saved value back for following tests
 		configPersistence.updateConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey, savedDBValue.getValue());
-		if (savedValue)
-			configMgr.addProperty(ClientRules.ClientRulesGroupCanApplyLoans, Constants.YES );
-		else
-			configMgr.addProperty(ClientRules.ClientRulesGroupCanApplyLoans, Constants.NO );
+		configMgr.setProperty(ClientRules.ClientRulesGroupCanApplyLoans, savedValue);
 		ClientRules.refresh();
 	}
 	
@@ -83,46 +77,18 @@ public class TestClientRules {
 		ConfigurationKeyValueInteger savedDBValue = null;
 		savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey);
 		Boolean savedValue = ClientRules.getClientCanExistOutsideGroup();
-		short non_exists = Constants.NO;
-		configMgr.setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, non_exists);
-		configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, non_exists);
+		configMgr.setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, false);
+		configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, Constants.NO);
 		ClientRules.refresh();
 		// set db value to false, too
-		assertTrue(ClientRules.getClientCanExistOutsideGroup() == false);
-		// clear the property from the config file
-		configMgr.clearProperty(ClientRules.ClientRulesClientCanExistOutsideGroup);
+		assertFalse(ClientRules.getClientCanExistOutsideGroup());
 		// now the return value from accounting rules class has to be what is in the database (0)
 		ClientRules.refresh();
-		assertTrue(ClientRules.getClientCanExistOutsideGroup() == false);
+		assertFalse(ClientRules.getClientCanExistOutsideGroup());
 		//	set the saved value back for following tests
 		configPersistence.updateConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey, savedDBValue.getValue());
-		if (savedValue)
-			configMgr.addProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, Constants.YES );
-		else
-			configMgr.addProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, Constants.NO );
+		configMgr.setProperty(ClientRules.ClientRulesClientCanExistOutsideGroup, savedValue);
 		ClientRules.refresh();
-		
-		
-	}
-	
-	@Test 
-	public void testGetCenterHierarchyExists() {
-		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		Boolean savedValue = ClientRules.getCenterHierarchyExists();
-		short non_exists = Constants.NO;
-		configMgr.setProperty(ClientRules.ClientRulesCenterHierarchyExists, non_exists);
-		ClientRules.refresh();
-		assertTrue(false == ClientRules.getCenterHierarchyExists());
-		// clear the property from the config file
-		configMgr.clearProperty(ClientRules.ClientRulesCenterHierarchyExists);
-		ClientRules.refresh();
-		// now the return value from accounting rules class has to be the default value = 1
-		assertTrue(true == ClientRules.getCenterHierarchyExists());
-		//	set the saved value back for following tests
-		if (savedValue)
-			configMgr.addProperty(ClientRules.ClientRulesCenterHierarchyExists, Constants.YES );
-		else
-			configMgr.addProperty(ClientRules.ClientRulesCenterHierarchyExists, Constants.NO );
 	}
 	
 	/**

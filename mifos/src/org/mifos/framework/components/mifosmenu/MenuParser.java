@@ -40,8 +40,6 @@ package org.mifos.framework.components.mifosmenu;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 
 import javax.xml.XMLConstants;
@@ -52,8 +50,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.configuration.business.CustomerConfig;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.exceptions.MenuParseException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -157,24 +155,20 @@ public class MenuParser {
 		return newMenuItems;
 	}
 	
-	private static boolean isMenuItemVisible(Element element)throws SystemException{
-		String methodName = element.getAttribute(MenuConstants.KEY_FOR_HIDDEN);
-		if(methodName!=null && methodName!=""){
-			CustomerConfig customerConfig = Configuration.getInstance().getCustomerConfig(Short.valueOf("1"));
-			try{
-				Method method = customerConfig.getClass().getMethod(methodName);
-				return (Boolean)method.invoke(customerConfig);
-			}
-			catch(NoSuchMethodException nsme){
-				new MenuParseException(nsme);
-			}
-			catch(InvocationTargetException ite){
-				new MenuParseException(ite);
-			}
-			catch(IllegalAccessException iae){
-				new MenuParseException(iae);
-			}
+	/**
+	 * Uses boolean keys in the application-wide configuration to determine if
+	 * menu items should be displayed. Missing keys will cause
+	 * {@link java.util.NoSuchElementException} to be thrown. Keys are
+	 * configured in menu.xml.
+	 */
+	private static boolean isMenuItemVisible(Element element) {
+		String visiKey = element.getAttribute(MenuConstants.KEY_FOR_HIDDEN);
+		if (StringUtils.isNotBlank(visiKey)) {
+			ConfigurationManager cm = ConfigurationManager.getInstance();
+			return cm.getBoolean(visiKey);
 		}
+		// if attribute doesn't exist, a configuration key wasn't specified,
+		// so menu item must be visible
 		return true;
 	}
 	

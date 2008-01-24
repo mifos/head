@@ -79,7 +79,7 @@
 						<namefragment>label.clients</namefragment>
 
 				</displayname>
-				<menuitem keyForHidden="isCenterHierarchyExists">
+				<menuitem keyForHidden="ClientRules.CenterHierarchyExists">
 					<displayname> 
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Center</namefragment>

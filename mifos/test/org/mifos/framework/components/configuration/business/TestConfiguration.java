@@ -9,6 +9,11 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+/**
+ * Most of this class is a remnant of per-office configuration, which <a
+ * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
+ * deprecated and may be removed</a> (-Adam 22-JAN-2008).
+ */
 public class TestConfiguration extends MifosTestCase{
 	private Configuration configuration ;
 	
@@ -28,7 +33,6 @@ public class TestConfiguration extends MifosTestCase{
 		SystemConfiguration systemConfig = configuration.getSystemConfig();
 		assertNotNull(systemConfig);
 		assertNotNull(systemConfig.getCurrency());
-		//assertNotNull(systemConfig.getMFILocale());
 		assertNotNull(systemConfig.getMifosTimeZone());
 		assertNotNull(systemConfig.getSessionTimeOut());
 		assertEquals(Short.valueOf("1"),systemConfig.getMFILocaleId());
@@ -60,18 +64,13 @@ public class TestConfiguration extends MifosTestCase{
 		assertForMeetingConfig(officeConfig.getMeetingConfig());
 	}
 
-	private void assertForCustomerConfig(CustomerConfig customerConfig){
+	private void assertForCustomerConfig(CustomerConfig customerConfig) throws Exception {
 		assertEquals(true, ClientRules.getCenterHierarchyExists().booleanValue());
 		assertEquals(true,ClientRules.getClientCanExistOutsideGroup().booleanValue());
 		assertEquals(true,ClientRules.getGroupCanApplyLoans().booleanValue());
-		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForClient());
-		assertEquals(true,customerConfig.isPendingApprovalStateDefinedForGroup());
 	}
 	
 	private void assertForAccountConfig(AccountConfig accountConfig){
-		assertEquals(true,accountConfig.isPendingApprovalStateDefinedForLoan());
-		assertEquals(true,accountConfig.isPendingApprovalStateDefinedForSavings());
-		assertEquals(false,accountConfig.isDisbursedToLOStateDefinedForLoan());
 		assertEquals(Short.valueOf("10"),accountConfig.getLatenessDays());
 		assertEquals(Short.valueOf("30"),accountConfig.getDormancyDays());
 		assertEquals(true,accountConfig.isBackDatedTxnAllowed());

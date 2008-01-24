@@ -58,6 +58,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.business.StateEntity;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -334,23 +335,19 @@ public class AccountStateMachines {
 		logger.debug("In AccountStateMachines::getConfigurationName()");
 		String configurationName = null;
 		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
-			if (Configuration.getInstance().getAccountConfig(officeId)
-					.isDisbursedToLOStateDefinedForLoan()) {
-				if (Configuration.getInstance().getAccountConfig(officeId)
-						.isPendingApprovalStateDefinedForLoan())
+			if (ProcessFlowRules.isLoanDisbursedToLoanOfficerStateEnabled()) {
+				if (ProcessFlowRules.isLoanPendingApprovalStateEnabled())
 					configurationName = "configuration 1";
 				else
 					configurationName = "configuration 2";
 			} else {
-				if (Configuration.getInstance().getAccountConfig(officeId)
-						.isPendingApprovalStateDefinedForLoan())
+				if (ProcessFlowRules.isLoanPendingApprovalStateEnabled())
 					configurationName = "configuration 3";
 				else
 					configurationName = "configuration 4";
 			}
 		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
-			if (Configuration.getInstance().getAccountConfig(officeId)
-					.isPendingApprovalStateDefinedForSavings())
+			if (ProcessFlowRules.isSavingsPendingApprovalStateEnabled())
 				configurationName = "configuration 1";
 			else
 				configurationName = "configuration 2";
@@ -358,14 +355,12 @@ public class AccountStateMachines {
 			if (level.equals(CustomerLevel.CENTER)) {
 				configurationName = "configuration 1";
 			} else if (level.equals(CustomerLevel.GROUP)) {
-				if (Configuration.getInstance().getCustomerConfig(officeId)
-						.isPendingApprovalStateDefinedForGroup())
+				if (ProcessFlowRules.isGroupPendingApprovalStateEnabled())
 					configurationName = "configuration 1";
 				else
 					configurationName = "configuration 2";
 			} else if (level.equals(CustomerLevel.CLIENT)) {
-				if (Configuration.getInstance().getCustomerConfig(officeId)
-						.isPendingApprovalStateDefinedForClient())
+				if (ProcessFlowRules.isClientPendingApprovalStateEnabled())
 					configurationName = "configuration 1";
 				else
 					configurationName = "configuration 2";

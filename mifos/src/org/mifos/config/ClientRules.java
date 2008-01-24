@@ -24,17 +24,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
 
-
 public class ClientRules {
-	
 	public static final String ClientRulesCenterHierarchyExists = "ClientRules.CenterHierarchyExists";
 	public static final String ClientRulesClientCanExistOutsideGroup = "ClientRules.ClientCanExistOutsideGroup";
 	public static final String ClientRulesGroupCanApplyLoans = "ClientRules.GroupCanApplyLoans";
@@ -44,23 +43,24 @@ public class ClientRules {
 	private static Boolean centerHierarchyExists;
 	private static Boolean groupCanApplyLoans;
 	private static Boolean clientCanExistOutsideGroup;
-	
+
 	/**
 	 * A name sequence is the order in which client names are displayed.
 	 * Example: first name, then middle name, then last name.
 	 * <p>
-	 * This member variable stores which of the {@link #allowedNameParts} are
-	 * to be used when displaying a client's name.
+	 * This member variable stores which of the {@link #allowedNameParts} are to
+	 * be used when displaying a client's name.
 	 */
 	private static String[] nameSequence;
 
 	/**
 	 * Stores strings that are allowed to be part of {@link #nameSequence}.
-	 */	
+	 */
 	private static Set<String> allowedNameParts;
-	
-	private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
-	
+
+	private static MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+
 	static {
 		allowedNameParts = new HashSet<String>();
 		allowedNameParts.add(ConfigConstants.FIRST_NAME);
@@ -68,20 +68,24 @@ public class ClientRules {
 		allowedNameParts.add(ConfigConstants.LAST_NAME);
 		allowedNameParts.add(ConfigConstants.SECOND_LAST_NAME);
 	}
-	
+
 	/**
-	 * Performs startup sanity checks. While not a requirement, it is
-	 * considered good practice to call this method prior to any other
-	 * methods in this class.
+	 * Performs startup sanity checks. While not a requirement, it is considered
+	 * good practice to call this method prior to any other methods in this
+	 * class.
 	 */
-	public static void init() {
+	public static void init() throws ConfigurationException {
 		if (!isValidNameSequence())
-			throw new RuntimeException("error in configured value for "
+			throw new ConfigurationException("error in configured value for "
 					+ ClientRulesNameSequence);
+		// If the configuration is invalid with respect to Client Rules, this
+		// will force discovery of the problem upon initialization
+		refresh();
 	}
-	
-	public static void refresh()
-	{
+
+	// "protected" visibility so it can be unit tested; it would otherwise
+	// be private
+	protected static void refresh() throws ConfigurationException {
 		centerHierarchyExists = null;
 		groupCanApplyLoans = null;
 		clientCanExistOutsideGroup = null;
@@ -91,121 +95,106 @@ public class ClientRules {
 		clientCanExistOutsideGroup = getClientCanExistOutsideGroup();
 		nameSequence = getNameSequence();
 	}
-	
-	public static Boolean getCenterHierarchyExists()
-	{
+
+	public static Boolean getCenterHierarchyExists() {
 		if (centerHierarchyExists == null)
 			centerHierarchyExists = getCenterHierarchyExistsFromConfig();
 		return centerHierarchyExists;
 	}
-	
-	public static Boolean getGroupCanApplyLoans()
-	{
+
+	/** Can group loans exist? */
+	public static Boolean getGroupCanApplyLoans() throws ConfigurationException {
 		if (groupCanApplyLoans == null)
 			groupCanApplyLoans = getGroupCanApplyLoansFromConfig();
 		return groupCanApplyLoans;
-			
 	}
+
 	public static Boolean getClientCanExistOutsideGroup()
-	{
+			throws ConfigurationException {
 		if (clientCanExistOutsideGroup == null)
 			clientCanExistOutsideGroup = getClientCanExistOutsideGroupFromConfig();
 		return clientCanExistOutsideGroup;
 	}
-	
-	private static Boolean getCenterHierarchyExistsFromConfig()
-	{
-		short defaultValue = Constants.YES;
-		short value;
+
+	private static Boolean getCenterHierarchyExistsFromConfig() {
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		if (configMgr.containsKey(ClientRulesCenterHierarchyExists))
-			value = configMgr.getShort(ClientRulesCenterHierarchyExists);
-		else 
-			value = defaultValue;
-		return value == Constants.YES;
+		return configMgr.getBoolean(ClientRulesCenterHierarchyExists);
 	}
-	
-	private static Boolean getGroupCanApplyLoansFromConfig()
-	{
-		ConfigurationPersistence configPersistence = new ConfigurationPersistence();
-		short value;
-		try
-		{
-			ConfigurationKeyValueInteger dbValue = configPersistence.getConfigurationKeyValueInteger(GroupCanApplyLoansKey);
-			ConfigurationManager configMgr = ConfigurationManager.getInstance();
-			if (configMgr.containsKey(ClientRulesGroupCanApplyLoans))
-			{
-				value = configMgr.getShort(ClientRulesGroupCanApplyLoans);
-				if (value == Constants.YES)
-				{
-					if (dbValue.getValue() == Constants.NO)
-						configPersistence.updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, value);
-				}
-				else if (value == Constants.NO)
-				{
-					if (dbValue.getValue() == Constants.YES) // flag error, how should this be handled??
-					{
-						logger.error("The value ClientRules.CenterHierarchyExists in the properties file " +
-								"applicationConfiguration.properties need to be set to 1 because it was set to 1 "
-								+ "before and can't be changed to 0.");
-								
-						value = Constants.YES;
-					}
-				}
-			}
-			else  // get the value from db
-				value = (short)dbValue.getValue();
-		}
-		catch (Exception ex)
-		{
-			throw new RuntimeException(ex.getMessage());
-		}
-		
-		return value == Constants.YES;
+
+	private static String getBadOverrideMsg(String key, String detailMsg) {
+		return "The value for key " + key + " in the file "
+				+ ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
+				+ " must to be set to 1 because it was set to 1"
+				+ " in the database, hence can't be set to to 0 in the custom"
+				+ " configuration file as this might invalidate existing data. "
+				+ detailMsg + " Also, "
+				+ ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
+				+ " must never be changed--make sure this"
+				+ " file is untouched.";
 	}
-	
-	private static Boolean getClientCanExistOutsideGroupFromConfig()
-	{
-		
+
+	private static boolean getGroupCanApplyLoansFromConfig()
+			throws ConfigurationException {
 		ConfigurationPersistence configPersistence = new ConfigurationPersistence();
-		short value;
-		try
-		{
-			ConfigurationKeyValueInteger dbValue = configPersistence.getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey);
+		boolean cfgValue;
+		try {
+			int dbValue = configPersistence.getConfigurationKeyValueInteger(
+					GroupCanApplyLoansKey).getValue();
 			ConfigurationManager configMgr = ConfigurationManager.getInstance();
-			if (configMgr.containsKey(ClientRulesClientCanExistOutsideGroup))
-			{
-				value = configMgr.getShort(ClientRulesClientCanExistOutsideGroup);
-				if (value == Constants.YES)
-				{
-					if (dbValue.getValue() == Constants.NO)
-						configPersistence.updateConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey, value);
-				}
-				else if (value == Constants.NO)
-				{
-					if (dbValue.getValue() == Constants.YES) // flag error, how should this be handled??
-					{
-						value = Constants.YES;
-						logger.error("The value ClientRules.CenterHierarchyExists in the properties file " +
-								"applicationConfiguration.properties need to be set to 1 because it was set to 1 "
-								+ "before and can't be changed to 0.");
-					}
-				}
+			cfgValue = configMgr.getBoolean(ClientRulesGroupCanApplyLoans);
+
+			if (dbValue == Constants.NO && cfgValue == true) {
+				configPersistence.updateConfigurationKeyValueInteger(
+						GroupCanApplyLoansKey, Constants.YES);
 			}
-			else // get the value from db
-				value = (short)dbValue.getValue();
+			else if (dbValue == Constants.YES && cfgValue == false) {
+				// Trying to override db value of "true/yes" with "false/no"
+				// in the config file violates business rules.
+				throw new ConfigurationException(
+						getBadOverrideMsg(GroupCanApplyLoansKey,
+								"Group loans may already exist."));
+			}
 		}
-		catch (Exception ex)
-		{
-			throw new RuntimeException(ex.getMessage());
+		catch (PersistenceException ex) {
+			throw new ConfigurationException(ex);
 		}
-		
-		return value == Constants.YES;
+
+		return cfgValue;
+	}
+
+	private static boolean getClientCanExistOutsideGroupFromConfig()
+			throws ConfigurationException {
+		ConfigurationPersistence configPersistence = new ConfigurationPersistence();
+		boolean cfgValue;
+		try {
+			int dbValue = configPersistence.getConfigurationKeyValueInteger(
+					ClientCanExistOutsideGroupKey).getValue();
+			ConfigurationManager configMgr = ConfigurationManager.getInstance();
+			cfgValue = configMgr
+					.getBoolean(ClientRulesClientCanExistOutsideGroup);
+
+			if (dbValue == Constants.NO && cfgValue == true) {
+				configPersistence.updateConfigurationKeyValueInteger(
+						ClientCanExistOutsideGroupKey, Constants.YES);
+			}
+			else if (dbValue == Constants.YES && cfgValue == false) {
+				// Trying to override db value of "true/yes" with "false/no"
+				// in the config file violates business rules.
+				throw new ConfigurationException(getBadOverrideMsg(
+						ClientCanExistOutsideGroupKey,
+						"Clients outside of groups may already exist."));
+			}
+		}
+		catch (PersistenceException ex) {
+			throw new ConfigurationException(ex);
+		}
+
+		return cfgValue;
 	}
 
 	/**
 	 * Fetches and populates {@link #nameSequence}.
-	 */	
+	 */
 	public static String[] getNameSequence() {
 		if (nameSequence == null) {
 			ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -219,7 +208,10 @@ public class ClientRules {
 	 * <p>
 	 * A name sequence is the order in which client names are displayed.
 	 * Example: first name, then middle name, then last name.
-	 */	
+	 * <p>
+	 * Throws no exceptions, but reasons for invalid sequences are logged as
+	 * errors.
+	 */
 	public static boolean isValidNameSequence(String[] nameSequence) {
 		// a null or empty part would cause errors when a name format when, for
 		// instance, ClientNameDetailView.getDisplayName() is called
@@ -243,17 +235,18 @@ public class ClientRules {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Check that the configured nameSequence is valid. Automatically fetches
-	 * and populates {@link #nameSequence} if necessary.
+	 * Delegates to {@link #isValidNameSequence(String[])} to check that the
+	 * configured nameSequence is valid. Automatically fetches and populates
+	 * {@link #nameSequence} if necessary.
 	 * <p>
 	 * A name sequence is the order in which client names are displayed.
 	 * Example: first name, then middle name, then last name.
-	 */	
+	 */
 	public static boolean isValidNameSequence() {
 		return isValidNameSequence(getNameSequence());
 	}

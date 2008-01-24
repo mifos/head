@@ -45,5 +45,9 @@ public class ConfigurationException extends ApplicationException {
 	public ConfigurationException(String key) {
 		super(key);
 	}
+	
+	public ConfigurationException(Throwable cause) {
+		super(cause);
+	}
 
 }

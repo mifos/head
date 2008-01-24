@@ -91,10 +91,10 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -230,9 +230,7 @@ public class ClientCustAction extends CustAction {
 			Hibernate.initialize(parent.getOffice());				
 			actionForm.setParentGroup(parent);
 		}
-		if (Configuration.getInstance().getCustomerConfig(
-				getUserContext(request).getBranchId())
-				.isPendingApprovalStateDefinedForClient() == true) {
+		if (ProcessFlowRules.isClientPendingApprovalStateEnabled() == true) {
 			SessionUtils.setAttribute(
 					CustomerConstants.PENDING_APPROVAL_DEFINED,
 					CustomerConstants.YES, request);

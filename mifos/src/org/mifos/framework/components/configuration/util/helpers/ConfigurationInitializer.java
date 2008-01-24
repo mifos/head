@@ -65,11 +65,15 @@ import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 
+/**
+ * This class is a remnant of per-office configuration, which <a
+ * href="http://article.gmane.org/gmane.comp.finance.mifos.devel/3498">is
+ * deprecated and may be removed</a> (-Adam 22-JAN-2008).
+ */
 public class ConfigurationInitializer {
 	private OfficeBO headOffice;
 
@@ -99,18 +103,15 @@ public class ConfigurationInitializer {
 			ApplicationException {
 		Map<Key, Object> officeConfigMap = new HashMap<Key, Object>();
 
-		List<CustomerStatusEntity> customerOptionalStates;
-		try {
-			customerOptionalStates = new CustomerPersistence()
-					.getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
-		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
-		}
-		setCustomerOptionalStates(officeConfigMap, customerOptionalStates);
-
-		List<AccountStateEntity> accountOptionalStates = new AccountPersistence()
-				.getAccountStates(ConfigConstants.OPTIONAL_FLAG);
-		setAccountOptionalStates(officeConfigMap, accountOptionalStates);
+		// TODO: don't set optional states here... this is handled in ProcessFlowRules
+//		List<CustomerStatusEntity> customerOptionalStates;
+//		customerOptionalStates = new CustomerPersistence()
+//				.getCustomerStates(ConfigConstants.OPTIONAL_FLAG);
+//		setCustomerOptionalStates(officeConfigMap, customerOptionalStates);
+//
+//		List<AccountStateEntity> accountOptionalStates = new AccountPersistence()
+//				.getAccountStates(ConfigConstants.OPTIONAL_FLAG);
+//		setAccountOptionalStates(officeConfigMap, accountOptionalStates);
 
 		setFiscalStartOfWeek(officeConfigMap);
 		setWeekOffList(officeConfigMap);
@@ -145,80 +146,83 @@ public class ConfigurationInitializer {
 		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
 				ConfigConstants.DORMANCY_DAYS), dormancyDays);
 	}
+	
+	// TODO: Will be removed shortly along with other per-office configuration
+	// detritus. (-Adam 24-JAN-2008)
 
-	private void setCustomerOptionalStates(Map<Key, Object> officeConfigMap,
-			List<CustomerStatusEntity> customerOptionalStates)
-			throws SystemException, ApplicationException {
-		if (customerOptionalStates != null && customerOptionalStates.size() > 0) {
-			for (CustomerStatusEntity customerStateEntity : customerOptionalStates) {
-				if (customerStateEntity.getCustomerLevel().getId().equals(
-						CustomerLevel.CLIENT.getValue()))
-					setClientOptionalState(officeConfigMap, customerStateEntity);
-				else if (customerStateEntity.getCustomerLevel().getId().equals(
-						CustomerLevel.GROUP.getValue()))
-					setGroupOptionalState(officeConfigMap, customerStateEntity);
-			}
-		}
-	}
+//	private void setCustomerOptionalStates(Map<Key, Object> officeConfigMap,
+//			List<CustomerStatusEntity> customerOptionalStates)
+//			throws SystemException, ApplicationException {
+//		if (customerOptionalStates != null && customerOptionalStates.size() > 0) {
+//			for (CustomerStatusEntity customerStateEntity : customerOptionalStates) {
+//				if (customerStateEntity.getCustomerLevel().getId().equals(
+//						CustomerLevel.CLIENT.getValue()))
+//					setClientOptionalState(officeConfigMap, customerStateEntity);
+//				else if (customerStateEntity.getCustomerLevel().getId().equals(
+//						CustomerLevel.GROUP.getValue()))
+//					setGroupOptionalState(officeConfigMap, customerStateEntity);
+//			}
+//		}
+//	}
+//
+//	private void setAccountOptionalStates(Map<Key, Object> officeConfigMap,
+//			List<AccountStateEntity> accountOptionalStates)
+//			throws SystemException, ApplicationException {
+//		if (accountOptionalStates != null && accountOptionalStates.size() > 0) {
+//			for (AccountStateEntity accountStateEntity : accountOptionalStates) {
+//				if (accountStateEntity.getPrdType().getProductTypeID().equals(
+//						AccountTypes.SAVINGS_ACCOUNT.getValue()))
+//					setSavingsOptionalState(officeConfigMap, accountStateEntity);
+//				else if (accountStateEntity.getPrdType().getProductTypeID()
+//						.equals(AccountTypes.LOAN_ACCOUNT.getValue()))
+//					setLoanOptionalStates(officeConfigMap, accountStateEntity);
+//			}
+//		}
+//	}
 
-	private void setAccountOptionalStates(Map<Key, Object> officeConfigMap,
-			List<AccountStateEntity> accountOptionalStates)
-			throws SystemException, ApplicationException {
-		if (accountOptionalStates != null && accountOptionalStates.size() > 0) {
-			for (AccountStateEntity accountStateEntity : accountOptionalStates) {
-				if (accountStateEntity.getPrdType().getProductTypeID().equals(
-						AccountTypes.SAVINGS_ACCOUNT.getValue()))
-					setSavingsOptionalState(officeConfigMap, accountStateEntity);
-				else if (accountStateEntity.getPrdType().getProductTypeID()
-						.equals(AccountTypes.LOAN_ACCOUNT.getValue()))
-					setLoanOptionalStates(officeConfigMap, accountStateEntity);
-			}
-		}
-	}
-
-	private void setClientOptionalState(Map<Key, Object> officeConfigMap,
-			CustomerStatusEntity customerStateEntity) throws SystemException,
-			ApplicationException {
-		if (customerStateEntity.getId().equals(
-				CustomerStatus.CLIENT_PENDING.getValue()))
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT),
-					Constants.NO);
-	}
-
-	private void setGroupOptionalState(Map<Key, Object> officeConfigMap,
-			CustomerStatusEntity customerStateEntity) throws SystemException,
-			ApplicationException {
-		if (customerStateEntity.getId().equals(GroupConstants.PENDING_APPROVAL))
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_GROUP),
-					Constants.NO);
-	}
-
-	private void setSavingsOptionalState(Map<Key, Object> officeConfigMap,
-			AccountStateEntity accountStateEntity) throws SystemException,
-			ApplicationException {
-		if (accountStateEntity.getId().equals(
-				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL))
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_SAVINGS),
-					Constants.NO);
-	}
-
-	private void setLoanOptionalStates(Map<Key, Object> officeConfigMap,
-			AccountStateEntity accountStateEntity) throws SystemException,
-			ApplicationException {
-		if (accountStateEntity.getId().equals(
-				AccountStates.LOANACC_PENDINGAPPROVAL))
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_LOAN),
-					Constants.NO);
-		else if (accountStateEntity.getId().equals(
-				AccountStates.LOANACC_DBTOLOANOFFICER))
-			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
-					ConfigConstants.DISBURSED_TO_LO_DEFINED_FOR_LOAN),
-					Constants.NO);
-	}
+//	private void setClientOptionalState(Map<Key, Object> officeConfigMap,
+//			CustomerStatusEntity customerStateEntity) throws SystemException,
+//			ApplicationException {
+//		if (customerStateEntity.getId().equals(
+//				CustomerStatus.CLIENT_PENDING.getValue()))
+//			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
+//					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT),
+//					Constants.NO);
+//	}
+//
+//	private void setGroupOptionalState(Map<Key, Object> officeConfigMap,
+//			CustomerStatusEntity customerStateEntity) throws SystemException,
+//			ApplicationException {
+//		if (customerStateEntity.getId().equals(GroupConstants.PENDING_APPROVAL))
+//			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
+//					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_GROUP),
+//					Constants.NO);
+//	}
+//
+//	private void setSavingsOptionalState(Map<Key, Object> officeConfigMap,
+//			AccountStateEntity accountStateEntity) throws SystemException,
+//			ApplicationException {
+//		if (accountStateEntity.getId().equals(
+//				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL))
+//			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
+//					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_SAVINGS),
+//					Constants.NO);
+//	}
+//
+//	private void setLoanOptionalStates(Map<Key, Object> officeConfigMap,
+//			AccountStateEntity accountStateEntity) throws SystemException,
+//			ApplicationException {
+//		if (accountStateEntity.getId().equals(
+//				AccountStates.LOANACC_PENDINGAPPROVAL))
+//			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
+//					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_LOAN),
+//					Constants.NO);
+//		else if (accountStateEntity.getId().equals(
+//				AccountStates.LOANACC_DBTOLOANOFFICER))
+//			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
+//					ConfigConstants.DISBURSED_TO_LO_DEFINED_FOR_LOAN),
+//					Constants.NO);
+//	}
 
 	public void initialize() {
 		try {

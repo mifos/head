@@ -67,7 +67,6 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -76,7 +75,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -93,6 +91,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.config.ClientRules;
+import org.mifos.config.ProcessFlowRules;
 
 public class MultipleLoanAccountsCreationAction extends BaseAction {
 
@@ -250,9 +249,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
-				Configuration.getInstance().getAccountConfig(
-						getUserContext(request).getBranchId())
-						.isPendingApprovalStateDefinedForLoan(), request);
+				ProcessFlowRules.isLoanPendingApprovalStateEnabled(), request);
 		logger.debug("outside get method");
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
