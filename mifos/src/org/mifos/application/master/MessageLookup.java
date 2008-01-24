@@ -49,7 +49,7 @@ import org.springframework.context.MessageSourceAware;
  * a localized text string for each instance of the enumerated type.
  * 
  * Text strings for enumerated types can currently be found in
- * org.mifos.config.resources.MessageLookupMessages.properties (and 
+ * org/mifos/config/localizedResources/MessageLookupMessages.properties (and 
  * associated versions for different locales).
  */
 public class MessageLookup implements MessageSourceAware {

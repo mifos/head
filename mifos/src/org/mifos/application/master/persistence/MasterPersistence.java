@@ -263,13 +263,16 @@ public class MasterPersistence extends Persistence {
 
 	public String retrieveMasterEntities(Integer entityId, Short localeId)
 			throws PersistenceException {
+		String masterEntity = null;
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("lookUpId", entityId);
 		queryParameters.put("localeId", localeId);
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME,
 				queryParameters);
-		return (String) queryResult.get(0);
+		if ((queryResult != null) && (queryResult.size() > 0))
+			masterEntity = (String) queryResult.get(0);
+		return masterEntity;
 	}
 
 	public List<MasterDataEntity> retrieveMasterDataEntity(String classPath)

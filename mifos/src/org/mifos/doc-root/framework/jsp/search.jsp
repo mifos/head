@@ -1,11 +1,12 @@
  <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
   <html-el:form action="custSearchAction.do?method=loadAllBranches">
         <tr>
           <td class="leftpanelinks"><table width="90%" border="0" cellspacing="0" cellpadding="0">
             <tr>
-              <td class="paddingbottom03"><span class="fontnormal8ptbold">Search
-                  by name, system ID or account number </span> </td>
+              <td class="paddingbottom03"><span class="fontnormal8ptbold"><mifos:mifoslabel name="framework.searchCriteria" bundle="FrameworkUIResources"></mifos:mifoslabel></span> </td>
             </tr>
           </table>
             <table width="90%" border="0" cellpadding="0" cellspacing="0">
@@ -27,7 +28,7 @@
               <tr>
                 <td align="right">
                  <html-el:submit property="searchButton" styleClass="buttn" style="width:60px;" >
-                Search
+                <mifos:mifoslabel name="framework.search" bundle="FrameworkUIResources"></mifos:mifoslabel>
                 </html-el:submit>
                 </td>
               </tr>

@@ -12,7 +12,7 @@
         dependency-check="default">
         <property name="basenames">
             <list>
-                <value>org/mifos/config/resources/MessageLookupMessages</value>
+                <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
             </list>
         </property>
     </bean>

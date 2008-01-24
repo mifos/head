@@ -37,7 +37,7 @@
                 
                 
                 <html-el:submit property="searchButton" styleClass="buttn" style="width:60px;" >
-                Search
+                <mifos:mifoslabel name="framework.search" bundle="FrameworkUIResources"></mifos:mifoslabel>
                 </html-el:submit>
                 
                 </td>

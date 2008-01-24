@@ -33,6 +33,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import javax.servlet.http.*;
+
 
 public class LoginAction extends BaseAction {
 
@@ -148,7 +150,10 @@ public class LoginAction extends BaseAction {
 	}
 
 	private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {
-		request.getSession(false).setAttribute(Constants.USERCONTEXT,userContext);
+		HttpSession hs = request.getSession(false);
+		hs.setAttribute(Constants.USERCONTEXT,userContext);
+		hs.setAttribute("org.apache.struts.action.LOCALE", userContext.getCurrentLocale());
+
 	}
 
 	private String getLoginForward(Short passwordChanged) {

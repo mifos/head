@@ -576,7 +576,7 @@
         </action>
 
     </action-mappings>
-
+	<message-resources key="FrameworkUIResources" parameter="org.mifos.config.localizedResources.FrameworkUIResources"  />
     <message-resources key="UIResources" parameter="org.mifos.config.localizedResources.UIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="LoggerResources"
