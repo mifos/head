@@ -1981,6 +1981,7 @@ public class LoanBO extends AccountBO {
 		Money durationInYearsM = new Money(Double.toString(durationInYears));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Get interest duration in years..." + durationInYears);
+		// the calls to Money.multiply() and Money.divide() round prematurely!
 		Money interest = getLoanAmount().multiply(
 				interestRateM.multiply(durationInYearsM)).divide(
 				new Money(Double.toString(100)));
