@@ -13,6 +13,7 @@
         <property name="basenames">
             <list>
                 <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
+                <value>org/mifos/config/localizedResources/reporterrors</value>
             </list>
         </property>
     </bean>

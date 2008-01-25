@@ -18,7 +18,10 @@ import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+
+import net.sf.jasperreports.charts.util.TimeSeriesLabelGenerator;
 
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -554,6 +557,7 @@ public class CollectionSheetReportServiceTest extends
 
 	public void testBsklProductFilterReturnsLoanProductWithBsklOfferingType()
 			throws Exception {
+		collectionSheet.addCollectionSheetLoanDetail(bsklLoanDetailsEntity);		
 		expect(
 				loanProductBusinessServiceMock
 						.getLoanOffering(BSKL_PRODUCT_OFFERING_ID)).andReturn(
@@ -561,7 +565,7 @@ public class CollectionSheetReportServiceTest extends
 
 		expect(accountBusinessServiceMock.getAccount(BSKL_LOAN_ACCNT_ID))
 				.andReturn(LoanBO.createInstanceForTest(bsklLoanProductOffering));
-
+		
 		replay(accountBusinessServiceMock);
 		replay(loanProductBusinessServiceMock);
 
@@ -576,6 +580,7 @@ public class CollectionSheetReportServiceTest extends
 
 	public void testClLoanProductFilterReturnsLoanProductWithClLoanOfferingType()
 			throws Exception {
+		collectionSheet.addCollectionSheetLoanDetail(clLoanDetailsEntity);			
 		expect(
 				loanProductBusinessServiceMock
 						.getLoanOffering(CL_PRODUCT_OFFERING_ID)).andReturn(
@@ -583,8 +588,6 @@ public class CollectionSheetReportServiceTest extends
 
 		expect(accountBusinessServiceMock.getAccount(CL_LOAN_ACCNT_ID))
 				.andReturn(LoanBO.createInstanceForTest(clLoanProductOffering));
-		expect(accountBusinessServiceMock.getAccount(BSKL_LOAN_ACCNT_ID))
-				.andReturn(LoanBO.createInstanceForTest(bsklLoanProductOffering));
 
 		replay(accountBusinessServiceMock);
 		replay(loanProductBusinessServiceMock);
@@ -600,6 +603,7 @@ public class CollectionSheetReportServiceTest extends
 
 	public void testMm1SavingsProductFilterReturnsSavingsProductWithMm1OfferingType()
 			throws Exception {
+		collectionSheet.addCollectionSheetSavingsDetail(mm1SavingDetailsEntity);		
 		expect(
 				savingsProductBusinessServiceMock
 						.getSavingsProduct(MM1_SAVINGS_PRODUCT_ID)).andReturn(
@@ -609,11 +613,7 @@ public class CollectionSheetReportServiceTest extends
 		mm1SavingsBO.populateInstanceForTest(mm1SavingsProductOffering);
 		expect(accountBusinessServiceMock.getAccount(MM1_SAVINGS_ACCNT_ID))
 				.andReturn(mm1SavingsBO);
-		SavingsBO skSavingsBO  = new SavingsBO();
-		skSavingsBO.populateInstanceForTest(skSavingsProductOffering);
-		expect(accountBusinessServiceMock.getAccount(SK_SAVINGS_ACCNT_ID))
-				.andReturn(skSavingsBO);
-
+		
 		replay(savingsProductBusinessServiceMock);
 		replay(accountBusinessServiceMock);
 
@@ -625,6 +625,32 @@ public class CollectionSheetReportServiceTest extends
 		verify(savingsProductBusinessServiceMock);
 		verify(accountBusinessServiceMock);
 	}
+
+	public void testSkSavingsProductFilterReturnsSavingsProductWithMm1OfferingType()
+	throws Exception {
+		collectionSheet.addCollectionSheetSavingsDetail(skSavingDetailsEntity);		
+		expect(
+				savingsProductBusinessServiceMock
+						.getSavingsProduct(SK_SAVING_PRD_OFFERING_ID)).andReturn(
+				skSavingsProductOffering);
+	
+		SavingsBO skSavingsBO  = new SavingsBO();
+		skSavingsBO.populateInstanceForTest(skSavingsProductOffering);
+		expect(accountBusinessServiceMock.getAccount(SK_SAVINGS_ACCNT_ID))
+				.andReturn(skSavingsBO);
+		
+		replay(savingsProductBusinessServiceMock);
+		replay(accountBusinessServiceMock);
+		
+		CollSheetSavingsDetailsEntity filteredSavingsDetailEntity = collectionSheetReportService
+				.getSavingProduct(collectionSheet, collectionSheetReportService
+						.getSavingsOffering(SK_SAVING_PRD_OFFERING_ID));
+		assertNotNull(filteredSavingsDetailEntity);
+		assertSame(skSavingDetailsEntity, filteredSavingsDetailEntity);
+		verify(savingsProductBusinessServiceMock);
+		verify(accountBusinessServiceMock);
+	}
+	
 
 	public void testGetMeetingDatesForCenterWhenSpecifiedBranchOfficerAndCenter()
 			throws Exception {
@@ -880,10 +906,6 @@ public class CollectionSheetReportServiceTest extends
 				.createSavingsDetails(MM1_SAVINGS_ACCNT_ID);
 		skSavingDetailsEntity = CollectionSheetSavingDetailsEntityFixture
 				.createSavingsDetails(SK_SAVINGS_ACCNT_ID);
-		collectionSheet.addCollectionSheetLoanDetail(clLoanDetailsEntity);
-		collectionSheet.addCollectionSheetLoanDetail(bsklLoanDetailsEntity);
-		collectionSheet.addCollectionSheetSavingsDetail(mm1SavingDetailsEntity);
-		collectionSheet.addCollectionSheetSavingsDetail(skSavingDetailsEntity);
 		bsklLoanProductOffering = LoanOfferingBO.createInstanceForTest(BSKL_PRODUCT_OFFERING_ID);
 		clLoanProductOffering = LoanOfferingBO.createInstanceForTest(CL_PRODUCT_OFFERING_ID);
 		mm1SavingsProductOffering = SavingsOfferingBO.createInstanceForTest(

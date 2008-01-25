@@ -159,7 +159,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		prdLogger.debug("creating product offering done");
 	}
 
-	public PrdOfferingBO(Short prdOfferingId) {
+	protected PrdOfferingBO(Short prdOfferingId) {
 		this(prdOfferingId, null, null, null);		
 	}
 

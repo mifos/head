@@ -2110,19 +2110,19 @@ return true;]]></method>
                                     <property name="width">1.4375in</property>
                                 </column>
                                 <column id="645">
-                                    <property name="width">0.740645669in</property>
-                                </column>
-                                <column id="646">
-                                    <property name="width">1.230645669in</property>
+                                    <property name="width">0.962in</property>
+                                    <property name="fontFamily">"Arial"</property>
                                 </column>
                                 <column id="647">
-                                    <property name="width">1.9895833333in</property>
+                                    <property name="width">3in</property>
+                                    <property name="fontFamily">"Arial"</property>
                                 </column>
                                 <row id="648">
                                     <cell id="649">
                                         <property name="colSpan">1</property>
                                         <property name="rowSpan">1</property>
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
@@ -2138,6 +2138,7 @@ return true;]]></method>
                                     </cell>
                                     <cell id="915">
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2152,6 +2153,7 @@ return true;]]></method>
                                         <property name="colSpan">1</property>
                                         <property name="rowSpan">1</property>
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2164,18 +2166,21 @@ return true;]]></method>
                                     </cell>
                                     <cell id="916">
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">0px</property>
                                         <property name="paddingRight">5px</property>
                                         <label id="1002">
+                                            <property name="fontSize">11pt</property>
                                             <property name="textAlign">right</property>
                                             <text-property name="text">Amount</text-property>
                                         </label>
                                     </cell>
                                     <cell id="917">
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2183,27 +2188,16 @@ return true;]]></method>
                                     </cell>
                                     <cell id="918">
                                         <property name="style">reportSummaryHeader</property>
+                                        <property name="fontSize">10pt</property>
                                         <property name="paddingLeft">10px</property>
-                                    </cell>
-                                    <cell id="655">
-                                        <property name="style">reportSummaryHeader</property>
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="paddingLeft">0px</property>
-                                        <property name="verticalAlign">middle</property>
-                                        <label id="763">
-                                            <property name="textAlign">center</property>
-                                            <text-property name="text" key="collection.sheet.summary.amount.taken.back">Amount taken back to Office</text-property>
-                                        </label>
                                     </cell>
                                     <cell id="656">
                                         <property name="fontFamily">"Arial"</property>
                                         <property name="fontSize">11pt</property>
                                         <property name="fontWeight">bold</property>
+                                        <property name="borderLeftColor">#000000</property>
+                                        <property name="borderLeftStyle">solid</property>
+                                        <property name="borderLeftWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2221,6 +2215,10 @@ return true;]]></method>
                                 <row id="657">
                                     <property name="style">summaryText</property>
                                     <cell id="658">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
@@ -2235,6 +2233,10 @@ return true;]]></method>
                                     </cell>
                                     <cell id="659">
                                         <property name="style">numberFormat</property>
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2248,6 +2250,10 @@ return true;]]></method>
                                         </data>
                                     </cell>
                                     <cell id="660">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2258,12 +2264,19 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="661">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
                                     <cell id="662">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2274,17 +2287,15 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="663">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
-                                    <cell id="664">
+                                    <cell id="665">
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="665">
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2293,6 +2304,10 @@ return true;]]></method>
                                 <row id="666">
                                     <property name="style">summaryText</property>
                                     <cell id="667">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
@@ -2307,6 +2322,10 @@ return true;]]></method>
                                     </cell>
                                     <cell id="668">
                                         <property name="style">numberFormat</property>
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2320,6 +2339,10 @@ return true;]]></method>
                                         </data>
                                     </cell>
                                     <cell id="669">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2330,12 +2353,19 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="670">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
                                     <cell id="671">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2346,17 +2376,15 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="672">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
-                                    <cell id="673">
+                                    <cell id="674">
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="674">
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2365,6 +2393,7 @@ return true;]]></method>
                                 <row id="675">
                                     <property name="style">summaryText</property>
                                     <cell id="676">
+                                        <property name="fontSize">11pt</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
@@ -2375,11 +2404,16 @@ return true;]]></method>
                                     </cell>
                                     <cell id="677">
                                         <property name="style">numberFormat</property>
+                                        <property name="fontSize">11pt</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                     </cell>
                                     <cell id="678">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2390,12 +2424,19 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="679">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
                                     <cell id="680">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2406,17 +2447,15 @@ return true;]]></method>
                                         </label>
                                     </cell>
                                     <cell id="681">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
-                                    <cell id="682">
+                                    <cell id="683">
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="683">
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2426,6 +2465,9 @@ return true;]]></method>
                                     <property name="style">summaryText</property>
                                     <cell id="685">
                                         <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
@@ -2434,12 +2476,16 @@ return true;]]></method>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">5px</property>
                                         <label id="999">
-                                            <property name="fontSize">11pt</property>
+                                            <property name="fontSize">10pt</property>
                                             <property name="fontWeight">bold</property>
                                             <text-property name="text" key="collection.sheet.summary.collection.total">Total Collection</text-property>
                                         </label>
                                     </cell>
                                     <cell id="686">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2458,115 +2504,57 @@ return true;]]></method>
                                     </cell>
                                     <cell id="687">
                                         <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">5px</property>
                                         <label id="777">
+                                            <property name="fontSize">10pt</property>
                                             <property name="fontWeight">bold</property>
                                             <text-property name="text" key="collection.sheet.summary.disbursement.total">Total Disbursement</text-property>
                                         </label>
                                     </cell>
                                     <cell id="688">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
                                     </cell>
                                     <cell id="689">
+                                        <property name="fontSize">10pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
                                         <property name="paddingLeft">5px</property>
+                                        <label id="1020">
+                                            <property name="fontSize">10pt</property>
+                                            <property name="fontWeight">bold</property>
+                                            <property name="textAlign">center</property>
+                                            <text-property name="text">Amount taken back to Office</text-property>
+                                        </label>
                                     </cell>
                                     <cell id="690">
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
                                         <property name="paddingLeft">10px</property>
-                                    </cell>
-                                    <cell id="691">
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
                                     </cell>
                                     <cell id="692">
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                </row>
-                                <row id="825">
-                                    <property name="style">summaryText</property>
-                                    <cell id="826">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
                                         <property name="borderLeftColor">#000000</property>
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="paddingLeft">5px</property>
-                                        <label id="834"/>
-                                    </cell>
-                                    <cell id="827">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="828">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="paddingLeft">5px</property>
-                                    </cell>
-                                    <cell id="829">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="paddingLeft">10px</property>
-                                    </cell>
-                                    <cell id="830">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="paddingLeft">5px</property>
-                                    </cell>
-                                    <cell id="831">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="paddingLeft">10px</property>
-                                    </cell>
-                                    <cell id="832">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                    </cell>
-                                    <cell id="833">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
@@ -2625,14 +2613,11 @@ return true;]]></method>
                         <cell id="1019"/>
                         <cell id="800"/>
                         <cell id="801">
-                            <property name="colSpan">1</property>
-                            <property name="rowSpan">1</property>
-                        </cell>
-                        <cell id="1016">
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <property name="style">signatureLine</property>
                         </cell>
+                        <cell id="1021"/>
                         <cell id="804">
                             <property name="colSpan">1</property>
                             <property name="rowSpan">1</property>
@@ -2669,17 +2654,14 @@ return true;]]></method>
                         <cell id="1006"/>
                         <cell id="814"/>
                         <cell id="815">
-                            <property name="colSpan">1</property>
-                            <property name="rowSpan">1</property>
-                        </cell>
-                        <cell id="1017">
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
-                            <label id="1018">
+                            <label id="1023">
                                 <property name="textAlign">center</property>
                                 <text-property name="text" key="collection.sheet.signature.center.manager">Center Manager</text-property>
                             </label>
                         </cell>
+                        <cell id="1022"/>
                         <cell id="818">
                             <property name="colSpan">1</property>
                             <property name="rowSpan">1</property>
@@ -2719,6 +2701,7 @@ return true;]]></method>
                 <footer>
                     <row id="349">
                         <cell id="350">
+                            <property name="style">groupFooter</property>
                             <property name="borderLeftColor">#808080</property>
                             <property name="borderLeftStyle">solid</property>
                             <property name="borderLeftWidth">thin</property>
@@ -2908,12 +2891,18 @@ return true;]]></method>
                     <property name="style">rowText</property>
                     <cell id="150">
                         <property name="style">idText</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderLeftColor">#808080</property>
                         <property name="borderLeftStyle">solid</property>
                         <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="261">
                             <structure name="numberFormat">
                                 <property name="category">Custom</property>
@@ -2923,9 +2912,15 @@ return true;]]></method>
                         </data>
                     </cell>
                     <cell id="151">
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <property name="paddingRight">5px</property>
                         <data id="262">
                             <property name="resultSetColumn">member_name</property>
@@ -2933,6 +2928,12 @@ return true;]]></method>
                     </cell>
                     <cell id="152">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="263">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -2943,9 +2944,15 @@ return true;]]></method>
                     </cell>
                     <cell id="153">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="264">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -2956,6 +2963,12 @@ return true;]]></method>
                     </cell>
                     <cell id="154">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="265">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -2966,9 +2979,15 @@ return true;]]></method>
                     </cell>
                     <cell id="155">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="266">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -2979,6 +2998,12 @@ return true;]]></method>
                     </cell>
                     <cell id="156">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="267">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -2989,9 +3014,15 @@ return true;]]></method>
                     </cell>
                     <cell id="157">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="268">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3002,6 +3033,12 @@ return true;]]></method>
                     </cell>
                     <cell id="158">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="269">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3012,9 +3049,15 @@ return true;]]></method>
                     </cell>
                     <cell id="159">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="270">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3025,9 +3068,15 @@ return true;]]></method>
                     </cell>
                     <cell id="160">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="273">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3038,9 +3087,15 @@ return true;]]></method>
                     </cell>
                     <cell id="161">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="274">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3051,9 +3106,15 @@ return true;]]></method>
                     </cell>
                     <cell id="206">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="275">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3064,9 +3125,15 @@ return true;]]></method>
                     </cell>
                     <cell id="842">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="911">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3077,9 +3144,15 @@ return true;]]></method>
                     </cell>
                     <cell id="968">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <data id="982">
                             <structure name="numberFormat">
                                 <property name="category">Currency</property>
@@ -3090,9 +3163,15 @@ return true;]]></method>
                     </cell>
                     <cell id="857">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#808080</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="borderRightColor">#808080</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">1pt</property>
+                        <property name="borderTopColor">#808080</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                     </cell>
                 </row>
             </detail>
