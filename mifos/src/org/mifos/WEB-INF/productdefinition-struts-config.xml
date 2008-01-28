@@ -4,9 +4,6 @@
 <struts-config>
     <form-beans>
         <!-- Product Configuration -->
-        <form-bean name="prdconfigurationactionform"
-                   type="org.mifos.application.productdefinition.struts.actionforms.PrdConfActionForm"/>
-        <!-- Product Configuration -->
         <form-bean name="prdconfactionform"
                    type="org.mifos.application.productdefinition.struts.actionforms.PrdConfActionForm"/>
         <!-- Loan Product -->
@@ -22,18 +19,6 @@
 
     <action-mappings>
         <!-- Product Configuration -->
-        <action path="/prdconfigurationaction" name="prdconfigurationactionform"
-                type="org.mifos.application.productdefinition.struts.action.PrdConfAction"
-                input="/prdconfigurationaction.do?method=validate" parameter="method" validate="true"
-                scope="request">
-            <forward name="cancel_success" path="/AdminAction.do?method=load"/>
-            <forward name="update_success" path="/AdminAction.do?method=load"/>
-            <forward name="search_success" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"/>
-            <forward name="cancel_failure" path="/AdminAction.do?method=load"/>
-            <forward name="update_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"/>
-            <forward name="search_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"/>
-        </action>
-
         <action path="/prdconfaction" name="prdconfactionform"
                 type="org.mifos.application.productdefinition.struts.action.PrdConfAction"
                 input="/prdconfaction.do?method=validate" parameter="method" validate="true">
