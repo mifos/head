@@ -2125,8 +2125,7 @@ public class SavingsBO extends AccountBO {
 	
 	@Override
 	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
-		if (Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
+		if (AccountingRules.isBackDatedTxnAllowed()) {
 			Date meetingDate = null;
 			trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
 			try {

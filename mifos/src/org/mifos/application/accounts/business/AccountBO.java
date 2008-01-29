@@ -46,8 +46,8 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -728,11 +728,6 @@ public class AccountBO extends BusinessObject {
 		return dueInstallments;
 	}
 
-    public boolean isBackDatedTrxnAllowed() {
-        return Configuration.getInstance().getAccountConfig(
-				getOffice().getOfficeId()).isBackDatedTxnAllowed();
-    }
-
     public boolean isLastCustomerMeetingDate(Date trxnDate) {
         Date meetingDate = null;
         try {
@@ -759,7 +754,7 @@ public class AccountBO extends BusinessObject {
     }
 
     public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
-        if (isBackDatedTrxnAllowed()) {
+        if (AccountingRules.isBackDatedTxnAllowed()) {
 			return isLastCustomerMeetingDate(trxnDate);
 		}
         else {

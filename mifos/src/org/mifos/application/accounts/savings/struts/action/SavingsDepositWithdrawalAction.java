@@ -32,9 +32,9 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -120,9 +120,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						TrxnTypes.savings_deposit.getValue()), request);
 		
 		SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
-				new Boolean(Configuration.getInstance().getAccountConfig(
-						savings.getCustomer().getOffice().getOfficeId())
-						.isBackDatedTxnAllowed()), request);
+				new Boolean(AccountingRules.isBackDatedTxnAllowed()), request);
 
 		actionForm.setTrxnDate(DateUtils.getCurrentDate(uc
 		.getPreferredLocale()));

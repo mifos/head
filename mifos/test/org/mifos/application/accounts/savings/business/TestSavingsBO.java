@@ -73,6 +73,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -388,8 +389,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
 		java.util.Date trxnDate = offSetCurrentDate(-5);
-		if (Configuration.getInstance().getAccountConfig(Short.valueOf("3"))
-				.isBackDatedTxnAllowed())
+		if (AccountingRules.isBackDatedTxnAllowed())
 			assertTrue(savings.isTrxnDateValid(trxnDate));
 		else
 			assertFalse(savings.isTrxnDateValid(trxnDate));

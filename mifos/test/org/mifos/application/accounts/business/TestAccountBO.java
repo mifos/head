@@ -66,8 +66,8 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -444,8 +444,7 @@ public class TestAccountBO extends TestAccount {
 		// Added by rajender on 24th July as test case was not passing
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		java.util.Date trxnDate = new Date(calendar.getTimeInMillis());
-		if (Configuration.getInstance().getAccountConfig(Short.valueOf("3"))
-				.isBackDatedTxnAllowed())
+		if (AccountingRules.isBackDatedTxnAllowed())
 			assertTrue(accountBO.isTrxnDateValid(trxnDate));
 		else
 			assertFalse(accountBO.isTrxnDateValid(trxnDate));

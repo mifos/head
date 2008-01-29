@@ -20,7 +20,6 @@
  */
 package org.mifos.framework.components.configuration.business;
 
-import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 
@@ -36,25 +35,6 @@ import org.mifos.framework.components.configuration.util.helpers.ConfigConstants
 public class AccountConfig extends BaseConfig {
 	public AccountConfig(CacheRepository cacheRepo, OfficeConfig officeConf) {
 		super(cacheRepo, officeConf);
-	}
-
-	/**
-	 * Head Office can specify whether/not system will accept back-dated
-	 * transactions. This is an MFI-wide setting and will be applicable to all
-	 * transactions in all offices for all loans, savings and client accounts.
-	 * By default, backdated transactions should be allowed. If the setting is
-	 * changed it only applies to future transactions
-	 * <ul>
-	 * <li>If "true", user can enter transactions dated earlier than current
-	 * date (but later than last meeting date).</li>
-	 * <li>If "false", user can only enter transactions dated with the current
-	 * date. Also, "date of transaction" for bulk entry will always be the
-	 * current date.</li>
-	 * </ul>
-	 */
-	public boolean isBackDatedTxnAllowed() {
-		ConfigurationManager cm = ConfigurationManager.getInstance();
-		return cm.getBoolean(ConfigConstants.BACK_DATED_TRANSACTIONS_ALLOWED);
 	}
 
 	public Short getLatenessDays() {

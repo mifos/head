@@ -102,15 +102,5 @@ public class Configuration {
   public AccountConfig getAccountConfig(Short officeId) {
  	 return getOfficeConfig(officeId).getAccountConfig();
   }
-  
-  // never called
-  public CustomerConfig getCustomerConfig(Short officeId) {
-	  return getOfficeConfig(officeId).getCustomerConfig();
-  }
-  
-  // never called
-  public MeetingConfig getMeetingConfig(Short officeId) {
-	  return getOfficeConfig(officeId).getMeetingConfig();
-  }
 
 }

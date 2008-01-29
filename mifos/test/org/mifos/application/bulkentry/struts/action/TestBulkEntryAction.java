@@ -89,10 +89,10 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
@@ -434,9 +434,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("load_success");
-		if (Configuration.getInstance().getAccountConfig(
-				Short.valueOf(center.getOffice().getOfficeId()))
-				.isBackDatedTxnAllowed()) {
+		if (AccountingRules.isBackDatedTxnAllowed()) {
 			assertEquals("The value for isBackDated Trxn Allowed", SessionUtils
 					.getAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
 							request), Constants.YES);

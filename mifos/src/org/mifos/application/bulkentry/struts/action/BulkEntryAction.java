@@ -73,7 +73,6 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -81,7 +80,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -94,6 +92,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 
 public class BulkEntryAction extends BaseAction {
@@ -219,9 +218,7 @@ public class BulkEntryAction extends BaseAction {
 
 		boolean isBackDatedTrxnAllowed = false;
 		if (actionForm.getOfficeId() != null)
-			isBackDatedTrxnAllowed = Configuration.getInstance()
-					.getAccountConfig(Short.valueOf(actionForm.getOfficeId()))
-					.isBackDatedTxnAllowed();
+			isBackDatedTrxnAllowed = AccountingRules.isBackDatedTxnAllowed();
 		Date meetingDate = new BulkEntryBusinessService()
 				.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
 						.getCustomerId()));

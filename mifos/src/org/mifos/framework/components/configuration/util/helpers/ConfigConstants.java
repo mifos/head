@@ -41,19 +41,6 @@ package org.mifos.framework.components.configuration.util.helpers;
  * This interface will hold the constants related to configurable items.
  */
 public interface ConfigConstants {
-	 //constants for Customer configuration
-	 public static final String PENDING_APPROVAL_DEFINED_FOR_CLIENT =
-		 "PendingApprovalDefinedForClient";
-	 public static final String PENDING_APPROVAL_DEFINED_FOR_GROUP =
-		 "PendingApprovalDefinedForGroup";
-	 
-	 //constants for Account configuration
-	 public static final String DISBURSED_TO_LO_DEFINED_FOR_LOAN =
-		 "DisbursedToLODefinedForLoan";
-	 public static final String PENDING_APPROVAL_DEFINED_FOR_LOAN =
-		 "PendingApprovalDefinedForLoan";
-	 public static final String PENDING_APPROVAL_DEFINED_FOR_SAVINGS =
-		 "PendingApprovalDefinedForSavings";
 	 public static final String LATENESS_DAYS = "latenessDays";
 	 public static final String DORMANCY_DAYS = "dormancyDays";
 	 

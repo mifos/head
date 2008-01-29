@@ -46,28 +46,16 @@ import org.mifos.framework.components.configuration.cache.CacheRepository;
  */
 public class OfficeConfig{
 	
-	  private CustomerConfig customerConfig;
 	  private AccountConfig accountConfig;
-	  private MeetingConfig meetingConfig;
 	  private Short officeId;
 
 	  public OfficeConfig(CacheRepository cacheRepo, Short officeId){
 		  this.officeId = officeId;
-		  customerConfig = new CustomerConfig(cacheRepo,this);
 		  accountConfig = new AccountConfig(cacheRepo,this);
-		  meetingConfig = new MeetingConfig();
 	  }
 	  
 	  public AccountConfig getAccountConfig() {
 		  return accountConfig;
-	  }
-	  
-	  public CustomerConfig getCustomerConfig() {
-		  return customerConfig;
-	  }
-	  
-	  public MeetingConfig getMeetingConfig() {
-		  return meetingConfig;
 	  }
 
 	  public Short getOfficeId() {
