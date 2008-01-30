@@ -190,14 +190,14 @@ public class Column {
 		UserContext userContext = (UserContext) pageContext.getSession()
 			.getAttribute(Constants.USER_CONTEXT_KEY);
 		LabelTagUtils labelTagUtils = LabelTagUtils.getInstance();
-		String labelText = MessageLookup.getInstance().lookupLabel(key, userContext);
-
+		String labelText = null;
 		if (labelText == null)try {
 			labelText = labelTagUtils.getLabel(pageContext, bundle,
 					userContext.getPreferredLocale(), key, null);
 		} catch (Exception e) {
 		}
-
+        if (labelText == null)
+        	labelText = MessageLookup.getInstance().lookupLabel(key, userContext);
 		if (labelText == null)try {
 			char[] charArray = bundle.toCharArray();
 			charArray[0] = Character.toUpperCase(charArray[0]);

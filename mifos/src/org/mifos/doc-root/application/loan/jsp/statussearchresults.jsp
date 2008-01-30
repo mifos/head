@@ -183,7 +183,7 @@
 								</td>
 								<td align="left" width="89%" valign="top">
 									<html-el:select property="newStatus" style="width:136px;">
-										<html-el:option value="3">Approved</html-el:option>
+										<html-el:option value="3"><mifos:mifoslabel name="accountStatus.approved" /></html-el:option>
 									</html-el:select>
 								</td>
 							</tr>

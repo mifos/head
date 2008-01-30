@@ -200,7 +200,7 @@
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 
-												<c:out value="${client.displayName}"/>: ID <c:out value="${client.globalCustNum}"/>
+												<c:out value="${client.displayName}"/>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${client.globalCustNum}"/>
 												<br>
 												<span class="fontnormalbold"><mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes" /></span> 
 												<c:out value="${client.personnel.displayName}"/>

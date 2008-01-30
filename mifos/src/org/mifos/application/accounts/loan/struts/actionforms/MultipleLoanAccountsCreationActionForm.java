@@ -64,8 +64,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import java.util.ResourceBundle;
 
 public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -272,9 +274,13 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 								.getMaxLoanAmount().getAmountDoubleValue()
 						|| getDoubleValue(loanAmount).doubleValue() < loanOffering
 								.getMinLoanAmount().getAmountDoubleValue()) {
+					Locale locale = getUserContext(request).getPreferredLocale();
+					ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
+							locale);
+					String loanAmountFor = resources.getString("loan.loanAmountFor");
 					addError(errors, LoanConstants.LOANAMOUNT,
 							LoanExceptionConstants.INVALIDMINMAX,
-							LoanConstants.LOAN_AMOUNT_FOR
+							loanAmountFor
 									+ clientDetail.getClientName(),
 							loanOffering.getMinLoanAmount().toString(),
 							loanOffering.getMaxLoanAmount().toString());

@@ -94,6 +94,7 @@ public class MessageLookup implements MessageSourceAware {
 			// we should return the default message from the properties file
 			if (textMessage == null || textMessage.length() == 0) {
 				textMessage = messageSource.getMessage(lookupKey, null, lookupKey, locale);
+				//textMessage = messageSource.getMessage(lookupKey, null, null, locale);
 			}
 			
 			return textMessage;

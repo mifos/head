@@ -2,6 +2,7 @@ package org.mifos.application.accounts.loan.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +10,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
+import java.util.ResourceBundle;
 
 public class AccountStatusActionForm extends BaseActionForm {
 	private String personnelId;
@@ -130,26 +133,35 @@ public class AccountStatusActionForm extends BaseActionForm {
 	// TODO: use localized strings for error messages rather than hardcoded
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
+				locale);
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
 		if (method.equals(Methods.searchResults.toString())) {
+			String branch = resources.getString("loan.branch");
+			String loanOfficer = resources.getString("loan.loanOfficer");
+			String currentStatus = resources.getString("loan.currentStatus");
 			if (StringUtils.isNullOrEmpty(getOfficeId()))
-				addError(errors, "officeId", "errors.mandatoryselect", "Branch");
+				addError(errors, "officeId", "errors.mandatoryselect", branch);
 			if (StringUtils.isNullOrEmpty(getPersonnelId()))
 				addError(errors, "loanOfficer", "errors.mandatoryselect",
-						"Loan Officer");
+						loanOfficer);
 			if (StringUtils.isNullOrEmpty(getCurrentStatus()))
 				addError(errors, "currentStatus", "errors.mandatoryselect",
-						"Current Status");
+						currentStatus);
 		}
 		if (method.equals(Methods.update.toString())) {
+			String account = resources.getString("loan.account");
+			String notes = resources.getString("loan.notes");
+			String note = resources.getString("loan.note");
 			if (getApplicableAccountRecords().size() == 0)
 				addError(errors, "records", "errors.alleastonerecord",
-						"account");
+						account);
 			if (StringUtils.isNullOrEmpty(getComments()))
-				addError(errors, "comments", "errors.mandatory", "notes");
+				addError(errors, "comments", "errors.mandatory", notes);
 			else if (getComments().length() > 500)
-				addError(errors, "comments", "errors.maximumlength", "note",
+				addError(errors, "comments", "errors.maximumlength", note,
 						"500");
 		}
 		if (!method.equals(Methods.validate.toString()))

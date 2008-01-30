@@ -1,6 +1,7 @@
 package org.mifos.application.accounts.loan.struts.actionforms;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ReverseLoanDisbursalActionForm extends BaseActionForm {
@@ -77,12 +79,15 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 
 	private void checkValidationForPreview(ActionErrors errors,
 			Locale userLocale) {
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
+				userLocale);
+		String note = resources.getString("loan.note");
 		if (StringUtils.isNullOrEmpty(getNote()))
 			addError(errors, LoanConstants.NOTE, LoanConstants.MANDATORY,
-					LoanConstants.NOTE);
+					note);
 		else if (getNote().length() > 500)
 			addError(errors, LoanConstants.NOTE, LoanConstants.MAX_LENGTH,
-					LoanConstants.NOTE, String
+					note, String
 							.valueOf(LoanConstants.COMMENT_LENGTH));
 	}
 

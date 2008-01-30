@@ -113,7 +113,7 @@
 											</c:otherwise>
 										</c:choose>
 										</span> 
-										<c:out value="${BusinessKey.customer.displayName}"/>: ID <c:out value="${BusinessKey.customer.globalCustNum}"/>
+										<c:out value="${BusinessKey.customer.displayName}"/>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${BusinessKey.customer.globalCustNum}"/>
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.loanOfficer" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.personnel.displayName}"/>
 										<br>

@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -79,6 +81,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -520,14 +523,15 @@ public class LoanAccountActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		String method = request.getParameter(Methods.method.toString());
 		ActionErrors errors = new ActionErrors();
+		UserContext userContext = getUserContext(request);
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request
 					.getParameter(Constants.CURRENTFLOWKEY));
 		try {
 			if (method.equals(Methods.getPrdOfferings.toString()))
-				checkValidationForGetPrdOfferings(errors);
+				checkValidationForGetPrdOfferings(errors, userContext);
 			else if (method.equals(Methods.load.toString()))
-				checkValidationForLoad(errors);
+				checkValidationForLoad(errors, userContext);
 			else if (method.equals(Methods.schedulePreview.toString()))
 				checkValidationForSchedulePreview(errors, request);
 			else if (method.equals(Methods.managePreview.toString()))
@@ -548,20 +552,30 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	// TODO: use localized strings for error messages rather than hardcoded
-	private void checkValidationForGetPrdOfferings(ActionErrors errors) {
+	private void checkValidationForGetPrdOfferings(ActionErrors errors, UserContext userContext) {
 		if (StringUtils.isNullOrEmpty(getCustomerId()))
+		{
 			addError(errors, LoanConstants.CUSTOMER,
 					LoanConstants.CUSTOMERNOTSELECTEDERROR,
-					ConfigurationConstants.CLIENT, ConfigurationConstants.GROUP);
+					getLabel(ConfigurationConstants.CLIENT, userContext),
+					getLabel(ConfigurationConstants.GROUP, userContext));
+		}
 	}
 
 	// TODO: use localized strings for error messages rather than hardcoded
-	private void checkValidationForLoad(ActionErrors errors) {
-		checkValidationForGetPrdOfferings(errors);
+	private void checkValidationForLoad(ActionErrors errors, UserContext userContext) {
+		checkValidationForGetPrdOfferings(errors, userContext);
 		if (StringUtils.isNullOrEmpty(getPrdOfferingId()))
+		{
+			Locale locale = userContext.getCurrentLocale();
+			ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
+					locale);
+			String instanceName = resources.getString("loan.instanceName");
 			addError(errors, LoanConstants.PRDOFFERINGID,
 					LoanConstants.LOANOFFERINGNOTSELECTEDERROR,
-					ConfigurationConstants.LOAN, LoanConstants.INSTANCENAME);
+					getLabel(ConfigurationConstants.LOAN, userContext),
+					instanceName);
+		}
 	}
 
 	private void checkValidationForSchedulePreview(ActionErrors errors,
@@ -589,20 +603,27 @@ public class LoanAccountActionForm extends BaseActionForm {
 	
 	private void checkValidationForPreviewBefore(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
+				locale);
+		String disbursalDate = resources.getString("loan.disbursalDate");
+		String noOfInstallments = resources.getString("loan.noOfInstallments");
+		String interestRate = resources.getString("loan.noOfInstallments");
+		String amount = resources.getString("loan.amount");
 		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
 				.getAttribute(LoanConstants.LOANOFFERING, request);
 		checkForMinMax(errors, getLoanAmount(), loanOffering.getMaxLoanAmount()
 				.getAmountDoubleValue(), loanOffering.getMinLoanAmount()
-				.getAmountDoubleValue(), LoanConstants.LOANAMOUNT);
+				.getAmountDoubleValue(), amount);
 		checkForMinMax(errors, getInterestRate(), loanOffering
 				.getMaxInterestRate(), loanOffering.getMinInterestRate(),
-				LoanConstants.INTERESTRATE);
+				interestRate);
 		checkForMinMax(errors, getNoOfInstallments(), loanOffering
 				.getMaxNoInstallments(), loanOffering.getMinNoInstallments(),
-				LoanConstants.NO_OF_INST);
+				noOfInstallments);
 		if (StringUtils.isNullOrEmpty(getDisbursementDate())) {
 			addError(errors, "Proposed/Actual disbursal date",
-					"errors.validandmandatory", "disbursal date");
+					"errors.validandmandatory", disbursalDate);
 		}
 		if(isInterestDedAtDisbValue()){
 			setGracePeriodDuration("0");
@@ -611,12 +632,13 @@ public class LoanAccountActionForm extends BaseActionForm {
 				.isNullOrEmpty(getGracePeriodDuration()))
 				|| (getDoubleValue(getGracePeriodDuration()) != null
 						&& getDoubleValue(getNoOfInstallments()) != null && getDoubleValue(getGracePeriodDuration()) >= getDoubleValue(getNoOfInstallments()))) {
+			String gracePeriodForRepayments = resources.getString("loan.gracePeriodForRepayments");
 			String noInst = StringUtils.isNullOrEmpty(getNoOfInstallments()) ? getStringValue(loanOffering
 					.getMaxNoInstallments())
 					: getNoOfInstallments();
 			addError(errors, LoanConstants.GRACEPERIODDURATION,
 					LoanConstants.GRACEPERIODERROR,
-					LoanConstants.GRACEPERIODDURATION, noInst);
+					gracePeriodForRepayments, noInst);
 		}
 
 	}

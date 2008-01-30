@@ -90,6 +90,19 @@ public class ConstPlugin implements PlugIn{
 	public void destroy() {
 	}
 
+	
+	/* The constant file names come from this part in the strut-config
+	 * <plug-in className="org.mifos.framework.struts.plugin.ConstPlugin">
+        <set-property property="constantFileNames"
+                      value="org.mifos.framework.util.helpers.Constants,
+		org.mifos.application.master.util.helpers.MasterConstants,
+		org.mifos.application.customer.util.helpers.CustomerConstants,
+		org.mifos.application.configuration.util.helpers.ConfigurationConstants,
+		org.mifos.application.accounts.util.helpers.AccountStates,
+		org.mifos.application.accounts.savings.util.helpers.SavingsConstants,
+		org.mifos.application.fees.util.helpers.FeeConstants"/>
+    </plug-in>
+	 */
 	private List<String> getConstantFileNames(){
 		StringTokenizer tokenizer = new StringTokenizer(constantFileNames,",");
 		List<String> fileNameList = new ArrayList<String>();
@@ -134,6 +147,14 @@ public class ConstPlugin implements PlugIn{
 		public static ConstantMapBuilder getInstance(){
 			return instance;
 		}
+		
+		/*
+		 * This map is for the constants to be resolved to their values which are used as keys
+		 * in order to look up for their localized values. For example, in the jsp file
+		 * the name=${ConfigurationConstants.CLIENT} is resolved as following:
+		 * a) ConfigurationConstants.CLIENT is used as a key to the constantMap to get value Client
+		 * b) Client is used as an entity to get its localized value in English as Client
+		 */
 		public Map buildMap(Class constantClass) throws ConstantsNotLoadedException{
 			Map<String, Object> constantsMap = new HashMap<String, Object>();
 			Field[] fields = constantClass.getDeclaredFields();

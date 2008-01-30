@@ -31,6 +31,7 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.config.AccountingRules;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class BaseActionForm extends ValidatorActionForm {
 
@@ -59,7 +60,7 @@ public class BaseActionForm extends ValidatorActionForm {
     protected String getConversionErrorText(ConversionError error, Locale locale)
     {
     	
-    	ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.framework.util.resources.UIResources", 
+    	ResourceBundle resources = ResourceBundle.getBundle (FilePaths.UI_RESOURCE_PROPERTYFILE, 
 				locale);
     	String errorText = resources.getString(error.toString());
     	if (error.equals(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST))

@@ -68,7 +68,7 @@
 								<mifos:mifoslabel name="loan.plz_note" />
 								<span class="fontnormal"> <mifos:mifoslabel name="loan.new" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.accs" /> <mifos:mifoslabel name="loan.withfollid" isColonRequired="Yes" /> <br> <br> </span>
 								<c:forEach var="loanGlobalNum" items="${requestScope.accountsList}" >
-								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get">Account #${loanGlobalNum}</html-el:link>
+								<html-el:link href="loanAccountAction.do?globalAccountNum=${loanGlobalNum}&method=get"><mifos:mifoslabel name="loan.loan.accountNumber" />${loanGlobalNum}</html-el:link>
 								<br>
 								</c:forEach>
 								<br>

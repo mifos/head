@@ -8,7 +8,7 @@ public class ConfigLocale {
 	private String countryCode;
 	private String languageCode;
 	
-	public ConfigLocale(String countryCode, String languageCode)
+	public ConfigLocale(String languageCode, String countryCode)
 	{
 		this.countryCode = countryCode;
 		this.languageCode = languageCode;

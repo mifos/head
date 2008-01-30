@@ -110,7 +110,7 @@
 												</html-el:option>
 											</c:when>
 											<c:otherwise>
-												<html-el:option value="">--Slelect--</html-el:option>
+												<html-el:option value=""><mifos:mifoslabel name="accountStatus.select"/></html-el:option>
 											</c:otherwise>
 										</c:choose>
 									</html-el:select>
