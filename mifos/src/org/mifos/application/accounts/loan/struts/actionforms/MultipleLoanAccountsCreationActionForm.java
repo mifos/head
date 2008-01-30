@@ -303,7 +303,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			UserContext userContext) {
 		if (StringUtils.isNullOrEmpty(branchOfficeId)) {
 			addError(errors, ConfigurationConstants.BRANCHOFFICE,
-					LoanConstants.MANDATORY_SELECT, getLabel(
+					LoanConstants.MANDATORY_SELECT, getMessageText(
 							ConfigurationConstants.BRANCHOFFICE, userContext));
 		}
 	}

@@ -509,7 +509,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 		}
 		if (officeId == null || "".equals(officeId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS, getLabel(
+					BulkEntryConstants.MANDATORYFIELDS, getMessageText(
 							ConfigurationConstants.BRANCHOFFICE, userContext)));
 		}
 		if (loanOfficerId == null || "".equals(loanOfficerId.trim())) {

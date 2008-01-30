@@ -764,14 +764,14 @@ public class ClientBO extends CustomerBO {
 		if (loanOfficerActive == false) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
-					new Object[] { MessageLookup.getInstance().lookupLabel(
+					new Object[] { MessageLookup.getInstance().lookup(
 							ConfigurationConstants.BRANCHOFFICE,
 							getUserContext()) });
 		}
 		if (branchInactive == true) {
 			throw new CustomerException(
 					CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
-					new Object[] { MessageLookup.getInstance().lookupLabel(
+					new Object[] { MessageLookup.getInstance().lookup(
 							ConfigurationConstants.BRANCHOFFICE,
 							getUserContext()) });
 		}

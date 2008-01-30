@@ -49,6 +49,15 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
  * Custom tag that represents type label. The tag adds a * if the corresponding
  * field assaociated is mandatory. The tag has a currency of the Locale
  * associated with it based on our attributes.
+ * 
+ * NOTES:
+ * If you do not pass a "bundle" argument to this tag, then it will dynamically
+ * construct the name of a resource bundle to load.  In this case, if you pass 
+ * a "name" key in of the form FirstPart.LastPart then this tag will 
+ * automatically attempt to load a resource bundle with the name 
+ * "FirstPartUIResources".  So BEWARE.  It would be good to remove this behavior
+ * which couples the name of a message key with the name of a resource bundle.
+ * 
  */
 public class MifosLabelTag extends BodyTagSupport {
 

@@ -161,6 +161,10 @@ public class BaseActionForm extends ValidatorActionForm {
 		return MessageLookup.getInstance().lookupLabel(key, userContext);
 	}
 
+	protected String getMessageText(String key, UserContext userContext) {
+		return MessageLookup.getInstance().lookup(key, userContext);
+	}
+
 	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException
 	{
 		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());

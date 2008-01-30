@@ -437,7 +437,7 @@ public class GroupBO extends CustomerBO {
 			.hasActivePeronnel(getOffice().getOfficeId())) {
 				throw new CustomerException(
 						GroupConstants.LOANOFFICER_INACTIVE,
-						new Object[] { MessageLookup.getInstance().lookupLabel(
+						new Object[] { MessageLookup.getInstance().lookup(
 								ConfigurationConstants.BRANCHOFFICE,
 								getUserContext()) });
 			}

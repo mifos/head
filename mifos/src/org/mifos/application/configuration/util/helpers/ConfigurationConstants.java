@@ -7,7 +7,6 @@ public static boolean DOES_CENTERHIERARCHY_EXIST = true;
 
 // constants for label lookup
 public static final String BULKENTRY="BulkEntry";
-public static final String BRANCHOFFICE="BranchOffice";
 public static final String CENTER="Center";
 public static final String OFFICE="Office";
 public static final String CLIENT="Client";
@@ -30,6 +29,11 @@ public static final String SAVINGS="Savings";
 public static final String INTEREST="Interest";
 public static final String LOAN="Loan";
 public static final String PERSONNEL="Personnel";
+
+/*
+ * Constants for retrieving Lookup Value text
+ */
+public static final String BRANCHOFFICE="OfficeLevels-BranchOffice";
 
 public static final String KEY_NO_MESSAGE_FOR_THIS_KEY=
 	"No message exist for this key";

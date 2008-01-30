@@ -27,7 +27,7 @@ public class AccountActionEntityTest extends TestCase {
 				AccountActionTypes.PAYMENT.getValue());
 
 		LookUpValueEntity lookUpValue = action.getLookUpValue();
-		assertEquals(" ", lookUpValue.getLookUpName());
+		assertEquals("AccountAction-Payment", lookUpValue.getLookUpName());
 		assertEquals(new Integer(191), lookUpValue.getLookUpId());
 
 		MifosLookUpEntity lookUpEntity = lookUpValue.getLookUpEntity();
