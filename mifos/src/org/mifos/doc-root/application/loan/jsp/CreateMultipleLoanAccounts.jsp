@@ -141,7 +141,7 @@
 												<table width="50%" border="0" cellpadding="4" cellspacing="0">
 													<tr class="fontnormal">
 														<td width="32%" align="right">
-															<mifos:mifoslabel name="${LABEL_BRANCHOFFICE}" mandatory="yes" isColonRequired="Yes" />
+															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" mandatory="yes" isColonRequired="Yes" />
 														</td>
 														<td width="68%">
 															<mifos:select property="branchOfficeId" onchange="fnLoadLoanOfficers(this.form)" style="width:136px;">
@@ -168,7 +168,7 @@
 														<td align="right">
 															<c:choose>
 																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
-																	<mifos:mifoslabel name="${LABEL_CENTER}" mandatory="yes" isColonRequired="Yes"/>
+																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" mandatory="yes" isColonRequired="Yes"/>
 																</c:when>
 																<c:otherwise>
 																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" mandatory="yes" isColonRequired="Yes"/>

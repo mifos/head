@@ -83,7 +83,7 @@
 															<mifos:mifoslabel name="bulkEntry.select" />
 															<c:choose>
 																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
-																	<mifos:mifoslabel name="${LABEL_CENTER}" />
+																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 																</c:when>
 																<c:otherwise>
 																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
@@ -128,7 +128,7 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="${LABEL_BULKENTRY}" />- </span>
+												<span class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" />- </span>
 												<mifos:mifoslabel name="bulkEntry.enterdata" />
 												<br>
 												<br>
@@ -140,7 +140,7 @@
 														<td class="fontnormalbold">
 															<c:choose>
 																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
-																	<mifos:mifoslabel name="${LABEL_CENTER}" />
+																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 																</c:when>
 																<c:otherwise>
 																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
@@ -163,7 +163,7 @@
 												<table width="590" border="0" cellspacing="0" cellpadding="0">
 													<tr valign="top">
 														<td width="207" class="fontnormal">
-															<mifos:mifoslabel name="${LABEL_BRANCHOFFICE}" />
+															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" />
 															:
 															<c:out value="${BulkEntry.office.officeName}" />
 															<br>

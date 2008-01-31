@@ -103,6 +103,9 @@ public class InitializerPlugin implements PlugIn {
 
 	}
 
+	/*
+	 * This method is not used anymore because the LABEL_CENTER,... are replaced with ConfigurationConstants.CENTER, ....
+	 */
 	private void initializeLabelConstants(ActionServlet servlet) {
 
 		ServletContext servletContext = servlet.getServletContext();
