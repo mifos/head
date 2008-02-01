@@ -197,12 +197,12 @@
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="previewButton" styleClass="buttn" style="width:70px;">
+									<html-el:submit property="previewButton" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.preview" />
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+									<html-el:button property="cancelButton" onclick="location.href='reverseloandisbaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

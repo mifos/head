@@ -84,7 +84,7 @@
 							<td align="right"></td>
 
 							<td><br>
-							<html-el:submit style="WIDTH: 60px" styleClass="buttn">
+							<html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="login.login" bundle="LoginUIResources"/>
 							</html-el:submit>
 							<html-el:hidden property="method" value="login" />

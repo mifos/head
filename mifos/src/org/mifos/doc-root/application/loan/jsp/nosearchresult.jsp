@@ -123,8 +123,7 @@
 								<html-el:button 
 
 									property="cancel" 
-									styleClass="buttn"
-									style="width:70px" 
+									styleClass="buttn" 
 									onclick="submitData(this.form);">
 									<mifos:mifoslabel name="accountStatus.search" />
 								</html-el:button>

@@ -215,7 +215,7 @@
 				<tr>
 
 					<td align="center">
-						<html-el:button property="cancel" styleClass="buttn" style="width:65px" onclick="submitData(this.form);">
+						<html-el:button property="cancel" styleClass="buttn"  onclick="submitData(this.form);">
 							<mifos:mifoslabel name="accountStatus.submit" />
 						</html-el:button>
 					</td>

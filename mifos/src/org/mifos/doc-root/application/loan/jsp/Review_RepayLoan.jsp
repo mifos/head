@@ -155,8 +155,7 @@
 				            <tr align="center">
 				                <td height="3" colspan="2" align="left">
 				                	<html-el:button property="editButton" styleClass="insidebuttn" 
-										onclick="javascript:fun_edit(this.form)"
-										style="width:115px;">
+										onclick="javascript:fun_edit(this.form)">
 										<mifos:mifoslabel name="loan.editTrxn" />
 									</html-el:button>
 				                </td>
@@ -170,12 +169,10 @@
 							</table>
 	            			<table width="96%" border="0" cellspacing="0" cellpadding="1">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:65px;">
+									<td align="center"><html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="loan.submit" />
 									</html-el:submit> &nbsp; <html-el:button property="cancelButton" styleClass="cancelbuttn" 
-										onclick="javascript:fun_return(this.form)"
-										style="width:65px;">
+										onclick="javascript:fun_return(this.form)">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button></td>
 								</tr>

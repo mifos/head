@@ -213,10 +213,10 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit property="previewDetailsBtn"
-								styleClass="buttn" style="width:75px;">
+								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.submit" />
 							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
-								styleClass="cancelbuttn" style="width:70px;"
+								styleClass="cancelbuttn" 
 								onclick="javascript:fun_cancel(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>

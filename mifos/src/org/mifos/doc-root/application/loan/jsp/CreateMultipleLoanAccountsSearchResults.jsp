@@ -231,25 +231,25 @@
 									<table width="96%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:button property="saveForLaterButton" styleClass="buttn" style="width:100px;" onclick="javascript:fun_saveForLater(this.form)">
+												<html-el:button property="saveForLaterButton" styleClass="buttn"  onclick="javascript:fun_saveForLater(this.form)">
 													<mifos:mifoslabel name="loan.saveForLater" />
 												</html-el:button>
 												&nbsp;
 												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:choose>
 													<c:when test='${PendingApproval == true}'>
-														<html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
+														<html-el:button property="submitForApprovalButton" styleClass="buttn"  onclick="javascript:fun_submitForApproval(this.form)">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
 													</c:when>
 													<c:otherwise>
-														<html-el:button property="approvedButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_approved(this.form)">
+														<html-el:button property="approvedButton" styleClass="buttn" onclick="javascript:fun_approved(this.form)">
 															<mifos:mifoslabel name="loan.approved" />
 														</html-el:button>
 													</c:otherwise>
 												</c:choose>
 												&nbsp;
-												<html-el:button property="cancelButton" styleClass="cancelbuttn" style="width:70px;" onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
+												<html-el:button property="cancelButton" styleClass="cancelbuttn"  onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

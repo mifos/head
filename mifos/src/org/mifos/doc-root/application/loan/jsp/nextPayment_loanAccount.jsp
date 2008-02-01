@@ -219,7 +219,7 @@
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td>
-							<html-el:button property="returnToAccountDetailsbutton"	onclick="javascript:fun_return(this.form);"	styleClass="buttn" style="width:165px;">
+							<html-el:button property="returnToAccountDetailsbutton"	onclick="javascript:fun_return(this.form);"	styleClass="buttn" >
 								<mifos:mifoslabel name="loan.returnToAccountDetails" bundle="loanUIResources" />
 							</html-el:button>
 							</td>

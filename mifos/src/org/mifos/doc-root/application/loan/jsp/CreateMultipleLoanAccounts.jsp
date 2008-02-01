@@ -202,11 +202,11 @@
 														</td>
 														<td>
 															<br>
-															<html-el:submit styleClass="buttn" style="width:70px">
+															<html-el:submit styleClass="buttn" >
 																<mifos:mifoslabel name="loan.search" />
 															</html-el:submit>
 															&nbsp;
-															<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
+															<html-el:button property="cancel" styleClass="cancelbuttn"  onclick="location.href='multipleloansaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 																<mifos:mifoslabel name="loan.cancel" />
 															</html-el:button>
 														</td>

@@ -179,11 +179,10 @@
 							<td align="center">&nbsp;</td>
 						</tr>
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:130px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="loan.reviewtransaction" />
 							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
-								styleClass="cancelbuttn" style="width:65px;"
+								styleClass="cancelbuttn" 
 								onclick="javascript:fun_return(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>

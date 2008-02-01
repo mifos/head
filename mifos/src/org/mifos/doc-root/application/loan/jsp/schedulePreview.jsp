@@ -322,11 +322,11 @@
 									<br>
 										<tr>
 											<td align="center">
-												<html-el:submit property="previewBtn" styleClass="buttn" style="width:70px;">
+												<html-el:submit property="previewBtn" styleClass="buttn" >
 													<mifos:mifoslabel name="loan.preview" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+												<html-el:button property="cancelButton" onclick="javascript:fun_cancel(this.form)" styleClass="cancelbuttn" >
 													<mifos:mifoslabel name="loan.cancel" />
 												</html-el:button>
 											</td>

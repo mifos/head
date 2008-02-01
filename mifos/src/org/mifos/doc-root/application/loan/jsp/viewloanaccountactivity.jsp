@@ -125,7 +125,7 @@
 					<td align="center">
 					   <html-el:button property="returnToAccountDetailsbutton"
 					       onclick="javascript:fun_return(this.form)"
-						     styleClass="buttn" style="width:165px;">
+						     styleClass="buttn" >
 						<mifos:mifoslabel name="loan.returnToAccountDetails"/>
 						</html-el:button>
 					</td>

@@ -46,8 +46,7 @@
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button property="btn"
-								onclick="fun_return(this.form);" styleClass="buttn"
-								style="width:165px;">
+								onclick="fun_return(this.form);" styleClass="buttn">
 								<mifos:mifoslabel name="Account.returnToAccountDetails"
 									bundle="accountsUIResources" />
 							</html-el:button></td>

@@ -88,7 +88,7 @@
 								</td>
 								<td width="83%">
 									&nbsp;
-									<html-el:submit property="continueButton" styleClass="buttn" style="width:70px;">
+									<html-el:submit property="continueButton" styleClass="buttn" >
 										<mifos:mifoslabel name="loan.search" />
 									</html-el:submit>
 								</td>
