@@ -1,0 +1,56 @@
+This is a list of names of everyone who has contributed code to Mifos. The
+purpose of this list is to encourage participation in Mifos. "Code" can mean
+Java source, XML, configuration for .properties files, documentation; anything
+committed to the same version control system in which this file lives.
+
+The list is sorted alphabetically in dictionary order using 'sort -d'. One
+human per line. If you are a committer, feel free to add your name to the list.
+If you are a contributor and would like to be added to the list, please contact
+a committer. Provide reference to a contribution you have made. There is no
+minimal contribution size.
+
+* fields are separated by a colon
+* field 1: comma-separated list of usernames used for commits. May be null.
+* field 2: given name(s) and surname. May be null.
+* long lines below should never be wrapped
+
+aalevy,amit:Amit Levy
+aditi_imtiyazmb:
+aditi_jalajs:
+aditi_krishankg:
+aditi_maneshg:
+aditi_mohammedn:
+aditi_navitas:
+aditi_rajenders:rajendersaini
+aditi_rohitr:
+aditi_sandeep:
+aditi_sreedhark:
+aditi_sreedharkr:
+aditi_sumeethaec:
+aditi_vasuv:
+aditi_yashol,yashol:
+aliyaw:Aliya Walji
+arunkanabar:
+ashish:
+Emily,emilytucker:Emily Tucker
+ericberman:
+erid_du:
+gsteff:
+imtiyaz:
+jdailey:James Dailey
+jkingdon:Jim Kingdon
+:Keith Pierce
+kimloanho:Kimloan Ho
+kratib:
+meonkeys:Adam Monsen
+nazirlajdel:Nazir Lajdel
+:Ofer Matan
+:Pramod Biligiri
+:Saurabh Kumar
+sonyabarry:
+tbostelmann:Tom Bostelmann
+twong:Terry Wong
+vanmh:Van Mittal-Henkel
+vasu:
+williampietri,wpietri:William Pietri
+youssefassad:Youssef Assad
