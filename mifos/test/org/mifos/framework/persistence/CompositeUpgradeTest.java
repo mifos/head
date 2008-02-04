@@ -22,7 +22,7 @@ public class CompositeUpgradeTest {
 			new CompositeUpgrade(upgradeOne, upgradeTwo);
 		assertEquals(53, composite.higherVersion());
 		Connection data = simpleDatabase(52);
-		composite.upgrade(data);
+		composite.upgrade(data, null);
 		assertEquals("upgrade to 53\n", upgradeOne.getLog());
 		assertEquals("upgrade to 53\n", upgradeTwo.getLog());
 		
@@ -61,7 +61,7 @@ public class CompositeUpgradeTest {
 			new CompositeUpgrade(upgradeOne);
 		assertEquals(53, composite.higherVersion());
 		Connection data = simpleDatabase(53);
-		composite.downgrade(data);
+		composite.downgrade(data, null);
 		assertEquals("downgrade from 53\n", upgradeOne.getLog());
 		assertEquals(52, new DatabaseVersionPersistence(data).read());
 	}
@@ -77,8 +77,8 @@ public class CompositeUpgradeTest {
 				new MyUpgrade("third"));
 
 		Connection data = simpleDatabase(52);
-		composite.upgrade(data);
-		composite.downgrade(data);
+		composite.upgrade(data, null);
+		composite.downgrade(data, null);
 
 		assertEquals(
 			"upgrading first\n" +
@@ -102,12 +102,12 @@ public class CompositeUpgradeTest {
 		}
 
 		@Override
-		public void downgrade(Connection connection) throws IOException, SQLException {
+		public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 			log.append("downgrading " + which + "\n");
 		}
 
 		@Override
-		public void upgrade(Connection connection) throws IOException, SQLException {
+		public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 			log.append("upgrading " + which + "\n");
 		}
 		

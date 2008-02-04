@@ -18,6 +18,7 @@ import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.master.persistence.Upgrade167;
 import org.mifos.application.master.persistence.Upgrade169;
+import org.mifos.application.master.persistence.Upgrade173;
 import org.mifos.application.productsmix.persistence.Upgrade127;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.persistence.AddReport;
@@ -29,7 +30,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 172;
+	public static final int APPLICATION_VERSION = 173;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
@@ -70,6 +71,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade167());
 		register(register, new Upgrade169());
 		register170(register);
+		register(register, new Upgrade173());
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -372,10 +374,36 @@ public class DatabaseVersionPersistence {
 		}
 	}
 
+	
 	URL lookup(String name) {
 		return getClass().getResource(name);
 	}
+	
+	public SqlUpgrade findUpgradeDowngradeScript(int higherVersion, String scriptName) {
+		// Currently, SQL files are located in the same package as
+		// DatabaseVersionPersistence so we need to load the file from this class
+		URL url = lookup(scriptName);
+		boolean foundInSql = url != null;
 
+		if (foundInSql) {
+			return new SqlUpgrade(url, higherVersion);
+		}
+		else {
+			String location;
+			try {
+				location = " in "
+						+ getClass().getProtectionDomain().getCodeSource()
+								.getLocation().toString();
+			}
+			catch (Throwable e) {
+				location = "";
+			}
+			throw new IllegalStateException("Did not find upgrade to "
+					+ higherVersion + " in java or in " + scriptName + " next to "
+					+ getClass().getName() + location);
+		}
+	}
+	
 	public List<Upgrade> downgrades(int downgradeTo, int databaseVersion) {
 		List<Upgrade> downgrades = new ArrayList<Upgrade>();
 		for (int higherVersion = databaseVersion; higherVersion > downgradeTo; --higherVersion) {
@@ -411,7 +439,7 @@ public class DatabaseVersionPersistence {
 		for (Upgrade upgrade : scripts(upgradeTo, version)) {
 
 			try {
-				upgrade.upgrade(connection);
+				upgrade.upgrade(connection, this);
 			}
 			catch (Exception e) {
 				throw new RuntimeException("error in upgrading to "

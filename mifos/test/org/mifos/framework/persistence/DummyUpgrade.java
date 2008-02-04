@@ -15,7 +15,7 @@ final class DummyUpgrade extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException, SQLException {
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		log.append("downgrade from " + higherVersion() + "\n");
 		if (connection != null) {
 			downgradeVersion(connection);
@@ -23,7 +23,7 @@ final class DummyUpgrade extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		log.append("upgrade to " + higherVersion() + "\n");
 		if (connection != null) {
 			upgradeVersion(connection);

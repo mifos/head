@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 /*
@@ -46,7 +47,7 @@ public class Upgrade167 extends Upgrade {
 	}
 	
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {	
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {	
 		if (!CustomFieldsHaveBeenCreated(connection,"PERSONNEL_CUSTOM_FIELD", 1) &&
 				!CustomFieldsHaveBeenCreated(connection,"OFFICE_CUSTOM_FIELD", 4) &&
 				!CustomFieldsHaveBeenCreated(connection,"ACCOUNT_CUSTOM_FIELD", 0) &&
@@ -115,7 +116,7 @@ public class Upgrade167 extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) 
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		// if any custom fields have been added, then don't recreate default custom
 		// fields when downgrading

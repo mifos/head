@@ -113,11 +113,11 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 					(short) newActivityId,
 					SecurityConstants.ORGANIZATION_MANAGEMENT,
 					DatabaseVersionPersistence.ENGLISH_LOCALE, "no name");
-			activity.upgrade(HibernateUtil.getSessionTL().connection());
+			activity.upgrade(HibernateUtil.getSessionTL().connection(), null);
 
 		}
 		catch (Exception e) {
-			activity.downgrade(HibernateUtil.getSessionTL().connection());
+			activity.downgrade(HibernateUtil.getSessionTL().connection(), null);
 			HibernateUtil.startTransaction();
 			new RolesPermissionsPersistence().delete(request
 					.getAttribute("report"));
@@ -126,7 +126,7 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		}
 
 		// Undo
-		activity.downgrade(HibernateUtil.getSessionTL().connection());
+		activity.downgrade(HibernateUtil.getSessionTL().connection(), null);
 		ReportsBO report = (ReportsBO) request.getAttribute("report");
 		removeReport(report.getReportId());
 	}

@@ -26,15 +26,18 @@ public class SqlUpgrade extends Upgrade {
 		return script;
 	}
 
-	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {
+	public void runScript(Connection connection) throws IOException, SQLException {
 		InputStream in = sql().openStream();
 		execute(in, connection);
-		in.close();
+		in.close();		
+	}
+	@Override
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
+		runScript(connection);
 	}
 	
 	@Override
-	public void downgrade(Connection connection) throws IOException, SQLException {
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		execute(
 			new FileInputStream(
 				"sql/downgrade_from_" + higherVersion() + ".sql"),

@@ -24,7 +24,7 @@ public class AddFieldTest {
 		String start = database.dumpForComparison();
 
 		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), null);
 		String afterUpAndDownGrade = database.dumpForComparison();
 
 		assertEquals(start, afterUpAndDownGrade);
@@ -44,7 +44,7 @@ VALUES(74,'AssignClients',1,0,0);
 			EntityType.CLIENT,
 			false,
 			false);
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		FieldConfigurationEntity fetched = (FieldConfigurationEntity) 
 			database.openSession().get(FieldConfigurationEntity.class, newId);
 		assertEquals(newId, fetched.getFieldConfigId());

@@ -102,7 +102,7 @@ public class Downgrader {
 		for (Upgrade downgrade : downgrades) {
 			out.print("Downgrading to " + downgrade.lowerVersion() + "...");
 			out.flush();
-			downgrade.downgrade(connection);
+			downgrade.downgrade(connection, persistence);
 			out.print("done.\n");
 			out.flush();
 		}

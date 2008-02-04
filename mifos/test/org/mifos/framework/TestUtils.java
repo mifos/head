@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -12,6 +13,8 @@ import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
@@ -227,4 +230,21 @@ public class TestUtils {
 				"org/mifos/config/applicationContext.xml");
 	}
 
+	public static Date generateNearestMondayOnOrAfterToday() {
+		// start from today's date and then add enough days to make it a Monday
+		DateTime dateTime = new DateTime();
+		Date startDate = null;
+		DateTime dateTimeMonday = null;
+		int dayOfWeek = dateTime.getDayOfWeek();
+
+		if (dayOfWeek == DateTimeConstants.MONDAY) {
+			startDate = dateTime.toDate();
+			dateTimeMonday = dateTime;
+		} else {
+			dateTimeMonday = dateTime.plusDays(7 - (dayOfWeek - DateTimeConstants.MONDAY));
+			startDate = dateTimeMonday.toDate();
+		}
+		return startDate;
+	}
+	
 }

@@ -17,10 +17,10 @@ public abstract class Upgrade {
 		this.higherVersion = higherVersion;
 	}
 
-	abstract public void upgrade(Connection connection) 
+	abstract public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 
-	abstract public void downgrade(Connection connection) 
+	abstract public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 
 	public int higherVersion() {
@@ -158,3 +158,5 @@ public abstract class Upgrade {
 	}
 
 }
+
+

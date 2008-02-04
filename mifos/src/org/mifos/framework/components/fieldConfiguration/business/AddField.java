@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddField extends Upgrade {
@@ -35,7 +36,7 @@ public class AddField extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) 
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME," +
@@ -51,7 +52,7 @@ public class AddField extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException,
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
 			SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"DELETE FROM FIELD_CONFIGURATION WHERE FIELD_CONFIG_ID=?");

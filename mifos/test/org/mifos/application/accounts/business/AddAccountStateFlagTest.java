@@ -27,7 +27,7 @@ public class AddAccountStateFlagTest {
 			"Rejected because feet are too big");
 
 		upgradeAndCheck(database, upgrade);
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), null);
 		String afterUpAndDownGrade = database.dumpForComparison();
 
 		assertEquals(start, afterUpAndDownGrade);
@@ -35,7 +35,7 @@ public class AddAccountStateFlagTest {
 
 	private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) 
 	throws Exception {
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		Session session = database.openSession();
 		AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(
 			AccountStateFlagEntity.class, FLAG_FEET_TOO_BIG);

@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -2354,12 +2355,26 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
+	/*
+	 * This test was failing if run on a Saturday because it used meetings
+	 * based on the current system time.  By ensuring the meetings occur on 
+	 * a Monday the problem is resolved.
+	 */
 	public void testRegenerateFutureWhenDayScheduleChanges() throws Exception {
-		createInitialCustomers();
+		// create customers with meetings on Monday
+		MeetingBO customerMeeting = TestObjectFactory
+				.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY,
+				EVERY_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY));
+		center = TestObjectFactory.createCenter("Center", customerMeeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		
 		MeetingBO loanOfferingMeeting = TestObjectFactory
-				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
-						EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-		Date startDate = new Date(System.currentTimeMillis());
+				.createMeeting(TestObjectFactory.getNewMeeting(WEEKLY,
+						EVERY_SECOND_WEEK, CUSTOMER_MEETING, WeekDay.MONDAY));
+		
+		Date startDate = TestUtils.generateNearestMondayOnOrAfterToday();
+
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, loanOfferingMeeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
@@ -2396,11 +2411,10 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils
-						.getDateWithoutTimeStamp(incrementCurrentDate(1)
-								.getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
+			assertEquals(DateUtils
+					.getDateWithoutTimeStamp(new DateTime(startDate.getTime()).plusDays(1).getMillis()), DateUtils
+					.getDateWithoutTimeStamp(actionDateEntity
+							.getActionDate().getTime()));
 		}
 	}
 
@@ -5102,7 +5116,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO
 				.getAccountId());
-		assertEquals((double) 1.0, ((LoanBO) accountBO).getPaymentsInArrears());
+		assertEquals(1.0, ((LoanBO) accountBO).getPaymentsInArrears());
 
 	}
 

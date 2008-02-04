@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class Upgrade127 extends Upgrade {
@@ -21,7 +22,7 @@ public class Upgrade127 extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) 
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		reparentActivity(connection, PRODUCT_MIX, PRODUCT_DEFINITION);
 
@@ -63,7 +64,7 @@ public class Upgrade127 extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) 
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		execute(connection, "DROP TABLE PRD_OFFERING_MIX");
 		

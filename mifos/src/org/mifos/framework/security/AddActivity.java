@@ -9,6 +9,7 @@ import java.sql.Types;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddActivity extends Upgrade {
@@ -38,7 +39,7 @@ public class AddActivity extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACTIVITY;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
@@ -90,7 +91,7 @@ public class AddActivity extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException,
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
 			SQLException {
 		short lookupId = findLookupId(connection, newActivityId);
 		deleteFromRolesActivity(connection);

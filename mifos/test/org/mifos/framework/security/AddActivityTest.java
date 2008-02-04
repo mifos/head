@@ -35,7 +35,7 @@ public class AddActivityTest {
 		String start = database.dumpForComparison();
 
 		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), null);
 		String afterUpAndDownGrade = database.dumpForComparison();
 
 		assertEquals(start, afterUpAndDownGrade);
@@ -66,7 +66,7 @@ public class AddActivityTest {
 				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
 				SecurityConstants.LOAN_MANAGEMENT, TEST_LOCALE,
 				"Can use the executive washroom");
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
 				ActivityEntity.class, newId);
 		fetched.setLocaleId(TEST_LOCALE);
@@ -97,7 +97,7 @@ public class AddActivityTest {
 		AddActivity upgrade = new AddActivity(
 				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
 				null, TEST_LOCALE, "Can use the executive washroom");
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
 				ActivityEntity.class, newId);
 		assertEquals(null, fetched.getParent());

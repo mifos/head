@@ -26,7 +26,7 @@ public class AddAccountActionTest {
 			"Send money to orphans");
 
 		upgradeAndCheck(database, upgrade);
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), null);
 		String afterUpAndDownGrade = database.dumpForComparison();
 
 		assertEquals(start, afterUpAndDownGrade);
@@ -34,7 +34,7 @@ public class AddAccountActionTest {
 
 	private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) 
 	throws Exception {
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		Session session = database.openSession();
 		AccountActionEntity action = (AccountActionEntity) session.get(
 				AccountActionEntity.class, SEND_TO_ORPHANS);

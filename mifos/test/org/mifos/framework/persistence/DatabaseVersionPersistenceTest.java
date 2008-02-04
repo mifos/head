@@ -317,12 +317,12 @@ public class DatabaseVersionPersistenceTest {
 		Upgrade upgrade = new Upgrade(79) {
 
 			@Override
-			public void downgrade(Connection connection) {
+			public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) {
 				throw new RuntimeException("not implemented");
 			}
 
 			@Override
-			public void upgrade(Connection connection) {
+			public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) {
 				throw new RuntimeException("tried but failed");
 			}
 			
@@ -365,8 +365,17 @@ public class DatabaseVersionPersistenceTest {
 		Database database = new Database();
 		DatabaseVersionPersistence persistence = javaOnlyPersistence(database);
 		DummyUpgrade found = (DummyUpgrade) persistence.findUpgrade(69);
-		found.upgrade(null);
+		found.upgrade(null, null);
 		assertEquals("upgrade to 69\n", found.getLog());
+	}
+
+	@Test public void javaConditional() throws Exception {
+		Database database = new Database();
+		DatabaseVersionPersistence persistence = conditionalPersistence(database);
+		SqlUpgrade found = persistence.findUpgradeDowngradeScript(10, CONDITIONAL_UPGRADE_10_NAME);
+		assertTrue(found != null);
+		SqlUpgrade found_downgrade = persistence.findUpgradeDowngradeScript(10,CONDITIONAL_DOWNGRADE_10_NAME);
+		assertTrue(found_downgrade != null);
 	}
 
 	private DatabaseVersionPersistence javaOnlyPersistence(Database database) {
@@ -425,6 +434,31 @@ public class DatabaseVersionPersistenceTest {
 		};
 		return persistence;
 	}
+
+	private static String CONDITIONAL_UPGRADE_10_NAME = "upgrade_to_10_conditional.sql";
+	private static String CONDITIONAL_DOWNGRADE_10_NAME = "downgrade_from_10_conditional.sql";
+
+	private DatabaseVersionPersistence conditionalPersistence(Database database) {
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(database.openConnection()) {
+			@Override
+			public URL lookup(String name) {
+				if (CONDITIONAL_UPGRADE_10_NAME.equals(name) || 
+					CONDITIONAL_DOWNGRADE_10_NAME.equals(name)) {
+					try {
+						return new URL("file:" + name);
+					} catch (MalformedURLException e) {
+						throw (AssertionFailedError)new AssertionFailedError().initCause(e);
+					}
+				}
+				else {
+					throw new AssertionFailedError("got unexpected " + name);
+				}
+			}
+		};
+		return persistence;
+	}
+	
 	
 	@Test public void duplicateRegistration() throws Exception {
 		Map<Integer, Upgrade> register = new HashMap<Integer, Upgrade>();

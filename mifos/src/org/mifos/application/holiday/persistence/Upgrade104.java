@@ -25,7 +25,7 @@ public class Upgrade104 extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		execute(connection, "CREATE TABLE REPAYMENT_RULE ("
 										+ "REPAYMENT_RULE_ID SMALLINT AUTO_INCREMENT NOT NULL,"
 										+ "REPAYMENT_RULE_LOOKUP_ID INTEGER,"
@@ -57,19 +57,19 @@ public class Upgrade104 extends Upgrade {
 		
 		addLookupEntity(connection, MifosLookUpEntity.REPAYMENT_RULE, "Repayment Rule", "Repayment Rule Types");
 		
-		sameDay.upgrade(connection);
-		nextMeetingOrRepayment.upgrade(connection);
-		nextWorkingDay.upgrade(connection);
+		sameDay.upgrade(connection, databaseVersionPersistence);
+		nextMeetingOrRepayment.upgrade(connection, databaseVersionPersistence);
+		nextWorkingDay.upgrade(connection, databaseVersionPersistence);
 		
 		upgradeVersion(connection);
 	}
 
 	@Override
-	public void downgrade(Connection connection) 
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
-		nextWorkingDay.downgrade(connection);
-		nextMeetingOrRepayment.downgrade(connection);
-		sameDay.downgrade(connection);
+		nextWorkingDay.downgrade(connection, databaseVersionPersistence);
+		nextMeetingOrRepayment.downgrade(connection, databaseVersionPersistence);
+		sameDay.downgrade(connection, databaseVersionPersistence);
 		
 		removeLookupEntity(connection, MifosLookUpEntity.REPAYMENT_RULE);
 

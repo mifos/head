@@ -447,6 +447,23 @@
 	<target name="clean_build" depends="check_config,clean_all,dist_build_db" 
 		description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
 
+	<target name="build_production_db" description="Builds the application database without custom config data">
+		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
+			userid="${db.user}" password="${db.pwd}"
+			classpath="${database.driver.jar}">
+			<transaction>
+				Drop database if exists ${db.name};
+				create database ${db.name};			
+				use ${db.name};
+			</transaction>
+			<transaction src="./sql/mifosdroptables.sql" />
+			<transaction src="./sql/latest-schema.sql" />
+			<transaction src="./sql/latest-data.sql" />
+			<!-- <transaction src="./sql/Index.sql" /> -->
+		</sql>
+        <antcall target="update_mifos_password"/>
+    </target>
+
 	<target name="build_db" description="Builds the application database">
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
 			userid="${db.user}" password="${db.pwd}"
@@ -459,6 +476,7 @@
 			<transaction src="./sql/mifosdroptables.sql" />
 			<transaction src="./sql/latest-schema.sql" />
 			<transaction src="./sql/latest-data.sql" />
+			<transaction src="./sql/custom_data.sql" />
 			<!-- <transaction src="./sql/Index.sql" /> -->
 		</sql>
         <antcall target="update_mifos_password"/>
@@ -481,6 +499,7 @@
 			<transaction src="./sql/mifosdroptables.sql" />
 			<transaction src="./sql/latest-schema.sql" />
 			<transaction src="./sql/latest-data.sql" />
+			<transaction src="./sql/custom_data.sql" />
 
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>

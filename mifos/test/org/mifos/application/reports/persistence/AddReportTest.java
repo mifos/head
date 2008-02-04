@@ -23,7 +23,7 @@ public class AddReportTest {
 		String start = database.dumpForComparison();
 
 		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), null);
 		String afterUpAndDownGrade = database.dumpForComparison();
 
 		assertEquals(start, afterUpAndDownGrade);
@@ -40,7 +40,7 @@ public class AddReportTest {
 			"aging_portfolio_at_risk",
 			"DetailedAgingPortfolioAtRisk.rptdesign"
 			);
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), null);
 		ReportsBO fetched = (ReportsBO) 
 			database.openSession().get(ReportsBO.class, newId);
 		assertEquals(newId, fetched.getReportId());

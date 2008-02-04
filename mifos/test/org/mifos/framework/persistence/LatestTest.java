@@ -169,9 +169,9 @@ public class LatestTest {
 			new FileReadingPersistence(database.openConnection());
 		Upgrade upgrade = persistence.findUpgrade(nextVersion);
 
-		upgrade.upgrade(database.openConnection());
+		upgrade.upgrade(database.openConnection(), persistence);
 		DataStore upgraded = database.dataStore();
-		upgrade.downgrade(database.openConnection());
+		upgrade.downgrade(database.openConnection(), persistence);
 		String after = new SqlDumper(false).dump(database.dataStore());
 		assertEquals("for higherVersion=" + nextVersion, before, after);
 		

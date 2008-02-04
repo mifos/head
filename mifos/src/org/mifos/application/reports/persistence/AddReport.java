@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddReport extends Upgrade {
@@ -26,7 +27,7 @@ public class AddReport extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) 
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		insertIntoReport(connection);
 		insertIntoReportJasperMap(connection);
@@ -62,7 +63,7 @@ public class AddReport extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) 
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		deleteFromReport(connection);
 		deleteFromReportJasperMap(connection);

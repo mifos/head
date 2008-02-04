@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 /*
@@ -42,7 +43,7 @@ public class Upgrade169 extends Upgrade {
 	}
 	
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {	
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {	
 		execute(connection, "DELETE FROM PERSONNEL_CUSTOM_FIELD WHERE PERSONNEL_ID = 1");
 		/* Clean up unused custom field entities and labels */ 
 		execute(connection, "DELETE FROM  LOOKUP_LABEL WHERE LABEL_ID = 61 AND ENTITY_NAME = \'CustomField1\'"); 
@@ -80,7 +81,7 @@ public class Upgrade169 extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) 
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		execute(connection, "INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION) " + 
 			"VALUES(31,\'PersonnelCustomField1\',\'PersonnelCustomField1\')");

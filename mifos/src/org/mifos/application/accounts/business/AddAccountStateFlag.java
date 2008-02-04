@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountStateFlag extends Upgrade {
@@ -33,7 +34,7 @@ public class AddAccountStateFlag extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) throws IOException, SQLException {
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACCOUNT_STATE_FLAG;
 
 		int lookupId = insertLookupValue(connection, lookupEntity);
@@ -43,7 +44,7 @@ public class AddAccountStateFlag extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException,
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
 			SQLException {
 		short lookupId = findLookupId(connection);
 

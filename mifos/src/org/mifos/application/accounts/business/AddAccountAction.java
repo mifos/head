@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddAccountAction extends Upgrade {
@@ -24,7 +25,7 @@ public class AddAccountAction extends Upgrade {
 	}
 
 	@Override
-	public void upgrade(Connection connection) 
+	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACCOUNT_ACTION;
 
@@ -46,7 +47,7 @@ public class AddAccountAction extends Upgrade {
 	}
 
 	@Override
-	public void downgrade(Connection connection) throws IOException, SQLException {
+	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		short lookupId = findLookupId(connection);
 		deleteFromAccountAction(connection);
 		deleteFromLookupValueLocale(connection, lookupId);
