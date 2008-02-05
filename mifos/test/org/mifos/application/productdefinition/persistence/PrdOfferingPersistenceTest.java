@@ -1,27 +1,56 @@
 package org.mifos.application.productdefinition.persistence;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.productsmix.business.ProductMixBO;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PrdOfferingPersistenceTest extends MifosTestCase {
 
+	private LoanOfferingBO loanOffering;
+	private LoanOfferingBO loanOffering2;
+
+	private PrdOfferingPersistence persistence;
+	
+	MeetingBO meetingIntCalc;
+	MeetingBO meetingIntCalc2;
+	ProductMixBO prdmix;
+	ProductMixBO prdmix2;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		persistence = new PrdOfferingPersistence();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.removeObject(prdmix);	
+		TestObjectFactory.removeObject(prdmix2);	
+		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(loanOffering2);
+		
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -147,5 +176,45 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 			if (prdStatus.getPrdState().equals("2"))
 				assertEquals("InActive", prdStatus.getPrdState().getName());
 		}
+	}
+	public void testGetPrdOfferingMix() throws ServiceException, PersistenceException {
+		createLoanProductMixed();
+		createsecondLoanProductMixed();
+		prdmix=createNotAllowedProductForAProductOffering(loanOffering,loanOffering);
+		assertEquals(2, persistence.getPrdOfferingMix().size());
+		assertTrue("Products Mix should be in alphabitical order:",
+				(persistence.getPrdOfferingMix().get(0).getPrdOfferingName().compareToIgnoreCase(persistence
+						.getPrdOfferingMix().get(1).getPrdOfferingName())) < 0);
+		HibernateUtil.closeSession();
+
+	}
+	private void createLoanProductMixed() throws PersistenceException {
+
+		Date startDate = new Date(System.currentTimeMillis());
+
+		meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+
+		loanOffering = TestObjectFactory.createLoanOffering("BLoan", "L",
+				startDate, meetingIntCalc);
+		loanOffering.updatePrdOfferingFlag();
+
+	}
+	private void createsecondLoanProductMixed() throws PersistenceException {
+
+		Date startDate = new Date(System.currentTimeMillis());
+
+		meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+
+		loanOffering2 = TestObjectFactory.createLoanOffering("ALoan", "aL",
+				startDate, meetingIntCalc);
+		loanOffering2.updatePrdOfferingFlag();
+
+	}
+	private  ProductMixBO createNotAllowedProductForAProductOffering(PrdOfferingBO prdOffering,PrdOfferingBO prdOfferingNotAllowedId)
+	{
+		return TestObjectFactory.createNotAllowedProductForAProductOffering(prdOffering,prdOfferingNotAllowedId);
+		
 	}
 }

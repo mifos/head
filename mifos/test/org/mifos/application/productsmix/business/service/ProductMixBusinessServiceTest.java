@@ -10,10 +10,13 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.productsmix.business.ProductMixBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -23,12 +26,18 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
 	private SavingsOfferingBO savingsOffering;
+	private SavingsOfferingBO secondSavingsOffering;
 	private LoanOfferingBO loanOffering;
+	private LoanOfferingBO loanOffering2;
 	private CustomerBO center;	
+	private CustomerBO center2;	
 	private ProductMixBusinessService service;
 	MeetingBO meetingIntPost;
 	MeetingBO meetingIntCalc;
-	
+	MeetingBO meetingIntPost2;
+	MeetingBO meetingIntCalc2;
+	ProductMixBO prdmix;
+	ProductMixBO prdmix2;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -39,9 +48,15 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.removeObject(prdmix);	
+		TestObjectFactory.removeObject(prdmix2);	
 		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(loanOffering2);
 		TestObjectFactory.removeObject(savingsOffering);
+		TestObjectFactory.removeObject(secondSavingsOffering);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.cleanUp(center2);
+		
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -72,9 +87,25 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
 	
 	public void testGetAllowedPrdOfferingsByType() throws ServiceException {
-		assertEquals(1, service.getAllowedPrdOfferingsByType(
+		createSecondSavingProduct();
+		assertEquals(2, service.getAllowedPrdOfferingsByType(
 				savingsOffering.getPrdOfferingId().toString(),
 				ProductType.SAVINGS.getValue().toString()).size());
+
+		assertEquals("A_SavingPrd", service.getAllowedPrdOfferingsByType(
+				savingsOffering.getPrdOfferingId().toString(),
+				ProductType.SAVINGS.getValue().toString()).get(0)
+				.getPrdOfferingName());
+
+		assertTrue("Savings products should be in alphabitical order:",
+				(service.getAllowedPrdOfferingsByType(
+						savingsOffering.getPrdOfferingId().toString(),
+						ProductType.SAVINGS.getValue().toString()).get(0)
+						.getPrdOfferingName().compareToIgnoreCase(service
+						.getAllowedPrdOfferingsByType(
+								savingsOffering.getPrdOfferingId().toString(),
+								ProductType.SAVINGS.getValue().toString()).get(
+								1).getPrdOfferingName())) < 0);
 		HibernateUtil.closeSession();
 
 	}
@@ -90,10 +121,27 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
 	
 	public void testGetNotAllowedPrdOfferingsByType_success() throws ServiceException {
-		assertEquals(0, service.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).size());
+		createSecondSavingProduct();
+		prdmix2=createNotAllowedProductForAProductOffering(savingsOffering,savingsOffering);
+		prdmix=createNotAllowedProductForAProductOffering(savingsOffering,secondSavingsOffering);
+		
+		assertEquals(2, service.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).size());
+		
+		assertTrue("Savings products should be in alphabitical order:",
+				(service.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).get(0)
+						.getPrdOfferingName().compareToIgnoreCase(service
+						.getNotAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId().toString()).get(
+								1).getPrdOfferingName())) < 0);
+
 		HibernateUtil.closeSession();
 	}
 
+	private  ProductMixBO createNotAllowedProductForAProductOffering(PrdOfferingBO prdOffering,PrdOfferingBO prdOfferingNotAllowedId)
+	{
+		return TestObjectFactory.createNotAllowedProductForAProductOffering(prdOffering,prdOfferingNotAllowedId);
+		
+	}
+	
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}
@@ -117,6 +165,62 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 		TestObjectFactory.createSavingsProduct("SavingPrd1", "S",
 			startDate,
 			meetingIntCalc, meetingIntPost);
+
+	}
+	
+		private void createSecondSavingProduct() {
+		Date startDate = new Date(System.currentTimeMillis());
+		meetingIntCalc2 = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		meetingIntPost2 = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+
+		center2 = createCenter("Center_Active_test2");
+
+		secondSavingsOffering = TestObjectFactory.createSavingsProduct(
+				"A_SavingPrd", "AS", startDate, meetingIntCalc2,
+				meetingIntPost2);
+
+	}
+
+	public void testGetPrdOfferingMix() throws ServiceException,
+			PersistenceException {
+		createLoanProductMixed();
+		createsecondLoanProductMixed();
+		prdmix = createNotAllowedProductForAProductOffering(loanOffering,
+				loanOffering);
+		assertEquals(2, service.getPrdOfferingMix().size());
+		assertTrue("Products Mix should be in alphabitical order:", (service
+				.getPrdOfferingMix().get(0).getPrdOfferingName()
+				.compareToIgnoreCase(service.getPrdOfferingMix().get(1)
+						.getPrdOfferingName())) < 0);
+		HibernateUtil.closeSession();
+
+	}
+
+	private void createLoanProductMixed() throws PersistenceException {
+
+		Date startDate = new Date(System.currentTimeMillis());
+
+		meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+
+		loanOffering = TestObjectFactory.createLoanOffering("Loan", "L",
+				startDate, meetingIntCalc);
+		loanOffering.updatePrdOfferingFlag();
+
+	}
+
+	private void createsecondLoanProductMixed() throws PersistenceException {
+
+		Date startDate = new Date(System.currentTimeMillis());
+
+		meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+
+		loanOffering2 = TestObjectFactory.createLoanOffering("aLoan", "aL",
+				startDate, meetingIntCalc);
+		loanOffering2.updatePrdOfferingFlag();
 
 	}
 

@@ -150,6 +150,7 @@ import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -320,6 +321,21 @@ public class TestObjectFactory {
 		return center;
 	}
 
+
+	public static ProductMixBO createNotAllowedProductForAProductOffering(PrdOfferingBO prdOffering,PrdOfferingBO prdOfferingNotAllowedId) {
+		ProductMixBO prdmix;
+		try {
+			prdmix = new ProductMixBO(prdOffering,prdOfferingNotAllowedId);
+			prdmix.save();
+			HibernateUtil.commitTransaction();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		addObject(prdmix);
+		return prdmix;
+	}
+	
 	public static List<FeeView> getFees() {
 		List<FeeView> fees = new ArrayList<FeeView>();
 		AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFee(

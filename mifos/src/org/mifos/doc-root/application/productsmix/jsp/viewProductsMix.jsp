@@ -50,6 +50,9 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<html-el:form action="/productMixAction?method=search">
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}"
+			var="mixedlist"/>
+
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
@@ -82,37 +85,28 @@
 							<font class="fontnormalRedBold"><html-el:errors
 								bundle="ProductDefUIResources" /> </font>
 							</span>
-							<c:forEach var="productMix"
-								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}">
+							<c:forEach var="productCategory"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductCategoryList')}">
+							
 								<c:if	test="${empty id}">
 									<c:set var="id"
-										value="${productMix.prdCategory.productType.productTypeID}" />
+										value="${productCategory.productType.productTypeID}" />
+
+								<c:if test="${!empty mixedlist}">
 									<table width="95%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="61%">
 											   <span class="fontnormalbold">
-												 <c:out value="${productMix.prdCategory.productType.name}" />
+												 <c:out value="${productCategory.productType.name}" />
 											   </span>
 											 </td>
 										</tr>
 									</table>
 								</c:if>
-								<c:if
-									test="${!empty id && id != productMix.prdCategory.productType.productTypeID}">
-									<c:set var="id"
-										value="${productMix.prdCategory.productType.productTypeID}" />
-									<br>
-									<table width="95%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td width="61%">
-											   <span class="fontnormalbold">
-												 <c:out value="${productMix.prdCategory.productType.name}" />
-											   </span>
-											 </td>
-										</tr>
-									</table>
-								</c:if>
-								<span class="fontnormalbold"> </span>								
+								<c:forEach var="productMix"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}">	
+								<c:if	test="${!empty id && id == productMix.prdCategory.productType.productTypeID}">	
+									<span class="fontnormalbold"> </span>								
 								<table width="90%" border="0" cellspacing="0" cellpadding="0">
 									<tr class="fontnormal">
 										<td width="1%"><img
@@ -125,6 +119,46 @@
 										</td>
 									</tr>
 								</table>
+								</c:if>
+								</c:forEach>
+								<br>
+								</c:if>
+								<c:if
+									test="${!empty id && id != productCategory.productType.productTypeID}">
+									<c:set var="id"
+										value="${productCategory.productType.productTypeID}" />
+
+								<c:if test="${!empty mixedlist}">
+
+									<table width="95%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="61%">
+											   <span class="fontnormalbold">
+												 <c:out value="${productCategory.productType.name}" />
+											   </span>
+											 </td>
+										</tr>
+									</table>
+								</c:if>
+								<c:forEach var="productMix"
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductMixList')}">	
+								<c:if	test="${!empty id && id == productMix.prdCategory.productType.productTypeID}">	
+									<span class="fontnormalbold"> </span>								
+								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<tr class="fontnormal">
+										<td width="1%"><img
+											src="pages/framework/images/bullet_circle.gif" width="9"
+											height="11"></td>
+										<td width="99%"><html-el:link
+											href="productMixAction.do?method=get&prdOfferingId=${productMix.prdOfferingId}&productType=${productMix.prdType.productTypeID}&randomNUm=${sessionScope.randomNUm}">
+											<c:out value="${productMix.prdOfferingName}" />
+										</html-el:link>
+										</td>
+									</tr>
+								</table>
+								</c:if>
+								</c:forEach>	
+								</c:if>							
 							</c:forEach>
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</html-el:form>

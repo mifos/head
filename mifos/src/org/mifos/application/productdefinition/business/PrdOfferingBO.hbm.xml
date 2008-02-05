@@ -312,6 +312,7 @@
 		select prdMixBO.prdOfferingId.prdOfferingId 
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+		order by prdOff.prdOfferingName
 		]]><!-- verifier les cas particulier -->
 	</query>
 	<query name="product.notallowedproductofferingbytype">
@@ -322,6 +323,7 @@
 		OR prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId 
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+		order by prdOff.prdOfferingName
 		]]><!-- verifier les cas particulier -->
 	</query>
 	<query name="product.allowedproductformixproduct">
@@ -345,7 +347,7 @@
 	</query>
 	<query name="product.retrieveProductOfferingMix">
 		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
-        where prdOffering.prdMixFlag =1
+        where prdOffering.prdMixFlag =1 order by prdOffering.prdOfferingName
 		]]>
 	</query>
 </hibernate-mapping>

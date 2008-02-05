@@ -52,6 +52,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productsmix.business.ProductMixBO;
@@ -576,6 +577,9 @@ public class ProductMixAction extends BaseAction {
 			}
 		}
 		SessionUtils.setCollectionAttribute(
+				ProductDefinitionConstants.PRODUCTCATEGORYLIST,
+				getAllCategories(userContext), request);
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRODUCTMIXLIST,
 				getPrdMixBusinessService().getPrdOfferingMix(), request);
 
@@ -697,6 +701,20 @@ public class ProductMixAction extends BaseAction {
 		prdOfferingBO = null;
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-
-
+	private List<ProductCategoryBO> getAllCategories(UserContext userContext)
+			throws Exception {
+		List<ProductCategoryBO> productCategoryList = getCategoryBusinessService()
+				.getAllCategories();
+		if (productCategoryList != null) {
+			for (ProductCategoryBO productCategoryBO : productCategoryList) {
+				productCategoryBO.getPrdCategoryStatus().setLocaleId(
+						userContext.getLocaleId());
+				productCategoryBO.getProductType().setUserContext(userContext);
+			}
+		}
+		return productCategoryList;
+	}
+	private ProductCategoryBusinessService getCategoryBusinessService() {
+		return new ProductCategoryBusinessService();
+	}
 }

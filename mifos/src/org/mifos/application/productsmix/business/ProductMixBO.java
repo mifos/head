@@ -115,7 +115,15 @@ public class ProductMixBO extends BusinessObject {
 			throw new ProductDefinitionException(e);
 		}
 	}
-
+	
+	public void save() throws ProductDefinitionException {
+		try {
+			new ProductMixPersistence().createOrUpdate(this);
+		}
+		catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+	}
 	
 	public boolean doesPrdOfferingsCanCoexist(Short idPrdOff_A, Short idPrdOff_B)
 			throws PersistenceException {
