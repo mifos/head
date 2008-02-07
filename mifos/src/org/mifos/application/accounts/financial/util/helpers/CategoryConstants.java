@@ -38,116 +38,31 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
+/**
+ * Hard-coded constants for general ledger categories. Categories are top-level
+ * entities in the chart of accounts (see "COA" table in latest-data.sql).
+ * <p>
+ * TODO: don't use IDs from COA table. Replace this class with methods to fetch
+ * top-level categories in {@link DynamicFinancialRules}.
+ * <p>
+ * 
+ * @see <a
+ *      href="http://mifos.org/knowledge/functional-specs/accounting-in-mifos">Accounting
+ *      in Mifos</a>
+ */
 public interface CategoryConstants {
 	public static final short ASSETS = 1;
 
 	public static final short CASHBANKBALANCE = 2;
 
-	public static final short PETTYCASH = 3;
-
-	public static final short CASHONE = 4;
-
-	public static final short CASHTWO = 5;
-
-	public static final short BANKBALANCES = 6;
-
-	public static final short BANKACCOUNTONE = 7;
-
-	public static final short BANKACCOUNTTWO = 8;
-
-	public static final short LOANPORTFOLIO = 9;
-
-	public static final short LOANSADVANCES = 10;
-
-	public static final short LOANTOCLIENTS = 11;
-
-	public static final short LOANLOSSPROVISION = 12;
-
-	public static final short WRITEOFFS = 13;
-
 	public static final short LIABILITIES = 14;
 
-	public static final short INTERESTPAYABLE = 15;
-
-	public static final short INTERESTPAYABLECLIENTS = 16;
-
-	public static final short INTERESTMANDATORYSAVINGS = 17;
-
 	public static final short INCOME = 18;
-
+	
 	public static final short DIRECTINCOME = 19;
-
-	public static final short INTERESTINCOMELOANS = 20;
-
+	
 	public static final short INTERESTONLOANS = 21;
-
-	public static final short PENALTY = 22;
-
-	public static final short INCOMEMICROCREDIT = 23;
-
-	public static final short FEES = 24;
-
-	public static final short ROUNDINGGL = 25;
-
-	public static final short CLIENTSDEPOSITS = 26;
-
-	public static final short DEPOSITSCLIENTS = 27;
-
-	public static final short SAVINGSACCOUNTS = 28;
-
-	public static final short MANDATORYSAVINGS = 29;
-
-	public static final short SAVINGSMANDATORY = 30;
-
-	public static final short MANDATORYSAVINGSACCOUNTS = 31;
-
-	public static final short IGLOAN = 32;
-
-	public static final short MANAGEDICICIIGLOAN = 33;
-
-	public static final short SPLOAN = 34;
-
-	public static final short MANAGEDICICISPLOAN = 35;
-
-	public static final short WFLOAN = 36;
-
-	public static final short MANAGEDWFLOAN = 37;
-
-	public static final short EMERGENCYLOANS = 38;
-
-	public static final short SPECIALLOANS = 39;
-
-	public static final short MICROENTERPRISESLOANS = 40;
-
-	public static final short EMERGENCYFUND = 41;
-
-	public static final short MARGINMONEY1 = 42;
-
-	public static final short MARGINMONEY2 = 43;
-
-	public static final short VILLAGEDEVELOPMENTFUND = 44;
-
-	public static final short SERVICECHARGE = 45;
-
-	public static final short PROCESSINGFEES = 46;
-
-	public static final short ANNUALSUBSCRIPTIONFEE = 47;
-
-	public static final short EMERGENCYLOANDOCUMENTATIONFEE = 48;
-
-	public static final short SALEOFPUBLICATION = 49;
-
-	public static final short FINESANDPENALTIES = 50;
-
-	public static final short MISCELLENEOUSINCOME = 51;
 
 	public static final short EXPENDITURE = 53;
 
-	public static final short DIRECTEXPENDITURE = 54;
-
-	public static final short COSTOFFUNDS = 55;
-
-	public static final short INTONCLIENTSVOLSAVINGS = 56;
-
-	public static final short INTONCLIENTSMANDSAVINGS = 57;
 }

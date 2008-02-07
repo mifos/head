@@ -35,19 +35,32 @@
 	<classpathentry kind="lib" path="lib/asm.jar"/>
 	<classpathentry kind="lib" path="lib/asm-attrs.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.hibernate.org/hib_docs/v3/api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.7.jar"/>
 	<classpathentry kind="lib" path="lib/jasperreports-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/easymockclassextension.jar"/>
 	<classpathentry kind="lib" path="lib/itext-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/spring-2.0.5.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.5.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://static.springframework.org/spring/docs/2.0.x/api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/mayfly-20070706.jar"/>
-	<classpathentry kind="lib" path="lib/commons-configuration-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-configuration-1.4.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://commons.apache.org/configuration/apidocs_1.3/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/strutstest-2.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-modules-cache.jar"/>
+	<classpathentry kind="lib" path="lib/xmlunit-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

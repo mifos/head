@@ -20,12 +20,13 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class TestUtils {
-	
+
 	/* Supplied in a few tests, but not actually in master data. 
 	   The test might set up the role, or more likely the test
 	   doesn't need it to exist in the database. */
@@ -222,14 +223,12 @@ public class TestUtils {
 	}
 
 	/**
-	 * This method initializes the Spring framework context. 
+	 * This method initializes the Spring framework context.
 	 */
-	static ApplicationContext context = null;
 	public static void initializeSpring() {
-			context = new ClassPathXmlApplicationContext(
-				"org/mifos/config/applicationContext.xml");
+		SpringUtil.initializeSpring();
 	}
-
+	
 	public static Date generateNearestMondayOnOrAfterToday() {
 		// start from today's date and then add enough days to make it a Monday
 		DateTime dateTime = new DateTime();

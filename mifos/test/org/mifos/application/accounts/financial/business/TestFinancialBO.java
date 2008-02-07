@@ -30,10 +30,7 @@ public class TestFinancialBO extends MifosTestCase {
 		while (iterSubCategory.hasNext()) {
 
 			COABO subCategoryCOA = iterSubCategory.next();
-			if (subCategoryCOA.getCategoryId() == CategoryConstants.BANKACCOUNTONE)
-				assertTrue(true);
-			else
-				assertTrue(false);
+			assertEquals("Bank Account 1", subCategoryCOA.getCategoryName());
 		}
 
 	}
@@ -56,8 +53,7 @@ public class TestFinancialBO extends MifosTestCase {
 				.getApplicableCreditCharts();
 		assertEquals(applicableCreditCategory.size(), 1);
 		for (COABO coa : applicableCreditCategory) {
-			assertEquals(coa.getCategoryId().shortValue(),
-					CategoryConstants.ROUNDINGGL);
+			assertEquals("Income from 999 Account", coa.getCategoryName());
 		}
 
 	}

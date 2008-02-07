@@ -39,147 +39,34 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
+import org.mifos.framework.spring.SpringUtil;
 
+/**
+ * Resolves general ledger accounts from financial actions. Currently just
+ * delegates to {@link DynamicFinancialRules} and will be replaced by the
+ * functionality in that class soon. (-Adam 06-FEB-2008)
+ */
 public class FinancialRules {
+	// TODO: inject dynamic financial rules into this class
+	// * add members, getters/setters
+	// * modify applicationContext.xml to refer to this
+
 	public static short getCategoryAssociatedToAction(short financialActionId,
 			Short type) throws FinancialException {
-		FinancialActionConstants financialAction = FinancialActionConstants.getFinancialAction(financialActionId);
-		return getCategoryAssociatedToAction(financialAction, type);
+		FinancialActionConstants financialAction = FinancialActionConstants
+				.getFinancialAction(financialActionId);
+		// TODO: after dependency injection is complete, it should not be
+		// necessary to refer to the ApplicationContext
+		DynamicFinancialRules dfr = (DynamicFinancialRules) SpringUtil
+				.getAppContext().getBean("dynamicFinancialRules",
+						DynamicFinancialRules.class);
+		return dfr.getCategoryAssociatedToAction(financialAction, type);
 	}
-	
-	public static short getCategoryAssociatedToAction(FinancialActionConstants financialAction,
-				Short type) throws FinancialException {
-		if ((financialAction == FinancialActionConstants.PRINCIPALPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.PRINCIPALPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.LOANSADVANCES;
 
-		if ((financialAction == FinancialActionConstants.INTERESTPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.INTERESTPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.INTERESTINCOMELOANS;
-
-		if ((financialAction == FinancialActionConstants.FEEPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.FEEPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.INCOMEMICROCREDIT;
-
-		if ((financialAction == FinancialActionConstants.PENALTYPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKBALANCES;
-		if ((financialAction == FinancialActionConstants.PENALTYPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.PENALTY;
-
-		if ((financialAction == FinancialActionConstants.ROUNDING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.ROUNDINGGL;
-		if ((financialAction == FinancialActionConstants.ROUNDING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.ROUNDINGGL;
-		if ((financialAction == FinancialActionConstants.MANDATORYDEPOSIT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-
-		if ((financialAction == FinancialActionConstants.MANDATORYDEPOSIT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.MANDATORYSAVINGS;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYDEPOSIT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYDEPOSIT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.CLIENTSDEPOSITS;
-		
-		if ((financialAction == FinancialActionConstants.MANDATORYWITHDRAWAL)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.MANDATORYSAVINGS;
-		if ((financialAction == FinancialActionConstants.MANDATORYWITHDRAWAL)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYWITHDRAWAL)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.CLIENTSDEPOSITS;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYWITHDRAWAL)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		
-		if ((financialAction == FinancialActionConstants.SAVINGS_INTERESTPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.DIRECTEXPENDITURE;
-		if ((financialAction == FinancialActionConstants.SAVINGS_INTERESTPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.SAVINGSMANDATORY;
-
-		if ((financialAction == FinancialActionConstants.DISBURSAL)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.DISBURSAL)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.LOANTOCLIENTS;
-		
-		if ((financialAction == FinancialActionConstants.MISCFEEPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.MISCFEEPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.FEES;
-		
-		if ((financialAction == FinancialActionConstants.MISCPENALTYPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.MISCPENALTYPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.PENALTY;
-		if ((financialAction == FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.FEES;
-		
-		if ((financialAction == FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.MANDATORYSAVINGS;
-		if ((financialAction == FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		
-		if ((financialAction == FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.CLIENTSDEPOSITS;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		
-		if ((financialAction == FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.MANDATORYSAVINGS;
-		
-		if ((financialAction == FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.BANKACCOUNTONE;
-		if ((financialAction == FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.CLIENTSDEPOSITS;	
-		
-		if ((financialAction == FinancialActionConstants.WRITEOFF)
-				&& (type.equals(FinancialConstants.DEBIT)))
-			return CategoryConstants.WRITEOFFS;
-		if ((financialAction == FinancialActionConstants.WRITEOFF)
-				&& (type.equals(FinancialConstants.CREDIT)))
-			return CategoryConstants.LOANTOCLIENTS;
-		throw new FinancialException(FinancialExceptionConstants.ACTIONNOTFOUND);
+	public static short getCategoryAssociatedToAction(
+			FinancialActionConstants financialAction, Short type)
+			throws FinancialException {
+		return getCategoryAssociatedToAction(financialAction.getValue(), type);
 	}
 
 }

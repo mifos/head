@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
@@ -139,98 +141,95 @@ public class AccountPersistenceTest extends TestAccount {
 		}
 		
 	}
-	public void testDumpChartOfAccounts() throws ConfigurationException {
+	public void testDumpChartOfAccounts() throws Exception {
 		String expected_chart = 
-		// "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-		"<configuration>\n" + 
-		"<ChartOfAccounts>\n" + 
-		"<GLAssetsAccount code=\"10000\" name=\"ASSETS\">\n" + 
-		"<GLAccount code=\"11000\" name=\"Cash and bank balances\">\n" + 
-		"<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">\n" + 
-		"<GLAccount code=\"11101\" name=\"Cash 1\"/>\n" + 
-		"<GLAccount code=\"11102\" name=\"Cash 2\"/>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"11200\" name=\"Bank Balances\">\n" + 
-		"<GLAccount code=\"11201\" name=\"Bank Account 1\"/>\n" + 
-		"<GLAccount code=\"11202\" name=\"Bank Account 2\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"13000\" name=\"Loan Portfolio\">\n" + 
-		"<GLAccount code=\"13100\" name=\"Loans and Advances\">\n" + 
-		"<GLAccount code=\"1501\" name=\"IGLoan\"/>\n" + 
-		"<GLAccount code=\"1502\" name=\"ManagedICICI-IGLoan\"/>\n" + 
-		"<GLAccount code=\"1503\" name=\"SPLoan\"/>\n" + 
-		"<GLAccount code=\"1504\" name=\"ManagedICICI-SPLoan\"/>\n" + 
-		"<GLAccount code=\"1505\" name=\"WFLoan\"/>\n" + 
-		"<GLAccount code=\"1506\" name=\"Managed WFLoan\"/>\n" + 
-		"<GLAccount code=\"1507\" name=\"Emergency Loans\"/>\n" + 
-		"<GLAccount code=\"1508\" name=\"Special  Loans\"/>\n" + 
-		"<GLAccount code=\"1509\" name=\"Micro Enterprises Loans\"/>\n" + 
-		"<GLAccount code=\"13101\" name=\"Loans to clients\"/>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"13200\" name=\"Loan Loss Provisions\">\n" + 
-		"<GLAccount code=\"13201\" name=\"Write-offs\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAssetsAccount>\n" + 
-		"<GLLiabilitiesAccount code=\"20000\" name=\"LIABILITIES\">\n" + 
-		"<GLAccount code=\"22000\" name=\"Interest Payable\">\n" + 
-		"<GLAccount code=\"22100\" name=\"Interest payable on clients savings\">\n" + 
-		"<GLAccount code=\"22101\" name=\"Interest on mandatory savings\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"23000\" name=\"Clients Deposits\">\n" + 
-		"<GLAccount code=\"23100\" name=\"Clients Deposits\">\n" + 
-		"<GLAccount code=\"4601\" name=\"Emergency Fund\"/>\n" + 
-		"<GLAccount code=\"4602\" name=\"Margin Money-1\"/>\n" + 
-		"<GLAccount code=\"4603\" name=\"Margin Money-2\"/>\n" + 
-		"<GLAccount code=\"4606\" name=\"Village Development Fund\"/>\n" + 
-		"<GLAccount code=\"23101\" name=\"Savings accounts\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"24000\" name=\"Mandatory Savings\">\n" + 
-		"<GLAccount code=\"24100\" name=\"Mandatory Savings\">\n" + 
-		"<GLAccount code=\"24101\" name=\"Mandatory Savings Accounts\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"</GLLiabilitiesAccount>\n" + 
-		"<GLIncomeAccount code=\"30000\" name=\"INCOME\">\n" + 
-		"<GLAccount code=\"31000\" name=\"Direct Income\">\n" + 
-		"<GLAccount code=\"31100\" name=\"Interest income from loans\">\n" + 
-		"<GLAccount code=\"5001\" name=\"Interest\"/>\n" + 
-		"<GLAccount code=\"31101\" name=\"Interest on loans\"/>\n" + 
-		"<GLAccount code=\"31102\" name=\"Penalty\"/>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"31300\" name=\"Income from micro credit &amp; lending activities\">\n" + 
-		"<GLAccount code=\"5201\" name=\"Processing Fees\"/>\n" + 
-		"<GLAccount code=\"5202\" name=\"Annual Subscription Fee\"/>\n" + 
-		"<GLAccount code=\"5203\" name=\"Emergency Loan Documentation Fee\"/>\n" + 
-		"<GLAccount code=\"5204\" name=\"Sale of Publication\"/>\n" + 
-		"<GLAccount code=\"5205\" name=\"Fines &amp; Penalties\"/>\n" + 
-		"<GLAccount code=\"6201\" name=\"Miscelleneous Income\"/>\n" + 
-		"<GLAccount code=\"31301\" name=\"Fees\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"<GLAccount code=\"31401\" name=\"Income from 999 Account\"/>\n" + 
-		"</GLIncomeAccount>\n" + 
-		"<GLExpenditureAccount code=\"40000\" name=\"EXPENDITURE\">\n" + 
-		"<GLAccount code=\"41000\" name=\"Direct Expenditure\">\n" + 
-		"<GLAccount code=\"41100\" name=\"Cost of Funds\">\n" + 
-		"<GLAccount code=\"41101\" name=\"Interest on clients voluntary savings\"/>\n" + 
-		"<GLAccount code=\"41102\" name=\"Interest on clients mandatory savings\"/>\n" + 
-		"</GLAccount>\n" + 
-		"</GLAccount>\n" + 
-		"</GLExpenditureAccount>\n" + 
-		"</ChartOfAccounts>\n" + 
-		"</configuration>\n";
+			"<configuration>" + 
+			"<ChartOfAccounts>" + 
+			"<GLAssetsAccount code=\"10000\" name=\"ASSETS\">" + 
+			"<GLAccount code=\"11000\" name=\"Cash and bank balances\">" + 
+			"<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">" + 
+			"<GLAccount code=\"11101\" name=\"Cash 1\"/>" + 
+			"<GLAccount code=\"11102\" name=\"Cash 2\"/>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"11200\" name=\"Bank Balances\">" + 
+			"<GLAccount code=\"11201\" name=\"Bank Account 1\"/>" + 
+			"<GLAccount code=\"11202\" name=\"Bank Account 2\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"13000\" name=\"Loan Portfolio\">" + 
+			"<GLAccount code=\"13100\" name=\"Loans and Advances\">" + 
+			"<GLAccount code=\"1501\" name=\"IGLoan\"/>" + 
+			"<GLAccount code=\"1502\" name=\"ManagedICICI-IGLoan\"/>" + 
+			"<GLAccount code=\"1503\" name=\"SPLoan\"/>" + 
+			"<GLAccount code=\"1504\" name=\"ManagedICICI-SPLoan\"/>" + 
+			"<GLAccount code=\"1505\" name=\"WFLoan\"/>" + 
+			"<GLAccount code=\"1506\" name=\"Managed WFLoan\"/>" + 
+			"<GLAccount code=\"1507\" name=\"Emergency Loans\"/>" + 
+			"<GLAccount code=\"1508\" name=\"Special  Loans\"/>" + 
+			"<GLAccount code=\"1509\" name=\"Micro Enterprises Loans\"/>" + 
+			"<GLAccount code=\"13101\" name=\"Loans to clients\"/>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"13200\" name=\"Loan Loss Provisions\">" + 
+			"<GLAccount code=\"13201\" name=\"Write-offs\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"</GLAssetsAccount>" + 
+			"<GLLiabilitiesAccount code=\"20000\" name=\"LIABILITIES\">" + 
+			"<GLAccount code=\"22000\" name=\"Interest Payable\">" + 
+			"<GLAccount code=\"22100\" name=\"Interest payable on clients savings\">" + 
+			"<GLAccount code=\"22101\" name=\"Interest on mandatory savings\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"23000\" name=\"Clients Deposits\">" + 
+			"<GLAccount code=\"23100\" name=\"Clients Deposits\">" + 
+			"<GLAccount code=\"4601\" name=\"Emergency Fund\"/>" + 
+			"<GLAccount code=\"4602\" name=\"Margin Money-1\"/>" + 
+			"<GLAccount code=\"4603\" name=\"Margin Money-2\"/>" + 
+			"<GLAccount code=\"4606\" name=\"Village Development Fund\"/>" + 
+			"<GLAccount code=\"23101\" name=\"Savings accounts\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"24000\" name=\"Mandatory Savings\">" + 
+			"<GLAccount code=\"24100\" name=\"Mandatory Savings\">" + 
+			"<GLAccount code=\"24101\" name=\"Mandatory Savings Accounts\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"</GLLiabilitiesAccount>" + 
+			"<GLIncomeAccount code=\"30000\" name=\"INCOME\">" + 
+			"<GLAccount code=\"31000\" name=\"Direct Income\">" + 
+			"<GLAccount code=\"31100\" name=\"Interest income from loans\">" + 
+			"<GLAccount code=\"5001\" name=\"Interest\"/>" + 
+			"<GLAccount code=\"31101\" name=\"Interest on loans\"/>" + 
+			"<GLAccount code=\"31102\" name=\"Penalty\"/>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"31300\" name=\"Income from micro credit &amp; lending activities\">" + 
+			"<GLAccount code=\"5201\" name=\"Processing Fees\"/>" + 
+			"<GLAccount code=\"5202\" name=\"Annual Subscription Fee\"/>" + 
+			"<GLAccount code=\"5203\" name=\"Emergency Loan Documentation Fee\"/>" + 
+			"<GLAccount code=\"5204\" name=\"Sale of Publication\"/>" + 
+			"<GLAccount code=\"5205\" name=\"Fines &amp; Penalties\"/>" + 
+			"<GLAccount code=\"6201\" name=\"Miscelleneous Income\"/>" + 
+			"<GLAccount code=\"31301\" name=\"Fees\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"<GLAccount code=\"31401\" name=\"Income from 999 Account\"/>" + 
+			"</GLIncomeAccount>" + 
+			"<GLExpenditureAccount code=\"40000\" name=\"EXPENDITURE\">" + 
+			"<GLAccount code=\"41000\" name=\"Direct Expenditure\">" + 
+			"<GLAccount code=\"41100\" name=\"Cost of Funds\">" + 
+			"<GLAccount code=\"41101\" name=\"Interest on clients voluntary savings\"/>" + 
+			"<GLAccount code=\"41102\" name=\"Interest on clients mandatory savings\"/>" + 
+			"</GLAccount>" + 
+			"</GLAccount>" + 
+			"</GLExpenditureAccount>" + 
+			"</ChartOfAccounts>" + 
+			"</configuration>";
 		String chart = accountPersistence.dumpChartOfAccounts();
-		// Note: replacing \r is an attempt to make this work on both Windows & Linux
-		chart = chart.replace("\r", "");
-		// ignore the first <?xml... line for the time being, output seems to vary
-		// from machine to machine (even Windows to Windows).  Some output looks like
-		// <?xml version="1.0" encoding="UTF-8" standalone="no" ?> 
-		// Why do we get the "standalone" attribute sometimes but not others?
-		assertEquals(expected_chart, chart.substring(chart.indexOf("<configuration>")));
+		
+		// TODO: move to BeforeClass setup
+		XMLUnit.setIgnoreWhitespace(true);
+		
+		XMLAssert.assertXMLEqual(expected_chart, chart);
 	}
 	
 	public void testSuccessGetNextInstallmentList() {

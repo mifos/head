@@ -28,6 +28,8 @@
     </bean>
 
 
+    <!-- Keys must be constants from FinancialActionConstants or application
+         will throw an exception during initialization --> 
     <bean id = "dynamicFinancialRules"
         class="org.mifos.application.accounts.financial.util.helpers.DynamicFinancialRules">        
         <property name="actionToGLCodeDebit">

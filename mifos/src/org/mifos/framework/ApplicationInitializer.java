@@ -31,6 +31,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -89,7 +90,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					// cache in MifosConfiguration.  When the use of the 
 					// cache is refactored away, we should be able to move
 					// back to the struts based Spring initialization
-					initializeSpring();
+					SpringUtil.initializeSpring();
 					
 					Configuration.getInstance();
 					MifosConfiguration.getInstance().init();
@@ -214,11 +215,5 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     public void requestInitialized(ServletRequestEvent event) {
         
     }
-    
-	static ApplicationContext context = null;
-	public static void initializeSpring() {
-			context = new ClassPathXmlApplicationContext(
-				"org/mifos/config/applicationContext.xml");
-	}
-    
+	
 }

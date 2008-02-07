@@ -45,6 +45,7 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
+// TODO: don't use IDs from COA table
 public class ChartOfAccountsCache {
 	private static Map<Short, COABO> cache = new HashMap<Short, COABO>();
 
@@ -63,7 +64,8 @@ public class ChartOfAccountsCache {
 		}
 	}
 
-	
+	// TODO: callers pass in CategoryConstants. Change this so "assets account"
+	// database row ID is fetched dynamically
 	public static COABO get(short categoryId) throws FinancialException {
 		COABO category = cache.get(categoryId);
 		if (category == null) {
