@@ -113,10 +113,15 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
 	public void testGetNotAllowedPrdOfferingsForMixProduct()
 			throws ServiceException {
-		assertEquals(0, service.getNotAllowedPrdOfferingsForMixProduct(
+		
+		createSecondSavingProduct();
+		prdmix2=createNotAllowedProductForAProductOffering(savingsOffering,savingsOffering);
+		prdmix=createNotAllowedProductForAProductOffering(savingsOffering,secondSavingsOffering);
+		
+		assertEquals(1, service.getNotAllowedPrdOfferingsForMixProduct(
 				savingsOffering.getPrdOfferingId().toString(),
 				ProductType.SAVINGS.getValue().toString()).size());
-
+			
 	}
 	
 	

@@ -313,7 +313,7 @@
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
 		order by prdOff.prdOfferingName
-		]]><!-- verifier les cas particulier -->
+		]]>
 	</query>
 	<query name="product.notallowedproductofferingbytype">
 		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO as prdOff
@@ -324,7 +324,7 @@
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
 		order by prdOff.prdOfferingName
-		]]><!-- verifier les cas particulier -->
+		]]>
 	</query>
 	<query name="product.allowedproductformixproduct">
 		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO as prdOff
@@ -333,6 +333,7 @@
 		and prdOff.prdOfferingId not in	(select prdMixBO.prdOfferingId.prdOfferingId
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+		order by prdOff.prdOfferingName
 		]]>
 	</query>
 	<query name="product.notallowedproductformixproduct">
@@ -340,10 +341,11 @@
 		where prdOff.prdOfferingId in (select prdMixBO.prdOfferingId.prdOfferingId
 		from org.mifos.application.productsmix.business.ProductMixBO prdMixBO
 		where prdMixBO.prdOfferingNotAllowedId.prdOfferingId=:prdOfferingId)
+		order by prdOff.prdOfferingName
 		]]>
 	</query>
 	<query name="product.byid">
-		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering where prdOffering.prdOfferingId=:prdOfferingId]]>
+		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering where prdOffering.prdOfferingId=:prdOfferingId order by prdOffering.prdOfferingName]]>
 	</query>
 	<query name="product.retrieveProductOfferingMix">
 		<![CDATA[from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
