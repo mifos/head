@@ -1401,18 +1401,22 @@ public class LoanAccountAction extends AccountAppAction {
 
 	private void setUpdatedLoanOfferingLoanAmount(
 			LoanOfferingBO loanOfferingBO, MaxMinLoanAmount maxMinLoanAmount) {
-		loanOfferingBO.setMaxLoanAmount(getMoney(maxMinLoanAmount
-				.getMaxLoanAmount().toString()));
-		loanOfferingBO.setMinLoanAmount(getMoney(maxMinLoanAmount
-				.getMinLoanAmount().toString()));
+		if (!(maxMinLoanAmount == null)) {
+			loanOfferingBO.setMaxLoanAmount(getMoney(maxMinLoanAmount
+					.getMaxLoanAmount().toString()));
+			loanOfferingBO.setMinLoanAmount(getMoney(maxMinLoanAmount
+					.getMinLoanAmount().toString()));
+		}
 	}
 
 	private void setUpdatedLoanOfferingNoOfInstall(
 			LoanOfferingBO loanOfferingBO, MaxMinNoOfInstall maxMinNoOfInstall) {
-		loanOfferingBO.setMaxNoInstallments(maxMinNoOfInstall
-				.getMaxNoOfInstallt());
-		loanOfferingBO.setMinNoInstallments(maxMinNoOfInstall
-				.getMinNoOfInstall());
+		if (!(maxMinNoOfInstall == null)) {
+			loanOfferingBO.setMaxNoInstallments(maxMinNoOfInstall
+					.getMaxNoOfInstallt());
+			loanOfferingBO.setMinNoInstallments(maxMinNoOfInstall
+					.getMinNoOfInstall());
+		}
 	}
 
 	private List<FundBO> getFunds(LoanOfferingBO loanOffering) {
