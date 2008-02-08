@@ -111,11 +111,11 @@ public class FinancialTransactionBO extends BusinessObject {
 	}
 
 	public boolean isDebitEntry() {
-		return this.debitCreditFlag.equals(FinancialConstants.DEBIT);
+		return this.debitCreditFlag.equals(FinancialConstants.DEBIT.getValue());
 	}
 
 	public boolean isCreditEntry() {
-		return this.debitCreditFlag.equals(FinancialConstants.CREDIT);
+		return this.debitCreditFlag.equals(FinancialConstants.CREDIT.getValue());
 	}
 
 	public Short getDebitCreditFlag() {

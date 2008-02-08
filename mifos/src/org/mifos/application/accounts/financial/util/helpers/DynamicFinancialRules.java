@@ -65,7 +65,7 @@ public class DynamicFinancialRules {
 	private static AccountPersistence accountPersistence = new AccountPersistence();
 
 	public short getCategoryAssociatedToAction(
-			FinancialActionConstants financialAction, Short type)
+			FinancialActionConstants financialAction, FinancialConstants type)
 			throws FinancialException {
 		if (type.equals(FinancialConstants.DEBIT)) {
 			return actionToCategoryDebit.get(financialAction);

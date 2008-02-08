@@ -127,7 +127,7 @@ public class FinancialBusinessService extends BusinessService {
 	}
 
 	public List<GLCodeEntity> getGLCodes(FinancialActionConstants financialAction,
-			Short debitCredit) throws SystemException, ApplicationException {
+			FinancialConstants debitCredit) throws SystemException, ApplicationException {
 		List<GLCodeEntity> glCodeList = new ArrayList<GLCodeEntity>();
 		Set<COABO> applicableCategory = null;
 		FinancialActionBO finActionFees = FinancialActionCache

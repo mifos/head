@@ -496,7 +496,7 @@ public class LoanPrdAction extends BaseAction {
 	}
 
 	private List<GLCodeEntity> getGLCodes(
-			FinancialActionConstants financialAction, Short debitCredit)
+			FinancialActionConstants financialAction, FinancialConstants debitCredit)
 			throws Exception {
 		prdDefLogger.debug("getGLCodes method of Loan Product Action called");
 		return new FinancialBusinessService().getGLCodes(financialAction,

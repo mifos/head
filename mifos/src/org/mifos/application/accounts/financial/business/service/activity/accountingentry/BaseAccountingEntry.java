@@ -63,7 +63,7 @@ public abstract class BaseAccountingEntry {
 
 	protected void addAccountEntryDetails(Money postedMoney,
 			FinancialActionBO financialAction, GLCodeEntity glcode,
-			Short debitCredit) throws FinancialException {
+			FinancialConstants debitCredit) throws FinancialException {
 		if (postedMoney.getAmountDoubleValue() != 0) {
 			postedMoney = getAmountToPost(postedMoney, financialAction, glcode,
 					debitCredit);
@@ -72,7 +72,7 @@ public abstract class BaseAccountingEntry {
 					glcode, financialActivity.getAccountTrxn().getActionDate(),
 					financialActivity.getAccountTrxn().getPersonnel(),
 					(short) 1, postedMoney, financialActivity.getAccountTrxn()
-							.getComments(), debitCredit);
+							.getComments(), debitCredit.getValue());
 			financialActivity.addFinancialTransaction(financialTransaction);
 		}
 	}
@@ -92,13 +92,13 @@ public abstract class BaseAccountingEntry {
 
 	private Money getAmountToPost(Money postedMoney,
 			FinancialActionBO financialAction, GLCodeEntity glcode,
-			Short debitCredit) throws FinancialException {
+			FinancialConstants debitCredit) throws FinancialException {
 		COABO chartOfAccounts = ChartOfAccountsCache
 				.get(glcode.getAssociatedCOA().getCategoryId());
 		if (chartOfAccounts.getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS)
 				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
 						CategoryConstants.EXPENDITURE)) {
-			if (debitCredit.equals(FinancialConstants.DEBIT))
+			if (debitCredit == FinancialConstants.DEBIT)
 				return postedMoney;
 			else
 				return postedMoney.negate();
@@ -107,7 +107,7 @@ public abstract class BaseAccountingEntry {
 				CategoryConstants.LIABILITIES)
 				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
 						CategoryConstants.INCOME)) {
-			if (debitCredit.equals(FinancialConstants.DEBIT))
+			if (debitCredit == FinancialConstants.DEBIT)
 				return postedMoney.negate();
 			else
 				return postedMoney;

@@ -52,7 +52,7 @@ public class FinancialRules {
 	// * modify applicationContext.xml to refer to this
 
 	public static short getCategoryAssociatedToAction(short financialActionId,
-			Short type) throws FinancialException {
+			FinancialConstants type) throws FinancialException {
 		FinancialActionConstants financialAction = FinancialActionConstants
 				.getFinancialAction(financialActionId);
 		// TODO: after dependency injection is complete, it should not be
@@ -64,7 +64,7 @@ public class FinancialRules {
 	}
 
 	public static short getCategoryAssociatedToAction(
-			FinancialActionConstants financialAction, Short type)
+			FinancialActionConstants financialAction, FinancialConstants type)
 			throws FinancialException {
 		return getCategoryAssociatedToAction(financialAction.getValue(), type);
 	}
