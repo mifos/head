@@ -51,7 +51,6 @@
 			<attribute name="javadoc_location" value="http://static.springframework.org/spring/docs/2.0.x/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/mayfly-20070706.jar"/>
 	<classpathentry kind="lib" path="lib/commons-configuration-1.4.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://commons.apache.org/configuration/apidocs_1.4/"/>
@@ -62,5 +61,6 @@
 	<classpathentry kind="lib" path="lib/strutstest-2.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-modules-cache.jar"/>
 	<classpathentry kind="lib" path="lib/xmlunit-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-02-08.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
