@@ -75,7 +75,8 @@ public class TestUtils {
 	}
 
 	public static Locale sampleLocale() {
-		return new Locale("en", "US");
+		//return new Locale("en", "US");
+		return new Locale("en", "GB");
 	}
 	
 	/**

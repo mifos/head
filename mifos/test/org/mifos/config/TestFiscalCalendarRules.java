@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class TestFiscalCalendarRules {
@@ -117,6 +118,8 @@ public class TestFiscalCalendarRules {
 			 Calendar calendar = new GregorianCalendar(pdt);
 			 try
 			 {
+				 Locale savedLocale = Localization.getInstance().getMainLocale();
+				 LocalizationConverter.getInstance().setCurrentLocale(Locale.US);
 				 SimpleDateFormat df = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
 				 //Keith: DateFormat must be set to the same timezone as the calendar
 				 //Otherwise dates don't roll over at the same exact time, causing
@@ -127,11 +130,13 @@ public class TestFiscalCalendarRules {
 				 calendar.setTime(thursday);
 				 String out = thursday.toString();
 				 out.contains("A");
+				 LocalizationConverter.getInstance().setCurrentLocale(savedLocale);
 			 }
 			 catch (Exception e)
 			 {
 				 
 			 }
+			 
 			assertTrue(FiscalCalendarRules.isWorkingDay(calendar));
 			calendar.add(Calendar.DAY_OF_WEEK, 1); // Friday
 			assertTrue(FiscalCalendarRules.isWorkingDay(calendar));

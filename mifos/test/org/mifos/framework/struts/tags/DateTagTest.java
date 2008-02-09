@@ -2,11 +2,13 @@ package org.mifos.framework.struts.tags;
 
 import junit.framework.TestCase;
 import org.dom4j.DocumentException;
+import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import javax.servlet.jsp.JspException;
 import java.util.Locale;
+import org.mifos.framework.util.LocalizationConverter;
 
 public class DateTagTest extends TestCase {
 	
@@ -35,8 +37,11 @@ public class DateTagTest extends TestCase {
 	}
 	
 	public void testGetFormat() throws Exception {
+		Locale savedLocale = Localization.getInstance().getMainLocale();
+		LocalizationConverter.getInstance().setCurrentLocale(Locale.US);
         DateTag dateTag = new DateTag();
         assertEquals("M/d/yy", dateTag.getUserFormat(TestUtils.makeUser().getPreferredLocale()));
+        LocalizationConverter.getInstance().setCurrentLocale(savedLocale);
 	}
 	
 	public void testFromPersonnel() throws Exception {

@@ -47,7 +47,7 @@ public class TableTagParserTest extends TestCase {
 				assertEquals("Name", columns[i].getValue());
 				assertEquals("method", columns[i].getValueType());
 				StringBuilder builder2 = new StringBuilder();
-				Locale locale = new Locale("en", "US");
+				Locale locale = new Locale("en", "GB");
 				OfficeView officeView = new OfficeView(Short.valueOf("1"),
 						"abcd", Short.valueOf("1"), "branch", Integer
 								.valueOf("1"));
@@ -105,7 +105,7 @@ public class TableTagParserTest extends TestCase {
 		StringBuilder stringBuilder = new StringBuilder();
 		List list =  new ArrayList();
 		list.add(createOfficeView());
-		Locale locale = new Locale("en", "US");
+		Locale locale = new Locale("en", "GB");
 		row.generateTableRows(stringBuilder,list,locale,locale,locale);
 		assertEquals("<tr><td class=\"drawtablerowbold\"   align=\"Down\" > </td></tr>",stringBuilder.toString());
 		

@@ -8,6 +8,8 @@ import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
 import org.mifos.framework.exceptions.InvalidDateException;
+import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.config.Localization;
 
 public class DateUtilsTest extends TestCase {
 	
@@ -70,11 +72,21 @@ public class DateUtilsTest extends TestCase {
 	// test that getLocaleDate is parsing various localized date strings into 
 	// java.sql.Date objects in our localization setting
 	public void testGetLocaleDate() throws Exception {
+		Locale savedLocale = Localization.getInstance().getMainLocale();
 		long expectedDate = new DateMidnight(2005, 03, 4).getMillis();
+		LocalizationConverter.getInstance().setCurrentLocale(Locale.GERMANY);
+		DateUtils.refreshInternalLocale();
 		assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.GERMANY, "04.03.2005").getTime());
+		LocalizationConverter.getInstance().setCurrentLocale(Locale.US);
+		DateUtils.refreshInternalLocale();
 		assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.US, "03/04/2005").getTime());
+		LocalizationConverter.getInstance().setCurrentLocale(Locale.UK);
+		DateUtils.refreshInternalLocale();
 		assertEquals(expectedDate, DateUtils.getLocaleDate(Locale.UK, "04/03/2005").getTime());
 		checkException(Locale.US, "04.03.2005");
+		DateUtils.refreshInternalLocale();
+		LocalizationConverter.getInstance().setCurrentLocale(savedLocale);
+		DateUtils.refreshInternalLocale();
 	}
 	
 	public void testGetDateFromBrowser() throws Exception {

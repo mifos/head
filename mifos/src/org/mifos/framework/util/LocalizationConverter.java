@@ -28,6 +28,9 @@ public class LocalizationConverter {
 	// the decimalFormatLocale is introduced because the double format is not supported for
 	// 1.1 realease yet and the English format is still used no matter what the configured locale is
 	private static Locale decimalFormatLocale;
+	//	the dateLocale is introduced because the date format is not supported for
+	// 1.1 realease yet and the English format is still used no matter what the configured locale is
+	private static Locale dateLocale;
 	
 	
 	
@@ -46,12 +49,18 @@ public class LocalizationConverter {
 		digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
 		digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
 		// for this 1.1. release this will be defaulted to the English locale and
-		// later on this will be the configured locale
+		// later on this will be the configured locale so these lines will be removed
 		decimalFormatLocale = new Locale("en", "GB");
 		loadDecimalFormats();
+		dateLocale = new Locale("en", "GB");
 		dateSeparator = getDateSeparator();
 	}
 	
+	// this method will be removed when date is localized
+	public Locale getDateLocale()
+	{
+		return dateLocale;
+	}
 	
 	// for testing purpose only, and for testing the decimalFormatLocale will be the configured locale
 	public void setCurrentLocale(Locale locale)
@@ -59,6 +68,7 @@ public class LocalizationConverter {
 		currentLocale = locale;
 		decimalFormatLocale = locale;
 		loadDecimalFormats();
+		dateLocale = locale;
 		dateSeparator = getDateSeparator();
 	}
 	
@@ -306,13 +316,15 @@ public class LocalizationConverter {
 		if (currentLocale == null)
 			throw new RuntimeException("The current locale is not set for LocalizationConverter.");
 		Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-		boolean find = supportThisLocale(locales, currentLocale);
+		// decimalFormatLocale is the English locale used temporarily because 1.1 release doesn't
+		// support date/time/double localization yet
+		boolean find = supportThisLocale(locales, dateLocale);
 		if (find == false)
 			throw new RuntimeException("DateFormat class doesn't support this country code: " +
-					currentLocale.getCountry() + " and language code: " + currentLocale.getLanguage());
+					dateLocale.getCountry() + " and language code: " + dateLocale.getLanguage());
 		
 		String separator = "";
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
 		String now = format.format(new java.util.Date());
 		char chArray[] = now.toCharArray();
 		for (int i = 0; i < chArray.length; i++) 
@@ -327,18 +339,21 @@ public class LocalizationConverter {
 		
 	}
 	
+	
 	public DateFormat getDateFormat()
 	{
 		if (currentLocale == null)
 			throw new RuntimeException("The current locale is not set for LocalizationConverter.");
+		// dateLocale is the English locale used temporarily because 1.1 release doesn't
+		// support date/time/double localization yet
 		Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-		boolean find = supportThisLocale(locales, currentLocale);
+		boolean find = supportThisLocale(locales, dateLocale);
 		if (find == false)
 			throw new RuntimeException("DateFormat class doesn't support this country code: " +
-					currentLocale.getCountry() + " and language code: " + currentLocale.getLanguage());
+					dateLocale.getCountry() + " and language code: " + dateLocale.getLanguage());
 
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
-		DateFormat simpleFormat = SimpleDateFormat.getDateInstance(DateFormat.SHORT, currentLocale);
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
+		//DateFormat simpleFormat = SimpleDateFormat.getDateInstance(DateFormat.SHORT, decimalFormatLocale);
 		return format;
 		
 	}

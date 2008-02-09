@@ -138,13 +138,10 @@ public class DateTag extends BaseInputTag {
 		if (userContext != null) {
 			// TODO - get from ApplicationConfiguration
 			String currentDateValue = returnValue();
-            Locale locale = userContext.getPreferredLocale();
-            if (null == locale) {
-                //locale = userContext.getMfiLocale();
-            	locale = userContext.getCurrentLocale();
-            }
+            // this line will be put back when date is localized Locale locale = userContext.getPreferredLocale();
+			// the following line will be removed when date is localized
+			Locale locale = LocalizationConverter.getInstance().getDateLocale();
             String output = render(locale, currentDateValue);
-			
 			TagUtils.getInstance().write(pageContext, output);
 		}
 
@@ -232,6 +229,8 @@ public class DateTag extends BaseInputTag {
 	}
 
 	String getUserFormat(Locale locale) {
+		// the following line will be removed when date is localized
+		locale = LocalizationConverter.getInstance().getDateLocale();
 		DateFormat df = DateFormat
 				.getDateInstance(DateFormat.SHORT, locale);
 		return ((SimpleDateFormat) df).toPattern();

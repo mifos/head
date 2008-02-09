@@ -64,10 +64,17 @@ public class DateUtils {
 	}
 
 	private final static String dbFormat = "yyyy-MM-dd";
-	private final static Locale internalLocale = Localization.getInstance()
-			.getMainLocale();
+	//	this configured locale is not used for 1.1 but later
+	//  private final static Locale internalLocale = Localization.getInstance()
+	//		.getMainLocale();
+	private  static Locale internalLocale = LocalizationConverter.getInstance().getDateLocale();
 	private static String dateSeparator = LocalizationConverter.getInstance()
 			.getDateSeparatorForCurrentLocale();
+	
+	public static void refreshInternalLocale()
+	{
+		internalLocale = LocalizationConverter.getInstance().getDateLocale();
+	}
 
 	public static String convertUserToDbFmt(String userDate, String userPattern) {
 		try {
@@ -99,12 +106,16 @@ public class DateUtils {
 	}
 
 	public static String getUserLocaleDate(Locale locale, Date databaseDate) {
+		// the following line is for 1.1 release and will be removed when date is localized
+		locale = internalLocale;
 		SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
 				.getDateInstance(DateFormat.SHORT, locale);
 		return shortFormat.format(databaseDate);
 	}
 
 	public static String getUserLocaleDate(Locale locale, String databaseDate) {
+		//	the following line is for 1.1 release and will be removed when date is localized
+		locale = internalLocale;
 		if (locale != null && databaseDate != null && !databaseDate.equals("")) {
 			try {
 				SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
@@ -211,6 +222,8 @@ public class DateUtils {
 
 	// should be removed and the setCurrentDate() should be used
 	public static String getCurrentDate(Locale locale) {
+		// the following line is for 1.1 release and will be removed when date is localized
+		locale = internalLocale;
 		Calendar currentCalendar = new GregorianCalendar();
 		int year = currentCalendar.get(Calendar.YEAR);
 		int month = currentCalendar.get(Calendar.MONTH);
@@ -359,6 +372,8 @@ public class DateUtils {
 	}
 
 	public static java.sql.Date getLocaleDate(Locale locale, String value) {
+		//	the following line is for 1.1 release and will be removed when date is localized
+		locale = internalLocale;
 		if (locale != null && value != null && !value.equals("")) {
 			try {
 				SimpleDateFormat shortFormat = (SimpleDateFormat) DateFormat
@@ -480,6 +495,8 @@ public class DateUtils {
 
 	public static String getDBtoUserFormatString(java.util.Date dbDate,
 			Locale userLocale) {
+		//	the following line is for 1.1 release and will be removed when date is localized
+		userLocale = internalLocale;
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat
 				.getDateInstance(DateFormat.MEDIUM, userLocale);
 		return format.format(dbDate);
@@ -487,6 +504,8 @@ public class DateUtils {
 
 	public static String getDBtoUserFormatShortString(java.util.Date dbDate,
 			Locale userLocale) {
+		//		 the following line is for 1.1 release and will be removed when date is localized
+		userLocale = internalLocale;
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat
 				.getDateInstance(DateFormat.SHORT, userLocale);
 		return format.format(dbDate);

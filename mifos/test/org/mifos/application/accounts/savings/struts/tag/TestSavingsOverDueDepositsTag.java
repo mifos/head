@@ -34,7 +34,7 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 	}	
 	public void testBuildDateUI(){
 		Date date = new Date(System.currentTimeMillis());
-		assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en","US"),date).toString().contains(DateUtils.getUserLocaleDate(new Locale("en","US"), date
+		assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en","GB"),date).toString().contains(DateUtils.getUserLocaleDate(new Locale("en","GB"), date
 		.toString())));
 		
 	}
@@ -46,8 +46,8 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 	public void testBuildDepositDueUIRow(){
 		Date date = new Date(System.currentTimeMillis());
 		
-		String outString =new SavingsOverDueDepositsTag().buildDepositDueUIRow(new Locale("en","US"),date,new Money("1000")).toString();
-		assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en","US"), date
+		String outString =new SavingsOverDueDepositsTag().buildDepositDueUIRow(new Locale("en","GB"),date,new Money("1000")).toString();
+		assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en","GB"), date
 		.toString())));
 		
 		assertTrue(outString.contains("1000"));
@@ -55,7 +55,7 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 	
 	public void testbuildUI()throws Exception{
 		createInitialObjects() ;
-		assertNotNull( new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(),new Locale("en","US")));
+		assertNotNull( new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(),new Locale("en","GB")));
 	}
 
 	private void createInitialObjects() throws Exception{
