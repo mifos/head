@@ -38,35 +38,107 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.framework.spring.SpringUtil;
 
 /**
- * Resolves general ledger accounts from financial actions. Currently just
- * delegates to {@link DynamicFinancialRules} and will be replaced by the
- * functionality in that class soon. (-Adam 06-FEB-2008)
+ * A Spring bean useful in resolving financial actions with their associated GL
+ * (general ledger) codes. GL codes are unique to GL accounts.
+ * <p>
+ * Example use case: principal is added to a new loan (a credit) and GL accounts
+ * appropriate for this action must be fetched. <a
+ * href="http://www.mifos.org/knowledge/functional-specs/accounting-in-mifos">More
+ * use cases</a>.
+ * <p>
+ * Spring must be initialized prior to using this class. This is currently
+ * performed via {@link SpringUtil#initializeSpring()}.
  */
 public class FinancialRules {
-	// TODO: inject dynamic financial rules into this class
-	// * add members, getters/setters
-	// * modify applicationContext.xml to refer to this
+	private static AccountPersistence accountPersistence = new AccountPersistence();
+	private Map<FinancialActionConstants, Short> actionToDebitAccount = new HashMap<FinancialActionConstants, Short>();
+	private Map<FinancialActionConstants, Short> actionToCreditAccount = new HashMap<FinancialActionConstants, Short>();
 
-	public static short getCategoryAssociatedToAction(short financialActionId,
+	private static FinancialRules financialRules = new FinancialRules();
+
+	public static final FinancialRules getInstance() {
+		return financialRules;
+	}
+
+	public short getCategoryAssociatedToAction(short financialActionId,
 			FinancialConstants type) throws FinancialException {
 		FinancialActionConstants financialAction = FinancialActionConstants
 				.getFinancialAction(financialActionId);
-		// TODO: after dependency injection is complete, it should not be
-		// necessary to refer to the ApplicationContext
-		DynamicFinancialRules dfr = (DynamicFinancialRules) SpringUtil
-				.getAppContext().getBean("dynamicFinancialRules",
-						DynamicFinancialRules.class);
-		return dfr.getCategoryAssociatedToAction(financialAction, type);
+		return getCategoryAssociatedToAction(financialAction, type);
 	}
 
-	public static short getCategoryAssociatedToAction(
+	public short getCategoryAssociatedToAction(
 			FinancialActionConstants financialAction, FinancialConstants type)
 			throws FinancialException {
-		return getCategoryAssociatedToAction(financialAction.getValue(), type);
+		if (type.equals(FinancialConstants.DEBIT)) {
+			return actionToDebitAccount.get(financialAction);
+		}
+		else if (type.equals(FinancialConstants.CREDIT)) {
+			return actionToCreditAccount.get(financialAction);
+		}
+		else {
+			throw new IllegalArgumentException(
+					"Unrecognized FinancialConstants type: " + type
+							+ ". Only DEBIT and CREDIT are allowed.");
+		}
 	}
 
+	/**
+	 * Spring looks for this mutator while initializing the
+	 * <code>actionToGLCodeDebit</code> property. Note that this property does
+	 * <em>not</em> correspond to an attribute on this bean. The actual member
+	 * variable mutated by this method is {@link #actionToDebitAccount}.
+	 */
+	public void setActionToGLCodeDebit(
+			HashMap<FinancialActionConstants, String> actionToGLCodeDebit) {
+		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeDebit
+				.entrySet()) {
+			actionToDebitAccount.put(entry.getKey(), accountPersistence
+					.getAccountIdFromGlCodeDuringInitialization(entry
+							.getValue()));
+		}
+	}
+
+	/**
+	 * Spring looks for this mutator while initializing the
+	 * <code>actionToGLCodeCredit</code> property. Note that this property
+	 * does <em>not</em> correspond to an attribute on this bean. The actual
+	 * member variable mutated by this method is {@link #actionToCreditAccount}.
+	 */
+	public void setActionToGLCodeCredit(
+			HashMap<FinancialActionConstants, String> actionToGLCodeCredit) {
+		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeCredit
+				.entrySet()) {
+			actionToCreditAccount.put(entry.getKey(), accountPersistence
+					.getAccountIdFromGlCodeDuringInitialization(entry
+							.getValue()));
+		}
+	}
+
+	// TODO: these methods will replace CategoryConstants
+	// (or does COABO#getCOAHead() already get top-level categories?)
+	public short getAssetsCategory() {
+		throw new RuntimeException("not implemented");
+	}
+
+	public short getLiabilitiesCategory() {
+		throw new RuntimeException("not implemented");
+	}
+
+	public short getIncomeCategory() {
+		throw new RuntimeException("not implemented");
+	}
+
+	public short getExpensesCategory() {
+		throw new RuntimeException("not implemented");
+	}
 }

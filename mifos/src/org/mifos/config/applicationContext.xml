@@ -30,8 +30,9 @@
 
     <!-- Keys must be constants from FinancialActionConstants or application
          will throw an exception during initialization --> 
-    <bean id = "dynamicFinancialRules"
-        class="org.mifos.application.accounts.financial.util.helpers.DynamicFinancialRules">        
+    <bean id = "financialRules"
+        class="org.mifos.application.accounts.financial.util.helpers.FinancialRules"
+        abstract="false" factory-method="getInstance">        
         <property name="actionToGLCodeDebit">
             <map>
                 <entry key="PRINCIPALPOSTING" value="11201"/>

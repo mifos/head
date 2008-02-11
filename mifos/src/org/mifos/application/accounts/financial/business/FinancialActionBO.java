@@ -50,14 +50,16 @@ public class FinancialActionBO extends MasterDataEntity {
 
 
 	public Set<COABO> getApplicableDebitCharts() throws FinancialException {
-		COABO chart = ChartOfAccountsCache.get(FinancialRules
-				.getCategoryAssociatedToAction(getId(), FinancialConstants.DEBIT));
+		COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance()
+				.getCategoryAssociatedToAction(getId(),
+						FinancialConstants.DEBIT));
 		return chart.getAssociatedChartOfAccounts();
 	}
 
 	public Set<COABO> getApplicableCreditCharts() throws FinancialException {
-		COABO chart = ChartOfAccountsCache.get(FinancialRules
-				.getCategoryAssociatedToAction(getId(), FinancialConstants.CREDIT));
+		COABO chart = ChartOfAccountsCache.get(FinancialRules.getInstance()
+				.getCategoryAssociatedToAction(getId(),
+						FinancialConstants.CREDIT));
 		return chart.getAssociatedChartOfAccounts();
 	}
 

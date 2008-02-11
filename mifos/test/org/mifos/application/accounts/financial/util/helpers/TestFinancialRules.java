@@ -39,13 +39,13 @@ public class TestFinancialRules {
 	public void testSupportedActions() throws Exception {
 		// TODO: use assertTrue() with String as first arg with a meaningful
 		// description
-		assertTrue(FinancialRules.getCategoryAssociatedToAction(
+		assertTrue(FinancialRules.getInstance().getCategoryAssociatedToAction(
 				FinancialActionConstants.PRINCIPALPOSTING,
 				FinancialConstants.DEBIT) > 0);
 		
 		// TODO: use assertTrue() with String as first arg with a meaningful
 		// description
-		assertTrue(FinancialRules.getCategoryAssociatedToAction(
+		assertTrue(FinancialRules.getInstance().getCategoryAssociatedToAction(
 				FinancialActionConstants.PRINCIPALPOSTING,
 				FinancialConstants.CREDIT) > 0);
 	}
@@ -55,7 +55,7 @@ public class TestFinancialRules {
 	 */
 	@Test(expected = RuntimeException.class)
 	public void testUnsupportedAction01() throws Exception {
-		FinancialRules.getCategoryAssociatedToAction((short) -1,
+		FinancialRules.getInstance().getCategoryAssociatedToAction((short) -1,
 				FinancialConstants.DEBIT);
 	}
 
@@ -64,7 +64,7 @@ public class TestFinancialRules {
 	 */
 	@Test(expected = RuntimeException.class)
 	public void testUnsupportedAction02() throws Exception {
-		FinancialRules.getCategoryAssociatedToAction(
+		FinancialRules.getInstance().getCategoryAssociatedToAction(
 				FinancialActionConstants.REVERSAL_ADJUSTMENT,
 				FinancialConstants.CREDIT);
 	}
@@ -74,7 +74,7 @@ public class TestFinancialRules {
 	 */
 	@Test(expected = RuntimeException.class)
 	public void testUnsupportedAction03() throws Exception {
-		FinancialRules.getCategoryAssociatedToAction(
+		FinancialRules.getInstance().getCategoryAssociatedToAction(
 				FinancialActionConstants.REVERSAL_ADJUSTMENT,
 				FinancialConstants.DEBIT);
 	}

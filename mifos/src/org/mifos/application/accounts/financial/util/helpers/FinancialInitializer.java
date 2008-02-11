@@ -76,6 +76,8 @@ public class FinancialInitializer {
 	public static void initializeCOA(Session session) throws FinancialException {
 		if (ChartOfAccountsCache.isInitialized()) return;
 		
+		// TODO: read in XML configuration for CoA
+		
 		Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_COA);
 		List<COABO> coaList = query.list();
 		for (COABO coa: coaList){
@@ -87,7 +89,7 @@ public class FinancialInitializer {
 			throws FinancialException {
 		try {
 			Query queryFinancialAction = session
-					.getNamedQuery("GETALLFINANCIALACTION");
+					.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
 			List<FinancialActionBO> listFinancialAction = queryFinancialAction
 					.list();
 			Iterator<FinancialActionBO> iterFinancialAction = listFinancialAction

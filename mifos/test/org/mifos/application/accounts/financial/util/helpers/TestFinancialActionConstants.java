@@ -25,7 +25,7 @@ public class TestFinancialActionConstants {
 	@Test
 	public void testGetFinancialAction() {
 		Query queryFinancialAction = HibernateUtil.getSessionTL()
-			.getNamedQuery("GETALLFINANCIALACTION");
+			.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
 		// NOTE: the following 2 database entries are not currently represented
 		// in the enum.  Should they be added to the enum or removed from the db?
 		//   FIN_ACTION_ID = 15 (Interest_Posting)
