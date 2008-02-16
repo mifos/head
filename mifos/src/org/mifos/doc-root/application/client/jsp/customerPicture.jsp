@@ -48,7 +48,7 @@
 <html>
 	<head>
 		<title>Mifos </title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link href="pages/framework/css/cssstyle.css" rel="stylesheet" type="text/css">
 		<script>
 			function resizeWindow(){
