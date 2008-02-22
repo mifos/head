@@ -45,7 +45,11 @@
 	<classpathentry kind="lib" path="lib/easymock.jar"/>
 	<classpathentry kind="lib" path="lib/easymockclassextension.jar"/>
 	<classpathentry kind="lib" path="lib/itext-1.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/junit-4.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.3.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://jsourcery.com/api/sourceforge/junit/4.3.1/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/spring-2.0.5.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://static.springframework.org/spring/docs/2.0.x/api/"/>
