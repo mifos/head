@@ -56,7 +56,7 @@ public class LoanPersistence extends Persistence {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		queryParameters.put("globalAccountNumber", accountGlobalNum);
 		Object queryResult = execUniqueResultNamedQuery(
-				NamedQueryConstants.FIND_ACCOUNT_BY_SYSTEM_ID, queryParameters);
+				NamedQueryConstants.FIND_LOAN_ACCOUNT_BY_SYSTEM_ID, queryParameters);
 		return queryResult == null ? null : (LoanBO) queryResult;
 	}
 

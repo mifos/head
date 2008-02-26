@@ -657,7 +657,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 								<tr>
 									<td width="70%" class="paddingL10"><span
 										class="fontnormal8pt"> <a
-										href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
+										href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=loan">
 									<c:out value="${surveyInstance.survey.name}" /> </a> </span></td>
 									<td width="30%" align="left" class="paddingL10"><span
 										class="fontnormal8pt"> <c:out
@@ -668,7 +668,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<tr>
 								<td colspan="2" align="right" class="paddingleft05"><span
 									class="fontnormal8pt"> <a
-									href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=client">
+									href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=loan">
 								<mifos:mifoslabel name="Surveys.attachasurvey"
 									bundle="SurveysUIResources" /> </a> <br>
 								<a href="surveysAction.do?method=mainpage"> <mifos:mifoslabel

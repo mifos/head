@@ -1330,22 +1330,24 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	public void updateLoanOfferingSameForAllLoan(LoanOfferingBO loanOffering) {
 		Iterator<LoanAmountSameForAllLoanBO> itr = loanOffering
 				.getLoanAmountSameForAllLoan().iterator();
-		LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-		Iterator<NoOfInstallSameForAllLoanBO> itrNoOfInstallSameForAllLoan = loanOffering
-				.getNoOfInstallSameForAllLoan().iterator();
-		NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = itrNoOfInstallSameForAllLoan
-				.next();
-		loanOffering.setMaxLoanAmount(new Money(loanAmountSameForAllLoanBO
-				.getMaxLoanAmount().toString()));
-		loanOffering.setMinLoanAmount(new Money(loanAmountSameForAllLoanBO
-				.getMinLoanAmount().toString()));
-		loanOffering.setDefaultLoanAmount(new Money(loanAmountSameForAllLoanBO
-				.getDefaultLoanAmount().toString()));
-		loanOffering.setMinNoInstallments(noOfInstallSameForAllLoanBO
-				.getMinNoOfInstall());
-		loanOffering.setMaxNoInstallments(noOfInstallSameForAllLoanBO
-				.getMaxNoOfInstall());
-		loanOffering.setDefNoInstallments(noOfInstallSameForAllLoanBO
-				.getDefaultNoOfInstall());
+		if (itr.hasNext()) {
+			LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
+			Iterator<NoOfInstallSameForAllLoanBO> itrNoOfInstallSameForAllLoan = loanOffering
+					.getNoOfInstallSameForAllLoan().iterator();
+			NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = itrNoOfInstallSameForAllLoan
+					.next();
+			loanOffering.setMaxLoanAmount(new Money(loanAmountSameForAllLoanBO
+					.getMaxLoanAmount().toString()));
+			loanOffering.setMinLoanAmount(new Money(loanAmountSameForAllLoanBO
+					.getMinLoanAmount().toString()));
+			loanOffering.setDefaultLoanAmount(new Money(loanAmountSameForAllLoanBO
+					.getDefaultLoanAmount().toString()));
+			loanOffering.setMinNoInstallments(noOfInstallSameForAllLoanBO
+					.getMinNoOfInstall());
+			loanOffering.setMaxNoInstallments(noOfInstallSameForAllLoanBO
+					.getMaxNoOfInstall());
+			loanOffering.setDefNoInstallments(noOfInstallSameForAllLoanBO
+					.getDefaultNoOfInstall());
+		}
 	}
 }

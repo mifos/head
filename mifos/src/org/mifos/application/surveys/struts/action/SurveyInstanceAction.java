@@ -743,7 +743,7 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		else if (type == SurveyType.LOAN) {
-			return "loanAccountAction.do?method=get&globalCustNum=" + globalNum;
+			return "loanAccountAction.do?method=get&globalAccountNum=" + globalNum;
 		}
 		else {
 			throw new NotImplementedException();

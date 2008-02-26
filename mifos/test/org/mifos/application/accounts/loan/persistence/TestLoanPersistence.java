@@ -215,7 +215,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 	
 	public void testGetLoanOffering() throws Exception {
-		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
+		LoanOfferingBO loanOffering = TestObjectFactory.createCompleteLoanOfferingObject();
 		LoanOfferingBO loanOfferingBO = loanPersistence.getLoanOffering(
 				loanOffering.getPrdOfferingId(),
 				TestObjectFactory.TEST_LOCALE);
@@ -281,37 +281,6 @@ public class TestLoanPersistence extends MifosTestCase {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
 
-	}
-	
-	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
-		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				ApplicableTo.GROUPS);
-		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		ProductCategoryBO productCategory = TestObjectFactory
-				.getLoanPrdCategory();
-		InterestTypesEntity interestTypes = new InterestTypesEntity(
-				InterestType.FLAT);
-		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceType.GRACEONALLREPAYMENTS);
-		List<FeeBO> fees = new ArrayList<FeeBO>();
-		List<FundBO> funds = new ArrayList<FundBO>();
-		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class,
-				Short.valueOf("2"));
-		funds.add(fundBO);
-		LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory
-				.getContext(), "Loan Offering", "LOAP", productCategory,
-				prdApplicableMaster, new Date(System.currentTimeMillis()), null, null, gracePeriodType,
-				(short) 2, interestTypes, new Money("1000"), new Money("3000"),
-				new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-				(short) 17, false, false, false, funds, fees, frequency,
-				principalglCodeEntity, intglCodeEntity);
-		loanOfferingBO.save();
-		return loanOfferingBO;
 	}
 	
 	private LoanBO getBadAccount() {

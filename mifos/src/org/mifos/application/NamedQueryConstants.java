@@ -387,6 +387,7 @@ public interface NamedQueryConstants {
 	//accounts
 	public String GET_MAX_ACCOUNT_ID="accounts.getMaxAccountId";
 	public String FIND_ACCOUNT_BY_SYSTEM_ID="accounts.findBySystemId";
+	public String FIND_LOAN_ACCOUNT_BY_SYSTEM_ID="accounts.findLoanBySystemId";
 	public String FIND_INDIVIDUAL_LOANS="accounts.findIndividualLoans";
 	public String RETRIEVE_LAST_TRXN="accounts.retrieveLastTrxn";
 	public String RETRIEVE_FIRST_TRXN="accounts.retrieveFirstTrxn";

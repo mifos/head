@@ -741,6 +741,28 @@ public class TestObjectFactory {
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}
+	
+	public static LoanOfferingBO createCompleteLoanOfferingObject() throws Exception {
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
+		MeetingBO frequency = TestObjectFactory.createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		ProductCategoryBO productCategory = getLoanPrdCategory();
+		InterestTypesEntity interestTypes = new InterestTypesEntity(InterestType.FLAT);
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		List<FundBO> funds = new ArrayList<FundBO>();
+		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class, Short.valueOf("2"));
+		funds.add(fundBO);
+		LoanOfferingBO loanOfferingBO = new LoanOfferingBO(getContext(), "Loan Offering", "LOAP", productCategory,
+				prdApplicableMaster, DateUtils.getCurrentDateWithoutTimeStamp(), null, null, gracePeriodType,
+				(short) 2, interestTypes, new Money("1000"), new Money("3000"),
+				new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+				(short) 17, false, false, false, funds, fees, frequency,
+				principalglCodeEntity, intglCodeEntity);
+		loanOfferingBO.save();
+		return loanOfferingBO;
+	}
 
 	public static ProductCategoryBO getLoanPrdCategory() {
 		return (ProductCategoryBO) addObject(testObjectPersistence
