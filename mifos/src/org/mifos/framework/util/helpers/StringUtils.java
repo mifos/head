@@ -43,6 +43,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang.WordUtils;
+
 /**
  * This class has got utility functions for string which would be required
  * through out the project.
@@ -109,5 +111,15 @@ public class StringUtils {
 		else
 			return searchStr;
 
+	}
+
+	/*
+	 * Create a camelcase token from a string containing multiple
+	 * whitespace separated tokens. 
+	 * 
+	 * For example "aBc dEF_gh-iJ  k.l" becomes "AbcDef_ghIjKL"
+	 */
+	public static String camelCase(String string) {
+		return org.apache.commons.lang.StringUtils.deleteWhitespace(WordUtils.capitalize(string.toLowerCase().replaceAll("\\W"," ")));
 	}
 }

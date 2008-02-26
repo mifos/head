@@ -10,8 +10,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueList;
@@ -25,12 +25,13 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.config.Localization;
+import org.mifos.framework.util.helpers.StringUtils;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -68,12 +69,13 @@ public class MasterPersistence extends Persistence {
 	}
 
 	private List<CustomValueListElement> lookUpValue(String entityName,
-			Short localeId, Session session) {
+			Short localeId, Session session) throws PersistenceException {
 		Query queryEntity = session
 				.getNamedQuery("masterdata.entitylookupvalue");
 		queryEntity.setString("entityType", entityName);
 		queryEntity.setShort("localeId", localeId);
 		List<CustomValueListElement> entityList = queryEntity.list();
+		
 		return entityList;
 	}
 
@@ -116,7 +118,7 @@ public class MasterPersistence extends Persistence {
 				.createQuery("select new org.mifos.application.master.business.CustomValueListElement("
 						+ "mainTable."
 						+ column
-						+ " ,lookup.lookUpId,lookupvalue.lookUpValue) "
+						+ " ,lookup.lookUpId,lookupvalue.lookUpValue,lookup.lookUpName) "
 						+ "from org.mifos.application.master.business.LookUpValueEntity lookup,"
 						+ "org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue,"
 						+ entityClass
@@ -133,20 +135,6 @@ public class MasterPersistence extends Persistence {
 		queryEntity.setShort(1, (short)1);
 		List<CustomValueListElement> entityList = queryEntity.list();
 		
-		/*
-		 * Now go through the list and if there is no text value for the element
-		 * then use the default localized value.
-		 */
-		
-		for (CustomValueListElement valueListElement : entityList) {
-			String lookupValue = valueListElement.getLookUpValue();
-			if (lookupValue == null || 
-				(lookupValue != null && lookupValue.length() == 0)) {
-				String key = entityName + "." + valueListElement.getLookUpId();
-				String localizedValue = MessageLookup.getInstance().lookup(key);
-				valueListElement.setLookupValue(localizedValue);
-			}
-		}
 		return entityList;
 	}
 
@@ -167,19 +155,6 @@ public class MasterPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
-
-	/*public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
-	 Short transactionTypeId) throws PersistenceException {
-	 HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-	 queryParameters.put("TRANSACTION_ID", transactionTypeId);
-	 List<PaymentTypeEntity> paymentTypes = ((TransactionTypeEntity) executeNamedQuery(
-	 NamedQueryConstants.GET_PAYMENT_TYPES, queryParameters).get(0))
-	 .getApplicablePaymentTypes();
-	 for (PaymentTypeEntity paymentType : paymentTypes) {
-	 paymentType.setLocaleId(localeId);
-	 }
-	 return paymentTypes;
-	 }*/
 
 	public List<MasterDataEntity> retrieveMasterEntities(Class clazz,
 			Short localeId) throws PersistenceException {
@@ -248,31 +223,20 @@ public class MasterPersistence extends Persistence {
 		List<ValueListElement> elements = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
 				queryParameters);
-		for (ValueListElement valueListElement : elements) {
-			String name = valueListElement.getName();
-			if (name == null || 
-				(name != null && name.length() == 0)) {
-				String key = entityName + "." + valueListElement.getValueKey();
-				String localizedValue = MessageLookup.getInstance().lookup(key);
-				valueListElement.setName(localizedValue);
-			}
-		}
+
 		return elements;
 
 	}
 
+	/*
+	 * @param entityId - the primary key of a LookUpValueEntity
+	 * @param localeId - a locale primary key which we now ignore
+	 */
 	public String retrieveMasterEntities(Integer entityId, Short localeId)
 			throws PersistenceException {
-		String masterEntity = null;
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("lookUpId", entityId);
-		queryParameters.put("localeId", localeId);
-		List queryResult = executeNamedQuery(
-				NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME,
-				queryParameters);
-		if ((queryResult != null) && (queryResult.size() > 0))
-			masterEntity = (String) queryResult.get(0);
-		return masterEntity;
+		
+		LookUpValueEntity lookupValue = (LookUpValueEntity)getPersistentObject(LookUpValueEntity.class, entityId);
+		return MessageLookup.getInstance().lookup(lookupValue);
 	}
 
 	public List<MasterDataEntity> retrieveMasterDataEntity(String classPath)
@@ -297,7 +261,7 @@ public class MasterPersistence extends Persistence {
 	 * Update the String value of a LookUpValueLocaleEntity.
 	 * @param id - the database id of the LookUpValueLocaleEntity object representing a ValueListElement
 	 */
-	public void updateValueListElementForLocale(Integer lookupValueEntityId,
+	public LookUpValueEntity updateValueListElementForLocale(Integer lookupValueEntityId,
 			Short localeId, String newValue) throws PersistenceException {
 		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) getPersistentObject(
 				LookUpValueEntity.class, lookupValueEntityId);
@@ -311,20 +275,29 @@ public class MasterPersistence extends Persistence {
 				break;
 			}
 		}
+		
+		return lookupValueEntity;
 	}
 
+	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
+			String newElementText, short localeId) throws PersistenceException {
+		
+		String lookUpName = StringUtils.camelCase(newElementText + "." + System.currentTimeMillis());
+		return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName, localeId);
+	}
 	/**
 	 * Create a new list element for a single locale.
 	 * 
 	 * It would be nicer for this to operate on objects rather than
 	 * ids, but it is a first step that works.
 	 */
-	public void addValueListElementForLocale(Short lookupEnityId,
-			String newElementText, short localeId) throws PersistenceException {
+	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
+			String newElementText, String lookUpName, short localeId) throws PersistenceException {
 		MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) getPersistentObject(
 				MifosLookUpEntity.class, lookupEnityId);
 		LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
 		lookUpValueEntity.setLookUpEntity(lookUpEntity);
+		lookUpValueEntity.setLookUpName(lookUpName);
 		createOrUpdate(lookUpValueEntity);
 
 		LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
@@ -332,6 +305,10 @@ public class MasterPersistence extends Persistence {
 		lookUpValueLocaleEntity.setLookUpValue(newElementText);
 		lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
 		createOrUpdate(lookUpValueLocaleEntity);
+		
+		MifosConfiguration.getInstance().updateKey(lookUpValueEntity, newElementText);
+		
+		return lookUpValueEntity;
 	}
 
 	/**

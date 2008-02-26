@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -49,16 +50,9 @@ public class AuditConfigurationPersistence extends Persistence {
 			List<PrdStatusEntity> productStates = executeNamedQuery(
 					NamedQueryConstants.ALL_PRD_STATES, null);
 			for (PrdStatusEntity prdStatusEntity : productStates) {
-				Set<LookUpValueLocaleEntity> lookUpValueLocaleSet = 
-					prdStatusEntity.getPrdState()
-					    .getLookUpValue().getLookUpValueLocales();
-				for (LookUpValueLocaleEntity lookup : lookUpValueLocaleSet) {
-					if (lookup.getLocaleId().equals(localeId)) {
-						valueMap.put(
-							prdStatusEntity.getOfferingStatusId().toString(), 
-							lookup.getLookUpValue());
-					}
-				}
+				valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), 
+					MessageLookup.getInstance().lookup(
+						prdStatusEntity.getPrdState().getLookUpValue()));
 			}
 		} catch (HibernateException e) {
 			throw new PersistenceException(e);

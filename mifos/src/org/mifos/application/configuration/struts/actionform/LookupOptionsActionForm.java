@@ -385,7 +385,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 
 		for (CustomValueListElement element : list) 
 		{
-			if (element.getLookUpValue().equals(this.lookupValue))
+			if (element.getLookUpValue() != null && element.getLookUpValue().equals(this.lookupValue))
 			{
 				addError(errors, entity, "errors.duplicatevalue", new String[]{null});
 				return;

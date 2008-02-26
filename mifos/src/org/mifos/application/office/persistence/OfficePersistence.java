@@ -185,7 +185,6 @@ public class OfficePersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("LEVEL_ID", level.getValue());
 		queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
-		queryParameters.put("LOCALE_ID", localeId);
 		List<OfficeView> queryResult = executeNamedQuery(
 				NamedQueryConstants.GETACTIVEPARENTS, queryParameters);
 			return queryResult;
@@ -195,7 +194,6 @@ public class OfficePersistence extends Persistence {
 	public List<OfficeView> getActiveLevels(Short localeId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("LOCALE_ID", localeId);
 		List<OfficeView> queryResult = executeNamedQuery(
 				NamedQueryConstants.GETACTIVELEVELS, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
@@ -208,7 +206,6 @@ public class OfficePersistence extends Persistence {
 	public List<OfficeView> getStatusList(Short localeId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("LOCALE_ID", localeId);
 		List<OfficeView> queryResult = executeNamedQuery(
 				NamedQueryConstants.GETOFFICESTATUS, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {

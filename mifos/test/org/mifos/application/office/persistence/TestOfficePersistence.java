@@ -1,7 +1,10 @@
 package org.mifos.application.office.persistence;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeTemplate;
 import org.mifos.application.office.business.OfficeTemplateImpl;
@@ -121,35 +124,44 @@ public class TestOfficePersistence extends MifosTestCase {
 		assertEquals(2, parents.size());
 		for (OfficeView view : parents) {
 
-			if (view.getLevelId().equals(OfficeLevel.HEADOFFICE))
+			if (view.getLevelId().equals(OfficeLevel.HEADOFFICE.getValue()))
 				assertEquals("Head Office", view.getLevelName());
-			else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE))
+			else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
 				assertEquals("Area Office", view.getLevelName());
 		}
 
 	}
 
+	/*
+	 * Check that we get the appropriate unordered list of levels back.
+	 */
 	public void testGetActiveLevels() throws Exception{
 
-		assertEquals(4, getOfficePersistence().getActiveLevels(Short.valueOf("1"))
-				.size());
+		List<OfficeView> officeLevels = getOfficePersistence().getActiveLevels(MasterDataEntity.CUSTOMIZATION_LOCALE_ID); 
+		assertEquals(4, officeLevels.size());
+		
+		Set<String> levels = new HashSet();
+		levels.add("Regional Office");
+		levels.add("Divisional Office");
+		levels.add("Area Office");
+		levels.add("Branch Office");
 
-	}
-
-	public void testGetActiveLevelsFailure() throws Exception {
-
-		assertEquals(null, getOfficePersistence().getActiveLevels(Short
-				.valueOf("-1")));
-
+		for (OfficeView level : officeLevels) {
+			assertTrue(levels.contains(level.getLevelName()));
+		}
 	}
 
 	public void testGetStatusList() throws Exception {
-		assertEquals(2, getOfficePersistence().getStatusList(Short.valueOf("1"))
-				.size());
-	}
+		List<OfficeView> officeLevels = getOfficePersistence().getStatusList(MasterDataEntity.CUSTOMIZATION_LOCALE_ID); 
+		assertEquals(2, officeLevels.size());
+		
+		Set<String> levels = new HashSet();
+		levels.add("Active");
+		levels.add("Inactive");
 
-	public void testGetStatusListFailure()throws Exception{
-		assertEquals(null, getOfficePersistence().getStatusList(Short.valueOf("-1")));
+		for (OfficeView level : officeLevels) {
+			assertTrue(levels.contains(level.getLevelName()));
+		}
 	}
 
 	public void testGetChildern() throws Exception{

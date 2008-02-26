@@ -77,6 +77,11 @@ public abstract class Upgrade {
 
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity) throws SQLException {
+		return insertLookupValue(connection, lookupEntity, " ");
+	}
+	
+	protected int insertLookupValue(Connection connection, 
+			int lookupEntity, String lookupKey) throws SQLException {
 		/* LOOKUP_ID is not AUTO_INCREMENT until database version 121.
 		   Although we perhaps could try to work some magic with the
 		   upgrades, it seems better to just insert in the racy way
@@ -94,7 +99,7 @@ public abstract class Upgrade {
 		
 		/* Pretty much all existing code inserts a space here.
 		   I'm not sure this field is used for anything. */
-		statement.setString(3, " ");
+		statement.setString(3, lookupKey);
 	
 		statement.executeUpdate();
 		statement.close();

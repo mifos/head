@@ -3,7 +3,6 @@
  */
 package org.mifos.application.master.business;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.mifos.application.master.MessageLookup;
@@ -78,22 +77,9 @@ public abstract class MasterDataEntity extends PersistentObject {
 		if (localeId == null) {
 			return null;
 		}
-		
-		return getLookUpValue().getMessageText();
-		
-/*		Jan 23, 2008 work in progress refactoring LookupValue text lookup
-		if (localeId == null)
-			return null;
-		String name = null;
-		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue()
-				.getLookUpValueLocales();
-		for (LookUpValueLocaleEntity entity : lookupSet) {
-			if (entity.getLocaleId().equals(localeId.shortValue())) {
-				name = entity.getLookUpValue();
-			}
-		}
+		String name = MessageLookup.getInstance().lookup(getLookUpValue()); 
 		return name;
-*/
+		
 	}
 
 	public String getName() {
@@ -119,7 +105,8 @@ public abstract class MasterDataEntity extends PersistentObject {
 					.getLookUpValueLocales();
 			for (LookUpValueLocaleEntity entity : lookupSet) {
 				if (entity.getLocaleId().equals(localeId.shortValue())
-						&& !entity.getLookUpValue().equals(name)) {
+						&& (entity.getLookUpValue() == null 
+						|| !entity.getLookUpValue().equals(name))) {
 					entity.setLookUpValue(name);
 				}
 			}

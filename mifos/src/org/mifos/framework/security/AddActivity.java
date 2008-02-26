@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
@@ -17,6 +18,7 @@ public class AddActivity extends Upgrade {
 	private final short newActivityId;
 	private final Short locale;
 	private final String activityName;
+	private final String activityNameKey;
 	private final Short parentActivity;
 
 	/**
@@ -36,13 +38,32 @@ public class AddActivity extends Upgrade {
 		this.parentActivity = parentActivity;
 		this.locale = locale;
 		this.activityName = activityName;
+		this.activityNameKey = " ";
 	}
 
+	/**
+	 * Define an activity and the key to lookup its name.
+	 * 
+	 * @param newActivityId ID for the activity we are creating
+	 * @param activityNameKey the key for looking up the name in a properties file
+	 * @param parentActivity existing ID for the parent
+	 * @param locale Locale in which we want to define a name
+	 */
+	public AddActivity(int higherVersion, String activityNameKey, 
+			short newActivityId, Short parentActivity) {
+		super(higherVersion);
+		this.newActivityId = newActivityId;
+		this.parentActivity = parentActivity;
+		this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
+		this.activityNameKey = activityNameKey;
+		this.activityName = null;
+	}
+	
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACTIVITY;
 
-		int lookupId = insertLookupValue(connection, lookupEntity);
+		int lookupId = insertLookupValue(connection, lookupEntity, activityNameKey);
 		insertMessage(connection, lookupId, locale, activityName);
 		try {
 			addActivityEntity(connection, lookupId);

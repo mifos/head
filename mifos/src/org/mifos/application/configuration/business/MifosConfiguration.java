@@ -10,16 +10,17 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
-import org.mifos.config.Localization;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.config.LocalizedTextLookup;
 /**
- * This class encapsulate all the configuration related funtionality in system
- * e.g. Label configuration
+ * This class caches label text and lookUpValue text.
+ * 
+ * Feb. 2008 - this class is slated to be removed.  It is unclear if we need
+ * caching and if we do, we should be able to use the Hibernate 2nd level cache
+ * or Spring based caching support.
  */
 
 public class MifosConfiguration {
@@ -63,6 +64,15 @@ public class MifosConfiguration {
 		labelCache.clear();
 		ApplicationConfigurationPersistence configurationPersistence = 
 			new ApplicationConfigurationPersistence();
+
+		List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
+		for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
+			String keyString = lookupValueEntity.getPropertiesKey();
+			if (keyString == null) keyString = " ";
+
+			labelCache.put(new LabelKey( keyString,MasterDataEntity.CUSTOMIZATION_LOCALE_ID), lookupValueEntity.getMessageText());
+		}
+		
 		List<MifosLookUpEntity> entities = 
 			configurationPersistence.getLookupEntities();
 		for (MifosLookUpEntity entity : entities) {
@@ -73,17 +83,21 @@ public class MifosConfiguration {
 			}
 		}
 		
-		List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
-		for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
-			String keyString = lookupValueEntity.getLookUpName();
-			if (keyString == null) keyString = " ";
-
-			labelCache.put(new LabelKey( keyString,MasterDataEntity.CUSTOMIZATION_LOCALE_ID), lookupValueEntity.getMessageText());
-		}
-
 	}
 
-
+	public void updateKey(LocalizedTextLookup keyContainer, String newValue) {
+		synchronized(labelCache)
+		{
+			LabelKey key = new LabelKey( keyContainer.getPropertiesKey(), MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
+			if (labelCache.containsKey(key))
+			{
+				labelCache.remove(key);
+				labelCache.put(key, newValue);
+			}
+			else
+				labelCache.put(key, newValue);
+		}		
+	}
 
 	
 

@@ -11,7 +11,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.security.util.ActivityChangeEvent;
 import org.mifos.framework.security.util.RoleChangeEvent;
 
-public class TestRoleTempleteBuilder extends MifosTestCase {
+public class RoleTempleteBuilderTest extends MifosTestCase {
 
 	public void testLocaleId() {
 		RoleTempleteBuilder roleTempleteBuilder = new RoleTempleteBuilder();

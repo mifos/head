@@ -2,6 +2,7 @@ package org.mifos.application.master.business;
 
 import java.io.Serializable;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.View;
 
 /**
@@ -33,24 +34,31 @@ public class CustomValueListElement extends View implements Serializable {
 	 */
 	private String lookUpValue;
 
+	/**
+	 * The text value of the key from {@link LookUpValueEntity} for looking up text in a given locale.) 
+	 */
+	private String lookUpValueKey;
+	
 	public CustomValueListElement() {
 	}
 
-	public CustomValueListElement(java.lang.Integer lookUpId, String lookUpValue) {
+	public CustomValueListElement(java.lang.Integer lookUpId, String lookUpValue, String lookUpValueKey) {
 
 		this.lookUpId = lookUpId;
 		this.lookUpValue = lookUpValue;
+		this.lookUpValueKey = lookUpValueKey;
 	}
 
 	/**
 	 * Possibly used in MasterPersistence.getCustomValueListElements
 	 */
 	public CustomValueListElement(java.lang.Short id, java.lang.Integer lookUpId,
-			String lookUpValue) {
+			String lookUpValue, String lookUpValueKey) {
 
 		this.lookUpId = lookUpId;
 		this.lookUpValue = lookUpValue;
 		this.associatedId = id.intValue();
+		this.lookUpValueKey = lookUpValueKey;
 	}
 
 	/**
@@ -76,8 +84,15 @@ public class CustomValueListElement extends View implements Serializable {
 		return lookUpId;
 	}
 
+	/*
+	 * Use the key for the LookUpValueEntity to resolve the value.
+	 */
 	public java.lang.String getLookUpValue() {
-		return lookUpValue;
+		if (lookUpValue != null && lookUpValue.length() > 0) {
+			return lookUpValue;
+		} else {
+			return MessageLookup.getInstance().lookup(lookUpValueKey);
+		}
 	}
 
 	public void setLookupValue(String newValue) {
@@ -98,5 +113,13 @@ public class CustomValueListElement extends View implements Serializable {
 
 	public void setName(String name) {
 		lookUpValue = name;
+	}
+
+	public String getLookUpValueKey() {
+		return lookUpValueKey;
+	}
+
+	public void setLookUpValueKey(String lookUpValueKey) {
+		this.lookUpValueKey = lookUpValueKey;
 	}
 }

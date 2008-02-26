@@ -6,16 +6,18 @@ import junit.framework.TestCase;
 
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
  * Also see {@link TestAccountActionEntity}.
  */
-public class AccountActionEntityTest extends TestCase {
+public class AccountActionEntityTest extends MifosTestCase {
 
 	public void testBasics() throws Exception {
 		DatabaseSetup.initializeHibernate();
@@ -40,7 +42,7 @@ public class AccountActionEntityTest extends TestCase {
 		assertEquals(1, valueLocales.size());
 		LookUpValueLocaleEntity valueLocale = valueLocales.iterator().next();
 		assertEquals(1, (int)valueLocale.getLocaleId());
-		assertEquals("Payment", valueLocale.getLookUpValue());
+		assertEquals("Payment", MessageLookup.getInstance().lookup(lookUpValue));
 
 		assertEquals("Payment", action.getName((short)1));
 		session.close();

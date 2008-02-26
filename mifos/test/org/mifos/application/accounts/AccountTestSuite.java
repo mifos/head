@@ -65,7 +65,7 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestEditStatusAction.class);
 		testSuite.addTestSuite(TestApplyChargeAction.class);		
 		testSuite.addTestSuite(TestOffsetAccountBO.class);	
-		testSuite.addTest(AddAccountStateFlagTest.suite());
+		testSuite.addTest(AddAccountStateFlagTest.testSuite());
 		testSuite.addTestSuite(TestAccountState.class);
 		return testSuite;
 		

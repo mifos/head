@@ -65,6 +65,6 @@
 	<classpathentry kind="lib" path="lib/strutstest-2.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-modules-cache.jar"/>
 	<classpathentry kind="lib" path="lib/xmlunit-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-02-08.jar"/>
+	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-02-12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

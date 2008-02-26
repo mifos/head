@@ -534,7 +534,6 @@ public interface NamedQueryConstants {
 	public String GETACTIVELEVELS="masterdata.activeLevels";
 	public String GETOFFICESTATUS="masterdata.officestatus";
 	public String GETCHILDERN="getChlidren";
-	public String MASTERDATA_MIFOS_ENTITY_NAME="masterdata.mifosEntityName";
 	public String GET_CUSTOMER_PICTURE="Customer.getPicture";
 	public String GETOFFICEINACTIVE="getCountInactiveOffice";
 	public String GET_PRD_TYPES="productdefenition.getProductTypes";

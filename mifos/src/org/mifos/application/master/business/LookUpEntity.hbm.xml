@@ -32,7 +32,7 @@
 	</query>
 	<query name="masterdata.entitylookupvalue">
 		<![CDATA[select new org.mifos.application.master.business.CustomValueListElement(
-				lookup.lookUpId,lookupvalue.lookUpValue) 
+				lookup.lookUpId,lookupvalue.lookUpValue, lookup.lookUpName) 
 				from org.mifos.application.master.business.LookUpValueEntity lookup,
 				org.mifos.application.master.business.LookUpEntity entity,
 				org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue 

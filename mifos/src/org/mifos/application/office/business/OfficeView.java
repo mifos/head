@@ -1,8 +1,14 @@
 package org.mifos.application.office.business;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.business.View;
 
+/*
+ * Feb 2008 i18n work in progress.
+ * looks like we need to make officeName, officeNameKey and
+ * levelName, levelNameKey and then go through MessageLookup to resolve them
+ */
 public class OfficeView extends View {
 
 	private Short officeId;
@@ -11,7 +17,7 @@ public class OfficeView extends View {
 
 	private Short levelId;
 
-	private String levelName;
+	private String levelNameKey;
 
 	private Integer versionNo;
 
@@ -24,16 +30,16 @@ public class OfficeView extends View {
 	}
 	
 	public OfficeView(Short officeId, String officeName,
-			OfficeLevel level, String levelName, Integer versionNo) {
-		this(officeId, officeName, level.getValue(), levelName, versionNo);
+			OfficeLevel level, String levelNameKey, Integer versionNo) {
+		this(officeId, officeName, level.getValue(), levelNameKey, versionNo);
 	}
 
 	public OfficeView(Short officeId, String officeName, Short levelId,
-			String levelName, Integer versionNo) {
+			String levelNameKey, Integer versionNo) {
 		this.officeId = officeId;
 		this.officeName = officeName;
 		this.levelId = levelId;
-		this.levelName = levelName;
+		this.levelNameKey = levelNameKey;
 		this.versionNo = versionNo;
 	}
 
@@ -61,15 +67,15 @@ public class OfficeView extends View {
 	}
 
 	public String getLevelName() {
-		return levelName;
+		return MessageLookup.getInstance().lookup(levelNameKey);
 	}
 
-	public OfficeView(Short levelId, String levelName) {
+	public OfficeView(Short levelId, String levelNameKey) {
 		this.levelId = levelId;
-		this.levelName = levelName;
+		this.levelNameKey = levelNameKey;
 	}
 
 	public String getDisplayName() {
-		return levelName + "(" + officeName + ")";
+		return getLevelName() + "(" + officeName + ")";
 	}
 }

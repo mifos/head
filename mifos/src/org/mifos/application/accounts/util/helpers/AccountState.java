@@ -45,31 +45,33 @@ import org.mifos.config.LocalizedTextLookup;
 public enum AccountState implements LocalizedTextLookup {
 
 	// AccountState Entity Values
-	LOAN_PARTIAL_APPLICATION(1), 
-	LOAN_PENDING_APPROVAL(2), 
-	LOAN_APPROVED(3), 
-	LOAN_DISBURSED_TO_LOAN_OFFICER(4), 
-	LOAN_ACTIVE_IN_GOOD_STANDING(5), 
-	LOAN_CLOSED_OBLIGATIONS_MET(6), 
-	LOAN_CLOSED_WRITTEN_OFF(7), 
-	LOAN_CLOSED_RESCHEDULED(8), 
-	LOAN_ACTIVE_IN_BAD_STANDING(9), 
-	LOAN_CANCELLED(10), 
+	LOAN_PARTIAL_APPLICATION(1,"AccountState-PartialApplication"), 
+	LOAN_PENDING_APPROVAL(2,"AccountState-ApplicationPendingApproval"), 
+	LOAN_APPROVED(3,"AccountState-ApplicationApproved"), 
+	LOAN_DISBURSED_TO_LOAN_OFFICER(4,"AccountState-DisbursedToLo"), 
+	LOAN_ACTIVE_IN_GOOD_STANDING(5,"AccountState-ActiveInGoodStanding"), 
+	LOAN_CLOSED_OBLIGATIONS_MET(6,"AccountState-ClosedObligationMet"), 
+	LOAN_CLOSED_WRITTEN_OFF(7,"AccountState-ClosedWrittenOff"), 
+	LOAN_CLOSED_RESCHEDULED(8,"AccountState-ClosedRescheduled"), 
+	LOAN_ACTIVE_IN_BAD_STANDING(9,"AccountState-ActiveInBadStanding"), 
+	LOAN_CANCELLED(10,"AccountState-Cancel"), 
 	// CustomerStatus Entity Values
-	CUSTOMER_ACCOUNT_ACTIVE(11), 
-	CUSTOMER_ACCOUNT_INACTIVE(12), 
+	CUSTOMER_ACCOUNT_ACTIVE(11,"CustomerStatus-CustomerAccountActive"), 
+	CUSTOMER_ACCOUNT_INACTIVE(12,"CustomerStatus-CustomerAccountInactive"), 
 	// SavingsStatus Entity Values
-	SAVINGS_PARTIAL_APPLICATION(13), 
-	SAVINGS_PENDING_APPROVAL(14), 
-	SAVINGS_CANCELLED(15), 
-	SAVINGS_ACTIVE(16), 
-	SAVINGS_CLOSED(17), 
-	SAVINGS_INACTIVE(18);
+	SAVINGS_PARTIAL_APPLICATION(13,"SavingsStatus-PartialApplication"), 
+	SAVINGS_PENDING_APPROVAL(14,"SavingsStatus-ApplicationPendingApproval"), 
+	SAVINGS_CANCELLED(15,"SavingsStatus-Cancelled"), 
+	SAVINGS_ACTIVE(16,"SavingsStatus-Active"), 
+	SAVINGS_CLOSED(17,"SavingsStatus-Closed"), 
+	SAVINGS_INACTIVE(18,"SavingsStatus-Inactive");
 
 	Short value;
+	String messageKey;
 
-	private AccountState(int value) {
+	private AccountState(int value, String key) {
 		this.value = (short)value;
+		this.messageKey = key;
 	}
 
 	public Short getValue() {
@@ -88,6 +90,6 @@ public enum AccountState implements LocalizedTextLookup {
 	}
 	
 	public String getPropertiesKey() {
-		return "AccountState." + toString();
+		return messageKey;
 	}	
 }

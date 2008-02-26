@@ -106,13 +106,13 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CustomerTestSuite.suite());
 		suite.addTest(BulkEntryTestSuite.suite());
+		suite.addTest(ApplicationConfigurationTestSuite.suite());		
 		suite.addTest(MasterTestSuite.suite());
 		suite.addTest(AccountTestSuite.suite());
 		suite.addTest(FinancialTestSuite.suite());
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());
 		suite.addTest(BatchJobTestSuite.suite());
-		suite.addTest(ApplicationConfigurationTestSuite.suite());
 		suite.addTest(LoanTestSuite.suite());
 		suite.addTest(SavingsTestSuite.suite());
 		suite.addTest(ProductDefinitionTestSuite.suite());

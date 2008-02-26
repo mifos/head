@@ -53,11 +53,8 @@ public class TestAccountState extends MifosTestCase {
 		for (AccountState state : AccountState.values()) {
 			AccountStateEntity stateInDatabase = stateListIterator.next();
 			assertEquals(state.getValue(), stateInDatabase.getId());
-			assertEquals(state.toString(), stateInDatabase.getLookUpValue().getLookUpName());
+			assertEquals(state.getPropertiesKey(), stateInDatabase.getLookUpValue().getLookUpName());
 			assertEquals(MessageLookup.getInstance().lookup(state), MessageLookup.getInstance().lookup(stateInDatabase));
-			// 12/5/07 for debugging: 
-			// System.out.println(state.toString() + " --- " + stateInDatabase.getLookUpValue().getLookUpName());
-			// System.out.println(state.getPropertiesKey() + " --- " + stateInDatabase.getPropertiesKey());
 		}
 		
 	}

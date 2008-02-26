@@ -284,7 +284,7 @@ public class MifosValueList extends BodyTagSupport {
 			
 			Integer lookupId = Integer.parseInt(splitValues[0].toString());
 			String lookupValue = splitValues[1];
-			list.add(new CustomValueListElement(lookupId, lookupValue));
+			list.add(new CustomValueListElement(lookupId, lookupValue,null));
 		}
 		customValueList.setCustomValueListElements(list);
 		return customValueList;

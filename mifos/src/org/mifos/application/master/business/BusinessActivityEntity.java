@@ -1,12 +1,15 @@
 package org.mifos.application.master.business;
 
+import org.mifos.application.master.MessageLookup;
+import org.mifos.config.LocalizedTextLookup;
+
 
 /**
  * An individual item from a database based list (aka lookup values). 
  * This class serves the same role as the {@link CustomValueListElement} class,
  * but it is used for both fixed an custom lists.
  */
-public class BusinessActivityEntity implements ValueListElement{
+public class BusinessActivityEntity implements ValueListElement, LocalizedTextLookup{
 
 	private Integer id;
 
@@ -29,7 +32,7 @@ public class BusinessActivityEntity implements ValueListElement{
 	}
 
 	public String getName() {
-		return name;
+		return MessageLookup.getInstance().lookup(this);
 	}
 
 	public void setName(String name) {
@@ -42,6 +45,10 @@ public class BusinessActivityEntity implements ValueListElement{
 
 	public void setValueKey(String valueKey) {
 		this.valueKey = valueKey;
+	}
+
+	public String getPropertiesKey() {
+		return getValueKey();
 	}
 
 }

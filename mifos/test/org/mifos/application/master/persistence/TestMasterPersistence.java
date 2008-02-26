@@ -13,6 +13,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -209,7 +210,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		
 		// add a CustomValueListElement to the list
 		final String NEW_SALUTATION_STRING = "Sir";
-		masterPersistence.addValueListElementForLocale(salutationValueList.getEntityId(), 
+		LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(salutationValueList.getEntityId(), 
 				NEW_SALUTATION_STRING, DEFAULT_LOCALE);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();

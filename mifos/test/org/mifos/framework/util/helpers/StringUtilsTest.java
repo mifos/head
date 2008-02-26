@@ -36,4 +36,9 @@ public class StringUtilsTest {
 	public void testLpad() {
 		assertEquals("___blah", StringUtils.lpad("blah", '_', 7));
 	}
+	
+	@Test
+	public void testCamelCase() {
+		assertEquals("AbcDef_ghIjKL",StringUtils.camelCase("aBc dEF_gh-iJ  k.l"));
+	}
 }

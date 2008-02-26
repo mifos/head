@@ -3,8 +3,8 @@ package org.mifos.application.rolesandpermission.business;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.business.PersistentObject;
 
 public class ActivityEntity extends PersistentObject {
@@ -68,31 +68,20 @@ public class ActivityEntity extends PersistentObject {
 	}
 
 	public String getDescription() {
-		if (localeId == null)
+		// can we get rid of this null check?
+		if (localeId == null) {
 			return null;
-		String name = null;
-		Set<LookUpValueLocaleEntity> lookupSet = getDescriptionLookupValues()
-				.getLookUpValueLocales();
-		for (LookUpValueLocaleEntity entity : lookupSet) {
-			if (entity.getLocaleId().equals(localeId.shortValue())) {
-				name = entity.getLookUpValue();
-			}
 		}
-		return name;
+		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
 	}
 
 	public String getActivityName() {
-		if (localeId == null)
+		// can we get rid of this null check?
+		if (localeId == null) {
 			return null;
-		String name = null;
-		Set<LookUpValueLocaleEntity> lookupSet = getActivityNameLookupValues()
-				.getLookUpValueLocales();
-		for (LookUpValueLocaleEntity entity : lookupSet) {
-			if (entity.getLocaleId().equals(localeId.shortValue())) {
-				name = entity.getLookUpValue();
-			}
 		}
-		return name;
+		return MessageLookup.getInstance().lookup(getActivityNameLookupValues());
+
 	}
 
 	public void setParent(ActivityEntity parent) {

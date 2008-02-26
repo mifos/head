@@ -12,6 +12,7 @@
         dependency-check="default">
         <property name="basenames">
             <list>
+                <value>org/mifos/config/localizedResources/LookupValueMessages</value>
                 <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
                 <value>org/mifos/config/localizedResources/reporterrors</value>
             </list>

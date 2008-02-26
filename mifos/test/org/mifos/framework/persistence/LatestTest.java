@@ -6,7 +6,11 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICA
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
@@ -14,6 +18,7 @@ import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.junit.Test;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTest {
@@ -41,6 +46,32 @@ public class LatestTest {
 		database.execute("insert into foo(x, y) values(5,7)");
 	}
 
+	@Test
+	public void subselect() {
+		Database database = TestDatabase.makeDatabase();
+		database.execute("create table first(first_id integer, first_value integer)");
+		database.execute("insert into first(first_id, first_value) values(5, 55)");
+		database.execute("insert into first(first_id, first_value) values(3, 33)");
+		database.execute("create table second(second_id integer, reference_to_first_id integer)");
+		database.execute("insert into second(second_id, reference_to_first_id) values(3, 5)");
+
+		database.execute("update first set first_value = 88 where first_id in" +
+				" (select reference_to_first_id from second where second_id = 3)");
+		
+		String updatedDump = new SqlDumper().dump(database.dataStore());
+
+		database = TestDatabase.makeDatabase();
+		database.execute("create table first(first_id integer, first_value integer)");
+		database.execute("insert into first(first_id, first_value) values(5, 88)");
+		database.execute("insert into first(first_id, first_value) values(3, 33)");
+		database.execute("create table second(second_id integer, reference_to_first_id integer)");
+		database.execute("insert into second(second_id, reference_to_first_id) values(3, 5)");
+		String expectedDump = new SqlDumper().dump(database.dataStore());
+		
+		assertEquals(expectedDump, updatedDump);
+		
+	}
+	
 	@Test
 	public void realSchema() throws Exception {
 		Database database = TestDatabase.makeDatabase();
@@ -128,18 +159,50 @@ public class LatestTest {
 		}
 	}
 	
+	private int findLookupId(Connection connection, String lookupName) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(
+				"select LOOKUP_ID from LOOKUP_VALUE where LOOKUP_NAME = ?");
+			statement.setString(1, lookupName);
+		ResultSet results = statement.executeQuery();
+		if (!results.next()) {
+			throw new SystemException(SystemException.DEFAULT_KEY, 
+				"Did not find a lookup_value with lookup_name: " + lookupName);
+		}
+		int lookupId = results.getInt(1);
+		results.close();
+		statement.close();
+		return lookupId;
+	}
+	
+	private int largestLookupId(Connection connection) throws SQLException {
+		Statement statement = connection.createStatement();
+		ResultSet results = statement.executeQuery(
+			"select max(lookup_id) from LOOKUP_VALUE");
+		if (!results.next()) {
+			throw new SystemException(SystemException.DEFAULT_KEY, 
+				"Did not find an existing lookup_id in lookup_value table");
+		}
+		int largestLookupId = results.getInt(1);
+		results.close();
+		statement.close();
+		return largestLookupId;
+	}
+	
 	@Test
 	public void afterLookupValues() throws Exception {
 		Database database = new Database(firstNumberedVersion());
 		
 		/* A customer will typically add records such as these during
 		   customization.  */
+
+		int lookupId = largestLookupId(database.openConnection());
+		int nextLookupId = lookupId + 1;
 		database.execute("insert into " +
-			"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
-			"VALUES(569,19,' ')");
+				"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
+				"VALUES(" + nextLookupId + ", 19,' ')");
 		database.execute("insert into " +
-			"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
-			"VALUES(1,569,'Martian')");
+				"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
+				"VALUES(1," + nextLookupId + ",'Martian')");
 
 		upAndBack(database.dataStore());
 	}

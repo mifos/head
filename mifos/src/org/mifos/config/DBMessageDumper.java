@@ -3,6 +3,7 @@ package org.mifos.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,14 @@ public class DBMessageDumper {
 		}
 	}
 
-	public void dumpLookupValues() {
+	enum DumpType {
+		PROPERTIES,
+		LOOKUP_VALUE_LOCALE_UPGRADE,
+		LOOKUP_VALUE_LOCALE_DOWNGRADE,
+		LOOKUP_VALUE_UPGRADE,
+		LOOKUP_VALUE_DOWNGRADE
+	}
+	public void dumpLookupValues(DumpType type) {
 		List<MifosLookUpEntity> entities=null;
 		try
 		{
@@ -64,30 +72,92 @@ public class DBMessageDumper {
 						return v1.getLookUpId().compareTo(v2.getLookUpId());
 					}
 				});
-				//System.out.println("-- Entity: " + entity.getEntityType());
-				System.out.println("## Entity: " + entity.getEntityType());
+				String commentChars = null;
+				if (type == DumpType.PROPERTIES) {
+					commentChars = "##";
+				} else {
+					commentChars = "--";
+				}
+				System.out.println(commentChars + " Entity: " + entity.getEntityType());
 				int index = 0;
-				for (LookUpValueEntity lookupValue : valuesList) {
-					Set<LookUpValueLocaleEntity> localeValues = lookupValue.getLookUpValueLocales();
-					for (LookUpValueLocaleEntity locale : localeValues) {
-						if (locale.getLocaleId() == 1) {
-							String camelCaseName = StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue().toLowerCase().replaceAll("\\W"," ")));
-							
-							// for properties files
-							System.out.println(lookupValue.getLookUpName() + " = " + locale.getLookUpValue());
-							//System.out.println(entity.getEntityType() + SEPARATOR + index++ + "." +  name + " = " + locale.getLookUpValue());
-							
-							// for latest-data.sql
-							//String lookupName = entity.getEntityType() + SEPARATOR + camelCaseName;
-							
-							// for downgrade
-							//String lookupName = " ";
-							//System.out.println("INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) " + 
-							//		"VALUES(" + lookupValue.getLookUpId() + ", " + entity.getEntityId() + ", '" + lookupName + "');");
-							//System.out.println(entity.getEntityType() + SEPARATOR + lookupValue.getLookUpName() + " = " + locale.getLookUpValue());						
+				// exclude custom lookup value lists
+				Set excludedEntities = new HashSet();
+//				excludedEntities.add("Salutation");
+//				excludedEntities.add("MaritalStatus");
+//				excludedEntities.add("Ethinicity");
+//				excludedEntities.add("EducationLevel");
+//				excludedEntities.add("Handicapped");
+//				excludedEntities.add("PersonnelTitles");
+//				excludedEntities.add("CollateralTypes");
+//				excludedEntities.add("LoanPurposes");
+				if (!excludedEntities.contains(entity.getEntityType())) {
+					for (LookUpValueEntity lookupValue : valuesList) {
+						Set<LookUpValueLocaleEntity> localeValues = lookupValue.getLookUpValueLocales();
+						for (LookUpValueLocaleEntity locale : localeValues) {
+							if (locale.getLocaleId() == 1) {
+								//String camelCaseName = StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue().toLowerCase().replaceAll("\\W"," ")));
+								//String camelCaseName = StringUtils.deleteWhitespace(WordUtils.capitalize(lookupValue.getLookUpName().toLowerCase().replaceAll("\\W"," ")));
 
-							//System.out.println("UPDATE LOOKUP_VALUE SET LOOKUP_NAME = '" 
-							//		+ lookupName + "' WHERE LOOKUP_ID = " + lookupValue.getLookUpId() + ";");
+								if (type == DumpType.PROPERTIES) {
+									System.out.println(lookupValue.getLookUpName() + " = " + locale.getLookUpValue());
+									//System.out.println(entity.getEntityType() + SEPARATOR +  camelCaseName + " = " + locale.getLookUpValue());
+								} else if (type == DumpType.LOOKUP_VALUE_UPGRADE) {
+									// for latest-data.sql
+									String camelCaseName = StringUtils.deleteWhitespace(WordUtils.capitalize(locale.getLookUpValue().toLowerCase().replaceAll("\\W"," ")));
+									String lookupName = entity.getEntityType() + SEPARATOR + camelCaseName;
+
+									// for downgrade
+									//String lookupName = " ";
+									//System.out.println("INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) " + 
+									//		"VALUES(" + lookupValue.getLookUpId() + ", " + entity.getEntityId() + ", '" + lookupName + "');");
+									//System.out.println("INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)\n" + 
+									//		"VALUES(" + locale.getLookUpValueId() + ", 1, " + lookupValue.getLookUpId() + ", NULL);");
+									//System.out.println(entity.getEntityType() + SEPARATOR + lookupValue.getLookUpName() + " = " + locale.getLookUpValue());						
+
+									if (lookupValue.getLookUpId() < 560) {
+										System.out.println("UPDATE LOOKUP_VALUE SET LOOKUP_NAME = '" 
+												+ lookupName + "' WHERE LOOKUP_ID = " + lookupValue.getLookUpId() + ";");
+									} else {
+										System.out.println("UPDATE LOOKUP_VALUE SET LOOKUP_NAME = '" 
+												+ lookupName + "' WHERE LOOKUP_ID IN (SELECT LOOKUP_ID FROM LOOKUP_VALUE_LOCALE "
+												+ " WHERE LOOKUP_VALUE = '" + locale.getLookUpValue() + "');");
+									}
+									/*
+								System.out.println("UPDATE LOOKUP_VALUE_LOCALE LVL SET LOOKUP_VALUE = NULL" 
+										+ " WHERE EXISTS (SELECT 1 FROM LOOKUP_VALUE LV WHERE" 
+										+ " LVL.LOOKUP_ID = LV.LOOKUP_ID AND" 
+										+ " LV.LOOKUP_NAME = '" + lookupValue.getLookUpName() + "');");
+
+								System.out.println("UPDATE LOOKUP_VALUE_LOCALE LVL SET LOOKUP_VALUE = "
+										+ "'" + locale.getLookUpValue() + "'"
+										+ " WHERE EXISTS (SELECT 1 FROM LOOKUP_VALUE LV WHERE" 
+										+ " LVL.LOOKUP_ID = LV.LOOKUP_ID AND" 
+										+ " LV.LOOKUP_NAME = '" + lookupValue.getLookUpName() + "');");
+									 */
+									/*
+								// upgrade
+								System.out.println("UPDATE LOOKUP_VALUE_LOCALE LVL, LOOKUP_VALUE LV SET LVL.LOOKUP_VALUE = NULL" 
+										+ " WHERE LVL.LOOKUP_ID = LV.LOOKUP_ID AND" 
+										+ " LV.LOOKUP_NAME = '" + lookupValue.getLookUpName() + "';");
+								// downgrade
+								System.out.println("UPDATE LOOKUP_VALUE_LOCALE LVL, LOOKUP_VALUE LV SET LVL.LOOKUP_VALUE = "
+										+ "'" + locale.getLookUpValue() + "'"
+										+ " WHERE LVL.LOOKUP_ID = LV.LOOKUP_ID AND" 
+										+ " LV.LOOKUP_NAME = '" + lookupValue.getLookUpName() + "';");
+									 */
+								} else {
+									String lookupValueLocaleValue = null;
+									if (type == DumpType.LOOKUP_VALUE_LOCALE_DOWNGRADE) {
+										lookupValueLocaleValue = "'" + locale.getLookUpValue() + "'";
+									} else if (type == DumpType.LOOKUP_VALUE_LOCALE_UPGRADE) {
+										lookupValueLocaleValue = "NULL";
+									}
+									System.out.println("UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE = "
+											+ lookupValueLocaleValue
+											+ " WHERE LOOKUP_ID = (SELECT LOOKUP_ID FROM LOOKUP_VALUE" 
+											+ " WHERE LOOKUP_NAME = '" + lookupValue.getLookUpName() + "');");
+								}
+							}
 						}
 					}
 				}
@@ -110,7 +180,7 @@ public class DBMessageDumper {
 		applicationInitializer.init();
 		
 		DBMessageDumper dumper = new DBMessageDumper();
-		dumper.dumpLookupValues();
+		dumper.dumpLookupValues(DumpType.PROPERTIES);
 	}
 
 }

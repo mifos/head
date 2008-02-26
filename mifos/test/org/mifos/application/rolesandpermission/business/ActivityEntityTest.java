@@ -3,7 +3,7 @@ package org.mifos.application.rolesandpermission.business;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestActivityEntity extends MifosTestCase {
+public class ActivityEntityTest extends MifosTestCase {
 	
 	private ActivityEntity activityEntity=null;
 
