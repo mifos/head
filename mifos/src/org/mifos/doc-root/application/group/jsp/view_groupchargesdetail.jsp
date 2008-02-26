@@ -144,7 +144,7 @@
 						</c:if> <BR>
 						<span class="fontnormalbold"> <mifos:mifoslabel
 							name="accounts.total" isColonRequired="Yes"></mifos:mifoslabel> <c:out
-							value='${BusinessKey.totalAmountDue.amountDoubleValue}'></c:out>
+							value='${BusinessKey.totalAmountDue}'></c:out>
 						</span></td>
 					</tr>
 				</table>

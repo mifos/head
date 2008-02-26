@@ -187,7 +187,7 @@
 												<c:otherwise>
 													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />:
 	                  </c:otherwise>
-											</c:choose> <c:out value="${BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
+											</c:choose> <c:out value="${BusinessKey.recommendedAmount}" /> <c:choose>
 												<c:when test="${BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">

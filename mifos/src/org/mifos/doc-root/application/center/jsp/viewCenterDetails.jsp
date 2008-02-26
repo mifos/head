@@ -189,7 +189,7 @@
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel name="Center.balance" bundle="CenterUIResources"/> <c:out
-												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
+												value="${savings.savingsBalance}" /> </span></td>
 										</tr>
 										<tr>
 											<td><img src="pages/framework/images/trans.gif" width="5"

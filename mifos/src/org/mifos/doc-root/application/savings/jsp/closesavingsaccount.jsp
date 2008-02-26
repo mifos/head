@@ -115,7 +115,7 @@
 									:
 								</td>
 								<td width="76%" valign="top" class="fontnormal">
-									<c:out value="${accountPayment.amount.amountDoubleValue}" />
+									<c:out value="${accountPayment.amount}" />
 								</td>
 							</tr>
 							<tr>

@@ -191,9 +191,9 @@
 												test="${loan.accountState.id==5 || loan.accountState.id==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
 													name="loan.outstandingbalance" />: <c:out
-													value="${loan.loanSummary.oustandingBalance.amountDoubleValue}" /><br>
+													value="${loan.loanSummary.oustandingBalance}" /><br>
 												<mifos:mifoslabel name="loan.amount_due" />: <c:out
-													value="${loan.totalAmountDue.amountDoubleValue}" /> </span>
+													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
 										</tr>
 										<tr>
@@ -248,7 +248,7 @@
 												</tr>
 											</table>
 											<span class="fontnormal"><mifos:mifoslabel	name="Client.balance" /> <c:out
-												value="${savings.savingsBalance.amountDoubleValue}" /> </span></td>
+												value="${savings.savingsBalance}" /> </span></td>
 										</tr>
 										<tr>
 											<td><img src="pages/framework/images/trans.gif" width="5"

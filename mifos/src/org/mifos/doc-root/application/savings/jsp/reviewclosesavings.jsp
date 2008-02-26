@@ -113,7 +113,7 @@
               <tr>
                 <td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.amount"/>: </td>
                 <td width="78%" class="fontnormal">
-                   	<c:out value="${accountPayment.amount.amountDoubleValue}"/>
+                   	<c:out value="${accountPayment.amount}"/>
                 </td>
               </tr>
               <tr>

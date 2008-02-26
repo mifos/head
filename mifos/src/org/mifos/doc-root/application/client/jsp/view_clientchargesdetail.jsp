@@ -146,7 +146,7 @@
 						<span class="fontnormalbold"> <mifos:mifoslabel
 							name="client.total" isColonRequired="Yes"
 							bundle="ClientUIResources" /> <c:out
-							value='${BusinessKey.totalAmountDue.amountDoubleValue}'></c:out>
+							value='${BusinessKey.totalAmountDue}'></c:out>
 						</span></td>
 					</tr>
 				</table>
