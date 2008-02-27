@@ -32,7 +32,16 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
 	}
 
 	public String getName() {
-		return MessageLookup.getInstance().lookup(this);
+		String lookupName = MessageLookup.getInstance().lookup(this);
+		
+		/*
+		 * Workaround for cases where the lookupValue name is null.
+		 */
+		if (lookupName == null) {
+			return name;
+		} else {
+			return lookupName;
+		}
 	}
 
 	public void setName(String name) {

@@ -110,8 +110,12 @@ public class MifosConfiguration {
 	}
 
 	public String getLabel(String key, Locale locale)throws ConfigurationException {
-		if(locale==null || key==null)
-			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
+//		if(locale==null || key==null)
+//			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
+		
+		if (key == null) {
+			return null;
+		}
 		
 		// we only use localeId 1 to store labels since it is an override for
 		// all locales
