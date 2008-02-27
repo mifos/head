@@ -72,7 +72,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}"
 				var="loanaccountownerisagroup" />
 			<c:set
-				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerId')}"
+				value="${BusinessKey.customer.customerId}"
 				var="customerId" />
 
 
