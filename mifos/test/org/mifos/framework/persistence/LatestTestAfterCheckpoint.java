@@ -137,13 +137,6 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 		
 		/* A customer will typically add records such as these during
 		   customization.  */
-//		database.execute("insert into " +
-//			"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
-//			"VALUES(569,19,' ')");
-//		database.execute("insert into " +
-//			"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
-//			"VALUES(1,569,'Martian')");
-
 		int lookupId = largestLookupId(database.openConnection());
 		int nextLookupId = lookupId + 1;
 		database.execute("insert into " +
