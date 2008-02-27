@@ -77,7 +77,7 @@ import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestS
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
-import org.mifos.framework.persistence.LatestTest;
+import org.mifos.framework.persistence.LatestTestAfterCheckpoint;
 import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
@@ -132,7 +132,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(StrutsTestSuite.suite());
 
 		suite.addTestSuite(HibernateTest.class);
-		suite.addTest(LatestTest.suite());
+		suite.addTest(LatestTestAfterCheckpoint.suite());
 		suite.addTestSuite(MayflyMiscTest.class);
 
 		suite.addTestSuite(TestMenuParser.class);

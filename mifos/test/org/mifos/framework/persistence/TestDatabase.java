@@ -118,12 +118,17 @@ public class TestDatabase implements SessionOpener {
 
 	public static void runUpgradeScripts(Connection connection)
 	throws Exception {
-		DatabaseVersionPersistence persistence = 
-	    	new FileReadingPersistence(connection);
-	    Assert.assertEquals(FIRST_NUMBERED_VERSION, persistence.read());
-	    persistence.upgradeDatabase();
+		runUpgradeScripts(FIRST_NUMBERED_VERSION, connection);
 	}
 
+	public static void runUpgradeScripts(int fromVersion, Connection connection)
+	throws Exception {
+		DatabaseVersionPersistence persistence = 
+	    	new FileReadingPersistence(connection);
+	    Assert.assertEquals(fromVersion, persistence.read());
+	    persistence.upgradeDatabase();
+	}
+	
 	/**
 	 * Create a database and upgrade it to the first database version
 	 * with a number.  Should be run on an empty database (no tables).
@@ -143,4 +148,14 @@ public class TestDatabase implements SessionOpener {
 	    executeScript(connection, "sql/Index.sql");
 	}
 
+	/**
+	 * Create a database and upgrade it to the latest checkpoint database 
+	 * version.  Should be run on an empty database (no tables).
+	 */
+	public static void upgradeLatestCheckpointVersion(Connection connection) 
+	throws FileNotFoundException, SQLException {
+	    executeScript(connection, "sql/latest-schema-checkpoint.sql");
+		executeScript(connection, "sql/latest-data-checkpoint.sql");
+	}
+	
 }
