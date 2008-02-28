@@ -367,7 +367,7 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px" onclick="this.disabled=true;">
+												<html-el:submit styleClass="buttn" style="width:70px" >
 													<mifos:mifoslabel name="bulkEntry.cont" />
 												</html-el:submit>
 												&nbsp;
