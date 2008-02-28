@@ -195,6 +195,21 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		verifyForward("load_success");
 	}
 	
+	public void testSuccessfullReLoad_Withdrawal() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "reLoad");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
+		actionPerform();
+		verifyForward("load_success");
+	}
+	
 	public void testFailurePreview() throws Exception {
 		createCenterAndGroup();
 		savingsOffering = helper.createSavingsOffering("asfddsf","213a");

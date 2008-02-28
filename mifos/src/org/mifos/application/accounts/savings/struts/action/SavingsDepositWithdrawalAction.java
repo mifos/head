@@ -140,15 +140,27 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				+ savings.getAccountId());
 		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
 		if (actionForm.getTrxnTypeId() != null
-				&& actionForm.getTrxnTypeId() != "") {
+				&& actionForm.getTrxnTypeId() != Constants.EMPTY_STRING) {
 			Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
+			// added for defect 1587 [start]
+			AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+			UserContext uc = (UserContext) SessionUtils.getAttribute(
+					Constants.USER_CONTEXT_KEY, request.getSession());
 			if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 				if (actionForm.getCustomerId() != null
-						&& actionForm.getCustomerId() != "")
+						&& actionForm.getCustomerId() != Constants.EMPTY_STRING)
 					actionForm.setAmount(savings.getTotalPaymentDue(Integer
 							.valueOf(actionForm.getCustomerId())).toString());
+				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+						persistence.getAcceptedPaymentTypesForATransaction(
+								uc.getLocaleId(),
+								TrxnTypes.savings_deposit.getValue()), request);
 			} else {
 				actionForm.setAmount(new Money().toString());
+				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+						persistence.getAcceptedPaymentTypesForATransaction(
+								uc.getLocaleId(),
+								TrxnTypes.savings_withdrawal.getValue()), request);
 			}
 		}
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -219,7 +231,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		actionForm.setPaymentTypeId(null);
 		actionForm.setTrxnTypeId(null);
 		actionForm.setCustomerId(null);
-		actionForm.setAmount("");
+		actionForm.setAmount(Constants.EMPTY_STRING);
 	}
 
 	private PaymentData createPaymentData(
