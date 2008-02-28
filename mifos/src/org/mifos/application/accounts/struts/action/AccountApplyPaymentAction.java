@@ -115,11 +115,24 @@ public class AccountApplyPaymentAction extends BaseAction {
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
 		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+		String input = request.getParameter(Constants.INPUT);
+		if(input != null && input.trim() != Constants.EMPTY_STRING)
+		{
+			if(input.equals(Constants.LOAN))
+			{
+				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				persistence.getAcceptedPaymentTypesForATransaction(
 						uc.getLocaleId(),
 						TrxnTypes.loan_repayment.getValue()), request);
-
+			}
+			else
+			{
+				SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+						persistence.getAcceptedPaymentTypesForATransaction(
+								uc.getLocaleId(),
+								TrxnTypes.fee.getValue()), request);
+			}
+		}		
 		actionForm.setAmount(account.getTotalPaymentDue());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -198,7 +211,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 	}
 
 	private String getForward(String input) {
-		if (input.equals("loan"))
+		if (input.equals(Constants.LOAN))
 			return ActionForwards.loan_detail_page.toString();
 		else
 			return "applyPayment_success";

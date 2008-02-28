@@ -66,8 +66,6 @@ public interface Constants {
 	public final static String MANAGE_PREVIOUS = "manage_previous";
 	public final static String MANAGE_PREVIEW = "manage_preview";
 	public final static String STORE_ATTRIBUTE="store_attribute";
-
-	// end of additions by ashish
 	public final static String FAILURE="failure";
 	public final static String MASTERINFO = "masterinfo";
 
@@ -91,7 +89,6 @@ public interface Constants {
 	public final static String  ACTIVITYCHANGEEVENT="ActivityChange";
 	public final static String KEY="123456789123456789123456";
 	//User Context for storing in session
-	//added by mohammedn
 	public final static String USERCONTEXT="UserContext";
 	public final static String TEMPUSERCONTEXT="Temp_UserContext";
 	public final static String SELECTTAG="select";
@@ -123,4 +120,6 @@ public interface Constants {
 
 	public static final String INPUT="input";
 	public static final String ERROR_VERSION_MISMATCH="error.versionnodonotmatch";
+	public static final String LOAN="loan";
+	public static final String EMPTY_STRING="";
 }

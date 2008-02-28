@@ -95,7 +95,7 @@
 								class="fontnormalbold"> <mifos:mifoslabel
 								name="client.ApplyTransaction" bundle="ClientUIResources" /> </span>
 							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link
-								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="applyPaymentAction.do?method=load&input=fee&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="client.apply_payment"
 									bundle="ClientUIResources" />
 							</html-el:link> <c:if

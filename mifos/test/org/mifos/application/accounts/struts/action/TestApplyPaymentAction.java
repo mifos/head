@@ -91,7 +91,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		super.tearDown();
 	}
 	
-	public void testApplyPaymentLoad()throws Exception{
+	public void testApplyPaymentLoad_Loan()throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
 		setRequestPathInfo("/applyPaymentAction");
@@ -106,6 +106,24 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm)request.getSession().getAttribute("applyPaymentActionForm");
 		assertEquals(actionForm.getAmount(),accountBO.getTotalPaymentDue());
 	}
+	
+	// added for defect 1590 [start]
+	public void testApplyPaymentLoad_Fees()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		accountBO = createLoanAccount();
+		setRequestPathInfo("/applyPaymentAction");
+		addRequestParameter("method", "load");
+		addRequestParameter("input","fee");
+		addRequestParameter("accountId",accountBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward(Constants.LOAD_SUCCESS);
+		verifyNoActionErrors();
+		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
+		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm)request.getSession().getAttribute("applyPaymentActionForm");
+		assertEquals(actionForm.getAmount(),accountBO.getTotalPaymentDue());
+	}
+	// added for defect 1590 [end]
 	
 	public void testApplyPaymentPreview(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
