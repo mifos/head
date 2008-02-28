@@ -19,6 +19,8 @@ import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.master.persistence.Upgrade167;
 import org.mifos.application.master.persistence.Upgrade169;
 import org.mifos.application.master.persistence.Upgrade173;
+import org.mifos.application.productdefinition.business.AddInterestCalcRule;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.Upgrade127;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.persistence.AddReport;
@@ -30,7 +32,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 174;
+	public static final int APPLICATION_VERSION = 175;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -73,6 +75,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade169());
 		register170(register);
 		register(register, new Upgrade173());
+		register175(register);		
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -248,6 +251,15 @@ public class DatabaseVersionPersistence {
 				"Can view admin documents")));
 		
 	}
+	
+	private static void register175(Map<Integer, Upgrade> register) {
+		register(register, new AddInterestCalcRule(175,InterestType.DECLINING_EPI.getValue(),
+				1, "InterestTypes-DecliningBalance-EqualPrincipalInstallment",
+				"Declining Balance-Equal Principal Installment",ENGLISH_LOCALE,
+				null));
+	}	
+
+	
 	private final Connection connection;
 	private final Map<Integer, Upgrade> registeredUpgrades;
 

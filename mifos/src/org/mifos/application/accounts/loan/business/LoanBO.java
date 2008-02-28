@@ -1965,7 +1965,9 @@ public class LoanBO extends AccountBO {
 				InterestType.FLAT.getValue()))
 			return getFlatInterestAmount(installmentEndDate);
 		if (getLoanOffering().getInterestTypes().getId().equals(
-				InterestType.DECLINING.getValue()))
+				InterestType.DECLINING.getValue()) 
+				|| getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING_EPI.getValue()))
 			return getDecliningInterestAmount(installmentEndDate);
 
 		return null;
@@ -2189,8 +2191,10 @@ public class LoanBO extends AccountBO {
 					InterestType.FLAT.getValue())) {
 				return principalInLastPayment(loanInterest);
 			}
-			else if (getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.DECLINING.getValue())) {
+			else if ((getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.DECLINING.getValue())) 
+						|| (getLoanOffering().getInterestTypes().getId().equals( 
+								InterestType.DECLINING_EPI.getValue()))) {
 				return principalInLastPaymentDecliningInterest(loanInterest);
 			}
 		}
@@ -2201,8 +2205,10 @@ public class LoanBO extends AccountBO {
 					InterestType.FLAT.getValue())) {
 				return allInstallments(loanInterest);
 			}
-			else if (getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.DECLINING.getValue())) {
+			else if ((getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.DECLINING.getValue())) 
+						|| (getLoanOffering().getInterestTypes().getId().equals
+								( InterestType.DECLINING_EPI.getValue()))) {
 				return allDecliningInstallments(loanInterest);
 			}
 		}
@@ -2363,6 +2369,8 @@ public class LoanBO extends AccountBO {
 				|| getGraceType() == GraceType.NONE) {
 
 			double principalBalance = getLoanAmount().getAmountDoubleValue();
+			double principalPerInstallmentEqual = getLoanAmount().getAmountDoubleValue()
+							/ getNoOfInstallments();
 
 			EMIInstallment installment = null;
 			double principalPaidCurrentPeriod = 0;
@@ -2380,9 +2388,18 @@ public class LoanBO extends AccountBO {
 				Money interstPerInstallmentM = new Money(Double
 						.toString(interestPerInstallment));
 				installment.setInterest(interstPerInstallmentM);
-				principalPaidCurrentPeriod = Math.abs(loanInterest
-						.getAmountDoubleValue()
-						- interestPerInstallment);
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = Math.abs(principalPerInstallmentEqual);
+					
+				}
+				
 				installment.setPrincipal(new Money(Double
 						.toString(principalPaidCurrentPeriod)));
 				principalBalance = principalBalance
@@ -2411,9 +2428,19 @@ public class LoanBO extends AccountBO {
 			for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
 
 				installment = new EMIInstallment();
-				principalPaidCurrentPeriod = Math.abs(loanInterest
-						.getAmountDoubleValue()
-						- interestPerInstallment);
+				//soham
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}	
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
+														/ (getNoOfInstallments()- getGracePeriodDuration());
+					
+				}
 				if (principalBalance > 0) {
 					interestPerInstallment = Math
 							.abs(principalBalance
@@ -2425,9 +2452,25 @@ public class LoanBO extends AccountBO {
 						.toString(interestPerInstallment));
 				installment.setInterest(interstPerInstallmentM);
 
-				principalPaidCurrentPeriod = Math.abs(loanInterest
-						.getAmountDoubleValue()
-						- interestPerInstallment);
+				//TODO: 28-Jan-08 Why is this repeated? Removing this fails the test 
+				//testCreateLoanAccountWithDecliningInterestGracePrincipalOnly.
+				//Thus currently left it as is with changes for declining_epi
+				
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}	
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
+														/ (getNoOfInstallments()- getGracePeriodDuration());
+					
+				}
+				// principalPaidCurrentPeriod = Math.abs(loanInterest
+				//		.getAmountDoubleValue()
+				//		- interestPerInstallment);
 				installment.setPrincipal(new Money(Double
 						.toString(principalPaidCurrentPeriod)));
 				principalBalance = principalBalance

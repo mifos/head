@@ -2098,9 +2098,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ getIntDedDisbursementFlag());
 
 		if (getInterestTypes() != null
-				&& getInterestTypes().equals(
+				&& (getInterestTypes().equals(
 						InterestType.DECLINING.getValue()
-								.toString())) {
+								.toString()) 
+								|| getInterestTypes().equals(
+										InterestType.DECLINING_EPI.getValue()
+										.toString()))){
 
 			if (null != getIntDedDisbursementFlag()
 					&& getIntDedDisbursementFlag().equals("1")) {

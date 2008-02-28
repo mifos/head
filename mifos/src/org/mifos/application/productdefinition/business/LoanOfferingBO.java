@@ -802,7 +802,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			throw new ProductDefinitionException("errors.create");
 		}
 
-		if (interestTypes.getId().equals(InterestType.DECLINING.getValue())
+		if ((interestTypes.getId().equals(InterestType.DECLINING.getValue())
+				||(interestTypes.getId().equals(InterestType.DECLINING_EPI.getValue())))
 				&& intDedDisbursement) {
 			throw new ProductDefinitionException(
 					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
@@ -835,7 +836,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			throw new ProductDefinitionException("errors.create");
 		}
 
-		if (interestTypes.getId().equals(InterestType.DECLINING.getValue())
+		if ((interestTypes.getId().equals(InterestType.DECLINING.getValue())
+				||(interestTypes.getId().equals(InterestType.DECLINING_EPI.getValue())))
 				&& intDedDisbursement) {
 			throw new ProductDefinitionException(
 					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);

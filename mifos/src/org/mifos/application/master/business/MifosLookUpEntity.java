@@ -61,6 +61,7 @@ public class MifosLookUpEntity extends PersistentObject {
 	public static final int ACCOUNT_STATE_FLAG = 70;
 	public static final int ACTIVITY = 87;
 	public static final int REPAYMENT_RULE = 91;
+	public static final int INTEREST_TYPES = 37;
 	
 	private Short entityId;
 

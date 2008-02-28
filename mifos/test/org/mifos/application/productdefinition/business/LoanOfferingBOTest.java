@@ -1297,6 +1297,43 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 
+	public void testLoanOfferingWithEqualPrincipalDecliningInterestDeductionAtDisbursement() {
+		try {
+			createIntitalObjects();
+			interestTypes = new InterestTypesEntity(InterestType.DECLINING_EPI);
+			Date startDate = offSetCurrentDate(0);
+			Date endDate = offSetCurrentDate(2);
+			new LoanOfferingBO(TestObjectFactory.getContext(), "Loan Offering",
+					"LOAP", productCategory, prdApplicableMaster, startDate,
+					endDate, null, null, null, interestTypes,
+					new Money("1000"), new Money("3000"), new Money("2000.0"),
+					12.0, 2.0, 3.0, (short) 20, (short) 11, (short) 17, false,
+					true, false, null, null, frequency, principalglCodeEntity,
+					intglCodeEntity);
+			fail();
+		}
+		catch (ProductDefinitionException e) {
+			assertEquals("exceptions.declineinterestdisbursementdeduction", e
+					.getKey());
+		}
+	}
+
+	public void testLoanOfferingWithEqualPrincipalDecliningInterestNoDeductionAtDisbursement()
+			throws Exception {
+		createIntitalObjects();
+		interestTypes = new InterestTypesEntity(InterestType.DECLINING_EPI);
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+				.getContext(), "Loan Offering", "LOAP", productCategory,
+				prdApplicableMaster, startDate, endDate, null, null, null,
+				interestTypes, new Money("1000"), new Money("3000"), new Money(
+						"2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+				(short) 17, false, false, false, null, null, frequency,
+				principalglCodeEntity, intglCodeEntity);
+		assertEquals(InterestType.DECLINING_EPI, loanOffering.getInterestType());
+	}
+
 	public void testPrdOfferingView() {
 		PrdOfferingView prdOfferingView = new PrdOfferingView();
 		prdOfferingView.setGlobalPrdOfferingNum("1234");
