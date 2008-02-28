@@ -96,5 +96,11 @@ public class TestHolidayPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUpHolidays(holidays);
 		holidayEntity = null;
 	}
+	
 
+	public void testGetDistinctYears() throws Exception {
+		List<HolidayBO> distinctYears = new HolidayPersistence().getDistinctYears();
+		assertNotNull(distinctYears);		
+	}
+	
 }

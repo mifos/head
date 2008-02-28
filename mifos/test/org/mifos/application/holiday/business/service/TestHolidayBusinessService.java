@@ -48,4 +48,11 @@ public class TestHolidayBusinessService extends MifosTestCase {
 		assertNotNull(repaymentRules);
 		assertEquals(3, repaymentRules.size());
 	}
+	
+	
+	public void testGetDistinctYears() throws Exception {
+		List<HolidayBO> distinctYears = new HolidayBusinessService().getDistinctYears();
+		assertNotNull(distinctYears);		
+	}
+	
 }

@@ -33,6 +33,7 @@
                        and holidayBO.repaymentRuleId = repaymentRule.id
 		               and holidayBO.holidayPK.holidayFromDate >= :START_OF_YEAR
                        and holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR
+                       order by holidayBO.holidayPK.holidayFromDate
    	       ]]>
 	</query>
 	<query name="holiday.getHoildaysByFlag">
@@ -40,5 +41,12 @@
 	                  where holidayBO.holidayChangesAppliedFlag = :FLAG
 			]]>
 	</query>
-
+	
+	
+	<query name="holiday.getDistinctYears">
+			<![CDATA[select distinct(holidayBO.holidayThruDate)
+					from org.mifos.application.holiday.business.HolidayBO holidayBO
+					order by holidayBO.holidayThruDate
+   	       ]]>
+	</query>
 </hibernate-mapping>

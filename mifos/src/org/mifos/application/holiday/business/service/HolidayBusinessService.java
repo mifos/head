@@ -66,4 +66,14 @@ public class HolidayBusinessService extends BusinessService {
 			throw new ServiceException(pe);
 		}
 	}
+	
+	
+	public List<HolidayBO> 	getDistinctYears() throws ServiceException {
+		try {
+			return new HolidayPersistence().getDistinctYears();
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+	
 }

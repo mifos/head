@@ -1,8 +1,5 @@
 package org.mifos.application.holiday.struts.action;
 
-import java.util.List;
-
-import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -51,15 +48,8 @@ public class TestHolidayAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
-		verifyForward(ActionForwards.get_success.toString());
-		assertNotNull(SessionUtils.getAttribute(HolidayConstants.HOLIDAYLIST1,
-				request));
-		assertNotNull(SessionUtils.getAttribute(HolidayConstants.HOLIDAYLIST2,
-				request));
-		assertEquals(0, ((List<HolidayBO>) SessionUtils.getAttribute(
-				HolidayConstants.HOLIDAYLIST1, request)).size());
-		assertEquals(0, ((List<HolidayBO>) SessionUtils.getAttribute(
-				HolidayConstants.HOLIDAYLIST2, request)).size());
+		verifyForward(ActionForwards.get_success.toString());		
+		assertNull(SessionUtils.getAttribute("noOfYears", request));		
 	}
 
 }

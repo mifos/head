@@ -119,4 +119,9 @@ public interface HolidayConstants {
 	
 	public static final String INVALIDFROMDATE = "errors.fromdateexception";
 	public static final String INVALIDTHRUDATE = "errors.thrudateexception";
+	
+	
+	public static final String HOLIDAY_LIST = "holidayList";
+	public static final String YEAR = "year";
+	public static final String NO_OF_YEARS = "noOfYears";
 }

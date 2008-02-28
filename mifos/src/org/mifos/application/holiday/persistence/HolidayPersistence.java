@@ -99,5 +99,12 @@ public class HolidayPersistence extends MasterPersistence {
 					NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
 		return count;
 	}
-
+	
+	
+	public List<HolidayBO> getDistinctYears() 
+	throws PersistenceException {		
+		Map<String, Object> parameters = new HashMap<String, Object>();		
+		return executeNamedQuery("holiday.getDistinctYears", parameters);
+	}
+	
 }

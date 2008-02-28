@@ -44,7 +44,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<%@ page import="java.util.Calendar"%>
+<%@page import="org.mifos.application.holiday.util.resources.HolidayConstants;"%>
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
@@ -92,12 +92,13 @@
             </tr>    
           </table>
           
-          <c:forEach var="item" begin="1" end="2">
-	        <%pageContext.setAttribute("holidayList", "holidayList" + pageContext.getAttribute("item"));%>
+           <c:forEach var="item" begin="1" end="<%= Integer.parseInt(request.getSession().getAttribute(HolidayConstants.NO_OF_YEARS).toString())%>">
+	        <%pageContext.setAttribute(HolidayConstants.HOLIDAY_LIST, HolidayConstants.HOLIDAY_LIST + pageContext.getAttribute("item"));%>
+	        
 	        
             <span class="fontnormalbold">
 			  <mifos:mifoslabel name="holiday.labelHolidaysForYear" bundle="HolidayUIResources"/>
-			  <%=(Calendar.getInstance().get(Calendar.YEAR)+Integer.parseInt(pageContext.getAttribute("item").toString())-1)%>
+			  <%= request.getSession().getAttribute(HolidayConstants.YEAR + pageContext.getAttribute("item")) %>
     	    </span>
             <br><br>
             <table width="98%" border="0" cellpadding="3" cellspacing="0">

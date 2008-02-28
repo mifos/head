@@ -1,7 +1,11 @@
 package org.mifos.application.holiday.struts.action;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,8 +82,10 @@ public class HolidayAction extends BaseAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		
-		SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAYLIST1, getHolidays(Calendar.getInstance().get(Calendar.YEAR), userContext.getLocaleId()),request);
-		SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAYLIST2, getHolidays(Calendar.getInstance().get(Calendar.YEAR)+1, userContext.getLocaleId()),request);
+		
+		// call method to set list of holidays in session
+		setHolidayListInSession(request, userContext);
+				
 		
 		return mapping.findForward("view_organizational_holidays");
 	}
@@ -154,16 +160,22 @@ public class HolidayAction extends BaseAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
-//		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		
-		SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAYLIST1, getHolidays(Calendar.getInstance().get(Calendar.YEAR), userContext.getLocaleId()),request);
-		SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAYLIST2, getHolidays(Calendar.getInstance().get(Calendar.YEAR)+1, userContext.getLocaleId()),request);
+		
+		// call method to set list of holidays in session
+		setHolidayListInSession(request, userContext);
+		
 				
 		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+	
+	
+	private List<HolidayBO> getDistinctYears() throws Exception{
+		List returnValues = getHolidayBizService().getDistinctYears();
+		return returnValues;
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -241,4 +253,43 @@ public class HolidayAction extends BaseAction {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
 	}
+	
+	
+	private void setHolidayListInSession(HttpServletRequest request,
+			UserContext userContext) throws Exception
+	{
+		List years = getDistinctYears();
+		Set distinctYears = null; 
+		if(years != null && years.size() != 0)
+		{	
+			List temp = new ArrayList();
+			Iterator iter = years.iterator();
+
+			while (iter.hasNext()) 
+			{				
+				String date = iter.next().toString();
+				date = date.substring(0, 4);
+				temp.add(date);
+			}
+			
+			//distinctYears = new HashSet(temp);
+			distinctYears = new TreeSet(temp);
+		}
+		
+		int yearGroupingCount = 1;
+		if(distinctYears != null && distinctYears.size() != 0)
+		{			
+			Iterator iter = distinctYears.iterator();
+			while (iter.hasNext()) 
+			{
+				String year = (String) iter.next();
+				int intYear = Integer.parseInt(year); 
+				SessionUtils.setCollectionAttribute(HolidayConstants.HOLIDAY_LIST + yearGroupingCount, getHolidays(intYear, userContext.getLocaleId()),request);
+				request.getSession().setAttribute(HolidayConstants.YEAR + yearGroupingCount, intYear);
+				yearGroupingCount++;
+			}			
+		}
+		request.getSession().setAttribute(HolidayConstants.NO_OF_YEARS, yearGroupingCount-1);
+	}
+	
 }
