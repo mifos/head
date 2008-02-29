@@ -60,6 +60,13 @@
 				form.submit();
 			}
 			
+			function fnSubmit(form, buttonSubmit) {
+				buttonSubmit.disabled=true;
+				form.method.value="create";
+				form.action="bulkentryaction.do";
+				form.submit();
+			}
+			
 			function fnPrevious(form) {
 				form.method.value="previous";
 				form.action="bulkentryaction.do";
@@ -239,7 +246,7 @@
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px"  property="submitBttn">
+												<html-el:submit styleClass="buttn" style="width:70px"  property="submitBttn" onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.submit" />
 												</html-el:submit>
 												&nbsp;

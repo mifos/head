@@ -58,6 +58,13 @@
 				form.submit();
 			}
 			
+			function fnSubmit(form, buttonSubmit) {
+				buttonSubmit.disabled=true;
+				form.method.value="get";
+				form.action="bulkentryaction.do";
+				form.submit();
+			}
+			
 			function fnLoadLoanOfficers(form) {
 				if(document.getElementsByName("officeId")[0].selectedIndex==0) {
 					form.method.value="load";
@@ -367,7 +374,7 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px" >
+												<html-el:submit styleClass="buttn" style="width:70px" onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.cont" />
 												</html-el:submit>
 												&nbsp;

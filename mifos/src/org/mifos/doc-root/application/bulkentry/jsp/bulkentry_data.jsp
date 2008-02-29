@@ -53,6 +53,16 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	
+	<script language="javascript">
+		<!--
+		function fnSubmit(form, buttonSubmit) {
+				buttonSubmit.disabled=true;
+				form.method.value="preview";
+				form.action="bulkentryaction.do";
+				form.submit();
+			}
+		</script>
 
 		<script SRC="pages/application/bulkentry/js/BulkEntry.js"></script>
 
@@ -223,7 +233,7 @@
 														</html-el:submit>
 													</c:when>
 													<c:otherwise>
-														<html-el:submit styleClass="buttn"  style="width:70px">
+														<html-el:submit styleClass="buttn"  style="width:70px" onclick="fnSubmit(this.form, this)">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:otherwise>
