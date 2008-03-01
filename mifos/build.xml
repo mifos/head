@@ -51,7 +51,7 @@
 
 	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
 	<property name="database.driver.jar" 
-		value="./lib/mysql-connector-java-3.1.13-bin.jar"/>
+		value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<path id="class.path">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar"/>
