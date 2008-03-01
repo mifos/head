@@ -1774,6 +1774,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		if (month == Calendar.FEBRUARY && day == 29) {
+			// if this is the "leap year day", just force the date
+			// back a day to try and work around leap year bugs
+			day--;
+		}
 		currentDateCalendar = new GregorianCalendar(year - noOfyears, month,
 				day);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
