@@ -4,19 +4,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestFinancialBO extends MifosTestCase {
-
-	@Override
-	protected void setUp() throws Exception {
-		FinancialInitializer.initialize();
-	}
 
 	public void testGetApplicableDebit() throws FinancialException {
 		FinancialActionBO finActionPrincipal = FinancialActionCache
@@ -30,7 +23,7 @@ public class TestFinancialBO extends MifosTestCase {
 		while (iterSubCategory.hasNext()) {
 
 			COABO subCategoryCOA = iterSubCategory.next();
-			assertEquals("Bank Account 1", subCategoryCOA.getCategoryName());
+			assertEquals("Bank Account 1", subCategoryCOA.getAccountName());
 		}
 
 	}
@@ -42,8 +35,8 @@ public class TestFinancialBO extends MifosTestCase {
 		Set<COABO> applicableCreditCategory = finActionPrincipal
 				.getApplicableCreditCharts();
 
-		assertEquals(applicableCreditCategory.size(),
-				TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE);
+		assertEquals(TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE,
+				applicableCreditCategory.size());
 	}
 
 	public void testRoundingCredit() throws FinancialException {
@@ -53,7 +46,7 @@ public class TestFinancialBO extends MifosTestCase {
 				.getApplicableCreditCharts();
 		assertEquals(applicableCreditCategory.size(), 1);
 		for (COABO coa : applicableCreditCategory) {
-			assertEquals("Income from 999 Account", coa.getCategoryName());
+			assertEquals("Income from 999 Account", coa.getAccountName());
 		}
 
 	}

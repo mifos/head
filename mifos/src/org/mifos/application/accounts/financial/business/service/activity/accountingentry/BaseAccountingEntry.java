@@ -44,10 +44,10 @@ import java.util.Set;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
@@ -93,20 +93,19 @@ public abstract class BaseAccountingEntry {
 	private Money getAmountToPost(Money postedMoney,
 			FinancialActionBO financialAction, GLCodeEntity glcode,
 			FinancialConstants debitCredit) throws FinancialException {
-		COABO chartOfAccounts = ChartOfAccountsCache
-				.get(glcode.getAssociatedCOA().getCategoryId());
-		if (chartOfAccounts.getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS)
-				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
-						CategoryConstants.EXPENDITURE)) {
+		COABO chartOfAccounts = ChartOfAccountsCache.get(glcode.getGlcode());
+		if (chartOfAccounts.getCOAHead().getCategoryType() == GLCategoryType.ASSET
+				|| chartOfAccounts.getCOAHead().getCategoryType() ==
+						GLCategoryType.EXPENDITURE) {
 			if (debitCredit == FinancialConstants.DEBIT)
 				return postedMoney;
 			else
 				return postedMoney.negate();
 		}
-		if (chartOfAccounts.getCOAHead().getCategoryId().equals(
-				CategoryConstants.LIABILITIES)
-				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
-						CategoryConstants.INCOME)) {
+		if (chartOfAccounts.getCOAHead().getCategoryType() ==
+				GLCategoryType.LIABILITY
+				|| chartOfAccounts.getCOAHead().getCategoryType() ==
+						GLCategoryType.INCOME) {
 			if (debitCredit == FinancialConstants.DEBIT)
 				return postedMoney.negate();
 			else

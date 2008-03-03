@@ -27,8 +27,8 @@ public class FinancialTestSuite extends TestSuite {
 	{
 		TestSuite testSuite = new FinancialTestSuite();
 		testSuite.addTestSuite(TestFinancialActionCache.class);
-		testSuite.addTestSuite(TestFinancialInitializer.class);
-		testSuite.addTestSuite(ChartOfAccountsCacheTest.class);
+		testSuite.addTest(TestFinancialInitializer.suite());
+		testSuite.addTest(ChartOfAccountsCacheTest.suite());
 		testSuite.addTest(TestFinancialRules.testSuite());
 		testSuite.addTestSuite(TestCOABO.class);
 		testSuite.addTestSuite(TestFinancialBO.class);

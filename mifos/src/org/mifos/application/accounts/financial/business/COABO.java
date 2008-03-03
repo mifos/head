@@ -57,41 +57,67 @@ import org.mifos.framework.business.BusinessObject;
  */
 public class COABO extends BusinessObject {
 	
-	private Short categoryId;
+	private Short accountId;
 
-	private String categoryName;
+	private String accountName;
 
+	/** Child accounts are also called subcategories. */
 	private Set subCategory;
 
 	private GLCodeEntity associatedGlcode;
 
 	private COAHierarchyEntity coaHierarchy;
+	
+	/**
+	 * Top-level general ledger accounts are also called "categories". If this
+	 * instance is a "category", this property will be non-null. While the Java
+	 * type is simply a String, accessors/mutators of this field shall
+	 * <strong>only</strong> use/provide the GLCategoryType constant. A
+	 * UserType could also be used to map {@link GLCategoryType} to this field,
+	 * as seen in <a href="http://www.hibernate.org/288.html">these</a> <a
+	 * href="http://www.hibernate.org/203.html">examples</a>, but this
+	 * "lightweight" solution seemed Good Enough for the time being.
+	 */
+	private String categoryType;
 
 	protected COABO() {
 		super();
-		categoryId = null;
-		categoryName = null;
+		accountId = null;
+		accountName = null;
 		subCategory = new HashSet();
 		associatedGlcode = null;
 		coaHierarchy = null;
+		categoryType = null;
 	}
 	
-	public COABO(int categoryId, String categoryName) {
-		this.categoryId = (short) categoryId;
-		this.categoryName = categoryName;
+	/**
+	 * Only used in unit tests.
+	 */
+	public COABO(int accountId, String accountName) {
+		this.accountId = (short) accountId;
+		this.accountName = accountName;
+	}
+
+	/**
+	 * Only used in unit tests.
+	 */
+	public COABO(int accountId, String accountName, GLCodeEntity glCodeEntity) {
+		this.accountId = (short) accountId;
+		this.accountName = accountName;
+		this.associatedGlcode = glCodeEntity;
 	}
 	
-	public COABO(String categoryName, GLCodeEntity glCodeEntity) {
-		this.categoryName = categoryName;
+	public COABO(String accountName, GLCodeEntity glCodeEntity) {
+		this.accountName = accountName;
 		this.associatedGlcode = glCodeEntity;
 	}
 
-	public Short getCategoryId() {
-		return categoryId;
+	public Short getAccountId() {
+		return accountId;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public String getAccountName() {
+		return accountName;
 	}
 
 	public Set getSubCategory() {
@@ -106,6 +132,24 @@ public class COABO extends BusinessObject {
 		return coaHierarchy;
 	}
 
+	public void setCoaHierarchy(COAHierarchyEntity coaHierarchy) {
+		this.coaHierarchy = coaHierarchy;
+	}
+
+	public GLCategoryType getCategoryType() {
+		if (null == categoryType)
+			return null;
+		else
+			return GLCategoryType.fromString(categoryType);
+	}
+
+	public void setCategoryType(GLCategoryType categoryType) {
+		if (null == categoryType)
+			this.categoryType = null;
+		else
+			this.categoryType = categoryType.toString();
+	}
+
 	public Set<COABO> getCurrentSubCategory() {
 		Set<COABO> applicableCOA = new HashSet<COABO>();
 		if (subCategory != null) {
@@ -117,8 +161,12 @@ public class COABO extends BusinessObject {
 		}
 		return applicableCOA;
 	}
+	
+	public String getGlCode() {
+		return getAssociatedGlcode().getGlcode();
+	}
 
-	/*
+	/**
 	 * Get a list of the subcategories of this account
 	 * ordered by GLCode.
 	 */
@@ -138,10 +186,10 @@ public class COABO extends BusinessObject {
 		COAHierarchyEntity headHiearchy = null;
 		COAHierarchyEntity currentHiearchy = null;
 		currentHiearchy = coaHierarchy;
-		headHiearchy = currentHiearchy.getParentCategory();
+		headHiearchy = currentHiearchy.getParentAccount();
 		while (headHiearchy != null) {
 			currentHiearchy = headHiearchy;
-			headHiearchy = headHiearchy.getParentCategory();
+			headHiearchy = headHiearchy.getParentAccount();
 
 		}
 
@@ -151,7 +199,7 @@ public class COABO extends BusinessObject {
 
 	public Set<COABO> getAssociatedChartOfAccounts() {
 		Set<COABO> applicableCOA = new HashSet<COABO>();
-		if (subCategory.size() == 0) {
+		if (null == subCategory || subCategory.size() == 0) {
 			applicableCOA.add(this);
 		} else {
 			applicableCOA.addAll(getCurrentSubCategory());
@@ -159,7 +207,7 @@ public class COABO extends BusinessObject {
 		return applicableCOA;
 
 	}
-
+	
 	@Override
 	public final boolean equals(Object otherObject) {
         if (!(otherObject instanceof COABO)) {
@@ -167,27 +215,30 @@ public class COABO extends BusinessObject {
 		}
 
 		COABO other = (COABO) otherObject;
-		if (other.getCategoryId().shortValue() == this.categoryId
-				.shortValue())
+		if (other.getAccountId().equals(this.accountId))
 			return true;
 		return false;
 	}
 
     @Override
     public int hashCode() {
-        if (this.getCategoryId() == null) {
+        if (this.getAccountId() == null) {
             return super.hashCode();
         }
         else {
-            return(this.getCategoryId().hashCode());
+            return(this.getAccountId().hashCode());
         }
     }
 
+    /**
+     * Compares general ledger codes lexicographically. Must use this type of
+     * comparison since GL codes may have numbers <em>and</em> letters. 
+     */
     public class GLCodeComparator implements Comparator<COABO> {
-    	public int compare(COABO coa1, COABO coa2) {
-    		int coa1code = Integer.parseInt(coa1.getAssociatedGlcode().getGlcode());
-    		int coa2code = Integer.parseInt(coa2.getAssociatedGlcode().getGlcode());
-    		return coa1code - coa2code;
-    	}
-    }
+		public int compare(COABO coa1, COABO coa2) { 
+			return coa1.getAssociatedGlcode().getGlcode().compareTo(
+					coa2.getAssociatedGlcode().getGlcode());
+		}
+	}
+
 }

@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -68,6 +69,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
+		FinancialInitializer.loadCOA();
 	}
 
 	@Override

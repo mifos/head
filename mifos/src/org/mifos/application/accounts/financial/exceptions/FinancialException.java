@@ -44,12 +44,14 @@ public class FinancialException extends ApplicationException {
 
 	public FinancialException(String key) {
 		super(key);
-
 	}
 
 	public FinancialException(String key, Throwable cause) {
 		super(key, cause);
+	}
 
+	public FinancialException(Throwable cause) {
+		super(cause);
 	}
 
 }

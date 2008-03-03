@@ -12,7 +12,6 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -57,6 +56,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
@@ -80,7 +80,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * and how it is applied.
  */
 public class TestLoanBORedoDisbursal extends MifosTestCase {
-    private AccountPersistence accountPersistence;
     private OfficePersistence officePersistence;
     private CenterPersistence centerPersistence;
     private GroupPersistence groupPersistence;
@@ -88,7 +87,6 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
     @Override
 	protected void setUp() throws Exception {
 		super.setUp();
-        accountPersistence = new AccountPersistence();
         officePersistence = new OfficePersistence();
         centerPersistence = new CenterPersistence();
         groupPersistence = new GroupPersistence();
@@ -113,9 +111,9 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
 		InterestTypesEntity interestType =
 			new InterestTypesEntity(InterestType.FLAT);
 		GLCodeEntity glCodePrincipal = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("11"));
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.LOANS_TO_CLIENTS);
 		GLCodeEntity glCodeInterest = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
 
         boolean interestDeductedAtDisbursement = false;
         boolean principalDueInLastInstallment = true;
@@ -266,10 +264,6 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         long numberOfTransactions =
             getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
         assertEquals(numberOfTransactions, 0);
-    }
-
-    private AccountPersistence getAccountPersistence() {
-        return accountPersistence;
     }
 
     private OfficePersistence getOfficePersistence() {

@@ -66,6 +66,12 @@ public interface FilePaths {
 		"deploymifosDB.properties";
 	public static final String SPRING_CONFIG =
 		"org/mifos/config/applicationContext.xml";
+	public static final String CHART_OF_ACCOUNTS_DEFAULT =
+		"org/mifos/config/resources/mifosChartOfAccounts.xml";
+	public static final String CHART_OF_ACCOUNTS =
+		"mifosChartOfAccounts.xml";
+	public static final String CHART_OF_ACCOUNTS_SCHEMA =
+		"org/mifos/config/resources/mifosChartOfAccounts.xsd";
 	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/reportproducts.properties";
 	public static final String REPORT_SERVICE_BEAN_FILE = "/org/mifos/config/reportServices.xml";
 	public static final String LOCALIZED_RESOURCE_PATH="org/mifos/config/localizedResources/";

@@ -38,7 +38,6 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -49,63 +48,93 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
+import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.configuration.exceptions.ConfigurationException;
+import org.mifos.config.ChartOfAccountsConfig;
+import org.mifos.config.GLAccount;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class FinancialInitializer {
 	public static void initialize() throws FinancialException {
-		Session session = null;
-
 		try {
-			session = HibernateUtil.openSession();
-			initalizeFinancialAction(session);
-			initializeCOA(session);
+			HibernateUtil.getSessionTL();
+			HibernateUtil.startTransaction();
+			initalizeFinancialAction();
+			loadCOA();
+			HibernateUtil.commitTransaction();
+			
+			// necessary or cacheCOA() doesn't work correctly. Is that because
+			// the commitTransaction() isn't flushing the session?
+			HibernateUtil.closeSession();
+			
+			cacheCOA();
 		}
 		catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
 			throw new FinancialException(
 					FinancialExceptionConstants.ACTIONNOTFOUND, e);
-		} finally {
-			try {
-				HibernateUtil.closeSession(session);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
-
 	}
 
-	public static void initializeCOA(Session session) throws FinancialException {
-		if (ChartOfAccountsCache.isInitialized()) return;
-		
-		// TODO: read in XML configuration for CoA
-		
+	/**
+	 * Reads chart of accounts from a configuration file and inserts into the
+	 * database.
+	 */
+	public static void loadCOA() throws FinancialException {
+		Session session = HibernateUtil.getSessionTL();
+		if (ChartOfAccountsConfig.isLoaded(session))
+			return;
+
+		ChartOfAccountsConfig coa;
+		try {
+			coa = ChartOfAccountsConfig.load(ChartOfAccountsConfig.getCoaUri());
+		}
+		catch (ConfigurationException e) {
+			throw new FinancialException(e);
+		}
+
+		AccountPersistence ap = new AccountPersistence();
+		for (GLAccount glAccount : coa.getGLAccounts()) {
+			// TODO: don't add accounts that already exist
+			// TODO: consider: account name updates (NOT gl code updates)
+			ap.addGeneralLedgerAccount(glAccount.name, glAccount.glCode,
+					glAccount.parentGlCode, glAccount.categoryType);
+		}
+	}
+
+	/**
+	 * Reads chart of accounts from the database and caches in memory.
+	 */
+	public static void cacheCOA() throws FinancialException {
+		if (ChartOfAccountsCache.isInitialized())
+			return;
+		Session session = HibernateUtil.getSessionTL();
 		Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_COA);
-		List<COABO> coaList = query.list();
-		for (COABO coa: coaList){
-			ChartOfAccountsCache.add(hibernateInitalize(coa));
+		List<COABO> coaBoList = query.list();
+		for (COABO coabo : coaBoList) {
+			ChartOfAccountsCache.add(hibernateInitalize(coabo));
 		}
 	}
 
-	public static void initalizeFinancialAction(Session session)
+	public static void initalizeFinancialAction()
 			throws FinancialException {
+		Session session = HibernateUtil.getSessionTL();
 		try {
 			Query queryFinancialAction = session
 					.getNamedQuery(FinancialQueryConstants.GET_ALL_FINANCIAL_ACTION);
-			List<FinancialActionBO> listFinancialAction = queryFinancialAction
-					.list();
-			Iterator<FinancialActionBO> iterFinancialAction = listFinancialAction
-					.iterator();
-			while (iterFinancialAction.hasNext()) {
-				FinancialActionCache.addToCache(iterFinancialAction.next());
-			}
-		} catch (Exception e) {
+			List<FinancialActionBO> listFinancialAction =
+				queryFinancialAction.list();
+			for (FinancialActionBO fabo : listFinancialAction)
+				FinancialActionCache.addToCache(fabo);
+		}
+		catch (Exception e) {
 			throw new FinancialException(
 					FinancialExceptionConstants.FINANCIALACTION_INITFAILED, e);
 		}
 
 	}
 
-	private static COABO hibernateInitalize(
-			COABO coa) {
+	private static COABO hibernateInitalize(COABO coa) {
 
 		Hibernate.initialize(coa);
 		Hibernate.initialize(coa.getCOAHead());

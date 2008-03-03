@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -46,6 +47,7 @@ public class TestSurvey extends MifosTestCase {
 		super.setUp();
 		database = TestDatabase.makeStandard();
 		session = database.installInThreadLocal();
+		FinancialInitializer.loadCOA();
 	}
 
 	@Override

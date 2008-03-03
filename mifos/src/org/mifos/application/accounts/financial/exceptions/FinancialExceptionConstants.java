@@ -42,8 +42,8 @@ public interface FinancialExceptionConstants {
 	public static final String ACTIONNOTFOUND = 
 		"exception.financial.ApplicationException.ActionNotFound";
 
-	public static final String CATEGORYNOTFOUND = 
-		"exception.financial.ApplicationException.CategoryNotFound";
+	public static final String ACCOUNT_NOT_FOUND = 
+		"exception.financial.ApplicationException.AccountNotFound";
 
 	public static final String FINANCIALACTION_INITFAILED = 
 		"exception.financial.ApplicationException.FinInitFailed";

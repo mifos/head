@@ -19,6 +19,7 @@ import org.mifos.application.holiday.persistence.Upgrade104;
 import org.mifos.application.master.persistence.Upgrade167;
 import org.mifos.application.master.persistence.Upgrade169;
 import org.mifos.application.master.persistence.Upgrade173;
+import org.mifos.application.master.persistence.Upgrade176;
 import org.mifos.application.productdefinition.business.AddInterestCalcRule;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.Upgrade127;
@@ -32,7 +33,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 175;
+	public static final int APPLICATION_VERSION = 176;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -75,7 +76,8 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade169());
 		register170(register);
 		register(register, new Upgrade173());
-		register175(register);		
+		register175(register);
+		register(register, new Upgrade176());
 		return Collections.unmodifiableMap(register);
 	}
 

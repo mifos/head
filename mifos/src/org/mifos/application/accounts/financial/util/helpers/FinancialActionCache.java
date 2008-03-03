@@ -45,6 +45,7 @@ import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
+// TODO: why does this cache exist? Is FinancialActionConstants not enough?
 public class FinancialActionCache {
 
 	private static Map<Short, FinancialActionBO> financialCacheRepository = new HashMap<Short, FinancialActionBO>();

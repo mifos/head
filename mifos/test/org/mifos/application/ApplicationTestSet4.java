@@ -34,6 +34,7 @@ import org.mifos.application.login.LoginTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
+import org.mifos.config.ChartOfAccountsConfigTest;
 import org.mifos.config.TestProcessFlowRules;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
@@ -81,6 +82,7 @@ public class ApplicationTestSet4 extends TestSuite {
 		suite.addTest(PPITestSuite.suite());
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
 		suite.addTest(TestProcessFlowRules.suite());
+		suite.addTest(ChartOfAccountsConfigTest.suite());
 		
 		return suite;
 	}

@@ -62,18 +62,17 @@ public class TestCaseInitializer {
 			DatabaseSetup.initializeHibernate();
 			//	add this because it is added to Application Initializer
 			Localization.getInstance().init(); 
-			FinancialInitializer.initialize();
-			AuthorizationManager.getInstance().init();
-			HierarchyManager.getInstance().init();
-			
 			/* initializeSpring needs to come before AuditConfiguration.init
 			 * in order for MasterDataEntity data to be loaded.
 			 */
 			TestUtils.initializeSpring();
+			// Spring must be initialized before FinancialInitializer
+			FinancialInitializer.initialize();
+			AuthorizationManager.getInstance().init();
+			HierarchyManager.getInstance().init();
+			
 			MifosConfiguration.getInstance().init();
 			AuditConfigurtion.init(Localization.getInstance().getMainLocale());
-			
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Error("Failed to start up", e);

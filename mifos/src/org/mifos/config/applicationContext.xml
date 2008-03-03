@@ -34,7 +34,7 @@
     <bean id = "financialRules"
         class="org.mifos.application.accounts.financial.util.helpers.FinancialRules"
         abstract="false" factory-method="getInstance">        
-        <property name="actionToGLCodeDebit">
+        <property name="actionToDebitAccount">
             <map>
                 <entry key="PRINCIPALPOSTING" value="11201"/>
                 <entry key="INTERESTPOSTING" value="11201"/>
@@ -57,7 +57,7 @@
                 <entry key="WRITEOFF" value="13201"/>
             </map>
         </property>
-        <property name="actionToGLCodeCredit">
+        <property name="actionToCreditAccount">
             <map>
                 <entry key="PRINCIPALPOSTING" value="13100"/>
                 <entry key="INTERESTPOSTING" value="31100"/>

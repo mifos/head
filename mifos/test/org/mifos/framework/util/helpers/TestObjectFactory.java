@@ -62,13 +62,18 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
@@ -172,6 +177,7 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.GLAccount;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
@@ -670,10 +676,10 @@ public class TestObjectFactory {
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
 				interestType);
 		GLCodeEntity glCodePrincipal = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("11"));
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.LOANS_TO_CLIENTS);
 
 		GLCodeEntity glCodeInterest = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("21"));
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
 		LoanOfferingBO loanOffering;
 		try {
 			loanOffering = new LoanOfferingBO(getContext(), name, shortName,
@@ -745,8 +751,8 @@ public class TestObjectFactory {
 	public static LoanOfferingBO createCompleteLoanOfferingObject() throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		ProductCategoryBO productCategory = getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(InterestType.FLAT);
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.GRACEONALLREPAYMENTS);
@@ -1055,8 +1061,7 @@ public class TestObjectFactory {
 			RecurrenceType meetingFrequency, Short recurAfter,
 			UserContext userContext) {
 		try {
-			GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL()
-					.get(GLCodeEntity.class, TestGeneralLedgerCode.FEES);
+			GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
 			MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter,
 					new Date(), MeetingType.PERIODIC_FEE);
 			FeeBO fee = new AmountFeeBO(userContext, feeName,

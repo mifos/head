@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -31,6 +32,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
@@ -40,6 +42,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 	private String flowKey;
 
 	UserContext userContext = null;
+	
+	AccountPersistence accountPersistence = new AccountPersistence();
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -343,8 +347,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("timeForInterestCacl", "1");
 		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
 		addRequestParameter("freqOfInterest", "1");
-		addRequestParameter("depositGLCode", "42");
-		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("depositGLCode", TestGeneralLedgerCode.MARGIN_MONEY_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST_CLIENT_MANDATORY_SAVINGS.toString());
 		addRequestParameter("recommendedAmount", "120.0");
 		actionPerform();
 
@@ -391,8 +395,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("timeForInterestCacl", "1");
 		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
 		addRequestParameter("freqOfInterest", "1");
-		addRequestParameter("depositGLCode", "42");
-		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("depositGLCode", TestGeneralLedgerCode.MARGIN_MONEY_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST_CLIENT_MANDATORY_SAVINGS.toString());
 		addRequestParameter("recommendedAmount", "120.0");
 		addRequestParameter("recommendedAmntUnit", "1");
 		actionPerform();
@@ -440,8 +444,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("timeForInterestCacl", "1");
 		addRequestParameter("recurTypeFortimeForInterestCacl", "2");
 		addRequestParameter("freqOfInterest", "1");
-		addRequestParameter("depositGLCode", "42");
-		addRequestParameter("interestGLCode", "57");
+		addRequestParameter("depositGLCode", TestGeneralLedgerCode.MARGIN_MONEY_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST_CLIENT_MANDATORY_SAVINGS.toString());
 		addRequestParameter("recommendedAmntUnit", "1");
 		actionPerform();
 

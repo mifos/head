@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+package org.mifos.config;
+
+import java.io.ByteArrayInputStream;
+import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mifos.application.accounts.financial.business.GLCategoryType;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.TestCaseInitializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+public class ChartOfAccountsConfigTest {
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(ChartOfAccountsConfigTest.class);
+	}
+
+	ChartOfAccountsConfig coa;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		// initialize Spring, Hibernate, etc.
+		new TestCaseInitializer();
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		coa = ChartOfAccountsConfig.load(FilePaths.CHART_OF_ACCOUNTS_DEFAULT);
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		coa = null;
+	}
+
+	@Test
+	public void testCreateCoa() throws Exception {
+		assertNotNull("error loading chart of accounts from "
+				+ "configuration file", coa);
+	}
+
+	@Test
+	public void testGetAllAccounts() throws Exception {
+		Set<GLAccount> glAccounts = coa.getGLAccounts();
+		assertEquals("default chart of accounts should have 56 "
+				+ "general ledger accounts", 56, glAccounts.size());
+		assert true;
+	}
+
+	/**
+	 * Make sure that the first account in the returned set is a top-level
+	 * account (also known as a category). A more comprehensive unit test would
+	 * ensure that child accounts are never seen before their parents when
+	 * iterating through the {@link Set} returned from
+	 * {@link ChartOfAccountsConfig#getGLAccounts()}.
+	 */
+	@Test
+	public void testFirstIsTopLevelAccount() throws Exception {
+		GLAccount first = coa.getGLAccounts().iterator().next();
+		assertNull(first.parentGlCode);
+	}
+
+	@Test
+	public void testGetCategory() throws Exception {
+		Node category = coa.getCategory(GLCategoryType.ASSET);
+		assertNotNull("failed to fetch a top-level GL account "
+				+ "(aka category)", category);
+
+		// TODO: should this be a test? do this as a runtime check in
+		// FinancialInitializer?
+		String name = category.getAttributes().getNamedItem(
+				ChartOfAccountsConfig.ACCOUNT_NAME_ATTR).getNodeValue();
+		assertEquals("assets category has unexpected name", "ASSETS", name);
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testConfigWithDupes() throws Exception {
+		String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
+				+ "<GLAccount code=\"11101\" name=\"Cash 1\" />"
+				+ "<GLAccount code=\"11101\" name=\"Cash 1\" />"
+				+ "<GLAccount code=\"11102\" name=\"Cash 2\" />"
+				+ "</GLAccount>";
+		ByteArrayInputStream bstr = new ByteArrayInputStream(invalid
+				.getBytes("UTF-8"));
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder parser = dbf.newDocumentBuilder();
+		Document document = parser.parse(bstr);
+
+		ChartOfAccountsConfig.traverse(document.getFirstChild(), null);
+	}
+
+	@Test
+	public void testTraverse() throws Exception {
+		String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
+				+ "<GLAccount code=\"11101\" name=\"Cash 1\" />"
+				+ "<GLAccount code=\"11102\" name=\"Cash 2\" />"
+				+ "</GLAccount>";
+		ByteArrayInputStream bstr = new ByteArrayInputStream(invalid
+				.getBytes("UTF-8"));
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder parser = dbf.newDocumentBuilder();
+		Document document = parser.parse(bstr);
+
+		Set<GLAccount> accounts = ChartOfAccountsConfig.traverse(document
+				.getFirstChild(), null);
+		assertEquals(3, accounts.size());
+
+		GLAccount expected = new GLAccount();
+		expected.glCode = "11102";
+		expected.name = "Cash 2";
+		expected.parentGlCode = "11100";
+		assertTrue(accounts.contains(expected));
+
+		GLAccount unExpected = new GLAccount();
+		unExpected.glCode = "11102";
+		unExpected.name = "Cash 3";
+		unExpected.parentGlCode = "11100";
+		assertFalse(accounts.contains(unExpected));
+
+		unExpected = new GLAccount();
+		unExpected.glCode = "11199";
+		unExpected.name = "Cash 2";
+		assertFalse(accounts.contains(unExpected));
+	}
+}

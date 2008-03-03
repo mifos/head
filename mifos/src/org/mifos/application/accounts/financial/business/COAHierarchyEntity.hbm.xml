@@ -4,14 +4,17 @@
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 	<class name="org.mifos.application.accounts.financial.business.COAHierarchyEntity" table="COAHIERARCHY">
-		<id name="categoryId" column="COA_ID" access="field">
+		<id name="accountId" column="COA_ID" access="field">
 			<generator class="foreign">
 				<param name="property">coa</param>
 			</generator>
 		</id>
 
-		<one-to-one name="coa" class="org.mifos.application.accounts.financial.business.COABO" outer-join="true" access="field" />
-		<many-to-one name="parentCategory" column="PARENT_COAID" class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" outer-join="true" cascade="none" update="false" insert="false" unique="true" access="field" />
+		<one-to-one name="coa" class="org.mifos.application.accounts.financial.business.COABO"
+			fetch="join" access="field" />
+		<many-to-one name="parentAccount" column="PARENT_COAID"
+			class="org.mifos.application.accounts.financial.business.COAHierarchyEntity"
+			fetch="join" cascade="none" unique="true" access="field" />
 
 	</class>
 </hibernate-mapping>

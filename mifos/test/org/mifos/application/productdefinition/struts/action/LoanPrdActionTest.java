@@ -81,6 +81,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
@@ -695,8 +696,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "35");
-		addRequestParameter("interestGLCode", "45");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -911,8 +912,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "7");
-		addRequestParameter("interestGLCode", "7");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -952,8 +953,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "7");
-		addRequestParameter("interestGLCode", "7");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -998,8 +999,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "7");
-		addRequestParameter("interestGLCode", "7");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.BANK_ACCOUNT_ONE.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -1250,8 +1251,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "35");
-		addRequestParameter("interestGLCode", "45");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -1301,8 +1302,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		// addRequestParameter("intDedDisbursementFlag", "0");
-		addRequestParameter("principalGLCode", "35");
-		addRequestParameter("interestGLCode", "45");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -1368,8 +1369,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		addRequestParameter("intDedDisbursementFlag", "1");
-		addRequestParameter("principalGLCode", "35");
-		addRequestParameter("interestGLCode", "45");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();
@@ -1419,8 +1420,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("minNoInstallments", "2");
 		addRequestParameter("defNoInstallments", "11");
 		// addRequestParameter("intDedDisbursementFlag", "0");
-		addRequestParameter("principalGLCode", "35");
-		addRequestParameter("interestGLCode", "45");
+		addRequestParameter("principalGLCode", TestGeneralLedgerCode.MANAGED_ICICI_SPLOAN.toString());
+		addRequestParameter("interestGLCode", TestGeneralLedgerCode.INTEREST.toString());
 		addRequestParameter("loanAmtCalcType", "1");
 		addRequestParameter("calcInstallmentType", "1");
 		actionPerform();

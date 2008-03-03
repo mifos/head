@@ -40,10 +40,8 @@ package org.mifos.application.accounts.financial.util.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.framework.spring.SpringUtil;
 
 /**
@@ -59,9 +57,10 @@ import org.mifos.framework.spring.SpringUtil;
  * performed via {@link SpringUtil#initializeSpring()}.
  */
 public class FinancialRules {
-	private static AccountPersistence accountPersistence = new AccountPersistence();
-	private Map<FinancialActionConstants, Short> actionToDebitAccount = new HashMap<FinancialActionConstants, Short>();
-	private Map<FinancialActionConstants, Short> actionToCreditAccount = new HashMap<FinancialActionConstants, Short>();
+	/** Values are general ledger account codes. */
+	private Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
+	/** Values are general ledger account codes. */
+	private Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();
 
 	private static FinancialRules financialRules = new FinancialRules();
 
@@ -69,14 +68,14 @@ public class FinancialRules {
 		return financialRules;
 	}
 
-	public short getCategoryAssociatedToAction(short financialActionId,
+	public String getGLAccountForAction(short financialActionId,
 			FinancialConstants type) throws FinancialException {
 		FinancialActionConstants financialAction = FinancialActionConstants
 				.getFinancialAction(financialActionId);
-		return getCategoryAssociatedToAction(financialAction, type);
+		return getGLAccountForAction(financialAction, type);
 	}
 
-	public short getCategoryAssociatedToAction(
+	public String getGLAccountForAction(
 			FinancialActionConstants financialAction, FinancialConstants type)
 			throws FinancialException {
 		if (type.equals(FinancialConstants.DEBIT)) {
@@ -92,53 +91,21 @@ public class FinancialRules {
 		}
 	}
 
-	/**
-	 * Spring looks for this mutator while initializing the
-	 * <code>actionToGLCodeDebit</code> property. Note that this property does
-	 * <em>not</em> correspond to an attribute on this bean. The actual member
-	 * variable mutated by this method is {@link #actionToDebitAccount}.
-	 */
-	public void setActionToGLCodeDebit(
-			HashMap<FinancialActionConstants, String> actionToGLCodeDebit) {
-		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeDebit
-				.entrySet()) {
-			actionToDebitAccount.put(entry.getKey(), accountPersistence
-					.getAccountIdFromGlCodeDuringInitialization(entry
-							.getValue()));
-		}
+	public Map<FinancialActionConstants, String> getActionToDebitAccount() {
+		return actionToDebitAccount;
 	}
 
-	/**
-	 * Spring looks for this mutator while initializing the
-	 * <code>actionToGLCodeCredit</code> property. Note that this property
-	 * does <em>not</em> correspond to an attribute on this bean. The actual
-	 * member variable mutated by this method is {@link #actionToCreditAccount}.
-	 */
-	public void setActionToGLCodeCredit(
-			HashMap<FinancialActionConstants, String> actionToGLCodeCredit) {
-		for (Entry<FinancialActionConstants, String> entry : actionToGLCodeCredit
-				.entrySet()) {
-			actionToCreditAccount.put(entry.getKey(), accountPersistence
-					.getAccountIdFromGlCodeDuringInitialization(entry
-							.getValue()));
-		}
+	public void setActionToDebitAccount(
+			Map<FinancialActionConstants, String> actionToDebitAccount) {
+		this.actionToDebitAccount = actionToDebitAccount;
 	}
 
-	// TODO: these methods will replace CategoryConstants
-	// (or does COABO#getCOAHead() already get top-level categories?)
-	public short getAssetsCategory() {
-		throw new RuntimeException("not implemented");
+	public Map<FinancialActionConstants, String> getActionToCreditAccount() {
+		return actionToCreditAccount;
 	}
 
-	public short getLiabilitiesCategory() {
-		throw new RuntimeException("not implemented");
-	}
-
-	public short getIncomeCategory() {
-		throw new RuntimeException("not implemented");
-	}
-
-	public short getExpensesCategory() {
-		throw new RuntimeException("not implemented");
+	public void setActionToCreditAccount(
+			Map<FinancialActionConstants, String> actionToCreditAccount) {
+		this.actionToCreditAccount = actionToCreditAccount;
 	}
 }

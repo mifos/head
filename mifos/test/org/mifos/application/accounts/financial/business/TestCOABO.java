@@ -4,29 +4,29 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestCOABO extends MifosTestCase {
 	public void testGetCOAHead() throws FinancialException {
-		FinancialInitializer.initialize();
-		COABO coaInterestLoans = ChartOfAccountsCache
-				.get(CategoryConstants.INTERESTONLOANS);
+		String interestOnLoansGlCode = "31101";
+		COABO coaInterestLoans = ChartOfAccountsCache.get(interestOnLoansGlCode);
 		COABO coaHead = coaInterestLoans.getCOAHead();
-		assertEquals(coaHead.getCategoryId().shortValue(),
-				CategoryConstants.INCOME);
+		assertEquals(GLCategoryType.INCOME, coaHead.getCategoryType());
 	}
 
 	public void testGetCurrentSubCategory() throws FinancialException {
-		FinancialInitializer.initialize();
-		COABO coaDirectIncome = ChartOfAccountsCache.get(CategoryConstants.DIRECTINCOME);
+		String directIncomeGlCode = "31000";
+		COABO coaDirectIncome = ChartOfAccountsCache.get(directIncomeGlCode);
 		Set<COABO> currentSubCategory = coaDirectIncome.getCurrentSubCategory();
-		assertEquals(currentSubCategory.size(),
-				TestConstants.FINANCIAL_DIRECTINCOME_SIZE);
+		assertEquals(TestConstants.FINANCIAL_DIRECTINCOME_SIZE,
+				currentSubCategory.size());
+		
+		GLCodeEntity g = (GLCodeEntity) HibernateUtil.getSessionTL().load(GLCodeEntity.class, new Short("1"));
+		System.out.println(g.getGlcode());
 	}
 
     public void testEquals() throws Exception {
@@ -39,17 +39,17 @@ public class TestCOABO extends MifosTestCase {
         	new COABO[] { chart53, chart53b, subclass }, 
         	new COABO[] { chart54 });
     }
-    
+
     public void testGetSubCategoryCOABOs() throws FinancialException {
     	String[] SUB_CATEGORY_NAMES = {"Petty Cash Accounts", "Bank Balances"};
     	String[] SUB_CATEGORY_GLCODES = {"11100", "11200"};
     	
-		FinancialInitializer.initialize();
-		COABO coa = ChartOfAccountsCache.get(CategoryConstants.CASHBANKBALANCE);
+		String cashBankBalanceGlCode = "11000";
+		COABO coa = ChartOfAccountsCache.get(cashBankBalanceGlCode);
 		List<COABO> subCategories = coa.getSubCategoryCOABOs();
 		for (int index=0; index < subCategories.size(); ++index) {
 			COABO subcat1 = subCategories.get(index);
-			assertEquals(SUB_CATEGORY_NAMES[index], subcat1.getCategoryName());
+			assertEquals(SUB_CATEGORY_NAMES[index], subcat1.getAccountName());
 			assertEquals(SUB_CATEGORY_GLCODES[index], subcat1.getAssociatedGlcode().getGlcode());
 		}    	
     }

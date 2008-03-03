@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -20,6 +21,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.COAHierarchyEntity;
+import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -265,7 +267,7 @@ public class AccountPersistence extends Persistence {
 		return getAccountIdFromGlCode(glCode, false);
 	}	
 
-	/*
+	/**
 	 * This method is equivalent to {@link getAccountIdFromGlCode} and 
 	 * is only for use during initialization as a workaround
 	 * for avoiding dependencies on auditing & string resolution during
@@ -277,6 +279,14 @@ public class AccountPersistence extends Persistence {
 	}	
 	
 	private Short getAccountIdFromGlCode(String glCode, boolean duringInitialization) {
+		// Without this check, Mayfly will fail to execute the query
+		// since the query parameter is a "null literal". This affects
+		// TestSurvey* unit tests.
+		// Even though this check is only required for Mayfly, it is
+		// good practice anyway to *not* execute a query that will never
+		// have any results.
+		if (null == glCode)	return null;
+
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.GL_CODE, glCode);
 		List queryResult;
@@ -316,7 +326,7 @@ public class AccountPersistence extends Persistence {
 	private void addAccountSubcategories(XMLConfiguration config, COABO coa, String path){
 		for (COABO subcat : coa.getSubCategoryCOABOs()) {
 			config.addProperty(path + "(-1)[@code]", subcat.getAssociatedGlcode().getGlcode());
-			config.addProperty(path + "[@name]", subcat.getCategoryName());
+			config.addProperty(path + "[@name]", subcat.getAccountName());
 			addAccountSubcategories(config, subcat, path + GL_ACCOUNT_TAG);
 		}
 		
@@ -329,7 +339,7 @@ public class AccountPersistence extends Persistence {
 		Iterator it = listAccounts.iterator();
 		while (it.hasNext()) {
 			COABO coa = (COABO)it.next();
-			String name = coa.getCategoryName();
+			String name = coa.getAccountName();
 			String glCode = coa.getAssociatedGlcode().getGlcode();
 			String path = "ChartOfAccounts";
 			if (glCode.equals(ASSETS_ACCOUNT_GL_CODE)) {
@@ -355,30 +365,58 @@ public class AccountPersistence extends Persistence {
 	}
 
 	public COABO addGeneralLedgerAccount(String name, String glCode,
-			String parentGLCode) {
-		return addGeneralLedgerAccount(name, glCode, getAccountIdFromGlCode(parentGLCode));
-	}	
+			String parentGLCode, GLCategoryType categoryType) {
+		return addGeneralLedgerAccount(name, glCode,
+				getAccountIdFromGlCode(parentGLCode), categoryType);
+	}
 	
 	public COABO addGeneralLedgerAccount(String name, String glcode,
-			Short parent_id) {
-		if (getAccountIdFromGlCode(glcode) != null) {
-			throw new RuntimeException("An account already exists with glcode: " + glcode);
+			Short parent_id, GLCategoryType categoryType) {
+		Short id = getAccountIdFromGlCode(glcode);
+		if (id != null) {
+			throw new RuntimeException(
+					"An account already exists with glcode: " + glcode
+							+ ". id was " + id);
 		}
+
 		GLCodeEntity glCodeEntity = new GLCodeEntity(null, glcode);
 		try {
 			createOrUpdate(glCodeEntity);
-			COABO newCOA = new COABO(name, glCodeEntity);
-			createOrUpdate(newCOA);
-			COABO parentCOA = (COABO)HibernateUtil.getSessionTL().load(COABO.class, parent_id);
-			COAHierarchyEntity coaHierarchyEntity = new COAHierarchyEntity(newCOA,parentCOA.getCoaHierarchy());
+			COABO newAccount = new COABO(name, glCodeEntity);
+			newAccount.setCategoryType(categoryType);
+			createOrUpdate(newAccount);
+
+			COABO parentCOA;
+			COAHierarchyEntity coaHierarchyEntity = null;
+			if (null == parent_id) {
+				coaHierarchyEntity = new COAHierarchyEntity(newAccount, null);
+			}
+			else {
+				parentCOA = (COABO) HibernateUtil.getSessionTL().load(
+						COABO.class, parent_id);
+				coaHierarchyEntity = new COAHierarchyEntity(newAccount,
+						parentCOA.getCoaHierarchy());
+			}
+
 			createOrUpdate(coaHierarchyEntity);
-			return newCOA;
+			newAccount.setCoaHierarchy(coaHierarchyEntity);
+
+			return newAccount;
 		}
 		catch (PersistenceException e) {
 			throw new RuntimeException(e);
-		}		
-	}	
-	
-	
+		}
+	}
+
+	/**
+	 * A "category" is a top-level general ledger account. Use this method to
+	 * fetch a single, specific category from the database.
+	 */
+	public COABO getCategory(GLCategoryType categoryType) {
+		Query topLevelAccount = getSession().getNamedQuery(
+				NamedQueryConstants.GET_TOP_LEVEL_ACCOUNT);
+		topLevelAccount.setParameter("categoryType", categoryType.toString());
+		return (COABO) topLevelAccount.uniqueResult();
+	}
 }
 

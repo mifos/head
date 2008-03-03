@@ -45,35 +45,37 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
-// TODO: don't use IDs from COA table
 public class ChartOfAccountsCache {
-	private static Map<Short, COABO> cache = new HashMap<Short, COABO>();
+	/** Keys are general ledger account codes, like "10000". */
+	private static Map<String, COABO> cache = new HashMap<String, COABO>();
 
 	public static boolean isInitialized() {
 		return !cache.isEmpty();
 	}
-	
+
 	public static void add(COABO coa) {
 		if (coa == null) {
 			throw new RuntimeException("Got a null coa reference");
 		}
-		if (cache.get(coa.getCategoryId()) == null) {
-			cache.put(coa.getCategoryId(), coa);
-		} else {
-			throw new RuntimeException("ChartOfAcctionsCache already contains an account with id: " + coa.getCategoryId());
+		if (cache.get(coa.getGlCode()) == null) {
+			cache.put(coa.getGlCode(), coa);
+		}
+		else {
+			throw new RuntimeException("ChartOfAcctionsCache already contains"
+					+ " an account with gl code: " + coa.getGlCode()
+					+ ". name is: " + coa.getAccountName() + ", id is: "
+					+ coa.getAccountId());
 		}
 	}
 
-	// TODO: callers pass in CategoryConstants. Change this so "assets account"
-	// database row ID is fetched dynamically
-	public static COABO get(short categoryId) throws FinancialException {
-		COABO category = cache.get(categoryId);
-		if (category == null) {
+	public static COABO get(String glCode) throws FinancialException {
+		COABO glAccount = cache.get(glCode);
+		if (glAccount == null) {
 			throw new FinancialException(
-					FinancialExceptionConstants.CATEGORYNOTFOUND);
+					FinancialExceptionConstants.ACCOUNT_NOT_FOUND);
 		}
 
-		return category;
+		return glAccount;
 	}
 
 }

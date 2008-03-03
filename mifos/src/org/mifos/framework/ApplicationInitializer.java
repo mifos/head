@@ -79,11 +79,6 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					ProcessFlowRules.init();
 					initializeSecurity();
 
-					FinancialInitializer.initialize();
-					EntityMasterData.getInstance().init();
-					initializeEntityMaster();
-					(new MifosScheduler()).registerTasks();
-					
 					// 1/4/08 Hopefully a temporary change to force Spring
 					// to initialize here (rather than in struts-config.xml
 					// prior to loading label values into a 
@@ -91,7 +86,13 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					// cache is refactored away, we should be able to move
 					// back to the struts based Spring initialization
 					SpringUtil.initializeSpring();
-					
+
+					// Spring must be initialized before FinancialInitializer
+					FinancialInitializer.initialize();
+					EntityMasterData.getInstance().init();
+					initializeEntityMaster();
+					(new MifosScheduler()).registerTasks();
+
 					Configuration.getInstance();
 					MifosConfiguration.getInstance().init();
 					configureAuditLogValues(Localization.getInstance().getMainLocale());

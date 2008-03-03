@@ -75,6 +75,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -93,7 +94,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	private String flowKey;
 	private String flowKey1;
-
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -1589,9 +1590,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
