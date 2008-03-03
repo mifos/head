@@ -47,6 +47,11 @@ public class TestSurvey extends MifosTestCase {
 		super.setUp();
 		database = TestDatabase.makeStandard();
 		session = database.installInThreadLocal();
+
+		// Force loading the chart of accounts since this data would otherwise
+		// not be present in a Mayfly database freshly initialized from
+		// particular SQL scripts. Why does setUp blow away the database every
+		// time, anyway? Must be working around *another* issue...
 		FinancialInitializer.loadCOA();
 	}
 

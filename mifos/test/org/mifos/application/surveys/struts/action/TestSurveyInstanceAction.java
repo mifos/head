@@ -12,7 +12,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -53,6 +52,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -69,12 +69,13 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		FinancialInitializer.loadCOA();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		HibernateUtil.resetMySQLDatabase();
+		// FIXME: Why is resetting the database necessary? Is there a more
+		// elegant way to clean up after particular tests have run?
+		TestDatabase.resetMySQLDatabase();
 		super.tearDown();
 	}
 

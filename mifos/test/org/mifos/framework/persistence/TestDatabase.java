@@ -3,6 +3,7 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import net.sourceforge.mayfly.dump.SqlDumper;
 import org.hibernate.Interceptor;
 import org.hibernate.classic.Session;
 import org.junit.Assert;
+import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
@@ -157,5 +159,20 @@ public class TestDatabase implements SessionOpener {
 	    executeScript(connection, "sql/latest-schema-checkpoint.sql");
 		executeScript(connection, "sql/latest-data-checkpoint.sql");
 	}
-	
+
+	public static void resetMySQLDatabase() throws Exception {
+		Connection connection = HibernateUtil.getSessionTL().connection();
+		SqlUpgrade.execute(new FileInputStream("sql/mifosdroptables.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/latest-schema.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/latest-data.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/testdbinsertionscript.sql"), connection);
+		HibernateUtil.closeSession();
+		
+		// If the database is ever blown away, we must repopulate chart of
+		// accounts data since some unit tests rely on its presence. It must
+		// be created via this method since adding it via an sql script would
+		// invalidate *other* unit tests that assume this method has been
+		// called.
+		FinancialInitializer.initialize();
+	}	
 }
