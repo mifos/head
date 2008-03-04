@@ -1,5 +1,6 @@
 package org.mifos.application.holiday.business;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.framework.business.BusinessObject;
 
@@ -7,18 +8,18 @@ public class RepaymentRuleEntity extends BusinessObject {
 
 	private LookUpValueEntity lookUpObject;
 	
-	private String lookUpValue;
+	private String lookUpValueKey;
 
 	private Short id;
 
 	protected RepaymentRuleEntity() {
-	       lookUpValue = null;
+		lookUpValueKey = null;
 	       lookUpObject = null;
 	}
 
-	public RepaymentRuleEntity(Short id, String lookUpValue) {
+	public RepaymentRuleEntity(Short id, String lookUpValueKey) {
 		this.id = id;
-	    this.lookUpValue = lookUpValue;
+	    this.lookUpValueKey = lookUpValueKey;
 	}
 	
 	public Short getId() {
@@ -30,15 +31,15 @@ public class RepaymentRuleEntity extends BusinessObject {
 	}
 
 	public String getLookUpValue() {
-		return this.lookUpValue;
+		return MessageLookup.getInstance().lookup(lookUpValueKey);
 	}
 	
 	private void setId(Short Id) {
 		this.id = Id;		
 	}
 
-	private void setLookUpValue(String lookUpValue) {
-		this.lookUpValue = lookUpValue;
+	private void setLookUpValueKey(String lookUpValueKey) {
+		this.lookUpValueKey = lookUpValueKey;
 	}
 	
 	private void setLookUpValue(LookUpValueEntity lookUpObject) {

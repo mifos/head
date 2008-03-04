@@ -32,12 +32,11 @@ public class HolidayPersistence extends MasterPersistence {
 		return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK);
 	}*/
 
-	public List<HolidayBO> getHolidays(int year, int localId) 
+	public List<HolidayBO> getHolidays(int year) 
 	throws PersistenceException {
 		SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		isoDateFormat.setLenient(false);
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("LOCALE_ID", new Short((short) localId));
 		try {
 			parameters.put("START_OF_YEAR", isoDateFormat.parse(year + "-01-01"));
 			parameters.put("END_OF_YEAR", isoDateFormat.parse(year + "-12-31"));
@@ -49,12 +48,17 @@ public class HolidayPersistence extends MasterPersistence {
 		return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
 	}
 	
-	public List<RepaymentRuleEntity> getRepaymentRuleTypes(int localId) throws PersistenceException{
+	public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws PersistenceException{
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("LOCALE_ID", localId);
-		
 		return executeNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE_TYPES, parameters);
+	}
+	
+	public RepaymentRuleEntity getRepaymentRule(short repaymentRuleId) throws PersistenceException{
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("repaymentRuleId", repaymentRuleId);
+		return (RepaymentRuleEntity)execUniqueResultNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE, parameters);
 	}
 	
 	public List<LoanScheduleEntity> getAllLoanSchedules(HolidayBO holiday) 

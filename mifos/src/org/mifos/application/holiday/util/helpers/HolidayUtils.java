@@ -48,8 +48,8 @@ public class HolidayUtils {
 		try {			
 			List<HolidayBO> holidayList = 
 				holidayService.getHolidays(
-						day.get(Calendar.YEAR), 1);			
-			holidayList.addAll(holidayService.getHolidays(day.get(Calendar.YEAR)+1, 1));
+						day.get(Calendar.YEAR));			
+			holidayList.addAll(holidayService.getHolidays(day.get(Calendar.YEAR)+1));
 			for (HolidayBO holidayEntity : holidayList) {				
 				if((DateUtils.getDateWithoutTimeStamp(day.getTimeInMillis())
 						.compareTo(DateUtils.getDateWithoutTimeStamp(holidayEntity.getHolidayFromDate().getTime())) >= 0 ) &&

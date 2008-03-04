@@ -34,18 +34,18 @@ public class HolidayBusinessService extends BusinessService {
 		}
 	}
 
-	public List<HolidayBO> 	getHolidays(int year, int localId) throws ServiceException {
+	public List<HolidayBO> 	getHolidays(int year) throws ServiceException {
 		//HolidayBO.isWorkingDay(Calendar.getInstance());		
 		try {
-			return new HolidayPersistence().getHolidays(year, localId);
+			return new HolidayPersistence().getHolidays(year);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
 	
-	public List<RepaymentRuleEntity> getRepaymentRuleTypes(int localId) throws ServiceException{		
+	public List<RepaymentRuleEntity> getRepaymentRuleTypes() throws ServiceException{		
 		try {
-			return new HolidayPersistence().getRepaymentRuleTypes(localId);
+			return new HolidayPersistence().getRepaymentRuleTypes();
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}

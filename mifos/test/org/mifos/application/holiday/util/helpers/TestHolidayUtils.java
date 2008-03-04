@@ -20,6 +20,8 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
+import org.mifos.application.holiday.business.RepaymentRuleEntity;
+import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -153,9 +155,9 @@ public class TestHolidayUtils extends MifosTestCase {
 		Date testDate = getDate("21/08/2007");
 		
 		// Create Holiday
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Same Day Holiday",
-				(short) 1, (short) 1, "Same Day");// the last string has no effect.
+		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Same Day Holiday",entity);// the last string has no effect.
 		
 		// disable holiday Validation because we are creating Holiday with fixed dates 
 		// which one day it may violate the validation rules.
@@ -188,8 +190,9 @@ public class TestHolidayUtils extends MifosTestCase {
 		
 		// Create Holiday
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)2);
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Next Meeting Or Repayment Holiday",
-				(short) 1, (short) 2, "Next MeetingOrRepayment");// the last string has no effect.
+				entity);// the last string has no effect.
 		
 		// Disable holiday Validation because we are creating Holiday with fixed dates 
 		// which one day it may violate the validation rules.
@@ -487,9 +490,10 @@ public class TestHolidayUtils extends MifosTestCase {
 									Short repaymentRule, String holidayName) 
 	throws ApplicationException {
 		// Create Holiday
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRule);
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, holidayName,
-				(short) 1, repaymentRule, "repaymentRule");// the last string has no effect.
+				entity);// the last string has no effect.
 		
 		// Disable holiday Validation because we are creating Holiday with fixed dates 
 		// which one day it may violate the validation rules.

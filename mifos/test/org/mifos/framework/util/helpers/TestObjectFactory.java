@@ -131,6 +131,8 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
+import org.mifos.application.holiday.business.RepaymentRuleEntity;
+import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.FundCodeEntity;
@@ -1693,8 +1695,9 @@ public class TestObjectFactory {
 			Date holidayThruDate, String holidayName, Short repaymentRuleId,
 			Short localeId) throws Exception {
 
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule(repaymentRuleId);
 		HolidayBO accountHoliday = new HolidayBO(holidayPK, holidayThruDate,
-				holidayName, localeId, repaymentRuleId, "");
+				holidayName, entity);
 
 		accountHoliday.save();
 

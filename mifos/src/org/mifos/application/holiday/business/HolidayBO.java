@@ -17,10 +17,8 @@ public class HolidayBO extends BusinessObject {
 	private Date holidayThruDate;
 
 	private String holidayName;
-
-	private Short repaymentRuleId;
-
-	private String repaymentRule;
+	
+	private RepaymentRuleEntity repaymentRuleEntity;
 
 	private boolean validationEnabled = true;
 	
@@ -40,8 +38,7 @@ public class HolidayBO extends BusinessObject {
 	}
 
 	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate,
-			String holidayName, Short localeId, Short repaymentRuleId,
-			String repaymentRule) throws ApplicationException {
+			String holidayName, RepaymentRuleEntity repaymentRuleEntity) throws ApplicationException {
 
 		this.holidayPK = new HolidayPK();
 
@@ -55,8 +52,26 @@ public class HolidayBO extends BusinessObject {
 		}
 		this.holidayThruDate = holidayThruDate;
 		this.holidayName = holidayName;
-		this.repaymentRuleId = repaymentRuleId;
-		this.repaymentRule = repaymentRule;
+		this.repaymentRuleEntity = repaymentRuleEntity;
+		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
+	}
+	
+	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate,
+			String holidayName, short repaymentRuleId, String lookupValueKey) throws ApplicationException {
+
+		this.holidayPK = new HolidayPK();
+
+		if (holidayPK != null) {
+			this.holidayPK.setOfficeId(holidayPK.getOfficeId());
+			this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
+		}
+		else {
+			throw new ApplicationException(
+					HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
+		}
+		this.holidayThruDate = holidayThruDate;
+		this.holidayName = holidayName;
+		this.repaymentRuleEntity = new RepaymentRuleEntity(repaymentRuleId, lookupValueKey);
 		this.holidayChangesAppliedFlag = YesNoFlag.NO.getValue();
 	}
 
@@ -64,8 +79,8 @@ public class HolidayBO extends BusinessObject {
 		return this.holidayPK;
 	}
 
-	public Short getRepaymentRuleId() {
-		return this.repaymentRuleId;
+	public RepaymentRuleEntity getRepaymentRuleEntity() {
+		return this.repaymentRuleEntity;
 	}
 
 	public Date getHolidayFromDate() {
@@ -86,8 +101,8 @@ public class HolidayBO extends BusinessObject {
 
 	@SuppressWarnings("unused")
 	// see .hbm.xml file
-	private void setRepaymentRuleId(Short repaymentRuleId) {
-		this.repaymentRuleId = repaymentRuleId;
+	private void setRepaymentRuleEntity(RepaymentRuleEntity repaymentRuleEntity) {
+		this.repaymentRuleEntity = repaymentRuleEntity;
 	}
 
 	@SuppressWarnings("unused")
@@ -144,7 +159,7 @@ public class HolidayBO extends BusinessObject {
 			this.validateFromDateAgainstThruDate(this.getHolidayFromDate(), this.getHolidayThruDate());
 		}
 		
-		if(this.getRepaymentRuleId().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
+		if(this.getRepaymentRuleEntity().getLookUpValue().equals(RepaymentRuleTypes.SAME_DAY.getValue()))
 			this.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
 		
 		new HolidayPersistence().createOrUpdate(this);
@@ -167,8 +182,14 @@ public class HolidayBO extends BusinessObject {
 	}
 
 	public String getRepaymentRule() {
-		return repaymentRule;
+		return repaymentRuleEntity.getLookUpValue();
 	}
+	
+	public Short getRepaymentRuleId()
+	{
+		return repaymentRuleEntity.getId();
+	}
+
 
 	private void validateFromDateAgainstCurrentDate(Date fromDate)
 			throws ApplicationException {

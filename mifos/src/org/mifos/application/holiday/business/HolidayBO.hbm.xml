@@ -16,23 +16,24 @@
 
 	    <property name="holidayThruDate" column="HOLIDAY_THRU_DATE" type="date" />
 		<property name="holidayName" column="HOLIDAY_NAME" type="string" />
-		<property name="repaymentRuleId" column="REPAYMENT_RULE_ID" type="short"/>
+		<many-to-one name="repaymentRuleEntity" column="REPAYMENT_RULE_ID" 		
+			 class="org.mifos.application.holiday.business.RepaymentRuleEntity" cascade="none" update="false" 	
+	     unique="true" insert="true"  /> 
 		<property name="holidayChangesAppliedFlag" column="HOLIDAY_CHANGES_APPLIED_FLAG"/>        
 	</class>
 
 	<!-- Holiday Specific Queries  -->
 	<query name="holiday.getHolidays">
    	       <![CDATA[select new org.mifos.application.holiday.business.HolidayBO(holidayBO.holidayPK, 
-   	       				   holidayBO.holidayThruDate, holidayBO.holidayName, lvl.localeId, 
-   	       				   holidayBO.repaymentRuleId, lvl.lookUpValue)
+   	       				   holidayBO.holidayThruDate, holidayBO.holidayName,  
+   	       				   repaymentRuleEntity.id, lv.lookUpName)
  			          from org.mifos.application.holiday.business.HolidayBO holidayBO,
- 			               org.mifos.application.holiday.business.RepaymentRuleEntity repaymentRule,
-			               org.mifos.application.master.business.LookUpValueLocaleEntity lvl 
-                     where lvl.lookUpId = repaymentRule.lookUpValue.lookUpId 
-                       and lvl.localeId = :LOCALE_ID
-                       and holidayBO.repaymentRuleId = repaymentRule.id
+ 			               org.mifos.application.holiday.business.RepaymentRuleEntity repaymentRuleEntity
+ 			               ,org.mifos.application.master.business.LookUpValueEntity lv  
+                     where  holidayBO.repaymentRuleEntity.id = repaymentRuleEntity.id
 		               and holidayBO.holidayPK.holidayFromDate >= :START_OF_YEAR
                        and holidayBO.holidayPK.holidayFromDate <= :END_OF_YEAR
+                       and lv.lookUpId = repaymentRuleEntity.lookUpValue.lookUpId  
                        order by holidayBO.holidayPK.holidayFromDate
    	       ]]>
 	</query>

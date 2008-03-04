@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
+import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
@@ -33,7 +34,8 @@ public class TestApplyHolidayChangesHelper extends MifosTestCase {
 	
 	public void testExecuteAgainstAppliedHolidays() throws Exception {		
 		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
 		holidayEntity.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
@@ -59,7 +61,8 @@ public class TestApplyHolidayChangesHelper extends MifosTestCase {
 	
 	public void testExecuteAgainst_Un_AppliedHolidays() throws Exception {		
 		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
+		RepaymentRuleEntity entity = new HolidayPersistence().getRepaymentRule((short)1);
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", entity);
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
 

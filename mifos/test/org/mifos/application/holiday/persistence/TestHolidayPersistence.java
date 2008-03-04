@@ -30,7 +30,8 @@ public class TestHolidayPersistence extends MifosTestCase {
 
 	public void testGetHolidays() throws Exception {
 		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
+		RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity((short)1, "RepaymentRule-SameDay");
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", repaymentRuleEntity);
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
 
@@ -38,27 +39,28 @@ public class TestHolidayPersistence extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR), 1);
+		List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR));
 		assertNotNull(holidays);
 		assertEquals(1, holidays.size());
 
 		TestObjectFactory.cleanUpHolidays(holidays);
 		holidayEntity = null;
 
-		holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR) - 1, 1);
+		holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR) - 1);
 		assertNotNull(holidays);
 		assertEquals(holidays.size(), 0);
 	}
 
 	public void testGetRepaymentRuleTypes() throws Exception {
-		List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence().getRepaymentRuleTypes((short) 1);
+		List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence().getRepaymentRuleTypes();
 		assertNotNull(repaymentRules);
 		assertEquals(3, repaymentRules.size());
 	}
 	
 	public void testGetUnAppliedHolidaysAgainstAppliedOnes() throws Exception {
 		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
+		RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity((short)1, "RepaymentRule-SameDay");
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", repaymentRuleEntity);
 		holidayEntity.setHolidayChangesAppliedFlag(YesNoFlag.YES.getValue());
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
@@ -79,7 +81,8 @@ public class TestHolidayPersistence extends MifosTestCase {
 	
 	public void testGetUnAppliedHolidaysAgainst_Un_AppliedOnes() throws Exception {
 		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
-		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
+		RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity((short)1, "RepaymentRule-SameDay");
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", repaymentRuleEntity);
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
 

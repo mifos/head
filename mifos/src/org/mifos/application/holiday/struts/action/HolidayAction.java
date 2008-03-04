@@ -17,6 +17,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
+import org.mifos.application.holiday.persistence.HolidayPersistence;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -70,7 +71,7 @@ public class HolidayAction extends BaseAction {
 		request.getSession().setAttribute("HolidayActionForm", null);
 		
 		SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, 
-				getRepaymentRuleTypes(userContext.getLocaleId()),request);		
+				getRepaymentRuleTypes(), request);		
 				
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -91,11 +92,11 @@ public class HolidayAction extends BaseAction {
 	}
 	
 	private List<HolidayBO> getHolidays(int year, int localeId) throws Exception{
-		return getHolidayBizService().getHolidays(year, localeId);
+		return getHolidayBizService().getHolidays(year);
 	}
 	
-	private List<RepaymentRuleEntity> getRepaymentRuleTypes(int localId) throws Exception{
-		return getHolidayBizService().getRepaymentRuleTypes(localId);
+	private List<RepaymentRuleEntity> getRepaymentRuleTypes() throws Exception{
+		return getHolidayBizService().getRepaymentRuleTypes();
 	}
 	
 	public ActionForward addHoliday(ActionMapping mapping, ActionForm form,
@@ -106,7 +107,7 @@ public class HolidayAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		
 		SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, 
-				getRepaymentRuleTypes(userContext.getLocaleId()),request);		
+				getRepaymentRuleTypes(),request);		
 		
 		return mapping.findForward(ActionForwards.load_success.toString());//"create_office_holiday");
 	}
@@ -128,7 +129,7 @@ public class HolidayAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 				
 		SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, 
-				getRepaymentRuleTypes(uc.getLocaleId()),request);
+				getRepaymentRuleTypes(), request);
 		
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
@@ -143,7 +144,7 @@ public class HolidayAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		
 		SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, 
-				getRepaymentRuleTypes(userContext.getLocaleId()),request);
+				getRepaymentRuleTypes(),request);
 		
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
@@ -214,12 +215,12 @@ public class HolidayAction extends BaseAction {
 		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 		
 		HolidayPK holidayPK = new HolidayPK((short)1,holidayActionForm.getFromDate());
-		
+		short repaymentRuleId = Short.parseShort(holidayActionForm.getRepaymentRuleId());
+		RepaymentRuleEntity repaymentRuleEntity = new HolidayPersistence().getRepaymentRule(repaymentRuleId);
 		HolidayBO accountHoliday = new HolidayBO(holidayPK, 
 				holidayActionForm.getThruDate(), 
-				holidayActionForm.getHolidayName(), 
-				getUserContext(request).getLocaleId(), 
-				Short.parseShort(holidayActionForm.getRepaymentRuleId()), "");
+				holidayActionForm.getHolidayName(),  
+				repaymentRuleEntity);
 
 		accountHoliday.update(holidayPK, 
 							  holidayActionForm.getThruDate(), 
