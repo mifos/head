@@ -53,6 +53,11 @@ public class MeetingDetailsEntity extends PersistentObject {
 
 	private final RecurrenceTypeEntity recurrenceType;
 
+	/*
+	 * The number of intervals between meetings.  For example, if meetings
+	 * are weekly and recurAfter = 1 then meetings occur every week, 
+	 * recurAfter = 2 means every second week.
+	 */
 	private Short recurAfter;
 
 	private final MeetingRecurrenceEntity meetingRecurrence;
