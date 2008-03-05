@@ -1,5 +1,3 @@
-ALTER TABLE coa DROP COLUMN CATEGORY_TYPE;
-
 /*Added for financials*/
 /* The table GLCODE will contain the different glcodes supported by the MFI, used in financial transactions - Configuration */
 INSERT INTO GL_CODE(GLCODE_ID,GLCODE_VALUE) 

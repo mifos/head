@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.SqlUpgrade;
@@ -59,7 +60,7 @@ public class Upgrade176 extends Upgrade {
 		finally {
 			statement.close();
 		}
-		
+
 		return numRows < 1;
 	}
 
@@ -72,6 +73,8 @@ public class Upgrade176 extends Upgrade {
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence dvp)
 			throws IOException, SQLException {
+		execute(connection,
+				"ALTER TABLE coa ADD COLUMN CATEGORY_TYPE VARCHAR(20)");
 		if (isTableEmpty("fees", connection)
 				&& isTableEmpty("financial_trxn", connection)
 				&& isTableEmpty("loan_offering", connection)
@@ -80,10 +83,34 @@ public class Upgrade176 extends Upgrade {
 				&& isTableEmpty("program", connection)
 				&& isTableEmpty("savings_offering", connection)) {
 
+			// looks like a fresh database, at least in terms of the chart of
+			// accounts data. Blow away all chart of accounts tables and let
+			// FinancialInitializer do its thing.
 			SqlUpgrade upgrade = dvp.findUpgradeDowngradeScript(this
 					.higherVersion(), "upgrade_to_176_conditional.sql");
 
 			upgrade.runScript(connection);
+		}
+		else {
+			// Some chart of accounts data exists. Try upgrading with a little
+			// more finesse.
+
+			// Yep, we're using string concatenation and not positional
+			// parameters, so don't copy this unless you know what you're doing.
+			// It's ok in this case because the string we're stuffing in there
+			// is basically known/hardcoded. This may or may not work depending
+			// on how customized a particular database is. If not, it will be
+			// need to be hand-migrated.
+			execute(connection, "UPDATE coa SET category_type = '"
+					+ GLCategoryType.ASSET + "' WHERE COA_Name = 'ASSETS'");
+			execute(connection, "UPDATE coa SET category_type = '"
+					+ GLCategoryType.LIABILITY
+					+ "' WHERE COA_Name = 'LIABILITIES'");
+			execute(connection, "UPDATE coa SET category_type = '"
+					+ GLCategoryType.INCOME + "' WHERE COA_Name = 'INCOME'");
+			execute(connection, "UPDATE coa SET category_type = '"
+					+ GLCategoryType.EXPENDITURE
+					+ "' WHERE COA_Name = 'EXPENDITURE'");
 		}
 		upgradeVersion(connection);
 	}
@@ -92,6 +119,7 @@ public class Upgrade176 extends Upgrade {
 	public void downgrade(Connection connection,
 			DatabaseVersionPersistence databaseVersionPersistence)
 			throws IOException, SQLException {
+		execute(connection, "ALTER TABLE coa DROP COLUMN CATEGORY_TYPE");
 		if (isTableEmpty("coa", connection)) {
 			SqlUpgrade upgrade = databaseVersionPersistence
 					.findUpgradeDowngradeScript(this.higherVersion(),

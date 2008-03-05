@@ -9,8 +9,6 @@ DELETE FROM coa_idmapper;
 DELETE FROM coa;
 DELETE FROM gl_code;
 
-ALTER TABLE coa ADD COLUMN CATEGORY_TYPE VARCHAR(20);
-
 -- TODO: here are some ideas for futher/future improvements to the
 -- chart of accounts tables...
 --
