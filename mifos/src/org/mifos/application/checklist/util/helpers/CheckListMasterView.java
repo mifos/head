@@ -1,18 +1,19 @@
 package org.mifos.application.checklist.util.helpers;
 
 import java.io.Serializable;
+import org.mifos.application.master.MessageLookup;
 
 public class CheckListMasterView implements Serializable {
 
 	private boolean isCustomer;
 
-	private String masterTypeName;
+	private String lookupKey;
 
 	private Short masterTypeId;
 
-	public CheckListMasterView(Short id, String name) {
+	public CheckListMasterView(Short id, String lookupKey) {
 		this.masterTypeId = id;
-		this.masterTypeName = name;
+		this.lookupKey = lookupKey;
 	}
 
 	public Short getMasterTypeId() {
@@ -20,7 +21,12 @@ public class CheckListMasterView implements Serializable {
 	}
 
 	public String getMasterTypeName() {
-		return masterTypeName;
+		if (isCustomer)
+			return MessageLookup.getInstance().lookupLabel(lookupKey);
+		else
+			return MessageLookup.getInstance().lookup(lookupKey);
+
+
 	}
 
 	public boolean getIsCustomer() {

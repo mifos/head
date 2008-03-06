@@ -27,7 +27,6 @@ public class CheckListPersistence extends MasterPersistence {
 		List<CheckListMasterView> masterData = new ArrayList();
 
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("localeId", localeId);
 		masterData = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_CUSTOMER_CHECKLIST,
 				queryParameters);

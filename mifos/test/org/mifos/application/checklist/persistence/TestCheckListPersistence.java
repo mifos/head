@@ -97,10 +97,10 @@ public class TestCheckListPersistence extends MifosTestCase {
 
 	public void testCheckListMasterView() {
 		CheckListMasterView checkListMasterView = new CheckListMasterView(Short
-				.valueOf("1"), "kendra");
+				.valueOf("1"), "Loan");
 		checkListMasterView.setIsCustomer(true);
 		assertEquals(Short.valueOf("1"), checkListMasterView.getMasterTypeId());
-		assertEquals("kendra", checkListMasterView.getMasterTypeName());
+		assertEquals("Loan", checkListMasterView.getMasterTypeName());
 		assertEquals(true, checkListMasterView.getIsCustomer());
 	}
 
