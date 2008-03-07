@@ -3239,7 +3239,9 @@ INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VAL
 /* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */
 INSERT INTO PERSONNEL_ROLE(PERSONNEL_ROLE_ID, ROLE_ID, PERSONNEL_ID)VALUES(1,1,1);
 
-/* The table Financial Action will contain the different financial actions supported by the system like Payment , Adjutment etc - System */
+/* The table Financial Action will contain the different financial actions
+   supported by the system like Payment , Adjutment etc - System. Constants in
+   FinancialActionConstants map to IDs in this table. */
 INSERT INTO FINANCIAL_ACTION
 VALUES(1,198);
 INSERT INTO FINANCIAL_ACTION
@@ -3262,8 +3264,12 @@ INSERT INTO FINANCIAL_ACTION VALUES(11,205);
 INSERT INTO FINANCIAL_ACTION VALUES(12,206);
 INSERT INTO FINANCIAL_ACTION VALUES(13,207);
 INSERT INTO FINANCIAL_ACTION VALUES(14,208);
+/* TODO: delete this one (and associated lookup values), it doesn't appear in
+   FinancialActionConstants and can therefore never be used. */
 INSERT INTO FINANCIAL_ACTION VALUES(15,209);
 INSERT INTO FINANCIAL_ACTION VALUES(16,363);
+/* TODO: delete this one (and associated lookup values), it doesn't appear in
+   FinancialActionConstants and can therefore never be used. */
 INSERT INTO FINANCIAL_ACTION VALUES(17,365);
 INSERT INTO FINANCIAL_ACTION VALUES(18,367);
 INSERT INTO FINANCIAL_ACTION VALUES(19,368);

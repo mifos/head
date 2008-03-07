@@ -52,7 +52,13 @@ public enum FinancialActionConstants {
 	VOLUNTORYDEPOSIT (10),
 	MANDATORYWITHDRAWAL (11),
 	VOLUNTORYWITHDRAWAL (12),
+	
+	/**
+	 * Not currently used in the code. If this action is to be supported, it
+	 * must also be added to the bean config file used by {@link FinancialRules}.
+	 */
 	REVERSAL_ADJUSTMENT (13),
+	
 	SAVINGS_INTERESTPOSTING (14),
 	CUSTOMERACCOUNTMISCFEESPOSTING (16),
 	MANDATORYDEPOSIT_ADJUSTMENT (18),
