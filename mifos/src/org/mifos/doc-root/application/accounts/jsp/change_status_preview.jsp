@@ -75,18 +75,13 @@
 								<td class="fontnormal">&nbsp;</td>
 							</tr>
 							<tr>
-								<td class="fontnormal"><mifos:mifoslabel
-									name="accounts.ChecklistMsg" bundle="accountsUIResources"></mifos:mifoslabel>
-								<mifos:mifoslabel name="accounts.ClickSubmit" bundle="accountsUIResources" />
-								<mifos:mifoslabel name="accounts.ClickCancel1"	bundle="accountsUIResources" />
+								<td class="fontnormal">
 								<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '1'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+									<mifos:mifoslabel name="accounts.CheckLoanTasksComplete" bundle="accountsUIResources" />
 								</c:if>
 								<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '2'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+									<mifos:mifoslabel name="accounts.CheckSavingsTasksComplete" bundle="accountsUIResources" />
 								</c:if>
-							<mifos:mifoslabel name="accounts.ClickCancel2"
-								bundle="accountsUIResources"></mifos:mifoslabel>
 								</td>
 							</tr>
 						</c:if>
@@ -113,7 +108,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button property="editInfo"
-								value="Edit Status" styleClass="insidebuttn" style="width:65px;"
+								styleClass="insidebuttn"
 								onclick="GoToEditPage(this.form)">
 								<mifos:mifoslabel name="accounts.EditStatus"
 									bundle="accountsUIResources"></mifos:mifoslabel>
@@ -127,10 +122,10 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit property="btn"
-								styleClass="buttn" style="width:70px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="accounts.submit" bundle="accountsUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="accounts.cancel" bundle="accountsUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

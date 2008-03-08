@@ -136,15 +136,14 @@
 										<customtags:headerLink selfLink="false"/>
 										<html-el:link href="customerAccountAction.do?method=load">
 								          	<c:if test="${param.input == 'ViewCenterCharges'}">
-								          	   <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-								          	</c:if>
-								           <c:if test="${param.input == 'ViewGroupCharges'}">
-								          	   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-								          	</c:if>
-								          	<c:if test="${param.input == 'ViewClientCharges'}">
-								          	  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-								          	</c:if>
-								          	<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
+	        			  						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
+	          								</c:if>
+	          								<c:if test="${param.input == 'ViewGroupCharges'}">
+					          					<mifos:mifoslabel name="Center.GroupCharges" bundle="CenterUIResources"/>
+					          				</c:if>
+					          				<c:if test="${param.input == 'ViewClientCharges'}">
+	          									<mifos:mifoslabel name="Center.ClientCharges" bundle="CenterUIResources"/>
+	          								</c:if>
 								         </html-el:link>
 									</c:otherwise>
 							</c:choose>
@@ -226,12 +225,11 @@
 						<tr>
 
 
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:65px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="accounts.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;
 							 <html-el:button property="btn"  styleClass="cancelbuttn"
-								style="width:65px;" onclick="javascript:fun_cancel(this.form)">
+								onclick="javascript:fun_cancel(this.form)">
 								<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 							</html-el:button></td>
 						</tr>

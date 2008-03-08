@@ -63,19 +63,14 @@
 						</tr>
 						<tr>
 							<td class="fontnormal"><br>
-							<mifos:mifoslabel name="accounts.SelectStatus"
-								bundle="accountsUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="accounts.ClickContinue" bundle="accountsUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="accounts.ClickCancel1"
-								bundle="accountsUIResources"></mifos:mifoslabel>
 								<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '1'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+									<mifos:mifoslabel name="accounts.SelectLoanStatusComplete"
+									    bundle="accountsUIResources" />
 								</c:if>
 								<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '2'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+									<mifos:mifoslabel name="accounts.SelectSavingsStatusComplete"
+									    bundle="accountsUIResources" />
 								</c:if>
-							<mifos:mifoslabel name="accounts.ClickCancel2"
-								bundle="accountsUIResources"></mifos:mifoslabel>
 								
 								</td>
 						</tr>
@@ -108,14 +103,12 @@
 									<c:if test="${status.id == '10' || status.id == '15'}">
 										<tr class="fontnormal">
 											<td align="center">&nbsp;</td>
-											<td><mifos:mifoslabel name="accounts.SelectExplaination1" bundle="accountsUIResources" />
-												<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '1'}">
-													<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+											<td><c:if test="${sessionScope.editStatusActionForm.accountTypeId == '1'}">
+													<mifos:mifoslabel name="accounts.SelectExplainationLoan" bundle="accountsUIResources" />
 												</c:if>
 												<c:if test="${sessionScope.editStatusActionForm.accountTypeId == '2'}">
-													<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+													<mifos:mifoslabel name="accounts.SelectExplainationSavings" bundle="accountsUIResources" />
 												</c:if>											
-												<mifos:mifoslabel name="accounts.SelectExplaination2" bundle="accountsUIResources" />
 												</td>
 										</tr>
 										<tr class="fontnormal">
@@ -154,11 +147,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="accounts.preview" />
 							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="accounts.cancel" />
 							</html-el:button></td>

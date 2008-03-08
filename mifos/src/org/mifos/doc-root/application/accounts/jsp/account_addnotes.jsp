@@ -50,16 +50,12 @@ function goToCancelPage(){
 						<tr>
 							<td><br>
 							<span class="fontnormal">
-								<mifos:mifoslabel name="Account.EnterANote" bundle="accountsUIResources"></mifos:mifoslabel>
-								<mifos:mifoslabel name="Account.ClickPreview" bundle="accountsUIResources"></mifos:mifoslabel>
-								<mifos:mifoslabel name="Savings.clickCancelToReturn" bundle="SavingsUIResources"/>
 					            <c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+									<mifos:mifoslabel name="accounts.EnterNoteLoanComplete" bundle="accountsUIResources" />
 								</c:if>
 								<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+									<mifos:mifoslabel name="accounts.EnterNoteSavingsComplete" bundle="accountsUIResources" />
 								</c:if>
-					            <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/>
 					         </span></td>
 						</tr>
 						<tr>
@@ -89,12 +85,11 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="accounts.preview"
 									bundle="accountsUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button
-								property="cancelBtn" styleClass="cancelbuttn" style="width:70px"
+								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="accounts.cancel"
 									bundle="accountsUIResources"></mifos:mifoslabel>
@@ -112,4 +107,5 @@ function goToCancelPage(){
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
+
 

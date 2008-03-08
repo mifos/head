@@ -75,17 +75,15 @@
 						</c:when>
 						<c:otherwise>
 							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}">
-	          	<c:if test="${param.input == 'ViewCenterCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-								</c:if>
-								<c:if test="${param.input == 'ViewGroupCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-								</c:if>
-								<c:if test="${param.input == 'ViewClientCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-								</c:if>
-								<mifos:mifoslabel name="Center.Charges"
-									bundle="CenterUIResources" />
+					          	<c:if test="${param.input == 'ViewCenterCharges'}">
+	          						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
+	          					</c:if>
+	          					<c:if test="${param.input == 'ViewGroupCharges'}">
+					          		<mifos:mifoslabel name="Center.GroupCharges" bundle="CenterUIResources"/>
+					          	</c:if>
+					          	<c:if test="${param.input == 'ViewClientCharges'}">
+	          						<mifos:mifoslabel name="Center.ClientCharges" bundle="CenterUIResources"/>
+	          					</c:if>
 							</html-el:link>
 						</c:otherwise>
 					</c:choose> </span></td>
@@ -154,7 +152,7 @@
 				</tr>
 				<tr>
 					<td height="3" colspan="2"><html-el:button property="Cancel"
-						styleClass="insidebuttn" style="width:115px;"
+						styleClass="insidebuttn"
 						onclick="goToPrevious(this.form)">
 						<mifos:mifoslabel name="accounts.edittrxn"></mifos:mifoslabel>
 					</html-el:button></td>
@@ -175,14 +173,14 @@
 					</html-el:submit> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewLoanDetails(this.form)">
+										onclick="ViewLoanDetails(this.form)">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 
 								</c:when>
 								<c:otherwise>
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewDetails()">
+										onclick="ViewDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 

@@ -261,13 +261,13 @@
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<c:choose>
 										<c:when test="${requestScope.isDisabled}">
-											<html-el:submit styleClass="buttn" style="width:115px;" property="submit_btn" disabled="true">
+											<html-el:submit styleClass="buttn" property="submit_btn" disabled="true">
 												<mifos:mifoslabel name="accounts.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleClass="buttn" style="width:115px;" property="submit_btn">
+											<html-el:submit styleClass="buttn" property="submit_btn">
 												<mifos:mifoslabel name="accounts.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
@@ -275,7 +275,7 @@
 									</c:choose>
 									</c:when>
 									<c:otherwise>
-										<html-el:submit styleClass="buttn" style="width:65px;" property="submit_btn">
+										<html-el:submit styleClass="buttn" property="submit_btn">
 											<mifos:mifoslabel name="accounts.submit">
 											</mifos:mifoslabel>
 										</html-el:submit>
@@ -283,7 +283,7 @@
 								</c:choose>
 
 								 &nbsp; 
-								<html-el:button styleClass="cancelbuttn" style="width:65px;" onclick="javascript:fun_cancel(this.form)" property="cancel">
+								<html-el:button styleClass="cancelbuttn" onclick="javascript:fun_cancel(this.form)" property="cancel">
 									<mifos:mifoslabel name="accounts.cancel">
 									</mifos:mifoslabel>
 								</html-el:button></td>

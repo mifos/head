@@ -1,5 +1,8 @@
 package org.mifos.application.accounts.struts.actionforms;
 
+import java.util.ResourceBundle;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -12,6 +15,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
+
 
 public class EditStatusActionForm extends BaseActionForm {
 	
@@ -174,17 +179,22 @@ public class EditStatusActionForm extends BaseActionForm {
 
 	private ActionErrors handleStatusPreviewValidations(
 			HttpServletRequest request, ActionErrors errors) {
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+			(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
+		String notesString = resources.getString("Account.Notes");
+		String status = resources.getString("accounts.status");
+		String flag = resources.getString("accounts.flag");
 		if (!StringUtils.isNullSafe(newStatusId))
-			addError(errors, LoanConstants.MANDATORY,LoanConstants.MANDATORY,
-					AccountConstants.STATUS);
+			addError(errors, LoanConstants.MANDATORY,LoanConstants.MANDATORY, status);
 		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
 			addError(errors, LoanConstants.MANDATORY_SELECT,LoanConstants.MANDATORY_SELECT,
-					SavingsConstants.FLAG);
+					flag);
 		if (StringUtils.isNullOrEmpty(notes))
-			addError(errors, LoanConstants.MANDATORY_TEXTBOX,LoanConstants.MANDATORY_TEXTBOX, AccountConstants.NOTES);
+			addError(errors, LoanConstants.MANDATORY_TEXTBOX,LoanConstants.MANDATORY_TEXTBOX, notesString);
 		else if (notes.length() > LoanConstants.COMMENT_LENGTH)
 			addError(errors, LoanConstants.MAX_LENGTH,LoanConstants.MAX_LENGTH,
-					AccountConstants.NOTES, String
+					notesString, String
 							.valueOf(LoanConstants.COMMENT_LENGTH));
 		return errors;
 	}

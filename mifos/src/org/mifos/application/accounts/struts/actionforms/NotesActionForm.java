@@ -1,5 +1,8 @@
 package org.mifos.application.accounts.struts.actionforms;
 
+import java.util.ResourceBundle;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -11,8 +14,11 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.FilePaths;
 
-public class NotesActionForm extends ValidatorActionForm {
+
+public class NotesActionForm extends BaseActionForm {
 
 	private String accountId;
 
@@ -91,19 +97,22 @@ public class NotesActionForm extends ValidatorActionForm {
 
 	private ActionErrors handlePreviewValidations(HttpServletRequest request,
 			ActionErrors errors) {
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, locale);
+		String notes = resources.getString("Account.Notes");
 		if (ValidateMethods.isNullOrBlank(getComment())) {
 			if (null == errors) {
 				errors = new ActionErrors();
 			}
 			errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
-					AccountConstants.ERROR_MANDATORY, AccountConstants.NOTES));
+					AccountConstants.ERROR_MANDATORY, notes));
 		} else if (getComment().length() > AccountConstants.COMMENT_LENGTH) {
 			// status length is more than 500, throw an exception
 			if (null == errors) {
 				errors = new ActionErrors();
 			}
 			errors.add(AccountConstants.MAX_LENGTH, new ActionMessage(
-					AccountConstants.MAX_LENGTH, AccountConstants.NOTES,
+					AccountConstants.MAX_LENGTH, notes,
 					AccountConstants.COMMENT_LENGTH));
 		}
 		return errors;

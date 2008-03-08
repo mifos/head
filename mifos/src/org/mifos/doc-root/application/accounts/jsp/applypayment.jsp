@@ -75,17 +75,15 @@
 						<c:otherwise>
 
 							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}" >
-								<c:if test="${param.input == 'ViewCenterCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-								</c:if>
-								<c:if test="${param.input == 'ViewGroupCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-								</c:if>
-								<c:if test="${param.input == 'ViewClientCharges'}">
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-								</c:if>
-								<mifos:mifoslabel name="Center.Charges"
-									bundle="CenterUIResources" />
+					          	<c:if test="${param.input == 'ViewCenterCharges'}">
+	          						<mifos:mifoslabel name="Center.CenterCharges" bundle="CenterUIResources"/>
+	          					</c:if>
+	          					<c:if test="${param.input == 'ViewGroupCharges'}">
+					          		<mifos:mifoslabel name="Center.GroupCharges" bundle="CenterUIResources"/>
+					          	</c:if>
+					          	<c:if test="${param.input == 'ViewClientCharges'}">
+	          						<mifos:mifoslabel name="Center.ClientCharges" bundle="CenterUIResources"/>
+	          					</c:if>
 							</html-el:link>
 
 						</c:otherwise>
@@ -172,13 +170,13 @@
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
 									<html-el:submit styleClass="buttn" disabled="true"
-										style="width:130px;" property="Preview">
+										property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" style="width:130px;" property="Preview">
+									<html-el:submit styleClass="buttn" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
 										</mifos:mifoslabel>
 									</html-el:submit>
@@ -186,14 +184,14 @@
 							</c:choose> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewLoanDetails(this.form)">
+										onclick="ViewLoanDetails(this.form)">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 
 								</c:when>
 								<c:otherwise>
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewDetails()">
+										onclick="ViewDetails()">
 										<mifos:mifoslabel name="accounts.cancel"></mifos:mifoslabel>
 									</html-el:button>
 

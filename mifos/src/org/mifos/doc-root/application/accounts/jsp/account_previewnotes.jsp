@@ -52,17 +52,12 @@
                 <tr>
                   <td><br>
                       <span class="fontnormal">
-			<mifos:mifoslabel name="Account.ReviewText" bundle="accountsUIResources"></mifos:mifoslabel>
-			<mifos:mifoslabel name="Account.Submit" bundle="accountsUIResources"></mifos:mifoslabel>
-			<mifos:mifoslabel name="Account.Edit" bundle="accountsUIResources"></mifos:mifoslabel>
-			<mifos:mifoslabel name="Savings.clickCancelToReturn" bundle="SavingsUIResources"/>
             <c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
-				<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+				<mifos:mifoslabel name="accounts.ReviewLoanComplete" bundle="accountsUIResources" />
 			</c:if>
 			<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
-				<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
+				<mifos:mifoslabel name="accounts.ReviewSavingsComplete" bundle="accountsUIResources" />
 			</c:if>
-            <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/>
 			</span></td>
                 </tr>
                 <tr>
@@ -84,7 +79,7 @@
                 </tr>
                 <tr>
                   <td align="left" valign="top">
-                  <html-el:button property="btn" style="width:65px;" styleClass="insidebuttn" onclick="goToEditPage()">
+                  <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
                   <mifos:mifoslabel name="Account.EditLabel" bundle="accountsUIResources"></mifos:mifoslabel>
                   </html-el:button>
                   </td>
@@ -100,11 +95,11 @@
                 <tr>
                   <td align="center">
 
-				<html-el:submit styleClass="buttn" style="width:70px;">
+				<html-el:submit styleClass="buttn">
 					<mifos:mifoslabel name="loan.submit" />
 				</html-el:submit>
                     &nbsp;&nbsp;
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="loan.cancel" />
                     </html-el:button>
 				</td>
@@ -121,4 +116,5 @@
 </html-el:form>
 </tiles:put>
 </tiles:insert>
+
 
