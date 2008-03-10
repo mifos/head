@@ -249,6 +249,7 @@ public class GroupCustAction extends CustAction {
 				.getLocaleId());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, groupBO);
 		logger.debug("Exiting GroupCustAction get method " );
 		
 		SurveysPersistence surveysPersistence = new SurveysPersistence();

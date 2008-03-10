@@ -43,8 +43,12 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
+
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
@@ -94,7 +98,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	private String flowKey;
 	private String flowKey1;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -138,6 +142,171 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
+	public void testCreateWithoutPermission() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		UserContext userContext = TestUtils.makeUser();
+		userContext.setRoles(new HashSet());
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
+				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request);
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<FundBO>(), request);
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request);
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("stateSelected", "1");
+		actionPerform();
+		verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
+		verifyForward(ActionForwards.create_failure.toString());
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
+
+	public void testUpdateSuccessWithRegeneratingNewRepaymentSchedule()
+			throws Exception {
+
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		Date startDate = new Date(System.currentTimeMillis());
+		String newDate = offSetCurrentDate(14, userContext.getPreferredLocale());
+		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
+		((LoanBO) accountBO).setBusinessActivityId(1);
+		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
+				"status changed");
+		accountBO.update();
+
+		HibernateUtil.commitTransaction();
+		LoanBO loan = (LoanBO) accountBO;
+		LoanOfferingBO loanOffering = loan.getLoanOffering();
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "manage");
+		actionPerform();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "managePreview");
+		addRequestParameter("loanAmount", loan.getLoanOffering()
+				.getDefaultLoanAmount().toString());
+		addRequestParameter("interestRate", loan.getLoanOffering()
+				.getDefInterestRate().toString());
+		addRequestParameter("noOfInstallments", loan.getLoanOffering()
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", newDate);
+		addRequestParameter("gracePeriodDuration", "0");
+		addRequestParameter("intDedDisbursement", "1");
+		actionPerform();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "update");
+		addRequestParameter("collateralNote", "test");
+		actionPerform();
+		verifyForward(ActionForwards.update_success.toString());
+		loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
+		assertEquals("test", loan.getCollateralNote());
+		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
+		assertTrue(loan.isInterestDeductedAtDisbursement());
+		assertEquals(0, loan.getGracePeriodDuration().intValue());
+		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
+				.getContext().getPreferredLocale(), DateUtils
+				.toDatabaseFormat(loan.getAccountActionDate(Short.valueOf("1"))
+						.getActionDate())));
+
+	}
+
+	public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges()
+			throws Exception {
+		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
+		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
+		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
+				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		populateLoanAmountSameForAllLoan("1", Double.parseDouble(loanOffering
+				.getMaxLoanAmount().toString()), Double
+				.parseDouble(loanOffering.getMinLoanAmount().toString()),
+				Double.parseDouble(loanOffering.getDefaultLoanAmount()
+						.toString()), loanPrdActionForm);
+		populateNoOfInstallSameForAllLoan("1", loanOffering
+				.getMaxNoInstallments().toString(), loanOffering
+				.getMinNoInstallments().toString(), loanOffering
+				.getDefNoInstallments().toString(), loanPrdActionForm);
+		loanOffering.update(Short.valueOf("1"), loanOffering
+				.getPrdOfferingName(), loanOffering.getPrdOfferingShortName(),
+				loanOffering.getPrdCategory(), loanOffering
+						.getPrdApplicableMaster(), loanOffering.getStartDate(),
+				loanOffering.getEndDate(), loanOffering.getDescription(),
+				PrdStatus.LOAN_ACTIVE, loanOffering.getGracePeriodType(),
+				loanOffering.getInterestTypes(), loanOffering
+						.getGracePeriodDuration(), loanOffering
+						.getMaxInterestRate(), loanOffering
+						.getMinInterestRate(), loanOffering
+						.getDefInterestRate(), loanOffering
+						.isIncludeInLoanCounter(), loanOffering
+						.isIntDedDisbursement(), loanOffering
+						.isPrinDueLastInst(), new ArrayList<FundBO>(),
+				new ArrayList<FeeBO>(), Short.valueOf("1"),
+				RecurrenceType.MONTHLY, loanPrdActionForm);
+		HibernateUtil.commitTransaction();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateUtils
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			i++;
+		}
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyActionErrors(new String[] { "exception.accounts.changeInLoanMeeting" });
+
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+	}
+
 	public void testGetForCancelledLoanAccount() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
@@ -168,7 +337,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAccountFlags().size());
 	}
 
-	
+
 	public void testPrevious() {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -481,11 +650,13 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoad() throws Exception {
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
+
 		actionPerform();
 
 		setRequestPathInfo("/loanAccountAction.do");
@@ -508,12 +679,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoadForMasterData() throws Exception {
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		actionPerform();
-
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -534,6 +705,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoadWithFee() throws Exception {
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -586,6 +758,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoadWithFeeForLoanOffering() throws Exception {
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		List<FeeBO> fees = getFee();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
@@ -643,89 +816,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 	}
 
-	public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges()
-			throws Exception {
-		createInitialObjects();
-		LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
-		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter("method", "getPrdOfferings");
-		addRequestParameter("customerId", group.getCustomerId().toString());
-		actionPerform();
-
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "load");
-		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
-				.toString());
-		actionPerform();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		populateLoanAmountSameForAllLoan("1", Double.parseDouble(loanOffering
-				.getMaxLoanAmount().toString()), Double
-				.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getDefaultLoanAmount()
-						.toString()), loanPrdActionForm);
-		populateNoOfInstallSameForAllLoan("1", loanOffering
-				.getMaxNoInstallments().toString(), loanOffering
-				.getMinNoInstallments().toString(), loanOffering
-				.getDefNoInstallments().toString(), loanPrdActionForm);
-		loanOffering.update(Short.valueOf("1"), loanOffering
-				.getPrdOfferingName(), loanOffering.getPrdOfferingShortName(),
-				loanOffering.getPrdCategory(), loanOffering
-						.getPrdApplicableMaster(), loanOffering.getStartDate(),
-				loanOffering.getEndDate(), loanOffering.getDescription(),
-				PrdStatus.LOAN_ACTIVE, loanOffering.getGracePeriodType(),
-				loanOffering.getInterestTypes(), loanOffering
-						.getGracePeriodDuration(), loanOffering
-						.getMaxInterestRate(), loanOffering
-						.getMinInterestRate(), loanOffering
-						.getDefInterestRate(), loanOffering
-						.isIncludeInLoanCounter(), loanOffering
-						.isIntDedDisbursement(), loanOffering
-						.isPrinDueLastInst(), new ArrayList<FundBO>(),
-				new ArrayList<FeeBO>(), Short.valueOf("1"),
-				RecurrenceType.MONTHLY, loanPrdActionForm);
-		HibernateUtil.commitTransaction();
-
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
-				.toString());
-		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
-				.toString());
-		addRequestParameter("noOfInstallments", loanOffering
-				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateUtils
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
-		addRequestParameter("gracePeriodDuration", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-				.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
-		int i = 0;
-		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-			addRequestParameter("customField[" + i + "].fieldId",
-					customFieldDef.getFieldId().toString());
-			addRequestParameter("customField[" + i + "].fieldValue", "11");
-			i++;
-		}
-		addRequestParameter("method", "schedulePreview");
-		actionPerform();
-		verifyActionErrors(new String[] { "exception.accounts.changeInLoanMeeting" });
-
-		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
-				.getObject(LoanOfferingBO.class, loanOffering
-						.getPrdOfferingId()));
-		group = TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-	}
-
 
 	public void testSchedulePreview() throws Exception {
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -788,6 +882,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithoutData() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -820,6 +915,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithDataWithNoGracePer() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -857,6 +953,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithData() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -892,6 +989,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewWithLoanOfferingFundsData() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
 		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
@@ -994,7 +1092,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
 		addRequestParameter("stateSelected", "1");
-		
+
 		performNoErrors();
 		verifyForward(ActionForwards.create_success.toString());
 		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
@@ -1019,40 +1117,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loan);
 	}
 
-	public void testCreateWithoutPermission() throws Exception {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		UserContext userContext = TestUtils.makeUser();
-		userContext.setRoles(new HashSet());
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		createInitialObjects();
-		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
-				request);
-		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<FundBO>(), request);
-		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
-				request);
-		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
-				new ArrayList<MasterDataEntity>(), request);
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter("stateSelected", "1");
-		actionPerform();
-		verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
-		verifyForward(ActionForwards.create_failure.toString());
-		TestObjectFactory.removeObject(loanOffering);
-	}
 
 	public void testManage() throws Exception {
 		try {
 			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(AccountState.LOAN_APPROVED,
-					startDate, 1);
+			accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 			LoanBO loan = (LoanBO) accountBO;
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
@@ -1080,8 +1150,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		try {
 			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(AccountState.LOAN_APPROVED,
-					startDate, 1);
+			accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 			LoanBO loan = (LoanBO) accountBO;
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 			setRequestPathInfo("/loanAccountAction.do");
@@ -1096,47 +1165,47 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	/*public void testManagePreview() throws ServiceException, SystemException,
-			ApplicationException {
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
-		((LoanBO) accountBO).setBusinessActivityId(1);
-		accountBO.update();
-		HibernateUtil.commitTransaction();
-		LoanBO loan = (LoanBO) accountBO;
-		LoanOfferingBO loanOffering = loan.getLoanOffering();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+	 ApplicationException {
+	 request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+	 Date startDate = new Date(System.currentTimeMillis());
+	 accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
+	 ((LoanBO) accountBO).setBusinessActivityId(1);
+	 accountBO.update();
+	 HibernateUtil.commitTransaction();
+	 LoanBO loan = (LoanBO) accountBO;
+	 LoanOfferingBO loanOffering = loan.getLoanOffering();
+	 loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+	 SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "manage");
-		actionPerform();
+	 setRequestPathInfo("/loanAccountAction.do");
+	 addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+	 .getAttribute(Constants.CURRENTFLOWKEY));
+	 addRequestParameter("method", "manage");
+	 actionPerform();
 
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "managePreview");
-		addRequestParameter("loanAmount", loan.getLoanOffering()
-				.getDefaultLoanAmount().toString());
-		addRequestParameter("interestRate", loan.getLoanOffering()
-				.getDefInterestRate().toString());
-		addRequestParameter("noOfInstallments", loan.getLoanOffering()
-				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateUtils
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
-		addRequestParameter("gracePeriodDuration", "1");
-		addRequestParameter("intDedDisbursement", "1");
-		actionPerform();
-		verifyForward(ActionForwards.managepreview_success.toString());
+	 setRequestPathInfo("/loanAccountAction.do");
+	 addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+	 .getAttribute(Constants.CURRENTFLOWKEY));
+	 addRequestParameter("method", "managePreview");
+	 addRequestParameter("loanAmount", loan.getLoanOffering()
+	 .getDefaultLoanAmount().toString());
+	 addRequestParameter("interestRate", loan.getLoanOffering()
+	 .getDefInterestRate().toString());
+	 addRequestParameter("noOfInstallments", loan.getLoanOffering()
+	 .getDefNoInstallments().toString());
+	 addRequestParameter("disbursementDate", DateUtils
+	 .getCurrentDate(((UserContext) request.getSession()
+	 .getAttribute("UserContext")).getPreferredLocale()));
+	 addRequestParameter("gracePeriodDuration", "1");
+	 addRequestParameter("intDedDisbursement", "1");
+	 actionPerform();
+	 verifyForward(ActionForwards.managepreview_success.toString());
 
-		assertNotNull(SessionUtils.getAttribute(
-				MasterConstants.COLLATERAL_TYPE_NAME, request));
-		assertNotNull(SessionUtils.getAttribute(
-				MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
-	}*/
+	 assertNotNull(SessionUtils.getAttribute(
+	 MasterConstants.COLLATERAL_TYPE_NAME, request));
+	 assertNotNull(SessionUtils.getAttribute(
+	 MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
+	 }*/
 
 	public void testManagePrevious() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1158,60 +1227,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loan_detail_page.toString());
 	}
 
-	public void testUpdateSuccessWithRegeneratingNewRepaymentSchedule()
-			throws Exception {
-
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		Date startDate = new Date(System.currentTimeMillis());
-		String newDate = offSetCurrentDate(14, userContext.getPreferredLocale());
-		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-		((LoanBO) accountBO).setBusinessActivityId(1);
-		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
-				"status changed");
-		accountBO.update();
-
-		HibernateUtil.commitTransaction();
-		LoanBO loan = (LoanBO) accountBO;
-		LoanOfferingBO loanOffering = loan.getLoanOffering();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "manage");
-		actionPerform();
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "managePreview");
-		addRequestParameter("loanAmount", loan.getLoanOffering()
-				.getDefaultLoanAmount().toString());
-		addRequestParameter("interestRate", loan.getLoanOffering()
-				.getDefInterestRate().toString());
-		addRequestParameter("noOfInstallments", loan.getLoanOffering()
-				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", newDate);
-		addRequestParameter("gracePeriodDuration", "0");
-		addRequestParameter("intDedDisbursement", "1");
-		actionPerform();
-		setRequestPathInfo("/loanAccountAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
-		addRequestParameter("method", "update");
-		addRequestParameter("collateralNote", "test");
-		actionPerform();
-		verifyForward(ActionForwards.update_success.toString());
-		loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
-		assertEquals("test", loan.getCollateralNote());
-		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
-		assertTrue(loan.isInterestDeductedAtDisbursement());
-		assertEquals(0, loan.getGracePeriodDuration().intValue());
-		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
-				.getContext().getPreferredLocale(), DateUtils
-				.toDatabaseFormat(loan.getAccountActionDate(Short.valueOf("1"))
-						.getActionDate())));
-
-	}
 
 	public void testUpdateSuccessWithoutRegeneratingNewRepaymentSchedule()
 			throws Exception {
@@ -1466,11 +1481,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		loanPrdActionForm = loanOfferingBO
 				.populateNoOfInstallFromLastLoanAmount("2", new Integer("0"),
-						new Integer("100"), new Integer("101"),
-						new Integer("200"), new Integer("201"),
-						new Integer("300"), new Integer("301"),
-						new Integer("400"), new Integer("401"),
-						new Integer("500"), new Integer("501"),
+						new Integer("100"), new Integer("101"), new Integer(
+								"200"), new Integer("201"), new Integer("300"),
+						new Integer("301"), new Integer("400"), new Integer(
+								"401"), new Integer("500"), new Integer("501"),
 						new Integer("600"), "10", "30", "20", "20", "40", "30",
 						"30", "50", "40", "40", "60", "50", "50", "70", "60",
 						"60", "80", "70", loanOfferingBO
@@ -1590,9 +1604,11 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
+				.getSessionTL().get(GLCodeEntity.class,
+						TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
-				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
+				.getSessionTL().get(GLCodeEntity.class,
+						TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(

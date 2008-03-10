@@ -179,7 +179,7 @@
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<script src="pages/framework/js/func.js"></script>	
+		<script src="pages/framework/js/func.js"></script>
 		<html-el:form action="/loanproductaction"
 			onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))"
@@ -404,12 +404,12 @@
 													name="product.defamt" bundle="ProductDefUIResources" /></td>
 											</tr>
 											<tr>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="minLoanAmount" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="maxLoanAmount" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="defaultLoanAmount" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="minLoanAmount" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="maxLoanAmount" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="defaultLoanAmount" /></td>
 											</tr>
 
 										</table>
@@ -441,12 +441,12 @@
 													readonly="true" value="0" /> - <mifos:mifosnumbertext
 													size="10" property="endRangeLoanAmt1"
 													onblur="changeValue(event, this, this.value,1)" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt1" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt1" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt1" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
@@ -454,12 +454,12 @@
 													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt2"
 													onblur="changeValue(event, this, this.value,2)" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt2" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt2" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt2" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
@@ -467,12 +467,12 @@
 													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt3"
 													onblur="changeValue(event, this, this.value,3)" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt3" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt3" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt3" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
@@ -480,12 +480,12 @@
 													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt4"
 													onblur="changeValue(event, this, this.value,4)" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt4" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt4" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt4" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
@@ -493,24 +493,24 @@
 													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt5"
 													onblur="changeValue(event, this, this.value,5)" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt5" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt5" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt5" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow"><mifos:mifosnumbertext
 													size="10" property="startRangeLoanAmt6" style="border:0"
 													readonly="true" /> - <mifos:mifosnumbertext size="10"
 													property="endRangeLoanAmt6" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMinLoanAmt6" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanMaxLoanAmt6" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="lastLoanDefaultLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMinLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanMaxLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="lastLoanDefaultLoanAmt6" /></td>
 											</tr>
 										</table>
 										</td>
@@ -536,57 +536,57 @@
 											</tr>
 											<tr>
 												<td class="drawtablerow">0</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt1" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt1" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt1" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt1" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow">1</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt2" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt2" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt2" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt2" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow">2</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt3" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt3" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt3" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt3" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow">3</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt4" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt4" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt4" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt4" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow">4</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt5" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt5" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt5" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt5" /></td>
 											</tr>
 											<tr>
 												<td class="drawtablerow">>4</td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMinLoanAmt6" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanMaxLoanAmt6" /></td>
-												<td class="drawtablerow"><mifos:decimalinput
-													size="10" property="cycleLoanDefaultLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMinLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanMaxLoanAmt6" /></td>
+												<td class="drawtablerow"><mifos:decimalinput size="10"
+													property="cycleLoanDefaultLoanAmt6" /></td>
 											</tr>
 										</table>
 
@@ -627,8 +627,8 @@
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:decimalinput 
-											 property="maxInterestRate"  /> <mifos:mifoslabel
+										<td valign="top"><mifos:decimalinput
+											property="maxInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
@@ -637,8 +637,8 @@
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:decimalinput 
-											 property="minInterestRate"  /> <mifos:mifoslabel
+										<td valign="top"><mifos:decimalinput
+											property="minInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
@@ -648,8 +648,8 @@
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
-										<td valign="top"><mifos:decimalinput 
-											 property="defInterestRate" /> <mifos:mifoslabel
+										<td valign="top"><mifos:decimalinput
+											property="defInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 								</table>
@@ -962,15 +962,29 @@
 											</table>
 											</div>
 										</tr>
+										<c:set
+											value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}"
+											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+
 										<tr class="fontnormal" id="intdeddis">
 											<td align="right"><mifos:mifoslabel
 												name="${ConfigurationConstants.SERVICE_CHARGE}"
 												bundle="ProductDefUIResources" /> <mifos:mifoslabel
 												name="product.deductedatdis" bundle="ProductDefUIResources" />
 											:</td>
-											<td valign="top"><html-el:checkbox
-												property="intDedDisbursementFlag" value="1"
-												onclick="fnIntDesbr();" /></td>
+											<td valign="top"><c:if
+												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
+
+
+												<html-el:checkbox property="intDedDisbursementFlag"
+													value="1" onclick="fnIntDesbr();" disabled="false" />
+											</c:if> <c:if
+												test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '0'}">
+
+
+												<html-el:checkbox property="intDedDisbursementFlag"
+													value="1" onclick="fnIntDesbr();" disabled="true" />
+											</c:if></td>
 										</tr>
 										<tr class="fontnormal">
 											<td align="right"><mifos:mifoslabel

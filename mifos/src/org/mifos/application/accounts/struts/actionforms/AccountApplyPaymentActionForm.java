@@ -252,15 +252,23 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 		if (StringUtils.isNullAndEmptySafe(transactionDateDD)
 				&& StringUtils.isNullAndEmptySafe(transactionDateMM)
 				&& StringUtils.isNullAndEmptySafe(transactionDateYY)) {
-
-			return transactionDateDD + "/" + transactionDateMM + "/"
+			String transactionDate="";
+			if (transactionDateDD.length()<2)
+				transactionDate=transactionDate+"0"+transactionDateDD;
+			else
+				transactionDate=transactionDate+transactionDateDD;
+			if (transactionDateMM.length()<2)
+				transactionDate=transactionDate+ "/"+"0"+transactionDateMM;
+			else
+				transactionDate=transactionDate+ "/"+transactionDateMM;
+			transactionDate=transactionDate+ "/"
 				+ transactionDateYY;
+			return transactionDate;
 		}
 		else {
 			return null;
 		}
 	}
-
 	public void setTransactionDate(String receiptDate) {
 		if (StringUtils.isNullOrEmpty(receiptDate)) {
 			transactionDateDD = null;
@@ -277,6 +285,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 			transactionDateYY = Integer.toString(cal.get(Calendar.YEAR));
 		}
 	}
+
 
 	public String getAccountId() {
 		return accountId;
@@ -348,4 +357,6 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 	public void setTransactionDateYY(String transactionDateYY) {
 		this.transactionDateYY = transactionDateYY;
 	}
+
+
 }

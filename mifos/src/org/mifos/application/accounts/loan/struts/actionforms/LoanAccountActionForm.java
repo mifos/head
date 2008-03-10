@@ -775,7 +775,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			CustomerBO customer = getCustomer(request);
 		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
 	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);            
-            
+		  
 			if (null != loanIndividualMonitoringIsEnabled
 					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
 					&& customer.getCustomerLevel().isGroup()) {
@@ -827,10 +827,12 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 		    Integer repaymentSchudlesIndepOfMetingIsEnabled = (Integer) SessionUtils.getAttribute(
 	        		LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, request);            
-            
+		 //   Integer  recurrenceId=(Integer) request.getAttribute("recurrenceId");
+		    int recurrenceId=1;
 			if (null != repaymentSchudlesIndepOfMetingIsEnabled
 					&& 0 != repaymentSchudlesIndepOfMetingIsEnabled.intValue()) {
-
+			    if (recurrenceId==2)
+			    {
 				if (StringUtils.isNullOrEmpty(this.getMonthRank())
 						|| StringUtils.isNullOrEmpty(this.getMonthWeek())
 						|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
@@ -838,7 +840,18 @@ public class LoanAccountActionForm extends BaseActionForm {
 							LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
 
 				}
+			    }
+			    else if (recurrenceId==1)
+			    {
+					if (StringUtils.isNullOrEmpty(this.getMonthWeek())
+							|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
+						addError(errors, "",
+								LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
+
+					}
+			    }
 			}
+		    
 		}
 		catch (PageExpiredException pee) {
 			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,

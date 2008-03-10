@@ -48,24 +48,38 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-
+	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+	<body onload="disableFields()">
 		<script>
-			function fun_return(form)
-					{
-						form.action="loanAccountAction.do";
-						form.method.value="get";
-						form.submit();
-					}
+			function fun_return(form){
+				form.action="loanAccountAction.do";
+				form.method.value="get";
+				form.submit();
+			}
+			
+			function disableFields(){
+			if (${repaymentSchedulesIndependentOfMeetingIsEnabled}==1)
+			{
+	 		document.getElementsByName("transactionDateDD")[0].disabled=true;
+	 		document.getElementsByName("transactionDateMM")[0].disabled=true;
+	 		document.getElementsByName("transactionDateYY")[0].disabled=true; 			 		
+	 		}
+	 		} 		
+				
+
+					
 	</script>
-		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		
 		<html-el:form
 			action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="currentFlowKey"
+				value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-					</span></td>
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<customtags:headerLink /> </span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -74,8 +88,8 @@
 						class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="70%" class="headingorange"><span class="heading"> <c:out
-								value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
+							<td width="70%" class="headingorange"><span class="heading">
+							<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
 							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
 							&nbsp;-&nbsp; </span> <mifos:mifoslabel name="loan.disburse" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /></td>
@@ -97,14 +111,18 @@
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.dateofdisb/payment" mandatory="true" />:&nbsp;</td>
-							<td class="fontnormal"><date:datetag property="transactionDate" />
-							</td>
+							<td class="fontnormal">
+
+							 <date:datetag property="transactionDate" />
+							 
+							 </td>
+							 							 
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.receiptId" />:&nbsp;</td>
-							<td class="fontnormal"><mifos:mifosalphanumtext maxlength="25"
-								property="receiptId" /></td>
+							<td class="fontnormal"><mifos:mifosalphanumtext
+								maxlength="25" property="receiptId" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
@@ -119,14 +137,17 @@
 							<td width="29%" align="right" class="fontnormal"><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
 								name="loan.amt" />:&nbsp;</td>
-							<td width="71%"><mifos:mifosdecimalinput property="loanAmount"
-								name="loanDisbursmentActionForm" disabled="true" /></td>
+							<td width="71%"><mifos:mifosdecimalinput
+								property="loanAmount" name="loanDisbursmentActionForm"
+								disabled="true" /></td>
 						</tr>
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
-							<td><mifos:select property="paymentTypeId" style="width:136px;">
-								<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+							<td><mifos:select property="paymentTypeId"
+								style="width:136px;">
+								<c:forEach var="PT"
+									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
 									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 								</c:forEach>
 							</mifos:select></td>
@@ -155,7 +176,8 @@
 									test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
-										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+										<c:forEach var="PT"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
 											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>
@@ -163,7 +185,8 @@
 								<c:otherwise>
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;">
-										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+										<c:forEach var="PT"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}">
 											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
 										</c:forEach>
 									</mifos:select>
@@ -182,7 +205,7 @@
 							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="loan.reviewtransaction" />
 							</html-el:submit> &nbsp; <html-el:button property="cancelButton"
-								styleClass="cancelbuttn" 
+								styleClass="cancelbuttn"
 								onclick="javascript:fun_return(this.form)">
 								<mifos:mifoslabel name="loan.cancel" />
 							</html-el:button></td>

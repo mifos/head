@@ -72,6 +72,7 @@ public class MeetingBO extends BusinessObject {
 	private Date meetingStartDate;
 
 	private String meetingPlace;
+	private Short weekNumber;
 	
 	/* TODO: This looks like it should be a local variable in
 	   each of the places which uses it.  I don't see it being
@@ -135,7 +136,38 @@ public class MeetingBO extends BusinessObject {
 		this.meetingPlace = meetingPlace;
 	}
 	
-	
+	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, 
+			MeetingType meetingType, String meetingPlace,short weekNumber)
+	throws MeetingException {
+		
+		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, 
+				startDate, meetingType, meetingPlace,weekNumber);
+		
+	}
+	public MeetingBO(int recurrenceId,Short dayNumber, Short recurAfter, Date startDate, 
+			MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
+		
+		this(RecurrenceType.WEEKLY, null, WeekDay.getWeekDay(dayNumber), null, recurAfter, 
+				startDate, meetingType, meetingPlace);
+		
+	}
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber,
+			WeekDay weekDay, RankType rank, Short recurAfter, 
+			Date startDate, MeetingType meetingType, String meetingPlace, short weekNumber)
+	throws MeetingException {
+	  	this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
+		this.meetingDetails = new MeetingDetailsEntity(
+				new RecurrenceTypeEntity(recurrenceType), dayNumber, 
+				weekDay, rank, recurAfter, this);
+		//TODO: remove this check after meeting create is migrated.
+	  	if(meetingType!=null)
+			this.meetingType = new MeetingTypeEntity(meetingType);
+		this.meetingId = null;
+		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(startDate.getTime());
+		this.meetingPlace = meetingPlace;
+		this.weekNumber= weekNumber;
+	}	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
 	}
@@ -318,7 +350,18 @@ public class MeetingBO extends BusinessObject {
 		}
 		return meetingDates;
 	}
-
+	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(int occurrences)throws MeetingException{
+		validateOccurences(occurrences);
+		List meetingDates=new ArrayList();
+		Date meetingDate = getFirstDateWithRepaymentIndepOfMeetingEnabled(getStartDate());
+		
+		for(int dateCount=0;dateCount<occurrences ;dateCount++){
+			//meetingDates.add(meetingDate);
+			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+			meetingDate = getNextDateWithRepaymentIndepOfMeetingEnabled(meetingDate);
+		}
+		return meetingDates;
+	}
 	private void validateMeetingDate(Date meetingDate)throws MeetingException{
 		if (meetingDate==null)
 			throw new MeetingException(MeetingConstants.INVALID_MEETINGDATE);
@@ -351,7 +394,23 @@ public class MeetingBO extends BusinessObject {
 		else
 			return getNextDateForDay(startDate);
 	}
+	private Date getFirstDateWithRepaymentIndepOfMeetingEnabled(Date startDate){
+		if(isWeekly())
+			return getFirstDateForWeek(startDate);
+		else if(isMonthly())
+			return getFirstDateForMonthWithRepaymentIndepOfMeetingEnabled(startDate);
+		else
+			return getFirstDateForDay(startDate);
+	}
 	
+	private Date getNextDateWithRepaymentIndepOfMeetingEnabled(Date startDate){
+		if(isWeekly())
+			return getNextDateForWeek(startDate);
+		else if(isMonthly())
+			return getNextDateForMonthWithRepaymentIndepOfMeetingEnabled(startDate);
+		else
+			return getNextDateForDay(startDate);
+	}
 	
 	private Date getFirstDateForDay(Date startDate){
 		return getNextDateForDay(startDate);
@@ -478,5 +537,101 @@ public class MeetingBO extends BusinessObject {
 		}
 		return scheduleDate;
 	}	
+	private Date getFirstDateForMonthWithRepaymentIndepOfMeetingEnabled(Date startDate){
+		Date scheduleDate=null;
+		gc.setTime(startDate);
 
+		if (isMonthlyOnDate()){
+			int disbursalDateValue = gc.get(GregorianCalendar.DATE);
+			
+			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
+			gc.set(GregorianCalendar.WEEK_OF_MONTH,getWeekNumber());
+			int fisrtRepaymentDateValue= gc.get(GregorianCalendar.DATE);
+			//if date passed in, is after the date on which schedule has to lie, move to next month 
+			if(disbursalDateValue>fisrtRepaymentDateValue)
+				gc.add(GregorianCalendar.MONTH,1);
+			
+			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
+			gc.set(GregorianCalendar.WEEK_OF_MONTH,getWeekNumber());
+			
+			scheduleDate=gc.getTime();
+			
+		}else{
+			//if current weekday is after the weekday on which schedule has to lie, move to next week
+			if (gc.get(Calendar.DAY_OF_WEEK)>getMeetingDetails().getWeekDay().getValue())
+				gc.add(Calendar.WEEK_OF_MONTH,1);
+			//set the weekday on which schedule has to lie
+			gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+			//if week rank is First, Second, Third or Fourth, Set the respective week.
+			//if current week rank is after the weekrank on which schedule has to lie, move to next month
+			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST)){
+				if(gc.get(Calendar.DAY_OF_WEEK_IN_MONTH)>getMeetingDetails().getWeekRank().getValue()){
+					gc.add(GregorianCalendar.MONTH,1);
+					gc.set(GregorianCalendar.DATE,1);
+				}
+				//set the weekrank on which schedule has to lie
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
+				scheduleDate=gc.getTime();
+			}
+			else {//scheduleData.getWeekRank()=Last
+				int M1 = gc.get(GregorianCalendar.MONTH);
+				//assumption: there are 5 weekdays in the month
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,5);
+				int M2 = gc.get(GregorianCalendar.MONTH);
+				//if assumption fails, it means there exists 4 weekdays in a month, return last weekday date
+				//if M1==M2, means there exists 5 weekdays otherwise 4 weekdays in a month
+				if (M1!=M2){
+					gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+					gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,4);
+				}
+				scheduleDate=gc.getTime();
+			}
+		}
+		return scheduleDate;
+	}	
+	
+	private Date getNextDateForMonthWithRepaymentIndepOfMeetingEnabled(Date startDate){
+		Date scheduleDate=null;
+		gc.setTime(startDate);
+		if(isMonthlyOnDate()){
+//			move to next month and return date.
+			gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
+			gc.set(GregorianCalendar.WEEK_OF_MONTH,getWeekNumber());
+			scheduleDate=gc.getTime();
+		}else{
+			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST))
+			{
+				//apply month recurrence
+				gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+				gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
+				scheduleDate=gc.getTime();
+			}else{//weekCount=-1
+				gc.set(GregorianCalendar.DATE,15);
+				gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
+				gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
+				int M1 = gc.get(GregorianCalendar.MONTH);
+				//assumption: there are 5 weekdays in the month
+				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,5);
+				int M2 = gc.get(GregorianCalendar.MONTH);
+				//if assumption fails, it means there exists 4 weekdays in a month, return last weekday date
+				//if M1==M2, means there exists 5 weekdays otherwise 4 weekdays	in a month			
+				if (M1!=M2){
+					gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+					gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,4);
+				}
+				scheduleDate=gc.getTime();
+			}
+		}
+		return scheduleDate;
+	}
+
+	public Short getWeekNumber() {
+		return weekNumber;
+	}
+
+	public void setWeekNumber(Short weekNumber) {
+		this.weekNumber = weekNumber;
+	}
 }

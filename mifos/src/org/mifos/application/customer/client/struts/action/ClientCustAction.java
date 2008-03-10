@@ -586,6 +586,7 @@ public class ClientCustAction extends CustAction {
 					getUserContext(request).getLocaleId());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, clientBO);
 		request.removeAttribute(ClientConstants.AGE);
 		loadMasterDataForDetailsPage(request, clientBO);
 		setSpouseOrFatherName(request, clientBO);

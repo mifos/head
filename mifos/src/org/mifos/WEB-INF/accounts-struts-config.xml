@@ -182,7 +182,7 @@
         </action>
         <action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
-                input="/loanAccountAction.do?method=validate" scope="session" validate="true">
+                input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
             <forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>
             <forward name="getInstallmentDetails_failure"
                      path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"/>

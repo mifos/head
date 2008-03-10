@@ -54,6 +54,7 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
@@ -84,6 +85,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -144,6 +146,10 @@ public class LoanPrdAction extends BaseAction {
 		request.getSession().setAttribute(
 				ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
 		loadMasterData(request);
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+        Integer repaymentIndepOfMeetingIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
+        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+   			 repaymentIndepOfMeetingIsEnabled.intValue(),request);
 		loadSelectedFeesAndFunds(new ArrayList<FeeView>(),
 				new ArrayList<FundBO>(), request);
 		prdDefLogger.debug("Load method of loan Product Action called");
@@ -428,6 +434,7 @@ public class LoanPrdAction extends BaseAction {
 		FundBusinessService fundService = new FundBusinessService();
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
+
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
 						.getActiveLoanProductCategories(), request);

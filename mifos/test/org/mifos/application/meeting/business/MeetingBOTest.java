@@ -73,7 +73,34 @@ public class MeetingBOTest extends MifosTestCase{
 			assertEquals(MeetingConstants.INVALID_ENDDATE,e.getKey());
 		}
 	}
+	public void testGetAllDatesWeeklyWithRepaymentIndepOfMeetingEnabled()throws Exception{
+		List list=null;
+		List expectedList=null;
+		startDate=getDate("15/11/2005");
+		endDate=getDate("01/03/2006");
+		recurAfter = Short.valueOf("1");
+		meeting = createWeeklyMeeting(WeekDay.THURSDAY, recurAfter, startDate);
+		list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(1);
+		expectedList = createExpectedList("17/11/2005");
+		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
+		matchDateLists(expectedList,list);		
+	}
 	
+	public void testGetAllDatesMonthlyWithRepaymentIndepOfMeetingEnabled()throws Exception{
+		//dates that lies on second monday of every month
+		List list=null;
+		List expectedList=null;
+		startDate=getDate("15/11/2005");
+		endDate=getDate("15/10/2006");
+		recurAfter = Short.valueOf("1");
+		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.SECOND, recurAfter, startDate);
+		list = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(2);
+		expectedList = createExpectedList("12/12/2005,09/01/2006");
+		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
+		matchDateLists(expectedList,list);	
+	}
 	public void testFailureGetAllDates_EndDateBeforeStartDate()throws Exception{
 		try{
 			recurAfter = Short.valueOf("10");

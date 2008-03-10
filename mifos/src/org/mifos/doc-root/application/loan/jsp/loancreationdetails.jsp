@@ -149,7 +149,7 @@
 						var span = document.getElementsByName("feeFormulaSpan"+index)[0];
 						span.innerHTML =formula;
 					}
-				}
+				}  
 
 				function displayFormula(listBox, textBox,index ){
 					//The fee combo box
@@ -537,39 +537,50 @@
 												<mifos:mifoslabel name="loan.repayment_date" mandatory="yes" />:
 											</td>
 											<td valign="top">
-											<mifos:mifoslabel name="meeting.labelThe"	bundle="MeetingResources" /> 
-												<mifos:select	property="monthRank" >
+										<c:if test="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == '2'}">	
+											<mifos:mifoslabel name="meeting.labelThe"	bundle="MeetingResources" />
+													<mifos:select	property="monthRank" >
 													<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
 															<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
 													</c:forEach>
 											</mifos:select>
+										</c:if>
 											<mifos:select property="monthWeek" >
 												<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
 															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
 												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="recurMonth" size="3" maxlength="3" disabled="true"/> <mifos:mifoslabel
-												name="meeting.labelMonths" bundle="MeetingResources" />
+												property="recurMonth" size="3" maxlength="3" disabled="true"/> 
+												<c:out value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceName}" />
 											</td>
 									</tr>
-													
-								</c:if>
-										
-									<!-- -->
-										
-																												
-										<!-- TODO: Change the property of checkbox -->
+						
+								<!-- TODO: Change the property of checkbox -->
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_disb" />:
 											</td>
 											<td valign="top">
-												<html-el:checkbox property="intDedDisbursement" value="1" onclick="intDedAtDisb()" />
+												<html-el:checkbox property="intDedDisbursement" value="1" onclick="intDedAtDisb()" disabled="true"/>
 											</td>
-										</tr>
-										
+										</tr>					
+								</c:if>
+								
+								<c:if test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '1'}">
+							
+								<!-- TODO: Change the property of checkbox -->
+										<tr class="fontnormal">
+											<td align="right" class="fontnormal">
+												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
+												<mifos:mifoslabel name="loan.interest_disb" />:
+											</td>
+											<td valign="top">
+												<html-el:checkbox property="intDedDisbursement" value="1" onclick="intDedAtDisb()" disabled="false"/>
+											</td>
+										</tr>	
+								</c:if>								
 										
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">

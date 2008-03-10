@@ -174,9 +174,6 @@ function goToCancelPage(){
 
 							<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
 								name="meeting.labelRecurWeeks" bundle="MeetingResources" />
-
-
-
 							<table border="0" cellspacing="0" cellpadding="2">
 								<tr class="fontnormal">
 									<td colspan="4"><mifos:mifoslabel
@@ -192,7 +189,7 @@ function goToCancelPage(){
 								</tr>
 							</table>
 							</div>
-							<div id="monthDIV" style="height:60px; width:380px; "><mifos:mifoslabel
+							<div id="monthDIV" style="height:65px; width:450px; "><mifos:mifoslabel
 								name="meeting.labelRecurMonths" bundle="MeetingResources" /> <br>
 							<table border="0" cellspacing="0" cellpadding="2">
 								<tr class="fontnormal">
