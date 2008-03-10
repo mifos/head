@@ -51,7 +51,8 @@ public class TestProductCategoryBusinessService extends MifosTestCase {
 					ProductType.LOAN.getValue()))
 				assertEquals("Loan",productTypeEntity.getName());
 			else
-				assertEquals("Margin Money",productTypeEntity.getName());
+				//assertEquals("Margin Money",productTypeEntity.getName());
+				assertEquals("Savings",productTypeEntity.getName());
 		}
 	}
 	

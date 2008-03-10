@@ -96,9 +96,13 @@ public class LookUpValueEntity extends PersistentObject implements LocalizedText
 	 */
 	public String getMessageText() {
 		String messageText = null;
-		for (LookUpValueLocaleEntity lookUpValueLocale : getLookUpValueLocales()) {
-			if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
-				messageText = lookUpValueLocale.getLookUpValue();				
+		Set<LookUpValueLocaleEntity> list = getLookUpValueLocales();
+		if (list != null)
+		{
+			for (LookUpValueLocaleEntity lookUpValueLocale : list) {
+				if (lookUpValueLocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
+					messageText = lookUpValueLocale.getLookUpValue();				
+				}
 			}
 		}
 	

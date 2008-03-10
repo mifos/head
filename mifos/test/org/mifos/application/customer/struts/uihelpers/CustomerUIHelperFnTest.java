@@ -198,7 +198,7 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		group.setUserContext(TestObjectFactory.getContext());
 		String positionName = CustomerUIHelperFn.getClientPosition(group
 				.getCustomerPositions(), client);
-		assertEquals("", positionName);
+		assertEquals("(Center Leader)", positionName);
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
 		addRequestParameter("customerId", client.getCustomerId().toString());

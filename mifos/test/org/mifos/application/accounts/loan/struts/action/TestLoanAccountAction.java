@@ -697,7 +697,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 		assertEquals(2, ((List) SessionUtils.getAttribute(
 				MasterConstants.COLLATERAL_TYPES, request)).size());
-		assertEquals(129, ((List) SessionUtils.getAttribute(
+		// after the empty lookup name 259 and 263 are removed this will go down to 129
+		assertEquals(131, ((List) SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIES, request)).size());
 
 		TestObjectFactory.removeObject(loanOffering);

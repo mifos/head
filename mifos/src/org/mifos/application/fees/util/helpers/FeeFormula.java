@@ -37,15 +37,19 @@
  */
 package org.mifos.application.fees.util.helpers;
 
+import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
-public enum FeeFormula {
-	AMOUNT((short) 1), AMOUNT_AND_INTEREST((short) 2), INTEREST((short) 3);
+public enum FeeFormula implements LocalizedTextLookup{
+	AMOUNT(1, "FeeFormulaMaster-LoanAmount"),  
+	AMOUNT_AND_INTEREST(2, "FeeFormulaMaster-LoanAmountInterest"), INTEREST(3, "FeeFormulaMaster-Interest");
 
 	Short value;
-
-	FeeFormula(Short value) {
-		this.value = value;
+	String messageKey;
+	
+	private FeeFormula(int value, String key) {
+		this.value = (short)value;
+		this.messageKey = key;
 	}
 
 	public Short getValue() {
@@ -58,4 +62,8 @@ public enum FeeFormula {
 				return feeFormula;
 		throw new PropertyNotFoundException("FeeFormula");
 	}
+	
+	public String getPropertiesKey() {
+		return messageKey;
+	}	
 }

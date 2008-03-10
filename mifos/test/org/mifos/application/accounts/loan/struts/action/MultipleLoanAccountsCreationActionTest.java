@@ -335,7 +335,8 @@ public class MultipleLoanAccountsCreationActionTest extends
 
 		assertEquals(1, ((List) SessionUtils.getAttribute(
 				LoanConstants.MULTIPLE_LOANS_CLIENTS_LIST, request)).size());
-		assertEquals(129, ((List) SessionUtils.getAttribute(
+		// this retrieve the loan purposes so this is 129 if empty lookup name are removed
+		assertEquals(131, ((List) SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIES, request)).size());
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING,
 				request));

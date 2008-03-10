@@ -107,7 +107,8 @@ public class TestMasterPersistence extends MifosTestCase {
 		List<ValueListElement> masterEntity = masterPersistence
 				.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, Short
 						.valueOf("1"));
-		assertEquals(129, masterEntity.size());
+		// kim 131 if includes the empty lookup_name for lookup id 259, 263
+		assertEquals(131, masterEntity.size());
 	}
 	
 	public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {

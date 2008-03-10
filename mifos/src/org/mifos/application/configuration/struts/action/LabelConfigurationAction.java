@@ -515,58 +515,58 @@ public class LabelConfigurationAction extends BaseAction {
 			throws Exception {
 		for (MifosLookUpEntity entity : lookupEntities) {
 			if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getClient(),userContext,false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getClient(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getGroup(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getGroup(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getCenter(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getCenter(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getLoans(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getLoans(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getSavings(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getSavings(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getState(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getState(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getPostalCode(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getPostalCode(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getEthnicity(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getEthnicity(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getCitizenship(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getCitizenship(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getHandicapped(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getHandicapped(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getGovtId(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getGovtId(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress1(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress1(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress2(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress2(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress3(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getAddress3(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
 				//	|| entity.getEntityType().equals(
 				//	ConfigurationConstants.SERVICE_CHARGE)
 				//	&& label.getLocaleId().equals(userContext.getLocaleId())) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getInterest(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getInterest(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getExternalId(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getExternalId(),userContext);
 			}
 			else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
-				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getBulkEntry(),userContext, false);
+				MessageLookup.getInstance().setCustomLabel(entity.getEntityType(),labelConfigurationActionForm.getBulkEntry(),userContext);
 			}
 		}
 	}
@@ -654,6 +654,7 @@ public class LabelConfigurationAction extends BaseAction {
 					}
 				}
 				configurationPersistence.createOrUpdate(value);
+				MifosConfiguration.getInstance().updateKey(value.getLookUpName(), name);
 			}
 		}
 	}

@@ -74,9 +74,9 @@ public abstract class MasterDataEntity extends PersistentObject {
 		// test cases depend upon the null locale behavior
 		// it seems like a hack which should be refactored
 		// TODO: remove test dependency on null localeId behavior
-		if (localeId == null) {
-			return null;
-		}
+		//if (localeId == null) {
+		//	return null;
+		//}
 		String name = MessageLookup.getInstance().lookup(getLookUpValue()); 
 		return name;
 		

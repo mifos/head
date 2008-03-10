@@ -32,6 +32,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.StringUtils;
+import java.util.Set;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -53,7 +54,6 @@ public class MasterPersistence extends Persistence {
 
 			Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
 			queryEntity.setString("entityType", entityName);
-			queryEntity.setShort("localeId", localeId);
 
 			CustomValueList entity = (CustomValueList) queryEntity
 					.uniqueResult();
@@ -73,7 +73,6 @@ public class MasterPersistence extends Persistence {
 		Query queryEntity = session
 				.getNamedQuery("masterdata.entitylookupvalue");
 		queryEntity.setString("entityType", entityName);
-		queryEntity.setShort("localeId", localeId);
 		List<CustomValueListElement> entityList = queryEntity.list();
 		
 		return entityList;
@@ -98,7 +97,6 @@ public class MasterPersistence extends Persistence {
 
 			Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
 			queryEntity.setString("entityType", entityName);
-			queryEntity.setShort("localeId", localeId);
 
 			CustomValueList entity = (CustomValueList) queryEntity
 					.uniqueResult();
@@ -219,7 +217,6 @@ public class MasterPersistence extends Persistence {
 			String entityName, Short localeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("entityType", entityName);
-		queryParameters.put("localeId", localeId);
 		List<ValueListElement> elements = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
 				queryParameters);
@@ -261,22 +258,25 @@ public class MasterPersistence extends Persistence {
 	 * Update the String value of a LookUpValueLocaleEntity.
 	 * @param id - the database id of the LookUpValueLocaleEntity object representing a ValueListElement
 	 */
-	public LookUpValueEntity updateValueListElementForLocale(Integer lookupValueEntityId,
+	public void updateValueListElementForLocale(Integer lookupValueEntityId,
 			Short localeId, String newValue) throws PersistenceException {
 		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) getPersistentObject(
 				LookUpValueEntity.class, lookupValueEntityId);
-
-		;
-		for (LookUpValueLocaleEntity valueForLocale : lookupValueEntity
-				.getLookUpValueLocales()) {
-			if (valueForLocale.getLocaleId().equals(localeId)) {
-				valueForLocale.setLookUpValue(newValue);
-				createOrUpdate(valueForLocale);
-				break;
-			}
+		Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
+		if (lookUpValueLocales != null)
+		{
+			for (LookUpValueLocaleEntity entity : lookUpValueLocales)
+				if (entity.getLookUpId().equals(lookupValueEntityId))
+				{
+					entity.setLookUpValue(newValue);
+					createOrUpdate(entity);
+					MifosConfiguration.getInstance().updateKey(lookupValueEntity.getLookUpName(), newValue);
+					break;
+				}
 		}
+
 		
-		return lookupValueEntity;
+
 	}
 
 	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
@@ -329,6 +329,7 @@ public class MasterPersistence extends Persistence {
 		// means that deleting the LookUpValueEntity should delete all the associated 
 		// LookUpValueLocaleEntity objects as well.
 		delete(lookUpValueEntity);
+		MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
 	}
 
 	/*

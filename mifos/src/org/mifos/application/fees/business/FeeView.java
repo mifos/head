@@ -44,7 +44,7 @@ public class FeeView extends View {
 		} else {
 			this.amount = ((RateFeeBO) fee).getRate().toString();
 			this.feeFormula = ((RateFeeBO) fee).getFeeFormula()
-					.getFormulaString(localeId);
+					.getFormulaString();
 		}
 		this.periodic = fee.isPeriodic();
 		if (fee.isPeriodic()) {

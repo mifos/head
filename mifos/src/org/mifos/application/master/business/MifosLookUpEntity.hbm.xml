@@ -29,13 +29,11 @@
     </query>
  	 <query name="masterdata.mifosEntityValue">
     	   <![CDATA[select new org.mifos.application.master.business.BusinessActivityEntity
-    	   (locale.lookUpId ,locale.lookUpValue, value.lookUpName)
+    	   (value.lookUpId ,value.lookUpName, value.lookUpName)
     	    from org.mifos.application.master.business.MifosLookUpEntity entity, 
-    	    org.mifos.application.master.business.LookUpValueEntity value,
-    	    org.mifos.application.master.business.LookUpValueLocaleEntity locale
+    	    org.mifos.application.master.business.LookUpValueEntity value
     	    where entity.entityId = value.lookUpEntity.entityId 
-    	    and locale.lookUpId = value.lookUpId
-    	    and locale.localeId=:localeId and entity.entityType=:entityType]]>
+    	    and entity.entityType=:entityType]]>
     </query>
             
 </hibernate-mapping> 

@@ -98,6 +98,31 @@ public class MifosConfiguration {
 				labelCache.put(key, newValue);
 		}		
 	}
+	
+	public void updateKey(String lookupValueKey, String newValue) {
+		synchronized(labelCache)
+		{
+			LabelKey key = new LabelKey(lookupValueKey, MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
+			if (labelCache.containsKey(key))
+			{
+				labelCache.remove(key);
+				labelCache.put(key, newValue);
+			}
+			else
+				labelCache.put(key, newValue);
+		}		
+	}
+	
+	public void deleteKey(String lookupValueKey) {
+		synchronized(labelCache)
+		{
+			LabelKey key = new LabelKey(lookupValueKey, MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
+			if (labelCache.containsKey(key))
+			{
+				labelCache.remove(key);
+			}
+		}		
+	}
 
 	
 

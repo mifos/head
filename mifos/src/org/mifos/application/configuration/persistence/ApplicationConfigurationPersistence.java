@@ -94,18 +94,23 @@ public class ApplicationConfigurationPersistence extends Persistence {
 		Session session = HibernateUtil.getSessionTL();
 		 values = session.getNamedQuery(
 				NamedQueryConstants.GET_LOOKUPVALUES).list();
-		 
-			for (LookUpValueEntity value : values) {
-				Set<LookUpValueLocaleEntity> localeValues = value
-						.getLookUpValueLocales();
-				value.getLookUpName();
-				for (LookUpValueLocaleEntity locale : localeValues) {
-
-					 locale.getLookUpValue();
-					 locale.getLocaleId();
+		    if (values != null)
+		    {
+				for (LookUpValueEntity value : values) {
+					Set<LookUpValueLocaleEntity> localeValues = value
+							.getLookUpValueLocales();
+					value.getLookUpName();
+					if (localeValues != null)
+					{
+						for (LookUpValueLocaleEntity locale : localeValues) {
+		
+							 locale.getLookUpValue();
+							 locale.getLocaleId();
+						}
+					}
+	
 				}
-
-			}
+		    }
 
 		}
 		finally{

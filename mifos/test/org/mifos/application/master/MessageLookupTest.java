@@ -83,7 +83,7 @@ public class MessageLookupTest {
 			// make sure that the GROUP label has not been set
 			// currently there is some test that is doing this and not cleaning up,
 			// so this test will fail unless the GROUP label is cleared
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
 
 			// Get the default label from the English resource bundle
 			assertEquals("Group",messageLookup.lookupLabel(ConfigurationConstants.GROUP, Locale.US));
@@ -98,7 +98,7 @@ public class MessageLookupTest {
 
 			// Override the resource bundle text with a custom label
 			String TEST_GROUP_NAME = "TestGroup";
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME, userContext, true);
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, TEST_GROUP_NAME, userContext);
 						
 			// The custom label should come back for each locale
 			assertEquals(TEST_GROUP_NAME,messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("fr")));
@@ -107,11 +107,11 @@ public class MessageLookupTest {
 
 			// Reset the custom label and then we should get the locale
 			// specific label again
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
 			assertEquals("Grupo",messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
 			
 		} finally {
-			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext, true);
+			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
 			localization.setCountryCodeLanguageCodeToConfigFile(originalConfig);
 		}
 	}

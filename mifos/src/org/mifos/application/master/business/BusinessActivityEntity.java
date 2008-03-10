@@ -13,6 +13,7 @@ public class BusinessActivityEntity implements ValueListElement, LocalizedTextLo
 
 	private Integer id;
 
+	// name is the valueKey, will be refactored later on
 	private String name;
 	
 	private String valueKey;

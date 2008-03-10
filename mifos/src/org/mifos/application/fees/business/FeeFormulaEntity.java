@@ -39,12 +39,17 @@
 package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class FeeFormulaEntity extends MasterDataEntity {
 
+	
+	private FeeFormula feeFormula;
+	
 	public FeeFormulaEntity(FeeFormula feeFormula) {
 		super(feeFormula.getValue());
+		this.feeFormula = feeFormula;
 	}
 
 	protected FeeFormulaEntity() {
@@ -52,5 +57,10 @@ public class FeeFormulaEntity extends MasterDataEntity {
 
 	public String getFormulaString(Short locale) {
 		return "Formula: % " + getName(locale);
+	}
+	
+	public String getFormulaString()
+	{
+		return "Formula: % " + MessageLookup.getInstance().lookup(feeFormula);
 	}
 }

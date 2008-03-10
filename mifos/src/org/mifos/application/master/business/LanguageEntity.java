@@ -53,6 +53,11 @@ public class LanguageEntity extends MasterDataEntity {
 	public String getLanguageName() {
 		return languageName;
 	}
+	
+	public String getLookedUpLanguageName()
+	{
+		return this.getName();
+	}
 
 	public String getLanguageShortName() {
 		return languageShortName;

@@ -88,11 +88,11 @@ public class CustomValueListElement extends View implements Serializable {
 	 * Use the key for the LookUpValueEntity to resolve the value.
 	 */
 	public java.lang.String getLookUpValue() {
-		if (lookUpValue != null && lookUpValue.length() > 0) {
-			return lookUpValue;
-		} else {
+		//if (lookUpValue != null && lookUpValue.length() > 0) {
+		//	return lookUpValue;
+		//} else {
 			return MessageLookup.getInstance().lookup(lookUpValueKey);
-		}
+		//}
 	}
 
 	public void setLookupValue(String newValue) {

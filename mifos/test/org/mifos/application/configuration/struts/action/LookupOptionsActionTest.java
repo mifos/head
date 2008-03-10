@@ -114,7 +114,8 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		assertTrue(compareLists(lookupOptionsActionForm.getCitizenships(), EXPECTED_CITIZENSHIP, 3));
 
 		String[] EXPECTED_LOAN_PURPOSES = {"0000-Animal Husbandry","0001-Cow Purchase","0002-Buffalo Purchase"};
-		assertTrue(compareLists(lookupOptionsActionForm.getPurposesOfLoan(), EXPECTED_LOAN_PURPOSES, 129));
+		// kim if the empty lookup name are not removed this will go up to 131
+		assertTrue(compareLists(lookupOptionsActionForm.getPurposesOfLoan(), EXPECTED_LOAN_PURPOSES, 131));
 
 		String[] EXPECTED_COLLATERAL_TYPES = {"Type 1","Type 2"};
 		assertTrue(compareLists(lookupOptionsActionForm.getCollateralTypes(), EXPECTED_COLLATERAL_TYPES, 2));

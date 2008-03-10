@@ -148,7 +148,7 @@ public class MessageLookup implements MessageSourceAware {
 	 * each update.  Ultimately, it would be cleaner to just use a key-value
 	 * lookup to implement these overrides.  
 	 */
-	public void setCustomLabel(String labelKey, String value, UserContext userContext, boolean updateCache) throws PersistenceException {
+	public void setCustomLabel(String labelKey, String value, UserContext userContext) throws PersistenceException {
 		ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
 		
 		// only update the value if there is a change
@@ -165,15 +165,17 @@ public class MessageLookup implements MessageSourceAware {
 						// this is bad too, and should go away with some
 						// refactoring
 						HibernateUtil.commitTransaction();
+						MifosConfiguration.getInstance().updateKey(labelKey, value);
 					}				
 				}
 			}
 		}
-		if (updateCache) {
-			MifosConfiguration.getInstance().init();
-		}
+		//if (updateCache) {
+		//	MifosConfiguration.getInstance().init();
+		//}
 		
 	}
+	
 	
 	/**
 	 * This is a dependency injection method used by Spring to

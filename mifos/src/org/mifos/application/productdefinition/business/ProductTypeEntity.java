@@ -47,6 +47,7 @@ import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.application.master.MessageLookup;
 
 public class ProductTypeEntity extends BusinessObject {
 
@@ -104,14 +105,8 @@ public class ProductTypeEntity extends BusinessObject {
 	}
 
 	public String getName() {
-		String name = null;
-		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue()
-				.getLookUpValueLocales();
-		for (LookUpValueLocaleEntity entity : lookupSet) {
-			if (entity.getLocaleId().equals(userContext.getLocaleId()))
-				name = entity.getLookUpValue();
-		}
-		return name;
+		String lookupKey = lookUpValue.getLookUpName();
+		return MessageLookup.getInstance().lookup(lookupKey);
 	}
 
 	public void update(Short latenessDormancy)
