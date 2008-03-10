@@ -20,7 +20,14 @@
  */
 package org.mifos.framework.spring;
 
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.ResourceLoader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -30,13 +37,33 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringUtil {
 	private static ApplicationContext appContext = null;
+	private static MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ROOTLOGGER);
 
 	public static void initializeSpring() {
-		// TODO: consider passing in an array of XML files.
-		// * core XML config (users shouldn't edit this)
-		// * dynamicFinancialRules bean initialization (users will want to edit
-		// this)
-		appContext = new ClassPathXmlApplicationContext(FilePaths.SPRING_CONFIG);
+		String[] configFiles = getConfigFiles();
+		appContext = new ClassPathXmlApplicationContext(configFiles);
+	}
+
+	private static String[] getConfigFiles() {
+		ArrayList<String> configFiles = new ArrayList<String>();
+
+		// required config file. exception thrown if not found.
+		configFiles.add(FilePaths.SPRING_CONFIG_CORE);
+
+		try {
+			if (null != ResourceLoader.getURI(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+				logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
+						+ " for custom bean configuration");
+				configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
+			}
+		}
+		catch (URISyntaxException e) {
+			logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
+					+ " not found in application classpath. Ignoring.");
+		}
+
+		return configFiles.toArray(new String[] {});
 	}
 
 	public static ApplicationContext getAppContext() {

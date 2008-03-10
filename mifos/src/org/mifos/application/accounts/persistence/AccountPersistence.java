@@ -364,12 +364,20 @@ public class AccountPersistence extends Persistence {
 		return chart;
 	}
 
+	/**
+	 * Persists given entities required to represent a new general ledger
+	 * account. Does not confirm that given account does not already exist in
+	 * database. It appears that accounts are unique only by GL code.
+	 */
 	public COABO addGeneralLedgerAccount(String name, String glCode,
 			String parentGLCode, GLCategoryType categoryType) {
 		return addGeneralLedgerAccount(name, glCode,
 				getAccountIdFromGlCode(parentGLCode), categoryType);
 	}
-	
+
+	/**
+	 * @see {@link #addGeneralLedgerAccount(String, String, String, GLCategoryType)}
+	 */
 	public COABO addGeneralLedgerAccount(String name, String glcode,
 			Short parent_id, GLCategoryType categoryType) {
 		Short id = getAccountIdFromGlCode(glcode);

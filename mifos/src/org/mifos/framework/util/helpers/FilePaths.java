@@ -64,12 +64,38 @@ public interface FilePaths {
 		"org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
 	public static final String CONFIGURABLEMIFOSDBPROPERTIESFILE = 
 		"deploymifosDB.properties";
-	public static final String SPRING_CONFIG =
+	/**
+	 * Main Spring configuration file. This is a relative path, meant to be
+	 * resolved by something that walks the classpath.
+	 */
+	public static final String SPRING_CONFIG_CORE =
 		"org/mifos/config/applicationContext.xml";
+	/**
+	 * A Mifos specialist or systems administrator can use this file to override
+	 * bean definitions in {@link #SPRING_CONFIG_CORE}. This is a relative
+	 * path, meant to be resolved by something that walks the classpath.
+	 */
+	public static final String SPRING_CONFIG_CUSTOM_BEANS =
+		"beanConfig.custom.xml";
+	/**
+	 * Default chart of accounts. Will be bundled inside WAR.
+	 */
 	public static final String CHART_OF_ACCOUNTS_DEFAULT =
 		"org/mifos/config/resources/mifosChartOfAccounts.xml";
-	public static final String CHART_OF_ACCOUNTS =
-		"mifosChartOfAccounts.xml";
+	/**
+	 * Custom chart of accounts configuration file. If a chart of accounts
+	 * other than the default is desired, a file with this name must be placed
+	 * in the application server's classpath before the first deployment of
+	 * a particular Mifos instance.
+	 */
+	public static final String CHART_OF_ACCOUNTS_CUSTOM =
+		"mifosChartOfAccounts.custom.xml";
+	/**
+	 * Validates {@link #CHART_OF_ACCOUNTS_DEFAULT} (or
+	 * {@link #CHART_OF_ACCOUNTS_CUSTOM}, if one exists). There may be problems
+	 * using this XML schema to validate the chart of accounts with Java 6,
+	 * perhaps with respect to the unit tests.
+	 */
 	public static final String CHART_OF_ACCOUNTS_SCHEMA =
 		"org/mifos/config/resources/mifosChartOfAccounts.xsd";
 	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/reportproducts.properties";

@@ -96,7 +96,7 @@ public class FinancialInitializer {
 		AccountPersistence ap = new AccountPersistence();
 		for (GLAccount glAccount : coa.getGLAccounts()) {
 			// TODO: don't add accounts that already exist
-			// TODO: consider: account name updates (NOT gl code updates)
+			// -- add unique constraint(s) to coa table?
 			ap.addGeneralLedgerAccount(glAccount.name, glAccount.glCode,
 					glAccount.parentGlCode, glAccount.categoryType);
 		}

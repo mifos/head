@@ -128,24 +128,26 @@ public class ChartOfAccountsConfig {
 	 * default otherwise.
 	 * <p>
 	 * Allows for easy overriding/customization of the chart of accounts by
-	 * placing a file called <code>mifosChartOfAccounts.xml</code> anywhere in
-	 * the application server classpath.
-	 * <p>
-	 * TODO: is this even necessary? Maybe the sysadmin can simply create
-	 * <code>org/mifos/config/resources</code> in, for instance,
-	 * <code>$CATALINA_HOME/shared/classes</code> and place the XML config
-	 * file there. If so, the filename could be changed to simply
-	 * <code>chartOfAccounts.xml</code>.
-	 * 
+	 * placing a file called <code>mifosChartOfAccounts.custom.xml</code>
+	 * anywhere in the application server classpath.
+	 *  
 	 * @return relative path to Chart of Accounts config file that the
 	 *         {@link ResourceLoader} can use to derive the actual on-disk
 	 *         location.
 	 */
 	public static String getCoaUri() {
-		if (new File(FilePaths.CHART_OF_ACCOUNTS).exists()) {
-			return FilePaths.CHART_OF_ACCOUNTS;
+		try {
+			if (null != ResourceLoader
+					.getURI(FilePaths.CHART_OF_ACCOUNTS_CUSTOM)) {
+				return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
+			}
 		}
-		else return FilePaths.CHART_OF_ACCOUNTS_DEFAULT;
+		catch (URISyntaxException e) {
+			// don't expect callers to deal with this low-level exception
+			throw new RuntimeException(e);
+		}
+
+		return FilePaths.CHART_OF_ACCOUNTS_DEFAULT;
 	}
 
 	/**
