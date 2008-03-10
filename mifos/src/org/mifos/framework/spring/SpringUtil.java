@@ -40,11 +40,21 @@ public class SpringUtil {
 	private static MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ROOTLOGGER);
 
+	/**
+	 * Dynamically fetches config files since an exception is thrown if a
+	 * nonexistant file is passed into
+	 * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])}.
+	 */
 	public static void initializeSpring() {
 		String[] configFiles = getConfigFiles();
 		appContext = new ClassPathXmlApplicationContext(configFiles);
 	}
 
+	/**
+	 * Provides an array of config files based on what is found by
+	 * {@link ResourceLoader}. Hopefully this coincides with the class loader
+	 * used by {@link ClassPathXmlApplicationContext}...
+	 */
 	private static String[] getConfigFiles() {
 		ArrayList<String> configFiles = new ArrayList<String>();
 
@@ -52,7 +62,8 @@ public class SpringUtil {
 		configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
 		try {
-			if (null != ResourceLoader.getURI(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+			if (null != ResourceLoader
+					.getURI(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
 				logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
 						+ " for custom bean configuration");
 				configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
