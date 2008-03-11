@@ -11,7 +11,11 @@
 	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
 	<classpathentry kind="lib" path="lib/commons-validator.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/1.2/apidocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/struts-el.jar"/>
 	<classpathentry kind="lib" path="lib/jta.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-kernel-1.0.jar"/>

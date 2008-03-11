@@ -266,12 +266,4 @@ public class ChartOfAccountsConfig {
 		List<COABO> coaBoList = query.list();
 		return !coaBoList.isEmpty();
 	}
-
-	// candidates:
-	// isAssetsSubcategory(), isLiabilitiesSubcategory(), etc.
-	// or perhaps isAsset(), isLiability(), etc.
-
-	// more candidates (could also go in COABO class)
-	// getCoaByName()
-	// getCoaById()
 }

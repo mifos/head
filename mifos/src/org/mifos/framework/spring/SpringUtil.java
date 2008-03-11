@@ -37,6 +37,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class SpringUtil {
 	private static ApplicationContext appContext = null;
+
+	/**
+	 * Use the root logger for lack of research as to which logger would be more
+	 * appropriate. {@link LoggerConstants#CONFIGURATION_LOGGER} might also be a
+	 * good choice.
+	 */
 	private static MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ROOTLOGGER);
 
