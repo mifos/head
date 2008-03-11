@@ -32,7 +32,11 @@
     <!-- Keys must be constants from FinancialActionConstants or application
          will throw an exception during initialization. REVERSAL_ADJUSTMENT is
          not currently being used anywhere in the code, but if this changes,
-         a mapping must be added to this file. --> 
+         a mapping must be added to this file.
+         
+         If this list is overridden using a custom bean config, this entire
+         element should be copied over. Mapping customizations can then be
+         introduced. --> 
     <bean id = "financialRules"
         class="org.mifos.application.accounts.financial.util.helpers.FinancialRules"
         abstract="false" factory-method="getInstance">        

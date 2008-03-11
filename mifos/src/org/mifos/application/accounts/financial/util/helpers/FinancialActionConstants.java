@@ -55,7 +55,8 @@ public enum FinancialActionConstants {
 	
 	/**
 	 * Not currently used in the code. If this action is to be supported, it
-	 * must also be added to the bean config file used by {@link FinancialRules}.
+	 * must also be added to the bean config file used by {@link FinancialRules}
+	 * and referencing unit tests must also be modified.
 	 */
 	REVERSAL_ADJUSTMENT (13),
 	

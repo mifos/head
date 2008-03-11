@@ -41,7 +41,8 @@ public class TestFinancialRules {
 	}
 
 	/**
-	 * Reversal adjustments aren't supported???
+	 * Reversal adjustments aren't supported. If support is to be added, a mapping
+	 * must also be added to the bean config file used by {@link FinancialRules}.
 	 */
 	public void testUnsupportedAction02() throws Exception {
 		assertNull(FinancialRules.getInstance().getGLAccountForAction(
@@ -50,11 +51,14 @@ public class TestFinancialRules {
 	}
 
 	/**
-	 * Reversal adjustments aren't supported???
+	 * Reversal adjustments aren't supported. If support is to be added, a mapping
+	 * must also be added to the bean config file used by {@link FinancialRules}
 	 */
 	public void testUnsupportedAction03() throws Exception {
 		assertNull(FinancialRules.getInstance().getGLAccountForAction(
 				FinancialActionConstants.REVERSAL_ADJUSTMENT,
 				FinancialConstants.DEBIT));
 	}
+	
+	// TODO: test override functionality of FinancialRules Spring bean config
 }

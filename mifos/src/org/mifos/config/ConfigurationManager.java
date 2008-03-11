@@ -37,18 +37,18 @@ import org.apache.commons.configuration.ConfigurationFactory;
  * values that come from various sources.  The intent is to use file
  * based configuration values for some configuration data and 
  * database based configuration for other configuration data.  
- * 
+ * <p>
  * The general idea is that configuration that does not change often
  * (or should not be changed often) would go into configuration files
  * while more frequently changed configuration would be stored in the
  * database and exposed via the UI.  In particular, configuration 
  * values that should be set once at install time or not be changed 
  * after being set are likely to go into configuration files.
- * 
+ * <p>
  * The file org/mifos/config/resources/configurationFactory.xml 
  * contains the names of the configuration files currently being
  * read.
- * 
+ * <p>
  * This class is currently under active development, so it is likely
  * to be changed significantly as iterative development proceeds.
  */

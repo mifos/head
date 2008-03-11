@@ -74,10 +74,14 @@ public class SpringUtil {
 						+ " for custom bean configuration");
 				configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
 			}
+			else {
+				logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
+						+ " not found in application classpath. Ignoring.");
+			}
 		}
 		catch (URISyntaxException e) {
-			logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
-					+ " not found in application classpath. Ignoring.");
+			// don't expect callers to deal with this low-level exception
+			throw new RuntimeException(e);
 		}
 
 		return configFiles.toArray(new String[] {});
