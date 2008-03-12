@@ -63,16 +63,18 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 	private String flowKey;
 	
 	private String categoryName;
+	private String category;
 
 	public CustomFieldsListTag() {
 	}
 	
 	public CustomFieldsListTag(String action, String method, String flow,
-			String category) {
+			String categoryName, String category) {
 		actionName = action;
 		methodName = method;
 		flowKey = flow;
-		categoryName = category;
+		this.categoryName = categoryName;
+		this.category = category;
 	}
 	
 	private String getDefaultValue(CustomFieldDefinitionEntity customField, UserContext userContext)
@@ -122,7 +124,7 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 
 	public String getCustomFieldsList(UserContext userContext) throws PersistenceException {
 		MasterPersistence master = new MasterPersistence();
-		EntityType entityType = CustomFieldCategory.getCustomFieldCategoryFromString(categoryName).mapToEntityType();
+		EntityType entityType = CustomFieldCategory.getCustomFieldCategoryFromString(category).mapToEntityType();
 
 		XmlBuilder html = new XmlBuilder();
 		
@@ -218,6 +220,14 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 

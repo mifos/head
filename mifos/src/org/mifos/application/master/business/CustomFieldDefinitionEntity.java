@@ -215,10 +215,10 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 				YesNoFlag.fromInt(mandatoryFlag), locale);
 	}
 	
-	public void setLabel(String label, Short localeId)
+	public void setLabel(String label)
 	{
 		for (LookUpLabelEntity entity : lookUpEntity.getLookUpLabels()) {
-			if (entity.getLocaleId().equals(localeId))
+			if (entity.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID))
 			{
 				entity.setLabelName(label);
 				break;

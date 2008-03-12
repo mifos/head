@@ -61,12 +61,13 @@ public class CustomFieldCategoryListTagTest extends TestCase {
 	public void testGetCategoryRow() throws Exception {
 		CustomFieldCategoryListTag tag = new CustomFieldCategoryListTag("action", "method", "flow");
 		String categoryName = "Personnel";
-		XmlBuilder link = tag.getCategoryRow(categoryName);
+		XmlBuilder link = tag.getCategoryRow(categoryName, categoryName);
 		assertEquals("<tr class=\"fontnormal\"><td width=\"1%\">" 
 				+ "<img src=\"pages/framework/images/bullet_circle.gif\" width=\"9\" height=\"11\" />"
 				+ "</td><td>"
 				+ "<a href=\"action?method=method&amp;"
 				+ "category=" + categoryName 
+				+  "&amp;categoryName=" + categoryName
 				+ "&amp;currentFlowKey=flow\">" + categoryName + "</a></td></tr>", link.getOutput());
 	}
 	

@@ -227,7 +227,7 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("check", "Cheque");
 		addRequestParameter("vouchers", "Voucher");
 		addRequestParameter("loans", "Loan");
-		addRequestParameter("savings", "Margin Money");
+		addRequestParameter("savings", "Savings");
 		addRequestParameter("state", "State");
 		addRequestParameter("postalCode", "Postal Code");
 		addRequestParameter("ethnicity", "Caste");
@@ -327,7 +327,7 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Cheque", labelConfigurationActionForm.getCheck());
 		assertEquals("Voucher", labelConfigurationActionForm.getVouchers());
 		assertEquals("Loan", labelConfigurationActionForm.getLoans());
-		assertEquals("Margin Money", labelConfigurationActionForm.getSavings());
+		assertEquals("Savings", labelConfigurationActionForm.getSavings());
 		assertEquals("State", labelConfigurationActionForm.getState());
 		assertEquals("Postal Code", labelConfigurationActionForm
 				.getPostalCode());

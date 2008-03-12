@@ -1,10 +1,12 @@
 package org.mifos.application.configuration.struts.tag;
 
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
@@ -58,6 +60,7 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
 	}
+	
 
 	String getCustomFieldCategoryList(UserContext userContext) throws Exception {
 		XmlBuilder html = new XmlBuilder();
@@ -65,9 +68,10 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
 				"table", "width", "95%", "border", "0",
 				"cellspacing", "0", "cellpadding", "0");
 
-		MasterPersistence masterPersistence = new MasterPersistence();
-		for (String category : masterPersistence.getCustomFieldCategories()) {
-			html.append(getCategoryRow(category));
+		CustomFieldCategory[] values = CustomFieldCategory.values();
+		for (int i=0; i < values.length; i++) {
+			String category = MessageLookup.getInstance().lookupLabel(values[i].name());
+			html.append(getCategoryRow(values[i].name(), category));
 		}			
 			
 		html.endTag("table");
@@ -88,11 +92,12 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
 */	
 
 	
-	XmlBuilder getCategoryRow(String categoryName) {
+	XmlBuilder getCategoryRow(String category, String categoryName) {
 		String urlencodedCategoryName = replaceSpaces(categoryName);
 		XmlBuilder html = new XmlBuilder();
 		String url = (actionName + "?method=" + methodName
-						+ "&category=" + urlencodedCategoryName
+						+ "&category=" + category
+						+ "&categoryName=" + urlencodedCategoryName
 						+ "&currentFlowKey=" + flowKey);
 		html.startTag("tr", "class", "fontnormal");		
 			bullet(html);

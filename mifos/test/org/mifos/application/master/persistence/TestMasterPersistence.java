@@ -212,7 +212,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		// add a CustomValueListElement to the list
 		final String NEW_SALUTATION_STRING = "Sir";
 		LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(salutationValueList.getEntityId(), 
-				NEW_SALUTATION_STRING, DEFAULT_LOCALE);
+				NEW_SALUTATION_STRING);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();
 		
@@ -244,7 +244,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		first.setName(UPDATED_NAME);
 		
 		// save it
-		masterPersistence.updateValueListElementForLocale(id,DEFAULT_LOCALE,UPDATED_NAME);
+		masterPersistence.updateValueListElementForLocale(id,UPDATED_NAME);
 		HibernateUtil.commitTransaction();
 		
 		// get the element back
@@ -257,20 +257,10 @@ public class TestMasterPersistence extends MifosTestCase {
 			}
 		}
 		// restore it
-		masterPersistence.updateValueListElementForLocale(id,DEFAULT_LOCALE,originalName);
+		masterPersistence.updateValueListElementForLocale(id,originalName);
 		HibernateUtil.commitTransaction();
 
 	}	
-	
-	public void testGetCustomFieldCategories() throws Exception {
-		MasterPersistence masterPersistence = new MasterPersistence();
-
-		Set<String> categories = new HashSet<String>(masterPersistence.getCustomFieldCategories());
-
-		for (CustomFieldCategory category : CustomFieldCategory.values()) {
-			assertTrue(categories.contains(category.toString()));
-		}
-	}
 	
 	
 }

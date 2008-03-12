@@ -259,7 +259,7 @@ public class MasterPersistence extends Persistence {
 	 * @param id - the database id of the LookUpValueLocaleEntity object representing a ValueListElement
 	 */
 	public void updateValueListElementForLocale(Integer lookupValueEntityId,
-			Short localeId, String newValue) throws PersistenceException {
+			 String newValue) throws PersistenceException {
 		LookUpValueEntity lookupValueEntity = (LookUpValueEntity) getPersistentObject(
 				LookUpValueEntity.class, lookupValueEntityId);
 		Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
@@ -280,10 +280,10 @@ public class MasterPersistence extends Persistence {
 	}
 
 	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
-			String newElementText, short localeId) throws PersistenceException {
+			String newElementText) throws PersistenceException {
 		
 		String lookUpName = StringUtils.camelCase(newElementText + "." + System.currentTimeMillis());
-		return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName, localeId);
+		return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName);
 	}
 	/**
 	 * Create a new list element for a single locale.
@@ -292,7 +292,7 @@ public class MasterPersistence extends Persistence {
 	 * ids, but it is a first step that works.
 	 */
 	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
-			String newElementText, String lookUpName, short localeId) throws PersistenceException {
+			String newElementText, String lookUpName) throws PersistenceException {
 		MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) getPersistentObject(
 				MifosLookUpEntity.class, lookupEnityId);
 		LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
@@ -301,7 +301,7 @@ public class MasterPersistence extends Persistence {
 		createOrUpdate(lookUpValueEntity);
 
 		LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
-		lookUpValueLocaleEntity.setLocaleId(localeId);
+		lookUpValueLocaleEntity.setLocaleId(MasterDataEntity.CUSTOMIZATION_LOCALE_ID);
 		lookUpValueLocaleEntity.setLookUpValue(newElementText);
 		lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
 		createOrUpdate(lookUpValueLocaleEntity);
@@ -332,17 +332,7 @@ public class MasterPersistence extends Persistence {
 		MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
 	}
 
-	/*
-	 * Return a list of the names of the categories of objects that can
-	 * have custom fields added (as specified in {@link CustomFieldCategory})
-	 */
-	public List<String> getCustomFieldCategories() {
-		List<String> categories = new ArrayList<String>();
-		for (CustomFieldCategory category : CustomFieldCategory.values()) {
-			categories.add(category.toString());
-		}
-		return categories;
-	}
+	
 
 	public void addLookUpEntity(MifosLookUpEntity lookUpEntity)
 			throws PersistenceException {

@@ -49,6 +49,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.application.master.business.CustomFieldCategory;
 
 public class CustomFieldsListTagTest extends TestCase {
 
@@ -66,7 +67,8 @@ public class CustomFieldsListTagTest extends TestCase {
 
 	public void testGetListRow() throws Exception {
 		String categoryName = "Personnel";
-		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName);
+		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, 
+				categoryName);
 		MasterPersistence master = new MasterPersistence();
 		CustomFieldDefinitionEntity customField = master.retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
 		XmlBuilder link = tag.getRow(customField, userContext, 1);
@@ -102,7 +104,7 @@ public class CustomFieldsListTagTest extends TestCase {
 
 	public void testGetCustomFieldsList() throws Exception {
 		String categoryName = "Personnel";
-		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName);
+		CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
 		String html = tag.getCustomFieldsList(userContext);
 		
 		assertWellFormedFragment(html);

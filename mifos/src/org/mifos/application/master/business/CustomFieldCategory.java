@@ -71,13 +71,32 @@ import org.mifos.application.util.helpers.EntityType;
  * {@link OfficeCustomFieldEntity} in {@link OfficeBO}
  */
 public enum CustomFieldCategory {
-	Personnel,
-	Office,
-	Client,
-	Group,
-	Center,
-	Loan,
-	Savings;
+	Personnel (17),
+	Office (15),
+	Client (1),
+	Group (12),
+	Center (20),
+	Loan (22),
+	Savings (21);
+	
+	Short value;
+
+	CustomFieldCategory(int value) {
+		this.value = (short)value;
+	}
+
+	public Short getValue() {
+		return value;
+	}
+	
+	public static CustomFieldCategory fromInt(int type) {
+		for (CustomFieldCategory candidate : CustomFieldCategory.values()) {
+			if (candidate.getValue() == type) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no custom field category type " + type);
+	}
 	
 	public EntityType mapToEntityType() {
 		switch (this) {

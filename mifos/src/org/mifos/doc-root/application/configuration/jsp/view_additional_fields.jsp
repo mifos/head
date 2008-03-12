@@ -67,7 +67,7 @@
 								href="customFieldsAction.do?method=load&amp;currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.view_additional_fields" />
 							</html-el:link> / </span>
-						<span class="fontnormal8ptbold">${requestScope.category} </span>
+						<span class="fontnormal8ptbold">${requestScope.categoryName} </span>
 					</td>
 				</tr>
 			</table>
@@ -77,7 +77,7 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<span class="heading">${requestScope.category} -</span> View Additional Fields
+									<span class="heading">${requestScope.categoryName} -</span> View Additional Fields
 								</td>
 							</tr>
 							<tr>
@@ -112,7 +112,7 @@
 							</tr>
 							<mifos:CustomFieldsList actionName="customFieldsAction.do" 
 								methodName="editField" flowKey="${requestScope.currentFlowKey}"
-								categoryName="${requestScope.category}"/>
+								categoryName="${requestScope.categoryName}" category="${requestScope.category}"/>
 							<tr>
 								<td width="11%" class="drawtablerow">
 									&nbsp;

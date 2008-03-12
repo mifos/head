@@ -73,9 +73,12 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 				
 				
 				CustomValueList entity = getEntity(locale, key);
-				returnVal = entity.getEntityLabel();
-				//put it into hash map for further use
-				dbMap_labels.put(new BundleKey(locale, key), returnVal);
+				if (entity != null)
+				{
+					returnVal = entity.getEntityLabel();
+					//put it into hash map for further use
+					dbMap_labels.put(new BundleKey(locale, key), returnVal);
+				}
 				
 				
 			} catch (Exception e) {

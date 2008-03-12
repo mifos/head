@@ -72,8 +72,9 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	private String dataType;
 	private Short customFieldId;
 	private String customFieldIdStr;
-	private String categoryTypeName;
+	private String categoryTypeName;  // localized category
 	private String mandatoryStringValue;
+	private String category; // the category name of the the CustomFieldCategory
 
 	
 	public String getMandatoryStringValue() {
@@ -241,6 +242,14 @@ public class CustomFieldsActionForm extends BaseActionForm{
 
 	public void setCategoryTypeName(String categoryTypeName) {
 		this.categoryTypeName = categoryTypeName;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 

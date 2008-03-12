@@ -649,7 +649,7 @@ public class LabelConfigurationAction extends BaseAction {
 				Set<LookUpValueLocaleEntity> localeValues = value
 						.getLookUpValueLocales();
 				for (LookUpValueLocaleEntity lookuplocale : localeValues) {
-					if (lookuplocale.getLocaleId().equals(localeId)) {
+					if (lookuplocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
 						lookuplocale.setLookUpValue(name);
 					}
 				}

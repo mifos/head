@@ -137,7 +137,7 @@ public class CustomFieldsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-		request.setAttribute("category", actionForm.getCategoryTypeName());
+		request.setAttribute("category", actionForm.getCategory());
 		logger.debug("start previous method of Define Custom Fields Action");
 		return mapping.findForward(ActionForwards.editprevious_success.toString());
 	}
@@ -155,7 +155,7 @@ public class CustomFieldsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-		request.setAttribute("category", actionForm.getCategoryTypeName());
+		request.setAttribute("category", actionForm.getCategory());
 		String flow = request.getParameter(Constants.CURRENTFLOWKEY).toString();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flow);
 		logger.debug("start Cancel Edit method of Define Custom Fields Action");
@@ -237,8 +237,10 @@ public class CustomFieldsAction extends BaseAction {
 		if (request.getParameter("category") != null)
 			category = request.getParameter("category");
 		else
-			category = actionForm.getCategoryTypeName();
+			category = actionForm.getCategory();
 		request.setAttribute("category", category);
+		String categoryName = MessageLookup.getInstance().lookupLabel(category);
+		request.setAttribute("categoryName", categoryName);
 		
 		logger.debug("Outside viewCategory method");
 		return mapping.findForward(ActionForwards.viewCategory_success
@@ -276,12 +278,12 @@ public class CustomFieldsAction extends BaseAction {
 		customField.setMandatoryFlag(flag.getValue());
 		Short localeId = getUserContext(request).getLocaleId();
 		String labelName = actionForm.getLabelName();
-		customField.setLabel(labelName, localeId);
+		customField.setLabel(labelName);
 		
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.updateCustomField(customField);
 		//MifosConfiguration.getInstance().reload();
-		request.setAttribute("category", actionForm.getCategoryTypeName());
+		request.setAttribute("category", actionForm.getCategory());
 		MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(), labelName, localeId);
 		logger.debug("Inside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());
@@ -365,7 +367,7 @@ public class CustomFieldsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CustomFieldsActionForm actionForm = (CustomFieldsActionForm) form;
-		request.setAttribute("category", actionForm.getCategoryTypeName());
+		request.setAttribute("category", actionForm.getCategory());
 		YesNoFlag flag = null;
 		if (actionForm.isMandatoryField())
 			flag = YesNoFlag.YES;
@@ -425,7 +427,8 @@ public class CustomFieldsAction extends BaseAction {
 		actionForm.setLabelName(label);		
 		String entityTypeName = getEntityTypeName(customField.getEntityType(), userContext);
 		actionForm.setCategoryTypeName(entityTypeName);
-		request.setAttribute("category", entityTypeName);
+		String customFieldCategory = CustomFieldCategory.fromInt(customField.getEntityType().intValue()).name();
+		request.setAttribute("category", customFieldCategory);
 		Locale locale = getUserLocale(request);
 		String dataTypeName = getDataType(customField.getFieldType(), locale);
 		Short fieldType = customField.getFieldType();
@@ -491,7 +494,7 @@ public class CustomFieldsAction extends BaseAction {
 				actionForward = ActionForwards.preview_failure;
 			}
 			else if (method.equals(Methods.editPreview.toString())) {
-				request.setAttribute("category", actionForm.getCategoryTypeName());
+				request.setAttribute("category", actionForm.getCategory());
 				actionForward = ActionForwards.editPreview_failure;
 			}
 		}

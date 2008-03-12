@@ -55,6 +55,7 @@ import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueList;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -112,7 +113,7 @@ public class LookupOptionsAction extends BaseAction {
 		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, 
 				getUserLocale(request));
 		UserContext userContext = getUserContext(request);
-		Short localeId = userContext.getLocaleId();
+		
 
 		if (configurationEntity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
@@ -461,13 +462,13 @@ public class LookupOptionsAction extends BaseAction {
 	}
 		
 	
-	private void UpdateDatabase(LookupOptionData data, Short localeId) throws PersistenceException 
+	private void UpdateDatabase(LookupOptionData data) throws PersistenceException 
 	{
 		MasterPersistence masterPersistence = new MasterPersistence();
 		if (data.getLookupId() > 0)
-			masterPersistence.updateValueListElementForLocale(data.getLookupId(), localeId, data.getLookupValue());
+			masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
 		else
-			masterPersistence.addValueListElementForLocale(data.getValueListId(), data.getLookupValue(), localeId);
+			masterPersistence.addValueListElementForLocale(data.getValueListId(), data.getLookupValue());
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -476,11 +477,10 @@ public class LookupOptionsAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside update method");
 		//setHiddenFields(request);
-		Short localeId = getUserContext(request).getLocaleId();
 		LookupOptionsActionForm lookupOptionsActionForm = (LookupOptionsActionForm) form;
 		LookupOptionData data = (LookupOptionData)SessionUtils.getAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA, request);
 		data.setLookupValue(lookupOptionsActionForm.getLookupValue());
-		UpdateDatabase(data, localeId);
+		UpdateDatabase(data);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

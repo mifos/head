@@ -157,7 +157,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		CustomValueListElement valueListElement = elementList.get(0);
 		assertEquals(UPDATE_NAME, valueListElement.getLookUpValue());
 		// restore the original name
-		masterPersistence.updateValueListElementForLocale(valueListElement.getLookUpId(), DEFAULT_LOCALE, originalName);
+		masterPersistence.updateValueListElementForLocale(valueListElement.getLookUpId(), originalName);
 		// compare the added element
 		valueListElement = elementList.get(elementList.size()-1);
 		assertEquals(NEW_ELEMENT_NAME, valueListElement.getLookUpValue());
