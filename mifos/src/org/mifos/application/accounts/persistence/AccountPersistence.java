@@ -426,5 +426,14 @@ public class AccountPersistence extends Persistence {
 		topLevelAccount.setParameter("categoryType", categoryType.toString());
 		return (COABO) topLevelAccount.uniqueResult();
 	}
+
+	public void updateAccountName(COABO account, String newName) {
+		account.setAccountName(newName);
+		try {
+			createOrUpdate(account);
+		} catch (PersistenceException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 

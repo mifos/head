@@ -120,6 +120,10 @@ public class COABO extends BusinessObject {
 		return accountName;
 	}
 
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
 	public Set getSubCategory() {
 		return subCategory;
 	}
