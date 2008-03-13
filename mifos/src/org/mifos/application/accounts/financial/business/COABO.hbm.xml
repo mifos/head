@@ -25,7 +25,7 @@
 			    class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" 
 			    column="COA_ID" fetch="join" />
 		</set>
-		<!-- While the corresponding Java type is simply a String,
+		<!-- The corresponding Java type is simply a String, but
 		accessors/mutators of this field shall only use/provide the
 		GLCategoryType constant. -->
 		<property name="categoryType" column="CATEGORY_TYPE" access="field"

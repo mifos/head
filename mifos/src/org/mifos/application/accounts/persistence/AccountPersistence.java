@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -36,11 +35,8 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -48,6 +44,13 @@ import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
+/**
+ * FIXME: the term "account" has two meanings in this class:
+ * <ol>
+ * 	 <li>A loan or savings account</li>
+ * 	 <li>A general ledger account</li>
+ * </ol>
+ */
 public class AccountPersistence extends Persistence {
 
 	public AccountBO getAccount(Integer accountId) throws PersistenceException {

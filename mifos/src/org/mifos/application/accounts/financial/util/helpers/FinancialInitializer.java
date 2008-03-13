@@ -148,6 +148,10 @@ public class FinancialInitializer {
 							"chart of accounts hierarchy change not supported");
 
 				if (!account.getAccountName().equals(glAccount.name)) {
+					if (null != account.getCategoryType())
+						throw new FinancialException(
+								"updating top-level general ledger accounts (categories) not supported");
+
 					System.out
 							.println("updating general ledger account with code="
 									+ account.getGlCode()
