@@ -1,0 +1,174 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DefineProductCategory</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">DefineProductCategory</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} month = dates.getMonth() + 1;if (month &lt; 10){month = '0' + month;}var year = dates.getFullYear();day + '/' + month + '/' + year}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View product categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>productType</td>
+	<td>label=Loan</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryName</td>
+	<td>LoanCategory${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryDesc</td>
+	<td>category description</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>You have successfully added a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View category details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>LoanCategory${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product Type: Loan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Product Categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=LoanCategory${time2}</td>
+	<td>LoanCategory${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>productType</td>
+	<td>label=Savings</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryName</td>
+	<td>SavingsCategory${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryDesc</td>
+	<td>category description</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>You have successfully added a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View product categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=SavingsCategory${time2}</td>
+	<td>SavingsCategory${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

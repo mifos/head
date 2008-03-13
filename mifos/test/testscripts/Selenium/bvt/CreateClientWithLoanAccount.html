@@ -1,0 +1,849 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CreateClientWithLoanAccount</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateClientWithLoanAccount</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} month = dates.getMonth() + 1;if (month &lt; 10){month = '0' + month;}var year = dates.getFullYear();day + '/' + month + '/' + year}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Branch${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Branch Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=Head Office(Mifos HO )</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line2</td>
+	<td>b</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>c</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.city</td>
+	<td>d</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>e</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>ireland</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>f</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>999</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new system user</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Branch${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstName</td>
+	<td>Officer</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastName</td>
+	<td>${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobMM</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobDD</td>
+	<td>21</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobYY</td>
+	<td>1900</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>gender</td>
+	<td>label=Male</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>preferredLocale</td>
+	<td>label=English</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>level</td>
+	<td>label=Loan Officer</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>MoveRight</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginName</td>
+	<td>loanofficer${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userPassword</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordRepeat</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Officer ${time} has been assigned the system ID number:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Clients & Accounts</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create new Client</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Click here to continue if Group membership is not required for your Client.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Branch${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientName.salutation</td>
+	<td>label=Mr</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clientName.firstName</td>
+	<td>firstname</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clientName.lastName</td>
+	<td>lastname${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dateOfBirthDD</td>
+	<td>22</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dateOfBirthMM</td>
+	<td>05</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dateOfBirthYY</td>
+	<td>1988</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetailView.gender</td>
+	<td>label=Male</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetailView.povertyStatus</td>
+	<td>label=Poor</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetailView.handicapped</td>
+	<td>label=Yes</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>spouseName.nameType</td>
+	<td>label=Father</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>spouseName.firstName</td>
+	<td>father</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>spouseName.lastName</td>
+	<td>lastname${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Continue']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>formedByPersonnel</td>
+	<td>label=Officer ${time}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>firstname lastname${time2} has been assigned the system ID number:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Client details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>storeText</td>
+	<td>//form/table[2]/tbody/tr/td[1]/table[1]/tbody/tr[3]/td/span[3]</td>
+	<td>customerId</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Application Pending Approval</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Date Of Birth: 22/05/1988; 19 years old</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Father Name: father lastname${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Poverty Status: Poor</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Handicapped: Yes</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Summarized Historical Data</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>MFI joining date: ${date}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View change log</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Record Creation Date:&nbsp;&nbsp;${date}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>returnToAccountDetailsbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Clients & Accounts</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>firstname lastname${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Search']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>1 results for firstname lastname${time2} in All Branches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=firstname lastname${time2}: ID ${customerId}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit MFI information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>loanOfficerId</td>
+	<td>label=Officer ${time}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'Edit meeting schedule<br />												/<br />												Add Group')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>recurWeek</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>weekDay</td>
+	<td>label=Tuesday</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>meetingPlace</td>
+	<td>location</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Meeting:&nbsp;&nbsp;Recur every 1 Week(s) on Tuesday</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'Edit<br />									Client<br />									status')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.editCustomerStatusActionForm.newStatusId[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>notes</td>
+	<td>activate client</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//form/table[2]/tbody/tr/td[1]/table[1]/tbody/tr[3]/td/span[1]</td>
+	<td>Active</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'Define new<br />								Loan<br />								product')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingName</td>
+	<td>LoanProduct${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingShortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>Loan product ${time} description</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdCategory</td>
+	<td>label=Other</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdApplicableMaster</td>
+	<td>label=Clients</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minLoanAmount</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxLoanAmount</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defaultLoanAmount</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestTypes</td>
+	<td>label=Flat</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxInterestRate</td>
+	<td>5</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minInterestRate</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defInterestRate</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>freqOfInstallments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>recurAfter</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxNoInstallments</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defNoInstallments</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestGLCode</td>
+	<td>label=31101</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>principalGLCode</td>
+	<td>label=1507</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Loan Product has been assigned the system ID number</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Clients & Accounts</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>firstname lastname${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Search']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=firstname lastname${time2}: ID ${customerId}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Loan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdOfferingId</td>
+	<td>label=LoanProduct${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>continueBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/td[2]</td>
+	<td>Loan product ${time} description</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loanAmount</td>
+	<td>20.0</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>interestRate</td>
+	<td>1.5</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>businessActivityId</td>
+	<td>label=0000-Animal Husbandry</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>collateralTypeId</td>
+	<td>label=Type 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>collateralNote</td>
+	<td>collateral notes</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>continueButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Account Owner: firstname lastname${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Loan Amount :&nbsp;&nbsp;20.0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>previewBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Interest Rate Type :&nbsp;&nbsp;Flat</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Frequency of Installments :&nbsp;&nbsp;2&nbsp;&nbsp;Week(s) </td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Principal due on last installment :&nbsp;&nbsp;No</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Grace Period Type :&nbsp;&nbsp;None</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Amount :&nbsp;&nbsp;20.0 (Allowed Amount:&nbsp;&nbsp;&nbsp;10.0&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;100.0)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Interest rate :&nbsp;&nbsp;1.5 (Allowed Interest Rate Amount :&nbsp;&nbsp;1.0&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;5.0)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>No. of installments :&nbsp;&nbsp;1 (Allowed Number of Installments:&nbsp;&nbsp;1&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;2)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Purpose of Loan:&nbsp;&nbsp;&nbsp;0000-Animal Husbandry</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Collateral type:&nbsp;&nbsp;&nbsp;Type 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitForApprovalButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>You have successfully created a new Loan account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'View <br />										Loan<br />										account details now')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Application Pending Approval</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit account status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>document.editStatusActionForm.newStatusId[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>notes</td>
+	<td>approve loan</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Application Approved</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//table[5]/tbody/tr[3]/td/span[2]</td>
+	<td>approve loan- mifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View status history</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//table[2]/tbody/tr[2]/td[1]</td>
+	<td>${date}</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/td[2]</td>
+	<td>-</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/td[3]</td>
+	<td>Application Pending Approval</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/td[4]</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//table[2]/tbody/tr[3]/td[1]</td>
+	<td>${date}</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[2]</td>
+	<td>Application Pending Approval</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[3]</td>
+	<td>Application Approved</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[4]</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

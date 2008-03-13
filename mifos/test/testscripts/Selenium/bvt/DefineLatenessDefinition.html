@@ -1,0 +1,119 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>DefineLatenessDefinition</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">DefineLatenessDefinition</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} month = dates.getMonth() + 1;if (month &lt; 10){month = '0' + month;}var year = dates.getFullYear();day + '/' + month + '/' + year}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View lateness/dormancy definition</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>latenessDays</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>dormancyDays</td>
+	<td>30</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>latenessDays</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dormancyDays</td>
+	<td>31</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View lateness/dormancy definition</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>latenessDays</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>dormancyDays</td>
+	<td>31</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>latenessDays</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dormancyDays</td>
+	<td>30</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

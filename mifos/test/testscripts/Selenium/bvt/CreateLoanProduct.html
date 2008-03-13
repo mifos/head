@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CreateLoanProduct</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateLoanProduct</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'Define new<br />								Loan<br />								product')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} month = dates.getMonth() + 1;if (month &lt; 10){month = '0' + month;}var year = dates.getFullYear();day + '/' + month + '/' + year}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingName</td>
+	<td>LoanProduct-${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingShortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>description</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdCategory</td>
+	<td>label=Other</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdApplicableMaster</td>
+	<td>label=Clients</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minLoanAmount</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxLoanAmount</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defaultLoanAmount</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestTypes</td>
+	<td>label=Flat</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxInterestRate</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minInterestRate</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defInterestRate</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>freqOfInstallments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>recurAfter</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestGLCode</td>
+	<td>label=31101</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>principalGLCode</td>
+	<td>label=1501</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxNoInstallments</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defNoInstallments</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Loan Product has been assigned the system ID number:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'View<br />									Loan<br />									Product details now')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product instance name: LoanProduct-${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Change Log</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Record Creation Date:&nbsp;&nbsp;${date}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>returnToAccountDetailsbutton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
