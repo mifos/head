@@ -30,6 +30,7 @@ import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
 import org.mifos.application.accounts.util.helper.TestAccountState;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
+import org.mifos.application.accounts.business.AddAccountActionTest;
 
 public class AccountTestSuite extends TestSuite {
 	
@@ -67,6 +68,7 @@ public class AccountTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestOffsetAccountBO.class);	
 		testSuite.addTest(AddAccountStateFlagTest.testSuite());
 		testSuite.addTestSuite(TestAccountState.class);
+		testSuite.addTest(AddAccountActionTest.suite());
 		return testSuite;
 		
 	}

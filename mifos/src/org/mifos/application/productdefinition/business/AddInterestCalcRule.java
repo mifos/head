@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
@@ -24,10 +25,18 @@ public class AddInterestCalcRule extends Upgrade {
 
 	private final Short locale;
 	private final String message;
+	protected static final String wrongLookupValueKeyFormat = "The key format must be InterestTypes-...";
+	protected static final String keyFormat = "InterestTypes-";
 
+	
+	/* This constructor is used for version 174 and lower. 
+	 * And it must not be used afterward
+	 */
 	public AddInterestCalcRule(int higherVersion, int newRuleId, 
 		int categoryId, String lookupName, String description, Short locale, String message) {
 		super(higherVersion);
+		if (higherVersion > lookupValueChangeVersion)
+			throw new RuntimeException(wrongConstructor);
 		this.newRuleId = newRuleId;
 		this.lookupName = lookupName;		
 		this.categoryId = categoryId;
@@ -35,6 +44,23 @@ public class AddInterestCalcRule extends Upgrade {
 		this.locale = locale;
 		this.message = message;
 	}
+	
+	/*
+	 * This constructor must be used after version 174. The lookupValueKey must in the format
+	 * InterestTypes-...
+	 */
+	public AddInterestCalcRule(int higherVersion, int newRuleId, 
+			int categoryId, String lookupName, String description) {
+			super(higherVersion);
+			if (!validateLookupValueKey(keyFormat, lookupName))
+				throw new RuntimeException(wrongLookupValueKeyFormat);
+			this.newRuleId = newRuleId;
+			this.lookupName = lookupName;		
+			this.categoryId = categoryId;
+			this.description = description;
+			this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
+			this.message = null;
+		}
 	
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {

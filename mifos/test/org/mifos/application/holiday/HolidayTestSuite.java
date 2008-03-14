@@ -9,6 +9,7 @@ import org.mifos.application.holiday.business.service.TestHolidayBusinessService
 import org.mifos.application.holiday.persistence.TestHolidayPersistence;
 import org.mifos.application.holiday.struts.action.TestHolidayAction;
 import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
+import org.mifos.application.holiday.persistence.AddRepaymentRuleTest;
 
 public class HolidayTestSuite extends TestSuite {
 
@@ -24,6 +25,7 @@ public class HolidayTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestHolidayPersistence.class);
 		testSuite.addTestSuite(TestHolidayAction.class);
 		testSuite.addTestSuite(TestHolidayUtils.class);
+		testSuite.addTest(AddRepaymentRuleTest.testSuite());
 		
 		return testSuite;
 	}

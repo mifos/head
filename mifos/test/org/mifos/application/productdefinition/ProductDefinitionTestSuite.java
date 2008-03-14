@@ -16,6 +16,7 @@ import org.mifos.application.productdefinition.persistence.TestProductCategoryPe
 import org.mifos.application.productdefinition.struts.action.LoanPrdActionTest;
 import org.mifos.application.productdefinition.struts.action.SavingsPrdActionTest;
 import org.mifos.application.productdefinition.struts.action.TestPrdCategoryAction;
+import org.mifos.application.productdefinition.business.AddInterestCalcRuleTest;
 
 public class ProductDefinitionTestSuite extends TestSuite {
 
@@ -38,6 +39,7 @@ public class ProductDefinitionTestSuite extends TestSuite {
 		testSuite.addTestSuite(LoanOfferingBOTest.class);
 		testSuite.addTestSuite(LoanPrdBusinessServiceTest.class);
 		testSuite.addTestSuite(LoanPrdActionTest.class);
+		testSuite.addTest(AddInterestCalcRuleTest.testSuite());
 		return testSuite;
 	}
 

@@ -6,30 +6,56 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
+
 public class AddAccountAction extends Upgrade {
 
 	private final Short locale;
-	private final String message;
+	private final String lookupValueKey;
 	private final int action;
+	private final String message;
+	protected static final String wrongLookupValueKeyFormat = "The key format must be AccountAction-...";
+	protected static final String keyFormat = "AccountAction-";
 
+	/* This constructor is used for version 174 and lower. 
+	 * And it must not be used afterward
+	 */
 	public AddAccountAction(int higherVersion,
 		int action, Short locale, String message) {
 		super(higherVersion);
+		if (higherVersion > lookupValueChangeVersion)
+			throw new RuntimeException(wrongConstructor);
 		this.action = action;
 		this.locale = locale;
 		this.message = message;
+		this.lookupValueKey = " ";
 	}
+	
+	/*
+	 * This constructor must be used after version 174. The lookupValueKey must in the format
+	 * AccountAction-...
+	 */
+	public AddAccountAction(int higherVersion,
+			int action, String lookupValueKey)  {
+			super(higherVersion);
+			if (!validateLookupValueKey(keyFormat, lookupValueKey))
+				throw new RuntimeException(wrongLookupValueKeyFormat);
+			this.action = action;
+			this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;
+			this.lookupValueKey = lookupValueKey;
+			this.message = null;
+		}
 
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACCOUNT_ACTION;
 
-		int lookupId = insertLookupValue(connection, lookupEntity);
+		int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
 		insertMessage(connection, lookupId, locale, message);
 		addAction(connection, action, lookupId);
 		upgradeVersion(connection);

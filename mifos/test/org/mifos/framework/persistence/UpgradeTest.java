@@ -1,6 +1,8 @@
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
 
@@ -38,6 +40,19 @@ public class UpgradeTest {
 		assertEquals(54, 
 			new DatabaseVersionPersistence(database.openConnection()).read()
 		);
+	}
+	
+	@Test 
+	public void validateLookupValueKeyTest() throws Exception {
+		String validKey = "Permissions-Groups-CanBlacklistAGroup";
+		String format = "Permissions-";
+		assertTrue(DummyUpgrade.validateLookupValueKey(format, validKey));
+		String invalidKey = "Groups-CanBlacklistAGroup";
+		assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+		invalidKey = null;
+		assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
+		invalidKey = "";
+		assertFalse(DummyUpgrade.validateLookupValueKey(format, invalidKey));
 	}
 	
 	public static junit.framework.Test suite() {

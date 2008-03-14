@@ -13,6 +13,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.hibernate.classic.Session;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
@@ -75,8 +76,9 @@ public class AddActivityTest {
 	private Upgrade upgradeAndCheck(TestDatabase database) throws IOException,
 			SQLException, ApplicationException {
 		short newId = 17032;
+		int databaseVersion = 172;
 		AddActivity upgrade = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+				databaseVersion + 1, newId,
 				SecurityConstants.LOAN_MANAGEMENT, TEST_LOCALE,
 				"Can use the executive washroom");
 		upgrade.upgrade(database.openConnection(), null);
@@ -113,13 +115,65 @@ public class AddActivityTest {
 		TestDatabase database = TestDatabase.makeStandard();
 
 		short newId = 17032;
+		int databaseVersion = 172;
 		AddActivity upgrade = new AddActivity(
-				DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+				databaseVersion + 1, newId,
 				null, TEST_LOCALE, "Can use the executive washroom");
 		upgrade.upgrade(database.openConnection(), null);
 		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
 				ActivityEntity.class, newId);
 		assertEquals(null, fetched.getParent());
+	}
+	
+	@Test 
+	public void validateLookupValueKeyTest() throws Exception {
+		String validKey = "Permissions-CanCreateFunds";
+		String format = "Permissions-";
+		assertTrue(AddAccountAction.validateLookupValueKey(format, validKey));
+		String invalidKey = "CanCreateFunds";
+		assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
+	}
+	
+	@Test 
+	public void constructorTest() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
+		String start = database.dumpForComparison();
+		short newId = 30000;
+		AddActivity upgrade = null;
+		try
+		{
+			// use deprecated construtor
+			upgrade = new AddActivity(
+					DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId,
+				null, TEST_LOCALE, "NewActivity");
+		}
+		catch (Exception e)
+		{
+			assertEquals(e.getMessage(), AddActivity.wrongConstructor);
+		}
+		String invalidKey ="NewActivity";
+		
+		try
+		{
+			// use invalid lookup key format
+			upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1,invalidKey, newId, null);	
+		}
+		catch (Exception e)
+		{
+			assertEquals(e.getMessage(), AddActivity.wrongLookupValueKeyFormat);
+		}
+		String goodKey = "Permissions-NewActivity";
+		//	use valid construtor and valid key
+		upgrade = new AddActivity(DatabaseVersionPersistence.APPLICATION_VERSION + 1, goodKey, newId, null);	
+		upgrade.upgrade(database.openConnection(), null);
+		ActivityEntity fetched = (ActivityEntity) database.openSession().get(
+				ActivityEntity.class, newId);
+		assertEquals(null, fetched.getParent());
+		assertEquals(null, fetched.getActivityName());
+		assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
+		upgrade.downgrade(database.openConnection(), null);
+		String afterUpAndDownGrade = database.dumpForComparison();
+		assertEquals(start, afterUpAndDownGrade);
 	}
 
 	public static junit.framework.Test testSuite() {

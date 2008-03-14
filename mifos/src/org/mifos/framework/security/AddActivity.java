@@ -20,6 +20,8 @@ public class AddActivity extends Upgrade {
 	private final String activityName;
 	private final String activityNameKey;
 	private final Short parentActivity;
+	protected static final String wrongLookupValueKeyFormat = "The key format must be Permissions-...";
+	protected static final String keyFormat = "Permissions-";
 
 	/**
 	 * Define an activity and one name for it.  If you want
@@ -31,9 +33,14 @@ public class AddActivity extends Upgrade {
 	 * @param locale Locale in which we want to define a name
 	 * @param activityName Name to give the activity, in that locale.
 	 */
+	/* This constructor is used for version 174 and lower. 
+	 * And it must not be used afterward
+	 */
 	public AddActivity(int higherVersion, short newActivityId,
 			Short parentActivity, Short locale, String activityName) {
 		super(higherVersion);
+		if (higherVersion > lookupValueChangeVersion)
+			throw new RuntimeException(wrongConstructor);
 		this.newActivityId = newActivityId;
 		this.parentActivity = parentActivity;
 		this.locale = locale;
@@ -49,9 +56,15 @@ public class AddActivity extends Upgrade {
 	 * @param parentActivity existing ID for the parent
 	 * @param locale Locale in which we want to define a name
 	 */
+	/*
+	 * This constructor must be used after version 174. The activityNameKey must in the format
+	 * Permissions-...
+	 */
 	public AddActivity(int higherVersion, String activityNameKey, 
 			short newActivityId, Short parentActivity) {
 		super(higherVersion);
+		if (!validateLookupValueKey(keyFormat, activityNameKey))
+			throw new RuntimeException(wrongLookupValueKeyFormat);
 		this.newActivityId = newActivityId;
 		this.parentActivity = parentActivity;
 		this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;

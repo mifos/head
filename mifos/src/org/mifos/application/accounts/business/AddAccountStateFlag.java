@@ -1,11 +1,13 @@
 package org.mifos.application.accounts.business;
 
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
@@ -23,21 +25,47 @@ public class AddAccountStateFlag extends Upgrade {
 
 	private final Short locale;
 	private final String message;
+	private final String lookupValueKey;
+	protected static final String wrongLookupValueKeyFormat = "The key format must be AccountFlags-...";
+	protected static final String keyFormat = "AccountFlags-";
 
+	/* This constructor is used for version 174 and lower. 
+	 * And it must not be used afterward
+	 */
 	public AddAccountStateFlag(int higherVersion, 
-		int newFlagId, String description, Short locale, String message) {
+		int newFlagId, String description, Short locale, String message)  {
 		super(higherVersion);
+		if (higherVersion > lookupValueChangeVersion)
+			throw new RuntimeException(wrongConstructor);
 		this.newFlagId = newFlagId;
 		this.description = description;
 		this.locale = locale;
 		this.message = message;
+		this.lookupValueKey = " ";
 	}
+	
+	/*
+	 * This constructor must be used after version 174. The lookupValueKey must in the format
+	 * AccountFlags-...
+	 */
+	
+	public AddAccountStateFlag(int higherVersion, 
+			int newFlagId, String description, String lookupValueKey)  {
+			super(higherVersion);
+			if (!validateLookupValueKey(keyFormat, lookupValueKey))
+				throw new RuntimeException(wrongLookupValueKeyFormat);
+			this.newFlagId = newFlagId;
+			this.description = description;
+			this.locale = MasterDataEntity.CUSTOMIZATION_LOCALE_ID;;
+			this.message = null;
+			this.lookupValueKey = lookupValueKey;
+		}
 
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		int lookupEntity = MifosLookUpEntity.ACCOUNT_STATE_FLAG;
 
-		int lookupId = insertLookupValue(connection, lookupEntity);
+		int lookupId = insertLookupValue(connection, lookupEntity, lookupValueKey);
 		insertMessage(connection, lookupId, locale, message);
 		addFlag(connection, newFlagId, description, lookupId);
 		upgradeVersion(connection);
@@ -97,5 +125,6 @@ public class AddAccountStateFlag extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
+	
 
 }

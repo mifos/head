@@ -257,8 +257,7 @@ public class DatabaseVersionPersistence {
 	private static void register175(Map<Integer, Upgrade> register) {
 		register(register, new AddInterestCalcRule(175,InterestType.DECLINING_EPI.getValue(),
 				1, "InterestTypes-DecliningBalance-EqualPrincipalInstallment",
-				"Declining Balance-Equal Principal Installment",ENGLISH_LOCALE,
-				null));
+				"Declining Balance-Equal Principal Installment"));
 	}	
 
 	

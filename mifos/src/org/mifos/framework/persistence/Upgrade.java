@@ -6,22 +6,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.util.helpers.StringUtils;
+
 
 public abstract class Upgrade {
 
 	private final int higherVersion;
+	protected static final int lookupValueChangeVersion = 174;
+	public static final String wrongConstructor = "This db version is higher than 174 so it needs to use the constructor with lookupValueKey parameter.";
 
 	protected Upgrade(int higherVersion) {
 		this.higherVersion = higherVersion;
 	}
 
+	
 	abstract public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 
 	abstract public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
+	
+	public static boolean validateLookupValueKey(String format, String key)
+	{
+		boolean result = false;
+		if (!StringUtils.isNullAndEmptySafe(key))
+			return result;
+		if (!key.startsWith(format, 0))
+			return result;
+		result = true;
+		return result;
+	}
+	
 
 	public int higherVersion() {
 		return higherVersion;
@@ -75,11 +91,18 @@ public abstract class Upgrade {
 		statement.close();
 	}
 
+	/*
+	 * This method is used for version 174 and lower (it was used in Upgrade169) and must not be used after 174
+	 */
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity) throws SQLException {
 		return insertLookupValue(connection, lookupEntity, " ");
 	}
 	
+	
+	/*
+	 * This method is used for version 174 and lower and must not be used after 174
+	 */
 	protected int insertLookupValue(Connection connection, 
 			int lookupEntity, String lookupKey) throws SQLException {
 		/* LOOKUP_ID is not AUTO_INCREMENT until database version 121.

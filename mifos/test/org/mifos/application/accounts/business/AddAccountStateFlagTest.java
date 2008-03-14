@@ -1,6 +1,8 @@
 package org.mifos.application.accounts.business;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.JUnit4TestAdapter;
 
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
@@ -19,7 +22,7 @@ import org.mifos.framework.util.helpers.TestCaseInitializer;
 public class AddAccountStateFlagTest {
 
 	private static final short FLAG_FEET_TOO_BIG = 12;
-	private TestDatabase database;
+	//private TestDatabase database;
 
 	/*
 	 * We need the test case initializer in order to set up the
@@ -30,15 +33,16 @@ public class AddAccountStateFlagTest {
 		new TestCaseInitializer();
 	}
 	
-	@Before public void setUp() throws SystemException, ApplicationException {
+	/*@Before public void setUp() throws SystemException, ApplicationException {
 		
 		database = TestDatabase.makeStandard();
 		database.installInThreadLocal();
 		
-	}
+	}*/
 
 	@Test
 	public void startFromStandardStore() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
 		String start = database.dumpForComparison();
 		
 		Upgrade upgrade = new AddAccountStateFlag(
@@ -81,6 +85,61 @@ public class AddAccountStateFlagTest {
 		assertEquals("Feet too big", flag.getFlagDescription());
 
 		assertEquals("Rejected because feet are too big", flag.getName());
+	}
+	
+	@Test 
+	public void validateLookupValueKeyTest() throws Exception {
+		String validKey = "AccountFlags-Withdraw";
+		String format = "AccountFlags-";
+		assertTrue(AddAccountStateFlag.validateLookupValueKey(format, validKey));
+		String invalidKey = "Withdraw";
+		assertFalse(AddAccountStateFlag.validateLookupValueKey(format, invalidKey));
+	}
+	
+	@Test 
+	public void constructorTest() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
+		short newId = 31500;
+		String start = database.dumpForComparison();
+		AddAccountStateFlag upgrade = null;
+		try
+		{
+			// use deprecated construtor		
+			upgrade = new AddAccountStateFlag(
+					DatabaseVersionPersistence.APPLICATION_VERSION + 1,
+				newId,
+				"NewAccountStateFlag",
+				TEST_LOCALE,
+				"NewAccountStateFlag");
+		}
+		catch (Exception e)
+		{
+			assertEquals(e.getMessage(), AddAccountStateFlag.wrongConstructor);
+		}
+		String invalidKey ="NewAccountStateFlag";
+		
+		try
+		{
+			// use invalid lookup key format
+			upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId , invalidKey, invalidKey);	
+		}
+		catch (Exception e)
+		{
+			assertEquals(e.getMessage(), AddAccountStateFlag.wrongLookupValueKeyFormat);
+		}
+		String goodKey = "AccountFlags-NewAccountStateFlag";
+		//	use valid construtor and valid key
+		upgrade = new AddAccountStateFlag(DatabaseVersionPersistence.APPLICATION_VERSION + 1, newId, goodKey, goodKey);	
+		upgrade.upgrade(database.openConnection(), null);
+		Session session = database.openSession();
+		AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(
+				AccountStateFlagEntity.class, newId);
+		assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
+		upgrade.downgrade(database.openConnection(), null);
+		String afterUpAndDownGrade = database.dumpForComparison();
+		assertEquals(start, afterUpAndDownGrade);
+		MifosConfiguration.getInstance().init();
+
 	}
 
 	public static junit.framework.Test testSuite() {
