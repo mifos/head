@@ -309,7 +309,7 @@
     	 initialized in the ApplicationInitializer class. 
     <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
         <set-property property="contextConfigLocation"
-                      value="/WEB-INF/classes/org/mifos/config/applicationContext.xml"/>
+        value="/WEB-INF/classes/org/mifos/config/resources/applicationContext.xml"/>
     </plug-in>
 	-->
 </struts-config>

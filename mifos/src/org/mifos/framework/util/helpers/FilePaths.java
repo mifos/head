@@ -69,14 +69,14 @@ public interface FilePaths {
 	 * resolved by something that walks the classpath.
 	 */
 	public static final String SPRING_CONFIG_CORE =
-		"org/mifos/config/applicationContext.xml";
+		"org/mifos/config/resources/applicationContext.xml";
 	/**
 	 * A Mifos specialist or systems administrator can use this file to override
 	 * bean definitions in {@link #SPRING_CONFIG_CORE}. This is a relative
 	 * path, meant to be resolved by something that walks the classpath.
 	 */
 	public static final String SPRING_CONFIG_CUSTOM_BEANS =
-		"beanConfig.custom.xml";
+		"mifosBeanConfig.custom.xml";
 	/**
 	 * Default chart of accounts. Will be bundled inside WAR.
 	 */

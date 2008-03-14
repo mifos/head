@@ -18,6 +18,7 @@ import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
@@ -25,29 +26,28 @@ import org.springframework.context.MessageSourceAware;
  * This class looks up messages
  * from tables like {@link LookUpValueEntity}, {@link LookUpValueLocaleEntity}
  * and the like.
- * 
+ * <p>
  * The idea is that we'll be able to come up with a simpler mechanism 
  * than the rather convoluted
  * one in {@link MasterPersistence}, {@link MasterDataEntity}, etc.
  * Or at least we can centralize where we call the convoluted
  * mechanism.
- * 
+ * <p>
  * Also see {@link ApplicationConfigurationPersistence}.
- * 
+ * <p>
  * The word "label" might be better than "message"; at least that's
  * what we call them in places like {@link LabelConfigurationAction}.
- * 
+ * <p>
  * An initial pass has been made at moving to resource bundle based
  * localization.  A Spring MessageSource is injected into the single 
  * instance of MessageLookup.  The MessageSource is used to manage
  * the loading and lookup from external resource bundle files.
- * See {@link org.mifos.config.applicationContext.xml}
- * for the Spring configuration. 
- * 
+ * See {@link FilePaths#SPRING_CONFIG_CORE} for the Spring configuration. 
+ * <p>
  * Enumerated types which implement the {@link LocalizedTextLookup}
  * interface can be passed to {@link MessageLookup} to look up
  * a localized text string for each instance of the enumerated type.
- * 
+ * <p>
  * Text strings for enumerated types can currently be found in
  * org/mifos/config/localizedResources/MessageLookupMessages.properties (and 
  * associated versions for different locales).
