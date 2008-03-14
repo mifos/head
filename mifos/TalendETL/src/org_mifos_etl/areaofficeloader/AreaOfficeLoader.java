@@ -249,7 +249,7 @@ public class AreaOfficeLoader {
 
 			java.util.Properties p = new java.util.Properties();
 
-			java.io.InputStream inStream = ArealOfficeLoader.class
+			java.io.InputStream inStream = AreaOfficeLoader.class
 					.getClassLoader().getResourceAsStream(
 							"hibernate.properties");
 
