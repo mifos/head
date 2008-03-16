@@ -58,7 +58,7 @@
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt"><html-el:link href="labelconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
-							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="configuration.define" /> <mifos:mifoslabel name="configuration.labels" /></span>
+							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="configuration.definelabels" /></span>
 					</td>
 				</tr>
 			</table>
@@ -68,8 +68,7 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<mifos:mifoslabel name="configuration.define" />
-									<mifos:mifoslabel name="configuration.labels" />
+									<mifos:mifoslabel name="configuration.definelabels" />
 								</td>
 							</tr>
 						</table>
@@ -525,12 +524,12 @@
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitButton" styleClass="buttn" style="width:70px;">
+									<html-el:submit property="submitButton" styleClass="buttn">
 										<mifos:mifoslabel name="configuration.submit" />
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='labelconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+									<html-el:button property="cancelButton" onclick="location.href='labelconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button>
 								</td>

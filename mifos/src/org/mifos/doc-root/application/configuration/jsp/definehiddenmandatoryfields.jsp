@@ -68,8 +68,7 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<mifos:mifoslabel name="configuration.define" />
-									<mifos:mifoslabel name="configuration.hiddenmandfields" />
+									<mifos:mifoslabel name="configuration.definehiddenmandfields" />
 								</td>
 							</tr>
 						</table>
@@ -156,7 +155,7 @@
 							<tr>
 								<td class="drawtablerow">
 									<mifos:mifoslabel name="configuration.assigning" />
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />s
+									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 									<mifos:mifoslabel name="configuration.topositions" />
 								</td>
 								<td class="drawtablerow">
@@ -374,7 +373,7 @@
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="24%" class="drawtablehd">
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />s
+									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 									<mifos:mifoslabel name="configuration.fields" />
 								</td>
 								<td width="28%" class="drawtablehd">
@@ -443,12 +442,12 @@
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitButton" styleClass="buttn" style="width:70px;">
+									<html-el:submit property="submitButton" styleClass="buttn">
 										<mifos:mifoslabel name="configuration.submit" />
 									</html-el:submit>
 									&nbsp;
 
-									<html-el:button property="cancelButton" onclick="location.href='hiddenmandatoryconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn" style="width:70px;">
+									<html-el:button property="cancelButton" onclick="location.href='hiddenmandatoryconfigurationaction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button>
 								</td>

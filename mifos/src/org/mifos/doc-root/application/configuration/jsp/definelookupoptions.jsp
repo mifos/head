@@ -76,8 +76,7 @@
 								href="lookupOptionsAction.do?method=cancel&amp;currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel
-								name="configuration.define" /> <mifos:mifoslabel
-								name="configuration.lookupoptions" />
+								name="configuration.definelookupoptions" />
 						</span>
 					</td>
 				</tr>
@@ -88,8 +87,7 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<mifos:mifoslabel name="configuration.define" />
-									<mifos:mifoslabel name="configuration.lookupoptions" />
+									<mifos:mifoslabel name="configuration.definelookupoptions" />
 								</td>
 							</tr>
 						</table>
@@ -115,13 +113,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddSalutation"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigSalutation.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br />
 												<html-el:submit property="btnEditSalutation"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit,this.form.ConfigSalutation.value,'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -156,13 +154,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddUserTitle"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigUserTitle.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditUserTitle"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigUserTitle.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -197,13 +195,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddMaritalStatus"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigMaritalStatus.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditMaritalStatus"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigMaritalStatus.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -238,13 +236,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddEthnicity"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEthnicity.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditEthnicity"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEthnicity.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -279,13 +277,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddEducationLevel"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEducationLevel.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditEducationLevel"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigEducationLevel.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -320,13 +318,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddCitizenship"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCitizenship.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditCitizenship"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCitizenship.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -361,13 +359,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddPurposeOfLoan"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPurposeOfLoan.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditPurposeOfLoan"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigPurposeOfLoan.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -402,13 +400,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddHandicapped"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigHandicapped.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditHandicapped"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigHandicapped.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -442,13 +440,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddCollateralType"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCollateralType.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditCollateralType"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigCollateralType.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -485,13 +483,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddOfficerTitle"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigOfficerTitle.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditOfficerTitle"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigOfficerTitle.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>
@@ -527,13 +525,13 @@
 											<td align="left" valign="top" width="31%">
 												<br />
 												<html-el:submit property="btnAddAttendance"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'add');">
 													<mifos:mifoslabel name="configuration.add" />
 												</html-el:submit>
 												<br>
 												<html-el:submit property="btnEditAttendance"
-													styleClass="insidebuttn" style="width:65px"
+													styleClass="insidebuttn"
 													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'edit');">
 													<mifos:mifoslabel name="configuration.edit" />
 												</html-el:submit>

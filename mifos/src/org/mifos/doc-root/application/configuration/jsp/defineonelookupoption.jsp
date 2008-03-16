@@ -77,10 +77,10 @@ function goToLookupOptionPage(method){
 								<mifos:mifoslabel name="configuration.admin" />
 							</html-el:link> / 
 							<html-el:link href="lookupOptionsAction.do?method=load">
-								<mifos:mifoslabel name="configuration.define" />  <mifos:mifoslabel name="configuration.lookupoptions" />
+								<mifos:mifoslabel name="configuration.definelookupoptions" />
 							</html-el:link> / 
 							
-						</span><span class="fontnormal8ptbold"><mifos:mifoslabel name="configuration.add_edit" /> <mifos:mifoslabel name="configuration.lookupoptions" /></span>
+						</span><span class="fontnormal8ptbold"><mifos:mifoslabel name="configuration.add_editlookupoption" /></span>
 					</td>
 				</tr>
 			</table>
@@ -90,8 +90,7 @@ function goToLookupOptionPage(method){
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<mifos:mifoslabel name="configuration.add_edit" />
-									<mifos:mifoslabel name="configuration.lookupoptions" />
+									<mifos:mifoslabel name="configuration.add_editlookupoption" />
 								</td>
 							</tr>
 						</table>
@@ -113,11 +112,11 @@ function goToLookupOptionPage(method){
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
 			              <tr>
 			                <td align="center">&nbsp;
-			                    <html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="goToLookupOptionPage(this.form.method);">
+			                    <html-el:button property="submitButton" styleClass="buttn" onclick="goToLookupOptionPage(this.form.method);">
 													<mifos:mifoslabel name="configuration.submit" />
 								</html-el:button>
 									&nbsp;
-						      	<html-el:button property="cancelButton" onclick="goToCancelPage(this.form.method)" styleClass="cancelbuttn" style="width:70px;">
+						      	<html-el:button property="cancelButton" onclick="goToCancelPage(this.form.method)" styleClass="cancelbuttn">
 																<mifos:mifoslabel name="configuration.cancel" />
 								</html-el:button>
 						           </td>

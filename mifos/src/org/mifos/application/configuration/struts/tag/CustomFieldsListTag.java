@@ -41,6 +41,9 @@ package org.mifos.application.configuration.struts.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import java.util.ResourceBundle;
+import java.util.Locale;
+
 import org.apache.struts.taglib.TagUtils;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
@@ -54,6 +57,7 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport { 
 	private String actionName;
@@ -86,6 +90,10 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 	}
 
 	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+			(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, locale);
+		String editString = resources.getString("configuration.edit");
 		XmlBuilder html = new XmlBuilder();
 		String url = (actionName + "?method=" + methodName
 						+ "&customFieldIdStr=" + customField.getFieldId()
@@ -114,7 +122,7 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 			html.endTag("td"); html.newline();
 			html.startTag("td", "width", "8%", "align", "right", "class", "drawtablerow");
 				html.startTag("a", "href", url);
-				html.text("Edit"); // TODO: externalize
+				html.text(editString); 
 				html.endTag("a");
 			html.endTag("td"); html.newline();
 		html.endTag("tr"); html.newline();
@@ -155,40 +163,7 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 		return EVAL_PAGE;
 	}
 
-	/*
-	public void doTag() throws JspException {
-		try {
-			UserContext userContext = (UserContext) ((PageContext)getJspContext()).getSession()
-				.getAttribute(Constants.USERCONTEXT);
-			
-			getJspContext().getOut().write(getCustomFieldsList(userContext));
-			
-		} catch (Exception e) {
-			throw new JspException(e);
-		}
-	}
-*/
 	
-	
-/*	
-	@Override
-	public int doStartTag() throws JspException {
-		try {
-			UserContext userContext = (UserContext) pageContext.getSession()
-			.getAttribute(Constants.USERCONTEXT);
-
-			TagUtils.getInstance().write(pageContext, getCustomFieldsList(userContext));
-			
-		} catch (Exception e) {
-			//
-			//   This turns into a (rather ugly) error 500.
-			//    TODO: make it more reasonable.
-			//
-			throw new JspException(e);
-		}
-		return EVAL_PAGE;
-	}
-*/
 
 	public String getActionName() {
 		return actionName;

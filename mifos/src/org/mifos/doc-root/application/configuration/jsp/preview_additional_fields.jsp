@@ -85,9 +85,7 @@
                     <tr>
                       <td><img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17"></td>
                       <td class="timelineboldorange">
-                      <mifos:mifoslabel name="configuration.review" />                      
-                       &amp;
-                      <mifos:mifoslabel name="configuration.submit" /> 
+                      <mifos:mifoslabel name="configuration.reviewandsubmit" />                      
                       </td>
                     </tr>
                   </table>
@@ -186,10 +184,10 @@
             <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit style="width:65px;"	property="submitBtn" styleClass="buttn">
+                <html-el:submit property="submitBtn" styleClass="buttn">
 							<mifos:mifoslabel name="configuration.submit" />
 				</html-el:submit>&nbsp;
-				<html-el:button property="calcelButton" style="width:65px;"	styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
+				<html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
 							<mifos:mifoslabel name="configuration.cancel" />
 				</html-el:button>                
                 </td>

@@ -77,7 +77,8 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<span class="heading">${requestScope.categoryName} -</span> View Additional Fields
+									<span class="heading">${requestScope.categoryName} -</span> 
+									<mifos:mifoslabel name="configuration.view_additional_fields" />
 								</td>
 							</tr>
 							<tr>
@@ -91,20 +92,20 @@
 						<table width="80%" border="0" cellpadding="3" cellspacing="0" >
 							<tr>
 								<td width="11%" class="drawtablehd">
-									Sequence No.
+									<mifos:mifoslabel name="configuration.sequence_number" />
 								</td>
 								<td width="22%" class="drawtablehd">
-									Label
+									<mifos:mifoslabel name="configuration.label" />
 								</td>
 								<td width="21%" class="drawtablehd">
-									Data Type
+									<mifos:mifoslabel name="configuration.data_type" />
 								</td>
 
 								<td width="21%" class="drawtablehd">
-									Default Value
+									<mifos:mifoslabel name="configuration.default_value" />
 								</td>
 								<td width="17%" class="drawtablehd">
-									Mandatory
+									<mifos:mifoslabel name="configuration.mandatory" />
 								</td>
 								<td width="8%" class="drawtablehd">
 									&nbsp;

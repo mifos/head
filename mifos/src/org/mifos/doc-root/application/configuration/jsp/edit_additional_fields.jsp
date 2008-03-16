@@ -144,10 +144,10 @@
               <br>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
-				<td align="center"><html-el:submit style="width:65px;"
+				<td align="center"><html-el:submit
 					property="btnPreviewEdit" styleClass="buttn" >
 					<mifos:mifoslabel name="configuration.preview" />
-				</html-el:submit>&nbsp; <html-el:button property="cancelButton" style="width:65px;"
+				</html-el:submit>&nbsp; <html-el:button property="cancelButton"
 					styleClass="cancelbuttn"
 					onclick="location.href='customFieldsAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 					<mifos:mifoslabel name="configuration.cancel"  />

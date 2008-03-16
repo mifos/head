@@ -78,18 +78,6 @@ public class CustomFieldCategoryListTag extends BodyTagSupport {
 
 		return html.getOutput();
 	}
-/*	
-	<table width="90%" border="0" cellspacing="0" cellpadding="0">
-	<tr class="fontnormal">
-		<td>
-			<img src="pages/framework/images/bullet_circle.gif"
-				width="9" height="11" alt="">
-		</td>
-		<td>
-			<a href="VIewCustomFields.htm">Personnel</a>
-		</td>
-	</tr>
-*/	
 
 	
 	XmlBuilder getCategoryRow(String category, String categoryName) {

@@ -97,7 +97,7 @@
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td class="fontnormalbold">
-									<font class="fontnormalRedBold"><html-el:errors bundle="ConfigurationUIResources" /> </font>
+									<font class="fontnormalRedBold"><html-el:errors bundle="configurationUIResources" /> </font>
 								</td>
 							</tr>
 							<tr>
@@ -164,11 +164,11 @@
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitBtn" styleClass="buttn" style="width:65px">
+									<html-el:submit property="submitBtn" styleClass="buttn">
 										<mifos:mifoslabel name="configuration.submit" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnEditCancel()">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnEditCancel()">
 										<mifos:mifoslabel name="configuration.cancel" />
 									</html-el:button>
 								</td>
