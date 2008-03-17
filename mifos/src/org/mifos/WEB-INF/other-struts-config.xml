@@ -21,6 +21,7 @@
         <form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm"/>
         <!-- admin action form -->
         <form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm"/>
+        <form-bean name="systemInfoActionForm" type="org.mifos.application.admin.struts.actionforms.SystemInfoActionForm"/>
         <!-- Notes form bean -->
         <form-bean name="feeactionform" type="org.mifos.application.fees.struts.actionforms.FeeActionForm"/>
         <!-- ChkListActionForm Action Form  -->
@@ -210,7 +211,11 @@
         <!-- admin action -->
         <action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm"
                 parameter="method" input="/AdminAction.do?method=validate" validate="false">
-            <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp"/>
+            <forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
+        </action>
+        <action path="/systemInfoAction" type="org.mifos.application.admin.struts.action.SystemInfoAction" name="systemInfoActionForm"
+                parameter="method" input="/SystemInfoAction.do?method=validate" validate="false">
+            <forward name="load_success" path="/pages/application/admin/jsp/sysinfo.jsp" />
         </action>
         <!-- Fee Action -->
         <action path="/feeaction" type="org.mifos.application.fees.struts.action.FeeAction" parameter="method"

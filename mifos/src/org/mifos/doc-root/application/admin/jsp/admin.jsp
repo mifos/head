@@ -201,9 +201,24 @@
 							</tr>
 						</table>
 
+					<!-- spacer -->
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
-
-
+						<tr><td>&nbsp;</td></tr>
+					</table>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>
+							<span class="headingorange"><mifos:mifoslabel name="admin.sysinfo.title" bundle="adminUIResources" /></span>
+							<table width="90%" border="0" cellspacing="0" cellpadding="0">
+								<tr class="fontnormal">
+									<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+									<td width="97%">
+										<a href="systemInfoAction.do?method=load">
+										<mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.sysinfo.title" bundle="adminUIResources" /></a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
 					</table>
 					</td>
 					<td width="52%" align="left" valign="top" class="paddingleft"><span

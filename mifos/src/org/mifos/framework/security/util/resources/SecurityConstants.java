@@ -474,5 +474,8 @@ public interface SecurityConstants {
 	public final short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
 	
 	public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
+
+	// System information
+	public final short CAN_VIEW_SYSTEM_INFO = 228;
 	
 }

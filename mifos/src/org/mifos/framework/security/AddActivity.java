@@ -28,6 +28,7 @@ public class AddActivity extends Upgrade {
 	 * to give it names in multiple locales, this upgrade can not
 	 * yet do that.
 	 * 
+	 * @param higherVersion db version after the new activity is added
 	 * @param newActivityId ID for the activity we are creating
 	 * @param parentActivity existing ID for the parent
 	 * @param locale Locale in which we want to define a name
@@ -50,11 +51,6 @@ public class AddActivity extends Upgrade {
 
 	/**
 	 * Define an activity and the key to lookup its name.
-	 * 
-	 * @param newActivityId ID for the activity we are creating
-	 * @param activityNameKey the key for looking up the name in a properties file
-	 * @param parentActivity existing ID for the parent
-	 * @param locale Locale in which we want to define a name
 	 */
 	/*
 	 * This constructor must be used after version 174. The activityNameKey must in the format

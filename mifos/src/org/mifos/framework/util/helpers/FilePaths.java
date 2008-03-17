@@ -124,4 +124,5 @@ public interface FilePaths {
 	// "org.mifos.application.productdefinition.util.resources.ProductDefinitionResources"
 	public static final String PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ProductDefinitionResources";
 	public static final String UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "UIResources";
+	public static final String SVN_REVISION_PROPERTYFILE = "org/mifos/config/resources/versionInfo.properties";
 }

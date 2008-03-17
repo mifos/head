@@ -30,6 +30,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.struts.action.AdminAction;
+import org.mifos.application.admin.struts.action.SystemInfoAction;
 import org.mifos.application.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.application.bulkentry.struts.action.BulkEntryAction;
 import org.mifos.application.checklist.struts.action.ChkListAction;
@@ -259,7 +260,7 @@ public class ActivityMapper {
 		parseActionSecurity(AcceptedPaymentTypeAction.getSecurity());
 		parseActionSecurity(ReportsCategoryAction.getSecurity());
 		parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
-		
+		parseActionSecurity(SystemInfoAction.getSecurity());
 	}
 
 	private void addCustomerSearchMappings() {

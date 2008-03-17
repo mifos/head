@@ -33,7 +33,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 178;
+	public static final int APPLICATION_VERSION = 179;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -78,6 +78,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade173());
 		register175(register);
 		register(register, new Upgrade176());
+		register179(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -260,6 +261,15 @@ public class DatabaseVersionPersistence {
 				"Declining Balance-Equal Principal Installment"));
 	}	
 
+	private static void register179(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(
+				new AddActivity(179, 
+						"Permissions-SystemInformation", 
+						(short) 227, null),
+				new AddActivity(179, 
+						"Permissions-CanViewSystemInformation",
+						(short) 228, new Short("227"))));
+	}
 	
 	private final Connection connection;
 	private final Map<Integer, Upgrade> registeredUpgrades;
