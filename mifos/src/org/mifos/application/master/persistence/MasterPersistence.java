@@ -33,6 +33,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.StringUtils;
 import java.util.Set;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 /**
  * This class is mostly used to look up instances of (a subclass of)
@@ -270,7 +271,7 @@ public class MasterPersistence extends Persistence {
 				{
 					entity.setLookUpValue(newValue);
 					createOrUpdate(entity);
-					MifosConfiguration.getInstance().updateKey(lookupValueEntity.getLookUpName(), newValue);
+					MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
 					break;
 				}
 		}
@@ -279,10 +280,11 @@ public class MasterPersistence extends Persistence {
 
 	}
 
-	public LookUpValueEntity addValueListElementForLocale(Short lookupEnityId,
+	public LookUpValueEntity addValueListElementForLocale(DynamicLookUpValueCreationTypes type, Short lookupEnityId,
 			String newElementText) throws PersistenceException {
 		
-		String lookUpName = StringUtils.camelCase(newElementText + "." + System.currentTimeMillis());
+		//String lookUpName = StringUtils.camelCase(newElementText + "." + System.currentTimeMillis());
+		String lookUpName = StringUtils.generateLookupName(type.name(), newElementText);
 		return addValueListElementForLocale(lookupEnityId, newElementText, lookUpName);
 	}
 	/**
@@ -306,7 +308,8 @@ public class MasterPersistence extends Persistence {
 		lookUpValueLocaleEntity.setLookUpId(lookUpValueEntity.getLookUpId());
 		createOrUpdate(lookUpValueLocaleEntity);
 		
-		MifosConfiguration.getInstance().updateKey(lookUpValueEntity, newElementText);
+		//MifosConfiguration.getInstance().updateKey(lookUpValueEntity, newElementText);
+		MessageLookup.getInstance().updateLookupValueInCache(lookUpValueEntity, newElementText);
 		
 		return lookUpValueEntity;
 	}

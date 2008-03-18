@@ -44,6 +44,9 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.framework.util.helpers.StringUtils;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -124,7 +127,9 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		// the label that someone enters can potentially collide with
 		// the name of another unrelated entity, causing problems with
 		// label lookup in the MifosConfiguration class
-		lookupEntity.setEntityType(label + " " + System.currentTimeMillis());
+		String labelName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.CustomField.name(), 
+				label);
+		lookupEntity.setEntityType(labelName);
 		
 		Set<LookUpLabelEntity> lookUpLabels = new HashSet<LookUpLabelEntity>();
 		LookUpLabelEntity lookupLabel = new LookUpLabelEntity();

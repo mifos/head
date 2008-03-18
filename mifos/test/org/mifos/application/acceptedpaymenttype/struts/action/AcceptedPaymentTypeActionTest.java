@@ -173,7 +173,7 @@ public class AcceptedPaymentTypeActionTest extends MifosMockStrutsTestCase{
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
 			id = paymentType.getId();
 	    	payment = new PaymentTypeData(id);
-	    	payment.setName(paymentType.getName(localeId));
+	    	payment.setName(paymentType.getName());
 	    	paymentTypeList.add(payment);
 		}
 	     

@@ -206,28 +206,28 @@ public class LabelConfigurationAction extends BaseAction {
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
 				labelConfigurationActionForm.setHeadOffice(officeLevelEntity
-						.getName(localeId));
+						.getName());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.REGIONALOFFICE)) {
 				labelConfigurationActionForm
-						.setRegionalOffice(officeLevelEntity.getName(localeId));
+						.setRegionalOffice(officeLevelEntity.getName());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.SUBREGIONALOFFICE)) {
 				labelConfigurationActionForm
 						.setSubRegionalOffice(officeLevelEntity
-								.getName(localeId));
+								.getName());
 			}
 			else if (officeLevelEntity.getLevel()
 					.equals(OfficeLevel.AREAOFFICE)) {
 				labelConfigurationActionForm.setAreaOffice(officeLevelEntity
-						.getName(localeId));
+						.getName());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.BRANCHOFFICE)) {
 				labelConfigurationActionForm.setBranchOffice(officeLevelEntity
-						.getName(localeId));
+						.getName());
 			}
 		}
 	}
@@ -242,19 +242,19 @@ public class LabelConfigurationAction extends BaseAction {
 			if (gracePeriodType.getId().equals(
 					GraceType.NONE.getValue())) {
 				labelConfigurationActionForm.setNone(gracePeriodType
-						.getName(localeId));
+						.getName());
 			}
 			else if (gracePeriodType.getId().equals(
 					GraceType.PRINCIPALONLYGRACE.getValue())) {
 				labelConfigurationActionForm
 						.setPrincipalOnlyGrace(gracePeriodType
-								.getName(localeId));
+								.getName());
 			}
 			else if (gracePeriodType.getId().equals(
 					GraceType.GRACEONALLREPAYMENTS.getValue())) {
 				labelConfigurationActionForm
 						.setGraceOnAllRepayments(gracePeriodType
-								.getName(localeId));
+								.getName());
 			}
 		}
 	}
@@ -329,16 +329,16 @@ public class LabelConfigurationAction extends BaseAction {
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
 			if (paymentType.getId().equals(PaymentTypes.CASH.getValue())) {
 				labelConfigurationActionForm.setCash(paymentType
-						.getName(localeId));
+						.getName());
 			}
 			else if (paymentType.getId()
 					.equals(PaymentTypes.VOUCHER.getValue())) {
 				labelConfigurationActionForm.setVouchers(paymentType
-						.getName(localeId));
+						.getName());
 			}
 			else if (paymentType.getId().equals(PaymentTypes.CHEQUE.getValue())) {
 				labelConfigurationActionForm.setCheck(paymentType
-						.getName(localeId));
+						.getName());
 			}
 		}
 	}
@@ -357,62 +357,62 @@ public class LabelConfigurationAction extends BaseAction {
 			if (accountState.getId().equals(
 					AccountState.LOAN_PARTIAL_APPLICATION.getValue())) {
 				labelConfigurationActionForm.setPartialApplication(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_PENDING_APPROVAL.getValue())) {
 				labelConfigurationActionForm.setPendingApproval(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_APPROVED.getValue())) {
 				labelConfigurationActionForm.setApproved(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_CANCELLED.getValue())) {
 				labelConfigurationActionForm.setCancel(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
 				labelConfigurationActionForm
-						.setActiveInGoodStanding(accountState.getName(localeId));
+						.setActiveInGoodStanding(accountState.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
 				labelConfigurationActionForm
-						.setActiveInBadStanding(accountState.getName(localeId));
+						.setActiveInBadStanding(accountState.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
 				labelConfigurationActionForm
-						.setClosedObligationMet(accountState.getName(localeId));
+						.setClosedObligationMet(accountState.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue())) {
 				labelConfigurationActionForm.setClosedWrittenOff(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
 				labelConfigurationActionForm.setClosedRescheduled(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.SAVINGS_CLOSED.getValue())) {
 				labelConfigurationActionForm.setClosed(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.SAVINGS_INACTIVE.getValue())) {
 				labelConfigurationActionForm.setInActive(accountState
-						.getName(localeId));
+						.getName());
 			}
 			else if (accountState.getId().equals(
 					AccountState.SAVINGS_ACTIVE.getValue())) {
 				labelConfigurationActionForm.setActive(accountState
-						.getName(localeId));
+						.getName());
 			}
 		}
 		List<CustomerStatusEntity> customerStatusList = ((CustomerBusinessService) ServiceFactory
@@ -422,7 +422,7 @@ public class LabelConfigurationAction extends BaseAction {
 			if (customerStatus.getId().equals(
 					CustomerStatus.CLIENT_HOLD.getValue())) {
 				labelConfigurationActionForm.setOnhold(customerStatus
-						.getName(localeId));
+						.getName());
 			}
 		}
 	}
@@ -436,27 +436,27 @@ public class LabelConfigurationAction extends BaseAction {
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
 				officeLevelEntity.update(labelConfigurationActionForm
-						.getHeadOffice(), localeId);
+						.getHeadOffice());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.REGIONALOFFICE)) {
 				officeLevelEntity.update(labelConfigurationActionForm
-						.getRegionalOffice(), localeId);
+						.getRegionalOffice());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.SUBREGIONALOFFICE)) {
 				officeLevelEntity.update(labelConfigurationActionForm
-						.getSubRegionalOffice(), localeId);
+						.getSubRegionalOffice());
 			}
 			else if (officeLevelEntity.getLevel()
 					.equals(OfficeLevel.AREAOFFICE)) {
 				officeLevelEntity.update(labelConfigurationActionForm
-						.getAreaOffice(), localeId);
+						.getAreaOffice());
 			}
 			else if (officeLevelEntity.getLevel().equals(
 					OfficeLevel.BRANCHOFFICE)) {
 				officeLevelEntity.update(labelConfigurationActionForm
-						.getBranchOffice(), localeId);
+						.getBranchOffice());
 			}
 		}
 	}
@@ -470,18 +470,17 @@ public class LabelConfigurationAction extends BaseAction {
 			GracePeriodTypeEntity gracePeriodType = (GracePeriodTypeEntity) masterDataEntity;
 			if (gracePeriodType.getId().equals(
 					GraceType.NONE.getValue())) {
-				gracePeriodType.update(labelConfigurationActionForm.getNone(),
-						localeId);
+				gracePeriodType.update(labelConfigurationActionForm.getNone());
 			}
 			else if (gracePeriodType.getId().equals(
 					GraceType.PRINCIPALONLYGRACE.getValue())) {
 				gracePeriodType.update(labelConfigurationActionForm
-						.getPrincipalOnlyGrace(), localeId);
+						.getPrincipalOnlyGrace());
 			}
 			else if (gracePeriodType.getId().equals(
 					GraceType.GRACEONALLREPAYMENTS.getValue())) {
 				gracePeriodType.update(labelConfigurationActionForm
-						.getGraceOnAllRepayments(), localeId);
+						.getGraceOnAllRepayments());
 			}
 		}
 	}
@@ -494,17 +493,14 @@ public class LabelConfigurationAction extends BaseAction {
 		for (MasterDataEntity masterDataEntity : paymentTypes) {
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
 			if (paymentType.getId().equals(PaymentTypes.CASH.getValue())) {
-				paymentType.update(labelConfigurationActionForm.getCash(),
-						localeId);
+				paymentType.update(labelConfigurationActionForm.getCash());
 			}
 			else if (paymentType.getId()
 					.equals(PaymentTypes.VOUCHER.getValue())) {
-				paymentType.update(labelConfigurationActionForm.getVouchers(),
-						localeId);
+				paymentType.update(labelConfigurationActionForm.getVouchers());
 			}
 			else if (paymentType.getId().equals(PaymentTypes.CHEQUE.getValue())) {
-				paymentType.update(labelConfigurationActionForm.getCheck(),
-						localeId);
+				paymentType.update(labelConfigurationActionForm.getCheck());
 			}
 		}
 	}
@@ -645,16 +641,10 @@ public class LabelConfigurationAction extends BaseAction {
 					|| value.getLookUpId().equals(Integer.valueOf("87"))) {
 				name = labelConfigurationActionForm.getSavings();
 			}
+			
 			if (name != null) {
-				Set<LookUpValueLocaleEntity> localeValues = value
-						.getLookUpValueLocales();
-				for (LookUpValueLocaleEntity lookuplocale : localeValues) {
-					if (lookuplocale.getLocaleId().equals(MasterDataEntity.CUSTOMIZATION_LOCALE_ID)) {
-						lookuplocale.setLookUpValue(name);
-					}
-				}
-				configurationPersistence.createOrUpdate(value);
-				MifosConfiguration.getInstance().updateKey(value.getLookUpName(), name);
+				MessageLookup.getInstance().updateLookupValue(value, name); 
+				
 			}
 		}
 	}

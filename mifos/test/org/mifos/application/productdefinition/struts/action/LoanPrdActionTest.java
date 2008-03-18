@@ -1137,18 +1137,15 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		// locale is not persisted.  When the object is accessed after the Hibernate
 		// session has been closed, then it needs to be reloaded or reattached 
 		// to the session.  But in reloaded, the locale that has been set is lost.
-		Short DEFAULT_LOCALE_ID = 1;
 
 		assertNotNull(loanOffering1.getPrdOfferingId());
 		assertNotNull(loanOffering1.getPrdOfferingName());
 		assertNotNull(loanOffering1.getPrdOfferingShortName());
 		assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
-		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName(
-				DEFAULT_LOCALE_ID));
+		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
 		assertNotNull(loanOffering1.getPrdApplicableMasterEnum());
 		assertNotNull(loanOffering1.getStartDate());
-		assertNotNull(loanOffering1.getGracePeriodType().getName(
-				DEFAULT_LOCALE_ID));
+		assertNotNull(loanOffering1.getGracePeriodType().getName());
 		assertNotNull(loanOffering1.getGracePeriodDuration());
 		assertNotNull(loanOffering1.getInterestTypes().getName());
 		for (Iterator<LoanAmountSameForAllLoanBO> itr = loanOffering1
@@ -1206,8 +1203,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 					LoanOfferingBO.class, loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdOfferingName());
 			assertNotNull(loanOfferingBO.getPrdOfferingId());
-			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName(
-					DEFAULT_LOCALE_ID));
+			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
 		}
 		HibernateUtil.closeSession();
 		TestObjectFactory.removeObject(loanOffering1);

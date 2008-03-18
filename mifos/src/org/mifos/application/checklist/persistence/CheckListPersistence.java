@@ -54,7 +54,7 @@ public class CheckListPersistence extends MasterPersistence {
 				NamedQueryConstants.CHECKLIST_GET_VALID_CUSTOMER_STATES, queryParameters);
 		for (CustomerStatusEntity customerStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(customerStatus
-					.getId(), customerStatus.getName(localeId), customerStatus
+					.getId(), customerStatus.getName(), customerStatus
 					.getCustomerLevel().getId()));
 		}
 		return checkListStatesView;
@@ -69,7 +69,7 @@ public class CheckListPersistence extends MasterPersistence {
 				NamedQueryConstants.CHECKLIST_GET_VALID_ACCOUNT_STATES, queryParameters);
 		for (AccountStateEntity accountStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(accountStatus
-					.getId(), accountStatus.getName(localeId), accountStatus
+					.getId(), accountStatus.getName(), accountStatus
 					.getPrdType().getProductTypeID()));
 		}
 		return checkListStatesView;

@@ -49,6 +49,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsDataSource;
@@ -59,6 +62,7 @@ import org.mifos.application.reports.business.ReportsParamsMapValue;
 import org.mifos.application.reports.business.ReportsParamsValue;
 import org.mifos.application.reports.exceptions.ReportException;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -492,5 +496,23 @@ public class ReportsPersistence extends Persistence {
 		Session session = null;
 		session = HibernateUtil.getSessionTL();
 		return (ReportsCategoryBO) session.load(ReportsCategoryBO.class, reportCategoryId);
+	}
+	
+	public void updateLookUpValue(Short activityId, String inputCategoryName)
+	{
+		ActivityEntity activityEntity = null;
+		try
+		{
+			activityEntity = (ActivityEntity) getPersistentObject(ActivityEntity.class, activityId);
+		}
+		catch (Exception ex)
+		{
+			throw new RuntimeException(ex.getMessage());
+		}
+		if (activityEntity != null)
+		{
+			LookUpValueEntity lookUpValueEntity = activityEntity.getDescriptionLookupValues();
+			MessageLookup.getInstance().updateLookupValue(lookUpValueEntity, inputCategoryName);
+		}
 	}
 }

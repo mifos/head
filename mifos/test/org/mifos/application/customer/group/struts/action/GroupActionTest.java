@@ -574,11 +574,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 				((List<CustomerBO>) SessionUtils.getAttribute(
 						GroupConstants.CLIENT_LIST, request)).size());
 		
-		Short DEFAULT_LOCALE = (short)1;
+	
 		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
 			assertEquals("Center Leader", customerPosition.getPosition()
-					.getName(DEFAULT_LOCALE));
+					.getName());
 			break;
 		}
 		TestObjectFactory.removeCustomerFromPosition(group);

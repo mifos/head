@@ -1262,7 +1262,7 @@ public class AccountBO extends BusinessObject {
 		transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(),
 				financialTrxn.getActionDate(), financialTrxn
 						.getFinancialAction()
-						.getName(userContext.getLocaleId()), financialTrxn
+						.getName(), financialTrxn
 						.getGlcode().getGlcode(), debit, credit, financialTrxn
 						.getPostedDate(), notes);
 

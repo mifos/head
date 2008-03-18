@@ -52,9 +52,9 @@ public class PaymentTypeEntity extends MasterDataEntity {
 		super(id);
 	}
 
-	public void update(String name, Short localeId) throws PersistenceException {
-		setName(localeId, name);
-		new MasterPersistence().createOrUpdate(this);
+	public void update(String name) throws PersistenceException {
+		setName(name);
+		//new MasterPersistence().createOrUpdate(this);
 	}
 
     @Override

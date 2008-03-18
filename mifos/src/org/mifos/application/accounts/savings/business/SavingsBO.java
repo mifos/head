@@ -1798,7 +1798,7 @@ public class SavingsBO extends AccountBO {
 		savingsRecentActivityView.setAmount(removeSign(
 				savingActivity.getAmount()).toString());
 		savingsRecentActivityView.setActivity(savingActivity.getActivity()
-				.getName(userContext.getLocaleId()));
+				.getName());
 		savingsRecentActivityView.setRunningBalance(String
 				.valueOf(savingActivity.getBalanceAmount()
 						.getAmountDoubleValue()));

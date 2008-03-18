@@ -213,7 +213,7 @@ public class AccountBusinessService extends BusinessService {
 				applicableCharge.setPeriodicity(new MeetingHelper().getDetailMessageWithFrequency(meeting, userContext));
 			} else {
 				applicableCharge.setPaymentType(fee.getFeeFrequency()
-						.getFeePayment().getName(userContext.getLocaleId()));
+						.getFeePayment().getName());
 			}
 			applicableChargeList.add(applicableCharge);
 		}

@@ -511,7 +511,7 @@ public class SavingsAction extends AccountAppAction {
 									.getAccountTrxnId());
 					savingsTransactionHistoryView
 							.setType(financialTransactionBO
-									.getFinancialAction().getName(localeId));
+									.getFinancialAction().getName());
 					savingsTransactionHistoryView
 							.setGlcode(financialTransactionBO.getGlcode()
 									.getGlcode());

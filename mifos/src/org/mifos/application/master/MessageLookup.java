@@ -19,6 +19,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
@@ -165,7 +166,7 @@ public class MessageLookup implements MessageSourceAware {
 						// this is bad too, and should go away with some
 						// refactoring
 						HibernateUtil.commitTransaction();
-						MifosConfiguration.getInstance().updateKey(labelKey, value);
+						updateLookupValueInCache(labelKey, value);
 					}				
 				}
 			}
@@ -174,6 +175,42 @@ public class MessageLookup implements MessageSourceAware {
 		//	MifosConfiguration.getInstance().init();
 		//}
 		
+	}
+	
+	public void updateLookupValueInCache(LocalizedTextLookup keyContainer, String newLookupValue)
+	{
+		MifosConfiguration.getInstance().updateKey(keyContainer, newLookupValue);
+	}
+	
+	public void updateLookupValueInCache(String lookupKey, String newLookupValue)
+	{
+		MifosConfiguration.getInstance().updateKey(lookupKey, newLookupValue);
+	}
+	
+	public void updateLookupValue(LookUpValueEntity lookupValueEntity, String newValue) 
+	{
+		
+		Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
+		if ((lookUpValueLocales != null) && StringUtils.isNullAndEmptySafe(newValue))
+		{
+			MasterPersistence masterPersistence = new MasterPersistence();
+			for (LookUpValueLocaleEntity entity : lookUpValueLocales)
+				if (entity.getLookUpId().equals(lookupValueEntity.getLookUpId()) &&  (entity.getLookUpValue() == null 
+						|| !entity.getLookUpValue().equals(newValue)))
+				{
+					entity.setLookUpValue(newValue);
+					try
+					{
+						masterPersistence.createOrUpdate(entity);
+					}
+					catch (Exception ex)
+					{
+						throw new RuntimeException(ex.getMessage());
+					}
+					MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
+					break;
+				}
+		}
 	}
 	
 	

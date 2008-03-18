@@ -45,6 +45,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 public class BirtReportsUploadAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
@@ -340,7 +341,9 @@ public class BirtReportsUploadAction extends BaseAction {
 		reportBO.setIsActive(Short.valueOf(uploadForm.getIsActive()));
 		reportBO.setReportsCategoryBO(category);
 		rp.createOrUpdate(reportBO);
-
+        // kim
+		String activityNameHead = "Can view ";
+        rp.updateLookUpValue(reportBO.getActivityId(),activityNameHead +  uploadForm.getReportTitle());
 		ActivityGenerator.reparentActivityUsingHibernate(reportBO
 				.getActivityId(), category.getActivityId());
 		ActivityGenerator.changeActivityMessage(reportBO.getActivityId(),
@@ -388,7 +391,7 @@ public class BirtReportsUploadAction extends BaseAction {
 		int newActivityId;
 		newActivityId = ActivityGenerator.calculateDynamicActivityId();
 		ActivityGenerator activityGenerator = new ActivityGenerator();
-		activityGenerator.upgradeUsingHQL(parentActivity,
+		activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivity,
 				lookUpDescription);
 		return newActivityId;
 	}

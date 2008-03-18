@@ -117,13 +117,13 @@ public class OfficeLevelEntity extends MasterDataEntity {
 
 	}
 
-	public void update(String name, Short localeId) throws OfficeException {
-		setName(localeId, name);
-		try {
-			new OfficeHierarchyPersistence().createOrUpdate(this);
-		}
-		catch (PersistenceException e) {
-			throw new OfficeException(e);
-		}
+	public void update(String name) throws OfficeException {
+		setName(name);
+		//try {
+		//	new OfficeHierarchyPersistence().createOrUpdate(this);
+		//}
+		//catch (PersistenceException e) {
+		//	throw new OfficeException(e);
+		//}
 	}
 }

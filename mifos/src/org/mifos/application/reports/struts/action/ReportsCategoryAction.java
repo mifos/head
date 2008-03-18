@@ -9,11 +9,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
+import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -28,6 +32,7 @@ import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 public class ReportsCategoryAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
@@ -124,7 +129,8 @@ public class ReportsCategoryAction extends BaseAction {
 		}
 
 		ActivityGenerator activityGenerator = new ActivityGenerator();
-		activityGenerator.upgradeUsingHQL( (short) 0, categoryName);
+		Short parentActivityId = (short)141; // report management is the parent
+		activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivityId, categoryName);
 
 		reportsCategoryBO.setActivityId((short) newActivityId);
 		reportsCategoryBO.setReportCategoryName(categoryName);
@@ -290,7 +296,12 @@ public class ReportsCategoryAction extends BaseAction {
 					.toString());
 		}
 		reportsCategoryBO.setReportCategoryName(inputCategoryName);
-		new ReportsPersistence().createOrUpdate(reportsCategoryBO);
+		ReportsPersistence rPersistence = new ReportsPersistence();
+		rPersistence.createOrUpdate(reportsCategoryBO);
+		// update cache
+		Short activityId = reportsCategoryBO.getActivityId();
+		rPersistence.updateLookUpValue(activityId, inputCategoryName);
+		
 		ActivityGenerator.changeActivityMessage(reportsCategoryBO
 				.getActivityId(), DatabaseVersionPersistence.ENGLISH_LOCALE,
 				reportsCategoryBO.getReportCategoryName());

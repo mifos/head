@@ -171,14 +171,14 @@ public class AccountStateMachines {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
 				if (accountStateEntityObj.getId().equals(
 						accountState.getValue())) {
-					return accountStateEntityObj.getName(localeId);
+					return accountStateEntityObj.getName();
 				}
 			}
 		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForSavings) {
 				if (accountStateEntityObj.getId().equals(
 						accountState.getValue())) {
-					return accountStateEntityObj.getName(localeId);
+					return accountStateEntityObj.getName();
 				}
 			}
 		}
@@ -193,7 +193,7 @@ public class AccountStateMachines {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
 					if (accountStateFlagEntity.getId().equals(flag.getValue())) {
-						return accountStateFlagEntity.getName(localeId);
+						return accountStateFlagEntity.getName();
 					}
 				}
 			}
@@ -202,7 +202,7 @@ public class AccountStateMachines {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
 					if (accountStateFlagEntity.getId().equals(flag.getValue())) {
-						return accountStateFlagEntity.getName(localeId);
+						return accountStateFlagEntity.getName();
 					}
 				}
 			}
@@ -217,21 +217,21 @@ public class AccountStateMachines {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForCenter) {
 				if (customerStatusEntity.getId().equals(
 						customerStatus.getValue())) {
-					return customerStatusEntity.getName(localeId);
+					return customerStatusEntity.getName();
 				}
 			}
 		} else if (customerLevel.equals(CustomerLevel.GROUP)) {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForGroup) {
 				if (customerStatusEntity.getId().equals(
 						customerStatus.getValue())) {
-					return customerStatusEntity.getName(localeId);
+					return customerStatusEntity.getName();
 				}
 			}
 		} else if (customerLevel.equals(CustomerLevel.CLIENT)) {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForClient) {
 				if (customerStatusEntity.getId().equals(
 						customerStatus.getValue())) {
-					return customerStatusEntity.getName(localeId);
+					return customerStatusEntity.getName();
 				}
 			}
 		}
@@ -248,7 +248,7 @@ public class AccountStateMachines {
 					if (null != customerStateFlagEntity.getId()) {
 						if (customerStateFlagEntity.getId().equals(
 								customerStatusFlag.getValue())) {
-							return customerStateFlagEntity.getName(localeId);
+							return customerStateFlagEntity.getName();
 						}
 					}
 				}
@@ -260,7 +260,7 @@ public class AccountStateMachines {
 					if (null != customerStateFlagEntity.getId()) {
 						if (customerStateFlagEntity.getId().equals(
 								customerStatusFlag.getValue())) {
-							return customerStateFlagEntity.getName(localeId);
+							return customerStateFlagEntity.getName();
 						}
 					}
 				}
@@ -272,7 +272,7 @@ public class AccountStateMachines {
 					if (null != customerStateFlagEntity.getId()) {
 						if (customerStateFlagEntity.getId().equals(
 								customerStatusFlag.getValue())) {
-							return customerStateFlagEntity.getName(localeId);
+							return customerStateFlagEntity.getName();
 						}
 					}
 				}

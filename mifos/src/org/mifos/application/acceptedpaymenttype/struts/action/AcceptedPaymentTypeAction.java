@@ -103,7 +103,7 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 			PaymentTypeEntity paymentType = (PaymentTypeEntity) masterDataEntity;
 			id = paymentType.getId();
 	    	payment = new PaymentTypeData(id);
-	    	payment.setName(paymentType.getName(localeId));
+	    	payment.setName(paymentType.getName());
 	    	paymentTypeList.add(payment);
 		}
 	     
@@ -133,7 +133,7 @@ public class AcceptedPaymentTypeAction extends BaseAction{
 		{
 			Short paymentTypeId = paymentType.getPaymentTypeEntity().getId();
 			data = new PaymentTypeData(paymentTypeId);
-			data.setName(paymentType.getPaymentTypeEntity().getName(localeId));
+			data.setName(paymentType.getPaymentTypeEntity().getName());
 			data.setAcceptedPaymentTypeId(paymentType.getAcceptedPaymentTypeId());
 			outList.add(data);
 			RemoveFromInList(inList, paymentTypeId);

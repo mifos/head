@@ -24,10 +24,9 @@ public class TestAccountActionEntity extends MifosTestCase {
 	}
 
 	public void testGetAccountAction(){
-		Short localeId = 1;
 		Short id = 1;
 		accountActionEntity = getAccountActionEntityObject(id);
-		assertEquals("Loan Repayment", accountActionEntity.getName(localeId));
+		assertEquals("Loan Repayment", accountActionEntity.getName());
 	}
 
 	private AccountActionEntity getAccountActionEntityObject(Short id) {

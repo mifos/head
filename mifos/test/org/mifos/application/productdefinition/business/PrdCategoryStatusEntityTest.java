@@ -26,13 +26,13 @@ public class PrdCategoryStatusEntityTest extends MifosTestCase {
 	
 	public void testGetNameFailure() {
 		prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("0"));
-		String name = prdCategoryStatusEntity.getName(Short.valueOf("1"));
+		String name = prdCategoryStatusEntity.getName();
 		assertFalse("This should fail, name is Inactive", !("Inactive".equals(name)));
 	}
 	
 	public void testGetNameSuccess() {
 		prdCategoryStatusEntity = getPrdCategoryStatus(Short.valueOf("1"));
-		String name = prdCategoryStatusEntity.getName(Short.valueOf("1"));
+		String name = prdCategoryStatusEntity.getName();
 		assertEquals("Active",name);
 	}
 	

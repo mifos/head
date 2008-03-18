@@ -27,13 +27,13 @@ public class AccountStateEntityTest extends MifosTestCase {
 	
 	public void testGetNameFailure() {
 		accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
-		String name = accountStateEntity.getName(Short.valueOf("1"));
+		String name = accountStateEntity.getName();
 		assertFalse("This should fail, name is Partial Application", !("Partial Application".equals(name)));
 	}
 	
 	public void testGetNameSuccess() {
 		accountStateEntity = getAccountStateEntityObject(Short.valueOf("1"));
-		String name = accountStateEntity.getName(Short.valueOf("1"));
+		String name = accountStateEntity.getName();
 		assertEquals("Partial Application",name);
 	}
 	
@@ -53,13 +53,13 @@ public class AccountStateEntityTest extends MifosTestCase {
 	
 	public void testGetNameWithLocaleSuccess() {
 		accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
-		String name = accountStateEntity.getName(Short.valueOf("1"));
+		String name = accountStateEntity.getName();
 		assertEquals(TestConstants.APPROVED,name);
 	}
 	
 	public void testGetNameWithLocaleFailure() {
 		accountStateEntity = getAccountStateEntityObject(Short.valueOf("3"));
-		String name = accountStateEntity.getName(Short.valueOf("1"));
+		String name = accountStateEntity.getName();
 		assertFalse("This should fail, name is Approved",!(TestConstants.APPROVED.equals(name)));
 	}
 	

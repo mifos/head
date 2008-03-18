@@ -122,4 +122,10 @@ public class StringUtils {
 	public static String camelCase(String string) {
 		return org.apache.commons.lang.StringUtils.deleteWhitespace(WordUtils.capitalize(string.toLowerCase().replaceAll("\\W"," ")));
 	}
+	
+	
+	public static String generateLookupName(String type, String newElementText)
+	{
+		return StringUtils.camelCase(type + "." + camelCase(newElementText) + "." + System.currentTimeMillis());
+	}
 }

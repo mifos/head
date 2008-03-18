@@ -75,6 +75,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 
 
@@ -468,7 +469,7 @@ public class LookupOptionsAction extends BaseAction {
 		if (data.getLookupId() > 0)
 			masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
 		else
-			masterPersistence.addValueListElementForLocale(data.getValueListId(), data.getLookupValue());
+			masterPersistence.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption, data.getValueListId(), data.getLookupValue());
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)

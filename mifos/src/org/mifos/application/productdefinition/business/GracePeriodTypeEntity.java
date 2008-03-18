@@ -54,15 +54,9 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
 		super();
 	}
 
-	public void update(String name, Short localeId)
+	public void update(String name)
 			throws ProductDefinitionException {
-		setName(localeId, name);
-		try {
-			new LoanPrdPersistence().createOrUpdate(this);
-		}
-		catch (PersistenceException e) {
-			throw new ProductDefinitionException(e);
-		}
+		setName(name);
 	}
 
 	public GraceType asEnum() {

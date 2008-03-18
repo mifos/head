@@ -256,40 +256,7 @@ public class MifosValueList extends BodyTagSupport {
    }
     
 
-	/**
-	 * Map a String array of elements each of the form:
-	 * "CustomValueListId;CustomValueListValue;update/original/add"
-	 * To a CustomValueList.
-	 * 
-	 * For example, a string array might look like:
-	 * "456;Updated String Value;update"
-	 * "0;New Value;add"
-	 * 
-	 * Each new value will have an id of zero while each updated value will
-	 * have a non-zero id, so the trailing "update","original" or "add" string
-	 * can be ignored when constructing the CustomValueListElement objects.
-	 */
-	public static CustomValueList mapUpdateStringArrayToCustomValueList(String[] updatedList, Short valueListId, Short localeId) {
-		CustomValueList customValueList = new CustomValueList(valueListId, localeId, "");
-		List<CustomValueListElement> list = new ArrayList<CustomValueListElement>();
-		for (int i=0; i < updatedList.length; i++)
-		{
-			String value = updatedList[i];
-			String[] splitValues = value.split(";");
-
-			// we should probably throw and exception or otherwise raise an
-			// error if either of these assertions fails
-			assert(splitValues.length == 3);
-			assert(!splitValues[2].equals("original"));
-			
-			Integer lookupId = Integer.parseInt(splitValues[0].toString());
-			String lookupValue = splitValues[1];
-			list.add(new CustomValueListElement(lookupId, lookupValue,null));
-		}
-		customValueList.setCustomValueListElements(list);
-		return customValueList;
-	}
-    
+	
 	/**
 	 * Map a CustomValueListElement to a String of the form:
 	 * "CustomValueListId;CustomValueListValue;original"

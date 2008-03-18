@@ -17,6 +17,7 @@ import org.mifos.config.LocalizedTextLookup;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestMasterPersistence extends MifosTestCase {
@@ -211,7 +212,8 @@ public class TestMasterPersistence extends MifosTestCase {
 		
 		// add a CustomValueListElement to the list
 		final String NEW_SALUTATION_STRING = "Sir";
-		LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(salutationValueList.getEntityId(), 
+		LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(DynamicLookUpValueCreationTypes.LookUpOption,
+				salutationValueList.getEntityId(), 
 				NEW_SALUTATION_STRING);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();

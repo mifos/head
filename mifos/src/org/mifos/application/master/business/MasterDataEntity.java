@@ -8,6 +8,7 @@ import java.util.Set;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * Subclasses of this class provide access to the database tables
@@ -70,7 +71,7 @@ public abstract class MasterDataEntity extends PersistentObject {
 	 * We ignore the locale, in order to treat values in the database
 	 * as customized values for all locales.
 	 */
-	public String getName(Short localeId) {
+	public String getName() {
 		// test cases depend upon the null locale behavior
 		// it seems like a hack which should be refactored
 		// TODO: remove test dependency on null localeId behavior
@@ -82,9 +83,9 @@ public abstract class MasterDataEntity extends PersistentObject {
 		
 	}
 
-	public String getName() {
-		return getName(getLocaleId());
-	}
+	//public String getName() {
+	//	return getName(getLocaleId());
+	//}
 
 	/* 
 	 * This method is currently used just for insuring that 
@@ -97,20 +98,7 @@ public abstract class MasterDataEntity extends PersistentObject {
 	/* Jan 18, 2008 work in progress 
 	 * 
 	 */
-	protected void setName(Short localeId, String name) {
-		// only support overrides for localeId = 1 
-		localeId = CUSTOMIZATION_LOCALE_ID;
-		if (localeId != null && StringUtils.isNullAndEmptySafe(name)) {
-			Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue()
-					.getLookUpValueLocales();
-			for (LookUpValueLocaleEntity entity : lookupSet) {
-				if (entity.getLocaleId().equals(localeId.shortValue())
-						&& (entity.getLookUpValue() == null 
-						|| !entity.getLookUpValue().equals(name))) {
-					entity.setLookUpValue(name);
-				}
-			}
-		}
-
+	protected void setName(String name)  {
+		MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
 	}
 }

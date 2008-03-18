@@ -445,8 +445,7 @@ public class ChkListAction extends BaseAction {
 				form.setMasterTypeName(ConfigurationConstants.CLIENT);
 			}
 			form.setStateName(((CustomerCheckListBO) checkList)
-					.getCustomerStatus().getName(
-							getUserContext(request).getLocaleId()));
+					.getCustomerStatus().getName());
 			form.setStateId(getStringValue(((CustomerCheckListBO) checkList)
 					.getCustomerStatus().getId()));
 			form.setIsCustomer(true);
@@ -468,8 +467,7 @@ public class ChkListAction extends BaseAction {
 			form.setMasterTypeName(((AccountCheckListBO) checkList)
 					.getProductTypeEntity().getName());
 			form.setStateName(((AccountCheckListBO) checkList)
-					.getAccountStateEntity().getName(
-							getUserContext(request).getLocaleId()));
+					.getAccountStateEntity().getName());
 			form.setStateId(getStringValue(((AccountCheckListBO) checkList)
 					.getAccountStateEntity().getId()));
 			form.setIsCustomer(false);

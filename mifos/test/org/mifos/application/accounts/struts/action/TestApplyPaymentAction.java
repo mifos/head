@@ -262,7 +262,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
 		
 		Short DEFAULT_LOCALE = (short)1;
-		assertNotNull(loan.getAccountState().getName(DEFAULT_LOCALE));
+		assertNotNull(loan.getAccountState().getName());
 		
 		accountBO = (AccountBO)HibernateUtil.getSessionTL().load(AccountBO.class, accountBO.getAccountId());
 	}

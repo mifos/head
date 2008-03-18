@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
@@ -18,6 +19,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
+import org.mifos.framework.util.helpers.StringUtils;
+
 
 public class ActivityGenerator {
 
@@ -28,12 +32,12 @@ public class ActivityGenerator {
 		return lookUpId;
 	}
 
-	public void upgradeUsingHQL(short parentActivity,
+	public void upgradeUsingHQL(DynamicLookUpValueCreationTypes type, short parentActivity,
 			String lookUpDescription) throws IOException, HibernateException,
 			PersistenceException, ServiceException, ActivityGeneratorException {
 
 		Transaction tx = HibernateUtil.startTransaction();
-			insertLookUpValue();
+			insertLookUpValue(type, lookUpDescription);
 			insertLookUpValueLocale(lookUpId, lookUpDescription);
 			insertActivity(parentActivity, lookUpId);
 			insertRolesActivity();
@@ -77,17 +81,21 @@ public class ActivityGenerator {
 				.setLocaleId(DatabaseVersionPersistence.ENGLISH_LOCALE);
 		lookUpValueLocaleEntity.setLookUpValue(lookUpDescription);
 		mp.createOrUpdate(lookUpValueLocaleEntity);
+	
 	}
 
-	private void insertLookUpValue() throws PersistenceException {
+	private void insertLookUpValue(DynamicLookUpValueCreationTypes type, String lookUpDescription) throws PersistenceException {
 
 		LookUpValueEntity anLookUp = new LookUpValueEntity();
 		MasterPersistence mp = new MasterPersistence();
 		MifosLookUpEntity lookUpEntity = (MifosLookUpEntity) mp
 				.getPersistentObject(MifosLookUpEntity.class, Short
 						.valueOf((short) MifosLookUpEntity.ACTIVITY));
+		String lookupName = StringUtils.generateLookupName(type.name(), lookUpDescription);
+		anLookUp.setLookUpName(lookupName);
 		anLookUp.setLookUpEntity(lookUpEntity);
 		mp.createOrUpdate(anLookUp);
+		MessageLookup.getInstance().updateLookupValueInCache(lookupName, lookUpDescription);
 		lookUpId = anLookUp.getLookUpId().intValue();
 	}
 

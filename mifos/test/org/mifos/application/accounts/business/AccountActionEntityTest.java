@@ -44,7 +44,7 @@ public class AccountActionEntityTest extends MifosTestCase {
 		assertEquals(1, (int)valueLocale.getLocaleId());
 		assertEquals("Payment", MessageLookup.getInstance().lookup(lookUpValue));
 
-		assertEquals("Payment", action.getName((short)1));
+		assertEquals("Payment", action.getName());
 		session.close();
 	}
 	

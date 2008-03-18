@@ -103,11 +103,11 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
 	public String getOldStatusName() {
 		if (oldStatus.getId().equals(newStatus.getId()))
 			return "-";
-		return oldStatus.getName(account.getUserContext().getLocaleId());
+		return oldStatus.getName();
 	}
 
 	public String getNewStatusName() {
-		return newStatus.getName(account.getUserContext().getLocaleId());
+		return newStatus.getName();
 	}
 
 	public Locale getLocale() {

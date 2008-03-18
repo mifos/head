@@ -1010,8 +1010,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		
 		SavingsOfferingBO savingsProduct = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, savingsProducts.get(0).getPrdOfferingId());
 
-		Short DEFAULT_LOCALE_ID = 1;
-		assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName(DEFAULT_LOCALE_ID));
+
+		assertEquals("Inactive", savingsProduct.getPrdStatus().getPrdState().getName());
 
 		product = (SavingsOfferingBO)HibernateUtil.getSessionTL().get(SavingsOfferingBO.class, product.getPrdOfferingId());
 

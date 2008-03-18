@@ -36,7 +36,7 @@ public class ActivityGeneratorTest extends TestCase {
 
 		short parentId = 13;
 
-		activityGenerator.upgradeUsingHQL(parentId, "abcd");
+		activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentId, "abcd");
 		int lookUpId = activityGenerator.getLookUpId();
 		assertEquals("abcd", activityGenerator.getLookUpValueLocaleEntity(
 				DatabaseVersionPersistence.ENGLISH_LOCALE, lookUpId)
