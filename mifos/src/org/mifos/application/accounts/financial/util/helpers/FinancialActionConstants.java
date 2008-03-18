@@ -44,7 +44,10 @@ public enum FinancialActionConstants {
 	INTERESTPOSTING (2),
 	FEEPOSTING (3),
 	MISCFEEPOSTING (4),
+	
+	/** Not currently used in code. Default mapping exists (not sure why). */
 	PENALTYPOSTING (5),
+	
 	MISCPENALTYPOSTING (6),
 	DISBURSAL (7),
 	ROUNDING (8),
