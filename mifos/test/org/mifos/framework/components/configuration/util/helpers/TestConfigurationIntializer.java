@@ -27,11 +27,8 @@ public class TestConfigurationIntializer extends MifosTestCase{
 		SystemConfiguration configuration = 
 			configInitializer.createSystemConfiguration();
 		assertNotNull(configuration);
-		assertNotNull(configuration.getSessionTimeOut());
 		assertNotNull(configuration.getCurrency());
 		assertNotNull(configuration.getMifosTimeZone());
-		assertNotNull(configuration.getMFILocale());
-		assertNotNull(configuration.getMFILocaleId());
 	}
 
  	public void testCreateOfficeCache() throws Exception{

@@ -27,6 +27,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.config.Localization;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -531,8 +532,8 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getPasswordChanged());
 		assertEquals(personnel.getPreferredLocale().getLocaleId(), userContext
 				.getLocaleId());
-		assertEquals(Configuration.getInstance().getSystemConfig()
-				.getMFILocaleId(), userContext.getMfiLocaleId());
+		assertEquals(Localization.getInstance().getLocaleId(),
+				userContext.getMfiLocaleId());
 		assertEquals(personnel.getPreferredLocale().getLanguageName()
 				, userContext.getPreferredLocale()
 				.getDisplayLanguage(userContext.getPreferredLocale()));
