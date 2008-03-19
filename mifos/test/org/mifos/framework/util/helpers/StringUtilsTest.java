@@ -23,6 +23,9 @@
 package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -36,9 +39,31 @@ public class StringUtilsTest {
 	public void testLpad() {
 		assertEquals("___blah", StringUtils.lpad("blah", '_', 7));
 	}
-	
+
 	@Test
 	public void testCamelCase() {
-		assertEquals("AbcDef_ghIjKL",StringUtils.camelCase("aBc dEF_gh-iJ  k.l"));
+		assertEquals("AbcDef_ghIjKL", StringUtils
+				.camelCase("aBc dEF_gh-iJ  k.l"));
 	}
+
+	@Test
+	public void testCreateCsv() throws Exception {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		String csv = StringUtils.createCsv(list);
+		assertEquals("1,2,3", csv);
+	}
+	
+//	@Test
+//	public void testTemp() throws Exception {
+//		String csv = StringUtils.createCsv(new RolesPermissionsPersistence().getRoles(),
+//				new Transformer() {
+//					public Object transform(Object input) {
+//						return ((RoleBO) input).getId();
+//					}
+//				});
+//		assertEquals("1,2", csv);
+//	}
 }

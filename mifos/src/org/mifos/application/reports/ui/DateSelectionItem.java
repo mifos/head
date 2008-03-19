@@ -4,16 +4,12 @@ import static org.mifos.application.reports.util.helpers.ReportsConstants.NA_DAT
 import static org.mifos.application.reports.util.helpers.ReportsConstants.NOT_APPLICABLE_DISPLAY_NAME;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateSelectionItem implements Serializable {
 
-	private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
-			"dd/MM/yyyy");
 	public static final DateSelectionItem NA_MEETING_DATE = new DateSelectionItem(
 			NA_DATE, NOT_APPLICABLE_DISPLAY_NAME);
 
@@ -33,23 +29,12 @@ public class DateSelectionItem implements Serializable {
 		this.displayDate = display;
 	}
 
-	private DateFormat getDateFormat() {
-		DateFormat dateFormat;
-		try {
-			dateFormat = LocalizationConverter.getInstance().getDateFormat();
-		}
-		catch (RuntimeException e) {
-			dateFormat = DEFAULT_DATE_FORMAT;
-		}
-		return dateFormat;
-	}
-
 	public Date getDate() {
 		return date;
 	}
 
 	public String getDisplayDate() {
-		return displayDate != null ? displayDate : getDateFormat().format(date);
+		return displayDate != null ? displayDate : DateUtils.getLocalizedDateFormat().format(date);
 	}
 
 	@Override

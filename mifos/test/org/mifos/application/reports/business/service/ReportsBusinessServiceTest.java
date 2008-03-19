@@ -1,21 +1,13 @@
 package org.mifos.application.reports.business.service;
 
-import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
-
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
 
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.persistence.ReportsPersistence;
-import org.mifos.application.reports.ui.SelectionItem;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 import servletunit.HttpServletRequestSimulator;

@@ -4,7 +4,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.reports.ui.SelectionItem.ALL_GROUP_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.NA_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.NA_CENTER_SELECTION_ITEM;
@@ -18,10 +17,7 @@ import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-
-import net.sf.jasperreports.charts.util.TimeSeriesLabelGenerator;
 
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -35,7 +31,6 @@ import org.mifos.application.collectionsheet.business.CollectionSheetSavingDetai
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficecFixture;
@@ -102,7 +97,6 @@ public class CollectionSheetReportServiceTest extends
 	private List<CollSheetCustBO> groupsCollectionSheets;
 	private List<CollSheetCustBO> customerCollectionSheets;
 	private CenterBO center;
-	private GroupBO group;
 	private CollSheetCustBO groupCollectionSheet;
 	private CollSheetCustBO centerCollectionSheet;
 	private CollSheetCustBO collectionSheet;
@@ -115,7 +109,7 @@ public class CollectionSheetReportServiceTest extends
 	private CollSheetSavingsDetailsEntity mm1SavingDetailsEntity;
 	private SavingsOfferingBO skSavingsProductOffering;
 	private CollSheetSavingsDetailsEntity skSavingDetailsEntity;
-	private ReportProductOfferingService reportProductOfferingService;
+	private ReportProductOfferingService reportProductOfferingServiceMock;
 	private IReportsParameterService reportsParameterServiceMock;
 
 	public void testGetBranchesCallsOfficeBusinessServiceAndChecksSelect()
@@ -161,6 +155,9 @@ public class CollectionSheetReportServiceTest extends
 
 	public void testGetNotApplicableLoanOfficerIfBranchNotApplicable()
 			throws Exception {
+		expect(
+				personnelBusinessServiceMock
+						.getPersonnel(PERSONNEL_ANY_SHORT_ID)).andReturn(null);
 		replay(personnelBusinessServiceMock);
 		retrieveAndAssertLoanOfficer(NA_BRANCH_OFFICE_SELECTION_ITEM.getId(),
 				NA_LOAN_OFFICER_SELECTION_ITEM);
@@ -175,6 +172,9 @@ public class CollectionSheetReportServiceTest extends
 	}
 
 	public void testGetSelectLoanOfficerIfBranchIdIsSelect() throws Exception {
+		expect(
+				personnelBusinessServiceMock
+						.getPersonnel(PERSONNEL_ANY_SHORT_ID)).andReturn(null);
 		replay(personnelBusinessServiceMock);
 		retrieveAndAssertLoanOfficer(SELECT_BRANCH_OFFICE_SELECTION_ITEM
 				.getId(), SELECT_LOAN_OFFICER_SELECTION_ITEM);
@@ -201,6 +201,9 @@ public class CollectionSheetReportServiceTest extends
 	}
 
 	public void testWhenBranchOfficeIdIsNull() throws Exception {
+		expect(
+				personnelBusinessServiceMock
+						.getPersonnel(PERSONNEL_ANY_SHORT_ID)).andReturn(null);
 		replay(personnelBusinessServiceMock);
 		List<SelectionItem> activeLoanOfficers = collectionSheetReportService
 				.getActiveLoanOfficers(PERSONNEL_ANY_ID, null);
@@ -232,7 +235,8 @@ public class CollectionSheetReportServiceTest extends
 		List<SelectionItem> activeLoanOfficers = collectionSheetReportService
 				.getActiveLoanOfficers(PERSONNEL_ANY_ID, BRANCH_ID);
 		assertEquals(2, activeLoanOfficers.size());
-		assertSame(SELECT_LOAN_OFFICER_SELECTION_ITEM, activeLoanOfficers.get(0));
+		assertSame(SELECT_LOAN_OFFICER_SELECTION_ITEM, activeLoanOfficers
+				.get(0));
 		assertEquals(new SelectionItem(LOAN_OFFICER.getPersonnelId(),
 				LOAN_OFFICER.getDisplayName()), activeLoanOfficers.get(1));
 		verify(personnelBusinessServiceMock);
@@ -281,9 +285,8 @@ public class CollectionSheetReportServiceTest extends
 	public void testCenterForExistingLoanOfficer() throws Exception {
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID, anyPersonnel
-								.getPersonnelId())).andReturn(
-				centerSelectionItems);
+						BRANCH_SHORT_ID, anyPersonnel.getPersonnelId()))
+				.andReturn(centerSelectionItems);
 		expect(personnelBusinessServiceMock.getPersonnel(ANY_SHORT_ID))
 				.andReturn(anyPersonnel);
 		replay(reportsParameterServiceMock);
@@ -300,9 +303,10 @@ public class CollectionSheetReportServiceTest extends
 	public void testCenterForAllLoanOfficers() throws Exception {
 		ArrayList<SelectionItem> personnels = new ArrayList<SelectionItem>();
 		SelectionItem otherPersonnel = SelectionItemFixture
-						.createSelectionItem(new Short("2"));
+				.createSelectionItem(new Short("2"));
 		personnels.add(otherPersonnel);
-		personnels.add(SelectionItemFixture.createSelectionItem(anyPersonnel.getPersonnelId()));
+		personnels.add(SelectionItemFixture.createSelectionItem(anyPersonnel
+				.getPersonnelId()));
 		expect(
 				reportsParameterServiceMock
 						.getActiveLoanOfficersUnderOffice(BRANCH_SHORT_ID))
@@ -319,12 +323,11 @@ public class CollectionSheetReportServiceTest extends
 		otherCustomers.add(SelectionItemFixture.createSelectionItem(4));
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID, anyPersonnel
-								.getPersonnelId())).andReturn(anyCustomers);
+						BRANCH_SHORT_ID, anyPersonnel.getPersonnelId()))
+				.andReturn(anyCustomers);
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID,
-						otherPersonnel.getId())).andReturn(
+						BRANCH_SHORT_ID, otherPersonnel.getId())).andReturn(
 				otherCustomers);
 		replay(reportsParameterServiceMock);
 		replay(personnelBusinessServiceMock);
@@ -348,16 +351,6 @@ public class CollectionSheetReportServiceTest extends
 						convertShortToInteger(loanOfficerId), null);
 		assertEquals(1, centersForLoanOfficer.size());
 		assertEquals(expectedCenter, centersForLoanOfficer.get(0));
-	}
-
-	private void retrieveAndAssertGroupBO(Short loanOfficerId,
-			SelectionItem expectedGroup) throws ServiceException,
-			PersistenceException {
-		List<SelectionItem> groupsForLoanOfficer = collectionSheetReportService
-				.getActiveGroupsForLoanOfficer(
-						convertShortToInteger(loanOfficerId), BRANCH_ID);
-		assertEquals(1, groupsForLoanOfficer.size());
-		assertEquals(expectedGroup, groupsForLoanOfficer.get(0));
 	}
 
 	public void testGetCollectionSheetForGivenBranchLoanOfficerCenterAndMeetingDate()
@@ -390,16 +383,16 @@ public class CollectionSheetReportServiceTest extends
 		replay(officeBusinessServiceMock);
 		replay(loanProductBusinessServiceMock);
 		replay(savingsProductBusinessServiceMock);
-		replay(reportProductOfferingService);
+		replay(reportProductOfferingServiceMock);
 		List<CollectionSheetReportDTO> collectionSheets = collectionSheetReportService
 				.getCollectionSheets(BRANCH_ID, LOAN_OFFICER_ID, CENTER_ID,
-						sqlMeetingDate, s2i(CustomerLevel.CENTER.getValue()));
+						sqlMeetingDate);
 		verify(collectionSheetServiceMock);
 		verify(customerBusinessServiceMock);
 		verify(officeBusinessServiceMock);
 		verify(loanProductBusinessServiceMock);
 		verify(savingsProductBusinessServiceMock);
-		verify(reportProductOfferingService);
+		verify(reportProductOfferingServiceMock);
 		assertEquals(2, collectionSheets.size());
 	}
 
@@ -415,34 +408,40 @@ public class CollectionSheetReportServiceTest extends
 
 	private void setSavingsOfferingExpectation(Short savingProductOffering1,
 			Short savingProductOffering2) throws ServiceException {
-		expect(reportProductOfferingService.getSavingsProduct1()).andReturn(
-				savingProductOffering1);
-		expect(
-				savingsProductBusinessServiceMock
-						.getSavingsProduct(savingProductOffering1)).andReturn(
-				SavingsOfferingBO.createInstanceForTest(savingProductOffering1));
-		expect(reportProductOfferingService.getSavingsProduct2()).andReturn(
-				savingProductOffering2);
-		expect(
-				savingsProductBusinessServiceMock
-						.getSavingsProduct(savingProductOffering2)).andReturn(
-				SavingsOfferingBO.createInstanceForTest(savingProductOffering2));
+		expect(reportProductOfferingServiceMock.getSavingsOffering1())
+				.andReturn(
+						SavingsOfferingBO
+								.createInstanceForTest(savingProductOffering1));
+		//		expect(
+		//				savingsProductBusinessServiceMock
+		//						.getSavingsProduct(savingProductOffering1))
+		//				.andReturn(
+		//						);
+		expect(reportProductOfferingServiceMock.getSavingsOffering2())
+				.andReturn(
+						SavingsOfferingBO
+								.createInstanceForTest(savingProductOffering2));
+		//		expect(
+		//				savingsProductBusinessServiceMock
+		//						.getSavingsProduct(savingProductOffering2))
+		//				.andReturn(
+		//						);
 	}
 
 	private void setLoanOfferingExpectation(Short loanProductOffering1,
 			Short loanProductOffering2) throws ServiceException {
-		expect(reportProductOfferingService.getLoanProduct1()).andReturn(
-				loanProductOffering1);
-		expect(
-				loanProductBusinessServiceMock
-						.getLoanOffering(loanProductOffering1)).andReturn(
+		expect(reportProductOfferingServiceMock.getLoanOffering1()).andReturn(
 				LoanOfferingBO.createInstanceForTest(loanProductOffering1));
-		expect(reportProductOfferingService.getLoanProduct2()).andReturn(
-				loanProductOffering2);
-		expect(
-				loanProductBusinessServiceMock
-						.getLoanOffering(loanProductOffering2)).andReturn(
-								LoanOfferingBO.createInstanceForTest(loanProductOffering2));
+		//		expect(
+		//				loanProductBusinessServiceMock
+		//						.getLoanOffering(loanProductOffering1)).andReturn(
+		//				);
+		expect(reportProductOfferingServiceMock.getLoanOffering2()).andReturn(
+				LoanOfferingBO.createInstanceForTest(loanProductOffering2));
+		//		expect(
+		//				loanProductBusinessServiceMock
+		//						.getLoanOffering(loanProductOffering2)).andReturn(
+		//				);
 	}
 
 	public void testGetCollectionSheetForAllCenterOffices() throws Exception {
@@ -483,17 +482,17 @@ public class CollectionSheetReportServiceTest extends
 		replay(officeBusinessServiceMock);
 		replay(loanProductBusinessServiceMock);
 		replay(savingsProductBusinessServiceMock);
-		replay(reportProductOfferingService);
+		replay(reportProductOfferingServiceMock);
 		List<CollectionSheetReportDTO> collectionSheets = collectionSheetReportService
 				.getCollectionSheets(BRANCH_ID, LOAN_OFFICER_ID, ALL_CENTER_ID,
-						meetingDate, s2i(CustomerLevel.CENTER.getValue()));
+						meetingDate);
 		verify(customerBusinessServiceMock);
 		verify(personnelBusinessServiceMock);
 		verify(collectionSheetServiceMock);
 		verify(officeBusinessServiceMock);
 		verify(loanProductBusinessServiceMock);
 		verify(savingsProductBusinessServiceMock);
-		verify(reportProductOfferingService);
+		verify(reportProductOfferingServiceMock);
 		assertEquals(MAX_COUNT, collectionSheets.size());
 	}
 
@@ -540,124 +539,126 @@ public class CollectionSheetReportServiceTest extends
 		replay(officeBusinessServiceMock);
 		replay(loanProductBusinessServiceMock);
 		replay(savingsProductBusinessServiceMock);
-		replay(reportProductOfferingService);
+		replay(reportProductOfferingServiceMock);
 		List<CollectionSheetReportDTO> collectionSheets = collectionSheetReportService
 				.getCollectionSheets(BRANCH_ID, ALL_LOAN_OFFICER_ID,
-						ALL_CENTER_ID, meetingDate, s2i(CustomerLevel.CENTER
-								.getValue()));
+						ALL_CENTER_ID, meetingDate);
 		verify(personnelBusinessServiceMock);
 		verify(customerBusinessServiceMock);
 		verify(collectionSheetServiceMock);
 		verify(officeBusinessServiceMock);
 		verify(loanProductBusinessServiceMock);
 		verify(savingsProductBusinessServiceMock);
-		verify(reportProductOfferingService);
+		verify(reportProductOfferingServiceMock);
 		assertEquals(MAX_COUNT * 2, collectionSheets.size());
 	}
 
 	public void testBsklProductFilterReturnsLoanProductWithBsklOfferingType()
 			throws Exception {
-		collectionSheet.addCollectionSheetLoanDetail(bsklLoanDetailsEntity);		
-		expect(
-				loanProductBusinessServiceMock
-						.getLoanOffering(BSKL_PRODUCT_OFFERING_ID)).andReturn(
+		collectionSheet.addCollectionSheetLoanDetail(bsklLoanDetailsEntity);
+		expect(reportProductOfferingServiceMock.getLoanOffering1()).andReturn(
 				bsklLoanProductOffering);
-
+		//		expect(
+		//				loanProductBusinessServiceMock
+		//						.getLoanOffering(BSKL_PRODUCT_OFFERING_ID)).andReturn(
+		//				bsklLoanProductOffering);
+		//
 		expect(accountBusinessServiceMock.getAccount(BSKL_LOAN_ACCNT_ID))
-				.andReturn(LoanBO.createInstanceForTest(bsklLoanProductOffering));
-		
+				.andReturn(
+						LoanBO.createInstanceForTest(bsklLoanProductOffering));
+		//
 		replay(accountBusinessServiceMock);
-		replay(loanProductBusinessServiceMock);
-
+		//		replay(loanProductBusinessServiceMock);
+		replay(reportProductOfferingServiceMock);
 		CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService
-				.getLoanProduct(collectionSheet, collectionSheetReportService
-						.getLoanOffering(BSKL_PRODUCT_OFFERING_ID));
+				.getLoanProduct(collectionSheet,
+						reportProductOfferingServiceMock.getLoanOffering1());
 		assertNotNull(filteredLoanDetailEntity);
 		assertSame(bsklLoanDetailsEntity, filteredLoanDetailEntity);
+		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
-		verify(loanProductBusinessServiceMock);
+		//		verify(loanProductBusinessServiceMock);
 	}
 
 	public void testClLoanProductFilterReturnsLoanProductWithClLoanOfferingType()
 			throws Exception {
-		collectionSheet.addCollectionSheetLoanDetail(clLoanDetailsEntity);			
-		expect(
-				loanProductBusinessServiceMock
-						.getLoanOffering(CL_PRODUCT_OFFERING_ID)).andReturn(
+		collectionSheet.addCollectionSheetLoanDetail(clLoanDetailsEntity);
+		expect(reportProductOfferingServiceMock.getLoanOffering2()).andReturn(
 				clLoanProductOffering);
+		replay(reportProductOfferingServiceMock);
+		//		expect(
+		//				loanProductBusinessServiceMock
+		//						.getLoanOffering(CL_PRODUCT_OFFERING_ID)).andReturn(
+		//				clLoanProductOffering);
 
 		expect(accountBusinessServiceMock.getAccount(CL_LOAN_ACCNT_ID))
 				.andReturn(LoanBO.createInstanceForTest(clLoanProductOffering));
 
 		replay(accountBusinessServiceMock);
-		replay(loanProductBusinessServiceMock);
+		//		replay(loanProductBusinessServiceMock);
 
 		CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService
-				.getLoanProduct(collectionSheet, collectionSheetReportService
-						.getLoanOffering(CL_PRODUCT_OFFERING_ID));
+				.getLoanProduct(collectionSheet,
+						reportProductOfferingServiceMock.getLoanOffering2());
 		assertNotNull(filteredLoanDetailEntity);
 		assertSame(clLoanDetailsEntity, filteredLoanDetailEntity);
+		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
-		verify(loanProductBusinessServiceMock);
+		//		verify(loanProductBusinessServiceMock);
 	}
 
 	public void testMm1SavingsProductFilterReturnsSavingsProductWithMm1OfferingType()
 			throws Exception {
-		collectionSheet.addCollectionSheetSavingsDetail(mm1SavingDetailsEntity);		
-		expect(
-				savingsProductBusinessServiceMock
-						.getSavingsProduct(MM1_SAVINGS_PRODUCT_ID)).andReturn(
-				mm1SavingsProductOffering);
+		collectionSheet.addCollectionSheetSavingsDetail(mm1SavingDetailsEntity);
+		expect(reportProductOfferingServiceMock.getSavingsOffering1())
+				.andReturn(mm1SavingsProductOffering);
 
 		SavingsBO mm1SavingsBO = new SavingsBO();
 		mm1SavingsBO.populateInstanceForTest(mm1SavingsProductOffering);
 		expect(accountBusinessServiceMock.getAccount(MM1_SAVINGS_ACCNT_ID))
 				.andReturn(mm1SavingsBO);
-		
-		replay(savingsProductBusinessServiceMock);
+
+		replay(reportProductOfferingServiceMock);
 		replay(accountBusinessServiceMock);
 
 		CollSheetSavingsDetailsEntity filteredSavingsDetailEntity = collectionSheetReportService
-				.getSavingProduct(collectionSheet, collectionSheetReportService
-						.getSavingsOffering(MM1_SAVINGS_PRODUCT_ID));
+				.getSavingProduct(collectionSheet,
+						reportProductOfferingServiceMock.getSavingsOffering1());
 		assertNotNull(filteredSavingsDetailEntity);
 		assertSame(mm1SavingDetailsEntity, filteredSavingsDetailEntity);
-		verify(savingsProductBusinessServiceMock);
+		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
 	}
 
 	public void testSkSavingsProductFilterReturnsSavingsProductWithMm1OfferingType()
-	throws Exception {
-		collectionSheet.addCollectionSheetSavingsDetail(skSavingDetailsEntity);		
-		expect(
-				savingsProductBusinessServiceMock
-						.getSavingsProduct(SK_SAVING_PRD_OFFERING_ID)).andReturn(
-				skSavingsProductOffering);
-	
-		SavingsBO skSavingsBO  = new SavingsBO();
+			throws Exception {
+		collectionSheet.addCollectionSheetSavingsDetail(skSavingDetailsEntity);
+		expect(reportProductOfferingServiceMock.getSavingsOffering2())
+				.andReturn(skSavingsProductOffering);
+
+		SavingsBO skSavingsBO = new SavingsBO();
 		skSavingsBO.populateInstanceForTest(skSavingsProductOffering);
 		expect(accountBusinessServiceMock.getAccount(SK_SAVINGS_ACCNT_ID))
 				.andReturn(skSavingsBO);
-		
-		replay(savingsProductBusinessServiceMock);
+
+		replay(reportProductOfferingServiceMock);
 		replay(accountBusinessServiceMock);
-		
+
 		CollSheetSavingsDetailsEntity filteredSavingsDetailEntity = collectionSheetReportService
-				.getSavingProduct(collectionSheet, collectionSheetReportService
-						.getSavingsOffering(SK_SAVING_PRD_OFFERING_ID));
+				.getSavingProduct(collectionSheet,
+						reportProductOfferingServiceMock.getSavingsOffering2());
 		assertNotNull(filteredSavingsDetailEntity);
 		assertSame(skSavingDetailsEntity, filteredSavingsDetailEntity);
-		verify(savingsProductBusinessServiceMock);
+		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
 	}
-	
+
 
 	public void testGetMeetingDatesForCenterWhenSpecifiedBranchOfficerAndCenter()
 			throws Exception {
 		expect(
 				reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-						LOAN_OFFICER_SHORT_ID, CENTER_ID, CustomerLevel.CENTER,
-						DateUtils.getSqlDate(2007, Calendar.JUNE, 30)))
+						LOAN_OFFICER_SHORT_ID, CENTER_ID, DateUtils.sqlToday()))
 				.andReturn(new ArrayList<DateSelectionItem>());
 		replay(reportsParameterServiceMock);
 		collectionSheetReportService.getMeetingDatesForCenter(BRANCH_ID,
@@ -665,24 +666,13 @@ public class CollectionSheetReportServiceTest extends
 		verify(reportsParameterServiceMock);
 	}
 
-	public void testGetMeetingDatesForGroupsWhenSpecifiedBranchOfficerAndCenter()
-	throws Exception {
-		expect(
-				reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-						LOAN_OFFICER_SHORT_ID, GROUP_ID, CustomerLevel.GROUP,
-						DateUtils.getSqlDate(2007, Calendar.JUNE, 30)))
-						.andReturn(new ArrayList<DateSelectionItem>());
-		replay(reportsParameterServiceMock);
-		collectionSheetReportService.getMeetingDatesForGroup(BRANCH_ID,
-				GROUP_ID, LOAN_OFFICER_ID);
-		verify(reportsParameterServiceMock);
-	}
-	
 	public void testGetMeetingDatesForCeneterWhenSpecifiedBranchAllOfficerAndCenterParameters()
 			throws Exception {
-		expect(reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-				center.getPersonnel().getPersonnelId(), CENTER_ID, CustomerLevel.CENTER,
-				DateUtils.getSqlDate(2007, Calendar.JUNE, 30))).andReturn(new ArrayList<DateSelectionItem>());
+		expect(
+				reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
+						center.getPersonnel().getPersonnelId(), CENTER_ID,
+						DateUtils.sqlToday())).andReturn(
+				new ArrayList<DateSelectionItem>());
 		expect(customerBusinessServiceMock.getCustomer(CENTER_ID)).andReturn(
 				center);
 		replay(customerBusinessServiceMock);
@@ -693,21 +683,6 @@ public class CollectionSheetReportServiceTest extends
 		verify(reportsParameterServiceMock);
 	}
 
-	public void testGetMeetingDatesForGroupsWhenSpecifiedBranchAllOfficerAndCenterParameters()
-	throws Exception {
-		expect(reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-				center.getPersonnel().getPersonnelId(), GROUP_ID, CustomerLevel.GROUP,
-				DateUtils.getSqlDate(2007, Calendar.JUNE, 30))).andReturn(new ArrayList<DateSelectionItem>());
-		expect(customerBusinessServiceMock.getCustomer(GROUP_ID)).andReturn(
-				group);
-		replay(customerBusinessServiceMock);
-		replay(reportsParameterServiceMock);
-		collectionSheetReportService.getMeetingDatesForGroup(BRANCH_ID,
-				GROUP_ID, ALL_LOAN_OFFICER_ID);
-		verify(customerBusinessServiceMock);
-		verify(reportsParameterServiceMock);
-	}
-	
 	public void testGetMeetingDatesForCenterWhenNACenter() throws Exception {
 		List<org.mifos.application.reports.ui.DateSelectionItem> meetingDates = collectionSheetReportService
 				.getMeetingDatesForCenter(
@@ -718,16 +693,6 @@ public class CollectionSheetReportServiceTest extends
 		assertEquals(1, meetingDates.size());
 	}
 
-	public void testMeetingDateForGroupForNACenter() throws Exception {
-		List<org.mifos.application.reports.ui.DateSelectionItem> meetingDates = collectionSheetReportService
-		.getMeetingDatesForGroup(
-				BRANCH_ID,
-				convertShortToInteger(NA_CENTER_SELECTION_ITEM.getId()),
-				convertShortToInteger(NA_LOAN_OFFICER_SELECTION_ITEM
-						.getId()));
-		assertEquals(1, meetingDates.size());
-	}
-	
 	public void testForALoanOfficerUserOnlyBranchOfficeRelatedPopulated()
 			throws Exception {
 		expect(personnelBusinessServiceMock.getPersonnel(LOAN_OFFICER_SHORT_ID))
@@ -748,88 +713,6 @@ public class CollectionSheetReportServiceTest extends
 		assertSame(OFFICE_SELECTION_ITEM, offices.get(1));
 	}
 
-	public void testGroupIsSelectLoanOfficerIsSelect() throws Exception {
-		retrieveAndAssertGroupBO(
-				SelectionItem.SELECT_LOAN_OFFICER_SELECTION_ITEM.getId(),
-				SelectionItem.SELECT_GROUP_SELECTION_ITEM);
-	}
-
-	public void testGroupForLoanOfficerIsNotApplicable() throws Exception {
-		retrieveAndAssertGroupBO(SelectionItem.NA_LOAN_OFFICER_SELECTION_ITEM
-				.getId(), SelectionItem.NA_GROUP_SELECTION_ITEM);
-	}
-
-	public void testGroupWhenLoanOfficerIdNull() throws Exception {
-		retrieveAndAssertGroupBO(null,
-				SelectionItem.SELECT_GROUP_SELECTION_ITEM);
-	}
-
-	public void testGetActiveGroupsForLoanOfficerAndBranch() throws Exception {
-		expect(
-				reportsParameterServiceMock.getActiveGroupsUnderUser(
-						BRANCH_SHORT_ID, LOAN_OFFICER.getPersonnelId()))
-				.andReturn(asList(new SelectionItem(Short.valueOf("1"), "")));
-		expect(
-				personnelBusinessServiceMock.getPersonnel(LOAN_OFFICER
-						.getPersonnelId())).andReturn(LOAN_OFFICER);
-		replay(reportsParameterServiceMock);
-		replay(personnelBusinessServiceMock);
-		List<SelectionItem> activeGroupsUnderUser = collectionSheetReportService
-				.getActiveGroupsForLoanOfficer(LOAN_OFFICER_ID, BRANCH_ID);
-		assertEquals(2, activeGroupsUnderUser.size());
-		assertEquals(ALL_GROUP_SELECTION_ITEM, activeGroupsUnderUser.get(0));
-		verify(reportsParameterServiceMock);
-		verify(personnelBusinessServiceMock);
-	}
-
-	public void testGroupForAllLoanOfficers() throws Exception {
-		ArrayList<SelectionItem> personnels = new ArrayList<SelectionItem>();
-		personnels.add(SelectionItemFixture.createSelectionItem(anyPersonnel
-				.getPersonnelId()));
-		SelectionItem otherPersonnel = SelectionItemFixture
-				.createSelectionItem(new Short("2"));
-		personnels.add(otherPersonnel);
-
-		ArrayList<SelectionItem> anyCustomers = new ArrayList<SelectionItem>();
-		SelectionItem anyOneCustomer = SelectionItemFixture
-				.createSelectionItem(new Integer(1));
-		anyCustomers.add(anyOneCustomer);
-		anyCustomers.add(SelectionItemFixture.createSelectionItem(2));
-
-		ArrayList<SelectionItem> otherCustomers = new ArrayList<SelectionItem>();
-		SelectionItem otherOneCustomer = SelectionItemFixture
-				.createSelectionItem(3);
-		otherCustomers.add(otherOneCustomer);
-		otherCustomers.add(SelectionItemFixture.createSelectionItem(4));
-		expect(
-				reportsParameterServiceMock
-						.getActiveLoanOfficersUnderOffice(ANY_SHORT_ID))
-				.andReturn(personnels);
-		expect(
-				reportsParameterServiceMock.getActiveGroupsUnderUser(
-						ANY_SHORT_ID, anyPersonnel.getPersonnelId()))
-				.andReturn(anyCustomers);
-		expect(
-				reportsParameterServiceMock.getActiveGroupsUnderUser(
-						ANY_SHORT_ID, otherPersonnel.getId())).andReturn(
-				otherCustomers);
-
-		replay(reportsParameterServiceMock);
-		replay(personnelBusinessServiceMock);
-
-		List<SelectionItem> activeGroups = collectionSheetReportService
-				.getActiveGroupsForLoanOfficer(ALL_LOAN_OFFICER_ID, ANY_ID);
-		assertEquals(5, activeGroups.size());
-		assertEquals(SelectionItem.ALL_GROUP_SELECTION_ITEM, activeGroups
-				.get(0));
-		assertTrue(activeGroups.contains(new SelectionItem(anyOneCustomer
-				.getId(), anyOneCustomer.getDisplayName())));
-		assertTrue(activeGroups.contains(new SelectionItem(otherOneCustomer
-				.getId(), otherOneCustomer.getDisplayName())));
-		verify(reportsParameterServiceMock);
-		verify(personnelBusinessServiceMock);
-	}
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -843,14 +726,16 @@ public class CollectionSheetReportServiceTest extends
 		accountBusinessServiceMock = createMock(AccountBusinessService.class);
 		loanProductBusinessServiceMock = createMock(LoanPrdBusinessService.class);
 		savingsProductBusinessServiceMock = createMock(SavingsPrdBusinessService.class);
-		reportProductOfferingService = createMock(ReportProductOfferingService.class);
+		reportProductOfferingServiceMock = createMock(ReportProductOfferingService.class);
 		reportsParameterServiceMock = createMock(ReportsParameterService.class);
 		collectionSheetReportService = new CollectionSheetReportService(
 				collectionSheetServiceMock, officeBusinessServiceMock,
-				personnelBusinessServiceMock, customerBusinessServiceMock,
-				accountBusinessServiceMock, loanProductBusinessServiceMock,
-				savingsProductBusinessServiceMock,
-				reportProductOfferingService, reportsParameterServiceMock);
+				personnelBusinessServiceMock, accountBusinessServiceMock,
+				reportProductOfferingServiceMock,
+				new CascadingReportParameterService(
+						reportsParameterServiceMock,
+						personnelBusinessServiceMock,
+						customerBusinessServiceMock));
 		branchOffices = new ArrayList<OfficeBO>();
 		branchOfficesSelectionItems = new ArrayList<SelectionItem>();
 		loanOfficers = new ArrayList<PersonnelBO>();
@@ -894,7 +779,6 @@ public class CollectionSheetReportServiceTest extends
 				groupCollectionSheet, LOAN_OFFICER_SHORT_ID);
 
 		center = CustomerFixture.createCenterBO(CENTER_ID, LOAN_OFFICER);
-		group = CustomerFixture.createGroupBO(GROUP_ID, LOAN_OFFICER);
 
 		collectionSheet = CollectionSheetCustomerBOFixture
 				.createCollectionSheet();
@@ -906,12 +790,14 @@ public class CollectionSheetReportServiceTest extends
 				.createSavingsDetails(MM1_SAVINGS_ACCNT_ID);
 		skSavingDetailsEntity = CollectionSheetSavingDetailsEntityFixture
 				.createSavingsDetails(SK_SAVINGS_ACCNT_ID);
-		bsklLoanProductOffering = LoanOfferingBO.createInstanceForTest(BSKL_PRODUCT_OFFERING_ID);
-		clLoanProductOffering = LoanOfferingBO.createInstanceForTest(CL_PRODUCT_OFFERING_ID);
-		mm1SavingsProductOffering = SavingsOfferingBO.createInstanceForTest(
-				MM1_SAVINGS_PRODUCT_ID);
-		skSavingsProductOffering = SavingsOfferingBO.createInstanceForTest(
-				SK_SAVING_PRD_OFFERING_ID);
+		bsklLoanProductOffering = LoanOfferingBO
+				.createInstanceForTest(BSKL_PRODUCT_OFFERING_ID);
+		clLoanProductOffering = LoanOfferingBO
+				.createInstanceForTest(CL_PRODUCT_OFFERING_ID);
+		mm1SavingsProductOffering = SavingsOfferingBO
+				.createInstanceForTest(MM1_SAVINGS_PRODUCT_ID);
+		skSavingsProductOffering = SavingsOfferingBO
+				.createInstanceForTest(SK_SAVING_PRD_OFFERING_ID);
 
 	}
 }

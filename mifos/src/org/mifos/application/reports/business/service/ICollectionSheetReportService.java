@@ -23,17 +23,9 @@ public interface ICollectionSheetReportService {
 			Integer loanOfficerIdIntValue, Integer branchIdIntValue)
 			throws ServiceException, PersistenceException;
 
-	public List<SelectionItem> getActiveGroupsForLoanOfficer(
-			Integer loanOfficerId, Integer branchId) throws ServiceException,
-			PersistenceException;
-
 	public List<CollectionSheetReportDTO> getCollectionSheets(
 			Integer branchId, Integer officerId, Integer centerId,
-			Date meetingDate, Integer customerLevel) throws Exception;
-
-	public List<DateSelectionItem> getMeetingDatesForGroup(Integer branchId,
-			Integer groupId, Integer officerId) throws PersistenceException,
-			ServiceException;
+			Date meetingDate) throws Exception;
 
 	public List<DateSelectionItem> getMeetingDatesForCenter(Integer branchId,
 			Integer groupId, Integer officerId) throws PersistenceException,

@@ -1,7 +1,9 @@
 package org.mifos.framework.persistence;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.GenericJDBCException;
+import org.hibernate.type.ShortType;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -67,18 +70,26 @@ public abstract class Persistence {
 	public List executeNamedQuery(String queryName, Map queryParameters)
 			throws PersistenceException {
 		try {
-			Session session = HibernateUtil.getSessionTL();
-			Query query = session.getNamedQuery(queryName);
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-					.debug(
-							"The query object for the query with the name  "
-									+ queryName + " has been obtained");
-
+			Query query = createdNamedQuery(queryName);
 			setParametersInQuery(query, queryName, queryParameters);
-			return query.list();
+			return runQuery(query);
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
+	}
+
+	public List runQuery(Query query) {
+		return query.list();
+	}
+	
+	public Query createdNamedQuery(String queryName) {
+		Session session = HibernateUtil.getSessionTL();
+		Query query = session.getNamedQuery(queryName);
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
+				.debug(
+						"The query object for the query with the name  "
+								+ queryName + " has been obtained");
+		return query;
 	}
 
 	public Object execUniqueResultNamedQuery(String queryName,
@@ -132,7 +143,8 @@ public abstract class Persistence {
 							.debug(
 									"The parameter key  for query with name  "
 											+ queryName + " is " + key);
-					query.setParameter(key, queryParameters.get(key));
+					Object value = queryParameters.get(key);
+					query.setParameter(key, value);
 				}
 			}
 		} catch (Exception e) {
@@ -178,5 +190,18 @@ public abstract class Persistence {
 	
 	public void initialize(Object object) {
 		Hibernate.initialize(object);
+	}
+
+	protected Integer getCountFromQueryResult(List queryResult) {
+		int count = 0;
+		if (queryResult.size() > 0 && queryResult.get(0) != null)
+			count = ((Number) queryResult.get(0)).intValue();
+		return count;
+	}
+
+	protected BigDecimal getCalculateValueFromQueryResult(List queryResult) {
+		return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal
+				.valueOf(((Number) queryResult.get(0)).doubleValue())
+				: null;
 	}
 }

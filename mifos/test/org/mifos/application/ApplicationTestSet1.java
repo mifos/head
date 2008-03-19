@@ -43,6 +43,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.accounts.savings.SavingsTestSuite;
+import org.mifos.application.branchreport.BranchReportTestSuite;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
 import org.mifos.application.collectionsheet.business.CollectionSheetReportTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
@@ -77,7 +79,9 @@ public class ApplicationTestSet1 extends TestSuite {
 		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CollectionSheetReportTestSuite.suite());
-
+		suite.addTest(BranchReportTestSuite.suite());
+		suite.addTest(BranchCashConfirmationReportTestSuite.suite());
+		
 		suite.addTest(SavingsTestSuite.suite());
 		suite.addTest(ReportsTestSuite.suite());
 		suite.addTest(FeeTestSuite.suite());

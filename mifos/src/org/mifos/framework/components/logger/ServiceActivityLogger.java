@@ -1,0 +1,80 @@
+package org.mifos.framework.components.logger;
+
+import java.lang.reflect.Method;
+
+import org.apache.commons.lang.time.StopWatch;
+
+public class ServiceActivityLogger extends AbstractServiceLogger {
+	protected final String serviceName;
+	private StopWatch stopWatch;
+
+	public ServiceActivityLogger() {
+		this(null);
+	}
+
+	public ServiceActivityLogger(String serviceName) {
+		super();
+		this.serviceName = serviceName;
+		stopWatch = new StopWatch();
+	}
+
+	public void startOfServiceCall(Method method, Object[] args) {
+		startTiming();
+		logStartActivity(method);
+	}
+
+	public void endOfServiceCall(Method method, Object[] args) {
+		stopTiming();
+		logEndActivity(method);
+		stopWatch.reset();
+	}
+
+	private void logStartActivity(Method method) {
+		info("Calling Service  : " + createStartLogMessage(method));
+	}
+
+	private void logEndActivity(Method method) {
+		info("Finished Service : " + createEndLogMessage(method));
+	}
+
+	protected String createStartLogMessage(Method method) {
+		return serviceInfoMsg(method);
+	}
+
+	protected String createEndLogMessage(Method method) {
+		return "Time Taken " + getTiming() + createStartLogMessage(method);
+	}
+
+	private String serviceInfoMsg(Method method) {
+		return "Service " + serviceName + " invoked Method " + method.getName();
+	}
+
+	// Apparently stop watch is not thread safe, will refine it if required
+	private void startTiming() {
+		try {
+			stopWatch.start();
+		}
+		catch (IllegalStateException e) {
+
+		}
+	}
+
+	private void stopTiming() {
+		try {
+			stopWatch.stop();
+		}
+		catch (IllegalStateException e) {
+		}
+	}
+
+	private long getTiming() {
+		long totalTimeSpent;
+		try {
+			totalTimeSpent = stopWatch.getTime();
+		}
+		catch (RuntimeException e) {
+			return 0;
+		}
+		return totalTimeSpent;
+	}
+}

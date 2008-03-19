@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class
+		name="org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO"
+		table="BATCH_LOAN_ARREARS_AGING">
+		<id name="arrearsAgingId" column="LOAN_ARREARS_AGING_ID"
+			type="integer" access="field">
+			<generator class="native" />
+		</id>
+		<property name="agingPeriod" column="AGING_PERIOD_ID"
+			type="org.mifos.application.branchreport.LoanArrearsAgingPeriodType"
+			access="field" />
+		<property name="clientsAging" column="CLIENTS_AGING"
+			type="integer" access="field" />
+		<property name="loansAging" column="LOANS_AGING" type="integer"
+			access="field" />
+		<property name="amountAging" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="AMOUNT_AGING_CURRENCY_ID"/>
+			<column name="AMOUNT_AGING"/>
+		</property>
+		<property name="amountOutstandingAging" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="AMOUNT_OUTSTANDING_AGING_CURRENCY_ID"/>
+			<column name="AMOUNT_OUTSTANDING_AGING"/>
+		</property>
+			
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+			class="org.mifos.application.branchreport.BranchReportBO">
+		</many-to-one>		
+	</class>
+
+	<sql-query
+		name="branchReport.getBranchReportLoanArrearsAgingForDateAndBranch">
+		<load-collection alias="loanArrears"
+			role="org.mifos.application.branchreport.BranchReportBO.loanArrearsAging" />
+		<![CDATA[SELECT {loanArrears.*} FROM BATCH_LOAN_ARREARS_AGING as loanArrears, BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=loanArrears.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+			ORDER BY loanArrears.AGING_PERIOD_ID
+		]]>
+	</sql-query>
+	<sql-query name="branchReport.extractBranchReportLoanArrears">
+	    <return-scalar column="clientsAgingCount" type="integer"/> 	    
+		<return-scalar column="loansAgingCount" type="integer"/>
+		<return-scalar column="amountAgingCount" type="big_decimal"/>
+		<return-scalar column="amountOutstandingAgingCount" type="big_decimal"/>
+		<![CDATA[
+		select (
+			select count(distinct laa.customer_id)
+				from loan_arrears_aging laa where laa.days_in_arrears >=:MIN_DAYS and
+				laa.days_in_arrears <= :MAX_DAYS and laa.customer_id not in (select distinct laa1.customer_id from
+				loan_arrears_aging laa1 where laa1.days_in_arrears >=:NOT_LESS_THAN_DAYS and laa1.office_id=:officeId) and
+				laa.office_id=:officeId
+			) as clientsAgingCount, 
+		count(*) as loansAgingCount, 
+		round(ifnull(sum(COALESCE(overdue_balance)),0),3) as amountAgingCount, 
+		round(ifnull(sum(COALESCE(unpaid_balance)),0),3) as amountOutstandingAgingCount
+		from loan_arrears_aging la where la.days_in_arrears >=:MIN_DAYS and
+		la.days_in_arrears <= :MAX_DAYS and la.office_id=:officeId
+		and la.overdue_balance_currency_id=:currencyId
+		and la.unpaid_balance_currency_id=:currencyId
+		group by la.overdue_balance_currency_id, la.unpaid_balance_currency_id
+		]]>
+	</sql-query>		
+</hibernate-mapping>

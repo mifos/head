@@ -1,6 +1,8 @@
 package org.mifos.application.reports.business;
 
 import org.mifos.application.reports.business.validator.Errors;
+import org.mifos.application.reports.util.helpers.ReportValidationConstants;
+
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
@@ -26,8 +28,8 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
 				DetailedAgingPortfolioReportParameters.INVALID_ID,
 				DetailedAgingPortfolioReportParameters.VALID_ID,
 				DetailedAgingPortfolioReportParameters.VALID_ID);
-		errorsMock.rejectValue(DetailedAgingPortfolioReportParameters.BRANCH_ID_PARAM, 
-				DetailedAgingPortfolioReportParameters.BRANCH_ID_INVALID_MSG);
+		errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM, 
+				ReportValidationConstants.BRANCH_ID_INVALID_MSG);
 		replay(errorsMock);
 		reportParameters.validate(errorsMock);
 		verify(errorsMock);
@@ -38,8 +40,8 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
 				DetailedAgingPortfolioReportParameters.VALID_ID,
 				DetailedAgingPortfolioReportParameters.INVALID_ID,
 				DetailedAgingPortfolioReportParameters.VALID_ID);
-		errorsMock.rejectValue(DetailedAgingPortfolioReportParameters.LOAN_OFFICER_ID_PARAM, 
-				DetailedAgingPortfolioReportParameters.LOAN_OFFICER_ID_INVALID_MSG);
+		errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM, 
+				ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
 		replay(errorsMock);
 		reportParameters.validate(errorsMock);
 		verify(errorsMock);
@@ -50,8 +52,8 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
 				DetailedAgingPortfolioReportParameters.VALID_ID,
 				DetailedAgingPortfolioReportParameters.VALID_ID,
 				DetailedAgingPortfolioReportParameters.INVALID_ID);
-		errorsMock.rejectValue(DetailedAgingPortfolioReportParameters.LOAN_PRODUCT_ID,
-				DetailedAgingPortfolioReportParameters.LOAN_PRODUCT_ID_INVALID_MSG);
+		errorsMock.rejectValue(ReportValidationConstants.LOAN_PRODUCT_ID_PARAM,
+				ReportValidationConstants.LOAN_PRODUCT_ID_INVALID_MSG);
 		replay(errorsMock);
 		reportParameters.validate(errorsMock);
 		verify(errorsMock);

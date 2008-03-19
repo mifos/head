@@ -21,6 +21,7 @@ public class ServiceFactory {
 	}
 
 	/**
+	 * deprecated
 	 * This method is deprecated.
 	 * 
 	 * Instead just call the constructor of the business service directly.

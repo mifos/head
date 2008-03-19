@@ -96,7 +96,7 @@ public class CollSheetCustBO extends BusinessObject {
 	
 	private Short loanOfficerId ;
 	
-	private CollSheetCustBO(Integer custId, String custDisplayName,
+	public CollSheetCustBO(Integer custId, String custDisplayName,
 			Short custLevel, Short custOfficeId, String searchId, Short loanOfficerId) {
 		super();
         initFields(custId, custDisplayName,

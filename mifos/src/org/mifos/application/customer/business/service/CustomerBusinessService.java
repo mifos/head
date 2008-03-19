@@ -37,6 +37,9 @@
  */
 package org.mifos.application.customer.business.service;
 
+import static org.mifos.framework.util.helpers.NumberUtils.getPercentage;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -63,9 +66,9 @@ import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
@@ -83,12 +86,20 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerBusinessService extends BusinessService {
 
+	private CustomerPersistence customerPersistence;
+
 	public CustomerBusinessService() {
+		this(new CustomerPersistence());
 	}
-	
+
+	public CustomerBusinessService(CustomerPersistence customerPersistence) {
+		super();
+		this.customerPersistence = customerPersistence;
+	}
+
 	public static CustomerBusinessService getInstance() {
 		return (CustomerBusinessService) ServiceFactory.getInstance()
-		.getBusinessService(BusinessServiceName.Customer);
+				.getBusinessService(BusinessServiceName.Customer);
 	}
 
 	@Override
@@ -101,9 +112,11 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().searchGroupClient(searchString,
 					userId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
-		} catch (ConfigurationException ce) {
+		}
+		catch (ConfigurationException ce) {
 			throw new ServiceException(ce);
 		}
 
@@ -114,7 +127,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().searchCustForSavings(searchString,
 					userId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 
@@ -123,7 +137,8 @@ public class CustomerBusinessService extends BusinessService {
 	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		try {
 			return new CustomerPersistence().getCustomer(customerId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -132,7 +147,8 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().findBySystemId(globalCustNum);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -142,7 +158,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().findBySystemId(globalCustNum,
 					levelId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -151,7 +168,8 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().fetchLoanCycleCounter(customerId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 
@@ -161,7 +179,8 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().getLastLoanAmount(customerId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -171,7 +190,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().numberOfMeetings(isPresent,
 					customerId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -186,7 +206,8 @@ public class CustomerBusinessService extends BusinessService {
 		CustomerBO customerBO;
 		try {
 			customerBO = new CustomerPersistence().getCustomer(customerId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 		Set<CustomerActivityEntity> customerAtivityDetails = customerBO
@@ -222,7 +243,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().search(searchString, officeId,
 					userId, userOfficeId);
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 
@@ -238,8 +260,7 @@ public class CustomerBusinessService extends BusinessService {
 		Money amount = removeSign(customerActivityEntity.getAmount());
 		if (amount.getAmountDoubleValue() == 0)
 			customerRecentActivityView.setAmount("-");
-		else
-			customerRecentActivityView.setAmount(amount.toString());
+		else customerRecentActivityView.setAmount(amount.toString());
 		if (customerActivityEntity.getPersonnel() != null)
 			customerRecentActivityView.setPostedBy(customerActivityEntity
 					.getPersonnel().getDisplayName());
@@ -249,8 +270,7 @@ public class CustomerBusinessService extends BusinessService {
 	private Money removeSign(Money amount) {
 		if (amount != null && amount.getAmountDoubleValue() < 0)
 			return amount.negate();
-		else
-			return amount;
+		else return amount;
 	}
 
 	private List<AccountBO> getAccountsForCustomer(String searchId,
@@ -258,7 +278,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().retrieveAccountsUnderCustomer(
 					searchId, officeId, accountTypeId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -324,9 +345,12 @@ public class CustomerBusinessService extends BusinessService {
 		List<CustomerBO> groups = null;
 		List<CustomerBO> clients = null;
 		try {
-			groups = new CustomerPersistence().getChildren(searchId,officeId,CustomerLevel.GROUP, ChildrenStateType.ACTIVE_AND_ONHOLD);
-			clients = new CustomerPersistence().getChildren(searchId,officeId,CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
-		} catch (PersistenceException pe) {
+			groups = new CustomerPersistence().getChildren(searchId, officeId,
+					CustomerLevel.GROUP, ChildrenStateType.ACTIVE_AND_ONHOLD);
+			clients = new CustomerPersistence().getChildren(searchId, officeId,
+					CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
@@ -360,7 +384,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().getStatusChecklist(statusId,
 					customerLevelId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -370,7 +395,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence()
 					.retrieveAllCustomerStatusList(levelId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -381,7 +407,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			AccountStateMachines.getInstance().initialize(localeId, officeId,
 					accountTypes, customerLevel);
-		} catch (StatesInitializationException sie) {
+		}
+		catch (StatesInitializationException sie) {
 			throw new ServiceException(sie);
 		}
 	}
@@ -416,17 +443,19 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().getAllCustomerNotes(customerId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
 
-	public List<ValueListElement> retrieveMasterEntities(
-			String entityName, Short localeId) throws ServiceException {
+	public List<ValueListElement> retrieveMasterEntities(String entityName,
+			Short localeId) throws ServiceException {
 		try {
 			return new MasterPersistence().retrieveMasterEntities(entityName,
 					localeId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -436,7 +465,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().getFormedByPersonnel(levelId,
 					officeId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -445,7 +475,8 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().retrievePicture(customerId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -472,7 +503,8 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().getAllClosedAccount(customerId,
 					accountTypeId);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -482,7 +514,35 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence()
 					.getActiveCentersUnderUser(personnel);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
+	public Integer getCenterCountForOffice(OfficeBO office)
+			throws ServiceException {
+		return getCustomerCountForOffice(CustomerLevel.CENTER, office);
+	}
+
+	public Integer getClientCountForOffice(OfficeBO office)
+			throws ServiceException {
+		return getCustomerCountForOffice(CustomerLevel.CLIENT, office);
+	}
+
+	public Integer getGroupCountForOffice(OfficeBO office)
+			throws ServiceException {
+		return getCustomerCountForOffice(CustomerLevel.GROUP, office);
+	}
+
+	private Integer getCustomerCountForOffice(CustomerLevel customerLevel,
+			OfficeBO office) throws ServiceException {
+		try {
+
+			return customerPersistence.getCustomerCountForOffice(customerLevel,
+					office.getOfficeId());
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
@@ -491,8 +551,214 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new CustomerPersistence().getGroupsUnderUser(personnel);
-		} catch (PersistenceException pe) {
+		}
+		catch (PersistenceException pe) {
 			throw new ServiceException(pe);
+		}
+	}
+
+	public Integer getActiveClientCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getActiveClientCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorClientCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getVeryPoorClientCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getActiveBorrowersCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getActiveBorrowersCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorActiveBorrowersCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorActiveBorrowersCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getCustomerReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getCustomerReplacementsCountForOffice(office, fieldId, fieldValue);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getCustomerVeryPoorReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorReplacementsCountForOffice(office, fieldId, fieldValue);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getDormantClientsCountByLoanAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod) throws ServiceException {
+		try {
+			return customerPersistence
+					.getDormantClientsCountByLoanAccountForOffice(office,
+							loanCyclePeriod);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getDormantClientsCountBySavingAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod) throws ServiceException {
+		try {
+			return customerPersistence
+			.getDormantClientsCountBySavingAccountForOffice(office,
+					loanCyclePeriod);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod) throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorDormantClientsCountByLoanAccountForOffice(
+							office, loanCyclePeriod);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod) throws ServiceException {
+		try {
+			return customerPersistence
+			.getVeryPoorDormantClientsCountBySavingAccountForOffice(
+					office, loanCyclePeriod);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public Integer getDropOutClientsCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getDropOutClientsCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public BigDecimal getClientDropOutRateForOffice(OfficeBO office)
+			throws ServiceException {
+		Integer dropOutClientsCountForOffice = getDropOutClientsCountForOffice(office);
+		try {
+			Integer activeOrHoldClientCountForOffice = customerPersistence
+					.getActiveOrHoldClientCountForOffice(office);
+			return getPercentage(dropOutClientsCountForOffice,
+					dropOutClientsCountForOffice
+							+ activeOrHoldClientCountForOffice);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public BigDecimal getVeryPoorClientDropoutRateForOffice(OfficeBO office)
+			throws ServiceException {
+		Integer veryPoorDropOutClientsCountForOffice = getVeryPoorDropOutClientsCountForOffice(office);
+
+		try {
+			Integer veryPoorActiveOrHoldClientCountForOffice = customerPersistence
+					.getVeryPoorActiveOrHoldClientCountForOffice(office);
+			return getPercentage(veryPoorDropOutClientsCountForOffice,
+					veryPoorDropOutClientsCountForOffice
+							+ veryPoorActiveOrHoldClientCountForOffice);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorDropOutClientsCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorDropOutClientsCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getOnHoldClientsCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getOnHoldClientsCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorOnHoldClientsCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorOnHoldClientsCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getActiveSaversCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence.getActiveSaversCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public Integer getVeryPoorActiveSaversCountForOffice(OfficeBO office)
+			throws ServiceException {
+		try {
+			return customerPersistence
+					.getVeryPoorActiveSaversCountForOffice(office);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
 		}
 	}
 }

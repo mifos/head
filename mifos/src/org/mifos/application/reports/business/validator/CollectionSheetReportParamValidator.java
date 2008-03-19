@@ -1,26 +1,23 @@
 package org.mifos.application.reports.business.validator;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.application.reports.business.CollectionSheetReportParameters;
-import org.mifos.application.reports.business.ReportParameterForm;
-import org.mifos.framework.servlet.ModifiableParameterServletRequest;
+import org.mifos.application.reports.business.CollectionSheetReportParameterForm;
 
 
-public class CollectionSheetReportParamValidator implements
-		ReportParameterValidator<CollectionSheetReportParameters> {
-	public static final ReportParameterValidator INSTANCE = new CollectionSheetReportParamValidator();
+public class CollectionSheetReportParamValidator extends
+		AbstractReportParameterValidator<CollectionSheetReportParameterForm> {
 
-	public void validate(CollectionSheetReportParameters target, Errors errors) {
-		target.validate(errors);
+	public CollectionSheetReportParamValidator(
+			List<String> applicableReportFilePaths) {
+		super(applicableReportFilePaths);
 	}
 
-	public CollectionSheetReportParameters buildReportParameterForm(
+	public CollectionSheetReportParameterForm buildReportParameterForm(
 			HttpServletRequest request) {
-		return CollectionSheetReportParameters.build(request);
+		return CollectionSheetReportParameterForm.build(request);
 	}
 
-	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, ReportParameterForm form, Errors errors) {
-		form.removeRequestParameters(modifiedRequest, errors);
-	}
 }

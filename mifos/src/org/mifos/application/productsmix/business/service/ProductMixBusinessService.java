@@ -202,7 +202,7 @@ public class ProductMixBusinessService extends BusinessService {
 	public PrdOfferingBO getPrdOfferingByID(Short prdofferingId)
 			throws ServiceException {
 		try {
-			return new PrdOfferingPersistence().getPrdOffringByID(prdofferingId);
+			return new PrdOfferingPersistence().getPrdOfferingByID(prdofferingId);
 		}
 		catch (PersistenceException e) {
 			throw new ServiceException(e);

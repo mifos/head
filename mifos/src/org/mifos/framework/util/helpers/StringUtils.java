@@ -40,10 +40,12 @@ package org.mifos.framework.util.helpers;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang.WordUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * This class has got utility functions for string which would be required
@@ -122,8 +124,15 @@ public class StringUtils {
 	public static String camelCase(String string) {
 		return org.apache.commons.lang.StringUtils.deleteWhitespace(WordUtils.capitalize(string.toLowerCase().replaceAll("\\W"," ")));
 	}
-	
-	
+
+	public static <T> String createCsv(Collection<T> collection) throws PersistenceException {
+		StringBuilder csvString = new StringBuilder();
+		for (T item : collection) {
+			csvString.append(item + ",");
+		}
+		return csvString.substring(0, csvString.length() - 1);
+	}
+
 	public static String generateLookupName(String type, String newElementText)
 	{
 		return StringUtils.camelCase(type + "." + camelCase(newElementText) + "." + System.currentTimeMillis());

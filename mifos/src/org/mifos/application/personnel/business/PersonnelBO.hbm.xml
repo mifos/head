@@ -16,43 +16,48 @@
 			unsaved-value="negative" />
 		<many-to-one name="level" column="LEVEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelLevelEntity"
-			unique="true" lazy="false"  />
+			unique="true" lazy="false" />
 		<many-to-one name="office" column="OFFICE_ID"
 			class="org.mifos.application.office.business.OfficeBO" unique="true"
-			lazy="false"  />
+			lazy="false" />
 		<many-to-one name="preferredLocale" column="PREFERRED_LOCALE"
-			class="org.mifos.application.master.business.SupportedLocalesEntity"   insert="true" update="true" cascade="none"/>
+			class="org.mifos.application.master.business.SupportedLocalesEntity"
+			insert="true" update="true" cascade="none" />
 		<one-to-one name="personnelDetails"
 			class="org.mifos.application.personnel.business.PersonnelDetailsEntity"
 			cascade="all" lazy="false" />
 
 		<property name="globalPersonnelNum"
-			column="GLOBAL_PERSONNEL_NUM" type="string"  />
+			column="GLOBAL_PERSONNEL_NUM" type="string" />
 		<property name="displayName" column="DISPLAY_NAME"
-			type="string"   />
+			type="string" />
 		<many-to-one name="status" column="PERSONNEL_STATUS"
-			class="org.mifos.application.personnel.business.PersonnelStatusEntity"  />
-		<property name="title" column="TITLE" type="integer"  />
-		<property name="searchId" column="SEARCH_ID" type="string"
-			  />
+			class="org.mifos.application.personnel.business.PersonnelStatusEntity" />
+		<property name="title" column="TITLE" type="integer" />
+		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="maxChildCount" column="MAX_CHILD_COUNT"
-			type="integer"  />
+			type="integer" />
 		<property name="encriptedPassword" column="PASSWORD"
 			type="binary" access="field" />
-		<property name="userName" column="LOGIN_NAME" unique="true" type="string" access="field"/>
-		<property name="emailId" column="EMAIL_ID" type="string" access="field"/>
+		<property name="userName" column="LOGIN_NAME" unique="true"
+			type="string" access="field" />
+		<property name="emailId" column="EMAIL_ID" type="string"
+			access="field" />
 		<property name="passwordChanged" column="PASSWORD_CHANGED"
-			type="short" access="field"/>
+			type="short" access="field" />
 		<property name="createdBy" column="CREATED_BY" type="short" />
-		<property name="createdDate" column="CREATED_DATE" type="date" access="field"/>
+		<property name="createdDate" column="CREATED_DATE" type="date"
+			access="field" />
 		<property name="updatedBy" column="UPDATED_BY" type="short" />
 		<property name="updatedDate" column="UPDATED_DATE" type="date" />
-		<property name="lastLogin" column="LAST_LOGIN" type="date" access="field"/>
+		<property name="lastLogin" column="LAST_LOGIN" type="date"
+			access="field" />
 		<property name="locked" column="LOCKED" type="short"
 			access="field" />
-		<property name="noOfTries" column="NO_OF_TRIES" type="short" access="field"/>
-		<set name="personnelRoles" cascade="all,delete-orphan" inverse="true"
-			lazy="false">
+		<property name="noOfTries" column="NO_OF_TRIES" type="short"
+			access="field" />
+		<set name="personnelRoles" cascade="all,delete-orphan"
+			inverse="true" lazy="false">
 			<key column="PERSONNEL_ID" />
 			<one-to-many
 				class="org.mifos.application.personnel.business.PersonnelRoleEntity" />
@@ -63,12 +68,15 @@
 			<one-to-many
 				class="org.mifos.application.personnel.business.PersonnelCustomFieldEntity" />
 		</set>
-		<set name="personnelMovements" cascade="all" lazy="false" access="field">
+		<set name="personnelMovements" cascade="all" lazy="false"
+			access="field">
 			<key column="PERSONNEL_ID" update="false" />
-			<one-to-many class="org.mifos.application.personnel.business.PersonnelMovementEntity"  />
+			<one-to-many
+				class="org.mifos.application.personnel.business.PersonnelMovementEntity" />
 		</set>
 		<set name="personnelNotes" cascade="all" inverse="true"
-			table="PERSONNEL_NOTES" lazy="true" order-by="COMMENT_ID desc" access="field">
+			table="PERSONNEL_NOTES" lazy="true" order-by="COMMENT_ID desc"
+			access="field">
 			<key column="PERSONNEL_ID" />
 			<many-to-many
 				class="org.mifos.application.personnel.business.PersonnelNotesEntity"
@@ -100,7 +108,7 @@
 	<query name="getCountByDobAndDisplayName">
 		<![CDATA[select count(*)  from org.mifos.application.personnel.business.PersonnelBO as personnel where  personnel.displayName = :DISPLAY_NAME and personnel.personnelDetails.dob =:DOB]]>
 	</query>
-	
+
 	<query name="getPersonBySystemId">
 		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.globalPersonnelNum =:globalPersonnelNum]]>
 	</query>
@@ -124,8 +132,8 @@
 			
 			(personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2))
 	 		]]>
-	 </query>
-	 
+	</query>
+
 	<query name="search_Personnel_first_and_last_name">
 		<![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName 
 			from org.mifos.application.personnel.business.PersonnelBO personnel 
@@ -142,14 +150,16 @@
 			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
 			and (personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2 )
 	 		]]>
-	 </query>	 
-	 
-	 
-        <query name="get_active_loanofficers_under_office">
-	          <![CDATA[from  org.mifos.application.personnel.business.PersonnelBO personnel 
+	</query>
+
+	<query name="get_active_loanofficers_under_office">
+		<![CDATA[from  org.mifos.application.personnel.business.PersonnelBO personnel 
 	        	   			where personnel.level.id=:personnelLevelId and 
 	        	   			personnel.office.officeId=:officeId and personnel.status.id=:ACTIVE
-	         order by personnel.displayName]]>
-        </query>
-	 	
+					        order by personnel.displayName]]>
+	</query>
+	<query name="personnel.getActiveBranchManagerUnderOffice">
+		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel 
+							where personnel.office.officeId =:officeId and personnel.status.id =:personnelStatusId]]>
+	</query>
 </hibernate-mapping>

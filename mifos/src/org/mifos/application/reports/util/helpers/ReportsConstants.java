@@ -38,6 +38,7 @@
 
 package org.mifos.application.reports.util.helpers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public interface ReportsConstants {
@@ -69,6 +70,7 @@ public interface ReportsConstants {
 ///ENDED BY MFTECH
 	public String BIRTREPORTPATH = "birtreport_path";
 	public String ADMINDOCBIRTREPORTPATH = "admindocumentreport_path";
+	static final SimpleDateFormat REPORT_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public static final String ERROR_TITLE="error.titleName";
 	public static final String ERROR_CATEGORYID="error.categoryId";

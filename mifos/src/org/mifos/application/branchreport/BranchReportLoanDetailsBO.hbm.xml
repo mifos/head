@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class
+		name="org.mifos.application.branchreport.BranchReportLoanDetailsBO"
+		table="BATCH_LOAN_DETAILS">
+		<id name="loanDetailsId" column="LOAN_DETAILS_ID" type="integer"
+			access="field">
+			<generator class="native" />
+		</id>
+		<property name="productName" column="PRODUCT_NAME" type="string"
+			access="field" />
+		<property name="numberOfLoansIssued"
+			column="NUMBER_OF_LOANS_ISSUED" type="integer" access="field" />
+		<property name="loanAmountIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_AMOUNT_ISSUED_CURRENCY_ID"/>
+			<column name="LOAN_AMOUNT_ISSUED"/>
+		</property>
+		<property name="loanInterestIssued" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_INTEREST_ISSUED_CURRENCY_ID"/>
+			<column name="LOAN_INTEREST_ISSUED"/>
+		</property>
+		<property name="numberOfLoansOutstanding"
+			column="NUMBER_OF_LOANS_OUTSTANDING" type="integer" access="field" />
+		<property name="loanAmountOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_OUTSTANDING_AMOUNT_CURRENCY_ID"/>
+			<column name="LOAN_OUTSTANDING_AMOUNT"/>
+		</property>
+		<property name="loanInterestOutstanding"  type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_OUTSTANDING_INTEREST_CURRENCY_ID"/>
+			<column name="LOAN_OUTSTANDING_INTEREST"/>
+		</property>
+
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID"
+			access="field"
+			class="org.mifos.application.branchreport.BranchReportBO">
+		</many-to-one>
+	</class>
+
+	<sql-query
+		name="branchReport.getBranchReportLoanDetailsForDateAndBranch">
+		<load-collection alias="loanDetails"
+			role="org.mifos.application.branchreport.BranchReportBO.loanDetails" />
+		<![CDATA[SELECT {loanDetails.*} FROM BATCH_LOAN_DETAILS as loanDetails, BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=loanDetails.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+
+	<sql-query name="branchReport.extractLoanDetailsForBranch">
+		<return-scalar column="productName" type="string" />
+		<return-scalar column="numberOfLoansIssued" type="integer" />
+		<return-scalar column="loanAmountIssued" type="big_decimal" />
+		<return-scalar column="loanInterestIssued" type="big_decimal" />
+		<return-scalar column="numberOfLoansOutstanding" type="integer" />
+		<return-scalar column="loanAmountOutstanding"
+			type="big_decimal" />
+		<return-scalar column="loanInterestOutstanding"
+			type="big_decimal" />
+		<![CDATA[
+			select po.prd_offering_name as productName, 
+			count(ls.account_id) as numberOfLoansIssued,
+			round(sum(COALESCE(ls.orig_principal,0)),3) as loanAmountIssued,
+			round(sum(COALESCE(ls.orig_interest ,0)),3) as loanInterestIssued,
+			sum(if((ls.orig_principal-ls.principal_paid=0),0,1)) as numberOfLoansOutstanding,
+			round(sum(COALESCE(ls.orig_principal,0)-COALESCE(ls.principal_paid,0)),3) as loanAmountOutstanding,
+			round(sum(COALESCE(ls.orig_interest,0) -COALESCE(ls.interest_paid, 0)),3) as loanInterestOutstanding
+			from loan_account lacc, customer cust, prd_offering po, account acc
+                        left outer join (
+                           select * from loan_summary ls1 where ls1.orig_principal_currency_id=:currencyId
+                                    and ls1.orig_interest_currency_id=:currencyId
+                        )  ls on acc.account_id=ls.account_id 
+			where acc.account_state_id > 4 and acc.account_state_id < 10 
+			and lacc.prd_offering_id=po.prd_offering_id 
+			and cust.customer_id = acc.customer_id
+			and acc.account_id=lacc.account_id 
+			and cust.branch_id=:officeId
+            group by lacc.prd_offering_id
+		]]>
+	</sql-query>
+</hibernate-mapping>

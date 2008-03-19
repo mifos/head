@@ -65,4 +65,14 @@
 		<initial-time>24:00:00</initial-time>
 		<delay-time>86400</delay-time>
 	</scheduler>
+	<scheduler>
+		<task-class-name>BranchReportTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>
+	</scheduler>
+	<scheduler>
+		<task-class-name>BranchCashConfirmationTask</task-class-name>
+		<initial-time>24:00:00</initial-time>
+		<delay-time>86400</delay-time>
+	</scheduler>
 </scheduler-tasks>

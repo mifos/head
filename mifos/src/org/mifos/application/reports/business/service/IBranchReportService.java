@@ -1,0 +1,81 @@
+package org.mifos.application.reports.business.service;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import org.mifos.application.branchreport.BranchReportBO;
+import org.mifos.application.branchreport.BranchReportClientSummaryBO;
+import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
+import org.mifos.application.branchreport.BranchReportLoanArrearsProfileBO;
+import org.mifos.application.branchreport.BranchReportLoanDetailsBO;
+import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
+import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
+import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.reports.business.dto.BranchReportHeaderDTO;
+import org.mifos.framework.exceptions.ServiceException;
+
+
+public interface IBranchReportService {
+
+	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId)
+			throws ServiceException;
+
+	public boolean isReportDataPresentForRundateAndBranchId(String branchId,
+			String runDate);
+
+	public boolean isReportDataPresentForRundate(Date runDate)
+			throws ServiceException;
+
+	public List<BranchReportLoanArrearsAgingBO> getLoanArrearsAgingInfo(
+			Integer branchId, String runDate) throws ServiceException;
+
+	public List<BranchReportClientSummaryBO> getClientSummaryInfo(
+			Integer branchId, String runDate) throws ServiceException;
+
+	public List<BranchReportStaffingLevelSummaryBO> getStaffingLevelSummary(
+			Integer branchId, String runDate) throws ServiceException;
+
+	public List<BranchReportStaffSummaryBO> getStaffSummary(Integer branchId,
+			String runDate) throws ServiceException;
+
+	public List<BranchReportLoanDetailsBO> getLoanDetails(Integer branchId,
+			String runDate) throws ServiceException;
+
+	public List<BranchReportLoanArrearsProfileBO> getLoanArrearsProfile(
+			Integer branchId, String runDate) throws ServiceException;
+
+	public void removeBranchReport(BranchReportBO branchReport)
+			throws ServiceException;
+
+	public List<BranchReportBO> getBranchReports(Date runDate)
+			throws ServiceException;
+
+	public BranchReportBO getBranchReport(Short branchId, Date runDate)
+			throws ServiceException;
+
+	public void removeBranchReports(List<BranchReportBO> branchReports)
+			throws ServiceException;
+
+	public BranchReportLoanArrearsAgingBO extractLoanArrearsAgingInfoInPeriod(
+			Short officeId, LoanArrearsAgingPeriod loanArrearsAgingPeriod, MifosCurrency currency)
+			throws ServiceException;
+
+	public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(
+			Short officeId, Integer daysInArrears, MifosCurrency currency) throws ServiceException;
+
+	public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office,
+			Integer daysInArrears) throws ServiceException;
+
+	public List<BranchReportStaffingLevelSummaryBO> extractBranchReportStaffingLevelSummaries(
+			Short branchId) throws ServiceException;
+
+	public List<BranchReportLoanDetailsBO> extractLoanDetails(Short branchId, MifosCurrency currency)
+			throws ServiceException;
+
+	public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(
+			Short branchId, MifosCurrency currency) throws ServiceException;
+
+}

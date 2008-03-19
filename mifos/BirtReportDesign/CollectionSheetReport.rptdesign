@@ -3,7 +3,7 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
     <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
     <property name="units">in</property>
-    <property name="includeResource">BirtReportResource/GrameenKootaCollectionSheetReportResource</property>
+    <property name="includeResource">BirtReportResource/CollectionSheetReportResources</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="905">
@@ -89,19 +89,10 @@ ALL_ID = new Packages.java.lang.Integer(-1);
 SELECT_ID = new Packages.java.lang.Integer(-2);
 NA_ID = new Packages.java.lang.Integer(-3);
 userId = params["userId"];
-CUSTOMER_LEVEL_GROUP  = 2;
-CUSTOMER_LEVEL_CENTER = 3;
 MAX_PRODUCT_COUNT = 2;
-//user config variable: customerLevel
-//set this to either CUSTOMER_LEVEL_CENTER or CUSTOMER_LEVEL_GROUP
-customerLevel = CUSTOMER_LEVEL_CENTER;
-
-customerLevelLabel = (customerLevel == CUSTOMER_LEVEL_CENTER) ? "Center" : "Group";
-
 try {
 	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
-    //collectionSheetService = new Packages.org.mifos.application.reports.business.service.CollectionSheetReportService();
-    collectionSheetService = Packages.org.mifos.application.reports.business.service.CollectionSheetReportServiceFactory.getCacheEnabledCollectionSheetReportService();
+    collectionSheetService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>
@@ -238,7 +229,7 @@ try {
                 </structure>
                 <structure>
                     <property name="position">26</property>
-                    <property name="name">customer_level_label</property>
+                    <property name="name">meeting_date</property>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -319,7 +310,7 @@ try {
                     <property name="columnName">savings_2_name</property>
                 </structure>
                 <structure>
-                    <property name="columnName">customer_level_label</property>
+                    <property name="columnName">meeting_date</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -451,14 +442,14 @@ try {
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">customer_level_label</property>
+                        <property name="name">meeting_date</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
             <property name="dataSource">MifosCollectionSheet</property>
             <method name="open"><![CDATA[collectionSheetReportsIterator = collectionSheetService.getCollectionSheets(params["branchId"],params["loanOfficerId"],
-    params["centerId"],params["meetingDate"], customerLevel).iterator();]]></method>
+    params["centerId"],params["meetingDate"]).iterator();]]></method>
             <method name="fetch"><![CDATA[if(!collectionSheetReportsIterator.hasNext()) return false;
 var collectionSheetRow = collectionSheetReportsIterator.next();
 row["member_id"] = collectionSheetRow.getCustomerId();
@@ -470,7 +461,8 @@ row["branch_name"] = collectionSheetRow.getBranchName();
 row["center_name"] = collectionSheetRow.getCenterName();
 row["group_name"] = collectionSheetRow.getGroupName();
 row["loan_officer_name"] = collectionSheetRow.getLoanOfficerName();
-row["customer_level_label"] = customerLevelLabel;
+row["meeting_date"] = collectionSheetRow.getMeetingDate();
+
 
 for(var i=0;i<MAX_PRODUCT_COUNT;i++){
 	var loanProduct = collectionSheetRow.getLoanProduct(i);
@@ -634,15 +626,9 @@ return true;]]></method>
 	if(!(officer instanceof Packages.java.lang.Integer)) {
 		var pbs = new Packages.org.mifos.application.personnel.business.service.PersonnelBusinessService();
 		//logger.info("User"+params["userId"]);
-		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? -2 : -1;
+		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? SELECT_ID : ALL_ID;
 	}  
-	if(customerLevel == CUSTOMER_LEVEL_CENTER){
-	    centerIterator = collectionSheetService.getActiveCentersForLoanOfficer(officer, branch).iterator();
-	}else if(customerLevel == CUSTOMER_LEVEL_GROUP){
-	    centerIterator = collectionSheetService.getActiveGroupsForLoanOfficer(officer,branch).iterator();
-	}else{
-	    logger.info("MCSReport : Centers open: Invalid customer level:" + customerLevel);
-	}
+    centerIterator = collectionSheetService.getActiveCentersForLoanOfficer(officer, branch).iterator();
 } catch(e) {
 	logger.info("MCSReport: CenterOffices: open: exception : "+e);
 }]]></method>
@@ -704,16 +690,8 @@ return true;]]></method>
 		centerId = SELECT_ID.equals(loanOfficerId)? SELECT_ID : ALL_ID;		
 	}
 	
-	if(customerLevel == 3){
-        meetingDateIterator = collectionSheetService.getMeetingDatesForCenter(
+    meetingDateIterator = collectionSheetService.getMeetingDatesForCenter(
 		    branchId, centerId,loanOfficerId).iterator();	
-	}else if(customerLevel == 2){
-	    meetingDateIterator = collectionSheetService.getMeetingDatesForGroup(
-		    branchId, centerId,loanOfficerId).iterator();	
-	}else {
-	    logger.info("MCSReport: MeetingDates: open: invalid customerLevel:" + customerLevel);
-	}
-	
 } catch(e) {
 	logger.info("MCSReport: MeetingDates: open: exception : "+e);
 }]]></method>
@@ -1150,7 +1128,7 @@ return true;]]></method>
                 </structure>
                 <structure>
                     <property name="name">rpt_meetingDate</property>
-                    <expression name="expression">new Packages.java.text.SimpleDateFormat("dd/MM/yyyy").format(params["meetingDate"])</expression>
+                    <expression name="expression">new Packages.org.mifos.framework.util.helpers.DateUtils.getLocalizedDateFormat().format(params["meetingDate"])</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -1205,11 +1183,6 @@ return true;]]></method>
                 <structure>
                     <property name="name">savings_2_name</property>
                     <expression name="expression">dataSetRow["savings_2_name"]</expression>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="name">customer_level_label</property>
-                    <expression name="expression">dataSetRow["customer_level_label"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -1331,7 +1304,7 @@ return true;]]></method>
                                         <label id="61">
                                             <property name="style">pageHeaderRight</property>
                                             <property name="color">#808080</property>
-                                            <text-property name="text" key="collection.sheet.local.title">Grameen Foundation</text-property>
+                                            <text-property name="text" key="collection.sheet.local.title">Grameen Koota</text-property>
                                         </label>
                                     </cell>
                                 </row>
@@ -1399,7 +1372,7 @@ return true;]]></method>
                                     <cell id="73">
                                         <property name="style">pageSubheaderRight</property>
                                         <label id="928">
-                                            <text-property name="text" key="collection.sheet.meetingdate.label"></text-property>
+                                            <text-property name="text" key="collection.sheet.meetingdate.label">Meeting Date</text-property>
                                         </label>
                                     </cell>
                                     <cell id="923">
@@ -1850,12 +1823,6 @@ return true;]]></method>
                 </header>
                 <footer>
                     <row id="553">
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr">customerLevel == CUSTOMER_LEVEL_GROUP</expression>
-                            </structure>
-                        </list-property>
                         <cell id="554">
                             <property name="style">centerFooter</property>
                             <property name="borderLeftColor">#808080</property>

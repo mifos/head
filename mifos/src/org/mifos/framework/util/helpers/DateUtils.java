@@ -63,6 +63,9 @@ public class DateUtils {
 		FUTURE, PAST, NONE
 	}
 
+	public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat(
+			"dd/MM/yyyy");
+
 	private final static String dbFormat = "yyyy-MM-dd";
 	//	this configured locale is not used for 1.1 but later
 	//  private final static Locale internalLocale = Localization.getInstance()
@@ -207,11 +210,7 @@ public class DateUtils {
 	}
 
 	public static String getCurrentDate() {
-		Calendar currentCalendar = new GregorianCalendar();
-		int year = currentCalendar.get(Calendar.YEAR);
-		int month = currentCalendar.get(Calendar.MONTH);
-		int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-		currentCalendar = new GregorianCalendar(year, month, day);
+		Calendar currentCalendar = getCurrentDateCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentCalendar
 				.getTimeInMillis());
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat
@@ -220,15 +219,23 @@ public class DateUtils {
 		return convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
-	// should be removed and the setCurrentDate() should be used
-	public static String getCurrentDate(Locale locale) {
-		// the following line is for 1.1 release and will be removed when date is localized
-		locale = internalLocale;
+	private static Calendar getCurrentDateCalendar() {
 		Calendar currentCalendar = new GregorianCalendar();
 		int year = currentCalendar.get(Calendar.YEAR);
 		int month = currentCalendar.get(Calendar.MONTH);
 		int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
 		currentCalendar = new GregorianCalendar(year, month, day);
+		return currentCalendar;
+	}
+
+	public static Date currentDate() {
+		return getCurrentDateCalendar().getTime();
+	}
+	// should be removed and the setCurrentDate() should be used
+	public static String getCurrentDate(Locale locale) {
+		// the following line is for 1.1 release and will be removed when date is localized
+		locale = internalLocale;
+		Calendar currentCalendar = getCurrentDateCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentCalendar
 				.getTimeInMillis());
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat
@@ -526,11 +533,7 @@ public class DateUtils {
 	// value == 0 : today
 	// value > 0 : after today
 	public static int whichDirection(Date date) {
-		Calendar currentCalendar = new GregorianCalendar();
-		int year = currentCalendar.get(Calendar.YEAR);
-		int month = currentCalendar.get(Calendar.MONTH);
-		int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-		currentCalendar = new GregorianCalendar(year, month, day);
+		Calendar currentCalendar = getCurrentDateCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentCalendar
 				.getTimeInMillis());
 
@@ -561,11 +564,7 @@ public class DateUtils {
 	}
 
 	public static Date getCurrentDateWithoutTimeStamp() {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day);
+		Calendar currentDateCalendar = getCurrentDateCalendar();
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
 
@@ -701,10 +700,6 @@ public class DateUtils {
 		return getCalendarAsOn(year, month, date).getTime();
 	}
 
-	public static Date currentDate() {
-		return new Date(System.currentTimeMillis());
-	}
-
 	public static java.sql.Date currentDateAsSqlDate() {
 		return convertToSqlDate(currentDate());
 	}
@@ -723,5 +718,20 @@ public class DateUtils {
 				.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
 				.get(Calendar.DATE));
 		return convertToSqlDate(calendarAsOnToday);
+	}
+
+	public static DateFormat getLocalizedDateFormat() {
+		DateFormat dateFormat;
+		try {
+			dateFormat = LocalizationConverter.getInstance().getDateFormat();
+		}
+		catch (RuntimeException e) {
+			dateFormat = DateUtils.DEFAULT_DATE_FORMAT;
+		}
+		return dateFormat;
+	}
+
+	public static Date convertSqlToDate(java.sql.Date meetingDate) {
+		return new Date(meetingDate.getTime());
 	}
 }

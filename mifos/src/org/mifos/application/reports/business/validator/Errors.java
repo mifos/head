@@ -37,17 +37,6 @@ public class Errors {
 		return errors;
 	}
 
-	public static class ErrorEntry {
-		final String fieldName;
-		final String errorCode;
-
-		public ErrorEntry(String fieldName, String errorCode) {
-			super();
-			this.fieldName = fieldName;
-			this.errorCode = errorCode;
-		}
-	}
-
 	public ErrorEntry getFieldError(String fieldName) {
 		for (ErrorEntry errorEntry : errors) {
 			if(errorEntry.fieldName.equals(fieldName))

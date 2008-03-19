@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.branchreport.BranchReportBO"
+		table="BATCH_BRANCH_REPORT">
+		<id name="branchReportId" access="field"
+			column="BRANCH_REPORT_ID">
+			<generator class="native" />
+		</id>
+		<property name="branchId" column="BRANCH_ID" type="short"
+			access="field" />
+		<property name="runDate" column="RUN_DATE" type="date"
+			access="field" />
+
+		<set name="clientSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true" />
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportClientSummaryBO" />
+		</set>
+
+		<set name="loanArrearsAging" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO" />
+		</set>
+
+		<set name="staffSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportStaffSummaryBO" />
+		</set>
+		
+		<set name="staffingLevelSummaries" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO" />
+		</set>
+		
+		<set name="loanDetails" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportLoanDetailsBO" />
+		</set>
+		
+		<set name="loanArrearsProfile" cascade="all, delete-orphan" inverse="true" lazy="true" access="field">
+			<key column="BRANCH_REPORT_ID" not-null="true"/>
+			<one-to-many
+				class="org.mifos.application.branchreport.BranchReportLoanArrearsProfileBO" />
+		</set>
+	</class>
+	<query name="branchReport.getBranchReportForDateAndBranch">
+		<![CDATA[ from org.mifos.application.branchreport.BranchReportBO branchReport
+					where branchReport.runDate=:RUN_DATE
+					and branchReport.branchId=:BRANCH_ID
+		]]>
+	</query>
+	<query name="branchReport.getBranchReportForDate">
+		<![CDATA[ from org.mifos.application.branchreport.BranchReportBO branchReport
+					where branchReport.runDate=:RUN_DATE
+		]]>
+	</query>
+</hibernate-mapping>

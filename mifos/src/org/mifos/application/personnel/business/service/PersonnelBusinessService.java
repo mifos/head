@@ -2,7 +2,7 @@ package org.mifos.application.personnel.business.service;
 
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.apache.commons.configuration.Configuration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -14,6 +14,7 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -22,6 +23,17 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelBusinessService extends BusinessService {
+	private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";
+	private RolesPermissionsPersistence rolesPermissionsPersistence;
+	private Configuration applicationConfiguration;
+	private PersonnelPersistence personnelPersistence;
+
+	public PersonnelBusinessService() {
+		personnelPersistence = new PersonnelPersistence();
+		rolesPermissionsPersistence = new RolesPermissionsPersistence();
+		applicationConfiguration = ConfigurationManager.getInstance();
+	}
+
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
@@ -59,7 +71,7 @@ public class PersonnelBusinessService extends BusinessService {
 	}
 	public List<RoleBO> getRoles() throws ServiceException {
 		try {
-			return new RolesPermissionsPersistence().getRoles();
+			return rolesPermissionsPersistence.getRoles();
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -128,4 +140,20 @@ public class PersonnelBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+
+	public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId) throws ServiceException {
+		try {
+			return personnelPersistence
+					.getActiveBranchManagersUnderOffice(
+							officeId,
+							rolesPermissionsPersistence
+									.getRole(applicationConfiguration
+											.getString(
+													BRANCH_MANAGER_ROLE_NAME_KEY)));
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
 }

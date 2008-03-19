@@ -9,12 +9,10 @@
 		<key-property name="displayName" type="string" access="field" />
 		</composite-id>
 	</class>
-	
 	<class name="org.mifos.application.reports.ui.DateSelectionItem"
 		mutable="false">
 		<id name="date" type="date" access="field" />
 	</class>	
-	
 	<sql-query name="SelectionItem.get_active_offices">
 		<return alias="branchOffice"
 			class="org.mifos.application.reports.ui.SelectionItem" />
@@ -44,8 +42,6 @@
   	   				and CUSTOMER.STATUS_ID=:ACTIVE
 		]]>
 	</sql-query>
-	
-
 	<sql-query name="DateSelectionItem.get_meeting_dates">
 		<return alias="dateItem"
 			class="org.mifos.application.reports.ui.DateSelectionItem" />
@@ -58,10 +54,9 @@
 				and COLL_SHEET_CUSTOMER.CUST_LEVEL=:CUSTOMER_LEVEL
 				and COLL_SHEET_CUSTOMER.CUST_OFFICE_ID=:branchId
 				and COLL_SHEET_CUSTOMER.LOAN_OFFICER_ID=:loanOfficerId
-				and COLL_SHEET.COLL_SHEET_DATE>:fromDate
+				and COLL_SHEET.COLL_SHEET_DATE>=:fromDate
 				order by COLL_SHEET.COLL_SHEET_DATE desc
 		]]>
 	</sql-query>
 	<!--DATE_FORMAT(COLL_SHEET.COLL_SHEET_DATE, '%d/%m/%Y') as {dateItem.displayDate-->
-	
 </hibernate-mapping>

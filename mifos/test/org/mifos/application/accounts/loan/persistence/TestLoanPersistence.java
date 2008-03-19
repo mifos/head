@@ -21,6 +21,7 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
@@ -29,6 +30,8 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+
+import org.mifos.application.office.business.OfficecFixture;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
@@ -367,7 +370,5 @@ public class TestLoanPersistence extends MifosTestCase {
 		short badLoanProductId = badAccount.getLoanOffering().getPrdOfferingId();
 		List<LoanBO> badLoanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,loanOfficerId,badLoanProductId);
 		assertEquals(1,badLoanList.size());
-		
-		
-	}	
+	}
 }

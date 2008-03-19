@@ -1,0 +1,150 @@
+package org.mifos.application.reports.business.service;
+
+import static org.mifos.application.reports.util.helpers.ReportUtils.parseReportDate;
+import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationInfoBO;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportHeader;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.framework.util.helpers.NumberUtils;
+import org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence;
+
+public class BranchCashConfirmationReportService implements
+		IBranchCashConfirmationReportService {
+
+	BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence;
+	private OfficeBusinessService officeBusinessService;
+
+	public BranchCashConfirmationReportService(
+			BranchCashConfirmationReportPersistence branchCashConfirmationReportPersistence,
+			OfficeBusinessService officeBusinessService) {
+		this.branchCashConfirmationReportPersistence = branchCashConfirmationReportPersistence;
+		this.officeBusinessService = officeBusinessService;
+	}
+
+	public List<BranchCashConfirmationCenterRecoveryBO> getCenterRecoveries(
+			Integer branchId, String runDate) throws ServiceException {
+		try {
+			return branchCashConfirmationReportPersistence.getCenterRecoveries(
+					convertIntegerToShort(branchId), parseReportDate(runDate));
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<BranchCashConfirmationInfoBO> getCenterIssues(Integer branchId,
+			String runDate) throws ServiceException {
+		try {
+			return branchCashConfirmationReportPersistence.getCenterIssues(
+					convertIntegerToShort(branchId), parseReportDate(runDate));
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<BranchCashConfirmationDisbursementBO> getDisbursements(
+			Integer branchId, String runDate) throws ServiceException {
+		try {
+			return branchCashConfirmationReportPersistence.getDisbursements(
+					convertIntegerToShort(branchId), parseReportDate(runDate));
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<BranchCashConfirmationReportBO> extractBranchCashConfirmationReport(
+			Date actionDate, AccountTypes accountType,
+			List<Short> prdOfferingsForRecoveries,
+			List<Short> prdOfferingsForIssues,
+			List<Short> prdOfferingsForDisbursements, MifosCurrency currency,
+			Date runDate) throws ServiceException {
+		try {
+			return branchCashConfirmationReportPersistence
+					.extractBranchCashConfirmationReport(actionDate,
+							accountType, prdOfferingsForRecoveries,
+							prdOfferingsForIssues,
+							prdOfferingsForDisbursements, currency, runDate);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<BranchCashConfirmationReportBO> getBranchCashConfirmationReportsForDate(
+			Date runDate) throws ServiceException {
+		try {
+			return branchCashConfirmationReportPersistence
+					.getBranchCashConfirmationReportsForDate(runDate);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+
+	}
+
+	public void deleteBranchCashConfirmationReports(
+			List<BranchCashConfirmationReportBO> reports)
+			throws ServiceException {
+		try {
+			for (BranchCashConfirmationReportBO report : reports)
+				branchCashConfirmationReportPersistence.delete(report);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public boolean isReportDataPresentForRundateAndBranchId(String branchId,
+			String runDate) {
+		try {
+			return CollectionUtils
+					.getFirstElement(branchCashConfirmationReportPersistence
+							.getBranchCashConfirmationReportsForDateAndBranch(
+									Short.valueOf(branchId),
+									parseReportDate(runDate))) != null;
+		}
+		catch (PersistenceException e) {
+			return false;
+		}
+		catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public BranchCashConfirmationReportHeader getReportHeader(Integer branchId,
+			String runDate) throws ServiceException {
+		try {
+			return new BranchCashConfirmationReportHeader(officeBusinessService
+					.getOffice(NumberUtils.convertIntegerToShort(branchId))
+					.getOfficeName(), parseReportDate(runDate));
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+}

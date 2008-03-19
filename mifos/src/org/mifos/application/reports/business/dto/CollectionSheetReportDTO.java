@@ -1,8 +1,11 @@
 package org.mifos.application.reports.business.dto;
 
+import java.util.Date;
+
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 // Understands collection sheet report properties
@@ -18,6 +21,7 @@ public class CollectionSheetReportDTO {
 	private final String loanOfficerName;
 	private final LoanProductDetails[] loanProducts;
 	private SavingsProductDetails[] savingsProducts;
+	private Date meetingDate;
 
 	public CollectionSheetReportDTO(
 			CollSheetLnDetailsEntity loanDetailsEntity1,
@@ -27,8 +31,9 @@ public class CollectionSheetReportDTO {
 			Integer customerId, Integer groupId, String customerName,
 			String branchName, String groupName, CustomerBO center,
 			String loanOfferingShortName1, String loanOfferingShortName2,
-			String savingsOfferingShortName1, String savingsOfferingShortName2) {
+			String savingsOfferingShortName1, String savingsOfferingShortName2, Date meetingDate) {
 
+		this.meetingDate = meetingDate;
 		loanProducts = new LoanProductDetails[2];
 		loanProducts[0] = new LoanProductDetails(loanDetailsEntity1, loanOfferingShortName1);
 		loanProducts[1] = new LoanProductDetails(loanDetailsEntity2, loanOfferingShortName2);
@@ -93,6 +98,10 @@ public class CollectionSheetReportDTO {
 	public String getLoanOfficerName() {
 		return loanOfficerName;
 	}
+	
+	public String getMeetingDate() {
+		return DateUtils.getLocalizedDateFormat().format(meetingDate);
+	}	
 
 	public Double getOtherFee() {
 		return loanProducts[0].getOtherFee() + loanProducts[1].getOtherFee();

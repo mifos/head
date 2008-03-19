@@ -29,13 +29,6 @@ public class SelectionItem implements Serializable {
 	public static final SelectionItem SELECT_CENTER_SELECTION_ITEM = new SelectionItem(
 			SELECT_ID, SELECT_DISPLAY_NAME);
 	
-	public static final SelectionItem SELECT_GROUP_SELECTION_ITEM = new SelectionItem(
-			SELECT_ID, SELECT_DISPLAY_NAME);	
-	public static final SelectionItem NA_GROUP_SELECTION_ITEM = new SelectionItem(
-			NOT_APPLICABLE_ID,NOT_APPLICABLE_DISPLAY_NAME);	
-	public static final SelectionItem ALL_GROUP_SELECTION_ITEM = new SelectionItem(
-			ALL_ID, ALL_DISPLAY_NAME);	
-
 	private String displayName;
 	private Short id;
 

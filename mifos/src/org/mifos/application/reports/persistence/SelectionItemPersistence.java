@@ -77,12 +77,12 @@ public class SelectionItemPersistence extends Persistence {
 	}
 	
 	public List<DateSelectionItem> getMeetingDates(Short branchId,
-			Short loanOfficerId, Integer customerId, Short customerLevel, Date from)
+			Short loanOfficerId, Integer customerId, Date from)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("COLL_SHEET_RUN_STATUS", CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
 		queryParameters.put("customerId", customerId);
-		queryParameters.put("CUSTOMER_LEVEL", customerLevel);
+		queryParameters.put("CUSTOMER_LEVEL", CustomerLevel.CENTER.getValue());
 		queryParameters.put("branchId", branchId);
 		queryParameters.put("loanOfficerId", loanOfficerId);
 		queryParameters.put("fromDate", from);

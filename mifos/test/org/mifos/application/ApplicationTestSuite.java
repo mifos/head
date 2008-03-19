@@ -48,7 +48,9 @@ import org.mifos.application.accounts.financial.FinancialTestSuite;
 import org.mifos.application.accounts.loan.LoanTestSuite;
 import org.mifos.application.accounts.savings.SavingsTestSuite;
 import org.mifos.application.admin.AdminTestSuite;
+import org.mifos.application.branchreport.BranchReportTestSuite;
 import org.mifos.application.bulkentry.BulkEntryTestSuite;
+import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportTestSuite;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.collectionsheet.CollectionSheetTestSuite;
 import org.mifos.application.collectionsheet.business.CollectionSheetReportTestSuite;
@@ -145,6 +147,8 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CollectionSheetReportTestSuite.suite());		
+		suite.addTest(BranchReportTestSuite.suite());		
+		suite.addTest(BranchCashConfirmationReportTestSuite.suite());		
 		return suite;
 	}
 }

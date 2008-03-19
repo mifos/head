@@ -27,6 +27,7 @@ import org.mifos.application.personnel.business.PersonnelTemplateImpl;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -39,6 +40,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelPersistence extends MifosTestCase {
 	
+	private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
+
 	private MeetingBO meeting;
 
 	private CustomerBO center;
@@ -130,7 +133,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	public void testNonLoanOfficerInBranch() throws Exception {
 		List<PersonnelView> personnels = persistence
 				.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER,
-						Short.valueOf("3"), Short.valueOf("2"),
+						Short.valueOf("3"), OFFICE_WITH_BRANCH_MANAGER,
 						PersonnelConstants.NON_LOAN_OFFICER);
 		assertEquals(1, personnels.size());
 	}
@@ -327,6 +330,15 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("client",clientStatus,
 				group,new Date());
 	}
+	
+	public void testGetActiveBranchManagerUnderOffice() throws Exception {
+		List<PersonnelBO> activeBranchManagersUnderOffice = new PersonnelPersistence()
+				.getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER,
+						new RolesPermissionsPersistence().getRole(Short
+								.valueOf("1")));
+		assertNotNull(activeBranchManagersUnderOffice);
+		assertEquals(2, activeBranchManagersUnderOffice.size());
+	}	
 	
 	
 }

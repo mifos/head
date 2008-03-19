@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class
+		name="org.mifos.application.branchreport.BranchReportClientSummaryBO"
+		table="BATCH_CLIENT_SUMMARY">
+		<id name="clientSummaryId" column="CLIENT_SUMMARY_ID"
+			type="integer" access="field">
+			<generator class="native" />
+		</id>
+
+		<property name="fieldName" column="FIELD_NAME" type="string"
+			access="field" />
+		<property name="total" column="TOTAL" type="string"
+			access="field" />
+		<property name="veryPoorTotal" column="VPOOR_TOTAL"
+			type="string" access="field" />
+
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
+			class="org.mifos.application.branchreport.BranchReportBO">
+		</many-to-one>
+	</class>
+
+	<sql-query
+		name="branchReport.getBranchReportClientSummaryForDateAndBranch">
+		<load-collection alias="clientSummaries"
+			role="org.mifos.application.branchreport.BranchReportBO.clientSummaries" />
+		<![CDATA[ SELECT {clientSummaries.*} FROM BATCH_CLIENT_SUMMARY as clientSummaries, 
+			BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=clientSummaries.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="branchReport.extractPortfolioAtRiskForBranch">
+		<return-scalar column="portfolioAtRisk" type="big_decimal"/>	
+		<![CDATA[select round(ifnull(sum(unpaid_principal)/(select sum(orig_principal-principal_paid) 
+                              from loan_summary, account where account.office_id=:officeId 
+                              and account.account_id=loan_summary.account_id
+                              and account.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding))*100.0,0),3)
+                as portfolioAtRisk
+		        from loan_arrears_aging, account 
+		        where days_in_arrears >= :daysInArrears
+		        and loan_arrears_aging.account_id=account.account_id
+		        and account.account_state_id in (:loanActiveInGoodStanding,:loanActiveInBadStanding)
+		        and account.office_id = :officeId
+		]]>	
+	</sql-query>
+</hibernate-mapping>

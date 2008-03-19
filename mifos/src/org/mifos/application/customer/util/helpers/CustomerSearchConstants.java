@@ -53,6 +53,7 @@ public interface CustomerSearchConstants {
 	public String LOADFORWARDOFFICE_SUCCESS="load_success";
 	public String OFFICE="Office";
 	public String PERSONNELLEVELID="personnelLevelId";
+	public String PERSONNELSTATUSID="personnelStatusId";
 	public String LOANOFFICERSLIST="LoanOfficerslist";
 	public Short LOADFORWARDNONLOANOFFICER=2;
 	public String OFFICELEVELID="officeLevelId";

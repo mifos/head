@@ -20,6 +20,9 @@
 -----------------------------------------------------------------------------%>
 <jsp:useBean id="fragments" type="java.util.Collection" scope="request" />
 
+<%-- pramod: Importing taglibs --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <%-----------------------------------------------------------------------------
 	Parameter dialog fragment
 -----------------------------------------------------------------------------%>
@@ -46,6 +49,16 @@
 					<!-- For Mifos Birt reports hide
 						<TR><TD COLSPAN="2"><%= BirtResources.getMessage( "birt.viewer.required" ) %></TD></TR>
 					-->
+					
+					<!-- pramod: adding error message here -->
+					<c:if test="${reportErrors ne null}">
+						Error occurred while generating report
+						<div align="left"><ul class="fontnormalRedBold">
+						<c:forEach items="${reportErrors.allErrorMessages}" var="error">
+							<li><c:out value="${error}"/></li>
+						</c:forEach>
+						</ul></div>
+					</c:if>					
 					<%
 						if ( fragments != null )
 						{

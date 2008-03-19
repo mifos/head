@@ -6,9 +6,10 @@ public class ServletUtils {
 
 	public static String getParameter(HttpServletRequest request,
 			String paramName) {
-		String parameter = request.getParameter(paramName);
-		return parameter != null ? parameter : request.getAttribute(parameter)
-				.toString();
+		return request.getParameter(paramName) != null ? request
+				.getParameter(paramName)
+				: request.getAttribute(paramName) != null ? request
+						.getAttribute(paramName).toString() : null;
 	}
 
 }

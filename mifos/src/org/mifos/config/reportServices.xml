@@ -23,18 +23,42 @@
 		class="org.mifos.application.customer.business.service.CustomerBusinessService" />
 	<bean id="accountBusinessService"
 		class="org.mifos.application.accounts.business.service.AccountBusinessService" />
-	<bean id="loanPrdBusinessService"
-		class="org.mifos.application.productdefinition.business.service.LoanPrdBusinessService" />
 	<bean id="savingsPrdBusinessService"
 		class="org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService" />
+	<bean id="loanPrdBusinessService"
+		class="org.mifos.application.productdefinition.business.service.LoanPrdBusinessService" />
+	<bean id="prdOfferingPersistence"
+		class="org.mifos.application.productdefinition.persistence.PrdOfferingPersistence" />
+	<bean id="branchReportPersistence"
+		class="org.mifos.application.branchreport.persistence.BranchReportPersistence" />
+	<bean id="branchCashConfirmationReportPersistence"
+		class="org.mifos.report.branchcashconfirmation.persistence.BranchCashConfirmationReportPersistence">
+		<constructor-arg ref="prdOfferingPersistence" />
+	</bean>
 	<bean id="reportProductOfferingService"
-		class="org.mifos.application.reports.business.service.ReportProductOfferingService" />
+		class="org.mifos.application.reports.business.service.ReportProductOfferingService">
+		<constructor-arg ref="loanPrdBusinessService" />
+		<constructor-arg ref="savingsPrdBusinessService" />
+		<constructor-arg>
+			<value>
+				classpath:org/mifos/application/reports/resources/collectionsheetreportproduct.properties
+			</value>
+		</constructor-arg>
+	</bean>
 
 	<bean id="selectionItemPersistence"
 		class="org.mifos.application.reports.persistence.SelectionItemPersistence" />
 	<bean id="reportParameterService"
 		class="org.mifos.application.reports.business.service.ReportsParameterService">
 		<constructor-arg ref="selectionItemPersistence" />
+	</bean>
+	<bean id="cascadignReportParameterService"
+		class="org.mifos.application.reports.business.service.CascadingReportParameterService">
+		<constructor-arg
+			type="org.mifos.application.reports.business.service.IReportsParameterService"
+			ref="reportParameterServiceProxy" />
+		<constructor-arg ref="personnelBusinessService" />
+		<constructor-arg ref="customerBusinessService" />
 	</bean>
 	<bean id="reportParameterServiceProxy"
 		class="org.springmodules.cache.interceptor.proxy.CacheProxyFactoryBean">
@@ -60,19 +84,9 @@
 		<constructor-arg ref="collectionSheetService" />
 		<constructor-arg ref="officeBusinessService" />
 		<constructor-arg ref="personnelBusinessService" />
-		<constructor-arg ref="customerBusinessService" />
 		<constructor-arg ref="accountBusinessService" />
-		<constructor-arg ref="loanPrdBusinessService" />
-		<constructor-arg ref="savingsPrdBusinessService" />
 		<constructor-arg ref="reportProductOfferingService" />
-		<constructor-arg>
-			<bean factory-method="decorate"
-				class="org.mifos.framework.business.service.ServiceDecoratorFactory">
-				<constructor-arg
-					type="org.mifos.application.reports.business.service.IReportsParameterService"
-					ref="reportParameterServiceProxy" />
-			</bean>
-		</constructor-arg>
+		<constructor-arg ref="cascadignReportParameterService" />
 	</bean>
 	<bean id="collectionSheetReportService" factory-method="decorate"
 		class="org.mifos.framework.business.service.ServiceDecoratorFactory">
@@ -81,9 +95,37 @@
 			ref="defaultCollectionSheetReportService" />
 		<constructor-arg>
 			<bean
-				class="org.mifos.framework.components.logger.ServiceLogger">
+				class="org.mifos.framework.components.logger.ServiceActivityLogger">
 				<constructor-arg value="CollectionSheetReportService" />
 			</bean>
 		</constructor-arg>
+	</bean>
+	<bean name="branchReportConfigService"
+		class="org.mifos.application.reports.business.service.BranchReportConfigService">
+		<constructor-arg>
+			<value>
+				classpath:org/mifos/application/reports/resources/branchreport.properties
+			</value>
+		</constructor-arg>
+	</bean>
+	<bean name="branchCashConfirmationConfigService"
+		class="org.mifos.application.reports.business.service.BranchCashConfirmationConfigService">
+		<constructor-arg>
+			<value>
+				classpath:org/mifos/application/reports/resources/branchcashconfirmationreport.properties
+			</value>
+		</constructor-arg>
+	</bean>
+	<bean name="branchReportService"
+		class="org.mifos.application.reports.business.service.BranchReportService">
+		<constructor-arg ref="officeBusinessService" />
+		<constructor-arg ref="personnelBusinessService" />
+		<constructor-arg ref="branchReportPersistence" />
+	</bean>
+
+	<bean name="branchCashConfirmationReportService"
+		class="org.mifos.application.reports.business.service.BranchCashConfirmationReportService">
+		<constructor-arg ref="branchCashConfirmationReportPersistence" />
+		<constructor-arg ref="officeBusinessService" />
 	</bean>
 </beans>

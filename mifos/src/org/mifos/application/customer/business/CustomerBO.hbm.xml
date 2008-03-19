@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding='UTF-8'?>
 <!DOCTYPE hibernate-mapping PUBLIC
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
@@ -825,5 +824,164 @@
 				 where client.parentCustomer  = :GROUP_ID 
 				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
 	</query>
-
+	<query name="Customer.getActiveClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active']]>
+	</query>
+	
+	<query name="Customer.getActiveOrHoldClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')]]>
+	</query>
+	
+	<query name="Customer.getVeryPoorActiveOrHoldClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description in ('Customer Was Active','Customer Was Hold')
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>
+	
+	<query name="Customer.getVeryPoorClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active'
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>	
+	<query name="Customers.getActiveBorrowersCountUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active']]>
+	</query>	
+	<query name="Customers.getVeryPoorBorrowersCountUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active'
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>	
+	<query name="Customers.getReplacementsCountUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office]]>
+	</query>		
+	<query name="Customers.getVeryPoorClientsUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>		
+	
+	<sql-query name="Customers.getDormantClientsCountByLoanAccountForOffice">
+	    <return-scalar column="dormantLoanAccounts" type="integer"/>
+		<![CDATA[select count(distinct(c.customer_id)) as dormantLoanAccounts from customer c
+					where c.customer_id not in
+					(
+					    select cust.customer_id from customer cust, account acc, loan_account la 
+					    where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+					    or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
+					    and cust.customer_id = acc.customer_id
+					    and acc.account_id = la.account_id
+					    and cust.branch_id = :officeId
+					)
+					and c.branch_id = :officeId
+		]]>
+	</sql-query>
+	<sql-query name="Customers.getVeryPoorDormantClientsCountByLoanAccountForOffice">
+		<return-scalar column="veryPoorDormantLoanAccounts" type="integer"/>
+		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantLoanAccounts from customer c, customer_detail cd
+				    where c.customer_id not in
+				    (
+				        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, loan_account la 
+				        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+				        or la.disbursement_date > date_sub(current_date, interval :loanCyclePeriod day))
+				        and cust.customer_id=cust_detail.customer_id
+				        and cust.customer_id = acc.customer_id
+				        and acc.account_id = la.account_id
+				        and cust.branch_id = :officeId
+				        and cust_detail.poverty_status=41
+				    )
+				    and c.branch_id = :officeId
+				    and c.customer_id=cd.customer_id
+				    and cd.poverty_status=41
+		]]>
+	</sql-query>
+	<sql-query name="Customers.getDormantClientsCountBySavingAccountForOffice">
+	    <return-scalar column="dormantSavingAccounts" type="integer"/>
+		<![CDATA[select count(distinct(c.customer_id)) as dormantSavingAccounts from customer c
+					where c.customer_id not in
+					(
+					    select cust.customer_id from customer cust, account acc, savings_account sa 
+					    where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+					    or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
+					    and cust.customer_id = acc.customer_id
+					    and acc.account_id = sa.account_id
+					    and cust.branch_id = :officeId
+					)
+					and c.branch_id = :officeId
+		]]>
+	</sql-query>
+	<sql-query name="Customers.getVeryPoorDormantClientsCountBySavingAccountForOffice">
+		<return-scalar column="veryPoorDormantSavingAccounts" type="integer"/>
+		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantSavingAccounts from customer c, customer_detail cd
+				    where c.customer_id not in
+				    (
+				        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, savings_account sa 
+				        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
+				        or sa.activation_date > date_sub(current_date, interval :loanCyclePeriod day))
+				        and cust.customer_id=cust_detail.customer_id
+				        and cust.customer_id = acc.customer_id
+				        and acc.account_id = sa.account_id
+				        and cust.branch_id = :officeId
+				        and cust_detail.poverty_status=41
+				    )
+				    and c.branch_id = :officeId
+				    and c.customer_id=cd.customer_id
+				    and cd.poverty_status=41
+		]]>
+	</sql-query>
+	<!-- All clients to be considered when calculating very poor dormant clients (see previous query) -->
+	<query name="Customers.getVeryPoorClientsToConsiderForDormantCount">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active'
+                 and client.customerDetail.povertyStatus=41]]>
+	</query>
+	
+	<query name="Customers.getDropOutClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Close']]>
+	</query>
+	
+	<query name="Customers.getVeryPoorDropOutClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Close'
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>	
+	
+	<query name="Customers.getOnHoldClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Hold']]>
+	</query>	
+	
+	<query name="Customers.getVeryPoorOnHoldClientsCountUnderOffice">
+		<![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Hold'
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>		
+	
+	<query name="Customers.getActiveSaversCountUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active']]>
+	</query>		
+	
+	<query name="Customers.getVeryPoorActiveSaversCountUnderOffice">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.office=:Office
+				 and client.customerStatus.description='Customer Was Active'
+				 and client.customerDetail.povertyStatus=41]]>
+	</query>			
 </hibernate-mapping>

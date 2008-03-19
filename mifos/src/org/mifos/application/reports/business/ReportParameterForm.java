@@ -7,4 +7,6 @@ public interface ReportParameterForm {
 	public void validate(Errors errors);
 
 	public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, Errors errors);
+	
+	public boolean isFormEmpty();
 }

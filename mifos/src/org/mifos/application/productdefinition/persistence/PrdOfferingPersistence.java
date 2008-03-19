@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -184,7 +185,14 @@ public class PrdOfferingPersistence extends Persistence {
 		return (PrdOfferingBO) getPersistentObject(PrdOfferingBO.class,
 				prdofferingId);
 	}
-	public PrdOfferingBO getPrdOffringByID(Short prdId)
+	
+	public LoanOfferingBO getLoanPrdOffering(Short loanPrdOfferingId)
+			throws PersistenceException {
+		return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class,
+				loanPrdOfferingId);
+	}
+	
+	public PrdOfferingBO getPrdOfferingByID(Short prdId)
 			throws PersistenceException {
 		prdLogger.debug("getting the product offering by id :"
 				+ prdId);

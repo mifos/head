@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -16,6 +19,7 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelRoleEntity;
 import org.mifos.application.personnel.business.PersonnelTemplate;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.exceptions.PersonnelException;
@@ -37,7 +41,8 @@ import org.mifos.framework.security.util.UserContext;
 
 public class PersonnelPersistence extends Persistence {
 
-    private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+	//TODO : Move to PersonnelRoleEntity
+	private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
     public List<PersonnelView> getActiveLoanOfficersInBranch(Short levelId,
 			Short officeId, Short userId, Short userLevelId)
@@ -321,4 +326,30 @@ public class PersonnelPersistence extends Persistence {
     private RolesPermissionsPersistence getRolesPermissionsPersistence() {
         return rolesPermissionsPersistence;
     }
+
+	public List<PersonnelBO> getActiveBranchManagersUnderOffice(Short officeId, final RoleBO role)
+			throws PersistenceException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICEID, officeId);
+		params.put(CustomerSearchConstants.PERSONNELSTATUSID,
+				PersonnelStatus.ACTIVE.getValue());
+		List activeBranchManagers = executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_BRANCH_MANAGER_UNDER_OFFICE,
+				params);
+		return (List<PersonnelBO>) CollectionUtils.select(activeBranchManagers,
+				new Predicate() {
+					public boolean evaluate(Object object) {
+						Set<PersonnelRoleEntity> applicableRoles = ((PersonnelBO) object)
+								.getPersonnelRoles();
+						return CollectionUtils.exists(applicableRoles,
+								new Predicate() {
+									public boolean evaluate(Object object) {
+										return ((PersonnelRoleEntity) object)
+												.getRole().equals(
+														role);
+									}
+								});
+					}
+				});
+	}
 }

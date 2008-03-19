@@ -223,7 +223,21 @@
 		<mapping resource="org/mifos/application/admindocuments/business/AdminDocAccStateMix.hbm.xml" />
 		<mapping resource="org/mifos/application/admindocuments/business/AdminDocument.hbm.xml" />
 		<!--  -->
-				
+		
+		<!-- Branch Report -->
+		<mapping resource="org/mifos/application/branchreport/BranchReportBO.hbm.xml" />				
+		<mapping resource="org/mifos/application/branchreport/BranchReportClientSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/application/branchreport/BranchReportLoanArrearsAgingBO.hbm.xml" />		
+		<mapping resource="org/mifos/application/branchreport/BranchReportStaffSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/application/branchreport/BranchReportStaffingLevelSummaryBO.hbm.xml" />		
+		<mapping resource="org/mifos/application/branchreport/BranchReportLoanDetailsBO.hbm.xml" />		
+		<mapping resource="org/mifos/application/branchreport/BranchReportLoanArrearsProfileBO.hbm.xml" />	
+		
+		<!--  Branch Cash Confirmation Report -->	
+		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationReportBO.hbm.xml" />	
+		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />	
+		<mapping resource="org/mifos/application/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />	
+		
 	</session-factory>
 
 </hibernate-configuration>

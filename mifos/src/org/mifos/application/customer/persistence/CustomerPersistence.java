@@ -27,19 +27,26 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerStatusFlagEntity;
@@ -55,6 +62,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -78,7 +86,33 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class CustomerPersistence extends Persistence {
-
+			
+	private static final Predicate CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS = new Predicate() {
+		public boolean evaluate(Object object) {
+			Set<AccountBO> accounts = ((ClientBO) object).getAccounts();
+			return CollectionUtils.exists(accounts, new Predicate() {
+				public boolean evaluate(Object object) {
+					AccountStateEntity accountState = ((AccountBO)object).getAccountState();
+					return new AccountStateEntity(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).sameId(accountState);
+				}
+			});
+		}
+	};
+		
+	private static final Predicate CLIENTS_WITH_ACTIVE_SAVINGS_ACCOUNT = new Predicate() {
+		public boolean evaluate(Object arg0) {
+			Set<AccountBO> accounts = ((ClientBO)arg0).getAccounts();
+			return CollectionUtils.exists(accounts, new Predicate() {
+				public boolean evaluate(Object arg0) {
+					AccountBO account = ((AccountBO)arg0);
+					return AccountTypes.SAVINGS_ACCOUNT.getValue().equals(
+							account.getAccountType().getAccountTypeId()) 
+					&& new AccountStateEntity(AccountState.SAVINGS_ACTIVE).sameId(account.getAccountState());						
+				}
+			});
+		}
+	};
+	
 	public CustomerPersistence() {
 	}
 
@@ -211,7 +245,8 @@ public class CustomerPersistence extends Persistence {
 				customer = queryResult.get(0);
 				initializeCustomer(customer);
 			}
-		} else if (levelId.shortValue() == CustomerLevel.GROUP.getValue()) {
+		}
+		else if (levelId.shortValue() == CustomerLevel.GROUP.getValue()) {
 			List<GroupBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_GROUP_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
@@ -219,7 +254,8 @@ public class CustomerPersistence extends Persistence {
 				initializeCustomer(customer);
 			}
 
-		} else if (levelId.shortValue() == CustomerLevel.CLIENT.getValue()) {
+		}
+		else if (levelId.shortValue() == CustomerLevel.CLIENT.getValue()) {
 			List<ClientBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CLIENT_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
@@ -237,19 +273,21 @@ public class CustomerPersistence extends Persistence {
 
 		try {
 
-				queryResult = new AccountPersistence().search(searchString,
-						officeId);
+			queryResult = new AccountPersistence().search(searchString,
+					officeId);
+			if (queryResult == null) {
+				queryResult = idSearch(searchString, officeId, userId);
 				if (queryResult == null) {
-					queryResult = idSearch(searchString, officeId,userId);
-					if (queryResult == null) {
-						queryResult = mainSearch(searchString, officeId,
-								userId, userOfficeId);
+					queryResult = mainSearch(searchString, officeId, userId,
+							userOfficeId);
 				}
 			}
 
-		} catch (HibernateSearchException e) {
+		}
+		catch (HibernateSearchException e) {
 			throw new PersistenceException(e);
-		} catch (SystemException e) {
+		}
+		catch (SystemException e) {
 			throw new PersistenceException(e);
 		}
 
@@ -292,7 +330,8 @@ public class CustomerPersistence extends Persistence {
 		queryInputs.setParamList(paramList);
 		try {
 			queryResult.setQueryInputs(queryInputs);
-		} catch (HibernateSearchException e) {
+		}
+		catch (HibernateSearchException e) {
 			throw new PersistenceException(e);
 		}
 
@@ -308,11 +347,11 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.CUSTOMERSFORSAVINGSACCOUNT);
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
-		if (personnel.getLevelEnum() ==	PersonnelLevel.LOAN_OFFICER) {
+		if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
 			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT;
 			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS;
 			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
-		} 
+		}
 		else {
 			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO;
 			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_NOLO;
@@ -332,7 +371,8 @@ public class CustomerPersistence extends Persistence {
 		queryInputs.setParamList(paramList);
 		try {
 			queryResult.setQueryInputs(queryInputs);
-		} catch (HibernateSearchException e) {
+		}
+		catch (HibernateSearchException e) {
 			throw new PersistenceException(e);
 		}
 
@@ -353,7 +393,8 @@ public class CustomerPersistence extends Persistence {
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH;
 			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
 
-		} else {
+		}
+		else {
 			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_NOOFFICEID;
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_NOOFFICEID;
 			paramList.add(typeNameValue("String", "OFFICE_SEARCH_ID",
@@ -363,14 +404,17 @@ public class CustomerPersistence extends Persistence {
 		}
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
-		if ( searchString.contains(" ")){
-			paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString.substring(0,searchString.indexOf(" "))));
-			paramList.add(typeNameValue("String", "SEARCH_STRING2", searchString.substring(searchString.indexOf(" ")+1,searchString.length())));
+		if (searchString.contains(" ")) {
+			paramList.add(typeNameValue("String", "SEARCH_STRING1",
+					searchString.substring(0, searchString.indexOf(" "))));
+			paramList.add(typeNameValue("String", "SEARCH_STRING2",
+					searchString.substring(searchString.indexOf(" ") + 1,
+							searchString.length())));
 		}
-		else
-		{
-			paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString));
-			paramList.add(typeNameValue("String", "SEARCH_STRING2",""));
+		else {
+			paramList.add(typeNameValue("String", "SEARCH_STRING1",
+					searchString));
+			paramList.add(typeNameValue("String", "SEARCH_STRING2", ""));
 		}
 		setParams(paramList, userId);
 		queryResult.setQueryInputs(queryInputs);
@@ -386,8 +430,8 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("Short", "LEVELID", CustomerLevel.CLIENT
 				.getValue()));
 		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
-				new PersonnelPersistence().getPersonnel(userId)
-					.getLevelEnum().getValue()));
+				new PersonnelPersistence().getPersonnel(userId).getLevelEnum()
+						.getValue()));
 	}
 
 	private String[] getAliasNames() {
@@ -413,8 +457,8 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	private QueryResult idSearch(String searchString, Short officeId,Short userId)
-			throws HibernateSearchException, SystemException,
+	private QueryResult idSearch(String searchString, Short officeId,
+			Short userId) throws HibernateSearchException, SystemException,
 			PersistenceException {
 		if (!isCustomerExist(searchString))
 			return null;
@@ -440,26 +484,33 @@ public class CustomerPersistence extends Persistence {
 			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT;
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID;
 			if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+						.getOffice().getSearchId()));
 			}
 			else {
-				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()+"%"));
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+						.getOffice().getSearchId()
+						+ "%"));
 			}
-		} else {
+		}
+		else {
 			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
 			if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
-				paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
+				paramList.add(typeNameValue("String", "ID", personnel
+						.getPersonnelId()));
 				namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT;
 				namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH;
 			}
 			else {
-				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()+"%"));
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+						.getOffice().getSearchId()
+						+ "%"));
 				namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT_NONLO;
 				namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NONLO;
 			}
 
 		}
-		
+
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
 
 		return queryResult;
@@ -598,7 +649,8 @@ public class CustomerPersistence extends Persistence {
 			query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
 			customerPerformanceHistoryView.setMeetingsAttended((Integer) query
 					.uniqueResult());
-		} else {
+		}
+		else {
 			query = session
 					.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED);
 			query.setInteger("CUSTOMERID", customerId);
@@ -696,17 +748,13 @@ public class CustomerPersistence extends Persistence {
 
 	public int getCustomerCountForOffice(CustomerLevel customerLevel,
 			Short officeId) throws PersistenceException {
-		int count = 0;
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("LEVEL_ID", customerLevel.getValue());
 		queryParameters.put("OFFICE_ID", officeId);
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.GET_CUSTOMER_COUNT_FOR_OFFICE,
 				queryParameters);
-		if (queryResult.size() > 0 && queryResult.get(0) != null)
-			count = ((Number) queryResult.get(0)).intValue();
-
-		return count;
+		return getCountFromQueryResult(queryResult);
 	}
 
 	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
@@ -736,7 +784,8 @@ public class CustomerPersistence extends Persistence {
 											+ prdOfferingName
 											+ " does not already exist in the list hence adding it to the list");
 					loanCycleCounters.add(loanCycleCounter);
-				} else {
+				}
+				else {
 					MifosLogManager
 							.getLogger(LoggerConstants.CLIENTLOGGER)
 							.debug(
@@ -785,9 +834,11 @@ public class CustomerPersistence extends Persistence {
 					.getNamedQuery(NamedQueryConstants.GETALLCUSTOMERNOTES);
 			query.setInteger("CUSTOMER_ID", customerId);
 			notesResult.executeQuery(query);
-		} catch (HibernateProcessException hpe) {
+		}
+		catch (HibernateProcessException hpe) {
 			throw new PersistenceException(hpe);
-		} catch (HibernateSearchException hse) {
+		}
+		catch (HibernateSearchException hse) {
 			throw new PersistenceException(hse);
 		}
 		return notesResult;
@@ -837,14 +888,15 @@ public class CustomerPersistence extends Persistence {
 
 	public void updateLOsForAllChildren(Short parentLO, String parentSearchId,
 			Short parentOfficeId) {
-		String hql = "update CustomerBO customer " +
-				" set customer.personnel = :parentLoanOfficer " +
+		String hql = "update CustomerBO customer "
+				+ " set customer.personnel = :parentLoanOfficer "
+				+
 
 				// This is for Hibernate 3.2.x instead of 3.0beta4 (?)
-//				" set customer.personnel.personnelId = :parentLoanOfficer " +
+				//				" set customer.personnel.personnelId = :parentLoanOfficer " +
 
-				" where customer.searchId like :parentSearchId" +
-				" and customer.office.officeId = :parentOfficeId";
+				" where customer.searchId like :parentSearchId"
+				+ " and customer.office.officeId = :parentOfficeId";
 		Session session = HibernateUtil.getSessionTL();
 		Query update = session.createQuery(hql);
 		update.setParameter("parentLoanOfficer", parentLO);
@@ -925,4 +977,161 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER,
 				queryParameters);
 	}
+
+	public Integer getActiveClientCountForOffice(OfficeBO office)
+			throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICE, office);
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_CLIENTS_COUNT_UNDER_OFFICE,
+				params));
+	}
+
+	public Integer getVeryPoorClientCountForOffice(OfficeBO office)
+	throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICE, office);
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_VERY_POOR_CLIENTS_COUNT_UNDER_OFFICE,
+				params));
+	}
+	
+	public Integer getActiveOrHoldClientCountForOffice(OfficeBO office)
+			throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICE, office);
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE,
+				params));
+	}
+
+	public Integer getVeryPoorActiveOrHoldClientCountForOffice(OfficeBO office)
+	throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICE, office);
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_VERY_POOR_ACTIVE_OR_HOLD_CLIENTS_COUNT_UNDER_OFFICE,
+				params));
+	}
+
+	public Integer getActiveBorrowersCountForOffice(OfficeBO office)
+			throws PersistenceException {
+		List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_ACTIVE_BORROWERS_COUNT_UNDER_OFFICE, office);
+		CollectionUtils.filter(clients, CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS);
+		return clients.size();
+	}
+
+	private List<ClientBO> runQueryForOffice(String queryName, OfficeBO office) throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICE, office);
+		return executeNamedQuery(queryName,params);
+	}
+
+	public Integer getVeryPoorActiveBorrowersCountForOffice(OfficeBO office) throws PersistenceException {
+		List<ClientBO> veryPoorActiveBorrowers = runQueryForOffice(
+				NamedQueryConstants.GET_VERY_POOR_ACTIVE_BORROWERS_COUNT_UNDER_OFFICE,office);
+		CollectionUtils.filter(veryPoorActiveBorrowers, CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS);
+		return veryPoorActiveBorrowers.size();
+	}
+
+	public Integer getCustomerReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue) throws PersistenceException {
+		List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_CUSTOMER_REPLACEMENTS_COUNT_UNDER_OFFICE, office);
+		CollectionUtils.filter(clients, new FieldStatePredicate(fieldId, fieldValue));
+		return clients.size();
+	}
+
+	public Integer getVeryPoorReplacementsCountForOffice(OfficeBO office, Short fieldId, String fieldValue) throws PersistenceException {
+		List<ClientBO> veryPoorClients = runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_CLIENTS_UNDER_OFFICE, office);
+		CollectionUtils.filter(veryPoorClients,  new FieldStatePredicate(fieldId, fieldValue));
+		return veryPoorClients.size();
+	}
+
+	
+	public Integer getDormantClientsCountByLoanAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod)
+			throws PersistenceException {
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_DORMANT_CLIENTS_COUNT_BY_LOAN_ACCOUNT_FOR_OFFICE,
+				populateDormantQueryParams(office, loanCyclePeriod)));
+	}
+	
+	public Integer getVeryPoorDormantClientsCountByLoanAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod)
+			throws PersistenceException {
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_LOAN_ACCOUNT_FOR_OFFICE,
+				populateDormantQueryParams(office, loanCyclePeriod)));
+	}
+
+	public Integer getDormantClientsCountBySavingAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod)
+			throws PersistenceException {
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE,
+				populateDormantQueryParams(office, loanCyclePeriod)));
+	}
+
+	public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(
+			OfficeBO office, Integer loanCyclePeriod)
+			throws PersistenceException {
+		return getCountFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE,
+				populateDormantQueryParams(office, loanCyclePeriod)));
+	}
+
+	private HashMap<String, Object> populateDormantQueryParams(OfficeBO office, Integer loanCyclePeriod) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(CustomerSearchConstants.OFFICEID, office.getOfficeId());
+		params.put("loanCyclePeriod", loanCyclePeriod);
+		return params;
+	}
+	
+	public Integer getDropOutClientsCountForOffice(OfficeBO office) throws PersistenceException{
+		return getCountFromQueryResult(runQueryForOffice(NamedQueryConstants.GET_DROP_OUT_CLIENTS_COUNT_UNDER_OFFICE, office));
+	}
+
+	public Integer getVeryPoorDropOutClientsCountForOffice(OfficeBO office) throws PersistenceException {
+		return getCountFromQueryResult(runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_DROP_OUT_CLIENTS_COUNT_UNDER_OFFICE, office));
+	}
+
+	public Integer getOnHoldClientsCountForOffice(OfficeBO office) throws PersistenceException {
+		return getCountFromQueryResult(runQueryForOffice(NamedQueryConstants.GET_ON_HOLD_CLIENTS_COUNT_UNDER_OFFICE, office));
+	}
+	
+	public Integer getVeryPoorOnHoldClientsCountForOffice(OfficeBO office) throws PersistenceException {
+		return getCountFromQueryResult(runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_ON_HOLD_CLIENTS_COUNT_UNDER_OFFICE, office));
+	}
+	
+	public Integer getActiveSaversCountForOffice(OfficeBO office) throws PersistenceException {
+		List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_ACTIVE_SAVERS_COUNT_UNDER_OFFICE, office);
+		CollectionUtils.filter(clients, CLIENTS_WITH_ACTIVE_SAVINGS_ACCOUNT);
+		return clients.size();
+	}
+	
+	public Integer getVeryPoorActiveSaversCountForOffice(OfficeBO office) throws PersistenceException {
+		List<ClientBO> clients = runQueryForOffice(NamedQueryConstants.GET_VERY_POOR_ACTIVE_SAVERS_COUNT_UNDER_OFFICE, office);
+		CollectionUtils.filter(clients, CLIENTS_WITH_ACTIVE_SAVINGS_ACCOUNT);
+		return clients.size();
+	}
+	
+	static private class FieldStatePredicate implements Predicate{
+		
+		private final Short fieldId;
+		private final String fieldValue;
+
+		public FieldStatePredicate(Short fieldId, String fieldValue){
+			this.fieldId = fieldId;
+			this.fieldValue = fieldValue;
+		}
+		
+		public boolean evaluate(Object object) {
+			Set<CustomerCustomFieldEntity> customFields = ((ClientBO)object).getCustomFields();
+			return CollectionUtils.exists(customFields, new Predicate(){
+				public boolean evaluate(Object object) {
+					CustomerCustomFieldEntity field = ((CustomerCustomFieldEntity)object);
+					return fieldValue.equals(field.getFieldValue()) && fieldId.equals(field.getFieldId()); 
+				}
+			});
+		}
+	};	
 }

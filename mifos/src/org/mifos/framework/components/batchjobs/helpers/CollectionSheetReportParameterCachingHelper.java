@@ -43,7 +43,7 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
-import org.mifos.application.reports.business.service.CollectionSheetReportServiceFactory;
+import org.mifos.application.reports.business.service.ReportServiceFactory;
 import org.mifos.application.reports.business.service.ICollectionSheetReportService;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.components.batchjobs.MifosTask;
@@ -63,7 +63,7 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		ICollectionSheetReportService collectionSheetService = CollectionSheetReportServiceFactory
+		ICollectionSheetReportService collectionSheetService = ReportServiceFactory
 				.getCacheEnabledCollectionSheetReportService();
 		collectionSheetService.invalidateCachedReportParameters();
 		try {
@@ -82,7 +82,7 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 				collectionSheetService
 						.getMeetingDatesForCenter(
 								officeId,
-								convertShortToInteger(SelectionItem.ALL_GROUP_SELECTION_ITEM
+								convertShortToInteger(SelectionItem.ALL_CENTER_SELECTION_ITEM
 										.getId()), allLoanOfficerId);
 			}
 		}

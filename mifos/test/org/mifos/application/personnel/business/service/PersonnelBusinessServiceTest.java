@@ -213,5 +213,4 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		return createPersonnel(office,PersonnelLevel.LOAN_OFFICER);
 	}
-	
 }

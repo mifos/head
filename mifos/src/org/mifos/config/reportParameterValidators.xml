@@ -1,0 +1,47 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<import resource="reportServices.xml" />
+	<bean
+		class="org.mifos.application.reports.business.validator.CollectionSheetReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>report/CollectionSheetReport.rptdesign</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean
+		class="org.mifos.application.reports.business.validator.DetailedAgingPortfolioReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>report/DetailedAgingPortfolioAtRisk.rptdesign</value>
+				<value>report/ActiveLoansByLoanOfficer.rptdesign</value>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean
+		class="org.mifos.application.reports.business.validator.BranchReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>report/BranchReport.rptdesign</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg ref="branchReportService" />
+	</bean>
+
+	<bean
+		class="org.mifos.application.reports.business.validator.BranchCashConfirmationReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>
+					report/BranchCashConfirmationReport.rptdesign
+				</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg ref="branchCashConfirmationReportService" />
+	</bean>
+
+</beans>

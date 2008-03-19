@@ -70,6 +70,10 @@ public interface FilePaths {
 	 */
 	public static final String SPRING_CONFIG_CORE =
 		"org/mifos/config/resources/applicationContext.xml";
+	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/collectionsheetreportproduct.properties";
+	public static final String BRANCH_REPORT_CONFIG = "/org/mifos/application/reports/resources/branchreport.properties";
+	public static final String BRANCH_CASH_CONFIRMATION_REPORT_CONFIG = "/org/mifos/application/reports/resources/branchcashconfirmationreport.properties";
+	public static final String REPORT_PARAMETER_VALIDATOR_CONFIG = "/org/mifos/config/reportParameterValidators.xml";
 	/**
 	 * A Mifos specialist or systems administrator can use this file to override
 	 * bean definitions in {@link #SPRING_CONFIG_CORE}. This is a relative
@@ -98,7 +102,6 @@ public interface FilePaths {
 	 */
 	public static final String CHART_OF_ACCOUNTS_SCHEMA =
 		"org/mifos/config/resources/mifosChartOfAccounts.xsd";
-	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/reportproducts.properties";
 	public static final String REPORT_SERVICE_BEAN_FILE = "/org/mifos/config/reportServices.xml";
 	public static final String LOCALIZED_RESOURCE_PATH="org/mifos/config/localizedResources/";
 	public static final String COLUMN_MAPPING_BUNDLE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "ColumnMappingBundle";

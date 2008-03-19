@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class
+		name="org.mifos.application.branchreport.BranchReportLoanArrearsProfileBO"
+		table="BATCH_LOAN_ARREARS_PROFILE">
+		<id name="loanArrearsProfileId" column="LOAN_ARREARS_PROFILE_ID" type="integer"
+			access="field">
+			<generator class="native" />
+		</id>
+		<property name="loansInArrears"
+			column="LOANS_IN_ARREARS" type="integer" access="field" />
+		<property name="clientsInArrears"
+			column="CLIENTS_IN_ARREARS" type="integer" access="field" />
+		<property name="overDueBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="OVERDUE_BALANCE_CURRENCY_ID"/>
+			<column name="OVERDUE_BALANCE"/>
+		</property>			
+		<property name="unpaidBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="UNPAID_BALANCE_CURRENCY_ID"/>
+			<column name="UNPAID_BALANCE"/>
+		</property>
+		<property name="loansAtRisk"
+			column="LOANS_AT_RISK" type="integer" access="field" />
+		<property name="outstandingAmountAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="OUTSTANDING_AMOUNT_AT_RISK_CURRENCY_ID"/>
+			<column name="OUTSTANDING_AMOUNT_AT_RISK"/>
+		</property>
+		<property name="overdueAmountAtRisk" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="OVERDUE_AMOUNT_AT_RISK_CURRENCY_ID"/>
+			<column name="OVERDUE_AMOUNT_AT_RISK"/>
+		</property>
+		<property name="clientsAtRisk"
+			column="CLIENTS_AT_RISK" type="integer" access="field" />
+		<many-to-one name="branchReport" column="BRANCH_REPORT_ID"
+			access="field"
+			class="org.mifos.application.branchreport.BranchReportBO">
+		</many-to-one>
+	</class>
+
+	<sql-query
+		name="branchReport.getBranchReportLoanArrearsProfileForDateAndBranch">
+		<load-collection alias="loanArrearsProfile"
+			role="org.mifos.application.branchreport.BranchReportBO.loanArrearsProfile" />
+		<![CDATA[SELECT {loanArrearsProfile.*} FROM BATCH_LOAN_ARREARS_PROFILE as loanArrearsProfile, 
+		 	BATCH_BRANCH_REPORT as branchReport WHERE 
+			branchReport.BRANCH_REPORT_ID=loanArrearsProfile.BRANCH_REPORT_ID 
+			AND branchReport.RUN_DATE=:RUN_DATE 
+			AND branchReport.BRANCH_ID=:BRANCH_ID
+		]]>
+	</sql-query>
+
+	<sql-query name="branchReport.extractLoansInArrearsForBranch">
+		<return-scalar column="loansInArrears" type="integer" />
+		<return-scalar column="clientsInArrears" type="integer" />
+		<return-scalar column="overDueBalance" type="big_decimal" />
+		<return-scalar column="unpaidBalance" type="big_decimal" />
+		<![CDATA[SELECT COUNT(*) as loansInArrears, 
+				    COUNT(DISTINCT CUSTOMER_ID) as clientsInArrears, 
+				    ROUND(IFNULL(SUM(COALESCE(OVERDUE_BALANCE,0)),0),3) as overDueBalance,
+				    ROUND(IFNULL(SUM(COALESCE(UNPAID_BALANCE,0)),0),3) as unpaidBalance
+				    FROM LOAN_ARREARS_AGING la 
+				    WHERE la.OFFICE_ID=:officeId 
+				    AND UNPAID_BALANCE_CURRENCY_ID=:currencyId AND OVERDUE_BALANCE_CURRENCY_ID=:currencyId
+		]]>
+	</sql-query>
+
+	<sql-query name="branchReport.extractLoansAndOutstandingAmountsAtRiskForBranch">
+		<return-scalar column="loansAtRisk" type="integer" />
+		<return-scalar column="outstandingAmountAtRisk" type="big_decimal" />
+		<return-scalar column="overdueAmountAtRisk" type="big_decimal" />
+		<![CDATA[SELECT COUNT(laa.customer_id) AS loansAtRisk,
+					ROUND(IFNULL(SUM(COALESCE(unpaid_balance)),0),3) AS outstandingAmountAtRisk,
+					ROUND(IFNULL(SUM(COALESCE(overdue_balance)),0),3) AS overdueAmountAtRisk
+					FROM loan_arrears_aging laa ,customer c
+					WHERE laa.customer_id=c.customer_id
+					AND c.customer_level_id=1
+					AND c.branch_id = :officeId
+					AND days_in_arrears > 30
+					AND laa.unpaid_balance_currency_id=:currencyId
+					AND laa.overdue_balance_currency_id=:currencyId
+		]]>
+	</sql-query>
+	<sql-query name="branchReport.extractLoanArrearsProfileClientsAtRiskForBranch">
+		<return-scalar column="clientsAtRisk" type="integer" />
+		<![CDATA[SELECT COUNT(DISTINCT cph.CUSTOMER_ID) as clientsAtRisk  
+					FROM client_perf_history cph, customer c WHERE 
+				    cph.CUSTOMER_ID=c.CUSTOMER_ID AND 
+				    c.CUSTOMER_LEVEL_ID=1 AND
+				    c.BRANCH_ID=:officeId AND
+				    cph.DELINQUINT_PORTFOLIO > 0
+		]]>
+	</sql-query>
+</hibernate-mapping>

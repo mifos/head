@@ -1,0 +1,249 @@
+package org.mifos.application.branchreport.persistence;
+
+import static org.mifos.framework.util.helpers.MoneyFixture.createMoney;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.mifos.application.branchreport.BranchReportBO;
+import org.mifos.application.branchreport.BranchReportBOFixture;
+import org.mifos.application.branchreport.BranchReportClientSummaryBO;
+import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
+import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
+import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
+import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.application.reports.business.service.BranchReportTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.framework.util.helpers.DateUtils;
+
+
+public class BranchReportPersistenceTest extends BranchReportTestCase {
+
+	private static final Short BRANCH_ID = Short.valueOf("1");
+	private Session session;
+	private Transaction transaction;
+	private Date runDate;
+	private BranchReportPersistence branchReportPersistence;
+	private BranchReportBO branchReportWithLoanArrears;
+	private BranchReportBO branchReportWithClientSummaries;
+	private BranchReportBO branchReportWithStaffSummary;
+
+	public void testGetBranchReportBatchForDateAndBranch() throws Exception {
+		BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID, runDate);
+		session.save(branchReportBO);
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(1, retrievedBranchReports,
+				PredicateUtils.equalPredicate(branchReportBO));
+	}
+
+	public void testRetrievesEmptyListIfNoBranchReportBatchForDateAndBranch()
+			throws Exception {
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(0, retrievedBranchReports,
+				PredicateUtils.truePredicate());
+	}
+
+	public void testRetrievesEmptyListIfNoBranchReportsForGivenDate()
+			throws Exception {
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(runDate);
+		assertListSizeAndTrueCondition(0, retrievedBranchReports,
+				PredicateUtils.truePredicate());
+	}
+
+	public void testRetrievesBranchReportsForGivenDate() throws Exception {
+		BranchReportBO branchReportBO = new BranchReportBO(BRANCH_ID, runDate);
+		session.save(branchReportBO);
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(runDate);
+		assertListSizeAndTrueCondition(1, retrievedBranchReports,
+				PredicateUtils.equalPredicate(branchReportBO));
+	}
+
+	public void testSaveBranchReportWithLoanArrearsAndRetrieveUsingBranchReport()
+			throws Exception {
+		session.save(branchReportWithLoanArrears);
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(1, retrievedBranchReports,
+				PredicateUtils.equalPredicate(branchReportWithLoanArrears));
+	}
+
+	public void testSaveBranchReportWithClientSummaryAndRetrieveUsingBranchReport()
+			throws Exception {
+		session.save(branchReportWithClientSummaries);
+		List<BranchReportBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReport(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(1, retrievedBranchReports,
+				PredicateUtils.equalPredicate(branchReportWithClientSummaries));
+	}
+
+	public void testReturnsEmptyListIfNoBranchReportClientSummaryBatchForDateAndBranch()
+			throws Exception {
+		retrieveAndAssertBranchReportClientSummaryForBranchAndDate(0,
+				PredicateUtils.truePredicate());
+	}
+
+
+	public void testGetLoanArrearsReportReturnsEmptyListIfReportNotFound()
+			throws Exception {
+		retrieveAndAssertLoanArrearsReportForBranchAndDate(0, PredicateUtils
+				.truePredicate());
+	}
+
+	public void testGetLoanArrearsReportForDateAndBranch() throws Exception {
+		session.save(branchReportWithLoanArrears);
+		retrieveAndAssertLoanArrearsReportForBranchAndDate(1, PredicateUtils
+				.equalPredicate(CollectionUtils
+						.getFirstElement(branchReportWithLoanArrears
+								.getLoanArrearsAging())));
+	}
+
+	public void testRetrieveStaffSummaryForDateAndBranchReturnsEmptyListIfNoDataPresent()
+			throws Exception {
+		retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(0,
+				PredicateUtils.truePredicate());
+	}
+
+	public void testRetrieveStaffSummaryForDateAndBranch() throws Exception {
+		session.save(branchReportWithStaffSummary);
+		retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(1,
+				PredicateUtils.equalPredicate(CollectionUtils
+						.getFirstElement(branchReportWithStaffSummary
+								.getStaffSummaries())));
+	}
+
+	//TODO TW Add test data and have better test
+	public void testExtractStaffSummaryActiveBorrowersCountReturnsEmptyListIfNoDataPresent()
+			throws Exception {
+		List<BranchReportStaffSummaryBO> staffSummary = branchReportPersistence
+				.extractBranchReportStaffSummary(Short.valueOf("2"), Integer
+						.valueOf(1), DEFAULT_CURRENCY);
+		assertTrue(staffSummary.isEmpty());
+	}
+
+	public void testRetrieveLoanArrearsAging() throws Exception {
+		BranchReportLoanArrearsAgingBO loanArrears = branchReportPersistence
+				.extractLoanArrearsAgingInfoInPeriod(
+						LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Short
+								.valueOf("2"), DEFAULT_CURRENCY);
+		assertNotNull(loanArrears);
+	}
+
+	public void testSaveLoanArrearsBOWithLargeValueForAmountOutstanding()
+			throws Exception {
+		BranchReportLoanArrearsAgingBO branchReportLoanArrearsAgingBO = new BranchReportLoanArrearsAgingBO(
+				LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1),
+				Integer.valueOf(2), createMoney(15724323.10),
+				createMoney(1283439.70));
+		BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(
+				null, Short.valueOf("2"), DateUtils.currentDate());
+		branchReport.addLoanArrearsAging(branchReportLoanArrearsAgingBO);
+		try {
+			session.save(branchReport);
+			transaction.commit();
+			transaction = session.beginTransaction();
+			deleteBranchReport(branchReport.getBranchReportId());
+		}
+		catch (Exception e) {
+			e.printStackTrace(System.out);
+			fail("Should not throw error when saving: " + e);
+		}
+	}
+
+	public void testExtractingLoanArrears() throws Exception {
+		BranchReportLoanArrearsAgingBO result = branchReportPersistence
+				.extractLoanArrearsAgingInfoInPeriod(
+						LoanArrearsAgingPeriod.ONE_WEEK, Short.valueOf("2"),
+						DEFAULT_CURRENCY);
+		assertNotNull(result);
+	}
+
+	public void testExtractStaffingSummaryLevels() throws Exception {
+		List<BranchReportStaffingLevelSummaryBO> staffingLevels = branchReportPersistence
+				.extractBranchReportStaffingLevelSummary(Short.valueOf("3"));
+		assertEquals(3, staffingLevels.size());
+		for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevels) {
+			if ("Total Staff".equals(summaryBO.getRolename())) {
+				assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
+			}
+		}
+	}
+
+	private void retrieveAndAssertLoanArrearsReportForBranchAndDate(
+			int resultCount, Predicate mustBeTrue) throws PersistenceException {
+		List<BranchReportLoanArrearsAgingBO> retrievedLoanArrearsReports = branchReportPersistence
+				.getLoanArrearsAgingReport(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(resultCount,
+				retrievedLoanArrearsReports, mustBeTrue);
+	}
+
+	private void retrieveAndAssertBranchReportClientSummaryForBranchAndDate(
+			int resultCount, Predicate predicate) throws PersistenceException {
+		List<BranchReportClientSummaryBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReportClientSummary(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(resultCount, retrievedBranchReports,
+				predicate);
+	}
+
+	private void retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(
+			int resultCount, Predicate predicate) throws PersistenceException {
+		List<BranchReportStaffSummaryBO> retrievedBranchReports = branchReportPersistence
+				.getBranchReportStaffSummary(BRANCH_ID, runDate);
+		assertListSizeAndTrueCondition(resultCount, retrievedBranchReports,
+				predicate);
+	}
+
+	private void deleteBranchReport(Integer reportId)
+			throws PersistenceException {
+		branchReportPersistence.delete(branchReportPersistence
+				.getPersistentObject(BranchReportBO.class, reportId));
+		transaction.commit();
+		transaction = session.beginTransaction();
+	}
+
+	private void assertListSizeAndTrueCondition(int resultCount,
+			List retrievedReports, Predicate mustBeTrue) {
+		assertEquals(resultCount, retrievedReports.size());
+		assertTrue(mustBeTrue.evaluate(CollectionUtils
+				.getFirstElement(retrievedReports)));
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		transaction.rollback();
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		branchReportPersistence = new BranchReportPersistence();
+		runDate = DateUtils.getDate(2008, Calendar.JANUARY, 1);
+		branchReportWithLoanArrears = new BranchReportBO(BRANCH_ID, runDate);
+		branchReportWithLoanArrears
+				.addLoanArrearsAging(new BranchReportLoanArrearsAgingBO(
+						LoanArrearsAgingPeriod.ONE_WEEK));
+
+		branchReportWithClientSummaries = new BranchReportBO(BRANCH_ID, runDate);
+		branchReportWithClientSummaries
+				.addClientSummary(BranchReportBOFixture
+						.createBranchReportClientSummaryBO(BranchReportClientSummaryBO.CENTER_COUNT));
+
+		branchReportWithStaffSummary = new BranchReportBO(BRANCH_ID, runDate);
+		branchReportWithStaffSummary.addStaffSummary(BranchReportBOFixture
+				.createBranchReportStaffSummaryBO());
+
+		session = HibernateUtil.getSessionTL();
+		transaction = session.beginTransaction();
+	}
+}

@@ -22,17 +22,27 @@ public class CollectionUtils {
 		return null;
 	}
 
-	public static<T> List<T> asList(
-			T element) {
+	public static <T> boolean exists(Collection<T> collections,
+			Predicate<T> predicate) throws Exception {
+		return null != find(collections, predicate);
+	}
+
+	public static <T> List<T> asList(T ... elements) {
 		List<T> list = new ArrayList<T>();
-		list.add(element);
+		for (T element : elements) {
+			list.add(element);
+		}
 		return list;
 	}
 
-	public static<T> Set<T> asSet(
-			T element) {
+	public static <T> Set<T> asSet(T element) {
 		Set<T> collectionSheetsForMeetingDate = new HashSet<T>();
 		collectionSheetsForMeetingDate.add(element);
 		return collectionSheetsForMeetingDate;
+	}
+
+	public static<T> T getFirstElement(Collection<T> collection) {
+		if(collection==null || collection.isEmpty()) return null;
+		return collection.iterator().next();
 	}
 }
