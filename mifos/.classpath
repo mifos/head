@@ -72,7 +72,7 @@
 			<attribute name="javadoc_location" value="http://xmlunit.sourceforge.net/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-02-12.jar"/>
+	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-03-19.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

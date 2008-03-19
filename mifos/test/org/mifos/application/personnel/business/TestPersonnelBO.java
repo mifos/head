@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -32,7 +33,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -774,6 +774,34 @@ public class TestPersonnelBO extends MifosTestCase {
 
 		assertEquals(localeId, personnel.getLocaleId());
 	}
+
+	public void testCreateFailureWithDuplicateUserName() throws Exception {
+		try {
+
+			PersonnelBO person1 = new PersonnelBO(
+					PersonnelLevel.NON_LOAN_OFFICER, office, Integer
+					.valueOf("1"), Short.valueOf("1"), "ABCD", "testUser", null,
+					null, null, name, null, new Date(), null, 1, null, null, null,
+					PersonnelConstants.SYSTEM_USER);
+			
+			PersonnelBO person2 = new PersonnelBO(
+					PersonnelLevel.NON_LOAN_OFFICER, office, Integer
+					.valueOf("1"), Short.valueOf("1"), "ABCD", "testUser", null,
+					null, null, name, null, new Date(), null, 1, null, null, null,
+					PersonnelConstants.SYSTEM_USER);
+			
+			person1.save();
+			person2.save();
+			HibernateUtil.rollbackTransaction();
+			fail();
+		} catch (PersonnelException e) {
+			assertEquals(PersistenceException.class, e.getCause().getClass());
+			assertEquals(ConstraintViolationException.class,
+					e.getCause().getCause().getClass());
+			HibernateUtil.rollbackTransaction();
+		}
+	}
+
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()
 				.getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
