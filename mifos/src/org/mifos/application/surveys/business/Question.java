@@ -175,12 +175,12 @@ public class Question implements Serializable, Comparable<Question> {
 		}
 
 		Question question = (Question) o;
-		return question.getQuestionId() == questionId;
+		return question.getQuestionId() == getQuestionId();
 	}
 	
 	@Override
 	public int hashCode() {
-		return new Integer(questionId).hashCode();
+		return new Integer(getQuestionId()).hashCode();
 	}
 	
 	public int compareTo(Question other) {
