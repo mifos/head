@@ -152,7 +152,7 @@
 							</span>
 						</tr>
 						<tr id="Client.Trained">
-							<td class="fontnormalbold"><mifos:mifoslabel name="client.Trained"
+							<td class="fontnormalbold"><html-el:hidden property="trained" value="${sessionScope.clientCustActionForm.trained}"/><mifos:mifoslabel name="client.Trained"
 								bundle="ClientUIResources" keyhm="Client.Trained" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:choose>
 								<c:when test="${sessionScope.clientCustActionForm.trained eq '1'}">
 									<span class="fontnormal"><mifos:mifoslabel
