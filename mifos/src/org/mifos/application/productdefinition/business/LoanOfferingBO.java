@@ -976,7 +976,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					if (((loanAmountFromLastLoanAmountBO.getStartRange() <= Double
 							.parseDouble(calaculateValue)) && (loanAmountFromLastLoanAmountBO
 							.getEndRange() >= Double
-							.parseDouble(calaculateValue)))) {
+							.parseDouble(calaculateValue)))
+							|| ((i == loanOfferingBO.loanAmountFromLastLoan
+									.size() - 1) && list.isEmpty())) {
 						list.add(loanAmountFromLastLoanAmountBO
 								.getMaxLoanAmount());
 						list.add(loanAmountFromLastLoanAmountBO
@@ -1040,7 +1042,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					if (((noOfInstallFromLastLoanAmountBO.getStartRange() <= Double
 							.parseDouble(calaculateValue)) && (noOfInstallFromLastLoanAmountBO
 							.getEndRange() >= Double
-							.parseDouble(calaculateValue)))) {
+							.parseDouble(calaculateValue)))
+							|| ((i == loanOfferingBO.noOfInstallFromLastLoan
+									.size() - 1) && list.isEmpty())) {
 						list.add(noOfInstallFromLastLoanAmountBO
 								.getMaxNoOfInstall());
 						list.add(noOfInstallFromLastLoanAmountBO

@@ -1274,13 +1274,13 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = getLoanOfferingFromLastLoan("fdfsdfsd",
 				"ertg", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
 		createInitialObjects();
-		makeRepaymentForLastLoanAmount();
+		
 		LoanAccountAction loanAccountAction = new LoanAccountAction();
 		LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
 		loanAccountActionForm.setCustomerId(group.getCustomerId().toString());
 		loanAccountAction.updateLoanOffering(loanOffering,
 				loanAccountActionForm);
-		setUp();
+		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
@@ -1315,8 +1315,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getSession().getAttribute("loanAccountActionForm");
 		LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(
 				actionForm.getAccountId()).intValue());
-		assertEquals(loan.getLoanAmount(), new Money("400"));
-		assertEquals(loan.getNoOfInstallments(), new Short("40"));
+		
+		assertEquals(loan.getLoanAmount(), new Money("200"));
+		assertEquals(loan.getNoOfInstallments(), new Short("20"));
 		TestObjectFactory.cleanUp(loan);
 		accountBO = null;
 	}

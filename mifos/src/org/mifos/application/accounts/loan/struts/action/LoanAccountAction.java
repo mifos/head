@@ -421,7 +421,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct))
 				.getApplicablePrdOfferings(customer.getCustomerLevel());
-		removePrdOfferingNotMatchingPrdType(loanOfferings, customer);
+		
 		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
 		SessionUtils.setCollectionAttribute(LoanConstants.LOANPRDOFFERINGS,
 				loanOfferings, request);
@@ -513,6 +513,11 @@ public class LoanAccountAction extends AccountAppAction {
 				request);
 	    CustomerBO customerBO = (CustomerBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
+	    if (customerBO == null)
+	    {
+	    	customerBO = (CustomerBO)SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
+					
+	    }
 		loanActionForm.setMonthWeek(customerBO.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay().getValue().toString());
 		if (recurrenceId==2) loanActionForm.setMonthRank(customerBO.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekRank().getValue().toString());
 		
@@ -1672,61 +1677,6 @@ public class LoanAccountAction extends AccountAppAction {
 		loadCustomFieldDefinitions(request);
 	}
 
-	private void removePrdOfferingNotMatchingPrdType(
-			List<LoanOfferingBO> loanOfferings, CustomerBO customer) {
-		Set<AccountBO> accounts = customer.getAccounts();
-		Iterator<AccountBO> itr = accounts.iterator();
-		ArrayList listAccountStateID = new ArrayList();
-		while (itr.hasNext()) {
-			AccountBO accountBo = itr.next();
-			listAccountStateID.add(accountBo.getAccountState().getId());
-
-		}
-		if (!(listAccountStateID.contains(AccountStates.LOANACC_OBLIGATIONSMET))) {
-			for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter
-					.hasNext();) {
-				LoanOfferingBO loanOffering = iter.next();
-				if (!(loanOffering.getLoanAmountFromLastLoan().isEmpty())) {
-					iter.remove();
-				}
-				else if (!(loanOffering.getNoOfInstallFromLastLoan().isEmpty())) {
-					iter.remove();
-				}
-			}
-
-		}
-		else {
-			for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter
-					.hasNext();) {
-				LoanOfferingBO loanOffering = iter.next();
-				if (!loanOffering.getLoanAmountFromLastLoan().isEmpty()) {
-					removePrdOfferingNotMatchingCustomerLastLoanAmount(
-							customer, loanOffering, iter);
-				}
-				else if (!loanOffering.getNoOfInstallFromLastLoan().isEmpty()) {
-					removePrdOfferingNotMatchingCustomerLastLoanAmount(
-							customer, loanOffering, iter);
-				}
-
-			}
-		}
-	}
-
-	private void removePrdOfferingNotMatchingCustomerLastLoanAmount(
-			CustomerBO customer, LoanOfferingBO loanOffering,
-			Iterator<LoanOfferingBO> iter) {
-		Double lastLoanAmount = getCustomerLastMaxLoanAmount(customer);
-		List listLoanAmount = loanOffering.eligibleLoanAmount(lastLoanAmount
-				.toString(), loanOffering);
-		List listNoOfInstall = loanOffering.eligibleNoOfInstall(lastLoanAmount
-				.toString(), loanOffering);
-		if (listLoanAmount.isEmpty()) {
-			iter.remove();
-		}
-		else if (listNoOfInstall.isEmpty()) {
-			iter.remove();
-		}
-	}
 
 	public Double getCustomerLastMaxLoanAmount(CustomerBO customer) {
 		ArrayList list = new ArrayList();
@@ -1753,6 +1703,10 @@ public class LoanAccountAction extends AccountAppAction {
 			}
 
 		}
+		if (list.isEmpty()) {
+						list.add(new Integer("0"));
+					}
+
 		return Double.parseDouble(Collections.max(list).toString());
 
 	}
