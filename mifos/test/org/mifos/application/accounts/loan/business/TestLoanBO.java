@@ -65,7 +65,6 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
-import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -779,9 +778,8 @@ public class TestLoanBO extends MifosTestCase {
 		loan.setGracePeriodType(gracePeriodType);
 		loan.setCreatedBy(Short.valueOf("1"));
 
-		CollateralTypeEntity collateralType = new CollateralTypeEntity(Short
-				.valueOf("1"));
-		loan.setCollateralType(collateralType);
+		// Set collateral type to lookup id 109, which references the lookup value 'Type 1'
+		loan.setCollateralTypeId(Integer.valueOf("109"));
 
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
 				InterestType.FLAT);

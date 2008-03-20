@@ -96,7 +96,6 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -179,8 +178,8 @@ public class LoanBO extends AccountBO {
 	 */
 	private Integer businessActivityId;
 
-	private CollateralTypeEntity collateralType;
-
+	private Integer collateralTypeId;
+	
 	private String collateralNote;
 
 	private Short groupFlag;
@@ -540,12 +539,12 @@ public class LoanBO extends AccountBO {
 		this.collateralNote = collateralNote;
 	}
 
-	public CollateralTypeEntity getCollateralType() {
-		return collateralType;
+	public Integer getCollateralTypeId() {
+		return collateralTypeId;
 	}
 
-	public void setCollateralType(CollateralTypeEntity collateralType) {
-		this.collateralType = collateralType;
+	public void setCollateralTypeId(Integer collateralTypeId) {
+		this.collateralTypeId = collateralTypeId;
 	}
 
 	public GracePeriodTypeEntity getGracePeriodType() {
@@ -1392,7 +1391,7 @@ public class LoanBO extends AccountBO {
 			Money loanAmount, Double interestRate, Short noOfInstallments,
 			Date disbursmentDate, Short gracePeriodDuration,
 			Integer businessActivityId, String collateralNote,
-			CollateralTypeEntity collateralTypeEntity,
+			Integer collateralTypeId,
 			List<CustomFieldView> customFields) throws AccountException {
 		if (interestDeductedAtDisbursment) {
 			try {
@@ -1417,7 +1416,7 @@ public class LoanBO extends AccountBO {
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursment);
 		setBusinessActivityId(businessActivityId);
 		setCollateralNote(collateralNote);
-		setCollateralType(collateralTypeEntity);
+		setCollateralTypeId(collateralTypeId);
 		if (getAccountState().getId().equals(
 				AccountState.LOAN_APPROVED.getValue())
 				|| getAccountState().getId().equals(

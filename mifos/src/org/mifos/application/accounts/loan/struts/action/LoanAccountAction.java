@@ -55,10 +55,10 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -706,10 +706,7 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
 		loan.setCollateralNote(loanActionForm.getCollateralNote());
-		CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
-				request, MasterConstants.COLLATERAL_TYPES, loanActionForm
-						.getCollateralTypeIdValue());
-		loan.setCollateralType(collateralTypeEntity);
+		loan.setCollateralTypeId(loanActionForm.getCollateralTypeIdValue());
 		return loan;
 	}
 
@@ -1167,19 +1164,8 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 	
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		SessionUtils.removeAttribute(MasterConstants.COLLATERAL_TYPE_NAME,
-				request);
 		SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
 				request);
-		if (loanAccountActionForm.getCollateralTypeIdValue() != null) {
-			CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
-					request, MasterConstants.COLLATERAL_TYPES,
-					loanAccountActionForm.getCollateralTypeIdValue());
-			collateralTypeEntity.setLocaleId(getUserContext(request)
-					.getLocaleId());
-			SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPE_NAME,
-					collateralTypeEntity.getName(), request);
-		}
 		if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
 			SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
 					getNameForBusinessActivityEntity(loanAccountActionForm
@@ -1221,10 +1207,8 @@ public class LoanAccountAction extends AccountAppAction {
 						request).getPreferredLocale()), loanAccountActionForm
 						.getGracePeriodDurationValue(), loanAccountActionForm
 						.getBusinessActivityIdValue(), loanAccountActionForm
-						.getCollateralNote(), getCollateralTypeEntity(form,
-						request),loanAccountActionForm.getCustomFields());
-		
-		
+						.getCollateralNote(), loanAccountActionForm.getCollateralTypeIdValue(),
+						loanAccountActionForm.getCustomFields());		
 	      
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		
@@ -1259,27 +1243,11 @@ public class LoanAccountAction extends AccountAppAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
-	private CollateralTypeEntity getCollateralTypeEntity(ActionForm form,
-			HttpServletRequest request) throws Exception {
-		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		if (loanAccountActionForm.getCollateralTypeIdValue() != null) {
-			CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
-					request, MasterConstants.COLLATERAL_TYPES,
-					loanAccountActionForm.getCollateralTypeIdValue());
-			collateralTypeEntity.setLocaleId(getUserContext(request)
-					.getLocaleId());
-			return collateralTypeEntity;
-		}
-		return null;
-	}
-
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
 		if (loanBO.getGracePeriodType() != null) {
 			// Is this locale ever consulted?  I don't see a place...
 			loanBO.getGracePeriodType().setLocaleId(localeId);
 		}
-		if (loanBO.getCollateralType() != null)
-			loanBO.getCollateralType().setLocaleId(localeId);
 		loanBO.getInterestType().setLocaleId(localeId);
 		loanBO.getAccountState().setLocaleId(localeId);
 		for (AccountFlagMapping accountFlagMapping : loanBO.getAccountFlags()) {
@@ -1480,9 +1448,12 @@ public class LoanAccountAction extends AccountAppAction {
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 
 
-		SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES,
-				getMasterEntities(CollateralTypeEntity.class, getUserContext(
-						request).getLocaleId()), request);
+		// Retrieve and set into the session all collateral types from the lookup_value_locale table associated with the current user context locale
+		SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, 
+				new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES,
+						getUserContext(request).getLocaleId()).getCustomValueListElements(), request);
+				
+		
 		SessionUtils
 				.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
 						((MasterDataService) ServiceFactory.getInstance()
@@ -1570,9 +1541,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.isInterestDeductedAtDisbursement() ? "1" : "0");
 		loanAccountActionForm.setBusinessActivityId(getStringValue(loan
 				.getBusinessActivityId()));
-		if (loan.getCollateralType() != null)
-			loanAccountActionForm.setCollateralTypeId(getStringValue(loan
-					.getCollateralType().getId()));
+		if (loan.getCollateralTypeId() != null)
+			loanAccountActionForm.setCollateralTypeId(getStringValue(loan.getCollateralTypeId()));		
 		loanAccountActionForm.setCollateralNote(loan.getCollateralNote());
 		loanAccountActionForm.setInterestRate(getStringValue(loan
 				.getInterestRate()));

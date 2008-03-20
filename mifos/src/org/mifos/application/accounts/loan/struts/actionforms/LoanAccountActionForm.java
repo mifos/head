@@ -442,8 +442,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 		return getIntegerValue(getBusinessActivityId());
 	}
 
-	public Short getCollateralTypeIdValue() {
-		return getShortValue(getCollateralTypeId());
+	public Integer getCollateralTypeIdValue() {
+		return getIntegerValue(getCollateralTypeId());
 	}
 
 	public Money getLoanAmountValue() {

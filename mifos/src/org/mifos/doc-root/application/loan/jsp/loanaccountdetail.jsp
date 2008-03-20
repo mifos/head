@@ -392,7 +392,11 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td class="fontnormal"><mifos:mifoslabel
 								name="loan.collateral_type" keyhm="Loan.CollateralType"
 								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />&nbsp;
-							<c:out value="${BusinessKey.collateralType.name}" /></td>
+							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" var="collateralType">
+								<c:if test="${collateralType.id eq BusinessKey.collateralTypeId}">
+									<c:out value="${collateralType.name}" />
+								</c:if>
+							</c:forEach></td>
 						</tr>
 						<tr id="Loan.CollateralNotes">
 							<td class="fontnormal"><br>

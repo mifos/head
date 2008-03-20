@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(181);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(182);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3033,15 +3033,6 @@ INSERT INTO RANK_DAYS_MASTER(RANK_DAYS_MASTER_ID,LOOKUP_ID)
 VALUES(4,102);
 INSERT INTO RANK_DAYS_MASTER(RANK_DAYS_MASTER_ID,LOOKUP_ID)
 VALUES(5,103);
-
-
-/* master data for table collateral_type*/
-/* The table COLLATERAL_TYPE contains the collateral types used in the system - System */ 
-INSERT INTO COLLATERAL_TYPE (COLLATERAL_TYPE_ID, LOOKUP_ID) 
-VALUES(1,109);
-INSERT INTO COLLATERAL_TYPE (COLLATERAL_TYPE_ID, LOOKUP_ID) 
-VALUES(2,110);
-
 
 /* master data for table fee_frequency_type*/
 /* The table Fee Frequency contains type of fees like periodic, one time - System */

@@ -334,7 +334,11 @@
 										<tr id="Loan.CollateralType">
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-												&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.collateralType.name}" /> </span>
+												&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" var="collateralType">
+														<c:if test="${collateralType.id eq BusinessKey.collateralTypeId}">
+															<c:out value="${collateralType.name}" />
+														</c:if>
+													</c:forEach></span>
 											</td>
 										</tr>
 										<tr id="Loan.CollateralNotes">

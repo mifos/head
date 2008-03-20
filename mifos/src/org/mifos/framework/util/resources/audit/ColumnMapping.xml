@@ -3,18 +3,12 @@
 
 	<entityType name="Loan" classPath="org.mifos.application.accounts.loan.business.LoanBO">
 		<entitiesToLog>
-			<entity name="collateralType"/>
 			<entity name="accountState"/>
 			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
 			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>
 		</entitiesToLog>
-		<propertyName name="collateralType" displayKey="Loan.CollateralType" doNotLog="No" lookUp="yes">
-			<entityName name="CollateralTypes">
-				<classPath  path="org.mifos.application.master.business.CollateralTypeEntity"/>
-			</entityName>
-		</propertyName>
 		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
 			<entityName name="AccountStates">
 				<classPath  path="org.mifos.application.accounts.business.AccountStateEntity"/>
@@ -28,6 +22,7 @@
 		<propertyName name="businessActivityId" displayKey="Loan.Purposeof,Loan"  doNotLog="No" lookUp="yes">
 			<entityName name="Loan Purposes"/>
 		</propertyName>
+		<propertyName name="collateralTypeId" displayKey="Loan.CollateralType" />
 		<propertyName name="collateralNote" displayKey="Loan.CollateralNote" />
 		<propertyName name="disbursementDate" displayKey="Loan.DisbursementDate" />
 		<propertyName name="noOfInstallments" displayKey="Loan.NoOfInstallments" />

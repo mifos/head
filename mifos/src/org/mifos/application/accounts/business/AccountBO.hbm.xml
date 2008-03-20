@@ -100,6 +100,7 @@
 			<property name="disbursementDate"
 				column="DISBURSEMENT_DATE" />
 			<property name="collateralNote" column="COLLATERAL_NOTE" />
+			<property name="collateralTypeId" column="COLLATERAL_TYPE_ID"/>			
 			<property name="gracePeriodDuration"
 				column="GRACE_PERIOD_DURATION" />
 			<property name="intrestAtDisbursement" access="field"
@@ -131,10 +132,6 @@
 				access="field"
 				class="org.mifos.application.meeting.business.MeetingBO"
 				unique="true" insert="true" cascade="all" update="false" />
-			<many-to-one name="collateralType"
-				column="COLLATERAL_TYPE_ID"
-				class="org.mifos.application.master.business.CollateralTypeEntity"
-				unique="true" cascade="none" insert="true" update="true" />
 			<many-to-one name="gracePeriodType"
 				column="GRACE_PERIOD_TYPE_ID"
 				class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"

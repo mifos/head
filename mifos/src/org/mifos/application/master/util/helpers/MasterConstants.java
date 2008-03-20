@@ -54,7 +54,6 @@ public interface MasterConstants {
 	public static final String PERSONNEL_TITLE ="PersonnelTitles";
 	public static final String PERSONNEL_LEVELS="PersonnelLevels";
 	public static final String COLLATERAL_TYPES="CollateralTypes";
-	public static final String COLLATERAL_TYPE_NAME="CollateralTypeName";
 	public static final String INTERESTTYPES="InterestTypes";
 	public static final String INTERESTCALCRULE="InterestCalcRule";
 	public static final String GRACEPERIODTYPES="GracePeriodTypes";

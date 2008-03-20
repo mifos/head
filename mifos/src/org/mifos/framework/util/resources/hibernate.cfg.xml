@@ -154,7 +154,6 @@
 		<mapping resource="org/mifos/application/office/business/OfficeCustomFieldEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/application/master/business/InterestTypesEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/master/business/CollateralTypeEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/application/accounts/loan/business/LoanActivityEntity.hbm.xml" />
 
