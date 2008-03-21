@@ -63,18 +63,6 @@
 
     <echo level="debug">CLASSPATH - ${java.class.path}</echo>
 
-	<!--definitions & target for SVNant 
-		To make the targets work (1) get svnant from http://subclipse.tigris.org/svnant.html
-		(2) copy  svnClientAdapter.jar and svnant.jar to ${ANT_HOME}/lib
-	-->
-	<property name="src.revision" value="Unknown" />
-	<condition property="svnant.installed">
-		<and>
-			<available file="${env.ANT_HOME}/lib/svnClientAdapter.jar"/>
-			<available file="${env.ANT_HOME}/lib/svnant.jar"/>
-		</and>
-	</condition>
-
 	<!-- read latest SVN revision number -->
 	<target name="svn-revision">
 	<loadfile property="svn.version" srcFile="${basedir}/.svn/entries" failonerror="true">
@@ -428,10 +416,9 @@
 	
 	<target name="dist-war-rev" 
 			depends="svn-revision,clean,compile,copy_files,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
-			if="src.revision"
 			description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
 		<move file="${dist.dir}/${webapplication.name}.war"
-			  tofile="${dist.dir}/${webapplication.name}-${src.revision}.war" />
+			  tofile="${dist.dir}/${webapplication.name}-${svn.version}.war" />
 	</target>
 
 	<target name="dist_build_db" 
