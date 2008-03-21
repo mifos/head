@@ -27,7 +27,6 @@ import junit.textui.TestRunner;
 import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 import org.mifos.application.accounts.AccountTestSuite;
 import org.mifos.application.admin.AdminTestSuite;
-import org.mifos.application.admin.system.SystemInfoTest;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.fund.FundTestSuite;
 import org.mifos.application.holiday.HolidayTestSuite;
@@ -35,8 +34,6 @@ import org.mifos.application.login.LoginTestSuite;
 import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.ppi.PPITestSuite;
 import org.mifos.application.surveys.SurveysTestSuite;
-import org.mifos.config.ChartOfAccountsConfigTest;
-import org.mifos.config.TestProcessFlowRules;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
@@ -82,9 +79,6 @@ public class ApplicationTestSet4 extends TestSuite {
 		suite.addTest(SurveysTestSuite.suite());
 		suite.addTest(PPITestSuite.suite());
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
-		suite.addTest(TestProcessFlowRules.suite());
-		suite.addTest(ChartOfAccountsConfigTest.suite());
-		suite.addTest(SystemInfoTest.suite());
 		
 		return suite;
 	}
