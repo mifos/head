@@ -27,6 +27,7 @@ import junit.textui.TestRunner;
 import org.mifos.application.acceptedpaymenttype.ApplicationAcceptedPaymentTypeTestSuite;
 import org.mifos.application.accounts.AccountTestSuite;
 import org.mifos.application.admin.AdminTestSuite;
+import org.mifos.application.admin.system.SystemInfoTest;
 import org.mifos.application.checklist.CheckListTestSuite;
 import org.mifos.application.fund.FundTestSuite;
 import org.mifos.application.holiday.HolidayTestSuite;
@@ -83,6 +84,7 @@ public class ApplicationTestSet4 extends TestSuite {
 		suite.addTest(ApplicationAcceptedPaymentTypeTestSuite.suite());
 		suite.addTest(TestProcessFlowRules.suite());
 		suite.addTest(ChartOfAccountsConfigTest.suite());
+		suite.addTest(SystemInfoTest.suite());
 		
 		return suite;
 	}

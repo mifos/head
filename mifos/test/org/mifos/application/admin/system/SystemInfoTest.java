@@ -22,18 +22,23 @@ package org.mifos.application.admin.system;
 
 import javax.servlet.ServletContext;
 
-import junit.framework.TestCase;
-
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
+import static org.junit.Assert.assertEquals;
 
 import servletunit.ServletContextSimulator;
 
-public class SystemInfoTest extends TestCase {
-	
-	private SystemInfo info; 
-	
-	@Override
-	protected void setUp() throws Exception {
+public class SystemInfoTest {
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(SystemInfoTest.class);
+	}
+
+	private SystemInfo info;
+
+	@Before
+	public void setUp() throws Exception {
 		ServletContext servletContext = new ServletContextSimulator();
 		info = new SystemInfo(new MockDatabaseMetaData(), servletContext);
 		info.setJavaVendor("Sun");
@@ -41,30 +46,38 @@ public class SystemInfoTest extends TestCase {
 		info.setSvnRevision(new MockSvnRevision());
 	}
 
+	@Test
 	public void testApplicationDatabaseVersion() throws Exception {
-		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info.getApplicationVersion());
+		assertEquals(DatabaseVersionPersistence.APPLICATION_VERSION, info
+				.getApplicationVersion());
 	}
-	
+
+	@Test
 	public void testDatabaseDetails() throws Exception {
 		assertEquals("vendorName", info.getDatabaseVendor());
 		assertEquals("1.0", info.getDatabaseVersion());
 		assertEquals("driverName", info.getDriverName());
 		assertEquals("2.0", info.getDriverVersion());
 	}
-	
+
+	@Test
 	public void testJava() throws Exception {
 		assertEquals("Sun", info.getJavaVendor());
 		assertEquals("1.5", info.getJavaVersion());
 	}
-	
+
+	@Test
 	public void testApplicationServer() throws Exception {
 		assertEquals("MockServletEngine/1.9.5", info.getApplicationServerInfo());
 	}
-	
-	public void testSubversionRevision() throws Exception {
-		assertEquals("123456", info.getSvnRevision());
 
+	@Test
+	public void testGetSubversionRevision() throws Exception {
+		assertEquals("123456", info.getSvnRevision());
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testGetSubversionRevisionFromMissingFile() throws Exception {
 		info.setSvnRevision(new SvnRevision("non-existant.file"));
-		assertEquals("unknown", info.getSvnRevision());
 	}
 }

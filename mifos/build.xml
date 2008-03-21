@@ -75,14 +75,27 @@
 		</and>
 	</condition>
 
-	<target name="svn-revision" if="svnant.installed"  description="Sets SVN revision">
-		<typedef name="svn"  classname="org.tigris.subversion.svnant.SvnTask"  /> 	
-		<svn javahl="false" >
-			<status path="./build.xml" revisionProperty="src.revision" />
-		</svn>
+	<!-- read latest SVN revision number -->
+	<target name="svn-revision">
+	<loadfile property="svn.version" srcFile="${basedir}/.svn/entries" failonerror="true">
+	   <filterchain>
+	      <headfilter lines="6"/>
+	      <tokenfilter>
+	         <filetokenizer/>
+	         <replaceregex pattern=".*[\r\n]+dir[\r\n]+([0-9]+)[\r\n]+http.*"
+	            flags="s" replace="\1"/>                               
+	      </tokenfilter>
+	   </filterchain>
+	</loadfile>
 	</target>
-	<!-- end definitions & target for svnant -->
 	
+	<target name="copy-revision" depends="svn-revision" description="Creates revision property file">
+		<copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
+			<filterset>
+				<filter token="revision" value="${svn.version}" />
+			</filterset>
+		</copy>	
+	</target>
 	
 	<target name="init">
 		<tstamp>
@@ -165,16 +178,12 @@
 		</javac>
 	</target>
 
-	<!-- new target to encapsulate both the old copy and the svnant integration --> 
-	<target name="copy_files2" depends="copy_files,copy-revision">
-	</target>
-	
 	<!--
 	Note that my.hibernate.properties and my.HibernateTest.properties,
 	unlike my.build.properties, entirely override the corresponding
 	file if they are present.
 	-->
-	<target name="copy_files">
+	<target name="copy_files" depends="copy-revision">
 		<available file="${conf.dir}/my.hibernate.properties"
                 property="my.hibernate.properties.present" value="true" />
 		<copy todir="${build.web-inf}/lib">
@@ -236,17 +245,6 @@
 		</copy>
 	</target>
 
-	<!-- if svnant is not installed revision is set to Unknown-->
-	<target name="copy-revision" depends="svn-revision"  description="Creates revision property file">
-		<copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
-			<filterset>
-				<filter token="revision" value="${src.revision}" />
-			</filterset>
-		</copy>	
-	</target>	
-
-	
-	
 	<target name="integrate_birt_web_viewer">
 		<copy todir="${build.src.dir}">
 			<fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
@@ -429,7 +427,7 @@
 	/>
 	
 	<target name="dist-war-rev" 
-			depends="svn-revision,clean,compile,copy_files2,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
+			depends="svn-revision,clean,compile,copy_files,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
 			if="src.revision"
 			description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
 		<move file="${dist.dir}/${webapplication.name}.war"
