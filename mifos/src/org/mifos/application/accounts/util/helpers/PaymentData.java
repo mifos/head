@@ -8,6 +8,10 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
+/*
+ * Used to hold information entered about a payment made.
+ * Currently this is populated from data entered on a web page. 
+ */
 public class PaymentData {
 
 	private Money totalAmount;
@@ -24,6 +28,10 @@ public class PaymentData {
 
 	private Short paymentTypeId;
 
+	/*
+	 * Holds information including the installment this payment is to be 
+	 * applied towards and any installments in arrears.
+	 */
 	private List<AccountPaymentData> accountPayments;
 
     private PaymentData(Money totalAmount, PersonnelBO personnel,

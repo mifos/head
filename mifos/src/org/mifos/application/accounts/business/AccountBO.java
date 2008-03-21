@@ -282,6 +282,9 @@ public class AccountBO extends BusinessObject {
 			}
 	}
 
+	/*
+	 * Take raw PaymentData (usually from a web page) and enter it into Mifos.
+	 */
     public final void applyPayment(PaymentData paymentData,
                                    boolean persistChanges)
 			throws AccountException {

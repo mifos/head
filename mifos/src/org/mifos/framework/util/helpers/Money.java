@@ -54,26 +54,62 @@ import org.mifos.framework.components.configuration.business.Configuration;
  */
 public final class Money implements Serializable {
 
+	/*
+	 * March 21, 2008 refactoring in progress.
+	 * usingNewMoney is an application-wide setting to switch between
+	 * the original implementation of the Money class (v1) and a new
+	 * implementation (v2).  This will go away once the new implementation
+	 * is complete and tested, but allows the two to coexist for the time
+	 * being.
+	 */
+	private static boolean usingNewMoney = false;
+
+	public static boolean isUsingNewMoney() {
+		return usingNewMoney;
+	}
+
+	public static void setUsingNewMoney(boolean usingNewMoney) {
+		Money.usingNewMoney = usingNewMoney;
+	}
+	
 	private final MifosCurrency currency;
 
 	private final BigDecimal amount;
 
 	public Money(MifosCurrency currency, String amount) {
-		this.currency = currency;
-		if (amount == null || "".equals(amount.trim()))
-			this.amount = null;
-		else
-			this.amount = setScale(new BigDecimal(amount));
+		if (usingNewMoney) {
+			this.currency = currency;
+			if (amount == null || "".equals(amount.trim())) {
+				this.amount = null;
+			} else {
+				this.amount = setScale(new BigDecimal(amount));
+			}
+		} else {
+			this.currency = currency;
+			if (amount == null || "".equals(amount.trim()))
+				this.amount = null;
+			else
+				this.amount = setScale(new BigDecimal(amount));			
+		}
 	}
 
 	public Money(String amount) {
-		this.currency = Configuration.getInstance().getSystemConfig()
-				.getCurrency();
-		if (amount == null || "".equals(amount.trim()))
-			this.amount = null;
-
-		else
-			this.amount = setScale(new BigDecimal(amount));
+		if (usingNewMoney) {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			if (amount == null || "".equals(amount.trim())) {
+				this.amount = null;
+			} else {
+				this.amount = setScale(new BigDecimal(amount));
+			}
+		} else {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			if (amount == null || "".equals(amount.trim()))
+				this.amount = null;
+			else
+				this.amount = setScale(new BigDecimal(amount));
+		}
 	}
 
 	/**
@@ -82,15 +118,25 @@ public final class Money implements Serializable {
 	 * 
 	 */
 	public Money(MifosCurrency currency, BigDecimal amount) {
-		this.currency = currency;
-		this.amount = setScale(amount);
+		if (usingNewMoney) {
+			this.currency = currency;
+			this.amount = setScale(amount);
+		} else {
+			this.currency = currency;
+			this.amount = setScale(amount);			
+		}
 	}
 
 	public Money(BigDecimal amount) {
-		this.currency = Configuration.getInstance().getSystemConfig()
-				.getCurrency();
-		this.amount = amount;
-
+		if (usingNewMoney) {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			this.amount = amount;
+		} else {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			this.amount = amount;
+		}
 	}
 
 	/**
@@ -98,10 +144,15 @@ public final class Money implements Serializable {
 	 * set to zero.
 	 */
 	public Money() {
-		this.currency = Configuration.getInstance().getSystemConfig()
-				.getCurrency();
-		this.amount = setScale(new BigDecimal(0));
-
+		if (usingNewMoney) {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			this.amount = setScale(new BigDecimal(0));
+		} else {
+			this.currency = Configuration.getInstance().getSystemConfig()
+			.getCurrency();
+			this.amount = setScale(new BigDecimal(0));			
+		}
 	}
 
 	public BigDecimal getAmount() {
@@ -129,6 +180,14 @@ public final class Money implements Serializable {
 	 * new Money object corresponding to the value.
 	 */
 	public Money add(Money money) {
+		if (usingNewMoney) {
+			return add_v2(money);
+		} else {
+			return add_v1(money);
+		}
+	}
+
+	private Money add_v1(Money money) {
 		if (null != money) {
 			if (isCurrencyDifferent(money))
 				throw new IllegalArgumentException(
@@ -137,15 +196,34 @@ public final class Money implements Serializable {
 		return (money == null || money.getAmount() == null || money
 				.getCurrency() == null) ? this : new Money(this.currency,
 				setScale(this.amount.add(money.getAmount())));
-
 	}
 
+	private Money add_v2(Money money) {
+		if (null != money) {
+			if (isCurrencyDifferent(money))
+				throw new IllegalArgumentException(
+						ExceptionConstants.ILLEGALMONEYOPERATION);
+		}
+		return (money == null || money.getAmount() == null || money
+				.getCurrency() == null) ? this : new Money(this.currency,
+				setScale(this.amount.add(money.getAmount())));
+	}
+
+	
 	/**
 	 * If the object passed as parameter is null or if its currency or amount is
 	 * null it returns this else performs the required operation and returns a
 	 * new Money object corresponding to the value.
 	 */
 	public Money subtract(Money money) {
+		if (usingNewMoney) {
+			return subtract_v2(money);
+		} else {
+			return subtract_v1(money);
+		}
+	}
+
+	private Money subtract_v1(Money money) {
 		if (null != money) {
 			if (isCurrencyDifferent(money))
 				throw new IllegalArgumentException(
@@ -154,15 +232,34 @@ public final class Money implements Serializable {
 		return (money == null || money.getAmount() == null || money
 				.getCurrency() == null) ? this : new Money(this.currency,
 				setScale(this.amount.subtract(money.getAmount())));
-
 	}
 
+	private Money subtract_v2(Money money) {
+		if (null != money) {
+			if (isCurrencyDifferent(money))
+				throw new IllegalArgumentException(
+						ExceptionConstants.ILLEGALMONEYOPERATION);
+		}
+		return (money == null || money.getAmount() == null || money
+				.getCurrency() == null) ? this : new Money(this.currency,
+				setScale(this.amount.subtract(money.getAmount())));
+	}
+
+	
 	/**
 	 * If the object passed as parameter is null or if its currency or amount is
 	 * null it returns this else performs the required operation and returns a
 	 * new Money object corresponding to the value.
 	 */
 	public Money multiply(Money money) {
+		if (usingNewMoney) {
+			return multiply_v2(money);
+		} else {
+			return multiply_v1(money);
+		}
+	}
+
+	private Money multiply_v1(Money money) {
 		if (null != money) {
 			if (isCurrencyDifferent(money))
 				throw new IllegalArgumentException(
@@ -171,10 +268,29 @@ public final class Money implements Serializable {
 		return (money == null || money.getAmount() == null || money
 				.getCurrency() == null) ? this : new Money(this.currency,
 				setScale(this.amount.multiply(money.getAmount())));
-
 	}
 
+	private Money multiply_v2(Money money) {
+		if (null != money) {
+			if (isCurrencyDifferent(money))
+				throw new IllegalArgumentException(
+						ExceptionConstants.ILLEGALMONEYOPERATION);
+		}
+		return (money == null || money.getAmount() == null || money
+				.getCurrency() == null) ? this : new Money(this.currency,
+				setScale(this.amount.multiply(money.getAmount())));
+	}
+
+	
 	public Money multiply(Double factor) {
+		if (usingNewMoney) {
+			return multiply_v2(factor);
+		} else {
+			return multiply_v1(factor);
+		}
+	}
+
+	private Money multiply_v1(Double factor) {
 		if (factor != null)
 			return new Money(this.currency, setScale(this.amount
 					.multiply(new BigDecimal(factor))));
@@ -183,12 +299,30 @@ public final class Money implements Serializable {
 					ExceptionConstants.ILLEGALMONEYOPERATION);
 	}
 
+	private Money multiply_v2(Double factor) {
+		if (factor != null)
+			return new Money(this.currency, setScale(this.amount
+					.multiply(new BigDecimal(factor))));
+		else
+			throw new IllegalArgumentException(
+					ExceptionConstants.ILLEGALMONEYOPERATION);
+	}
+
+	
 	/**
 	 * If the object passed as parameter is null or if its currency or amount is
 	 * null it returns this else performs the required operation and returns a
 	 * new Money object corresponding to the value.
 	 */
 	public Money divide(Money money) {
+		if (usingNewMoney) {
+			return divide_v2(money);
+		} else {
+			return divide_v1(money);
+		}
+	}
+
+	private Money divide_v1(Money money) {
 		if (null != money) {
 			if (isCurrencyDifferent(money))
 				throw new IllegalArgumentException(
@@ -199,7 +333,31 @@ public final class Money implements Serializable {
 				setScale(this.amount.divide(money.getAmount())));
 	}
 
+	private Money divide_v2(Money money) {
+		if (null != money) {
+			if (isCurrencyDifferent(money))
+				throw new IllegalArgumentException(
+						ExceptionConstants.ILLEGALMONEYOPERATION);
+		}
+		return (money == null || money.getAmount() == null || money
+				.getCurrency() == null) ? this : new Money(this.currency,
+				setScale(this.amount.divide(money.getAmount())));
+	}
+	
 	public Money negate() {
+		if (usingNewMoney) {
+			return negate_v2();
+		} else {
+			return negate_v1();
+		}
+	}
+
+	private Money negate_v1() {
+		BigDecimal tempAmnt = this.amount.negate();
+		return new Money(this.currency, setScale(tempAmnt));
+	}
+
+	private Money negate_v2() {
 		BigDecimal tempAmnt = this.amount.negate();
 		return new Money(this.currency, setScale(tempAmnt));
 	}
@@ -217,6 +375,29 @@ public final class Money implements Serializable {
 	 * 
 	 */
 	public static Money round(Money money) {
+		if (usingNewMoney) {
+			return round_v2(money);
+		} else {
+			return round_v1(money);
+		}
+	}
+
+	private static Money round_v1(Money money) {
+		if (null != money) {
+			BigDecimal roundingAmount = new BigDecimal(money.getCurrency()
+					.getRoundingAmount().doubleValue());
+			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount);
+
+			nearestFactor = nearestFactor.setScale(
+				0, money.getCurrency().getRoundingModeEnum());
+
+			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+			return new Money(money.getCurrency(), roundedAmount);
+		}
+		return money;
+	}
+
+	private static Money round_v2(Money money) {
 		if (null != money) {
 			BigDecimal roundingAmount = new BigDecimal(money.getCurrency()
 					.getRoundingAmount().doubleValue());
@@ -272,5 +453,6 @@ public final class Money implements Serializable {
 			return amount.toString();
 		return "0";
 	}
+
 
 }

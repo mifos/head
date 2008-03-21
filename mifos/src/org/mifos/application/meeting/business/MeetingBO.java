@@ -58,7 +58,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
- * This class encapsulate the meeting
+ * A better name for MeetingBO would be along the lines of "ScheduledEvent".
+ * To see what a "meeting" can be look at {@link MeetingType}.  It encompasses
+ * not only a customer meeting, but also financial events like loan installments,
+ * interest posting and the like.  This should be refactored, perhaps from a 
+ * ScheduledEvent base class with subclasses that correspond to the different
+ * MeetingType entries.  In this way a member like meetingPlace could be 
+ * associated with the CustomerMeeting rather than all MeetingTypes.
  */
 public class MeetingBO extends BusinessObject {
 	

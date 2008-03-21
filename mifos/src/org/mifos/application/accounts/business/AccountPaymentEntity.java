@@ -53,6 +53,11 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
 
+/*
+ * Seems to be used to record information about a payment.
+ * 
+ * Has some duplicate information that is contained in {@link AccountTrxnEntity}
+ */
 public class AccountPaymentEntity extends PersistentObject {
 
     private final Integer paymentId = null;

@@ -1507,6 +1507,12 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
+	/*
+	 * PaymentData is the payment information entered in the UI
+	 * 
+	 * An AccountPaymentEntity is created from the PaymentData passed in.
+	 * 
+	 */
 	@Override
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException {
@@ -1725,7 +1731,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	protected final void applyRounding() {
-		if (!isPricipalZeroInAnyInstallmemt()) {
+		if (!isPrincipalZeroInAnyInstallmemt()) {
 			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
 			Money diffAmount = new Money();
 			int count = 0;
@@ -1908,7 +1914,49 @@ public class LoanBO extends AccountBO {
 		return rateAmount.toString();
 	}
 
+	/*
+	 * Refactoring in progress as of March 20, 2008
+	 */
+
+	/*
+	 * usingNewLoanSchedulingMethod is a global setting to switch 
+	 * between the old calculation method and the new one which is 
+	 * under development.  Ideally, it would be nice to separate the 
+	 * schedule calculation code from the loan code, so that it could
+	 * be pluggable, perhaps as a Strategy pattern.  We'll see if we want 
+	 * to go that far or not with the refactoring.  
+	 * 
+	 * This switching code will go away 
+	 * once the new method is complete and tested. 
+	 */
+	private static boolean usingNewLoanSchedulingMethod = false;
+	
+	public static boolean isUsingNewLoanSchedulingMethod() {
+		return usingNewLoanSchedulingMethod;
+	}
+
+	public static void setUsingNewLoanSchedulingMethod(boolean useNewLoanSchedulingMethod) {
+		usingNewLoanSchedulingMethod = useNewLoanSchedulingMethod;
+	}
+
+	/*
+	 * generateMeetingSchedule can delegate to generateMeetingSchedule_v1 
+	 * (the original) or generateMeetingSchedule_v2 (refactored version)
+	 */	
 	private void generateMeetingSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
+		if (isUsingNewLoanSchedulingMethod()) {
+			generateMeetingSchedule_v2(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
+		} else {
+			generateMeetingSchedule_v1(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);			
+		}
+	}
+
+	/*
+	 * Refactoring in progress as of March 20, 2008
+	 */
+	private void generateMeetingSchedule_v1(
+			boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
 		if(isRepaymentIndepOfMeetingEnabled){
@@ -1953,7 +2001,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private Boolean isPricipalZeroInAnyInstallmemt() {
+	private Boolean isPrincipalZeroInAnyInstallmemt() {
 		for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
 			if (((LoanScheduleEntity) accountActionDate).isPrincipalZero()) {
 				return true;
@@ -3466,4 +3514,546 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	public boolean isOfProductOffering(LoanOfferingBO loanOfferingBO) {
 		return this.loanOffering.equals(loanOfferingBO);
 	}
+
+/***********************************
+ * Financial Calculation Refactoring
+ ***********************************/
+	
+	private void generateMeetingSchedule_v2(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Generating meeting schedule... ");
+		if(isRepaymentIndepOfMeetingEnabled){
+			setLoanMeeting(newMeetingForRepaymentDay);
+		}
+		List<InstallmentDate> installmentDates;
+		if (isRepaymentIndepOfMeetingEnabled)
+		installmentDates = getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
+					getLoanMeeting(), noOfInstallments,
+					getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),isRepaymentIndepOfMeetingEnabled);
+		else
+		installmentDates = getInstallmentDates(
+				getLoanMeeting(), noOfInstallments,
+				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled));
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Obtained intallments dates");
+		Money loanInterest = getLoanInterest_v2(installmentDates.get(
+				installmentDates.size() - 1).getInstallmentDueDate());
+		List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Emi installment  obtained ");
+		validateSize(installmentDates, EMIInstallments);
+		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
+		if (getAccountFees().size() != 0) {
+			populateAccountFeeAmount(getAccountFees(), loanInterest);
+			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
+		}
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Fee installment obtained ");
+		generateRepaymentSchedule(installmentDates, EMIInstallments,
+				feeInstallment);
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Meeting schedule generated  ");
+		applyRounding_v2();
+	}
+	
+	private Money getLoanInterest_v2(Date installmentEndDate)
+	throws AccountException {
+		if (getLoanOffering().getInterestTypes().getId().equals(
+				InterestType.FLAT.getValue()))
+			return getFlatInterestAmount_v2(installmentEndDate);
+		if (getLoanOffering().getInterestTypes().getId().equals(
+				InterestType.DECLINING.getValue()) 
+				|| getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING_EPI.getValue()))
+			return getDecliningInterestAmount_v2(installmentEndDate);
+
+		return null;
+	}
+
+	// why not pass "100" as a string rather than Double.toString(100)?
+	// seems like the Double.toString call could introduce small errors
+	private Money getFlatInterestAmount_v2(Date installmentEndDate)
+			throws AccountException {
+		Double interestRate = getInterestRate();
+		Double durationInYears = getTotalDurationInYears(installmentEndDate);
+		Money interestRateM = new Money(Double.toString(interestRate));
+		Money durationInYearsM = new Money(Double.toString(durationInYears));
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Get interest duration in years..." + durationInYears);
+		// the calls to Money.multiply() and Money.divide() round prematurely!
+		Money interest = getLoanAmount().multiply(
+				interestRateM.multiply(durationInYearsM)).divide(
+				new Money(Double.toString(100)));
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Get interest accumulated..." + interest);
+		return interest;
+	}
+
+	/*
+	 * double --> BigDecimal
+	 */
+	private Money getDecliningInterestAmount_v2(Date installmentEndDate)
+			throws AccountException {
+
+		double annualPeriod = getDecliningInterestAnnualPeriods();
+		Double interestRate = getInterestRate();
+		//i*P / [1- (1+i)^-n]
+
+		Double durationInYears = getTotalDurationInYears_v2(installmentEndDate);
+		double interestRatePerPeriod = interestRate / 100 / annualPeriod;
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"DecliningInterestCalculator:getInterest duration in years..."
+						+ durationInYears);
+
+		int usedPeriods = getNoOfInstallments();
+		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
+			usedPeriods = usedPeriods - getGracePeriodDuration();
+		}
+
+		double interest = getLoanAmount().getAmountDoubleValue()
+				* (interestRate / 100 / annualPeriod)
+				/ (1.00d - Math.pow(1.00d + interestRatePerPeriod, -1.00d
+						* usedPeriods));
+
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"DecliningInterestCalculator:getInterest interest accumulated..."
+						+ interest);
+
+
+		return new Money(Double.toString(interest));
+	}
+	
+	/*
+	 * double --> BigDecimal
+	 */
+	private double getTotalDurationInYears_v2(Date installmentEndDate)
+	throws AccountException {
+		int interestDays = getInterestDays();
+		int daysInWeek = getDaysInWeek();
+		int daysInMonth = getDaysInMonth();
+
+		Short recurrenceType = this.getLoanMeeting().getMeetingDetails()
+		.getRecurrenceType().getRecurrenceId();
+		int duration = getNoOfInstallments()
+		* this.getLoanMeeting().getMeetingDetails().getRecurAfter();
+		if (interestDays == AccountConstants.INTEREST_DAYS_360) {
+			if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
+				double totalWeekDays = duration * daysInWeek;
+				double durationInYears = totalWeekDays
+				/ AccountConstants.INTEREST_DAYS_360;
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get total week days.." + totalWeekDays);
+				return durationInYears;
+			}
+			else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
+				double totalMonthDays = duration * daysInMonth;
+				double durationInYears = totalMonthDays
+				/ AccountConstants.INTEREST_DAYS_360;
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get total month days.." + totalMonthDays);
+				return durationInYears;
+			}
+			throw new AccountException(
+					AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
+		}
+		else if (interestDays == AccountConstants.INTEREST_DAYS_365) {
+			if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get interest week 365 days");
+				double totalWeekDays = duration * daysInWeek;
+				double durationInYears = totalWeekDays
+				/ AccountConstants.INTEREST_DAYS_365;
+				return durationInYears;
+			}
+			else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get interest month 365 days");
+
+				// will have to consider inc/dec time in some countries
+				Long installmentStartTime = getDisbursementDate().getTime();
+				Long installmentEndTime = installmentEndDate.getTime();
+				Long diffTime = installmentEndTime - installmentStartTime;
+				double daysDiff = diffTime / (1000 * 60 * 60 * 24);
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get start date..");
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get end date..");
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				.debug("Get diff in days..." + daysDiff);
+				double durationInYears = daysDiff
+				/ AccountConstants.INTEREST_DAYS_365;
+				return durationInYears;
+			}
+			throw new AccountException(
+					AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
+		}
+		else throw new AccountException(
+				AccountConstants.NOT_SUPPORTED_INTEREST_DAYS);
+	}
+
+	private List<EMIInstallment> generateEMI_v2(Money loanInterest)
+	throws AccountException {
+		if (isInterestDeductedAtDisbursement()
+				&& !getLoanOffering().isPrinDueLastInst())
+			return interestDeductedAtDisbursement_v2(loanInterest);
+
+		if (getLoanOffering().isPrinDueLastInst()
+				&& !isInterestDeductedAtDisbursement()) {
+			if (getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.FLAT.getValue())) {
+				return principalInLastPayment_v2(loanInterest);
+			}
+			else if ((getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.DECLINING.getValue())) 
+					|| (getLoanOffering().getInterestTypes().getId().equals( 
+							InterestType.DECLINING_EPI.getValue()))) {
+				return principalInLastPaymentDecliningInterest_v2(loanInterest);
+			}
+		}
+
+		if (!getLoanOffering().isPrinDueLastInst()
+				&& !isInterestDeductedAtDisbursement()) {
+			if (getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.FLAT.getValue())) {
+				return allInstallments_v2(loanInterest);
+			}
+			else if ((getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.DECLINING.getValue())) 
+					|| (getLoanOffering().getInterestTypes().getId().equals
+							( InterestType.DECLINING_EPI.getValue()))) {
+				return allDecliningInstallments_v2(loanInterest);
+			}
+		}
+		if (getLoanOffering().isPrinDueLastInst()
+				&& isInterestDeductedAtDisbursement())
+			return interestDeductedFirstPrincipalLast_v2(loanInterest);
+
+		throw new AccountException(
+				AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
+	}
+
+	private List<EMIInstallment> interestDeductedAtDisbursement_v2(
+			Money loanInterest) throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		// grace can only be none
+		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
+				|| getGraceType() == GraceType.PRINCIPALONLYGRACE)
+			throw new AccountException(
+					AccountConstants.INTERESTDEDUCTED_INVALIDGRACETYPE);
+
+		if (getGraceType() == GraceType.NONE) {
+			Money interestFirstInstallment = loanInterest;
+			// principal starts only from the second installment
+			Money principalPerInstallment = new Money(Double
+					.toString(getLoanAmount().getAmountDoubleValue()
+							/ (getNoOfInstallments() - 1)));
+			EMIInstallment installment = new EMIInstallment();
+			installment.setPrincipal(new Money());
+			installment.setInterest(interestFirstInstallment);
+			emiInstallments.add(installment);
+			for (int i = 1; i < getNoOfInstallments(); i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(principalPerInstallment);
+				installment.setInterest(new Money());
+
+				emiInstallments.add(installment);
+			}
+		}
+		return emiInstallments;
+	}
+
+	private List<EMIInstallment> principalInLastPayment_v2(Money loanInterest)
+			throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		// grace can only be none
+		if (getGraceType() == GraceType.PRINCIPALONLYGRACE)
+			throw new AccountException(
+					AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
+		if (getGraceType() == GraceType.NONE
+				|| getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
+			Money principalLastInstallment = getLoanAmount();
+			// principal starts only from the second installment
+			Money interestPerInstallment = new Money(Double
+					.toString(loanInterest.getAmountDoubleValue()
+							/ getNoOfInstallments()));
+			EMIInstallment installment = null;
+			for (int i = 0; i < getNoOfInstallments() - 1; i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(new Money());
+				installment.setInterest(interestPerInstallment);
+				emiInstallments.add(installment);
+			}
+			// principal set in the last installment
+			installment = new EMIInstallment();
+			installment.setPrincipal(principalLastInstallment);
+			installment.setInterest(interestPerInstallment);
+			emiInstallments.add(installment);
+			return emiInstallments;
+		}
+		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+	}
+
+	private List<EMIInstallment> principalInLastPaymentDecliningInterest_v2(
+			Money loanInterest) throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		// grace can only be none
+		if (getGraceType() == GraceType.PRINCIPALONLYGRACE)
+			throw new AccountException(
+					AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
+		if (getGraceType() == GraceType.NONE
+				|| getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
+			Money principalLastInstallment = getLoanAmount();
+
+			Money interestPerInstallment = new Money(
+					Double
+							.toString(getLoanAmount().getAmountDoubleValue()
+									* (getInterestRate() / 100 / getDecliningInterestAnnualPeriods())));
+			EMIInstallment installment = null;
+			for (int i = 0; i < getNoOfInstallments() - 1; i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(new Money());
+				installment.setInterest(interestPerInstallment);
+				emiInstallments.add(installment);
+			}
+			// principal set in the last installment
+			installment = new EMIInstallment();
+			installment.setPrincipal(principalLastInstallment);
+			installment.setInterest(interestPerInstallment);
+			emiInstallments.add(installment);
+			return emiInstallments;
+		}
+		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+	}
+
+
+	private List<EMIInstallment> allInstallments_v2(Money loanInterest)
+			throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
+				|| getGraceType() == GraceType.NONE) {
+			Money principalPerInstallment = new Money(Double
+					.toString(getLoanAmount().getAmountDoubleValue()
+							/ getNoOfInstallments()));
+			Money interestPerInstallment = new Money(Double
+					.toString(loanInterest.getAmountDoubleValue()
+							/ getNoOfInstallments()));
+			EMIInstallment installment = null;
+			for (int i = 0; i < getNoOfInstallments(); i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(principalPerInstallment);
+				installment.setInterest(interestPerInstallment);
+				emiInstallments.add(installment);
+			}
+			return emiInstallments;
+		}
+
+		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
+			Money principalPerInstallment = new Money(
+					Double
+							.toString(getLoanAmount().getAmountDoubleValue()
+									/ (getNoOfInstallments() - getGracePeriodDuration())));
+			Money interestPerInstallment = new Money(Double
+					.toString(loanInterest.getAmountDoubleValue()
+							/ getNoOfInstallments()));
+			EMIInstallment installment = null;
+			for (int i = 0; i < getGracePeriodDuration(); i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(new Money());
+				installment.setInterest(interestPerInstallment);
+				emiInstallments.add(installment);
+			}
+			for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(principalPerInstallment);
+				installment.setInterest(interestPerInstallment);
+				emiInstallments.add(installment);
+			}
+			return emiInstallments;
+		}
+		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+	}
+
+	private List<EMIInstallment> allDecliningInstallments_v2(Money loanInterest)
+			throws AccountException {
+
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
+				|| getGraceType() == GraceType.NONE) {
+
+			double principalBalance = getLoanAmount().getAmountDoubleValue();
+			double principalPerInstallmentEqual = getLoanAmount().getAmountDoubleValue()
+							/ getNoOfInstallments();
+
+			EMIInstallment installment = null;
+			double principalPaidCurrentPeriod = 0;
+			double interestPerInstallment = 0;
+			for (int i = 0; i < getNoOfInstallments(); i++) {
+
+				installment = new EMIInstallment();
+
+				if (principalBalance > 0) {
+					interestPerInstallment = Math
+							.abs(principalBalance
+									* ((getInterestRate().doubleValue() / 100) / getDecliningInterestAnnualPeriods()));
+				}
+
+				Money interstPerInstallmentM = new Money(Double
+						.toString(interestPerInstallment));
+				installment.setInterest(interstPerInstallmentM);
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = Math.abs(principalPerInstallmentEqual);
+					
+				}
+				
+				installment.setPrincipal(new Money(Double
+						.toString(principalPaidCurrentPeriod)));
+				principalBalance = principalBalance
+						- principalPaidCurrentPeriod;
+				emiInstallments.add(installment);
+			}
+
+			return emiInstallments;
+		}
+
+		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
+			double principalBalance = getLoanAmount().getAmountDoubleValue();
+			double interestPerInstallment = Math
+					.abs(principalBalance
+							* ((getInterestRate().doubleValue() / 100) / getDecliningInterestAnnualPeriods()));
+			Money interestPerInstallmentM = new Money(Double
+					.toString(interestPerInstallment));
+			EMIInstallment installment = null;
+			for (int i = 0; i < getGracePeriodDuration(); i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(new Money());
+				installment.setInterest(interestPerInstallmentM);
+				emiInstallments.add(installment);
+			}
+			double principalPaidCurrentPeriod = 0;
+			for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
+
+				installment = new EMIInstallment();
+				//soham
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}	
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
+														/ (getNoOfInstallments()- getGracePeriodDuration());
+					
+				}
+				if (principalBalance > 0) {
+					interestPerInstallment = Math
+							.abs(principalBalance
+									* ((getInterestRate().doubleValue() / 100) / getDecliningInterestAnnualPeriods()));
+				}
+				installment.setPrincipal(new Money(Double
+						.toString(principalPaidCurrentPeriod)));
+				Money interstPerInstallmentM = new Money(Double
+						.toString(interestPerInstallment));
+				installment.setInterest(interstPerInstallmentM);
+
+				//TODO: 28-Jan-08 Why is this repeated? Removing this fails the test 
+				//testCreateLoanAccountWithDecliningInterestGracePrincipalOnly.
+				//Thus currently left it as is with changes for declining_epi
+				
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) {
+					principalPaidCurrentPeriod = Math.abs(loanInterest
+							.getAmountDoubleValue()
+							- interestPerInstallment);
+				}	
+				else if (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))	{
+					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
+														/ (getNoOfInstallments()- getGracePeriodDuration());
+					
+				}
+				// principalPaidCurrentPeriod = Math.abs(loanInterest
+				//		.getAmountDoubleValue()
+				//		- interestPerInstallment);
+				installment.setPrincipal(new Money(Double
+						.toString(principalPaidCurrentPeriod)));
+				principalBalance = principalBalance
+						- principalPaidCurrentPeriod;
+				emiInstallments.add(installment);
+			}
+
+			return emiInstallments;
+		}
+		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+	}
+
+	private List<EMIInstallment> interestDeductedFirstPrincipalLast_v2(
+			Money loanInterest) throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
+				|| getGraceType() == GraceType.PRINCIPALONLYGRACE)
+			throw new AccountException(
+					AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
+		if (getGraceType() == GraceType.NONE) {
+			Money principalLastInstallment = getLoanAmount();
+			Money interestFirstInstallment = loanInterest;
+
+			EMIInstallment installment = null;
+			installment = new EMIInstallment();
+			installment.setPrincipal(new Money());
+			installment.setInterest(interestFirstInstallment);
+			emiInstallments.add(installment);
+			for (int i = 1; i < getNoOfInstallments() - 1; i++) {
+				installment = new EMIInstallment();
+				installment.setPrincipal(new Money());
+				installment.setInterest(new Money());
+				emiInstallments.add(installment);
+			}
+			installment = new EMIInstallment();
+			installment.setPrincipal(principalLastInstallment);
+			installment.setInterest(new Money());
+			emiInstallments.add(installment);
+			return emiInstallments;
+		}
+		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+	}
+
+	protected final void applyRounding_v2() {
+		if (!isPrincipalZeroInAnyInstallmemt()) {
+			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
+			Money diffAmount = new Money();
+			int count = 0;
+			List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
+			for (AccountActionDateEntity accountActionDate : unpaidInstallments) {
+				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+				count++;
+				if (lastAccountActionDate.getInstallmentId().equals(
+						loanScheduleEntity.getInstallmentId())) {
+					continue;
+				}
+				Money totalAmount = loanScheduleEntity.getTotalDueWithFees();
+				Money roundedTotalAmount = Money.round(totalAmount);
+				loanScheduleEntity.setPrincipal(loanScheduleEntity
+						.getPrincipal().subtract(
+								totalAmount.subtract(roundedTotalAmount)));
+				diffAmount = diffAmount.add(totalAmount
+						.subtract(roundedTotalAmount));
+
+			}
+			lastAccountActionDate.setPrincipal(lastAccountActionDate
+					.getPrincipal().add(diffAmount));
+		}
+	}
+
+	
 }
