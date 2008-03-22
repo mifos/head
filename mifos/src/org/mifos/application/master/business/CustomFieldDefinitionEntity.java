@@ -141,7 +141,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		
 		Set<LookUpValueEntity> lookUpValues = new HashSet<LookUpValueEntity>();
 		LookUpValueEntity lookupValue = new LookUpValueEntity();
-		lookupValue.setLookUpName("");
+		lookupValue.setLookUpName(labelName);
 		lookupValue.setLookUpEntity(lookupEntity);
 		lookUpValues.add(lookupValue);
 		lookupEntity.setLookUpValues(lookUpValues);

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
+import org.mifos.framework.security.activity.DynamicLookUpValueCreationTypes;
 
 public class StringUtilsTest {
 	public static junit.framework.Test suite() {
@@ -44,6 +45,22 @@ public class StringUtilsTest {
 	public void testCamelCase() {
 		assertEquals("AbcDef_ghIjKL", StringUtils
 				.camelCase("aBc dEF_gh-iJ  k.l"));
+	}
+	
+	@Test
+	public void testGenerateLookupName() {
+		String newElementText = "OfficeLevels";
+		String lookupName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(), 
+				newElementText);
+		assertEquals(0, lookupName.indexOf("DBUpgrade"));
+		String tooLong = 
+			  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+			+ "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+			+ "0";
+		lookupName = StringUtils.generateLookupName(DynamicLookUpValueCreationTypes.DBUpgrade.name(), 
+				tooLong);
+		assertEquals(100, lookupName.length());
+		
 	}
 
 	@Test

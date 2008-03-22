@@ -51,11 +51,14 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import java.text.DateFormat;
 import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.mifos.framework.util.helpers.DateUtils;
 
 
@@ -140,6 +143,15 @@ public class CustomFieldsActionForm extends BaseActionForm{
 	}
 	
 	private void validateDefaultValue(ActionErrors errors, HttpServletRequest request){
+		if (StringUtils.isNullOrEmpty(dataType))
+		{
+			Locale locale = getUserContext(request).getPreferredLocale();
+			ResourceBundle resources = ResourceBundle.getBundle (FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, 
+					locale);
+			String dataTypeParam = resources.getString("configuration.data_type");
+			addError(errors, dataType, "errors.mandatory_selectbox", dataTypeParam);
+			return;
+		}
 		Short dataTypeValue = Short.parseShort(dataType);
 		if (dataTypeValue.equals(CustomFieldType.NUMERIC.getValue()) && (!StringUtils.isNullOrEmpty(defaultValue)))
 		{

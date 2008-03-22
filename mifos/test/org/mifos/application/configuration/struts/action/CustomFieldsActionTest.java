@@ -420,7 +420,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("categoryType", CustomFieldCategory.Client.mapToEntityType().getValue().toString());
-		addRequestParameter("labelName", "Custom Field for Client");
+		addRequestParameter("labelName", "Custom Field for Client 2");
 		addRequestParameter("dataType", CustomFieldType.ALPHA_NUMERIC.getValue().toString());
 		addRequestParameter("defaultValue", "Client");
 		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
@@ -437,7 +437,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("categoryType", CustomFieldCategory.Group.mapToEntityType().getValue().toString());
-		addRequestParameter("labelName", "Custom Field for Group");
+		addRequestParameter("labelName", "Custom Field for Group 2");
 		addRequestParameter("dataType", CustomFieldType.DATE.getValue().toString());
 		addRequestParameter("defaultValue", "20/08/2007");
 		addRequestParameter("mandatoryField", YesNoFlag.YES.getValue().toString());
@@ -454,7 +454,7 @@ public class CustomFieldsActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customFieldsAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("categoryType", CustomFieldCategory.Center.mapToEntityType().getValue().toString());
-		addRequestParameter("labelName", "Custom Field for Center");
+		addRequestParameter("labelName", "Custom Field for Center 2");
 		addRequestParameter("dataType", CustomFieldType.NUMERIC.getValue().toString());
 		addRequestParameter("defaultValue", "10.2");
 		addRequestParameter("mandatoryField", YesNoFlag.NO.getValue().toString());

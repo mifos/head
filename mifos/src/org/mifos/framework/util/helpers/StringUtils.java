@@ -53,6 +53,8 @@ import org.mifos.framework.exceptions.PersistenceException;
  * 
  */
 public class StringUtils {
+	private static final short LookUpNameLength = 100;
+	
 	public StringUtils() {
 	}
 
@@ -133,8 +135,12 @@ public class StringUtils {
 		return csvString.substring(0, csvString.length() - 1);
 	}
 
+	// add test case
 	public static String generateLookupName(String type, String newElementText)
 	{
-		return StringUtils.camelCase(type + "." + camelCase(newElementText) + "." + System.currentTimeMillis());
+		String name = type + "." + camelCase(newElementText) + "." + System.currentTimeMillis();
+		if (name.length() > LookUpNameLength)
+			name = name.substring(0, LookUpNameLength);
+		return name;
 	}
 }
