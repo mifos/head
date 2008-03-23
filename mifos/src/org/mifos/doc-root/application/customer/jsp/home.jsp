@@ -143,7 +143,7 @@
 												
 											<tr class="fontnormal8pt">
 												<td width="88%">
-													<html-el:submit property="searchButton" styleClass="buttn" style="width:70px;">
+													<html-el:submit property="searchButton" styleClass="buttn">
 														<mifos:mifoslabel name="CustomerSearch.search"/>
 													</html-el:submit>
 												</td>

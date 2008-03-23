@@ -249,6 +249,8 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	XmlBuilder noResults(String officeName, String officeId, String searchString) {
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
 		XmlBuilder html = new XmlBuilder();
 		html.startTag("table", "width", "96%", "border", "0", "cellpadding",
 				"0", "cellspacing", "0");
@@ -256,16 +258,16 @@ public class TableTag extends BodyTagSupport {
 		html.startTag("td", "colspan", "2", "valign", "top");
 		html.singleTag("br");
 		html.startTag("span", "class", "headingorange");
-		html.text("No results found");
-		html.text(" for ");
+		html.text(resources.getString("Customer.noResultsFoundFor") + " ");
 		html.startTag("span", "class", "heading");
 		html.text(searchString);
 		html.text(" ");
 		html.endTag("span");
+		String inString = resources.getString("Customer.in");
 		if (officeId.equals(ALL_BRANCHES)) {
-			renderInClause(html, "All Branches");
+			renderInClause(html, resources.getString("Customer.allBranches"), inString);
 		} else {
-			renderInClause(html, officeName);
+			renderInClause(html, officeName, inString);
 		}
 
 		html.endTag("span");
@@ -286,9 +288,9 @@ public class TableTag extends BodyTagSupport {
 		return html;
 	}
 
-	private void renderInClause(XmlBuilder html, String myOfficeName) {
+	private void renderInClause(XmlBuilder html, String myOfficeName, String inString) {
 		html.startTag("span", "class", "headingorange");
-		html.text(" in");
+		html.text(" " + inString);
 		html.endTag("span");
 
 		html.text(" ");
@@ -301,6 +303,11 @@ public class TableTag extends BodyTagSupport {
 	private void createStartTable(StringBuilder result,
 			boolean headingRequired, boolean topBlueLineRequired)
 			throws PageExpiredException {
+		HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
 		if (headingRequired) {
 			String searchString = (String) SessionUtils.getAttribute(
 					Constants.SEARCH_STRING, (HttpServletRequest) pageContext
@@ -313,7 +320,7 @@ public class TableTag extends BodyTagSupport {
 							"<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">")
 					.append(
 							"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">")
-					.append(size + " results for </span>");
+					.append(size + " " + resources.getString("Customer.resultsFor") + " </span>");
 			result.append("<span class=\"heading\">"
 					+ MifosTagUtils.xmlEscape(searchString) + " </span>");
 			String officeId = (String) SessionUtils.getAttribute(
@@ -321,13 +328,13 @@ public class TableTag extends BodyTagSupport {
 							.getRequest());
 			if (officeId != null && officeId.equals("0")) {
 				result
-						.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-								+ "All Branches" + "</span>");
+						.append("<span class=\"headingorange\">" + resources.getString("Customer.in") + "</span> <span class=\"heading\">"
+								+ resources.getString("Customer.allBranches") + "</span>");
 			}
 
 			else {
 				result
-						.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
+						.append("<span class=\"headingorange\">" + resources.getString("Customer.in") + "</span> <span class=\"heading\">"
 								+ MifosTagUtils.xmlEscape(officeName)
 								+ "</span>");
 			}
@@ -363,7 +370,7 @@ public class TableTag extends BodyTagSupport {
 					.append(
 							"<tr><td height=\"35\" colspan=\"2\" align=\"center\" class=\"blueline\">")
 					.append(
-							"<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+							"<table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 		} else {
 			result
 					.append(
@@ -373,7 +380,7 @@ public class TableTag extends BodyTagSupport {
 					.append(
 							"<tr><td height=\"35\" colspan=\"2\" align=\"center\">")
 					.append(
-							"<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+							"<table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 		}
 	}
 

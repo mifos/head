@@ -47,6 +47,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -77,6 +78,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class ClientCustActionForm extends CustomerActionForm {
 
@@ -234,15 +236,19 @@ public class ClientCustActionForm extends CustomerActionForm {
 			String method) throws ApplicationException {
 
 		ActionErrors errors = new ActionErrors();
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
 		if ((method.equals(Methods.previewPersonalInfo.toString())
 				|| method.equals(Methods.next.toString()) || method
 				.equals(Methods.previewEditPersonalInfo.toString()))
 				&& (ClientConstants.INPUT_PERSONAL_INFO.equals(input) || ClientConstants.INPUT_EDIT_PERSONAL_INFO
 						.equals(input))) {
-			validateClientNames(errors);
-			validateDateOfBirth(request, errors);
-			validateGender(errors);
-			validateSpouseNames(errors);
+			validateClientNames(errors, resources);
+			validateDateOfBirth(request, errors, resources);
+			validateGender(errors, resources);
+			validateSpouseNames(errors, resources);
 			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
 			validateCustomFields(request, errors);
 			validatePicture(request, errors);
@@ -295,50 +301,63 @@ public class ClientCustActionForm extends CustomerActionForm {
 		}
 	}
 
-	private void validateGender(ActionErrors errors) {
+	private void validateGender(ActionErrors errors, ResourceBundle resources) {
 		if (clientDetailView.getGender() == null)
 			errors.add(CustomerConstants.GENDER, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.GENDER));
+					resources.getString("Customer.Gender")));
 	}
 
-	private void validateClientNames(ActionErrors errors) {
+	private void validateClientNames(ActionErrors errors, ResourceBundle resources) {
 		if (clientName.getSalutation() == null)
 			errors.add(CustomerConstants.SALUTATION, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.SALUTATION));
+					resources.getString("Customer.Salutation")));
 		if (StringUtils.isNullOrEmpty(clientName.getFirstName()))
 			errors.add(CustomerConstants.FIRST_NAME, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.FIRST_NAME));
+					resources.getString("Customer.FirstName")));
 		if (StringUtils.isNullOrEmpty(clientName.getLastName()))
 			errors.add(CustomerConstants.LAST_NAME, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.LAST_NAME));
+					resources.getString("Customer.LastName")));
 
 	}
 
-	private void validateSpouseNames(ActionErrors errors) {
+	private void validateSpouseNames(ActionErrors errors, ResourceBundle resources) {
 		if (spouseName.getNameType() == null)
 			errors.add(CustomerConstants.SPOUSE_TYPE, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.SPOUSE_TYPE));
+					resources.getString("Customer.SpouseType")));
 		if (StringUtils.isNullOrEmpty(spouseName.getFirstName()))
 			errors.add(CustomerConstants.SPOUSE_FIRST_NAME, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.SPOUSE_FIRST_NAME));
+					resources.getString("Customer.SpouseFirstName")));
 		if (StringUtils.isNullOrEmpty(spouseName.getLastName()))
 			errors.add(CustomerConstants.SPOUSE_LAST_NAME, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					CustomerConstants.SPOUSE_LAST_NAME));
+					resources.getString("Customer.SpouseLastName")));
 
 	}
-
+	
 	void validateDateOfBirth(HttpServletRequest request,
 			ActionErrors errors) {
+		validateDateOfBirth(request, errors, null);
+	}
+	
+	void validateDateOfBirth(HttpServletRequest request,
+			ActionErrors errors, ResourceBundle resources) {
 		if (StringUtils.isNullOrEmpty(getDateOfBirth())) {
-			errors.add(CustomerConstants.DOB, new ActionMessage(
-					CustomerConstants.ERRORS_MANDATORY, CustomerConstants.DOB));
+			if(resources == null)
+			{
+				errors.add(CustomerConstants.DOB, new ActionMessage(
+					CustomerConstants.ERRORS_MANDATORY, CustomerConstants.DOB));				
+			}
+			else
+			{
+				errors.add(CustomerConstants.DOB, new ActionMessage(
+					CustomerConstants.ERRORS_MANDATORY, resources.getString("Customer.DateOfBirth")));
+			}
 		}
 		
 		else {

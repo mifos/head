@@ -108,7 +108,7 @@
 			<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button property="btn"
-								styleClass="buttn" style="width:135px"
+								styleClass="buttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="label.backtodetailpage"
 									bundle="CustomerUIResources"></mifos:mifoslabel>

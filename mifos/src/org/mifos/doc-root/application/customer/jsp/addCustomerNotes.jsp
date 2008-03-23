@@ -89,11 +89,10 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="Customer.preview"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button
-								property="cancelBtn" styleClass="cancelbuttn" style="width:70px"
+								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="Customer.cancel"></mifos:mifoslabel>
 							</html-el:button></td>

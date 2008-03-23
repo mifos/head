@@ -155,11 +155,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="Customer.preview" />
 							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="Customer.cancel" />
 							</html-el:button></td>

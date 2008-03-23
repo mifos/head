@@ -110,6 +110,8 @@ public interface FilePaths {
 	public static String LOAN_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "LoanUIResources";
 	//org.mifos.application.accounts.savings.util.resources.SavingsUIResources
 	public static String SAVING_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "SavingsUIResources";
+	//org.mifos.application.accounts.savings.util.resources.CustomerUIResources
+	public static String CUSTOMER_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "CustomerUIResources";
 	// "org.mifos.application.accounts.util.resources.accountsUIResources"
 	public static String ACCOUNTS_UI_RESOURCE_PROPERTYFILE=LOCALIZED_RESOURCE_PATH + "accountsUIResources";
 	//org.mifos.application.configuration.util.resources.ConfigurationUIResources

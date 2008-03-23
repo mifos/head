@@ -38,6 +38,8 @@
 package org.mifos.framework.components.tabletag;
 
 import java.util.ResourceBundle;
+
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**
@@ -80,17 +82,23 @@ public class PageScroll {
 		 * if previous or next is not allowed then disable the respective link.
 		 */
 		
-		
+		String previousStr = resource.getString("Previous");
+		String nextStr = resource.getString("Next");
+		String resultsStr = resource.getString("Results");
+		resultsStr = resultsStr.replaceFirst("%s1", new Integer(pageStart).toString());
+		resultsStr = resultsStr.replaceFirst("%s2", new Integer(pageEnd).toString());
+		resultsStr = resultsStr.replaceFirst("%s3", new Integer(size).toString());
+
 		if (prev) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey,current-1)).append("</td>");
+			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey,current-1)).append("</td>");
 		} else {
-			result.append("<td width=\"75\" class=\"fontnormalboldgray\">Previous</td>");
+			result.append("<td width=\"20%\" class=\"fontnormalboldgray\">" + previousStr + "</td>");
 		}
-		result.append("<td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results "+ pageStart + "-" + pageEnd + " of " + size + " </td>");
+		result.append("<td width=\"40%\" align=\"center\" class=\"fontnormalbold\">" + resultsStr +  " </td>");
 		if (next) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Next"),"searchNext", currentFlowKey,current+1)).append("</td>");
+			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(getAnchor(action, nextStr,"searchNext", currentFlowKey,current+1)).append("</td>");
 		} else {
-			result.append("<td width=\"75\" align=\"right\" class=\"fontnormalboldgray\">Next</td>");
+			result.append("<td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">" + nextStr + "</td>");
 		}
 		result.append("</tr>");
 		return result.toString();

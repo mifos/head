@@ -24,7 +24,7 @@
 
 								<c:set var="OfficesList"
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesList')}" />
-							<td class="fontnormal">Search for: <html-el:text
+							<td class="fontnormal"><mifos:mifoslabel name="CustomerSearch.searchFor" isColonRequired="yes"/> <html-el:text
 								property="searchString" maxlength="200"/> 
 									
 								<html-el:select style="width:136px;" property="officeId">
@@ -60,7 +60,7 @@
 								</c:choose>
 								</html-el:select> 
 								&nbsp; <html-el:submit
-								style="width:60px;" styleClass="buttn">
+								styleClass="buttn">
 								<mifos:mifoslabel name="CustomerSearch.search" />
 							</html-el:submit></td>
 						</tr>

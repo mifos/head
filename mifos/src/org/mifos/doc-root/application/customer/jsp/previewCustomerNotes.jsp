@@ -84,7 +84,7 @@
                 </tr>
                 <tr>
                   <td align="left" valign="top">
-                  <html-el:button property="btn" style="width:65px;" styleClass="insidebuttn" onclick="goToEditPage(this.form)">
+                  <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage(this.form)">
                   <mifos:mifoslabel name="Customer.EditLabel"></mifos:mifoslabel>
                   </html-el:button>
                   </td>
@@ -100,11 +100,11 @@
                 <tr>
                   <td align="center">
                   
-				<html-el:submit styleClass="buttn" style="width:70px;">
+				<html-el:submit styleClass="buttn">
 					<mifos:mifoslabel name="Customer.submit" />
 				</html-el:submit>
                     &nbsp;&nbsp;
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage(this.form)">
+                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 	                    <mifos:mifoslabel name="Customer.cancel" />
                     </html-el:button>
 				</td>

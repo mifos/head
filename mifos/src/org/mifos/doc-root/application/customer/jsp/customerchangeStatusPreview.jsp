@@ -115,7 +115,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button property="editInfo"
-								value="Edit Status" styleClass="insidebuttn" style="width:65px;"
+								styleClass="insidebuttn"
 								onclick="GoToEditPage(this.form)">
 								<mifos:mifoslabel name="Customer.EditStatus"></mifos:mifoslabel>
 							</html-el:button></td>
@@ -128,10 +128,10 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit property="btn"
-								styleClass="buttn" style="width:70px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="Customer.submit"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="Customer.cancel"></mifos:mifoslabel>
 							</html-el:button></td>

@@ -166,7 +166,7 @@
 							<c:when test="${requestScope.method=='loadAdjustment'}">
 								<tr>
 									<td width="5%" valign="top" align="right" class="fontnormal"><mifos:mifoslabel
-										name="Customer.notes" mandatory="yes" />: <br>
+										name="Customer.Notes" mandatory="yes" />: <br>
 									</td>
 									<td width="95%" class="fontnormal"><html-el:textarea
 										property="adjustmentNote" cols="37"
@@ -175,7 +175,7 @@
 							</c:when>
 							<c:otherwise>
 								<td valign="top" align="right" class="fontnormalbold"><mifos:mifoslabel
-									name="Customer.notes" />: <br>
+									name="Customer.Notes" />: <br>
 								</td>
 								<td class="fontnormal"><c:out
 									value="${sessionScope.custApplyAdjustmentActionForm.adjustmentNote}" /></td>
@@ -195,14 +195,14 @@
 								<c:when test="${requestScope.method=='loadAdjustment'}">
 									<c:choose>
 										<c:when test="${requestScope.isDisabled}">
-											<html-el:submit styleClass="buttn" style="width:115px;"
+											<html-el:submit styleClass="buttn"
 												property="submit_btn" disabled="true">
 												<mifos:mifoslabel name="Customer.btn_reviewAdjustment">
 												</mifos:mifoslabel>
 											</html-el:submit>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleClass="buttn" style="width:115px;"
+											<html-el:submit styleClass="buttn"
 												property="submit_btn">
 												<mifos:mifoslabel name="Customer.btn_reviewAdjustment">
 												</mifos:mifoslabel>
@@ -211,14 +211,14 @@
 									</c:choose>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" style="width:65px;"
+									<html-el:submit styleClass="buttn"
 										property="submit_btn">
 										<mifos:mifoslabel name="Customer.submit">
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:otherwise>
 							</c:choose> &nbsp; <html-el:button styleClass="cancelbuttn"
-								style="width:65px;" onclick="javascript:fun_cancel(this.form)"
+								onclick="javascript:fun_cancel(this.form)"
 								property="cancel">
 								<mifos:mifoslabel name="Customer.cancel">
 								</mifos:mifoslabel>

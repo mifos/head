@@ -39,6 +39,8 @@
 package org.mifos.application.customer.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -49,6 +51,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class EditCustomerStatusActionForm extends BaseActionForm {
 	
@@ -235,14 +240,18 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
 
 	private ActionErrors handleStatusPreviewValidations(
 			HttpServletRequest request, ActionErrors errors) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
 		if (!StringUtils.isNullSafe(newStatusId))
-			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, CustomerConstants.STATUS_FIELD));
+			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.status")));
 		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
-			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, CustomerConstants.FLAG_FIELD));
+			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.flag")));
 		if (StringUtils.isNullOrEmpty(notes))
-			errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX, CustomerConstants.NOTES_FIELD));
+			errors.add(CustomerConstants.MANDATORY_TEXTBOX, new ActionMessage(CustomerConstants.MANDATORY_TEXTBOX, resources.getString("Customer.notes")));
 		else if (notes.length() > CustomerConstants.COMMENT_LENGTH)
-			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.NOTES_FIELD,CustomerConstants.COMMENT_LENGTH));
+			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(CustomerConstants.MAXIMUM_LENGTH, resources.getString("Customer.notes") ,CustomerConstants.COMMENT_LENGTH));
 		return errors;
 	}
 

@@ -39,6 +39,8 @@
 package org.mifos.application.customer.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -48,6 +50,9 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
 
 public class CustomerNotesActionForm extends ValidatorActionForm {
 
@@ -120,18 +125,22 @@ public class CustomerNotesActionForm extends ValidatorActionForm {
 	}
 
 	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
 		if (ValidateMethods.isNullOrBlank(getComment())) {
 			if (null == errors) {
 				errors = new ActionErrors();
 			}
 			errors.add(CustomerConstants.ERROR_MANDATORY_TEXT_AREA, new ActionMessage(
-					CustomerConstants.ERROR_MANDATORY_TEXT_AREA , CustomerConstants.NOTES_FIELD));
+					CustomerConstants.ERROR_MANDATORY_TEXT_AREA , resources.getString("Customer.notes")));
 		} else if (getComment().length() > CustomerConstants.COMMENT_LENGTH) {
 			if (null == errors) {
 				errors = new ActionErrors();
 			}
 			errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(
-					CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.NOTES_FIELD,
+					CustomerConstants.MAXIMUM_LENGTH, resources.getString("Customer.notes"),
 					CustomerConstants.COMMENT_LENGTH));
 		}
 		return errors;

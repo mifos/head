@@ -23,10 +23,7 @@
 								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesList')}" />
 							<c:out value='${Office}' /> <br>
 							</span><span class="fontnormalbold"> <mifos:mifoslabel
-								name="CustomerSearch.toreview" /> <mifos:mifoslabel
-								name="CustomerSearch.or" /> <mifos:mifoslabel
-								name="CustomerSearch.edit" /> <mifos:mifoslabel
-								name="CustomerSearch.a" /> <mifos:mifoslabel
+								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
 								<c:when test="${isCenterHeirarchyExists==Constants.YES}">
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
@@ -36,8 +33,7 @@
 								<c:otherwise>
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 	                  		</c:otherwise>
-							</c:choose> <mifos:mifoslabel name="CustomerSearch.or" /> <mifos:mifoslabel
-								name="CustomerSearch.account" /> </span></td>
+							</c:choose> <mifos:mifoslabel name="CustomerSearch.revieweditinstruction2" /> </span></td>
 						</tr>
 
 					</table>
@@ -76,7 +72,7 @@
 								<tr>
 									<td>&nbsp;</td>
 									<td align="right" class="paddingleft05notop"><html-el:submit
-										style="width:60px;" styleClass="buttn">
+										styleClass="buttn">
 										<mifos:mifoslabel name="CustomerSearch.search" />
 									</html-el:submit></td>
 								</tr>
@@ -112,9 +108,9 @@
 							</c:forEach> 
 									  </c:when>
 									<c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.no"/>
-											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
-											<mifos:mifoslabel name="CustomerSearch.available"/>
+											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/>
+											<mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
 									</c:otherwise>
 									</c:choose>
 							

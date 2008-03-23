@@ -190,9 +190,9 @@ public class TableTagTest extends TestCase {
 
 	public void testPageScroll(){
 		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1));
-		assertEquals("<tr><td width=\"75\" class=\"fontnormalboldgray\">Previous</td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234"));
-		assertEquals("<tr><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234"));
-		assertEquals("<tr><td width=\"75\" class=\"fontnormalboldgray\">Previous</td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"75\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234"));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234"));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234"));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234"));
 	}
 	public void testLink(){
 		assertEquals("",Link.createLink(new String []{""},null,null,null,null,null,null));

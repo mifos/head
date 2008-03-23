@@ -98,8 +98,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button
-								onclick="goToEditPage()" property="btn" styleClass="insidebuttn"
-								style="width:125px;">
+								onclick="goToEditPage()" property="btn" styleClass="insidebuttn">
 								<mifos:mifoslabel name="label.edithistoricaldata"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
 							</html-el:button></td>
@@ -112,11 +111,11 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit property="submitBtn"
-								styleClass="buttn" style="width:70px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="CustomerUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button
-								property="cancelBtn" styleClass="cancelbuttn" style="width:70px"
+								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="CustomerUIResources"></mifos:mifoslabel>

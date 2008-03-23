@@ -250,8 +250,7 @@
 									<td class="fontnormal"><mifos:mifoslabel
 										name="accounts.search_for" />:&nbsp; <html-el:text
 										styleId="111" property="searchString" maxlength="200"/> &nbsp;
-									<html-el:submit property="searchButton" styleClass="buttn"
-										style="width:70px;">
+									<html-el:submit property="searchButton" styleClass="buttn">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit></td>
 								</tr>
@@ -273,7 +272,7 @@
 							<table width="96%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td align="center"><html-el:button property="cancelButton"
-										styleClass="cancelbuttn" style="width:70px;"
+										styleClass="cancelbuttn"
 										onclick="javascript:fun_cancel(this.form)">
 										<mifos:mifoslabel name="accounts.cancel" />
 									</html-el:button></td>

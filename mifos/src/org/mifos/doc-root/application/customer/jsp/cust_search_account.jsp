@@ -212,13 +212,12 @@
 								<tr class="fontnormal">
 									<td width="30%">&nbsp;</td>
 									<td width="70%"><br>
-									<html-el:submit property="searchButton" styleClass="buttn"
-										style="width:70px;">
+									<html-el:submit property="searchButton" styleClass="buttn">
 										<mifos:mifoslabel name="accounts.search" />
 									</html-el:submit>&nbsp;
                                     <html-el:button property="cancelButton"
                                         onclick="javascript:fun_cancel(this.form)"
-                                        styleClass="cancelbuttn" style="width:70px;">
+                                        styleClass="cancelbuttn">
                                         <mifos:mifoslabel name="accounts.cancel" />
                                     </html-el:button>
                                     </td>

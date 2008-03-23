@@ -25,10 +25,7 @@
 						<tr>
 							<td class="headingorange"><c:out value='${Office}' /> <br>
 							</span><span class="fontnormalbold"> <mifos:mifoslabel
-								name="CustomerSearch.toreview" /> <mifos:mifoslabel
-								name="CustomerSearch.or" /> <mifos:mifoslabel
-								name="CustomerSearch.edit" /> <mifos:mifoslabel
-								name="CustomerSearch.a" /> <mifos:mifoslabel
+								name="CustomerSearch.revieweditinstruction1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}" />, <c:choose>
 								<c:when test="${isCenterHeirarchyExists eq true}">
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
@@ -38,8 +35,7 @@
 								<c:otherwise>
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 	                  		</c:otherwise>
-							</c:choose> <mifos:mifoslabel name="CustomerSearch.or" /> <mifos:mifoslabel
-								name="CustomerSearch.account" /> </span></td>
+							</c:choose> <mifos:mifoslabel name="CustomerSearch.revieweditinstruction2" /></span></td>
 						</tr>
 					</table>
 					<br>
@@ -58,9 +54,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td height="26" colspan="2"><mifos:mifoslabel
-												name="CustomerSearch.tosearch" />,&nbsp; <mifos:mifoslabel
-												name="CustomerSearch.enter" />&nbsp; <mifos:mifoslabel
-												name="CustomerSearch.a" />&nbsp; <mifos:mifoslabel
+												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
 												<c:when test="${isCenterHeirarchyExists eq true}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
@@ -79,7 +73,7 @@
 										<tr class="fontnormal">
 											<td height="26" colspan="2"><html-el:text
 												property="searchString" maxlength="200" /> <html-el:submit
-												style="width:60px;" styleClass="buttn">
+												styleClass="buttn">
 												<mifos:mifoslabel name="CustomerSearch.search" />
 											</html-el:submit></td>
 										</tr>
@@ -93,7 +87,7 @@
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"> <mifos:mifoslabel
-												name="CustomerSearch.select" />&nbsp; loan officer</span></td>
+												name="CustomerSearch.selectLoanOfficer" /></span></td>
 										</tr>
 									</table>
 
@@ -125,9 +119,9 @@
 											</c:forEach>
 									  </c:when>
 									<c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.no"/>
+											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
 											<mifos:mifoslabel name="CustomerSearch.loanOfficers"/>
-											<mifos:mifoslabel name="CustomerSearch.available"/>
+											<mifos:mifoslabel name="CustomerSearch.noEntityAvailableSuffix"/>
 									</c:otherwise>
 									</c:choose>
 
