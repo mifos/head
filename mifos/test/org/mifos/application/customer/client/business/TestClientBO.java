@@ -108,6 +108,22 @@ public class TestClientBO extends MifosTestCase {
 		clientPerformanceHistoryEntity.setNoOfActiveLoans(noOfActiveLoans);
 	}
 	
+	public void testPovertyLikelihoodHibernateMapping() throws Exception {
+		createInitialObjects();
+		Double pct = new Double(55.0);
+		String hd = "**FOO**";
+		client.setPovertyLikelihoodPercent(pct);
+		client.getCustomerDetail().setHandicappedDetails(hd);
+		new ClientPersistence().createOrUpdate(client);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		Integer clientId = client.getCustomerId();
+		ClientBO retrievedClient = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
+		assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
+		assertEquals(pct, retrievedClient.getPovertyLikelihoodPercent());
+		
+	}
+
 	public void testRemoveClientFromGroup() throws Exception {
 		createInitialObjects();
 		client.updateClientFlag();

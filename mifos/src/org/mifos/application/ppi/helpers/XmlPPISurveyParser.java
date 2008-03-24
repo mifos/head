@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 
 public class XmlPPISurveyParser {
 	
+	/** TODO: Should be private */
 	public PPISurvey parseInto(String uri, PPISurvey survey)
             throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
 		InputStream xml = ResourceLoader.getURI(uri).toURL().openStream();
@@ -110,6 +111,10 @@ public class XmlPPISurveyParser {
 		return parseInto(uri, new PPISurvey());
 	}
 	
+	/** TODO: Do not create new PPISurvey instance here, do it
+	 * in the body of parseInto()
+	 * TODO: This method is never used
+	 */
 	public PPISurvey parse(InputStream stream) throws Exception {
 		return parseInto(stream, new PPISurvey());
 	}

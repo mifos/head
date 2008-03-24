@@ -34,7 +34,7 @@ import org.mifos.application.master.persistence.Upgrade183;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 183;
+	public static final int APPLICATION_VERSION = 184;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 

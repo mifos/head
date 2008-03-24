@@ -71,6 +71,12 @@ public class ClientDetailEntity extends PersistentObject {
 
 	private Short povertyStatus;
 	
+	private Double povertyLikelihoodPercent;
+	
+	/**
+	 * Create a new instance based on a view.
+	 * 
+	 */
 	public ClientDetailEntity(ClientBO client, ClientDetailView view) {
 		super();
 		this.customerId = null;
@@ -86,6 +92,7 @@ public class ClientDetailEntity extends PersistentObject {
 		this.dateStarted = null;
 		this.handicappedDetails = null;
 		this.povertyStatus = view.getPovertyStatus();
+		this.povertyLikelihoodPercent = null;
 	}
 
 	protected ClientDetailEntity() {
@@ -102,6 +109,7 @@ public class ClientDetailEntity extends PersistentObject {
 		this.gender = null;
 		this.dateStarted = null;
 		this.handicappedDetails = null;
+		this.povertyLikelihoodPercent = null;
 	}
 	
 	public Integer getEthinicity() {
@@ -198,6 +206,14 @@ public class ClientDetailEntity extends PersistentObject {
 
 	public void setPovertyStatus(Short povertyStatus) {
 		this.povertyStatus = povertyStatus;
+	}
+	
+	public Double getPovertyLikelihoodPercent() {
+		return this.povertyLikelihoodPercent;
+	}
+	
+	public void setPovertyLikelihoodPercent(Double povertyLikelihoodPercent) {
+		this.povertyLikelihoodPercent = povertyLikelihoodPercent;
 	}
 
 	public void updateClientDetails(ClientDetailView view) {

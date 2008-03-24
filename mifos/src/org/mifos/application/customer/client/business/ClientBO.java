@@ -38,6 +38,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
@@ -247,6 +248,23 @@ public class ClientBO extends CustomerBO {
 		this.secondLastName = secondLastName;
 	}
 
+	public Double getPovertyLikelihoodPercent() {
+		return this.customerDetail.getPovertyLikelihoodPercent();
+	}
+	
+	/**
+	 * TODO: This method is deprecated and should be removed once
+	 * method attachPpiSurvey is implemented. Poverty likelihood should be
+	 * set based on the results of a PPI survey and should not be
+	 * over-writable in order to maintain the integrity of this data.
+	 * 
+	 * The method is included here in order to test hibernate mappings through
+	 * customerDetail.
+	 */
+	public void setPovertyLikelihoodPercent(Double pct) {
+		this.customerDetail.setPovertyLikelihoodPercent(pct);
+	}
+	
 	public Set<ClientInitialSavingsOfferingEntity> getOfferingsAssociatedInCreate() {
 		return offeringsAssociatedInCreate;
 	}
@@ -891,5 +909,7 @@ public class ClientBO extends CustomerBO {
 
 	}
 	
-
+	public void attachPpiSurveyInstance(SurveyInstance ppiSurvey) {
+		/* TODO not implemented yet */
+	}
 }
