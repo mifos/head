@@ -58,7 +58,6 @@ public class ReportsBO extends BusinessObject {
 	private ReportsJasperMap reportsJasperMap;
 	private Short activityId;
 	private Short isActive;
-	public static final Short ACTIVE = Short.valueOf("1");
 
 	public Short getReportId() {
 		return reportId;

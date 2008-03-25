@@ -124,9 +124,8 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allowReport(26, ReportSecurityConstants.CENTER_MEETING_SCHEDULE);
 		security.allowReport(28, ReportSecurityConstants.DETAILED_AGING_OF_PORTFOLIO_AT_RISK);
 		security.allowReport(29, ReportSecurityConstants.ACTIVE_LOANS_BY_LOAN_OFFICER);
-		security.allowReport(30, ReportSecurityConstants.COLLECTION_SHEET_REPORT);
 		
-		if(getLargestReportId().intValue() > 30){
+		if(getLargestReportId().intValue() > 29){
 			for(ReportsBO report : getNewUploadedReport()){
 			    security.allowReport(report.getReportId().intValue(),report.getActivityId());
 			}
@@ -259,7 +258,7 @@ public class ReportsUserParamsAction extends BaseAction {
 		List<ReportsBO> newReports = new ArrayList<ReportsBO>();
 	    for(ReportsBO report : new ReportsPersistence().getAllReports())
 	    {
-	          if(report.getReportId().intValue()>30){
+	          if(report.getReportId().intValue()>29){
 	        		newReports.add(report);
 	        }
 	    }

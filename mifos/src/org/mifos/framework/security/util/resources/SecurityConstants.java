@@ -435,8 +435,6 @@ public interface SecurityConstants {
     
     public final short CAN_VIEW_DETAILED_AGING_OF_PORTFOLIO_AT_RISK = 207;
 
-    public final short CAN_VIEW_COLLECTION_SHEET_REPORT = 229;
-
     //Add Group MemberShip
     public final short CAN_ADD_CLIENTS_TO_GROUPS = 208;
     
