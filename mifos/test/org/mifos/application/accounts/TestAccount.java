@@ -17,6 +17,8 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccount extends MifosTestCase {
@@ -34,18 +36,17 @@ public class TestAccount extends MifosTestCase {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+	protected void tearDown() throws Exception {		
 		try {
 			TestObjectFactory.cleanUp(accountBO);
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
 			accountPersistence = null;
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
-		catch (Exception e) {
-			// throwing here tends to mask failures
-			e.printStackTrace();
-		}
-
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 

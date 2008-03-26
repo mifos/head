@@ -55,7 +55,7 @@ public class CheckListBusinessService extends BusinessService {
 	public void isValidCheckListState(Short levelId, Short stateId,
 			boolean isCustomer) throws ServiceException {
 		try {
-			Integer records = new CheckListPersistence().isValidCheckListState(
+			Long records = new CheckListPersistence().isValidCheckListState(
 					levelId, stateId, isCustomer);
 			if (records.intValue() != 0)
 				throw new ServiceException(

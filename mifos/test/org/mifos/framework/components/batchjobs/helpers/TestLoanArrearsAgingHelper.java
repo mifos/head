@@ -20,6 +20,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -55,12 +56,17 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loanAccount1);
-		TestObjectFactory.cleanUp(loanAccount2);
-		TestObjectFactory.cleanUp(loanAccount3);
-		TestObjectFactory.cleanUp(loanAccount4);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(loanAccount1);
+			TestObjectFactory.cleanUp(loanAccount2);
+			TestObjectFactory.cleanUp(loanAccount3);
+			TestObjectFactory.cleanUp(loanAccount4);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		loanArrearsAgingHelper = null;
 		HibernateUtil.closeSession();
 		super.tearDown();

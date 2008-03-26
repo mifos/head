@@ -366,25 +366,20 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
-		HibernateUtil.closeSession();
+		// HibernateUtil.closeSession();
+		
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(System.currentTimeMillis()), Short.valueOf("2"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.roll(Calendar.DATE, 1);
 
@@ -392,17 +387,18 @@ public class TestCustomerPersistence extends MifosTestCase {
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
+		
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
 				.numberOfMeetings(true, client.getCustomerId());
 		assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended()
 				.intValue());
+				
 		HibernateUtil.closeSession();
+
 		client = TestObjectFactory.getObject(CustomerBO.class, client
 				.getCustomerId());
 	}
@@ -415,36 +411,30 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
-		HibernateUtil.closeSession();
+		
+		//HibernateUtil.closeSession();
+		
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(System.currentTimeMillis()), Short.valueOf("2"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.roll(Calendar.DATE, 1);
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
 				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"),
 				clients);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
+		
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
 				.numberOfMeetings(false, client.getCustomerId());
@@ -468,7 +458,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
 				client, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering);
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		account = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				loanBO.getAccountId());
@@ -885,6 +875,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getPersonnel().getPersonnelId());
 		assertEquals(center.getPersonnel().getPersonnelId(), client
 				.getPersonnel().getPersonnelId());
+		HibernateUtil.startTransaction();
 		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
 		new CustomerPersistence().updateLOsForAllChildren(newLO
 				.getPersonnelId(), center.getSearchId(), center.getOffice()

@@ -38,6 +38,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -73,13 +74,18 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(clientSavingsAccount);
-		TestObjectFactory.cleanUp(groupSavingsAccount);
-		TestObjectFactory.cleanUp(centerSavingsAccount);
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(clientSavingsAccount);
+			TestObjectFactory.cleanUp(groupSavingsAccount);
+			TestObjectFactory.cleanUp(centerSavingsAccount);
+			TestObjectFactory.cleanUp(account);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -193,7 +199,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
 						System.currentTimeMillis()), new java.sql.Date(System
 						.currentTimeMillis()), client.getCustomerId(),savingsAccounts);
-		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
 				clientSavingsAccount.getAccountId()).getAccount());
 		HibernateUtil.commitTransaction();

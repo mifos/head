@@ -109,7 +109,7 @@ public class PrdOfferingPersistence extends Persistence {
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
-				prdType);
+				Short.valueOf(prdType));
 		if(prdType.equals(ProductType.LOAN.getValue().toString()))
 			queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
 			else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
@@ -124,10 +124,8 @@ public class PrdOfferingPersistence extends Persistence {
 			throws PersistenceException {
 				
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
-				prdType);
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
-				prdId);	
+		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));	
 		if(prdType.equals(ProductType.LOAN.getValue().toString()))
 			queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
 			else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
@@ -143,10 +141,8 @@ public class PrdOfferingPersistence extends Persistence {
 			throws PersistenceException {
 				
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE,
-				prdType);
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
-				prdId);	
+		queryParameters.put(ProductDefinitionConstants.PRODUCTTYPE, Short.valueOf(prdType));
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));	
 		if(prdType.equals(ProductType.LOAN.getValue().toString()))
 		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
 		else if(prdType.equals(ProductType.SAVINGS.getValue().toString()))
@@ -161,8 +157,7 @@ public class PrdOfferingPersistence extends Persistence {
 			throws PersistenceException {
 				
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
-				prdId);	
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));	
 		return  executeNamedQuery(
 				NamedQueryConstants.NOT_ALLOWED_PRD_OFFERING_BYTYPE, queryParameters);
 			
@@ -172,8 +167,7 @@ public class PrdOfferingPersistence extends Persistence {
 			throws PersistenceException {
 				
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
-				prdId);	
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));	
 		return  executeNamedQuery(
 				NamedQueryConstants.NOT_ALLOWED_PRD_OFFERING_FOR_MIXPRODUCT, queryParameters);
 			
@@ -185,7 +179,7 @@ public class PrdOfferingPersistence extends Persistence {
 		return (PrdOfferingBO) getPersistentObject(PrdOfferingBO.class,
 				prdofferingId);
 	}
-	
+
 	public LoanOfferingBO getLoanPrdOffering(Short loanPrdOfferingId)
 			throws PersistenceException {
 		return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class,
@@ -197,8 +191,7 @@ public class PrdOfferingPersistence extends Persistence {
 		prdLogger.debug("getting the product offering by id :"
 				+ prdId);
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(ProductDefinitionConstants.PRODUCTID,
-				prdId);
+		queryParameters.put(ProductDefinitionConstants.PRODUCTID, Short.valueOf(prdId));
 		 	PrdOfferingBO prdOffring = (PrdOfferingBO) execUniqueResultNamedQuery(
 				NamedQueryConstants.PRD_BYID, queryParameters);
 		 	return prdOffring;

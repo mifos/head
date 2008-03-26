@@ -581,8 +581,10 @@ public class BulkEntryBusinessService extends BusinessService {
 			else
 				account = (SavingsBO) getAccount(accountId,
 						AccountTypes.SAVINGS_ACCOUNT);
+			// TODO: Committing the transaction fixes unit test, but is this the right thing to do?
 			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			account.withdraw(accountPaymentDataView);
+			HibernateUtil.commitTransaction();
 			HibernateUtil.getSessionTL().clear();
 			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
 					account, YesNoFlag.YES));

@@ -54,7 +54,7 @@
 				and COLL_SHEET_CUSTOMER.CUST_LEVEL=:CUSTOMER_LEVEL
 				and COLL_SHEET_CUSTOMER.CUST_OFFICE_ID=:branchId
 				and COLL_SHEET_CUSTOMER.LOAN_OFFICER_ID=:loanOfficerId
-				and COLL_SHEET.COLL_SHEET_DATE>=:fromDate
+				and COLL_SHEET.COLL_SHEET_DATE>= date(:fromDate)
 				order by COLL_SHEET.COLL_SHEET_DATE desc
 		]]>
 	</sql-query>

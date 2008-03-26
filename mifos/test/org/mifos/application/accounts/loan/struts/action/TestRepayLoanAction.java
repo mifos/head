@@ -44,7 +44,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		flowKey = createFlow(request, RepayLoanAction.class);
 		accountBO = getLoanAccount();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 	}

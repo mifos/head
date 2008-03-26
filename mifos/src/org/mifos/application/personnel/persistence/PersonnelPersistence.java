@@ -125,7 +125,7 @@ public class PersonnelPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("userId", personnelId);
 		queryParameters.put("officeId", officeId);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Long count = (Long) execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_ALL_CUSTOMERS_FOR_LO, queryParameters);
 		if (count != null) {
 			return count > 0 ? true : false;

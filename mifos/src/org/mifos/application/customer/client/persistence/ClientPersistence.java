@@ -109,7 +109,7 @@ public class ClientPersistence extends Persistence {
 			List queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CLIENT_BASEDON_GOVTID, 
 					queryParameters);
-			return ((Integer)queryResult.get(0)).intValue()>0;
+			return ((Long)queryResult.get(0)).intValue()>0;
 	}
 	
 	public boolean checkForDuplicacyOnName(
@@ -159,7 +159,7 @@ public class ClientPersistence extends Persistence {
 		public List<ClientBO> getActiveClientsUnderGroup(Short groupId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("GROUP_ID", groupId);
+		queryParameters.put("GROUP_ID", groupId.intValue());
 		List<ClientBO> queryResult = executeNamedQuery(
 				NamedQueryConstants.ACTIVE_CLIENTS_UNDER_GROUP, queryParameters);
 		return queryResult;

@@ -38,7 +38,6 @@
 
 package org.mifos.framework.components.audit.util.helpers;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,10 +45,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.EntityMode;
-import org.hibernate.Interceptor;
+import org.hibernate.EmptyInterceptor;
 import org.hibernate.Transaction;
-import org.hibernate.type.Type;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -60,7 +57,7 @@ import org.mifos.framework.security.util.UserContext;
  * For Hibernate 3.2.2 or so, we'd just extend EmptyInterceptor.
  * But that doesn't exist in 3.0 beta4.
  */
-public class AuditInterceptor implements Interceptor {
+public class AuditInterceptor extends EmptyInterceptor {
 
 	private AuditLog auditLog;
 	private InterceptHelper interceptHelper;
@@ -88,65 +85,11 @@ public class AuditInterceptor implements Interceptor {
 		return true;
 	}
 	
-	public void beforeTransactionCompletion(Transaction tx) {
-	}
-
-	public boolean onSave(Object arg0, Serializable arg1, Object[] arg2,
-			String[] arg3, Type[] arg4) {
-		return false;
-	}
-
-	public void onDelete(Object arg0, Serializable arg1, Object[] arg2,
-			String[] arg3, Type[] arg4) {
-	}
-
-	public void preFlush(Iterator arg0) {
-	}
-
-	public void postFlush(Iterator arg0) {
-	}
-
-	public Boolean isTransient(Object arg0) {
-		return null;
-	}
-
-	public int[] findDirty(Object entity, Serializable id,
-			Object[] currentState, Object[] previousState,
-			String[] propertyNames, Type[] types) {
-		return null;
-	}
-
-	public Object instantiate(String entityName, EntityMode entityMode,
-			Serializable id) {
-		return null;
-	}
-
-	public String getEntityName(Object arg) {
-		return null;
-	}
-
-	public Object getEntity(String arg0, Serializable arg1) {
-		return null;
-	}
-		
-	public boolean onLoad(Object arg0, Serializable arg1, Object[] arg2,
-			String[] arg3, Type[] arg4) {
-		return false;
-	}
-
-	public void afterTransactionBegin(Transaction tx) {
-	}
-
-	public boolean onFlushDirty(Object entity, Serializable id,
-			Object[] currentState, Object[] previousState,
-			String[] propertyNames, Type[] types) {
-		return false;
-	}
-	
-	public void afterTransactionCompletion(Transaction tx) {
+	@Override
+    public void afterTransactionCompletion(Transaction tx) {
 		if(tx!=null && tx.wasCommitted() && !tx.wasRolledBack())
 			flag=true;
-		if (tx==null && flag && ((interceptHelper.getInitialValueMap() != null
+		if (flag && ((interceptHelper.getInitialValueMap() != null
 				&& interceptHelper.getInitialValueMap().size() > 0) || 
 				(interceptHelper.getChangeValueMap() != null
 						&& interceptHelper.getChangeValueMap().size() > 0))) {

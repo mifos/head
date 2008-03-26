@@ -87,6 +87,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
@@ -133,11 +134,16 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.removeObject(savingsOffering1);
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.removeObject(savingsOffering1);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -1123,7 +1129,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerConstants.CUSTOM_FIELDS_LIST, request));
 		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
 		assertNotNull(povertyStatusList);
-
+		
 	}
 
 	public void testEditPersonalInfoPreviewFailure() throws Exception {
@@ -1229,7 +1235,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 
 	}
-	
+
 	public void testSuccessfulUpdatePersonalInfo_AuditLog() throws Exception {
 		createClientForAuditLog();
 		setRequestPathInfo("/clientCustAction.do");
@@ -1317,7 +1323,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUpChangeLog();
 	}
 	
-		
 	private void createClientForAuditLog() throws Exception {
 		Short officeId = 1;
 		Short personnel = 3;
@@ -1332,6 +1337,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short gender = Short.valueOf("49");
 		Short povertyStatus = Short.valueOf("41");
 		
+		HibernateUtil.startTransaction();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 				NameType.CLIENT, salutation, "Client", "", "1",
 				"");
@@ -1357,7 +1363,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
-
+	
 	public void testUpdateMfiInfo_AuditLog() throws Exception {
 		createClientForAuditLog();
 		setRequestPathInfo("/clientCustAction.do");

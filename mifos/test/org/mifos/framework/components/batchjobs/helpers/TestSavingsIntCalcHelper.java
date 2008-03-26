@@ -100,7 +100,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		
 		savings1.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
@@ -109,7 +109,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
@@ -118,7 +118,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper
@@ -127,7 +127,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		
 		TestSavingsBO.setNextIntCalcDate(savings4,helper.getDate("01/05/2006"));
 		TestSavingsBO.setActivationDate(savings4,helper.getDate("10/04/2006"));
@@ -139,7 +139,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
@@ -148,7 +148,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
@@ -157,7 +157,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper

@@ -48,6 +48,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -83,7 +84,7 @@ import org.mifos.framework.security.util.UserContext;
  */
 public class GroupBO extends CustomerBO {
 
-	private GroupPerformanceHistoryEntity performanceHistory;
+	private GroupPerformanceHistoryEntity groupPerformanceHistory;
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.GROUP_LOGGER);
@@ -100,7 +101,7 @@ public class GroupBO extends CustomerBO {
 				parentCustomer, null, null);
 		validateFieldsForGroupUnderCenter(parentCustomer);
 		setValues(trained, trainedDate);
-		this.performanceHistory = new GroupPerformanceHistoryEntity(this);
+		this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
 
 	public GroupBO(UserContext userContext, String displayName,
@@ -114,12 +115,12 @@ public class GroupBO extends CustomerBO {
 				null, meeting, loanOfficerId);
 		validateFieldsForGroupUnderOffice(loanOfficerId, meeting, officeId);
 		setValues(trained, trainedDate);
-		this.performanceHistory = new GroupPerformanceHistoryEntity(this);
+		this.groupPerformanceHistory = new GroupPerformanceHistoryEntity(this);
 	}
 
 	protected GroupBO() {
 		super();
-		this.performanceHistory = null;
+		this.groupPerformanceHistory = null;
 	}
 	
 	private GroupBO(UserContext userContext, String displayName,
@@ -147,16 +148,15 @@ public class GroupBO extends CustomerBO {
 		return getStatus() == CustomerStatus.GROUP_ACTIVE;
 	}
 
-	@Override
-	public GroupPerformanceHistoryEntity getPerformanceHistory() {
-		return performanceHistory;
+	public GroupPerformanceHistoryEntity getGroupPerformanceHistory() {
+		return groupPerformanceHistory;
 	}
 
-	protected void setPerformanceHistory(
-			GroupPerformanceHistoryEntity performanceHistory) {
-		if (performanceHistory != null)
-			performanceHistory.setGroup(this);
-		this.performanceHistory = performanceHistory;
+	public void setGroupPerformanceHistory(
+			GroupPerformanceHistoryEntity groupPerformanceHistory) {
+		if (groupPerformanceHistory != null)
+			groupPerformanceHistory.setGroup(this);
+		this.groupPerformanceHistory = groupPerformanceHistory;
 	}
 
 	@Override

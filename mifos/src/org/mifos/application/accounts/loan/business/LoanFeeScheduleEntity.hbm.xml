@@ -37,7 +37,7 @@
 			org.mifos.application.customer.business.CustomerBO as customer,
 			org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity as feeAction 
 			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
+			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
 			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
 			customer.customerStatus.id in (3,4,9,10,13) 
 			and accountAction.actionDateId = feeAction.accountActionDate.actionDateId

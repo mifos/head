@@ -48,6 +48,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -72,9 +73,14 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

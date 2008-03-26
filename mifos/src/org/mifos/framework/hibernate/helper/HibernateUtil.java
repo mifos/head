@@ -144,38 +144,30 @@ public class HibernateUtil {
 	 * TestObjectPersistence#update(Session, org.mifos.framework.business.PersistentObject)
 	 */
 	public static Transaction startTransaction() {
-		return getSessionHolder().startTransaction();
+		Transaction transaction = getSessionTL().getTransaction();
+		if (!transaction.isActive()) {
+			transaction.begin();
+		}
+		return transaction;
 	}
 
 	public static Transaction getTransaction() {
-		if (getSessionHolder() == null)
-			return null;
-
-		return getSessionHolder().getTransaction();
+		return getSessionTL().getTransaction();
 	}
 
 	public static void closeSession() {
-		SessionHolder sessionHolder = getSessionHolder();
-		if (sessionHolder != null) {
-			Session session = sessionHolder.getSession();
-			session.close();
-			session = null;
-			getSessionHolder().setInterceptor(null);
-			threadLocal.set(null);
+		if (getSessionTL().isOpen()) {
+			getSessionTL().close();
 		}
-
+		threadLocal.set(null);
 	}
 
 	public static void flushAndCloseSession() {
-		SessionHolder sessionHolder = getSessionHolder();
-		if (sessionHolder != null) {
-			Session session = sessionHolder.getSession();
-			session.flush();
-			session.close();
-			session = null;
-			getSessionHolder().setInterceptor(null);
-			threadLocal.set(null);
+		if (getSessionTL().isOpen()) {
+			getSessionTL().flush();
+			getSessionTL().close();
 		}
+		threadLocal.set(null);
 
 	}
 
@@ -201,31 +193,22 @@ public class HibernateUtil {
 	}
 
 	public static boolean isSessionOpen() {
-		if (getSessionHolder() == null)
-			return false;
-		
-		Session session = getSessionHolder().getSession();
-		if (session == null || !session.isOpen()) {
-			return false;
+		if (getSessionHolder() != null) {
+			return getSessionHolder().getSession().isOpen();
 		}
-
-		return true;
+		return false;
 	}
 
 	public static void commitTransaction() {
-		if (getTransaction() != null) {
-			getTransaction().commit();
-			getSessionHolder().setTranasction(null);
+		if (getSessionTL().getTransaction().isActive()) {
+			getSessionTL().getTransaction().commit();
 		}
-
 	}
 
 	public static void rollbackTransaction() {
-		if (getTransaction() != null) {
-			getTransaction().rollback();
-			getSessionHolder().setTranasction(null);
+		if (getSessionTL().getTransaction().isActive()) {
+			getSessionTL().getTransaction().rollback();
 		}
-
 	}
 
 }

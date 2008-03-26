@@ -18,11 +18,13 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -63,7 +65,7 @@ public class ClientBO extends CustomerBO {
 
 	private String governmentId;
 
-	private final ClientPerformanceHistoryEntity performanceHistory;
+	private ClientPerformanceHistoryEntity clientPerformanceHistory;
 
 	private Short groupFlag;
 
@@ -123,7 +125,7 @@ public class ClientBO extends CustomerBO {
 		super();
 		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		this.clientAttendances = new HashSet<ClientAttendanceBO>();
-		this.performanceHistory = null;
+		this.clientPerformanceHistory = null;
 		this.offeringsAssociatedInCreate = null;
 	}
 
@@ -146,7 +148,7 @@ public class ClientBO extends CustomerBO {
 		validateOfferings(offeringsSelected);
 		nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
-		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
+		this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
 		
 		this.dateOfBirth = dateOfBirth;
 		this.governmentId = governmentId;
@@ -269,9 +271,14 @@ public class ClientBO extends CustomerBO {
 		return offeringsAssociatedInCreate;
 	}
 
-	@Override
-	public ClientPerformanceHistoryEntity getPerformanceHistory() {
-		return performanceHistory;
+	public ClientPerformanceHistoryEntity getClientPerformanceHistory() {
+		return clientPerformanceHistory;
+	}
+	
+	public void setClientPerformanceHistory(ClientPerformanceHistoryEntity clientPerformanceHistory) {
+		if (clientPerformanceHistory != null)
+			clientPerformanceHistory.setClient(this);
+		this.clientPerformanceHistory = clientPerformanceHistory;
 	}
 
 	public void addClientAttendance(ClientAttendanceBO clientAttendance) {

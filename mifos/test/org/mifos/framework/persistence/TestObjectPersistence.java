@@ -173,7 +173,7 @@ public class TestObjectPersistence {
     }
 	
     public void flushandCloseSession() {
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 	}
 

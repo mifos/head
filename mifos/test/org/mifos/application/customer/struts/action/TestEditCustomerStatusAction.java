@@ -68,6 +68,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -104,11 +105,16 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loanBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(office);
+		try {
+			TestObjectFactory.cleanUp(loanBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.cleanUp(office);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

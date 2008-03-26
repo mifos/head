@@ -27,6 +27,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -45,12 +46,19 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		List<CustomerBO> customerList = new ArrayList<CustomerBO>();
-		if (group != null)
-			customerList.add(group);
-		if (center != null)
-			customerList.add(center);
-		TestObjectFactory.cleanUp(customerList);
+		try {
+			List<CustomerBO> customerList = new ArrayList<CustomerBO>();
+			if (group != null)
+				customerList.add(group);
+			if (center != null)
+				customerList.add(center);
+			TestObjectFactory.cleanUp(customerList);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testExecuteAmountUpdated() throws Exception {

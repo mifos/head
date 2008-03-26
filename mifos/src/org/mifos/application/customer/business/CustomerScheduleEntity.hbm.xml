@@ -53,7 +53,7 @@
 			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
 			org.mifos.application.customer.business.CustomerBO as customer 
 			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
+			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
 			and customer.searchId like :SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
 			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
 			accountAction.account.accountId,accountAction.actionDate
@@ -69,7 +69,7 @@
 			) from org.mifos.application.customer.business.CustomerScheduleEntity as accountAction,
 			org.mifos.application.customer.business.CustomerBO as customer 
 			where customer.customerId = accountAction.customer.customerId
-			and accountAction.actionDate <=:MEETING_DATE and accountAction.paymentStatus=:PAYMENT_STATUS
+			and accountAction.actionDate <= date(:MEETING_DATE) and accountAction.paymentStatus=:PAYMENT_STATUS
 			and customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and 
 			customer.customerStatus.id in (3,4,9,10,13) order by customer.customerId,
 			accountAction.account.accountId,accountAction.actionDate
@@ -78,7 +78,7 @@
 	
 	
 	<query name="getYesterdaysInstallmentForActiveCustomers">
-		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=:CURRENT_DATE ]]>
+		<![CDATA[select accountActionDateEntity.account.accountId from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDateEntity where accountActionDateEntity.account.accountType.accountTypeId=:CUSTOMER_TYPE_ID and accountActionDateEntity.customer.customerStatus.id in (:ACTIVE_CENTER_STATE, :ACTIVE_GROUP_STATE, :ACTIVE_CLIENT_STATE, :ONHOLD_CLIENT_STATE, :ONHOLD_GROUP_STATE) and accountActionDateEntity.actionDate=date(:CURRENT_DATE) ]]>
 	</query>
 
 

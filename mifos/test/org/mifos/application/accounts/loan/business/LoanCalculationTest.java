@@ -1086,7 +1086,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
 				AccountState.LOAN_APPROVED, startDate, loanOffering);
-		((ClientBO) client).getPerformanceHistory().updateLoanCounter(
+		((ClientBO) client).getClientPerformanceHistory().updateLoanCounter(
 				loanOffering, YesNoFlag.YES);
 		TestObjectFactory.updateObject(client);
 		TestObjectFactory.updateObject(accountBO);
@@ -1109,7 +1109,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, state, startDate, loanOffering,
 				disbursalType);
-		((ClientBO) client).getPerformanceHistory().updateLoanCounter(
+		((ClientBO) client).getClientPerformanceHistory().updateLoanCounter(
 				loanOffering, YesNoFlag.YES);
 		return accountBO;
 

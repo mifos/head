@@ -26,6 +26,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -87,14 +88,19 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	
 	@Override
 	public void tearDown() throws Exception {
-		reloadMembers();
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(client3);
-		TestObjectFactory.cleanUp(client4);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			reloadMembers();
+			TestObjectFactory.cleanUp(savings);
+			TestObjectFactory.cleanUp(client1);
+			TestObjectFactory.cleanUp(client2);
+			TestObjectFactory.cleanUp(client3);
+			TestObjectFactory.cleanUp(client4);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

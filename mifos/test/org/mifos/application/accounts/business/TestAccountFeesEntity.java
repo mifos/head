@@ -24,6 +24,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -43,12 +44,17 @@ public class TestAccountFeesEntity extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		accountPersistence = null;
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			accountPersistence = null;
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public static void addAccountFees(AccountFeesEntity fees,AccountBO account) {

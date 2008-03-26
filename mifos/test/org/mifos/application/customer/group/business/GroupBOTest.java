@@ -57,6 +57,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -102,18 +103,23 @@ public class GroupBOTest extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		TestObjectFactory.cleanUp(account2);
-		TestObjectFactory.cleanUp(account1);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(group1);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(center1);
-		TestObjectFactory.cleanUp(officeBO);
+		try {
+			TestObjectFactory.cleanUp(account2);
+			TestObjectFactory.cleanUp(account1);
+			TestObjectFactory.cleanUp(client1);
+			TestObjectFactory.cleanUp(client2);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(group1);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.cleanUp(center1);
+			TestObjectFactory.cleanUp(officeBO);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 	
 	public static void setLastGroupLoanAmount(
@@ -453,12 +459,12 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(center.getPersonnel().getPersonnelId(), group
 				.getPersonnel().getPersonnelId());
 		assertEquals("1.1.1", group.getSearchId());
-		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
+		assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory()
 				.getGroup().getCustomerId());
 		client = TestObjectFactory.createClient("new client",
 				CustomerStatus.CLIENT_ACTIVE, group,
 				new java.util.Date());
-		assertEquals(1, group.getPerformanceHistory().getActiveClientCount()
+		assertEquals(1, group.getGroupPerformanceHistory().getActiveClientCount()
 				.intValue());
 	}
 
@@ -614,9 +620,9 @@ public class GroupBOTest extends MifosTestCase {
 				changeFirstInstallmentDate(account, 31);
 			}
 		}
-		group.getPerformanceHistory().generatePortfolioAtRisk();
+		group.getGroupPerformanceHistory().generatePortfolioAtRisk();
 		assertEquals(new Money("1.0"), group
-				.getPerformanceHistory().getPortfolioAtRisk());
+				.getGroupPerformanceHistory().getPortfolioAtRisk());
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -635,9 +641,9 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("600.0"), group.getPerformanceHistory().getTotalOutStandingLoanAmount());
+		assertEquals(new Money("600.0"), group.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
 		assertEquals(new Money("600.0"), group
-				.getPerformanceHistory().getTotalOutStandingLoanAmount());
+				.getGroupPerformanceHistory().getTotalOutStandingLoanAmount());
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -656,9 +662,9 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("300.0"), group.getPerformanceHistory().getAvgLoanAmountForMember());
+		assertEquals(new Money("300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
 		assertEquals(new Money("300.0"), group
-				.getPerformanceHistory().getAvgLoanAmountForMember());
+				.getGroupPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -696,7 +702,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(new Money("2000.0"), 
 				client.getSavingsBalance());
 		assertEquals(new Money("3000.0"), 
-				group.getPerformanceHistory().getTotalSavingsAmount());
+				group.getGroupPerformanceHistory().getTotalSavingsAmount());
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -724,10 +730,11 @@ public class GroupBOTest extends MifosTestCase {
 		client2 = TestObjectFactory.createClient("client3",
 				CustomerStatus.CLIENT_CANCELLED, group);
 		assertEquals(Integer.valueOf("2"), 
-				group.getPerformanceHistory().getActiveClientCount());
+				group.getGroupPerformanceHistory().getActiveClientCount());
 	}
 
 	public void testUpdateBranchFailure_OfficeNULL() throws Exception {
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		try {
 			group.transferToBranch(null);
@@ -739,6 +746,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateBranchFailure_TransferInSameOffice() throws Exception {
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		try {
 			group.transferToBranch(group.getOffice());
@@ -751,6 +759,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateBranchFailure_OfficeInactive() throws Exception {
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		officeBO = createOffice();
 		officeBO.update(officeBO.getOfficeName(), officeBO.getShortName(), OfficeStatus.INACTIVE, officeBO.getOfficeLevel(), officeBO.getParentOffice(), null, null);
@@ -767,8 +776,13 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	public void testUpdateBranchFailure_DuplicateGroupName() throws Exception {
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		officeBO = createOffice();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		HibernateUtil.startTransaction();
 		group1 = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE, officeBO
 				.getOfficeId());
 		try {
@@ -782,6 +796,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	public void testSuccessfulTransferToBranch() throws Exception {
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
@@ -1214,6 +1229,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	public void testUpdateMeeting()throws Exception{
+		HibernateUtil.startTransaction();
 		group = createGroupUnderBranch(CustomerStatus.GROUP_PENDING);
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient(group, CustomerStatus.CLIENT_PENDING);

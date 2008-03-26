@@ -79,6 +79,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -126,15 +127,11 @@ public class TestSavingsBO extends MifosTestCase {
 			TestObjectFactory.cleanUp(client2);
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
-			// why no clean up of savingsOffering?
-			HibernateUtil.closeSession();
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
-		catch (Exception e) {
-			/* Throwing from tearDown (since it is called from a finally block),
-			   will often mask the real failure.
-			 */
-			e.printStackTrace();
-		}
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
@@ -539,7 +536,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountState.SAVINGS_ACTIVE, savingsOffering
 						.getRecommendedAmount(), null);
 		savings.save();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, new Money(currency, "1000.0"), new Money(currency,
@@ -572,7 +569,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountState.SAVINGS_ACTIVE, savingsOffering
 						.getRecommendedAmount(), null);
 		savings.save();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savings.setActivationDate(helper.getDate("15/05/2006"));
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, new Money(currency, "1000.0"), new Money(currency,
@@ -609,7 +606,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.save();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savings.setActivationDate(helper.getDate("05/01/2006"));
 		payment = helper.createAccountPaymentToPersist(savings, new Money(
 				currency, "1000.0"), new Money(currency, "2700.0"), helper
@@ -618,7 +615,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		payment = helper.createAccountPaymentToPersist(savings, new Money(
 				currency, "500.0"), new Money(currency, "2200.0"), helper
 				.getDate("10/03/2006"),
@@ -626,7 +623,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		payment = helper.createAccountPaymentToPersist(savings, new Money(
 				currency, "1200.0"), new Money(currency, "3400.0"), helper
 				.getDate("15/03/2006"),
@@ -634,7 +631,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		payment = helper.createAccountPaymentToPersist(savings, new Money(
 				currency, "2000.0"), new Money(currency, "1400.0"), helper
 				.getDate("25/03/2006"),
@@ -642,7 +639,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 
 		double intAmount = savings.calculateInterestForClosure(
 				helper.getDate("10/04/2006")).getAmountDoubleValue();
@@ -718,7 +715,7 @@ public class TestSavingsBO extends MifosTestCase {
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);
 
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savings = (SavingsBO) accountPersistence.getAccount(savings
 				.getAccountId());
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
@@ -880,7 +877,7 @@ public class TestSavingsBO extends MifosTestCase {
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);
 
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savings = (SavingsBO) accountPersistence.getAccount(savings
 				.getAccountId());
 		savings.setSavingsBalance(new Money(TestObjectFactory.getMFICurrency(),
@@ -907,7 +904,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulFlagSave() throws Exception {
 		Session session = HibernateUtil.getSessionTL();
-		Transaction trxn = session.beginTransaction();
+		HibernateUtil.startTransaction();
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = helper.createSavingsAccount("000X00000000013",
@@ -922,8 +919,8 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountStateEntity.class, (short) 15);
 		for (AccountStateFlagEntity flag : state.getFlagSet())
 			TestAccountBO.addAccountFlag(flag,savings);
-		session.update(savings);
-		trxn.commit();
+		savings.update();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		session = HibernateUtil.getSessionTL();
 		SavingsBO savingsNew = (SavingsBO) (session.get(SavingsBO.class,
@@ -1011,7 +1008,7 @@ public class TestSavingsBO extends MifosTestCase {
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		Money amountAdjustedTo = new Money(currency, "500.0");
 		boolean isAdjustPossible = savings
 				.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
@@ -1034,7 +1031,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		Money amountAdjustedTo = new Money(currency, "1000.0");
 		boolean isAdjustPossible = savings
 				.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
@@ -1058,7 +1055,7 @@ public class TestSavingsBO extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savingsOffering.setMaxAmntWithdrawl(new Money("1200"));
 		Money amountAdjustedTo = new Money(currency, "1500.0");
 		boolean isAdjustPossible = savings
@@ -1085,7 +1082,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(new Money(currency, "400.0"));
 		savings.update();
 
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
 		Money amountAdjustedTo = new Money(currency, "2000.0");
 		boolean isAdjustPossible = savings
@@ -1113,7 +1110,7 @@ public class TestSavingsBO extends MifosTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(new Money(currency, "400.0"));
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
 		Money amountAdjustedTo = new Money(currency, "2000.0");
 		try {
@@ -1146,7 +1143,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.setSavingsBalance(new Money(currency, "400.0"));
 		savings.update();
 		savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.getSavingsOffering().setMaxAmntWithdrawl(new Money("2500"));
@@ -1196,7 +1193,7 @@ public class TestSavingsBO extends MifosTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1443,7 +1440,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1536,7 +1533,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1708,7 +1705,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1784,7 +1781,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1907,7 +1904,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addSavingsActivityDetails(savingsActivity);
 
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -3757,6 +3754,7 @@ public class TestSavingsBO extends MifosTestCase {
 		meetingDates.remove(0);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
 				.getInstallmentId().intValue() + 1));
+		savings.update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,

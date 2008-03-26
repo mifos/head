@@ -195,7 +195,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.save();
-			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
 			payment = helper.createAccountPaymentToPersist(savings,
@@ -207,7 +207,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
-			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
 			savings = savingsPersistence.findById(savings.getAccountId());
@@ -221,7 +221,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
-			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
 			savings = savingsPersistence.findById(savings.getAccountId());
@@ -235,7 +235,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
-			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
 			savings = savingsPersistence.findById(savings.getAccountId());
@@ -249,7 +249,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
-			HibernateUtil.getSessionTL().flush();
+			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 
 			savings = savingsPersistence.findById(savings.getAccountId());
@@ -378,12 +378,12 @@ public class TestSavingsPersistence extends MifosTestCase {
 		TestSavingsBO.setActionDate(accountActionDateEntity,offSetCurrentDate(7));
 
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());
@@ -415,11 +415,11 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 		TestSavingsBO.setPaymentDate(accountActionDateEntity,currentDate);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		assertEquals(savingsPersistence
 				.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
 	}

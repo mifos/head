@@ -99,6 +99,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -188,6 +189,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.ActivityContext;
@@ -319,8 +321,7 @@ public class TestObjectFactory {
 					meeting, personnelId);
 			center.save();
 			HibernateUtil.commitTransaction();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		addObject(center);
@@ -1449,10 +1450,7 @@ public class TestObjectFactory {
 
 	private static void deleteCustomer(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		// HACK to get this loaded in a new session
-		customer = (CustomerBO) session.load(CustomerBO.class, customer
-				.getCustomerId());
+		HibernateUtil.startTransaction();
 		session.lock(customer, LockMode.NONE);
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);
@@ -1470,7 +1468,7 @@ public class TestObjectFactory {
 		}
 		session.delete(customer);
 		deleteFees(feeList);
-		transaction.commit();
+		HibernateUtil.commitTransaction();
 	}
 
 	private static void deleteClientOfferings(CustomerBO customer) {
@@ -2190,7 +2188,7 @@ public class TestObjectFactory {
 
 	public static void cleanUpChangeLog() {
 		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
+		HibernateUtil.startTransaction();
 		List<AuditLog> auditLogList = session.createQuery(
 				"from org.mifos.framework.components.audit.business.AuditLog")
 				.list();
@@ -2201,7 +2199,8 @@ public class TestObjectFactory {
 				session.delete(auditLog);
 			}
 		}
-		transaction.commit();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 	}
 
 	public static List<AuditLog> getChangeLog(EntityType type, Integer entityId) {

@@ -19,6 +19,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -36,14 +37,17 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 
 
 	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-
+	protected void tearDown() throws Exception {		
+		try {
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public static void addAccountPayment(AccountPaymentEntity payment,AccountBO account) {

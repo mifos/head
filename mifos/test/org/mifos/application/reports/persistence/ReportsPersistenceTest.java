@@ -32,7 +32,7 @@ public class ReportsPersistenceTest extends MifosTestCase {
          Query query = session.createQuery("select count(*) from ReportsCategoryBO");
          List list = query.list();
          
-		assertEquals(list.get(0), listOfReportCategories.size());
+		assertEquals(((Long) list.get(0)).intValue(), listOfReportCategories.size());
 		assertEquals("1", listOfReportCategories.get(0)
 				.getReportCategoryId().toString());
 		assertEquals("Client Detail",
@@ -176,7 +176,7 @@ public class ReportsPersistenceTest extends MifosTestCase {
 		 org.hibernate.Session session= HibernateUtil.getSessionTL();
 		 Query query = session.createQuery("select count(*) from ReportsBO");
 		 List list = query.list();
-		 int reportsNum = ((Integer)list.get(0)).intValue();
+		 int reportsNum = ((Long)list.get(0)).intValue();
 		 assertEquals(reportsNum, reportsPersistence.getAllReports().size());
 	 }
 	 

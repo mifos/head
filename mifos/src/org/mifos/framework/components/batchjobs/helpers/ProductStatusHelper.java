@@ -47,6 +47,8 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class ProductStatusHelper extends TaskHelper {
@@ -70,7 +72,7 @@ public class ProductStatusHelper extends TaskHelper {
 			query.setShort("activeLoanStatus", PrdStatus.LOAN_ACTIVE.getValue());
 			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
-			query.executeUpate();
+			query.executeUpdate();
 
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveLoanStatus "
 					+ "where p.prdType.productTypeID=:loan and p.endDate=:currentDate";
@@ -79,7 +81,7 @@ public class ProductStatusHelper extends TaskHelper {
 					.getValue());
 			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
-			query.executeUpate();
+			query.executeUpdate();
 
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeSavingStatus "
 					+ "where p.prdType.productTypeID=:saving and p.startDate=:currentDate";
@@ -88,7 +90,7 @@ public class ProductStatusHelper extends TaskHelper {
 					.getValue());
 			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
-			query.executeUpate();
+			query.executeUpdate();
 
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveSavingStatus "
 					+ "where p.prdType.productTypeID=:saving and p.endDate=:currentDate";
@@ -97,11 +99,18 @@ public class ProductStatusHelper extends TaskHelper {
 					.getValue());
 			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
-			query.executeUpate();
+			query.executeUpdate();
 
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
+			try {
+				HibernateUtil.rollbackTransaction();
+			} catch (Exception ex) {
+				// Whoops, rollback failed, log error?
+				MifosLogManager
+				.getLogger(LoggerConstants.BATCH_JOBS)
+				.error("ProductStatusHelper execute failed and subsequent rollback failed with exception " + ex.getClass().getName() + ": " + ex.getMessage());
+			}
 			throw new BatchJobException(e);
 		}
 	}

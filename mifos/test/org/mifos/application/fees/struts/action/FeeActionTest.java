@@ -59,6 +59,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -103,10 +104,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 			HibernateUtil.closeSession();
 		}
 		catch (Exception e) {
-			/* Throwing exceptions from finally/tearDown will obscure
-			   a failure, if there was one.
-			*/
-			e.printStackTrace();
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
 		super.tearDown();
 	}
@@ -715,6 +714,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulViewAllFees() throws Exception {
+		HibernateUtil.startTransaction();
 		fee = TestObjectFactory.createOneTimeRateFee("Group_Fee",
 				FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		fee1 = TestObjectFactory.createOneTimeRateFee("Customer_Fee",
@@ -725,6 +725,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		fee3 = TestObjectFactory
 				.createOneTimeRateFee("Center_Fee", FeeCategory.CENTER, 40.0,
 						FeeFormula.AMOUNT, FeePayment.UPFRONT);
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "viewAll");

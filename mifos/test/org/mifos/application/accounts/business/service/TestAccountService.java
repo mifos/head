@@ -54,6 +54,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -83,12 +84,18 @@ public class TestAccountService extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(savingsBO);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			accountPersistence = null;
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}		
+		HibernateUtil.closeSession();
 		super.tearDown();
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(savingsBO);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		accountPersistence = null;
 	}
 
 	public void testGetTrxnHistory() throws Exception {

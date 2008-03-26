@@ -287,7 +287,7 @@
 	</class>
 	<query name="accounts.getLastMeetingDateforCustomer">
 		<![CDATA[from org.mifos.application.customer.business.CustomerScheduleEntity accountTrxn 
-			where accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.actionDate <= :ACTION_DATE  
+			where accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.actionDate <= date(:ACTION_DATE)  
 			order by accountTrxn.actionDate desc]]>
 	</query>
 
@@ -295,7 +295,7 @@
 		<![CDATA[select new org.mifos.application.productdefinition.util.helpers.PrdOfferingView(
 			prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
 			from org.mifos.application.productdefinition.business.PrdOfferingBO prdOffering
-			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus = :prdStatus
+			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus
 			and prdOffering.prdApplicableMaster.id = :prdApplicableMaster 
 			order by prdOffering.prdOfferingName
 		]]>
@@ -323,7 +323,7 @@
 		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn 
 			where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId) 
 			from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 
-			where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate < :date)]]>
+			where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate < date(:date))]]>
 	</query>
 
 	<query name="accounts.retrieveFirstTrxn">
@@ -351,7 +351,7 @@
 	<query name="accounts.getCustomerAccountActionDates">
 		<![CDATA[from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDates 
 			where accountActionDates.account.accountId = :ACCOUNT_ID and 
-			accountActionDates.actionDate <= :ACTION_DATE and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
+			accountActionDates.actionDate <= date(:ACTION_DATE) and accountActionDates.paymentStatus = :PAYMENT_STATUS]]>
 	</query>
 
 	<!-- Get the Loan accounts	that are in arrears-->
@@ -360,7 +360,7 @@
 			join  account.accountActionDates as actiondate
 			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
 			and account.accountState.id in (:LOANAPPROVED,:LOANACTIVEINGOODSTAND)
-			and actiondate.actionDate < :CHECKDATE
+			and actiondate.actionDate < date(:CHECKDATE)
 			and actiondate.paymentStatus=:PAYMENTSTATUS 
 			group by account.accountId]]>
 	</query>
@@ -379,17 +379,17 @@
 			join  account.accountActionDates as actiondate
 			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
 			and account.accountState.id in (:LOANACTIVEINGOODSTAND,:BADSTANDING)
-			and actiondate.actionDate <= :CHECKDATE
+			and actiondate.actionDate <= date(:CHECKDATE)
 			and actiondate.paymentStatus=:PAYMENTSTATUS 
 			group by account.accountId]]>
 	</query>
 	<query name="accounts.retrieveSavingsAccountsIntCalc">
 		<![CDATA[select savings.accountId from org.mifos.application.accounts.savings.business.SavingsBO savings
-			where  savings.nextIntCalcDate <= :currentDate and savings.accountState.id in (16,18)) ]]>
+			where  savings.nextIntCalcDate <= date(:currentDate) and savings.accountState.id in (16,18)) ]]>
 	</query>
 	<query name="accounts.retrieveSavingsAccountsIntPost">
 		<![CDATA[select savings.accountId from org.mifos.application.accounts.savings.business.SavingsBO savings
-			where  savings.nextIntPostDate < :currentDate and savings.accountState.id in (16,18)) ]]>
+			where  savings.nextIntPostDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
 	</query>
 
 	<query name="accounts.retrieveAccountsForCustomer">
@@ -404,7 +404,7 @@
 			where actionDate.account.accountId = :ACCOUNT_ID and
 			actionDate.account.accountType.accountTypeId=:ACCOUNT_TYPE_ID
 			and actionDate.account.accountState.id =:ACTIVE
-			and actionDate.actionDate < :CHECKDATE
+			and actionDate.actionDate < date(:CHECKDATE)
 			and actionDate.paymentStatus=:PAYMENTSTATUS 
 			]]>
 	</query>

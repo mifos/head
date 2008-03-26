@@ -18,6 +18,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -45,12 +46,17 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(group1);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(center1);
-		TestObjectFactory.cleanUp(office);
+		try {
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(group1);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.cleanUp(center1);
+			TestObjectFactory.cleanUp(office);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

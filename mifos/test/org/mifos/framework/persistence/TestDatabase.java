@@ -162,10 +162,13 @@ public class TestDatabase implements SessionOpener {
 
 	public static void resetMySQLDatabase() throws Exception {
 		Connection connection = HibernateUtil.getSessionTL().connection();
+		HibernateUtil.startTransaction();
 		SqlUpgrade.execute(new FileInputStream("sql/mifosdroptables.sql"), connection);
 		SqlUpgrade.execute(new FileInputStream("sql/latest-schema.sql"), connection);
 		SqlUpgrade.execute(new FileInputStream("sql/latest-data.sql"), connection);
+		SqlUpgrade.execute(new FileInputStream("sql/custom_data.sql"), connection);
 		SqlUpgrade.execute(new FileInputStream("sql/testdbinsertionscript.sql"), connection);
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
 		// If the database is ever blown away, we must repopulate chart of

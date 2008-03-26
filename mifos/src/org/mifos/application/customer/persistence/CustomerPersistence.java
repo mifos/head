@@ -522,9 +522,9 @@ public class CustomerPersistence extends Persistence {
 
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		queryParameters.put("globalCustNum", globalCustNum);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Integer count = new Long((Long) execUniqueResultNamedQuery(
 				NamedQueryConstants.CUSTOMER_FIND_COUNT_BY_SYSTEM_ID,
-				queryParameters);
+				queryParameters)).intValue();
 		return count != null && count > 0 ? true : false;
 
 	}
@@ -647,16 +647,16 @@ public class CustomerPersistence extends Persistence {
 					.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSATTENDED);
 			query.setInteger("CUSTOMERID", customerId);
 			query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-			customerPerformanceHistoryView.setMeetingsAttended((Integer) query
-					.uniqueResult());
+			customerPerformanceHistoryView.setMeetingsAttended(new Long((Long) query
+					.uniqueResult()).intValue());
 		}
 		else {
 			query = session
 					.getNamedQuery(NamedQueryConstants.NUMBEROFMEETINGSMISSED);
 			query.setInteger("CUSTOMERID", customerId);
 			query.setDate("DATEONEYEARBEFORE", dateOneYearBefore);
-			customerPerformanceHistoryView.setMeetingsMissed((Integer) query
-					.uniqueResult());
+			customerPerformanceHistoryView.setMeetingsMissed(new Long((Long) query
+					.uniqueResult()).intValue());
 		}
 		return customerPerformanceHistoryView;
 	}
@@ -888,13 +888,8 @@ public class CustomerPersistence extends Persistence {
 
 	public void updateLOsForAllChildren(Short parentLO, String parentSearchId,
 			Short parentOfficeId) {
-		String hql = "update CustomerBO customer "
-				+ " set customer.personnel = :parentLoanOfficer "
-				+
-
-				// This is for Hibernate 3.2.x instead of 3.0beta4 (?)
-				//				" set customer.personnel.personnelId = :parentLoanOfficer " +
-
+		String hql = "update CustomerBO customer " +
+				" set customer.personnel.personnelId = :parentLoanOfficer " +
 				" where customer.searchId like :parentSearchId"
 				+ " and customer.office.officeId = :parentOfficeId";
 		Session session = HibernateUtil.getSessionTL();
@@ -902,8 +897,7 @@ public class CustomerPersistence extends Persistence {
 		update.setParameter("parentLoanOfficer", parentLO);
 		update.setParameter("parentSearchId", parentSearchId + ".%");
 		update.setParameter("parentOfficeId", parentOfficeId);
-		update.executeUpate();
-	}
+		update.executeUpdate();	}
 
 	public void deleteCustomerMeeting(CustomerBO customer)
 			throws PersistenceException {

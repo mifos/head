@@ -9,6 +9,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -60,13 +61,25 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	}
 	
 	public void testExecuteForCustomerAccount() throws Exception{
-		createCenter();
-		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
-		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+		HibernateUtil.startTransaction();
+		createCenter();		
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		HibernateUtil.startTransaction();
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		assertEquals(noOfInstallments+10,center.getCustomerAccount().getAccountActionDates().size());
 		
+		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
+		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
+		
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		System.out.println(center.getCustomerAccount().getAccountActionDates().size());
+		assertEquals(noOfInstallments+10,center.getCustomerAccount().getAccountActionDates().size());		
 	}
 	
 	public void testExecuteForSavingsAccount() throws Exception{
@@ -121,16 +134,14 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				.getCustomerMeeting().getMeeting().getStartDate().toString());
 	}
 	
-	private void createCenter() {
+	private void createCenter() throws CustomerException {
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting, feeView);
-		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());	
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
+		center.update();
 	}
 	
 	

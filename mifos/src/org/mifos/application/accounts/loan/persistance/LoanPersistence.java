@@ -67,8 +67,8 @@ public class LoanPersistence extends Persistence {
 
 	public List<LoanBO> findIndividualLoans(String accountId)
 			throws PersistenceException {
-		Map<String, String> queryParameters = new HashMap<String, String>();
-		queryParameters.put(LoanConstants.LOANACCOUNTID, accountId);
+		Map<String, Integer> queryParameters = new HashMap<String, Integer>();
+		queryParameters.put(LoanConstants.LOANACCOUNTID, new Integer(accountId));
 		List<LoanBO> queryResult = executeNamedQuery(
 				NamedQueryConstants.FIND_INDIVIDUAL_LOANS, queryParameters);
 		return queryResult == null ? null : (List<LoanBO>) queryResult;
@@ -173,9 +173,9 @@ public class LoanPersistence extends Persistence {
 	public List<LoanBO> getSearchResults(String officeId, String personnelId,
 			String type, String currentStatus) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("OFFICE_ID", officeId);
-		queryParameters.put("PERSONNEL_ID", personnelId);
-		queryParameters.put("CURRENT_STATUS", currentStatus);
+		queryParameters.put("OFFICE_ID", Short.parseShort(officeId));
+		queryParameters.put("PERSONNEL_ID", Short.parseShort(personnelId));
+		queryParameters.put("CURRENT_STATUS", Short.parseShort(currentStatus));
 		return executeNamedQuery(NamedQueryConstants.GET_SEARCH_RESULTS,
 				queryParameters);
 	}

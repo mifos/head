@@ -17,6 +17,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -43,11 +44,16 @@ public class TestCenterBusinessService extends MifosTestCase {
 	}
 
 	@Override
-	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savingsBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+	public void tearDown() throws Exception {		
+		try {
+			TestObjectFactory.cleanUp(savingsBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

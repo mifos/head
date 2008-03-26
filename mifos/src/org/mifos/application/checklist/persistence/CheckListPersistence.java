@@ -80,19 +80,17 @@ public class CheckListPersistence extends MasterPersistence {
 		return (CheckListBO) getPersistentObject(CheckListBO.class, checkListId);
 	}
 
-	public int isValidCheckListState(Short levelId, Short stateId,
+	public long isValidCheckListState(Short levelId, Short stateId,
 			boolean isCustomer) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("levelId", levelId);
 		queryParameters.put("stateId", stateId);
-		Integer count;
 		if (isCustomer)
-			count = (Integer) execUniqueResultNamedQuery(
+			return (Long) execUniqueResultNamedQuery(
 					NamedQueryConstants.CUSTOMER_VALIDATESTATE, queryParameters);
 		else
-			count = (Integer) execUniqueResultNamedQuery(
+			return (Long) execUniqueResultNamedQuery(
 					NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
-		return count;
 	}
 
 	public List<CustomerCheckListBO> retreiveAllCustomerCheckLists()

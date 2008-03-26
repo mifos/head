@@ -36,6 +36,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.config.ConfigurationManager;
@@ -116,16 +117,12 @@ public class TestHolidayUtils extends MifosTestCase {
 			HibernateUtil.closeSession();
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
-			// why no clean up of savingsOffering?
-			HibernateUtil.closeSession();
-			setSavedConfig();
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
-		catch (Exception e) {
-			/* Throwing from a finally block, which tearDown is called from,
-			   will often hide the real failure.
-			 */
-			e.printStackTrace();
-		}
+		HibernateUtil.closeSession();
+		setSavedConfig();
 		super.tearDown();
 	}
 

@@ -52,6 +52,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -90,13 +91,12 @@ public class TestClientBO extends MifosTestCase {
 			TestObjectFactory.cleanUp(center1);
 			TestObjectFactory.cleanUp(office);
 			TestObjectFactory.removeObject(savingsOffering1);
-			TestObjectFactory.removeObject(savingsOffering2);
-			HibernateUtil.closeSession();
+			TestObjectFactory.removeObject(savingsOffering2);			
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
-		catch (Exception e) {
-			// throwing here may obscure previous failures
-			e.printStackTrace();
-		}
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 	

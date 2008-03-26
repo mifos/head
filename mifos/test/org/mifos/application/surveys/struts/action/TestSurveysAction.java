@@ -17,6 +17,7 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
@@ -64,11 +65,11 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		if (testSurvey != null) {
+		/*if (testSurvey != null) {
 			//HibernateUtil.getSessionTL().delete(testSurvey);
 			testSurvey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, testSurvey.getSurveyId());
 			deleteSurvey(testSurvey);
-		}
+		}*/
 /*		if (question != null) {
 			HibernateUtil.getSessionTL().delete(question);
 		}
@@ -76,6 +77,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 			HibernateUtil.getSessionTL().delete(question2);
 		}
 */		
+		TestDatabase.resetMySQLDatabase();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();
 	}

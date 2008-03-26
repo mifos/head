@@ -74,7 +74,7 @@
 	<query name="CollectionSheetCustomer.customersWithSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.customer.business.CustomerScheduleEntity accountActionDate
 					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
-					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+					and (accountActionDate.actionDate= date(:meeting_date) and accountActionDate.account.accountState.id in (5,11,16))
 						
 						
 		]]>
@@ -82,7 +82,7 @@
 	<query name="CollectionSheetCustomer.loansWithSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanScheduleEntity accountActionDate
 					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
-					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+					and (accountActionDate.actionDate= date(:meeting_date) and accountActionDate.account.accountState.id in (5,11,16))
 						
 						
 		]]>
@@ -90,7 +90,7 @@
 	<query name="CollectionSheetCustomer.savingssWithSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.accounts.savings.business.SavingsScheduleEntity accountActionDate
 					where accountActionDate.account.customer.customerStatus.id in (3,4,9,10,13)
-					and (accountActionDate.actionDate= :meeting_date and accountActionDate.account.accountState.id in (5,11,16))
+					and (accountActionDate.actionDate= date(:meeting_date) and accountActionDate.account.accountState.id in (5,11,16))
 						
 						
 		]]>
@@ -99,7 +99,7 @@
 	<query name="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate">
 		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanBO loan
 					where loan.customer.customerStatus.id in (3,4,9,10,13)
-					and (loan.disbursementDate= :meeting_date and loan.accountState.id in (3,4))
+					and (loan.disbursementDate = date(:meeting_date) and loan.accountState.id in (3,4))
 						
 						
 		]]>
@@ -108,7 +108,7 @@
 	<query name="CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDateAndLoanOfficer">
 		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
 					where collectionSheet.custLevel = :CUSTOMER_LEVEL
-					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.collectionSheet.collSheetDate= date(:MEETING_DATE)
 					and collectionSheet.custId = :CUSTOMER_ID
 					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
 		]]>
@@ -117,7 +117,7 @@
 	<query name="CollectionSheetCustomer.collectionSheetForSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
 					where collectionSheet.custLevel = :CUSTOMER_LEVEL
-					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.collectionSheet.collSheetDate= date(:MEETING_DATE)
 					and collectionSheet.custId = :CUSTOMER_ID
 					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
 		]]>
@@ -126,7 +126,7 @@
 	<query name="CollectionSheetCustomer.collectionSheetOfCustomersUnderAParentForSpecifiedMeetingDate">
 		<![CDATA[ from org.mifos.application.collectionsheet.business.CollSheetCustBO collectionSheet
 					where collectionSheet.custLevel = :CUSTOMER_LEVEL
-					and collectionSheet.collectionSheet.collSheetDate= :MEETING_DATE
+					and collectionSheet.collectionSheet.collSheetDate= date(:MEETING_DATE)
 					and collectionSheet.parentCustomerId = :PARENT_CUSTOMER_ID
 					and collectionSheet.loanOfficerId = :LOAN_OFFICER_ID
 		]]>

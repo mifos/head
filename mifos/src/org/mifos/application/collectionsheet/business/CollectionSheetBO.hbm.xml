@@ -20,7 +20,7 @@
 
     <query name="collectionSheet.getCollectionSheetForMeetingDate">
             <![CDATA[from org.mifos.application.collectionsheet.business.CollectionSheetBO 
-            collectionSheet where collectionSheet.collSheetDate = :MEETING_DATE]]>
+            collectionSheet where collectionSheet.collSheetDate = date(:MEETING_DATE)]]>
     </query>	   
 
 	<!-- Query to retrieve meeting date for specified center -->
@@ -32,7 +32,7 @@
 				and coll_sheet_customer.cust_level=:CUSTOMER_LEVEL 
 				and coll_sheet_customer.cust_office_id=:OFFICE_ID
 				and coll_sheet_customer.loan_officer_id=:LOAN_OFFICER_ID 
-				and collectionSheet.coll_sheet_date > :FROM_DATE
+				and collectionSheet.coll_sheet_date > date(:FROM_DATE)
 				and collectionSheet.coll_sheet_id=coll_sheet_customer.coll_sheet_id
 				order by collectionSheet.coll_sheet_date desc
 		]]>

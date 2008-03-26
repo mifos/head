@@ -49,6 +49,7 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -81,14 +82,19 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-	
-		TestObjectFactory.cleanUp(loanOfficer);
-		TestObjectFactory.cleanUp(createdBranchOffice);
+	protected void tearDown() throws Exception {		
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+
+			TestObjectFactory.cleanUp(loanOfficer);
+			TestObjectFactory.cleanUp(createdBranchOffice);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -247,16 +253,16 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testGroupPerfObject() throws PersistenceException {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = group
-				.getPerformanceHistory();
+				.getGroupPerformanceHistory();
 		GroupBOTest.setLastGroupLoanAmount(groupPerformanceHistory, new Money(
 				"100"));
 		TestObjectFactory.updateObject(group);
 		HibernateUtil.closeSession();
 		group = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
-		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
+		assertEquals(group.getCustomerId(), group.getGroupPerformanceHistory()
 				.getGroup().getCustomerId());
-		assertEquals(new Money("100"), group.getPerformanceHistory()
+		assertEquals(new Money("100"), group.getGroupPerformanceHistory()
 				.getLastGroupLoanAmount());
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -282,17 +288,17 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testClientPerfObject() throws PersistenceException {
 		createInitialObjects();
 		ClientPerformanceHistoryEntity clientPerformanceHistory = client
-				.getPerformanceHistory();
+				.getClientPerformanceHistory();
 		clientPerformanceHistory.setNoOfActiveLoans(Integer.valueOf("1"));
 		clientPerformanceHistory.setLastLoanAmount(new Money("100"));
 		TestObjectFactory.updateObject(client);
 		client = (ClientBO) customerPersistence.findBySystemId(client
 				.getGlobalCustNum(), client.getCustomerLevel().getId());
-		assertEquals(client.getCustomerId(), client.getPerformanceHistory()
+		assertEquals(client.getCustomerId(), client.getClientPerformanceHistory()
 				.getClient().getCustomerId());
-		assertEquals(new Money("100"), client.getPerformanceHistory()
+		assertEquals(new Money("100"), client.getClientPerformanceHistory()
 				.getLastLoanAmount());
-		assertEquals(new Money("0"), client.getPerformanceHistory()
+		assertEquals(new Money("0"), client.getClientPerformanceHistory()
 				.getDelinquentPortfolioAmount());
 	}
 

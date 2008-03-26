@@ -142,7 +142,6 @@
 		<javac srcdir="${src.dir}" 
 		       destdir="${build.classes}" 
 		       debug="${debug.flag}"
-		       deprecation="on"
 		       target="1.5"
 		       includes="**/*.java"
 		       excludes="${global.exclude}">
@@ -155,7 +154,6 @@
 		<javac srcdir="${test.dir}" 
 		       destdir="${test.classes}" 
 		       debug="${debug.flag}"
-		       deprecation="on"
 		       includes="**/*.java"
 		       excludes="${global.exclude}">
 			<classpath>

@@ -28,6 +28,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -67,21 +68,26 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		if (savings != null) {
-			savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+		try {
+			if (savings != null) {
+				savings = (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
+			}
+			TestObjectFactory.cleanUp(savings);
+			savings = null;
+			if (group != null) {
+				group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
+			}
+			TestObjectFactory.cleanUp(group);
+			group = null;
+			if (center != null) {
+				center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
+			}
+			TestObjectFactory.cleanUp(center);
+			center = null;
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
 		}
-		TestObjectFactory.cleanUp(savings);
-		savings = null;
-		if (group != null) {
-			group = (GroupBO)HibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-		}
-		TestObjectFactory.cleanUp(group);
-		group = null;
-		if (center != null) {
-			center = (CenterBO)HibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-		}
-		TestObjectFactory.cleanUp(center);
-		center = null;
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -104,7 +110,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
@@ -145,7 +151,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balance);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
@@ -290,7 +296,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt()

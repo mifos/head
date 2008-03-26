@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -159,7 +160,7 @@ public class AccountPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("accountTypeId", accountTypeId);
 		queryParameters.put("accountStatus", accountStatusId);
-		queryParameters.put("checklistStatus", 1);
+		queryParameters.put("checklistStatus", (short) 1);
 		return executeNamedQuery(NamedQueryConstants.STATUSCHECKLIST,
 				queryParameters);
 	}

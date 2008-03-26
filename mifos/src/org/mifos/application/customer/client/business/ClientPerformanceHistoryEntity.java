@@ -25,7 +25,11 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	private Money totalSavings;
 
-	private final ClientBO client;
+	private ClientBO client;
+	
+	public void setClient(ClientBO client) {
+		this.client = client;
+	}
 
 	public ClientPerformanceHistoryEntity(ClientBO client) {
 		super();

@@ -53,7 +53,9 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -677,7 +679,17 @@ public abstract class CustomerBO extends BusinessObject {
 		return new Money();
 	}
 
-	public abstract CustomerPerformanceHistory getPerformanceHistory();
+	// TODO: Abstract method doesn't work with Hibernate 3.2?
+	// public abstract CustomerPerformanceHistory getPerformanceHistory();
+	public CustomerPerformanceHistory getPerformanceHistory() {
+		if (this instanceof ClientBO) {
+			return ((ClientBO) this).getClientPerformanceHistory();
+		} else if (this instanceof GroupBO) {
+			return ((GroupBO) this).getGroupPerformanceHistory();
+		} else {
+			return null;
+		}
+	}
 
 	public Money getSavingsBalance() {
 		Money amount = new Money();

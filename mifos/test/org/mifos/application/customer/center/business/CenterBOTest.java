@@ -34,6 +34,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -60,11 +61,16 @@ public class CenterBOTest extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
+		super.tearDown();		
 	}
 
 	public static void setPerformanceHistoryDetails(
@@ -355,6 +361,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 
+		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), null, center
 				.getExternalId(), center.getMfiJoiningDate(), center
 				.getAddress(), null, null);
@@ -381,6 +388,7 @@ public class CenterBOTest extends MifosTestCase {
 				.getPersonnel().getPersonnelId());
 		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
 		HibernateUtil.closeSession();
+		HibernateUtil.startTransaction();
 		center.update(TestUtils.makeUser(), newLO
 				.getPersonnelId(), center.getExternalId(), center
 				.getMfiJoiningDate(), center.getAddress(), null, null);
@@ -499,6 +507,8 @@ public class CenterBOTest extends MifosTestCase {
 	public void testSearchIdOnlyUniquePerOffice() throws Exception {
 		Date startDate = new Date();
 
+		HibernateUtil.startTransaction();
+		
 		// In real life, would be another branch rather than an area
 		Short branch1 = TestObjectFactory.SAMPLE_AREA_OFFICE;
 		
@@ -520,7 +530,8 @@ public class CenterBOTest extends MifosTestCase {
 				"sameBranch", null, null, null, null, startDate, 
 				branch1, meeting,
 				PersonnelConstants.SYSTEM_USER);
-			HibernateUtil.getSessionTL().save(center);
+		HibernateUtil.getSessionTL().save(center);
+		HibernateUtil.commitTransaction();
 		
 		assertEquals("1.1", center.getSearchId());
 		assertEquals("1.1", center2.getSearchId());

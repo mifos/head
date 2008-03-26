@@ -97,7 +97,7 @@
 
 		<subclass name="org.mifos.application.customer.group.business.GroupBO" 
 			discriminator-value="GROUP">
-			<one-to-one name="performanceHistory" 
+			<one-to-one name="groupPerformanceHistory"
 				class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" 
 				cascade="all" property-ref="group" />
 		</subclass>
@@ -115,6 +115,9 @@
 			<one-to-one name="customerPicture" 
 				class="org.mifos.application.customer.client.business.CustomerPictureEntity" 
 				cascade="all" property-ref="customer" />
+			<one-to-one name="clientPerformanceHistory" 
+				class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" 
+				cascade="all" property-ref="client"/>
 			<set name="nameDetailSet" cascade="all" access="field">
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientNameDetailEntity" />
@@ -126,10 +129,7 @@
 			<set name="offeringsAssociatedInCreate"  table="CLIENT_INITIAL_SAVINGS_OFFERING" inverse="true" cascade="save-update"  access="field" lazy="true">
 				<key column="CUSTOMER_ID" />
 				<many-to-many class="org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity" column="CLIENT_OFFERING_ID"/>
-			</set>
-			<one-to-one name="performanceHistory" 
-				class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" 
-				cascade="all" property-ref="client" access="field"/>
+			</set>			
 		</subclass>
 
 	</class>
@@ -165,9 +165,9 @@
 			account.accountId=actionDate.account.accountId and 
 			account.customer.customerId=actionDate.customer.customerId
 			and account.loanOffering.prdOfferingId != null 
-			and ((actionDate.actionDate=:meetingDate and  
+			and ((actionDate.actionDate=date(:meetingDate) and  
 			account.accountState.id in (5,9)) or (
-			account.accountState.id in (3,4) and account.disbursementDate<=:meetingDate)) 
+			account.accountState.id in (3,4) and account.disbursementDate<=date(:meetingDate))) 
 			order by account.customer.customerLevel.id,account.loanOffering.prdOfferingShortName]]>
 	</query>
 	<query name="Customer.getSavingsProductForCustomer">
@@ -175,7 +175,7 @@
 			from org.mifos.application.accounts.savings.business.SavingsBO account,
 			org.mifos.application.accounts.savings.business.SavingsScheduleEntity actionDate
 			where account.accountId=actionDate.account.accountId 
-			and actionDate.actionDate=:meetingDate and account.savingsOffering.prdOfferingId != null 
+			and actionDate.actionDate=date(:meetingDate) and account.savingsOffering.prdOfferingId != null 
 			and account.customer.personnel.personnelId=:personnelId
 			and account.customer.searchId like :searchId and account.accountState.id=16
 			and (account.customer.customerId=actionDate.customer.customerId
@@ -269,7 +269,7 @@
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and :customerId = 0) or (:customerId != 0 and client.customerLevel.id =:LEVEL_ID and client.governmentId =:GOVT_ID and client.customerId !=:customerId)]]>
     </query>					  
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
- 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
+ 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =date(:DATE_OFBIRTH) and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =date(:DATE_OFBIRTH) and client.customerId !=:customerId)]]>
 
 <!--  NOTE: care must be taken with the query above to use java.sql.Date objects and not java.util.Date objects when clients
 		A more defensive query would be as below, where we explicity ignore time information more fine grained than "day".
@@ -296,7 +296,7 @@
 			where 
 			client.customerId = clientAttendance.customer.customerId
 			and client.office.officeId = :OFFICE_ID
-			and clientAttendance.meetingDate = :MEETING_DATE	]]>
+			and clientAttendance.meetingDate = date(:MEETING_DATE)	]]>
     </query>				      	  
   
     
@@ -809,10 +809,10 @@
 	        	   	and customer.customerStatus.id in (7,8,9,10)]]>
         </query>
 		  <query name="numberOfMeetingsAttended">
-		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (1,4) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
+		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (1,4) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
 	 </query>
 	 <query name="numberOfMeetingsMissed">
-		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
+		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > date(:DATEONEYEARBEFORE) and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
 	 </query>
 	 <query name="Customer.getActiveClientsUnderParent">
 		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
@@ -821,7 +821,7 @@
 	</query>
 	<query name="Customer.getActiveClientsUnderGroup">
 		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
-				 where client.parentCustomer  = :GROUP_ID 
+				 where client.parentCustomer.customerId  = :GROUP_ID 
 				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
 	</query>
 	<query name="Customer.getActiveClientsCountUnderOffice">

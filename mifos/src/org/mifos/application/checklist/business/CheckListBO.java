@@ -143,9 +143,8 @@ public abstract class CheckListBO extends BusinessObject {
 
 	protected void validateCheckListState(Short masterTypeId, Short stateId,
 			boolean isCustomer) throws CheckListException {
-		Integer records;
 		try {
-			records = new CheckListPersistence().isValidCheckListState(
+			Long records = new CheckListPersistence().isValidCheckListState(
 					masterTypeId, stateId, isCustomer);
 			if (records.intValue() != 0)
 				throw new CheckListException(

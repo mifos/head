@@ -65,6 +65,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -96,18 +97,23 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		/*List<ProductMixBO> prdmixBO = (List<ProductMixBO>) HibernateUtil.getSessionTL().get(
 				ProductMixBO.class,productOffering.getPrdOfferingId());*/
 		
-		TestObjectFactory.removeObject(loanOffering);
-		TestObjectFactory.removeObject(loanOffering1);
-		TestObjectFactory.removeObject(savingProduct);
-		TestObjectFactory.removeObject(savingProduct2);
+		try {
+			TestObjectFactory.removeObject(loanOffering);
+			TestObjectFactory.removeObject(loanOffering1);
+			TestObjectFactory.removeObject(savingProduct);
+			TestObjectFactory.removeObject(savingProduct2);
 
-		// HACK: reload the productOffering in the new session to avoid 
-		// org.hibernate.StaleObjectStateException issues
-		productOffering = (PrdOfferingBO)HibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
-		TestObjectFactory.removeObject(productOffering);
-		TestObjectFactory.removeObject(prdmix);	
-		TestObjectFactory.removeObject(saving1);
-		TestObjectFactory.removeObject(saving2);
+			// HACK: reload the productOffering in the new session to avoid 
+			// org.hibernate.StaleObjectStateException issues
+			productOffering = (PrdOfferingBO)HibernateUtil.getSessionTL().get(PrdOfferingBO.class, productOffering.getPrdOfferingId());
+			TestObjectFactory.removeObject(productOffering);
+			TestObjectFactory.removeObject(prdmix);	
+			TestObjectFactory.removeObject(saving1);
+			TestObjectFactory.removeObject(saving2);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 
 		super.tearDown();
 	}
@@ -162,15 +168,19 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.create_success.toString());
-		doClenUp();
+		cleanUpAfterCreate();
+		HibernateUtil.closeSession();
 	}
 	
-	private void doClenUp() throws PersistenceException, ProductDefinitionException  {
-		List<ProductMixBO> productList = (new ProductMixPersistence().getAllProductMix());
+	private void cleanUpAfterCreate() throws PersistenceException,
+			ProductDefinitionException {
+		HibernateUtil.startTransaction();
+		List<ProductMixBO> productList = (new ProductMixPersistence()
+				.getAllProductMix());
 		for (ProductMixBO tempPrdMix : productList) {
 			tempPrdMix.delete();
 		}
-		
+		HibernateUtil.commitTransaction();
 	}
 
 	public void testGet_success() throws Exception {

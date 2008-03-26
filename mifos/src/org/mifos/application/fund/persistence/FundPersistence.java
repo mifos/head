@@ -18,11 +18,11 @@ public class FundPersistence extends Persistence {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.FUNDLOGGER);
 
-	public Integer getFundNameCount(String fundName)throws PersistenceException {
+	public Long getFundNameCount(String fundName)throws PersistenceException {
 		logger.debug("getting the fund name count for :" + fundName);
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(FundConstants.FUND_NAME, fundName);
-		return (Integer) execUniqueResultNamedQuery(
+		return (Long) execUniqueResultNamedQuery(
 				NamedQueryConstants.CHECK_FUND_NAME_EXIST, queryParameters);
 	}
 	

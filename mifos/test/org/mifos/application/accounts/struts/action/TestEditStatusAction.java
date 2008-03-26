@@ -25,6 +25,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
@@ -77,12 +78,17 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	}
 	
 	@Override
-	public void tearDown() throws Exception {
-		reloadMembers();
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+	public void tearDown() throws Exception {		
+		try {
+			reloadMembers();
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

@@ -37,9 +37,13 @@ Cobertura install
 	</target>
 
 	<target name="coverage" depends="instrument" description="Compiles source, test, runs test cases and generates a coverage report">
-		<junit printsummary="on" fork="true" maxmemory="512M" failureproperty="tests.instrument.failure">
+		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+						dir="${basedir}"
+						failureproperty="tests.failure">
 
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="${dist.dir}/mifos_cobertura.ser" />
+			
+			<sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
 
 			<classpath location="${instrumented.dir}" />
 			<classpath location="${build.classes}" />
@@ -53,6 +57,9 @@ Cobertura install
 					<include name="**/${test.suite}.class" />
 				</fileset>
 			</batchtest>
+			<assertions>
+				<enable />
+			</assertions>
 		</junit>
 
 		<cobertura-report format="html" destdir="${dist.dir}/code_coverage" datafile="${dist.dir}/mifos_cobertura.ser">
@@ -60,7 +67,7 @@ Cobertura install
 				<include name="**/*.java" />
 			</fileset>
 		</cobertura-report>
-		<fail if="tests.instrument.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
+		<fail if="tests.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
 	<target name="all" 

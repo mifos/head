@@ -174,7 +174,7 @@ public class SavingsPersistence extends Persistence {
 
 	public int getMissedDepositsPaidAfterDueDate(Integer accountId)
 			throws PersistenceException {
-		Integer count = 0;
+		Long count = 0L;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNT_ID", accountId);
 		queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGS_ACCOUNT
@@ -189,7 +189,7 @@ public class SavingsPersistence extends Persistence {
 		if (null != queryResult && queryResult.size() > 0) {
 			Object obj = queryResult.get(0);
 			if (obj != null)
-				count = (Integer) obj;
+				count = (Long) obj;
 		}
 		return count.intValue();
 	}

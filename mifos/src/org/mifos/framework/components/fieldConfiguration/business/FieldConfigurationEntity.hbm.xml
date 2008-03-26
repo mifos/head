@@ -22,7 +22,7 @@
  </class>
  <query name="getFieldList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
-         			fce.entityMaster=:entityId]]>
+         			fce.entityMaster.id=:entityId]]>
  </query>
  <query name="getAllFieldConfigurationList">
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce]]>

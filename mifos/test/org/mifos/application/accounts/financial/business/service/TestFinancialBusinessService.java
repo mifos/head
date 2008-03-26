@@ -39,6 +39,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -64,10 +65,15 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loan);
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(loan);
+			TestObjectFactory.cleanUp(savings);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// TODO Whoops, cleanup didnt work, reset db
+			TestDatabase.resetMySQLDatabase();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -181,7 +187,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -200,7 +206,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -257,7 +263,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -276,7 +282,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
