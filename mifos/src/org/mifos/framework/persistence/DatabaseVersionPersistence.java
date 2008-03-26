@@ -34,7 +34,7 @@ import org.mifos.application.master.persistence.Upgrade183;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 185;
+	public static final int APPLICATION_VERSION = 184;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -81,19 +81,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade176());
 		register179(register);
 		register(register, new Upgrade183());
-		register185(register);
 		return Collections.unmodifiableMap(register);
-	}
-
-	private static void register185(Map<Integer, Upgrade> register) {
-		register(register, new CompositeUpgrade(new AddReport(185, (short) 30,
-				ReportsCategoryBO.ANALYSIS,
-				"Collection Sheet Report",
-				"collection_sheet_report",
-				"CollectionSheetReport.rptdesign"), new AddActivity(185,
-				"Permissions-CanViewCollectionSheetReport",
-				SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
-				SecurityConstants.ANALYSIS)));
 	}
 
 	private static void register101(Map<Integer, Upgrade> register) {

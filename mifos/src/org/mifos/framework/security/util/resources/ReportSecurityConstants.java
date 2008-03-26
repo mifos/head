@@ -70,7 +70,6 @@ public interface ReportSecurityConstants {
 	public static final short  CENTER_MEETING_SCHEDULE = 177;
 	public static final short DETAILED_AGING_OF_PORTFOLIO_AT_RISK = 207;
 	public static final short ACTIVE_LOANS_BY_LOAN_OFFICER = 212;
-	public static final short COLLECTION_SHEET_REPORT = 229;
 	
 	
 }
