@@ -42,13 +42,18 @@ package org.mifos.application.customer.group.struts.actionforms;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -128,6 +133,7 @@ public class GroupCustActionForm extends CustomerActionForm {
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {		
 		ActionErrors errors = new ActionErrors();
+		try {
 		if(method.equals(Methods.previewManage.toString())){
 			validateName(errors);
 			validateTrained(request, errors);
@@ -141,7 +147,16 @@ public class GroupCustActionForm extends CustomerActionForm {
 			validateCustomFields(request,errors);			
 			validateFees(request,errors);
 		}
-		
+        } catch (ApplicationException ae) {
+			// Discard other errors (is that right?)
+        	ae.printStackTrace();
+			errors = new ActionErrors();
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+		}
+		if (!errors.isEmpty()) {
+			request.setAttribute(GroupConstants.METHODCALLED, method);
+		}
 		return errors;
 	}
 	

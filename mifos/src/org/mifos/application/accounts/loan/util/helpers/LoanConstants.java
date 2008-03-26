@@ -201,6 +201,7 @@ public interface LoanConstants {
 	static final String ADMINISTRATIVE_DOCUMENT_IS_ENABLED="AdministrativeDocumentsIsEnabled";
 	public static final String MIN_RANGE_IS_NOT_MET="errors.minrangeisnotmet";
 	public static final String MAX_RANGE_IS_NOT_MET="errors.maxrangeisnotmet";
+	public static final String METHODCALLED="methodCalled";
 	
 	
 

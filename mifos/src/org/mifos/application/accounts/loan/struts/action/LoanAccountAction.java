@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
@@ -32,6 +33,7 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionF
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -47,6 +49,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.LoanCounter;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -105,6 +108,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -390,11 +394,11 @@ public class LoanAccountAction extends AccountAppAction {
 		if (perspective != null) {
 			request.setAttribute("perspective", perspective);
 		}
-
 		ActionForwards actionForward = null;
-		String method = (String) request.getAttribute("methodCalled");
-		if (method.equals(Methods.getPrdOfferings.toString())
-				|| method.equals(Methods.load.toString()))
+		String method = (String) request.getAttribute(LoanConstants.METHODCALLED);
+		if (method.equals(Methods.getPrdOfferings.toString()))
+			actionForward = ActionForwards.getPrdOfferigs_failure;
+		else if (method.equals(Methods.load.toString()))
 			actionForward = ActionForwards.getPrdOfferigs_success;
 		else if (method.equals(Methods.schedulePreview.toString()))
 			actionForward = ActionForwards.load_success;
@@ -402,7 +406,6 @@ public class LoanAccountAction extends AccountAppAction {
 			actionForward = ActionForwards.managepreview_failure;
 		else if (method.equals(Methods.preview.toString()))
 			actionForward = ActionForwards.preview_failure;
-
 		return mapping.findForward(actionForward.toString());
 	}
 
@@ -438,6 +441,7 @@ public class LoanAccountAction extends AccountAppAction {
                 if ( null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue()!=0) {
                     SessionUtils.setAttribute(LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
             				loanIndividualMonitoringIsEnabled.intValue(),request);
+                    request.setAttribute(LoanConstants.METHODCALLED,"getPrdOfferings");
                     if (customer.getCustomerLevel().isGroup()) {
         				SessionUtils.setAttribute(
         						LoanConstants.LOANACCOUNTOWNERISAGROUP, "yes", request);
@@ -454,12 +458,14 @@ public class LoanAccountAction extends AccountAppAction {
         				List<ClientBO> clients = new ClientBusinessService()
         				.getActiveClientsUnderGroup(customer.getCustomerId().shortValue());
         		if (clients == null || clients.size() == 0) {
-        			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
+        			throw new ApplicationException(GroupConstants.IMPOSSIBLETOCREATEGROUPLOAN);
         		}
         				
         				setClientDetails(loanActionForm,clients);
         				SessionUtils.setCollectionAttribute(LoanConstants.CLIENT_LIST,
         						clients, request);
+        				SessionUtils.setAttribute("clientListSize",
+        						clients.size(), request);
         
         			}
                 }
@@ -552,6 +558,35 @@ public class LoanAccountAction extends AccountAppAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+			CustomerBO customer = getCustomer(request);
+		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);            
+		  
+			if (null != loanIndividualMonitoringIsEnabled
+					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+					&& customer.getCustomerLevel().isGroup()) {
+				SessionUtils.setAttribute(
+						LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+						loanIndividualMonitoringIsEnabled.intValue(), request);
+				List<String> ids_clients_selected = loanActionForm.getClients();
+				List<LoanAccountDetailsViewHelper> listdetail = loanActionForm.getClientDetails();
+			
+				double totalAmout=new Double(0);
+				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+					if (ids_clients_selected.contains(tempAccount
+							.getClientId())) {
+						if (tempAccount.getLoanAmount() != null){
+							totalAmout = totalAmout
+									+ tempAccount.getLoanAmount().doubleValue();							
+						}
+					}
+				
+				}
+				loanActionForm.setLoanAmount(Double.toString(totalAmout));
+			
+
+			}
+	
 		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct)).getLoanOffering(
@@ -884,6 +919,15 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		String perspective = loanActionForm.getPerspective();
 		Integer recurrenceId=(Integer) SessionUtils.getAttribute(LoanConstants.RECURRENCEID,request);
+		 ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
+					.getConfigurationKeyValueInteger(
+							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
+					.getValue();
+			boolean isRepaymentIndepOfMeetingEnabled=false;
+	        if (null != repaymentIndepOfMeetingIsEnabled
+					&& 0 != repaymentIndepOfMeetingIsEnabled.intValue())
+	        	isRepaymentIndepOfMeetingEnabled=true;	
 		if (perspective != null) {
 			request.setAttribute("perspective", perspective);
 		}
@@ -895,11 +939,7 @@ public class LoanAccountAction extends AccountAppAction {
         	loan = redoLoan(loanActionForm, request);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
            
-            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-					.getConfigurationKeyValueInteger(
-							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-					.getValue();
+           
 		
 			if (null != repaymentIndepOfMeetingIsEnabled
 					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
@@ -929,11 +969,6 @@ public class LoanAccountAction extends AccountAppAction {
                             .getPersonnelId());
             loan = (LoanBO) SessionUtils.getAttribute(
                     Constants.BUSINESS_KEY, request);
-            ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-						.getConfigurationKeyValueInteger(
-							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-					.getValue();
     					if (null != repaymentIndepOfMeetingIsEnabled
 					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
 	
@@ -955,7 +990,6 @@ public class LoanAccountAction extends AccountAppAction {
             
    		}
         
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		
 		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
 				.getConfigurationKeyValueInteger(
@@ -973,7 +1007,7 @@ public class LoanAccountAction extends AccountAppAction {
 					loanActionForm.getState(), new Money(loanAccountDetail
 					.getLoanAmount().toString()), loan
 					.getNoOfInstallments(), loan.getDisbursementDate(),
-					false, loan.getInterestRate(), loan
+					false,isRepaymentIndepOfMeetingEnabled, loan.getInterestRate(), loan
 							.getGracePeriodDuration(), loan.getFund(),
 					new ArrayList<FeeView>(),
 					new ArrayList<CustomFieldView>());

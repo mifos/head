@@ -3,6 +3,7 @@
  */
 package org.mifos.application.accounts.loan.struts.action;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,16 +14,20 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ServiceException;
@@ -129,6 +134,7 @@ public class LoanDisbursmentAction extends BaseAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
@@ -145,8 +151,37 @@ public class LoanDisbursmentAction extends BaseAction {
 				.getPreferredLocale());
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
 				.getId());
-		if (!loan.isTrxnDateValid(trxnDate))
-			throw new AccountException("errors.invalidTxndate");
+		 ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
+					.getConfigurationKeyValueInteger(
+							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
+					.getValue();
+		boolean isRepaymentIndepOfMeetingEnabled=false;
+        if (null != repaymentIndepOfMeetingIsEnabled
+				&& 0 != repaymentIndepOfMeetingIsEnabled.intValue())
+        	isRepaymentIndepOfMeetingEnabled=true;	
+        if (!isRepaymentIndepOfMeetingEnabled)
+        {
+        	if (!loan.isTrxnDateValid(trxnDate))
+        		throw new AccountException("errors.invalidTxndate");
+        }
+        else
+        {  if (AccountingRules.isBackDatedTxnAllowed()) {
+				List<Object> objectList = Arrays
+						.asList(loan.getAccountStatusChangeHistory().toArray());
+				AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
+						.get(objectList.size() - 1);
+				if (accountStatusChangeHistoryEntity.getNewStatus().getId()
+						.equals(AccountState.LOAN_APPROVED.getValue())) {
+					if (isTrxnDateLessThanLastTransactionMade(trxnDate,accountStatusChangeHistoryEntity.getCreatedDate())) {
+						throw new AccountException("errors.invalidTxndateLessThanLastTransactionMade");
+					}
+					;
+				}
+        }
+		}
+        	
+        	
 		if (actionForm.getPaymentModeOfPayment() != null
 				&& actionForm.getPaymentModeOfPayment().equals(""))
 			loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short
@@ -195,5 +230,11 @@ public class LoanDisbursmentAction extends BaseAction {
 			throws ServiceException {
 		return false;
 	}
-
+	private static boolean isTrxnDateLessThanLastTransactionMade(
+			Date trxnDate,Date lastTransactionMade) {
+		if (DateUtils.getDateWithoutTimeStamp(trxnDate.getTime())
+				.compareTo(DateUtils.getDateWithoutTimeStamp(lastTransactionMade.getTime())) < 0)
+			return true;
+		return false;
+	}
 }

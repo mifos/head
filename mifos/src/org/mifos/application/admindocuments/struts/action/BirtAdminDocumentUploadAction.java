@@ -59,6 +59,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
@@ -159,7 +160,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		return reportsBusinessService;
 	}
 
-	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadProductInstance(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -173,13 +174,12 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		if (!StringUtils.isNullOrEmpty(uploadForm.getAccountTypeId())) {
 			SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,
 					new AccountBusinessService()
-			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);
-		
+			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);		
 		}
-
 		return mapping.findForward(ActionForwards.load_success
 				.toString());
 	}
+	@TransactionDemarcate(joinToken = true)
 	private void updateSelectedStatus(HttpServletRequest request,
 			BirtAdminDocumentUploadActionForm uploadForm) throws PageExpiredException, ServiceException {
 		List<AccountStateEntity> selectList = new ArrayList<AccountStateEntity>();
@@ -294,10 +294,11 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		is.close();
 		formFile.destroy();
 	}
-
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
 	}

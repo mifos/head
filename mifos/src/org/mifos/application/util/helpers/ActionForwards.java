@@ -77,6 +77,7 @@ public enum ActionForwards {
 	loadMeeting_success,
 	center_detail_page,
 	getPrdOfferigs_success,
+	getPrdOfferigs_failure,
 	schedulePreview_success,
 	group_detail_page,
 	client_detail_page,

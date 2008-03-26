@@ -61,5 +61,7 @@ public interface LoanExceptionConstants {
 	public final String LOANANDPURPOSEENTREDWITHOUTSELECTINGINDIVIDUAL = "errors.loanandpurposeentredwithoutselectingindividual";
 	public final String NUMBEROFSELECTEDMEMBERSISNOTATLEASTTWO = "errors.numberofselectedmembersisnotatleasttwo";
 	public final String SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
+	public final String CUSTOMERLOANAMOUNTFIELD = "errors.individualamountfield";
+	public final String CUSTOMERPURPOSEOFLOANFIELD = "errors.individualpurposeofloanfield";
 	public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";	
 }

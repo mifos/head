@@ -312,7 +312,7 @@ public class LoanBO extends AccountBO {
 			LoanOfferingBO loanOffering, CustomerBO customer,
 			AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
-			boolean interestDeductedAtDisbursement, Double interestRate,
+			boolean interestDeductedAtDisbursement,boolean isRepaymentIndepOfMeetingEnabled,Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields) throws AccountException {
 			
@@ -336,7 +336,7 @@ public class LoanBO extends AccountBO {
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 			throw new AccountException(
 					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-
+		if (isRepaymentIndepOfMeetingEnabled == false)
 		if (!isDisbursementDateValid(customer, disbursementDate))
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);

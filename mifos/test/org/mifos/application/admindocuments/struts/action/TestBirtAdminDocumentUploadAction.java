@@ -40,6 +40,7 @@ package org.mifos.application.admindocuments.struts.action;
 
 import org.mifos.application.admindocuments.business.AdminDocumentBO;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.application.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.reports.business.MockFormFile;
 import org.mifos.application.reports.business.ReportsBO;
@@ -48,40 +49,34 @@ import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Constants;
 
 
 public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+
 		super.setUp();
 	}
 
 	public void testGetBirtAdminDocumentUploadPage() {
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 		addRequestParameter("method", "getBirtAdminDocumentUploadPage");
-		actionPerform();
+		actionPerform(); 
 		verifyNoActionErrors();
 	}
-	public void testPrevious() {
-		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
-		addRequestParameter("method", "previous");
-		actionPerform();
-		verifyForward("load_success");
-		verifyNoActionErrors();
-	}	
 	
 
 	public void testShouldSubmitSucessWhenUploadNewAdminDocument() throws Exception {
-
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 
-		BirtReportsUploadActionForm form = new BirtReportsUploadActionForm();
-		form.setReportTitle("testShouldSubmitSucessWhenUploadNewAdminDocument");
-		form.setReportCategoryId("1");
+		BirtAdminDocumentUploadActionForm form = new BirtAdminDocumentUploadActionForm();
+		form.setAdminiDocumentTitle("testShouldSubmitSucessWhenUploadNewAdminDocument");
 		form.setIsActive("1");
 		form.setFile(new MockFormFile("testFileName1.rptdesign"));
 		setActionForm(form);
@@ -89,17 +84,17 @@ public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "upload");
 		actionPerform();
 
-		ReportsBO report = (ReportsBO) request.getAttribute("report");
-		assertNotNull(report);
+		AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
+		assertNotNull(adminDocument);
 		ReportsPersistence rp = new ReportsPersistence();
 		ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(
-				ReportsJasperMap.class, report.getReportId());
+				ReportsJasperMap.class, adminDocument.getAdmindocId());
 		assertNotNull(jasper);
 
 		verifyNoActionErrors();
 		verifyForward("create_success");
 
-		removeReport(report.getReportId());
+		removeReport(adminDocument.getAdmindocId());
 
 	}
 
@@ -149,8 +144,15 @@ public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 	public void testEdit() {
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 		addRequestParameter("method", "edit");
+		addRequestParameter("admindocId", "1");
 		actionPerform();
+		AdminDocumentBO adminDocument = (AdminDocumentBO) request
+				.getAttribute(Constants.BUSINESS_KEY);
+		assertEquals("1", adminDocument.getAdmindocId().toString());
 		verifyNoActionErrors();
+		verifyForward(ActionForwards.edit_success.toString());
+		
+
 	}
 	public void testEditThenUpload() {
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
@@ -162,6 +164,7 @@ public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 	public void testDownloadAdminDocument() {
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 		addRequestParameter("method", "downloadAdminDocument");
+		addRequestParameter("admindocId", "1");
 		actionPerform();
 		verifyNoActionErrors();
 	}

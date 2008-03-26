@@ -170,7 +170,7 @@ public class TestLoanBO extends MifosTestCase {
 			LoanBO.createIndividualLoan(userContext,loanOffering,group,AccountState.LOAN_PARTIAL_APPLICATION,
 					new Money(
 							currency, "300.0"), Short.valueOf("1"),
-					meetingDates.get(0), true, 10.0, (short) 0, new FundBO(),
+					meetingDates.get(0), true,false, 10.0, (short) 0, new FundBO(),
 					new ArrayList<FeeView>(), null);
 
 			
@@ -577,7 +577,7 @@ public class TestLoanBO extends MifosTestCase {
 		try {
 			loan = LoanBO.createIndividualLoan(TestUtils.makeUser(), loanOfering, customer,
 					state, new Money(currency, "300.0"), Short.valueOf("6"),
-					meetingDates.get(0), true, 0.0, (short) 0, new FundBO(),
+					meetingDates.get(0), true,false, 0.0, (short) 0, new FundBO(),
 					new ArrayList<FeeView>(), null);
 		}
 		catch (ApplicationException e) {

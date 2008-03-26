@@ -199,6 +199,8 @@
             <forward name="viewStatusHistory" path="/pages/application/loan/jsp/viewLoanStatusHistory.jsp"/>
             <forward name="getPrdOfferigs_success"
                      path="/pages/application/loan/jsp/loancreationprdofferingselect.jsp"/>
+            <forward name="getPrdOfferigs_failure"
+                     path="/pages/application/group/jsp/viewgroupdetails.jsp"/>
             <forward name="load_success" path="/pages/application/loan/jsp/loancreationdetails.jsp"/>
             <forward name="schedulePreview_success" path="/pages/application/loan/jsp/schedulePreview.jsp"/>
             <forward name="schedulePreview_failure" path="/pages/application/loan/jsp/loancreationdetails.jsp"/>

@@ -67,6 +67,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -546,7 +547,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 					.getValues()));
 		}
 		if (!errors.isEmpty()) {
-			request.setAttribute("methodCalled", method);
+			request.setAttribute(LoanConstants.METHODCALLED, method);
 		}
 		return errors;
 	}
@@ -587,6 +588,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		validateNumberOfSelectedMembers(request, errors);
 		validateSumOfTheAmountsSpecified(request, errors);
 		validateRepaymentDayRequired(request, errors);
+		validatePurposeOfLoanFields(request, errors);
 	}
 
     private void checkValidationForPreview(ActionErrors errors,
@@ -791,6 +793,13 @@ public class LoanAccountActionForm extends BaseActionForm {
 							totalAmout = totalAmout
 									+ tempAccount.getLoanAmount().doubleValue();							
 						}
+						else
+						{
+							errors.add(LoanExceptionConstants.CUSTOMERLOANAMOUNTFIELD,
+									new ActionMessage(LoanExceptionConstants.CUSTOMERLOANAMOUNTFIELD));
+							break;
+						}
+
 					}
 				
 				}
@@ -896,7 +905,42 @@ public class LoanAccountActionForm extends BaseActionForm {
 							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
 		}
 	}
+	private  void validatePurposeOfLoanFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			CustomerBO customer = getCustomer(request);
+		    Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils.getAttribute(
+	        		LoanConstants.LOANINDIVIDUALMONITORINGENABLED, request);            
+		  
+			if (null != loanIndividualMonitoringIsEnabled
+					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
+					&& customer.getCustomerLevel().isGroup()) {
 
+				List<String> ids_clients_selected = getClients();
+				List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+					if (ids_clients_selected.contains(tempAccount
+							.getClientId())) {
+							if (StringUtils.isNullOrEmpty(tempAccount.getBusinessActivity().toString()))
+							{		
+							errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
+									new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
+							break;
+							}
+					}
+				}		
+
+			}
+		}
+		catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
+		catch (ServiceException e) {
+			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+		}
+	}
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
         try {
             if (paymentDataBeans != null && paymentDataBeans.size() > 0) {
