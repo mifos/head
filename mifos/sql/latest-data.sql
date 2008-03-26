@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(184);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(185);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -1547,6 +1547,8 @@ VALUES(947, 1, 604, NULL);
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(605, 87, 'Permissions-CanViewSystemInformation');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(948, 1, 605, NULL);
+INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(606, 87, 'Permissions-CanViewCollectionSheetReport');
+INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) VALUES(949, 1, 606, NULL);
 -- Entity: ServiceCharge
 -- Entity: feeUpdationType
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME) VALUES(556, 89, 'feeUpdationType-AppliesToExistingFutureAccounts');
@@ -3328,7 +3330,8 @@ INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER)
   VALUES(28,6,'Detailed Aging of Portfolio at Risk','aging_portfolio_at_risk');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
   VALUES(29,6,'Active Loans By Loan Officer','active_loans_by_loan_officer');
-  
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) 
+  VALUES(30,6,'Collection Sheet Report','collection_sheet_report',NULL,1);
 
 /* The table Transaction Type defines the transaction types for which the MFI can assign acceptable payment methods.  - System.*/
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(1,'Loan Disbursement');
@@ -3498,6 +3501,9 @@ INSERT INTO report_jasper_map(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,
 REPORT_IDENTIFIER, REPORT_JASPER) VALUES 
 (29,6,'Active Loans By Loan Officer', 
 'active_loans_by_loan_officer', 'ActiveLoansByLoanOfficer.rptdesign');
+INSERT INTO report_jasper_map (REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER,
+REPORT_JASPER) VALUES (30,6,'Collection Sheet Report','collection_sheet_report','CollectionSheetReport.rptdesign');
+
 -- end data for Reports Mini Portal
 
 --INSERT INTO LOOKUP_VALUE_LOCALE VALUES(915,1,570,'Can reverse Loan disbursals');
@@ -3555,6 +3561,11 @@ INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
   ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
   VALUES(208,34,582,582);
 INSERT INTO ROLES_ACTIVITY VALUES (208,1);
+
+INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,
+  ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
+  VALUES(229,150,606,606);
+INSERT INTO ROLES_ACTIVITY VALUES (229,1);
 
 --INSERT INTO LOOKUP_VALUE_LOCALE VALUES(928,1,583,'Product Mix');
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) VALUES(209,89,583,583);

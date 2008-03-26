@@ -44,7 +44,7 @@ public class AddReportTest {
 		ReportsBO fetched = (ReportsBO) 
 			database.openSession().get(ReportsBO.class, newId);
 		assertEquals(newId, fetched.getReportId());
-		assertEquals(null, fetched.getIsActive());
+		assertEquals(ReportsBO.ACTIVE, fetched.getIsActive());
 		assertEquals(null, fetched.getActivityId());
 		assertEquals("Detailed Aging of Portfolio at Risk", 
 			fetched.getReportName());

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -37,12 +38,13 @@ public class AddReport extends Upgrade {
 	throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(
 			"INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID," +
-			"REPORT_NAME,REPORT_IDENTIFIER)" +
-			"VALUES(?,?,?,?)");
+			"REPORT_NAME,REPORT_IDENTIFIER, REPORT_ACTIVE)" +
+			"VALUES(?,?,?,?,?)");
 		statement.setShort(1, newId);
 		statement.setShort(2, category);
 		statement.setString(3, name);
 		statement.setString(4, identifier);
+		statement.setShort(5, ReportsBO.ACTIVE);
 		statement.executeUpdate();
 		statement.close();
 	}

@@ -412,36 +412,18 @@ public class CollectionSheetReportServiceTest extends
 				.andReturn(
 						SavingsOfferingBO
 								.createInstanceForTest(savingProductOffering1));
-		//		expect(
-		//				savingsProductBusinessServiceMock
-		//						.getSavingsProduct(savingProductOffering1))
-		//				.andReturn(
-		//						);
 		expect(reportProductOfferingServiceMock.getSavingsOffering2())
 				.andReturn(
 						SavingsOfferingBO
 								.createInstanceForTest(savingProductOffering2));
-		//		expect(
-		//				savingsProductBusinessServiceMock
-		//						.getSavingsProduct(savingProductOffering2))
-		//				.andReturn(
-		//						);
 	}
 
 	private void setLoanOfferingExpectation(Short loanProductOffering1,
 			Short loanProductOffering2) throws ServiceException {
 		expect(reportProductOfferingServiceMock.getLoanOffering1()).andReturn(
 				LoanOfferingBO.createInstanceForTest(loanProductOffering1));
-		//		expect(
-		//				loanProductBusinessServiceMock
-		//						.getLoanOffering(loanProductOffering1)).andReturn(
-		//				);
 		expect(reportProductOfferingServiceMock.getLoanOffering2()).andReturn(
 				LoanOfferingBO.createInstanceForTest(loanProductOffering2));
-		//		expect(
-		//				loanProductBusinessServiceMock
-		//						.getLoanOffering(loanProductOffering2)).andReturn(
-		//				);
 	}
 
 	public void testGetCollectionSheetForAllCenterOffices() throws Exception {
@@ -558,17 +540,10 @@ public class CollectionSheetReportServiceTest extends
 		collectionSheet.addCollectionSheetLoanDetail(bsklLoanDetailsEntity);
 		expect(reportProductOfferingServiceMock.getLoanOffering1()).andReturn(
 				bsklLoanProductOffering);
-		//		expect(
-		//				loanProductBusinessServiceMock
-		//						.getLoanOffering(BSKL_PRODUCT_OFFERING_ID)).andReturn(
-		//				bsklLoanProductOffering);
-		//
 		expect(accountBusinessServiceMock.getAccount(BSKL_LOAN_ACCNT_ID))
 				.andReturn(
 						LoanBO.createInstanceForTest(bsklLoanProductOffering));
-		//
 		replay(accountBusinessServiceMock);
-		//		replay(loanProductBusinessServiceMock);
 		replay(reportProductOfferingServiceMock);
 		CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService
 				.getLoanProduct(collectionSheet,
@@ -577,7 +552,6 @@ public class CollectionSheetReportServiceTest extends
 		assertSame(bsklLoanDetailsEntity, filteredLoanDetailEntity);
 		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
-		//		verify(loanProductBusinessServiceMock);
 	}
 
 	public void testClLoanProductFilterReturnsLoanProductWithClLoanOfferingType()
@@ -586,16 +560,10 @@ public class CollectionSheetReportServiceTest extends
 		expect(reportProductOfferingServiceMock.getLoanOffering2()).andReturn(
 				clLoanProductOffering);
 		replay(reportProductOfferingServiceMock);
-		//		expect(
-		//				loanProductBusinessServiceMock
-		//						.getLoanOffering(CL_PRODUCT_OFFERING_ID)).andReturn(
-		//				clLoanProductOffering);
-
 		expect(accountBusinessServiceMock.getAccount(CL_LOAN_ACCNT_ID))
 				.andReturn(LoanBO.createInstanceForTest(clLoanProductOffering));
 
 		replay(accountBusinessServiceMock);
-		//		replay(loanProductBusinessServiceMock);
 
 		CollSheetLnDetailsEntity filteredLoanDetailEntity = collectionSheetReportService
 				.getLoanProduct(collectionSheet,
@@ -604,7 +572,6 @@ public class CollectionSheetReportServiceTest extends
 		assertSame(clLoanDetailsEntity, filteredLoanDetailEntity);
 		verify(reportProductOfferingServiceMock);
 		verify(accountBusinessServiceMock);
-		//		verify(loanProductBusinessServiceMock);
 	}
 
 	public void testMm1SavingsProductFilterReturnsSavingsProductWithMm1OfferingType()
