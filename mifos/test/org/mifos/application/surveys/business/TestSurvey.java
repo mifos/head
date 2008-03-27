@@ -50,8 +50,8 @@ public class TestSurvey extends MifosTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		TestDatabase.resetMySQLDatabase();
 		HibernateUtil.closeSession();
+		TestDatabase.resetMySQLDatabase();
 		super.tearDown();
 	}
 	
