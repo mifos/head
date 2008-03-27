@@ -54,7 +54,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td height="26" colspan="2"><mifos:mifoslabel
-												name="CustomerSearch.searchinstruction1" /> <mifos:mifoslabel
+												name="CustomerSearch.searchinstruction1" />&nbsp; <mifos:mifoslabel
 												name="${ConfigurationConstants.CLIENT}" />,&nbsp; <c:choose>
 												<c:when test="${isCenterHeirarchyExists=='true'}">
 													<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,&nbsp;
@@ -72,7 +72,7 @@
 										<tr class="fontnormal">
 											<td height="26" colspan="2"><html-el:text
 												property="searchString" maxlength="200" /> <html-el:submit
-												styleClass="buttn">
+												 styleClass="buttn">
 												<mifos:mifoslabel name="CustomerSearch.search" />
 											</html-el:submit></td>
 										</tr>
@@ -128,7 +128,7 @@
 											</c:forEach> 
 										</c:when>
 										<c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+										    <mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
 											<c:choose>
 												<c:when test='${isCenterHeirarchyExists eq true}'>
 												<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
@@ -150,7 +150,7 @@
 										<tr class="fontnormal">
 											<td width="100%" colspan="2" class="bglightblue"><span
 												class="heading"> <mifos:mifoslabel
-												name="CustomerSearch.CustomerSearch.selectLoanOfficer" /></span></td>
+												name="CustomerSearch.selectLoanOfficer" /></span></td>
 										</tr>
 									</table>
 									<c:choose>
@@ -240,18 +240,17 @@
 									</c:forEach> 
 									</c:when>
 									<c:otherwise>
-									
-										<c:choose>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+									<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+									<c:choose>
 											<c:when test='${isCenterHeirarchyExists eq true}'>
 											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 											</c:when>
 											<c:otherwise>
 											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
 											</c:otherwise>
-											<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
-											<br>
 										</c:choose>
+										<mifos:mifoslabel name="CustomerSearch.noEntityAvailablePrefix"/>
+									<br>
 									</c:otherwise>
 									</c:choose>
 									
