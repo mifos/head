@@ -86,11 +86,11 @@ public class DatabaseVersionPersistence {
 	}
 
 	private static void register185(Map<Integer, Upgrade> register) {
-		register(register, new CompositeUpgrade(new AddReport(185, (short) 30,
+		register(register, new CompositeUpgrade(new AddReport(185, (short) 0,
 				ReportsCategoryBO.ANALYSIS,
 				"Collection Sheet Report",
 				"collection_sheet_report",
-				"CollectionSheetReport.rptdesign"), new AddActivity(185,
+				"CollectionSheetReport.rptdesign", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
 				"Permissions-CanViewCollectionSheetReport",
 				SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
 				SecurityConstants.ANALYSIS)));
