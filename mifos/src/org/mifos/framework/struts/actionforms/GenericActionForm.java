@@ -36,7 +36,7 @@ public class GenericActionForm extends ActionForm {
 	public void setDateValue(String keyPrefix, Date date) {
 		Calendar calendar = DateUtils.getCalendar(date);
 		setValue(keyPrefix + "_DD", calendar.get(Calendar.DAY_OF_MONTH));
-		setValue(keyPrefix + "_MM", calendar.get(Calendar.MONTH));
+		setValue(keyPrefix + "_MM", calendar.get(Calendar.MONTH) + 1);
 		setValue(keyPrefix + "_YY", calendar.get(Calendar.YEAR));
 	}
 	

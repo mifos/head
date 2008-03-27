@@ -1,6 +1,7 @@
 package org.mifos.framework.util.helpers;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -141,6 +142,20 @@ public class DateUtilsTest extends TestCase {
 		assertFalse(DateUtils.isValidDate("1\1\2000"));
 		assertTrue(DateUtils.isValidDate("1/2/2000"));
 		assertFalse(DateUtils.isValidDate("2/20/2000"));
+	}
+	
+	public void testGetCalendar() throws Exception {
+		Date today = new SimpleDateFormat("yyyy-MM-dd").parse("2008-03-26");
+		Calendar todaysCalendar = DateUtils.getCalendar(today);
+		assertEquals(2008, todaysCalendar.get(Calendar.YEAR));
+		assertEquals(Calendar.MARCH, todaysCalendar.get(Calendar.MONTH));
+		assertEquals(26, todaysCalendar.get(Calendar.DAY_OF_MONTH));
+		
+		today = new SimpleDateFormat("yyyy-MM-dd").parse("2004-12-06");
+		todaysCalendar = DateUtils.getCalendar(today);
+		assertEquals(2004, todaysCalendar.get(Calendar.YEAR));
+		assertEquals(Calendar.DECEMBER, todaysCalendar.get(Calendar.MONTH));
+		assertEquals(6, todaysCalendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 	private void checkException(Locale locale, String input) {

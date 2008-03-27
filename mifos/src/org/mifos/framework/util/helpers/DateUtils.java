@@ -648,13 +648,9 @@ public class DateUtils {
 	 * Also see {@link #getCalendarDate(long)}.
 	 */
 	public static Calendar getCalendar(Date date) {
-		Calendar dateCalendar = new GregorianCalendar();
-		dateCalendar.setTimeInMillis(date.getTime());
-		int year = dateCalendar.get(Calendar.YEAR);
-		int month = dateCalendar.get(Calendar.MONTH);
-		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
-		dateCalendar = new GregorianCalendar(year, month, day);
-		return dateCalendar;
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(org.apache.commons.lang.time.DateUtils.truncate(date, Calendar.DATE));
+		return calendar;
 	}
 
 	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2) {
