@@ -438,6 +438,9 @@ public class ClientBO extends CustomerBO {
 			validateLO(personnel);
 		}
 		setPersonnel(personnel);
+		for (AccountBO account: this.getAccounts()) {
+					account.setPersonnel(this.getPersonnel());
+					}
 		super.update();
 	}
 

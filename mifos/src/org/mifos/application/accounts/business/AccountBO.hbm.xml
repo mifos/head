@@ -40,7 +40,7 @@
 			access="field" />
 		<many-to-one name="personnel" column="PERSONNEL_ID"
 			class="org.mifos.application.personnel.business.PersonnelBO"
-			cascade="none" update="false" insert="true" unique="true"
+			cascade="none" update="true" insert="true" unique="true"
 			access="field" />
 
 		<set name="accountNotes" cascade="all" inverse="true"

@@ -75,7 +75,7 @@ public class AccountBO extends BusinessObject {
 
 	protected final OfficeBO office;
 
-	protected final PersonnelBO personnel;
+	protected PersonnelBO personnel;
 
 	protected Set<AccountNotesEntity> accountNotes;
 
@@ -223,6 +223,10 @@ public class AccountBO extends BusinessObject {
 		this.accountState = accountState;
 	}
 
+	public void setPersonnel(PersonnelBO personnel) {
+		this.personnel = personnel;
+	}
+	
 	protected void setClosedDate(Date closedDate) {
 		this.closedDate = (Date) ((closedDate == null) ? null : closedDate.clone());
 	}
