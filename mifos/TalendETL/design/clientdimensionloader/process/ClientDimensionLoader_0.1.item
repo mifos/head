@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="ASCII"?>
 <talendfile:ProcessType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" defaultContext="Default">
   <context confirmationNeeded="false" name="Default">
-    <contextParameter comment="The OLTP database password" name="OLTP_DB_PASSWORD" prompt="OLTP_PASSWORD?" promptNeeded="false" type="id_String" value="password"/>
-    <contextParameter comment="The OLTP database user" name="OLTP_DB_USER" prompt="OLTP_USER?" promptNeeded="false" type="id_String" value="mifos"/>
-    <contextParameter comment="The OLTP database schema." name="OLTP_DB_NAME" prompt="OLTP_DBNAME?" promptNeeded="false" type="id_String" value="mifos"/>
-    <contextParameter comment="The port on which the OLTP database is running." name="OLTP_DB_PORT" prompt="OLTP_PORT?" promptNeeded="false" type="id_String" value="3306"/>
-    <contextParameter comment="The OLTP database host name" name="OLTP_HOST_NAME" prompt="OLTP_HOST?" promptNeeded="false" type="id_String" value="localhost"/>
-    <contextParameter comment="Connection to  MifOS OLAP database." name="OLAP_DB_HOST" prompt="OLAP_DB_HOST?" promptNeeded="false" type="id_String" value="localhost"/>
-    <contextParameter comment="Port number to the OLAP database" name="OLAP_DB_PORT" prompt="OLAP_DB_PORT?" promptNeeded="false" type="id_String" value="3306"/>
-    <contextParameter comment="The MifOS OLAP database schema name" name="OLAP_DB_NAME" prompt="OLAP_DB_NAME?" promptNeeded="false" type="id_String" value="mifos_reporting"/>
-    <contextParameter comment="The MifOS OLAP database user" name="OLAP_DB_USER" prompt="OLAP_DB_USER?" promptNeeded="false" type="id_String" value="mifos"/>
-    <contextParameter comment="The MifOS OLAP database user password" name="OLAP_DB_PASSWORD" prompt="OLAP_DB_PASS?" promptNeeded="false" type="id_String" value="password"/>
-    <contextParameter comment="GK data host name" name="GK_DATA_HOST" prompt="new1?" promptNeeded="false" type="id_String" value="9.161.154.48"/>
-    <contextParameter comment="GK data db port" name="GK_DATA_DB_PORT" prompt="new1?" promptNeeded="false" type="id_String" value="3306"/>
-    <contextParameter comment="" name="GK_DATA_DB_USER" prompt="new1?" promptNeeded="false" type="id_String" value="root"/>
-    <contextParameter comment="" name="GK_DATA_DB_PASSWORD" prompt="new1?" promptNeeded="false" type="id_String" value="cool4n0w"/>
-    <contextParameter comment="" name="GK_DATA_DB_SCHEMA" prompt="new1?" promptNeeded="false" type="id_String" value="grameen"/>
+    <contextParameter comment="" name="OLTP_DB_HOST" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="9.161.146.80"/>
+    <contextParameter comment="" name="OLTP_DB_PORT" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="3306"/>
+    <contextParameter comment="" name="OLTP_DB_SCHEMA" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="grameen"/>
+    <contextParameter comment="" name="OLTP_DB_USER" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="root"/>
+    <contextParameter comment="" name="OLTP_DB_PASSWORD" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="cool4n0w"/>
+    <contextParameter comment="" name="OLAP_DB_HOST" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="localhost"/>
+    <contextParameter comment="" name="OLAP_DB_PORT" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="3306"/>
+    <contextParameter comment="" name="OLAP_DB_SCHEMA" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="test"/>
+    <contextParameter comment="" name="OLAP_DB_USER" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="mifos"/>
+    <contextParameter comment="" name="OLAP_DB_PASSWORD" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="password"/>
   </context>
   <parameters>
     <elementParameter field="TEXT" name="VERSION" value="0.1"/>
@@ -80,13 +75,13 @@
     <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE" value="BUILT_IN"/>
     <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE" value=""/>
     <elementParameter field="PROPERTY_TYPE" name="PROPERTY" value=""/>
-    <elementParameter field="TEXT" name="HOST" value="GK_DATA_HOST"/>
+    <elementParameter field="TEXT" name="HOST" value="OLTP_DB_HOST"/>
     <elementParameter field="TEXT" name="TYPE" value="MySQL"/>
-    <elementParameter field="TEXT" name="PORT" value="GK_DATA_DB_PORT"/>
-    <elementParameter field="TEXT" name="DBNAME" value="GK_DATA_DB_SCHEMA"/>
+    <elementParameter field="TEXT" name="PORT" value="OLTP_DB_PORT"/>
+    <elementParameter field="TEXT" name="DBNAME" value="OLTP_DB_SCHEMA"/>
     <elementParameter field="TEXT" name="PROPERTIES" value="&quot;noDatetimeStringSync=true&quot;"/>
-    <elementParameter field="TEXT" name="USER" value="GK_DATA_DB_USER"/>
-    <elementParameter field="TEXT" name="PASS" value="GK_DATA_DB_PASSWORD"/>
+    <elementParameter field="TEXT" name="USER" value="OLTP_DB_USER"/>
+    <elementParameter field="TEXT" name="PASS" value="OLTP_DB_PASSWORD"/>
     <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
     <elementParameter field="TEXT" name="LABEL" value="MifOS_OLTP_DB"/>
@@ -172,7 +167,7 @@
     <elementParameter field="TEXT" name="HOST" value="OLAP_DB_HOST"/>
     <elementParameter field="TEXT" name="TYPE" value="MySQL"/>
     <elementParameter field="TEXT" name="PORT" value="OLAP_DB_PORT"/>
-    <elementParameter field="TEXT" name="DBNAME" value="OLAP_DB_NAME"/>
+    <elementParameter field="TEXT" name="DBNAME" value="OLAP_DB_SCHEMA"/>
     <elementParameter field="TEXT" name="PROPERTIES" value="&quot;noDatetimeStringSync=true&quot;"/>
     <elementParameter field="TEXT" name="USER" value="OLAP_DB_USER"/>
     <elementParameter field="TEXT" name="PASS" value="OLAP_DB_PASSWORD"/>
@@ -313,13 +308,13 @@
     <elementParameter field="TEXT" name="TYPE" value="MySQL"/>
     <elementParameter field="TEXT" name="HOST" value="OLAP_DB_HOST"/>
     <elementParameter field="TEXT" name="PORT" value="OLAP_DB_PORT"/>
-    <elementParameter field="TEXT" name="DBNAME" value="OLAP_DB_NAME"/>
+    <elementParameter field="TEXT" name="DBNAME" value="OLAP_DB_SCHEMA"/>
     <elementParameter field="TEXT" name="PROPERTIES" value="&quot;noDatetimeStringSync=true&quot;"/>
     <elementParameter field="TEXT" name="USER" value="OLAP_DB_USER"/>
     <elementParameter field="TEXT" name="PASS" value="OLAP_DB_PASSWORD"/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;client_dim&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
-    <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
+    <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="UPDATE_OR_INSERT"/>
     <elementParameter field="CHECK" name="EXTENDINSERT" value="false"/>
     <elementParameter field="LABEL" name="NOTE" value="(Not compatible with reject links)"/>
     <elementParameter field="TEXT" name="NB_ROWS_PER_INSERT" value="100"/>
@@ -331,7 +326,7 @@
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
     <elementParameter field="TABLE" name="ADD_COLS"/>
     <elementParameter field="TEXT" name="COMMIT_EVERY" value="10000"/>
-    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true"/>
     <elementParameter field="MAPPING_TYPE" name="MAPPING" value="mysql_id"/>
     <elementParameter field="TEXT" name="LABEL" value="client_dim"/>
     <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
@@ -392,7 +387,7 @@
     <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
     <elementParameter field="CHECK" name="DUMMY" value="false"/>
     <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="java.util.Properties p = new java.util.Properties();&#xA;&#xA;java.io.InputStream inStream = ClientDimensionLoader.class&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getClassLoader()&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getResourceAsStream(&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&quot;hibernate.properties&quot;);&#xA;&#xA;p.load(inStream);&#xA;OLTP_DB_PASSWORD =(String) p.get(&quot;OLTP_DB_PASSWORD&quot;);&#xA;OLTP_DB_USER = (String) p.get(&quot;OLTP_DB_USER&quot;);&#xA;OLTP_DB_NAME = (String) p.get(&quot;OLTP_DB_NAME&quot;);&#xA;OLTP_DB_PORT = (String) p.get(&quot;OLTP_DB_PORT&quot;);&#xA;OLTP_HOST_NAME = (String) p.get(&quot;OLTP_HOST_NAME&quot;);&#xA;OLAP_DB_HOST = (String) p.get(&quot;OLAP_DB_HOST&quot;);&#xA;OLAP_DB_PORT = (String) p.get(&quot;OLAP_DB_PORT&quot;);&#xA;OLAP_DB_NAME = (String) p.get(&quot;OLAP_DB_NAME&quot;);&#xA;OLAP_DB_USER = (String) p.get(&quot;OLAP_DB_USER&quot;);&#xA;OLAP_DB_PASSWORD = (String) p.get(&quot;OLAP_DB_PASSWORD&quot;);&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xA;"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="java.util.Properties p = new java.util.Properties();&#xA;&#xA;java.io.InputStream inStream = ClientDimensionLoader.class&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getClassLoader()&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getResourceAsStream(&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&quot;hibernate.properties&quot;);&#xA;&#xA;p.load(inStream);&#xA;OLTP_DB_PASSWORD =(String) p.get(&quot;OLTP_DB_PASSWORD&quot;);&#xA;OLTP_DB_USER = (String) p.get(&quot;OLTP_DB_USER&quot;);&#xA;OLTP_DB_SCHEMA = (String) p.get(&quot;OLTP_DB_NAME&quot;);&#xA;OLTP_DB_PORT = (String) p.get(&quot;OLTP_DB_PORT&quot;);&#xA;OLTP_DB_HOST = (String) p.get(&quot;OLTP_HOST_NAME&quot;);&#xA;OLAP_DB_HOST = (String) p.get(&quot;OLAP_DB_HOST&quot;);&#xA;OLAP_DB_PORT = (String) p.get(&quot;OLAP_DB_PORT&quot;);&#xA;OLAP_DB_SCHEMA = (String) p.get(&quot;OLAP_DB_NAME&quot;);&#xA;OLAP_DB_USER = (String) p.get(&quot;OLAP_DB_USER&quot;);&#xA;OLAP_DB_PASSWORD = (String) p.get(&quot;OLAP_DB_PASSWORD&quot;);&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#xA;"/>
     <elementParameter field="TEXT" name="LABEL" value="Connection property loader"/>
     <elementParameter field="TEXT" name="HINT" value="&lt;b>DB_Connections&lt;/b>&lt;br>loads and initializes the DB connetion details"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
