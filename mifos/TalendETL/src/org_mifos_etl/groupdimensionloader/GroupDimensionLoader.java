@@ -40,21 +40,16 @@ public class GroupDimensionLoader {
 	private static java.util.Properties defaultProps = new java.util.Properties();
 	// create application properties with default
 	private static java.util.Properties context = new java.util.Properties();
-	private static String OLTP_DB_PASSWORD;
-	private static String OLTP_DB_USER;
-	private static String OLTP_DB_NAME;
+	private static String OLTP_DB_HOST;
 	private static String OLTP_DB_PORT;
-	private static String OLTP_HOST_NAME;
+	private static String OLTP_DB_SCHEMA;
+	private static String OLTP_DB_USER;
+	private static String OLTP_DB_PASSWORD;
 	private static String OLAP_DB_HOST;
 	private static String OLAP_DB_PORT;
-	private static String OLAP_DB_NAME;
+	private static String OLAP_DB_SCHEMA;
 	private static String OLAP_DB_USER;
 	private static String OLAP_DB_PASSWORD;
-	private static String GK_DATA_HOST;
-	private static String GK_DATA_DB_PORT;
-	private static String GK_DATA_DB_USER;
-	private static String GK_DATA_DB_PASSWORD;
-	private static String GK_DATA_DB_SCHEMA;
 	private static final String jobName = "GroupDimensionLoader";
 	private static final String projectName = "ORG_MIFOS_ETL";
 	public static Integer errorCode = null;
@@ -266,12 +261,12 @@ public class GroupDimensionLoader {
 			p.load(inStream);
 			OLTP_DB_PASSWORD = (String) p.get("OLTP_DB_PASSWORD");
 			OLTP_DB_USER = (String) p.get("OLTP_DB_USER");
-			OLTP_DB_NAME = (String) p.get("OLTP_DB_NAME");
+			OLTP_DB_SCHEMA = (String) p.get("OLTP_DB_NAME");
 			OLTP_DB_PORT = (String) p.get("OLTP_DB_PORT");
-			OLTP_HOST_NAME = (String) p.get("OLTP_HOST_NAME");
+			OLTP_DB_HOST = (String) p.get("OLTP_HOST_NAME");
 			OLAP_DB_HOST = (String) p.get("OLAP_DB_HOST");
 			OLAP_DB_PORT = (String) p.get("OLAP_DB_PORT");
-			OLAP_DB_NAME = (String) p.get("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) p.get("OLAP_DB_NAME");
 			OLAP_DB_USER = (String) p.get("OLAP_DB_USER");
 			OLAP_DB_PASSWORD = (String) p.get("OLAP_DB_PASSWORD");
 
@@ -323,7 +318,7 @@ public class GroupDimensionLoader {
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
 			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
-					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_NAME + "?"
+					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
 			String userName_tMysqlConnection_2 = OLAP_DB_USER;
@@ -387,13 +382,13 @@ public class GroupDimensionLoader {
 
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
-			String url_tMysqlConnection_1 = "jdbc:mysql://" + GK_DATA_HOST
-					+ ":" + GK_DATA_DB_PORT + "/" + GK_DATA_DB_SCHEMA + "?"
+			String url_tMysqlConnection_1 = "jdbc:mysql://" + OLTP_DB_HOST
+					+ ":" + OLTP_DB_PORT + "/" + OLTP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
-			String userName_tMysqlConnection_1 = GK_DATA_DB_USER;
+			String userName_tMysqlConnection_1 = OLTP_DB_USER;
 
-			String password_tMysqlConnection_1 = GK_DATA_DB_PASSWORD;
+			String password_tMysqlConnection_1 = OLTP_DB_PASSWORD;
 
 			java.sql.Connection conn_tMysqlConnection_1 = java.sql.DriverManager
 					.getConnection(url_tMysqlConnection_1,
@@ -764,6 +759,9 @@ public class GroupDimensionLoader {
 
 			// ###############################
 			// # Vars initialization
+			class Var__tMap_1__Struct {
+			}
+			Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
 			// ###############################
 
 			// ###############################
@@ -1473,6 +1471,7 @@ public class GroupDimensionLoader {
 
 					// ###############################
 					// # Vars tables
+					Var__tMap_1__Struct Var = Var__tMap_1;
 					// ###############################
 
 					// ###############################
@@ -2717,33 +2716,7 @@ public class GroupDimensionLoader {
 
 		short center_id;
 
-		short customer_level_id;
-
 		String global_cust_num;
-
-		String display_name;
-
-		Short branch_id;
-
-		Short loan_officer_id;
-
-		Short status_id;
-
-		String external_id;
-
-		java.util.Date created_date;
-
-		java.util.Date updated_date;
-
-		java.util.Date mfi_joining_date;
-
-		java.util.Date customer_activation_date;
-
-		Short created_by;
-
-		Short updated_by;
-
-		int version_no;
 
 		@Override
 		public int hashCode() {
@@ -2822,7 +2795,7 @@ public class GroupDimensionLoader {
 			java.sql.Statement stmt_tMysqlInput_3 = conn_tMysqlInput_3
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_3 = stmt_tMysqlInput_3
-					.executeQuery("SELECT center_dim.center_id, center_dim.customer_level_id, center_dim.global_cust_num,  center_dim.display_name, center_dim.branch_id, center_dim.loan_officer_id, center_dim.status_id,  center_dim.external_id, center_dim.created_date, center_dim.updated_date,  center_dim.mfi_joining_date, center_dim.customer_activation_date, center_dim.created_by,  center_dim.updated_by, center_dim.version_no  FROM center_dim");
+					.executeQuery("SELECT center_dim.center_id, center_dim.global_cust_num FROM center_dim");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_3 = rs_tMysqlInput_3
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_3 = rsmd_tMysqlInput_3.getColumnCount();
@@ -2834,9 +2807,8 @@ public class GroupDimensionLoader {
 					.getTime();
 
 			globalMap
-					.put(
-							"tMysqlInput_3_QUERY",
-							"SELECT center_dim.center_id, center_dim.customer_level_id, center_dim.global_cust_num,  center_dim.display_name, center_dim.branch_id, center_dim.loan_officer_id, center_dim.status_id,  center_dim.external_id, center_dim.created_date, center_dim.updated_date,  center_dim.mfi_joining_date, center_dim.customer_activation_date, center_dim.created_by,  center_dim.updated_by, center_dim.version_no  FROM center_dim");
+					.put("tMysqlInput_3_QUERY",
+							"SELECT center_dim.center_id, center_dim.global_cust_num FROM center_dim");
 
 			while (rs_tMysqlInput_3.next()) {
 				nb_line_tMysqlInput_3++;
@@ -2859,252 +2831,12 @@ public class GroupDimensionLoader {
 
 				if (colQtyInRs_tMysqlInput_3 < 2) {
 
-					row2.customer_level_id = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(2) != null) {
-						row2.customer_level_id = rs_tMysqlInput_3.getShort(2);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 3) {
-
 					row2.global_cust_num = null;
 
 				} else {
 
-					if (rs_tMysqlInput_3.getObject(3) != null) {
-						row2.global_cust_num = rs_tMysqlInput_3.getString(3);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 4) {
-
-					row2.display_name = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(4) != null) {
-						row2.display_name = rs_tMysqlInput_3.getString(4);
-					} else {
-
-						row2.display_name = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 5) {
-
-					row2.branch_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(5) != null) {
-						row2.branch_id = rs_tMysqlInput_3.getShort(5);
-					} else {
-
-						row2.branch_id = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 6) {
-
-					row2.loan_officer_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(6) != null) {
-						row2.loan_officer_id = rs_tMysqlInput_3.getShort(6);
-					} else {
-
-						row2.loan_officer_id = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 7) {
-
-					row2.status_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(7) != null) {
-						row2.status_id = rs_tMysqlInput_3.getShort(7);
-					} else {
-
-						row2.status_id = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 8) {
-
-					row2.external_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(8) != null) {
-						row2.external_id = rs_tMysqlInput_3.getString(8);
-					} else {
-
-						row2.external_id = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 9) {
-
-					row2.created_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getString(9) != null) {
-						String dateString_tMysqlInput_3 = rs_tMysqlInput_3
-								.getString(9);
-						if (!dateString_tMysqlInput_3.equals("0000-00-00")
-								&& !dateString_tMysqlInput_3
-										.equals("0000-00-00 00:00:00")) {
-							row2.created_date = rs_tMysqlInput_3
-									.getTimestamp(9);
-						} else {
-							row2.created_date = (java.util.Date) year0_tMysqlInput_3
-									.clone();
-						}
-					} else {
-						row2.created_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 10) {
-
-					row2.updated_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getString(10) != null) {
-						String dateString_tMysqlInput_3 = rs_tMysqlInput_3
-								.getString(10);
-						if (!dateString_tMysqlInput_3.equals("0000-00-00")
-								&& !dateString_tMysqlInput_3
-										.equals("0000-00-00 00:00:00")) {
-							row2.updated_date = rs_tMysqlInput_3
-									.getTimestamp(10);
-						} else {
-							row2.updated_date = (java.util.Date) year0_tMysqlInput_3
-									.clone();
-						}
-					} else {
-						row2.updated_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 11) {
-
-					row2.mfi_joining_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getString(11) != null) {
-						String dateString_tMysqlInput_3 = rs_tMysqlInput_3
-								.getString(11);
-						if (!dateString_tMysqlInput_3.equals("0000-00-00")
-								&& !dateString_tMysqlInput_3
-										.equals("0000-00-00 00:00:00")) {
-							row2.mfi_joining_date = rs_tMysqlInput_3
-									.getTimestamp(11);
-						} else {
-							row2.mfi_joining_date = (java.util.Date) year0_tMysqlInput_3
-									.clone();
-						}
-					} else {
-						row2.mfi_joining_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 12) {
-
-					row2.customer_activation_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getString(12) != null) {
-						String dateString_tMysqlInput_3 = rs_tMysqlInput_3
-								.getString(12);
-						if (!dateString_tMysqlInput_3.equals("0000-00-00")
-								&& !dateString_tMysqlInput_3
-										.equals("0000-00-00 00:00:00")) {
-							row2.customer_activation_date = rs_tMysqlInput_3
-									.getTimestamp(12);
-						} else {
-							row2.customer_activation_date = (java.util.Date) year0_tMysqlInput_3
-									.clone();
-						}
-					} else {
-						row2.customer_activation_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 13) {
-
-					row2.created_by = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(13) != null) {
-						row2.created_by = rs_tMysqlInput_3.getShort(13);
-					} else {
-
-						row2.created_by = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 14) {
-
-					row2.updated_by = null;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(14) != null) {
-						row2.updated_by = rs_tMysqlInput_3.getShort(14);
-					} else {
-
-						row2.updated_by = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_3 < 15) {
-
-					row2.version_no = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_3.getObject(15) != null) {
-						row2.version_no = rs_tMysqlInput_3.getInt(15);
+					if (rs_tMysqlInput_3.getObject(2) != null) {
+						row2.global_cust_num = rs_tMysqlInput_3.getString(2);
 					} else {
 
 						throw new RuntimeException(
@@ -3135,20 +2867,7 @@ public class GroupDimensionLoader {
 				row2Struct row2_HashRow = new row2Struct();
 
 				row2_HashRow.center_id = row2.center_id;
-				row2_HashRow.customer_level_id = row2.customer_level_id;
 				row2_HashRow.global_cust_num = row2.global_cust_num;
-				row2_HashRow.display_name = row2.display_name;
-				row2_HashRow.branch_id = row2.branch_id;
-				row2_HashRow.loan_officer_id = row2.loan_officer_id;
-				row2_HashRow.status_id = row2.status_id;
-				row2_HashRow.external_id = row2.external_id;
-				row2_HashRow.created_date = row2.created_date;
-				row2_HashRow.updated_date = row2.updated_date;
-				row2_HashRow.mfi_joining_date = row2.mfi_joining_date;
-				row2_HashRow.customer_activation_date = row2.customer_activation_date;
-				row2_HashRow.created_by = row2.created_by;
-				row2_HashRow.updated_by = row2.updated_by;
-				row2_HashRow.version_no = row2.version_no;
 				tHash_Lookup_row2.put(row2_HashRow);
 
 				/**
@@ -3753,37 +3472,25 @@ public class GroupDimensionLoader {
 				context.putAll(context_param);
 			}
 
-			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
-
-			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
-
-			OLTP_DB_NAME = (String) context.getProperty("OLTP_DB_NAME");
+			OLTP_DB_HOST = (String) context.getProperty("OLTP_DB_HOST");
 
 			OLTP_DB_PORT = (String) context.getProperty("OLTP_DB_PORT");
 
-			OLTP_HOST_NAME = (String) context.getProperty("OLTP_HOST_NAME");
+			OLTP_DB_SCHEMA = (String) context.getProperty("OLTP_DB_SCHEMA");
+
+			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
+
+			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
 
 			OLAP_DB_HOST = (String) context.getProperty("OLAP_DB_HOST");
 
 			OLAP_DB_PORT = (String) context.getProperty("OLAP_DB_PORT");
 
-			OLAP_DB_NAME = (String) context.getProperty("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) context.getProperty("OLAP_DB_SCHEMA");
 
 			OLAP_DB_USER = (String) context.getProperty("OLAP_DB_USER");
 
 			OLAP_DB_PASSWORD = (String) context.getProperty("OLAP_DB_PASSWORD");
-
-			GK_DATA_HOST = (String) context.getProperty("GK_DATA_HOST");
-
-			GK_DATA_DB_PORT = (String) context.getProperty("GK_DATA_DB_PORT");
-
-			GK_DATA_DB_USER = (String) context.getProperty("GK_DATA_DB_USER");
-
-			GK_DATA_DB_PASSWORD = (String) context
-					.getProperty("GK_DATA_DB_PASSWORD");
-
-			GK_DATA_DB_SCHEMA = (String) context
-					.getProperty("GK_DATA_DB_SCHEMA");
 
 		} catch (java.io.IOException ie) {
 			System.err.println("Could not load context " + contextStr);
@@ -3875,6 +3582,6 @@ public class GroupDimensionLoader {
 	}
 }
 /*******************************************************************************
- * 106983 characters generated by Talend OpenStudio on the March 14, 2008
- * 2:17:02 PM GMT
+ * 99050 characters generated by Talend OpenStudio on the March 27, 2008 6:48:26
+ * PM GMT
  ******************************************************************************/

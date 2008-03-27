@@ -40,21 +40,16 @@ public class ClientDimensionLoader {
 	private static java.util.Properties defaultProps = new java.util.Properties();
 	// create application properties with default
 	private static java.util.Properties context = new java.util.Properties();
-	private static String OLTP_DB_PASSWORD;
-	private static String OLTP_DB_USER;
-	private static String OLTP_DB_NAME;
+	private static String OLTP_DB_HOST;
 	private static String OLTP_DB_PORT;
-	private static String OLTP_HOST_NAME;
+	private static String OLTP_DB_SCHEMA;
+	private static String OLTP_DB_USER;
+	private static String OLTP_DB_PASSWORD;
 	private static String OLAP_DB_HOST;
 	private static String OLAP_DB_PORT;
-	private static String OLAP_DB_NAME;
+	private static String OLAP_DB_SCHEMA;
 	private static String OLAP_DB_USER;
 	private static String OLAP_DB_PASSWORD;
-	private static String GK_DATA_HOST;
-	private static String GK_DATA_DB_PORT;
-	private static String GK_DATA_DB_USER;
-	private static String GK_DATA_DB_PASSWORD;
-	private static String GK_DATA_DB_SCHEMA;
 	private static final String jobName = "ClientDimensionLoader";
 	private static final String projectName = "ORG_MIFOS_ETL";
 	public static Integer errorCode = null;
@@ -262,12 +257,12 @@ public class ClientDimensionLoader {
 			p.load(inStream);
 			OLTP_DB_PASSWORD = (String) p.get("OLTP_DB_PASSWORD");
 			OLTP_DB_USER = (String) p.get("OLTP_DB_USER");
-			OLTP_DB_NAME = (String) p.get("OLTP_DB_NAME");
+			OLTP_DB_SCHEMA = (String) p.get("OLTP_DB_NAME");
 			OLTP_DB_PORT = (String) p.get("OLTP_DB_PORT");
-			OLTP_HOST_NAME = (String) p.get("OLTP_HOST_NAME");
+			OLTP_DB_HOST = (String) p.get("OLTP_HOST_NAME");
 			OLAP_DB_HOST = (String) p.get("OLAP_DB_HOST");
 			OLAP_DB_PORT = (String) p.get("OLAP_DB_PORT");
-			OLAP_DB_NAME = (String) p.get("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) p.get("OLAP_DB_NAME");
 			OLAP_DB_USER = (String) p.get("OLAP_DB_USER");
 			OLAP_DB_PASSWORD = (String) p.get("OLAP_DB_PASSWORD");
 
@@ -319,7 +314,7 @@ public class ClientDimensionLoader {
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
 			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
-					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_NAME + "?"
+					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
 			String userName_tMysqlConnection_2 = OLAP_DB_USER;
@@ -383,13 +378,13 @@ public class ClientDimensionLoader {
 
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
-			String url_tMysqlConnection_1 = "jdbc:mysql://" + GK_DATA_HOST
-					+ ":" + GK_DATA_DB_PORT + "/" + GK_DATA_DB_SCHEMA + "?"
+			String url_tMysqlConnection_1 = "jdbc:mysql://" + OLTP_DB_HOST
+					+ ":" + OLTP_DB_PORT + "/" + OLTP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
-			String userName_tMysqlConnection_1 = GK_DATA_DB_USER;
+			String userName_tMysqlConnection_1 = OLTP_DB_USER;
 
-			String password_tMysqlConnection_1 = GK_DATA_DB_PASSWORD;
+			String password_tMysqlConnection_1 = OLTP_DB_PASSWORD;
 
 			java.sql.Connection conn_tMysqlConnection_1 = java.sql.DriverManager
 					.getConnection(url_tMysqlConnection_1,
@@ -736,7 +731,7 @@ public class ClientDimensionLoader {
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
 			String url_tMysqlOutput_1 = "jdbc:mysql://" + OLAP_DB_HOST + ":"
-					+ OLAP_DB_PORT + "/" + OLAP_DB_NAME + "?"
+					+ OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
 			String dbUser_tMysqlOutput_1 = OLAP_DB_USER;
@@ -766,19 +761,15 @@ public class ClientDimensionLoader {
 								+ tableName_tMysqlOutput_1
 								+ "`(`customer_level_id` SMALLINT(5)  not null,`global_cust_num` VARCHAR(100)  not null,`display_name` VARCHAR(200)  ,`group_id` SMALLINT(5)  ,`loan_officer_id` SMALLINT(5)  ,`status_id` SMALLINT(5)  ,`external_id` VARCHAR(50)  ,`created_date` DATE ,`updated_date` DATE ,`mfi_joining_date` DATE ,`customer_activation_date` DATE ,`created_by` SMALLINT(5)  ,`updated_by` SMALLINT(5)  ,`version_no` INT(10)  not null,primary key(`global_cust_num`))");
 			}
-			java.sql.PreparedStatement pstmt_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("SELECT COUNT(1) FROM `" + "client_dim"
-							+ "` WHERE `global_cust_num` = ?");
+			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
+					.prepareStatement("UPDATE `"
+							+ "client_dim"
+							+ "` SET `customer_level_id` = ?,`display_name` = ?,`group_id` = ?,`loan_officer_id` = ?,`status_id` = ?,`external_id` = ?,`created_date` = ?,`updated_date` = ?,`mfi_joining_date` = ?,`customer_activation_date` = ?,`created_by` = ?,`updated_by` = ?,`version_no` = ? WHERE `global_cust_num` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_1 = conn_tMysqlOutput_1
 					.prepareStatement("INSERT INTO `"
 							+ "client_dim"
 							+ "` (`customer_level_id`,`global_cust_num`,`display_name`,`group_id`,`loan_officer_id`,`status_id`,`external_id`,`created_date`,`updated_date`,`mfi_joining_date`,`customer_activation_date`,`created_by`,`updated_by`,`version_no`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("UPDATE `"
-							+ "client_dim"
-							+ "` SET `customer_level_id` = ?,`display_name` = ?,`group_id` = ?,`loan_officer_id` = ?,`status_id` = ?,`external_id` = ?,`created_date` = ?,`updated_date` = ?,`mfi_joining_date` = ?,`customer_activation_date` = ?,`created_by` = ?,`updated_by` = ?,`version_no` = ? WHERE `global_cust_num` = ?");
 
 			int commitEvery_tMysqlOutput_1 = 10000;
 
@@ -1604,216 +1595,201 @@ public class ClientDimensionLoader {
 					currentComponent = "tMysqlOutput_1";
 
 					whetherReject_tMysqlOutput_1 = false;
+					int updateFlag_tMysqlOutput_1 = 0;
 
-					if (client_dim1.global_cust_num == null) {
-						pstmt_tMysqlOutput_1.setNull(1, java.sql.Types.VARCHAR);
+					pstmtUpdate_tMysqlOutput_1.setShort(1,
+							client_dim1.customer_level_id);
+
+					if (client_dim1.display_name == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(2,
+								java.sql.Types.VARCHAR);
 
 					} else {
 
-						pstmt_tMysqlOutput_1.setString(1,
+						pstmtUpdate_tMysqlOutput_1.setString(2,
+								client_dim1.display_name);
+
+					}
+
+					if (client_dim1.group_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(3,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(3,
+								client_dim1.group_id);
+
+					}
+
+					if (client_dim1.loan_officer_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(4,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(4,
+								client_dim1.loan_officer_id);
+
+					}
+
+					if (client_dim1.status_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(5,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(5,
+								client_dim1.status_id);
+
+					}
+
+					if (client_dim1.external_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(6,
+								java.sql.Types.VARCHAR);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setString(6,
+								client_dim1.external_id);
+
+					}
+
+					if (client_dim1.created_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = client_dim1.created_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(7,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(7, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(7,
+								java.sql.Types.DATE);
+
+					}
+
+					if (client_dim1.updated_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = client_dim1.updated_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(8,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(8, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(8,
+								java.sql.Types.DATE);
+
+					}
+
+					if (client_dim1.mfi_joining_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = client_dim1.mfi_joining_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(9,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(9, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(9,
+								java.sql.Types.DATE);
+
+					}
+
+					if (client_dim1.customer_activation_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = client_dim1.customer_activation_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(10,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(10, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(10,
+								java.sql.Types.DATE);
+
+					}
+
+					if (client_dim1.created_by == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(11,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(11,
+								client_dim1.created_by);
+
+					}
+
+					if (client_dim1.updated_by == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(12,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(12,
+								client_dim1.updated_by);
+
+					}
+
+					pstmtUpdate_tMysqlOutput_1.setInt(13,
+							client_dim1.version_no);
+
+					if (client_dim1.global_cust_num == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(14,
+								java.sql.Types.VARCHAR);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setString(14,
 								client_dim1.global_cust_num);
 
 					}
 
-					java.sql.ResultSet rs_tMysqlOutput_1 = pstmt_tMysqlOutput_1
-							.executeQuery();
-					int checkCount_tMysqlOutput_1 = -1;
-					while (rs_tMysqlOutput_1.next()) {
-						checkCount_tMysqlOutput_1 = rs_tMysqlOutput_1.getInt(1);
+					try {
+						updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
+								.executeUpdate();
+						updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
+								+ updateFlag_tMysqlOutput_1;
+
+					} catch (Exception e) {
+						whetherReject_tMysqlOutput_1 = true;
+						throw (e);
 					}
-					if (checkCount_tMysqlOutput_1 > 0) {
-
-						pstmtUpdate_tMysqlOutput_1.setShort(1,
-								client_dim1.customer_level_id);
-
-						if (client_dim1.display_name == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(2,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setString(2,
-									client_dim1.display_name);
-
-						}
-
-						if (client_dim1.group_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(3,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(3,
-									client_dim1.group_id);
-
-						}
-
-						if (client_dim1.loan_officer_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(4,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(4,
-									client_dim1.loan_officer_id);
-
-						}
-
-						if (client_dim1.status_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(5,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(5,
-									client_dim1.status_id);
-
-						}
-
-						if (client_dim1.external_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(6,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setString(6,
-									client_dim1.external_id);
-
-						}
-
-						if (client_dim1.created_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = client_dim1.created_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(7,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(7,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(7,
-									java.sql.Types.DATE);
-
-						}
-
-						if (client_dim1.updated_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = client_dim1.updated_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(8,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(8,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(8,
-									java.sql.Types.DATE);
-
-						}
-
-						if (client_dim1.mfi_joining_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = client_dim1.mfi_joining_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(9,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(9,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(9,
-									java.sql.Types.DATE);
-
-						}
-
-						if (client_dim1.customer_activation_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = client_dim1.customer_activation_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(10,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(10,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(10,
-									java.sql.Types.DATE);
-
-						}
-
-						if (client_dim1.created_by == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(11,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(11,
-									client_dim1.created_by);
-
-						}
-
-						if (client_dim1.updated_by == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(12,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(12,
-									client_dim1.updated_by);
-
-						}
-
-						pstmtUpdate_tMysqlOutput_1.setInt(13,
-								client_dim1.version_no);
-
-						if (client_dim1.global_cust_num == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(14,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setString(14,
-									client_dim1.global_cust_num);
-
-						}
-
-						try {
-							updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
-									+ pstmtUpdate_tMysqlOutput_1
-											.executeUpdate();
-						} catch (Exception e) {
-							whetherReject_tMysqlOutput_1 = true;
-							System.err.print(e.getMessage());
-						}
-					} else {
+					if (updateFlag_tMysqlOutput_1 == 0) {
 
 						pstmtInsert_tMysqlOutput_1.setShort(1,
 								client_dim1.customer_level_id);
@@ -2003,7 +1979,7 @@ public class ClientDimensionLoader {
 											.executeUpdate();
 						} catch (Exception e) {
 							whetherReject_tMysqlOutput_1 = true;
-							System.err.print(e.getMessage());
+							throw (e);
 						}
 					}
 					nb_line_tMysqlOutput_1++;
@@ -2086,11 +2062,6 @@ public class ClientDimensionLoader {
 			if (pstmtInsert_tMysqlOutput_1 != null) {
 
 				pstmtInsert_tMysqlOutput_1.close();
-
-			}
-			if (pstmt_tMysqlOutput_1 != null) {
-
-				pstmt_tMysqlOutput_1.close();
 
 			}
 
@@ -3822,37 +3793,25 @@ public class ClientDimensionLoader {
 				context.putAll(context_param);
 			}
 
-			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
-
-			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
-
-			OLTP_DB_NAME = (String) context.getProperty("OLTP_DB_NAME");
+			OLTP_DB_HOST = (String) context.getProperty("OLTP_DB_HOST");
 
 			OLTP_DB_PORT = (String) context.getProperty("OLTP_DB_PORT");
 
-			OLTP_HOST_NAME = (String) context.getProperty("OLTP_HOST_NAME");
+			OLTP_DB_SCHEMA = (String) context.getProperty("OLTP_DB_SCHEMA");
+
+			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
+
+			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
 
 			OLAP_DB_HOST = (String) context.getProperty("OLAP_DB_HOST");
 
 			OLAP_DB_PORT = (String) context.getProperty("OLAP_DB_PORT");
 
-			OLAP_DB_NAME = (String) context.getProperty("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) context.getProperty("OLAP_DB_SCHEMA");
 
 			OLAP_DB_USER = (String) context.getProperty("OLAP_DB_USER");
 
 			OLAP_DB_PASSWORD = (String) context.getProperty("OLAP_DB_PASSWORD");
-
-			GK_DATA_HOST = (String) context.getProperty("GK_DATA_HOST");
-
-			GK_DATA_DB_PORT = (String) context.getProperty("GK_DATA_DB_PORT");
-
-			GK_DATA_DB_USER = (String) context.getProperty("GK_DATA_DB_USER");
-
-			GK_DATA_DB_PASSWORD = (String) context
-					.getProperty("GK_DATA_DB_PASSWORD");
-
-			GK_DATA_DB_SCHEMA = (String) context
-					.getProperty("GK_DATA_DB_SCHEMA");
 
 		} catch (java.io.IOException ie) {
 			System.err.println("Could not load context " + contextStr);
@@ -3944,6 +3903,6 @@ public class ClientDimensionLoader {
 	}
 }
 /*******************************************************************************
- * 109500 characters generated by Talend OpenStudio on the March 14, 2008
- * 1:46:52 PM GMT
+ * 108164 characters generated by Talend OpenStudio on the March 27, 2008
+ * 7:09:27 PM GMT
  ******************************************************************************/
