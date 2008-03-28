@@ -36,11 +36,11 @@
             <table width="98%" border="0" cellpadding="3" cellspacing="0">
               <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.QuestionName" bundle="SurveysUIResources" mandatory="yes"/></td>
-                <td width="76%"><html-el:text property="value(shortName)"/></td>
+                <td width="76%"><mifos:mifosalphanumtext property="value(shortName)" maxlength="50" /></td>
               </tr>
               <tr class="fontnormal">
                 <td width="24%" align="right"><mifos:mifoslabel name="Surveys.Question" bundle="SurveysUIResources" mandatory="yes"/></td>
-                <td width="76%"><html-el:text property="value(questionText)"/></td>
+                <td width="76%"><mifos:mifosalphanumtext property="value(questionText)" maxlength="1000" /></td>
               </tr>
 
               <tr class="fontnormal">
