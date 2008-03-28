@@ -309,6 +309,7 @@
 		<echo>Using database: ${testdb.name}</echo>
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
+			haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
 			failureproperty="tests.failure">
 			<sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
 			<classpath>
@@ -338,6 +339,7 @@
 		<echo>Using database: ${testdb.name}</echo>
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
+			haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
 			failureproperty="tests.failure">
 			<sysproperty key="hibernate.connection.url" value="jdbc:mysql://${testdb.ip}:${testdb.port}/${testdb.name}"/>
 			<classpath>
@@ -376,6 +378,7 @@
 		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Profile tests">
 		<junit printsummary="on" fork="true" maxmemory="${profile.memory}" 
+			haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
 			dir="${basedir}"
 			failureproperty="tests.failure">
 			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/>
