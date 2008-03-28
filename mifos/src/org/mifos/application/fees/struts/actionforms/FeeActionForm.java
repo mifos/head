@@ -368,7 +368,12 @@ public class FeeActionForm extends BaseActionForm {
 		return StringUtils.isNullAndEmptySafe(feeFormula);
 	}
 	
-	private boolean isAmountValid(){
-		return getAmountValue().getAmountDoubleValue()>0.0;
-	}	
+	boolean isAmountValid(){
+        try {
+            return getAmountValue().getAmountDoubleValue()>0.0;
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
