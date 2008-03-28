@@ -94,6 +94,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 	private String hideGroupAddress3;
 
 	private String hideGroupTrained;
+	
+	private String mandatoryLoanAccountPurpose;
 
 	public String getHideClientBusinessWorkActivities() {
 		return hideClientBusinessWorkActivities;
@@ -381,7 +383,16 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 	public void setMandatorySystemCitizenShip(String mandatorySystemCitizenShip) {
 		this.mandatorySystemCitizenShip = mandatorySystemCitizenShip;
 	}
+	
+	public String getMandatoryLoanAccountPurpose() {
+		return mandatoryLoanAccountPurpose;
+	}
 
+	public void setMandatoryLoanAccountPurpose(
+			String mandatoryLoanAccountPurpose) {
+		this.mandatoryLoanAccountPurpose = mandatoryLoanAccountPurpose;
+	}
+	
 	public String getMandatorySystemEducationLevel() {
 		return mandatorySystemEducationLevel;
 	}
@@ -456,6 +467,7 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 		this.mandatorySystemEthnicity = "0";
 		this.hideSystemCitizenShip = "0";
 		this.mandatorySystemCitizenShip = "0";
+		this.mandatoryLoanAccountPurpose = "0";
 		this.hideSystemHandicapped = "0";
 		this.mandatorySystemHandicapped = "0";
 		this.hideSystemEducationLevel = "0";

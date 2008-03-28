@@ -86,6 +86,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertEquals("1", actionForm.getMandatorySystemExternalId());
 		assertEquals("1", actionForm.getMandatorySystemHandicapped());
 		assertEquals("0", actionForm.getMandatorySystemPhoto());
+		assertEquals("1", actionForm.getMandatoryLoanAccountPurpose());
 	}
 
 	public void testUpdate() throws Exception {
@@ -150,6 +151,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertEquals("0", actionForm.getMandatorySystemExternalId());
 		assertEquals("0", actionForm.getMandatorySystemHandicapped());
 		assertEquals("1", actionForm.getMandatorySystemPhoto());
+		
 
 		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
 		addRequestParameter("method", "update");
@@ -188,6 +190,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 		addRequestParameter("mandatoryClientSpouseFatherSecondLastName", "1");
 		addRequestParameter("mandatoryClientGovtId", "0");
 		addRequestParameter("mandatorySystemPhoto", "0");
+		addRequestParameter("mandatoryLoanAccountPurpose", "1");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();

@@ -19,6 +19,8 @@ public interface HiddenMandatoryFieldNamesConstants {
 	public static final String RECEIPT_ID = "ReceiptId";
 
 	public static final String COLLATERAL_TYPE = "CollateralType";
+	
+	public static final String PURPOSE_OF_LOAN = "PurposeOfLoan";
 
 	public static final String COLLATERAL_NOTES = "CollateralNotes";
 

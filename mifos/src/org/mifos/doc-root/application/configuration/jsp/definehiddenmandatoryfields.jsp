@@ -427,6 +427,32 @@
 									&nbsp;
 								</td>
 							</tr>
+						</table>
+						<span class="heading"></span>
+						<table width="96%" border="0" cellpadding="3" cellspacing="0">	
+							<tr>
+								<td width="24%" class="drawtablehd">
+									<mifos:mifoslabel name="configuration.loanAccountfields" />
+								</td>
+								<td width="28%" class="drawtablehd">
+									<mifos:mifoslabel name="configuration.hide" />
+								</td>
+								<td width="28%" class="drawtablehd">
+									<mifos:mifoslabel name="configuration.mandatory" />
+								</td>
+							</tr>
+													
+							<tr>
+								<td class="drawtablerow">
+									<mifos:mifoslabel name="configuration.purposeofloan" />
+								</td>
+								<td class="drawtablerow">
+									&nbsp;
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="mandatoryLoanAccountPurpose" value="1"/>
+								</td>
+							</tr>
 							<tr>
 								<td class="drawtablerow">
 									&nbsp;

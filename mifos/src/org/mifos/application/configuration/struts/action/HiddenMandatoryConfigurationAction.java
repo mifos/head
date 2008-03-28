@@ -198,6 +198,14 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 					getShortValue(actionForm.getHideSystemReceiptIdDate()));
 		}
 		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.PURPOSE_OF_LOAN)) {
+			// TODO: move to a new method with other loan account field updates
+			fieldConfiguration.update(getShortValue(actionForm
+					.getMandatoryLoanAccountPurpose()), fieldConfiguration
+					.getHiddenFlag());
+		}
+		
+		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)
 				|| fieldConfiguration.getFieldName().equals(
 						HiddenMandatoryFieldNamesConstants.COLLATERAL_NOTES)) {
@@ -676,6 +684,13 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 					.setHideSystemReceiptIdDate(getStringValue(fieldConfiguration
 							.getHiddenFlag()));
 		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.PURPOSE_OF_LOAN)) {
+			actionForm
+					.setMandatoryLoanAccountPurpose(getStringValue(fieldConfiguration.getMandatoryFlag()));
+		}
+		
+		
 		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.COLLATERAL_TYPE)) {
 			actionForm
