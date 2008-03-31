@@ -91,7 +91,7 @@
                 <td align="left" class="drawtablerow">
                 <c:out value="${results.veryPoorMin}"/>
                 -
-                <c:out value="${results.nonPoorMax}"/>
+                <c:out value="${results.veryPoorMax}"/>
                 </td>
                 <td>&nbsp;</td>
             </tr>

@@ -53,7 +53,7 @@
                 <td align="left" class="drawtablerow">
                 <c:out value="${retrievedSurvey.veryPoorMin}"/>
                 -
-                <c:out value="${retrievedSurvey.nonPoorMax}"/>
+                <c:out value="${retrievedSurvey.veryPoorMax}"/>
                 </td>
                 <td>&nbsp;</td>
             </tr>
