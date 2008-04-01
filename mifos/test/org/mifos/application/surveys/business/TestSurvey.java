@@ -3,6 +3,7 @@ package org.mifos.application.surveys.business;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
@@ -336,51 +337,51 @@ public class TestSurvey extends MifosTestCase {
 		return instance;
 	}
 	
-//	public void testSurveyResponseWithChoices() throws Exception {
-//		SurveysPersistence persistence = new SurveysPersistence();
-//		SurveyInstance instance = makeSurveyInstance("Test choice type survey response");
-//		Survey survey = instance.getSurvey();
-//		String questionText = "Why did the chicken cross the road?";
-//		String shortName = "Chicken Question";
-//		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
-//		QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
-//		QuestionChoice choice2 = new QuestionChoice("Exercise");
-//		List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
-//		choices.add(choice1);
-//		choices.add(choice2);
-//		question.setChoices(choices);
-//		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
-//		session.save(question);
-//		SurveyResponse response = new SurveyResponse();
-//		response.setSurveyQuestion(surveyQuestion);	
-//		response.setChoiceValue(choice1);
-//		response.setInstance(instance);
-//		session.save(response);
-//		List<SurveyResponse> responses = persistence.retrieveAllResponses();
-//		assertEquals(1, responses.size());
-//		assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
-//	}
+	public void testSurveyResponseWithChoices() throws Exception {
+		SurveysPersistence persistence = new SurveysPersistence();
+		SurveyInstance instance = makeSurveyInstance("Test choice type survey response");
+		Survey survey = instance.getSurvey();
+		String questionText = "Why did the chicken cross the road?";
+		String shortName = "Chicken Question";
+		Question question = new Question(shortName, questionText, AnswerType.CHOICE);
+		QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
+		QuestionChoice choice2 = new QuestionChoice("Exercise");
+		List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+		choices.add(choice1);
+		choices.add(choice2);
+		question.setChoices(choices);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
+		HibernateUtil.getSessionTL().save(question);
+		SurveyResponse response = new SurveyResponse();
+		response.setSurveyQuestion(surveyQuestion);	
+		response.setChoiceValue(choice1);
+		response.setInstance(instance);
+		HibernateUtil.getSessionTL().save(response);
+		List<SurveyResponse> responses = persistence.retrieveAllResponses();
+		assertEquals(1, responses.size());
+		assertEquals(choice1.getChoiceId(), responses.get(0).getChoiceValue().getChoiceId());
+	}
 	
 	// this test was created because of problems persisting number survey responses
 	// in mayfly
-//	public void testNumberSurveyResponse() throws Exception {
-//		SurveyInstance instance = makeSurveyInstance("Test number survey response");
-//		Survey survey = instance.getSurvey();
-//		String questionText = "Sample question with a numeric answer";
-//		String shortName = "Sample Name";
-//		Question question = new Question(shortName, questionText, AnswerType.NUMBER);
-//		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
-//		session.save(question);
-//		SurveyResponse response = new SurveyResponse();
-//		response.setSurveyQuestion(surveyQuestion);
-//		response.setNumberValue(new Double(5));
-//		response.setInstance(instance);
-//		session.save(response);
-//		
-//		List<SurveyResponse> responses = new SurveysPersistence().retrieveAllResponses();
-//		assertEquals(1, responses.size());
-//		assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
-//	}
+	public void testNumberSurveyResponse() throws Exception {
+		SurveyInstance instance = makeSurveyInstance("Test number survey response");
+		Survey survey = instance.getSurvey();
+		String questionText = "Sample question with a numeric answer";
+		String shortName = "Sample Name";
+		Question question = new Question(shortName, questionText, AnswerType.NUMBER);
+		SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
+		HibernateUtil.getSessionTL().save(question);
+		SurveyResponse response = new SurveyResponse();
+		response.setSurveyQuestion(surveyQuestion);
+		response.setNumberValue(new Double(5));
+		response.setInstance(instance);
+		HibernateUtil.getSessionTL().save(response);
+		
+		List<SurveyResponse> responses = new SurveysPersistence().retrieveAllResponses();
+		assertEquals(1, responses.size());
+		assertEquals(questionText, responses.get(0).getQuestion().getQuestionText());
+	}
 	
 	public void testSurveyResponseTypechecks() throws Exception {
 		SurveyInstance instance = makeSurveyInstance("Test survey response typechecks");

@@ -2592,12 +2592,6 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestUtils.makeUser();
 		Money totalRepaymentAmount = loanBO.getTotalEarlyRepayAmount();
 		
-		/*CustomerPerformanceHistory customerPerformanceHistory = ((LoanBO) accountBO).getCustomer().getPerformanceHistory();		
-		// TODO: The following checks and 'hacks' aren't perceived to be normal, something sometimes goes astray here?
-		if (null == customerPerformanceHistory) {
-			customerPerformanceHistory = (CustomerPerformanceHistory) HibernateUtil.getSessionTL().createQuery("from org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity e where e.client.customerId = " + ((LoanBO) accountBO).getCustomer().getCustomerId()).uniqueResult();
-		}*/
-		
 		Integer noOfActiveLoans = ((ClientPerformanceHistoryEntity) ((LoanBO) accountBO).getCustomer().getPerformanceHistory()).getNoOfActiveLoans();
 		
 		LoanPerformanceHistoryEntity loanPerfHistory = ((LoanBO) accountBO)
