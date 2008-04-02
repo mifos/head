@@ -44,8 +44,8 @@ public class PPISurvey extends Survey {
 	
 
 	public static int DEFAULT_VERY_POOR_MIN = 0;
-	public static int DEFAULT_VERY_POOR_MAX = 0;
-	public static int DEFAULT_POOR_MIN = 24;
+	public static int DEFAULT_VERY_POOR_MAX = 24;
+	public static int DEFAULT_POOR_MIN = 25;
 	public static int DEFAULT_POOR_MAX = 49;
 	public static int DEFAULT_AT_RISK_MIN = 50;
 	public static int DEFAULT_AT_RISK_MAX = 74;
@@ -165,11 +165,11 @@ public class PPISurvey extends Survey {
 	}
 	public void populateDefaultValues() {
 		setVeryPoorMin(DEFAULT_VERY_POOR_MIN);
-		setVeryPoorMax(DEFAULT_POOR_MAX);
+		setVeryPoorMax(DEFAULT_VERY_POOR_MAX);
 		setPoorMin(DEFAULT_POOR_MIN);
-		setPoorMax(DEFAULT_AT_RISK_MAX);
+		setPoorMax(DEFAULT_POOR_MAX);
 		setAtRiskMin(DEFAULT_AT_RISK_MIN);
-		setAtRiskMax(DEFAULT_NON_POOR_MAX);
+		setAtRiskMax(DEFAULT_AT_RISK_MAX);
 		setNonPoorMin(DEFAULT_NON_POOR_MIN);
 		setNonPoorMax(DEFAULT_NON_POOR_MAX);
 	}

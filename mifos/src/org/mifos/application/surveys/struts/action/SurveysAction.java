@@ -334,7 +334,7 @@ public class SurveysAction extends BaseAction {
 	
 	private List<Question> getQuestions() throws PersistenceException {
 			SurveysPersistence persistence = new SurveysPersistence();
-			return persistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+			return persistence.retrieveGeneralQuestionsByState(QuestionState.ACTIVE);
 	}
 	
 	public ActionForward edit_entry(ActionMapping mapping, ActionForm form,

@@ -33,6 +33,10 @@
                     <mifos:mifoslabel name="Surveys.definequestion"/>
                 </a>
             </span>
+            <br />
+            <span class="fontnormal">
+                <mifos:mifoslabel name="Surveys.viewQuestions_ppi_note"/>
+            </span>
         </div>
         <c:if test="${requestScope.itemCount > 0}">
         <br/>
@@ -55,6 +59,9 @@
     	<tr class="fontnormal">
 	      <td width="1%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/></td>
     	  <td width="99%">
+        <c:if test="${question.questionType == 1}">
+     		<c:out value="(PPI) " />
+        </c:if>
         <html-el:link href="questionsAction.do?method=get&questionId=${question.questionId}&randomNUm=${sessionScope.randomNUm}">
           <c:out value="${question.shortName}"/>
         </html-el:link>

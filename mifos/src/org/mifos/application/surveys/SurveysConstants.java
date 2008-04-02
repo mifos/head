@@ -43,4 +43,7 @@ public class SurveysConstants {
 	public static final String INVALID_OFFICER="errors.invalidofficer";
 	public static final String NAME_EXISTS="errors.nameexists";
     public static final String INVALID_NUMBER_OF_CHOICES="erros.invalidnumberofchoices";
+    
+    public static final int QUESTION_TYPE_GENERAL = 0;
+    public static final int QUESTION_TYPE_PPI = 1;
 }

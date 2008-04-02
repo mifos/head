@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.mifos.application.ppi.business.PPIChoice;
+import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.framework.formulaic.DateValidator;
@@ -162,6 +164,16 @@ public class Question implements Serializable, Comparable<Question> {
 	
 	public void addChoice(QuestionChoice choice) {
 		getChoices().add(choice);
+	}
+	
+	public int getQuestionType() {
+		if (answerType == AnswerType.CHOICE) {
+			for (QuestionChoice choice : choices) {
+				if (choice instanceof PPIChoice)
+					return SurveysConstants.QUESTION_TYPE_PPI;
+			}
+		}
+		return SurveysConstants.QUESTION_TYPE_GENERAL;
 	}
 	
 	@Override

@@ -1,11 +1,14 @@
 package org.mifos.application.surveys.persistence;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -90,6 +93,19 @@ public class SurveysPersistence extends Persistence {
         return query.list();
     }
     
+    public List<Question> getQuestionsByQuestionType(int questionType) throws PersistenceException {
+    	return getQuestionsByQuestionType(retrieveAllQuestions(), questionType);
+    }
+
+    public List<Question> getQuestionsByQuestionType(List<Question> questions, int questionType) throws PersistenceException {
+    	List<Question> filteredQuestions = new ArrayList<Question>();
+    	for (Question question : questions) {
+			if (question.getQuestionType() == questionType)
+				filteredQuestions.add(question);
+		}
+		return filteredQuestions;
+	}
+
     public List<Question> retrieveSomeQuestions(int offset, int limit) throws PersistenceException {
     	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_ALL);
     	query.setFirstResult(offset);
@@ -97,10 +113,10 @@ public class SurveysPersistence extends Persistence {
     	return query.list();
     }
     
-    public List<Question> retrieveQuestionsByState(QuestionState state) throws PersistenceException {
+    public List<Question> retrieveGeneralQuestionsByState(QuestionState state) throws PersistenceException {
     	Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_STATE);
     	query.setParameter("QUESTION_STATE", state.getValue());
-    	return query.list();
+    	return getQuestionsByQuestionType(query.list(), SurveysConstants.QUESTION_TYPE_GENERAL);
     }
 
     
@@ -137,5 +153,4 @@ public class SurveysPersistence extends Persistence {
     	query.setParameter("INSTANCE_SURVEY", survey);
     	return query.list();
     }
-
 }

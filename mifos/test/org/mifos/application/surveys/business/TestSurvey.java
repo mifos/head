@@ -90,10 +90,10 @@ public class TestSurvey extends MifosTestCase {
 		surveysPersistence.createOrUpdate(question2);
 		surveysPersistence.createOrUpdate(question3);
 		
-		List<Question> results = surveysPersistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+		List<Question> results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.ACTIVE);
 		assertEquals(2, results.size());
 		assertEquals(questionText1, results.get(0).getQuestionText());
-		results = surveysPersistence.retrieveQuestionsByState(QuestionState.INACTIVE);
+		results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.INACTIVE);
 		assertEquals(questionText2, results.get(0).getQuestionText());
 	}
 	
@@ -282,7 +282,7 @@ public class TestSurvey extends MifosTestCase {
 		assertEquals(questionText2, results.get(1).getQuestionText());
 		assertEquals(questionText3, results.get(2).getQuestionText());
 		
-		results = surveysPersistence.retrieveQuestionsByState(QuestionState.ACTIVE);
+		results = surveysPersistence.retrieveGeneralQuestionsByState(QuestionState.ACTIVE);
 		assertEquals(2, results.size());
 		assertEquals(questionText1, results.get(0).getQuestionText());
 		assertEquals(questionText3, results.get(1).getQuestionText());

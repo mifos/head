@@ -1,8 +1,9 @@
 package org.mifos.application.ppi.business;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,6 +100,23 @@ public class TestPPISurvey {
 		
 		survey.setQuestions(questions);
 		return survey;
+	}
+	
+	@Test
+	public void testDefaultPovertyBandLimits() throws Exception {
+		PPISurvey ppiSurvey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE,
+				SurveyType.CLIENT, Country.INDIA);
+		ppiSurvey.populateDefaultValues();
+		
+		assertTrue(0 == ppiSurvey.getVeryPoorMin());
+		assertTrue (ppiSurvey.getVeryPoorMin()<= ppiSurvey.getVeryPoorMax());
+		assertTrue (ppiSurvey.getVeryPoorMax() == ppiSurvey.getPoorMin() - 1);
+		assertTrue (ppiSurvey.getPoorMin() <= ppiSurvey.getPoorMax());
+		assertTrue (ppiSurvey.getPoorMax() == ppiSurvey.getAtRiskMin() - 1);
+		assertTrue (ppiSurvey.getAtRiskMin() <= ppiSurvey.getAtRiskMax());
+		assertTrue (ppiSurvey.getAtRiskMax() == ppiSurvey.getNonPoorMin() - 1);
+		assertTrue (ppiSurvey.getNonPoorMin() <= ppiSurvey.getNonPoorMax());
+		assertTrue (ppiSurvey.getNonPoorMax() == 100);
 	}
 	
 	@Test

@@ -226,7 +226,7 @@ public class QuestionsAction extends PersistenceAction {
 		for (Question question : questions) {
 			persistence.createOrUpdate(question);
 		}
-		List<Question> questionList = persistence.retrieveAllQuestions();
+		List<Question> questionList = persistence.getQuestionsByQuestionType(SurveysConstants.QUESTION_TYPE_GENERAL);
 		request.setAttribute(SurveysConstants.KEY_QUESTIONS_LIST, questionList);
 		request.setAttribute(SurveysConstants.KEY_ITEM_COUNT, questions.size());
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
