@@ -4,6 +4,9 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
+import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
+import static org.mifos.framework.util.helpers.DateUtils.currentDate;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
@@ -25,6 +28,7 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.mifos.api.Loan;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -48,7 +52,6 @@ import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -74,6 +77,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.personnel.business.CustomerFixture;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -6167,5 +6171,90 @@ public class TestLoanBO extends MifosTestCase {
 				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
+	
+	public void testIsDisbursementDateLessThanCurrentDateShouldReturnTrueIfDateInPast() throws Exception {
+		assertTrue(LoanBO.isDisbursementDateLessThanCurrentDate(getDateFromToday(-1)));
+	}
 
+	public void testIsDisbursementDateLessThanCurrentDateShouldReturnFalseIfDateInFuture() throws Exception {
+		assertFalse(LoanBO.isDisbursementDateLessThanCurrentDate(getDateFromToday(1)));
+	}
+	
+	public void testIsDisbursementDateLessThanCurrentDateShouldReturnFalseIfDateIsToday() throws Exception {
+		assertFalse(LoanBO.isDisbursementDateLessThanCurrentDate(
+				getCurrentDateWithoutTimeStamp()));
+	}
+	
+	public void testIsDisbursementDateAfterProductStartDateShouldReturnFalseIfProductStartDateIsLaterThanDisbursement() throws Exception {
+		assertFalse(LoanBO.isDisbursementDateAfterProductStartDate(currentDate(), new LoanOfferingBO() {
+			@Override
+			public Date getStartDate() {
+				return getDateFromToday(1);
+			}
+		}));
+	}
+	public void testIsDisbursementDateAfterProductStartDateShouldReturnTrueIfProductStartDateIsEarlierThanDisbursement() throws Exception {
+		assertTrue(LoanBO.isDisbursementDateAfterProductStartDate(currentDate(), new LoanOfferingBO() {
+			@Override
+			public Date getStartDate() {
+				return getDateFromToday(-1);
+			}
+		}));
+	}
+	public void testIsDisbursementDateAfterProductStartDateShouldReturnTrueIfProductStartDateSameAsDisbursement() throws Exception {
+		assertTrue(LoanBO.isDisbursementDateAfterProductStartDate(currentDate(), new LoanOfferingBO() {
+			@Override
+			public Date getStartDate() {
+				return currentDate();
+			}
+		}));
+	}
+	
+	public void testDisbursementDateInvalidForRedoIfDisbursementBeforeCustomerActivationDate()
+			throws Exception {
+		assertFalse(LoanBO.isDibursementDateValidForRedoLoan(
+				new LoanOfferingBO() {
+					@Override
+					public Date getStartDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 1);
+					}
+				}, new ClientBO() {
+					@Override
+					public Date getCustomerActivationDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 2);
+					}
+				}, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+	}
+
+	public void testDisbursementDateInvalidForRedoIfDisbursementBeforeProductStartDate()
+			throws Exception {
+		assertFalse(LoanBO.isDibursementDateValidForRedoLoan(
+				new LoanOfferingBO() {
+					@Override
+					public Date getStartDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 2);
+					}
+				}, new ClientBO() {
+					@Override
+					public Date getCustomerActivationDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 1);
+					}
+				}, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+	}
+
+	public void testDisbursementDateValidForRedoIfDisbursementAfterActivationAndProductStartDate()
+			throws Exception {
+		assertTrue(LoanBO.isDibursementDateValidForRedoLoan(
+				new LoanOfferingBO() {
+					@Override
+					public Date getStartDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 1);
+					}
+				}, new ClientBO() {
+					@Override
+					public Date getCustomerActivationDate() {
+						return DateUtils.getDate(2008, Calendar.JANUARY, 1);
+					}
+				}, DateUtils.getDate(2008, Calendar.JANUARY, 1)));
+	}
 }

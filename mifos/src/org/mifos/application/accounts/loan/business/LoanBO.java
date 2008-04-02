@@ -252,7 +252,17 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
 		}
-
+		
+		if(!isDisbursementDateLessThanCurrentDate(disbursementDate)) {
+			throw new AccountException(
+					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE_FOR_REDO_LOAN);
+		}
+		
+		if(!isDibursementDateValidForRedoLoan(loanOffering, customer, disbursementDate)) {
+			throw new AccountException(
+					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+		}
+		
 		if (isRepaymentIndepOfMeetingEnabled == false)
 			if (!isDisbursementDateValid(customer, disbursementDate)) {
 				throw new AccountException(
@@ -263,7 +273,7 @@ public class LoanBO extends AccountBO {
                 interestRate, gracePeriodDuration, fund, feeViews, customFields, true,isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
     }
 
-    public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering,
+	public static LoanBO createLoan(UserContext userContext, LoanOfferingBO loanOffering,
                                       CustomerBO customer, AccountState accountState, Money loanAmount,
                                       Short noOfinstallments, Date disbursementDate,
                                       boolean interestDeductedAtDisbursement, Double interestRate,
@@ -2582,14 +2592,6 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return isValid;
 	}
 
-	private static boolean isDisbursementDateLessThanCurrentDate(
-			Date disbursementDate) {
-		if (DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime())
-				.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0)
-			return true;
-		return false;
-	}
-
 	private void applyPeriodicFee(FeeBO fee, Double charge,
 			List<AccountActionDateEntity> dueInstallments)
 			throws AccountException {
@@ -4055,5 +4057,26 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 	}
 
+	static boolean isDisbursementDateAfterCustomerActivationDate(
+			Date disbursementDate, CustomerBO customer) {
+		return DateUtils.dateFallsOnOrBeforeDate(customer.getCustomerActivationDate(),
+				disbursementDate);
+	}
+
+	static boolean isDisbursementDateAfterProductStartDate(
+			Date disbursementDate, LoanOfferingBO loanOffering) {
+		return DateUtils.dateFallsOnOrBeforeDate(loanOffering.getStartDate(), disbursementDate);
+	}
+
+	static boolean isDisbursementDateLessThanCurrentDate(
+			Date disbursementDate) {
+		if (DateUtils.dateFallsBeforeDate(disbursementDate, DateUtils.getCurrentDateWithoutTimeStamp()))
+			return true;
+		return false;
+	}
 	
+	static boolean isDibursementDateValidForRedoLoan(LoanOfferingBO loanOffering, CustomerBO customer, Date disbursementDate) {
+		return isDisbursementDateAfterCustomerActivationDate(disbursementDate, customer)
+				&& isDisbursementDateAfterProductStartDate(disbursementDate, loanOffering);
+	}
 }

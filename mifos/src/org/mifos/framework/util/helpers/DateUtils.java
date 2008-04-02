@@ -730,4 +730,25 @@ public class DateUtils {
 	public static Date convertSqlToDate(java.sql.Date meetingDate) {
 		return new Date(meetingDate.getTime());
 	}
+
+	public static Date getDateFromToday(int days) {
+		return getDatePlusXDays(getCurrentDateWithoutTimeStamp(),
+						days);
+	}
+
+	/**
+	 * returns true if the beforeDate falls before afterDate, 
+	 * returns false if both are same dates or afterDate falls before beforeDate
+	 */
+	public static boolean dateFallsBeforeDate(Date beforeDate, Date afterDate) {
+		return getDateWithoutTimeStamp(beforeDate.getTime())
+				.compareTo(
+						getDateWithoutTimeStamp(afterDate.getTime())) < 0;
+	}
+
+	public static boolean dateFallsOnOrBeforeDate(Date beforeDate, Date afterDate) {
+		return getDateWithoutTimeStamp(beforeDate.getTime())
+		.compareTo(
+				getDateWithoutTimeStamp(afterDate.getTime())) <= 0;
+	}
 }

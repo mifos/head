@@ -54,6 +54,7 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -539,5 +540,14 @@ public class GroupBO extends CustomerBO {
 					CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		}
 	}
-	
+
+	public static GroupBO createInstanceForTest(UserContext userContext,
+			GroupTemplate template, CenterBO center, Date customerActivationDate) throws CustomerException {
+		GroupBO group = new GroupBO(userContext, template.getDisplayName(), template.getCustomerStatus(),
+				                template.getExternalId(), template.isTrained(), template.getTrainedDate(),
+				                template.getAddress(), template.getCustomFieldViews(), template.getFees(),
+				                template.getLoanOfficerId(), center);
+		group.setCustomerActivationDate(customerActivationDate);
+		return group;
+	}
 }

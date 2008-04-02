@@ -328,7 +328,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		prdLogger.debug("Validation of the fields in Prd Offering done.");
 	}
 
-	private void validateStartDateAgainstCurrentDate(Date startDate)
+	protected void validateStartDateAgainstCurrentDate(Date startDate)
 			throws ProductDefinitionException {
 		if (DateUtils.getDateWithoutTimeStamp(startDate.getTime()).compareTo(
 				DateUtils.getCurrentDateWithoutTimeStamp()) < 0) {

@@ -19,10 +19,12 @@ import org.mifos.application.customer.center.CenterTemplate;
 import org.mifos.application.customer.center.CenterTemplateImpl;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.GroupTemplate;
 import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
@@ -55,6 +57,7 @@ import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -99,9 +102,8 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         super.tearDown();
     }
     
-    private LoanOfferingBO createLoanOffering(UserContext userContext, MeetingBO meeting)
+    private LoanOfferingBO createLoanOffering(UserContext userContext, MeetingBO meeting, Date loanProductStartDate)
             throws ProductDefinitionException {
-        Date startDate = new Date(System.currentTimeMillis());
         PrdApplicableMasterEntity prdApplicableMaster =
 			new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
 		ProductCategoryBO productCategory = TestObjectFactory
@@ -120,9 +122,9 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         Money loanAmount = new Money("300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
-        LoanOfferingBO loanOffering = new LoanOfferingBO(
-                userContext, "TestLoanOffering", "TLO",
-				productCategory, prdApplicableMaster, startDate, null,
+        LoanOfferingBO loanOffering = LoanOfferingBO.createInstanceForTest(
+        		userContext, "TestLoanOffering", "TLO",
+				productCategory, prdApplicableMaster, loanProductStartDate, null,
 				null, gracePeriodType, (short) 0, interestType,
                 loanAmount, loanAmount, loanAmount,
 				interestRate, interestRate, interestRate,
@@ -140,8 +142,9 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         return loanOffering;
     }
 
-    private LoanBO createLoanAccount(GroupBO group, LoanOfferingBO loanOffering, MeetingBO meeting)
-            throws AccountException {
+    private LoanBO createLoanAccount(GroupBO group,
+			LoanOfferingBO loanOffering, MeetingBO meeting,
+			Date disbursementDate) throws AccountException {
         MifosCurrency currency = TestObjectFactory.getCurrency();
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numberOfInstallments);
@@ -182,32 +185,50 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         return pastDate;
     }
 
-    private LoanBO createLoan(UserContext userContext)
+    private LoanBO createLoan(UserContext userContext, Date disbursementDate)
             throws Exception {
         OfficeTemplate template =
                 OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
         OfficeBO office = getOfficePersistence().createOffice(userContext, template);
 
-        MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplate());
+        MeetingBO meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplateStartingFrom(
+        		disbursementDate
+        		));
 
         CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
         CenterBO center = getCenterPersistence().createCenter(userContext, centerTemplate);
 
         GroupTemplate groupTemplate = GroupTemplateImpl.createNonUniqueGroupTemplate(center.getCustomerId());
-        GroupBO group = getGroupPersistence().createGroup(userContext, groupTemplate);
-
-        LoanOfferingBO loanOffering = createLoanOffering(userContext, meeting);
-        return createLoanAccount(group, loanOffering, meeting);
+		
+        GroupBO group = createGroup(userContext, groupTemplate, disbursementDate);
+        
+        LoanOfferingBO loanOffering = createLoanOffering(userContext, meeting, disbursementDate);
+        return createLoanAccount(group, loanOffering, meeting, disbursementDate);
     }
+
+    // inlined the persistence method to set the activation/creation date of customer on or before disbursement date
+	private GroupBO createGroup(UserContext userContext, GroupTemplate groupTemplate, final Date disbursementDate) 
+		throws PersistenceException, ValidationException, CustomerException {
+		CenterBO center = null;
+		if (groupTemplate.getParentCenterId() != null) {
+		    center = getGroupPersistence().getCenterPersistence().getCenter(groupTemplate.getParentCenterId());
+		    if (center == null) {
+		        throw new ValidationException(GroupConstants.PARENT_OFFICE_ID);
+		    }
+		}
+		GroupBO group = GroupBO.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
+		group.save();
+		return group;
+	}
 
     public void testCreateAndDisperseLoanInThePast() throws Exception {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
         try {
             UserContext userContext = TestUtils.makeUser();
 
-            LoanBO loan = createLoan(userContext);
-
             Date twoWeeksAgo = createPreviousDate(14);
+            LoanBO loan = createLoan(userContext, twoWeeksAgo);
+
             disperseLoan(userContext, loan, twoWeeksAgo);
             long dispersementTimeInMil = loan.getDisbursementDate().getTime();
             long twoWeeksAgoInMil = twoWeeksAgo.getTime();

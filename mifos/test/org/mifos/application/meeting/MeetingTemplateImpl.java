@@ -37,11 +37,11 @@ public class MeetingTemplateImpl implements MeetingTemplate {
     private MeetingType meetingType;
     private String meetingPlace;
 
-    private MeetingTemplateImpl() {
+    private MeetingTemplateImpl(Date startDate) {
         this.recurrenceType = RecurrenceType.WEEKLY;
         this.weekDay = WeekDay.MONDAY;
         this.meetingType = MeetingType.CUSTOMER_MEETING;
-        this.startDate = new Date();
+        this.startDate = startDate;
         this.recurAfter = 1;
         this.meetingPlace = "SomeTestMeetingPlaceLocation";
     }
@@ -79,6 +79,10 @@ public class MeetingTemplateImpl implements MeetingTemplate {
     }
 
     public static MeetingTemplateImpl createWeeklyMeetingTemplate() {
-        return new MeetingTemplateImpl();
+        return createWeeklyMeetingTemplateStartingFrom(new Date());
+    }
+
+    public static MeetingTemplateImpl createWeeklyMeetingTemplateStartingFrom(Date startDate) {
+    	return new MeetingTemplateImpl(startDate);
     }
 }

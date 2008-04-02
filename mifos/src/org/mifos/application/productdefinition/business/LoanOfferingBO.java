@@ -1356,4 +1356,31 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					.getDefaultNoOfInstall());
 		}
 	}
+
+	public static LoanOfferingBO createInstanceForTest(UserContext userContext, String prdOfferingName,
+			String prdOfferingShortName, ProductCategoryBO prdCategory,
+			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
+			Date endDate, String description,
+			GracePeriodTypeEntity gracePeriodType, Short gracePeriodDuration,
+			InterestTypesEntity interestTypes, Money minLoanAmount,
+			Money maxLoanAmount, Money defaultLoanAmount,
+			Double maxInterestRate, Double minInterestRate,
+			Double defInterestRate, Short maxNoInstallments,
+			Short minNoInstallments, Short defNoInstallments,
+			boolean loanCounter, boolean intDedDisbursement,
+			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
+			MeetingBO meeting, GLCodeEntity principalGLcode,
+			GLCodeEntity interestGLcode) throws ProductDefinitionException {
+		LoanOfferingBO loanOffering = new LoanOfferingBO(userContext, prdOfferingName,
+								prdOfferingShortName, prdCategory, prdApplicableMaster,
+								new Date(), endDate, description, gracePeriodType,
+								gracePeriodDuration, interestTypes, minLoanAmount,
+								maxLoanAmount, defaultLoanAmount, maxInterestRate,
+								minInterestRate, defInterestRate, maxNoInstallments,
+								minNoInstallments, defNoInstallments, loanCounter,
+								intDedDisbursement, prinDueLastInst, funds, fees, meeting,
+								principalGLcode, interestGLcode);
+		loanOffering.setStartDate(startDate);
+		return loanOffering;
+	}
 }
