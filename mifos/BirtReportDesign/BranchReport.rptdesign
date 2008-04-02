@@ -506,7 +506,7 @@ return true;]]></method>
             </structure>
             <property name="dataSource">BranchReportDataSource</property>
             <method name="open"><![CDATA[try{
-	branchReportHeader = branchReportService.getBranchReportHeaderDTO(params["branchId"]);
+	branchReportHeader = branchReportService.getBranchReportHeaderDTO(params["branchId"], params["branchReportDate"]);
 	branchReportHeaderRead = false;
 }catch(e){
     new Packages.java.util.logging.Logger.getLogger("").info("BranchReport: ReportHeader open:"+e);
@@ -517,7 +517,7 @@ return true;]]></method>
 	row["city_name"] = branchReportHeader.getCityName();
 	row["state_name"] = branchReportHeader.getStateName();
 	row["branch_manager"] = branchReportHeader.getBranchManagerName();
-	row["current_date"] = branchReportHeader.getCurrentDate();
+	row["current_date"] = branchReportHeader.getReportDate();
 	
 	branchReportHeaderRead = true;
 	return true;

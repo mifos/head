@@ -68,15 +68,20 @@ public class BranchReportService implements IBranchReportService {
 				new BranchReportPersistence());
 	}
 
-	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId)
+	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate)
 			throws ServiceException {
 		Short officeId = convertIntegerToShort(branchId);
 		PersonnelBO branchManager = CollectionUtils
 				.getFirstElement(personnelBusinessService
 						.getActiveBranchManagersUnderOffice(officeId));
-		return new BranchReportHeaderDTO(officeBusinessService
-				.getOffice(officeId), branchManager == null ? null
-				: branchManager.getDisplayName());
+		try {
+			return new BranchReportHeaderDTO(officeBusinessService
+					.getOffice(officeId), branchManager == null ? null
+					: branchManager.getDisplayName(), ReportUtils.parseReportDate(runDate));
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	public boolean isReportDataPresentForRundateAndBranchId(String branchId,

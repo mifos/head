@@ -40,7 +40,7 @@ import org.mifos.framework.exceptions.ServiceException;
 
 public interface IBranchReportService {
 
-	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId)
+	public BranchReportHeaderDTO getBranchReportHeaderDTO(Integer branchId, String runDate)
 			throws ServiceException;
 
 	public boolean isReportDataPresentForRundateAndBranchId(String branchId,

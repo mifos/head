@@ -20,6 +20,8 @@
  */
 package org.mifos.application.reports.business.dto;
 
+import java.util.Date;
+
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -27,10 +29,12 @@ public class BranchReportHeaderDTO {
 
 	private OfficeBO office;
 	private String branchManagerName;
+	private final Date runDate;
 
-	public BranchReportHeaderDTO(OfficeBO office, String branchManagerName) {
+	public BranchReportHeaderDTO(OfficeBO office, String branchManagerName, Date runDate) {
 		this.office = office;
 		this.branchManagerName = branchManagerName;
+		this.runDate = runDate;
 	}
 
 	public String getBranchName() {
@@ -45,8 +49,8 @@ public class BranchReportHeaderDTO {
 		return office.getAddress().getAddress().getState();
 	}
 
-	public String getCurrentDate() {
-		return DateUtils.getLocalizedDateFormat().format(DateUtils.currentDate());
+	public String getReportDate() {
+		return DateUtils.getLocalizedDateFormat().format(runDate);
 	}
 
 	public String getBranchManagerName() {
@@ -56,8 +60,10 @@ public class BranchReportHeaderDTO {
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
-		int result = 1;
+		int result = super.hashCode();
+		result = PRIME * result + ((branchManagerName == null) ? 0 : branchManagerName.hashCode());
 		result = PRIME * result + ((office == null) ? 0 : office.hashCode());
+		result = PRIME * result + ((runDate == null) ? 0 : runDate.hashCode());
 		return result;
 	}
 
@@ -65,16 +71,28 @@ public class BranchReportHeaderDTO {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final BranchReportHeaderDTO other = (BranchReportHeaderDTO) obj;
+		if (branchManagerName == null) {
+			if (other.branchManagerName != null)
+				return false;
+		}
+		else if (!branchManagerName.equals(other.branchManagerName))
+			return false;
 		if (office == null) {
 			if (other.office != null)
 				return false;
 		}
 		else if (!office.equals(other.office))
+			return false;
+		if (runDate == null) {
+			if (other.runDate != null)
+				return false;
+		}
+		else if (!runDate.equals(other.runDate))
 			return false;
 		return true;
 	}

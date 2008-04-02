@@ -110,9 +110,9 @@ public class BranchReportServiceTest extends BranchReportTestCase {
 				office);
 		replay(officeBusinessServiceMock);
 		BranchReportHeaderDTO returnedHeaderDTO = branchReportService
-				.getBranchReportHeaderDTO(BRANCH_ID);
+				.getBranchReportHeaderDTO(BRANCH_ID, RUN_DATE_STR);
 		verify(officeBusinessServiceMock);
-		assertEquals(new BranchReportHeaderDTO(office, null), returnedHeaderDTO);
+		assertEquals(new BranchReportHeaderDTO(office, null, RUN_DATE), returnedHeaderDTO);
 	}
 
 	public void testRemovesSpecifiedBranchReport() throws Exception {

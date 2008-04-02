@@ -64,7 +64,7 @@ public class BranchReportHelper extends TaskHelper {
 		Date runDate = new Date(timeInMillis);
 		try {
 			removeExistingBranchReportsForGivenRunDate(runDate);
-			populateBranchReportBatch(session);
+			populateBranchReportBatch(session, runDate);
 			transaction.commit();
 		}
 		catch (HibernateException e) {
@@ -76,11 +76,11 @@ public class BranchReportHelper extends TaskHelper {
 		}
 	}
 
-	void populateBranchReportBatch(Session session) throws BatchJobException,
+	void populateBranchReportBatch(Session session, Date runDate) throws BatchJobException,
 			ServiceException {
 		List<OfficeBO> branchOffices = officeBusinessService.getBranchOffices();
 		for (OfficeBO branchOffice : branchOffices) {
-			createBranchReport(session, branchOffice, DateUtils.currentDate());
+			createBranchReport(session, branchOffice, runDate);
 		}
 	}
 
