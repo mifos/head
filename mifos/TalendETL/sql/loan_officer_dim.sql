@@ -14,6 +14,6 @@ CREATE TABLE  `loan_officer_dim` (
   `description` varchar(100) default NULL,
   `branch_office_id` smallint(6) not null,
   unique key `global_personnel_num` (`global_personnel_num`),
-  constraint `loan_officer_id_ibfk_2` foreign key (`branch_office_id`) references `branch_office_dim` (`branch_office_id`) on delete no action on update no action
-  PRIMARY KEY  (`personnel_id`)
+  constraint `loan_officer_id_ibfk_2` foreign key (`branch_office_id`) references `branch_office_dim` (`office_id`) on delete no action on update no action,
+  PRIMARY KEY  (`loan_officer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

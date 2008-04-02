@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendProperties="http://www.talend.org/properties">
+  <TalendProperties:Project xmi:id="_sMZZIADBEd2S9bA0UMgEuw" label="org_mifos_etl" description="" language="java" technicalLabel="ORG_MIFOS_ETL" local="true">
+    <technicalStatus xmi:id="_sMZZIQDBEd2S9bA0UMgEuw" label="development" code="DEV"/>
+    <technicalStatus xmi:id="_sMZZIgDBEd2S9bA0UMgEuw" label="testing" code="TEST"/>
+    <technicalStatus xmi:id="_sMZZIwDBEd2S9bA0UMgEuw" label="production" code="PROD"/>
+    <documentationStatus xmi:id="_sMZZJADBEd2S9bA0UMgEuw" label="1er lecture" code="1ER"/>
+    <documentationStatus xmi:id="_sMZZJQDBEd2S9bA0UMgEuw" label="2eme lecture" code="2EM"/>
+    <documentationStatus xmi:id="_sMZZJgDBEd2S9bA0UMgEuw" label="validate" code="VAL"/>
+    <folders xmi:id="_sMZZJwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZKADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZKQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZKgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZKwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZLADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZLQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZLgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZLwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZMADBEd2S9bA0UMgEuw"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZMQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZMgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+    </folders>
+    <folders xmi:id="_sMZZMwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZNADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZNQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZNgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZNwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZOADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZOQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZOgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZOwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZPADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZPQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZPgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZPwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZQADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZQQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZQgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZQwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZRADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZRQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZRgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZRwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+    </folders>
+    <folders xmi:id="_sMZZSADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZSQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZSgDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_sMZZSwDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZTADBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZTQDBEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_sMZZTgDBEd2S9bA0UMgEuw">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_sMZZTwDBEd2S9bA0UMgEuw"/>
+    </folders>
+    <migrationTasks>org.talend.repository.localprovider.RemoveRoutineFolderTask</migrationTasks>
+    <migrationTasks>org.talend.repository.localprovider.model.migration.ChangeXmiSerialization</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametRunProcess</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametMysqlOutputBulkExec</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametCatcher</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.upgradetUniqRow</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametDbInputToOracle</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametDbInputToMySQL</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametDbInputToPostgresql</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametDbInputToMssql</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.updatetRowGenerator</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.upgradetWarntDiePriority</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametFileZipUnzip</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.changeRunBeforeAfterToThenRunMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.RemoveSpaceInJobNameMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddProductAndMappingInDBConnectionEMFMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametFTPToFTP</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametNormalize</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametFlowMeter</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametFlowMeterCatcher</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.addQuot</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.upgradetRunJobRemoveQuotesMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.changetUniqRowLinks</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddDdColumn</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.convertOldPerlTypes</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.renametXMLRPC</migrationTasks>
+    <migrationTasks>org.talend.repository.renametFileInputCSV</migrationTasks>
+    <migrationTasks>org.talend.repository.renametFileOutputCSV</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.upgradetAdvancedXML</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.DieOnErrorDefaultValueMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.renameRoutinesClassName</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddRenameOnFileCopyMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddPerlRefArrayPointer</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddPerlRefArrayPointer2</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.changeLookupColumnList</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.AddConnectorNameInConnections</migrationTasks>
+    <migrationTasks>org.talend.repository.connection.rename.runifok.oncomponentok</migrationTasks>
+    <migrationTasks>org.talend.repository.connection.rename.runerror.oncomponenterror</migrationTasks>
+    <migrationTasks>org.talend.repository.connection.rename.thenrun.onsubjobok</migrationTasks>
+    <migrationTasks>org.talend.repository.model.migration.ReplaceMultiFlowBytReplicateMigrationTask</migrationTasks>
+    <migrationTasks>org.talend.repository.migration.upgradeAttributestAdvancedXML</migrationTasks>
+  </TalendProperties:Project>
+  <TalendProperties:User xmi:id="_sMZZUADBEd2S9bA0UMgEuw" login="exportUser@talend.com"/>
+</xmi:XMI>

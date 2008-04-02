@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="ASCII"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendProperties="http://www.talend.org/properties">
-  <TalendProperties:Project xmi:id="_oED1sPwqEdyxS5fl8dCDdw" label="org_mifos_etl" description="" language="java" technicalLabel="ORG_MIFOS_ETL" local="true">
-    <technicalStatus xmi:id="_oED1sfwqEdyxS5fl8dCDdw" label="development" code="DEV"/>
-    <technicalStatus xmi:id="_oED1svwqEdyxS5fl8dCDdw" label="testing" code="TEST"/>
-    <technicalStatus xmi:id="_oED1s_wqEdyxS5fl8dCDdw" label="production" code="PROD"/>
-    <documentationStatus xmi:id="_oED1tPwqEdyxS5fl8dCDdw" label="1er lecture" code="1ER"/>
-    <documentationStatus xmi:id="_oED1tfwqEdyxS5fl8dCDdw" label="2eme lecture" code="2EM"/>
-    <documentationStatus xmi:id="_oED1tvwqEdyxS5fl8dCDdw" label="validate" code="VAL"/>
-    <folders xmi:id="_oED1t_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1uPwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+  <TalendProperties:Project xmi:id="_uzeToADCEd2S9bA0UMgEuw" label="org_mifos_etl" description="" language="java" technicalLabel="ORG_MIFOS_ETL" local="true">
+    <technicalStatus xmi:id="_uzeToQDCEd2S9bA0UMgEuw" label="development" code="DEV"/>
+    <technicalStatus xmi:id="_uzeTogDCEd2S9bA0UMgEuw" label="testing" code="TEST"/>
+    <technicalStatus xmi:id="_uzeTowDCEd2S9bA0UMgEuw" label="production" code="PROD"/>
+    <documentationStatus xmi:id="_uzeTpADCEd2S9bA0UMgEuw" label="1er lecture" code="1ER"/>
+    <documentationStatus xmi:id="_uzeTpQDCEd2S9bA0UMgEuw" label="2eme lecture" code="2EM"/>
+    <documentationStatus xmi:id="_uzeTpgDCEd2S9bA0UMgEuw" label="validate" code="VAL"/>
+    <folders xmi:id="_uzeTpwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTqADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
     </folders>
-    <folders xmi:id="_oED1ufwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1uvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_uzeTqQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTqgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
     </folders>
-    <folders xmi:id="_oED1u_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1vPwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_uzeTqwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTrADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
     </folders>
-    <folders xmi:id="_oED1vfwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1vvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1v_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1wPwqEdyxS5fl8dCDdw"/>
+    <folders xmi:id="_uzeTrQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTrgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTrwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTsADCEd2S9bA0UMgEuw"/>
       </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1wfwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1wvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-    </folders>
-    <folders xmi:id="_oED1w_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1xPwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-    </folders>
-    <folders xmi:id="_oED1xfwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1xvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1x_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1yPwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1yfwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1yvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1y_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1zPwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1zfwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1zvwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED1z_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED10PwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED10fwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED10vwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED10_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED11PwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED11fwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      </children>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED11vwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-        <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED11_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTsQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTsgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
       </children>
     </folders>
-    <folders xmi:id="_oED12PwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED12fwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_uzeTswDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTtADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
     </folders>
-    <folders xmi:id="_oED12vwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-    <folders xmi:id="_oED12_wqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED13PwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED13fwqEdyxS5fl8dCDdw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_uzeTtQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTtgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTtwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTuADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTuQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTugDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTuwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTvADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTvQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTvgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTvwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTwADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTwQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTwgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTwwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTxADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTxQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTxgDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+        <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTxwDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      </children>
     </folders>
-    <folders xmi:id="_oED13vwqEdyxS5fl8dCDdw">
-      <children xsi:type="TalendProperties:FolderItem" xmi:id="_oED13_wqEdyxS5fl8dCDdw"/>
+    <folders xmi:id="_uzeTyADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTyQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_uzeTygDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    <folders xmi:id="_uzeTywDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTzADCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTzQDCEd2S9bA0UMgEuw" type="SYSTEM_FOLDER"/>
+    </folders>
+    <folders xmi:id="_uzeTzgDCEd2S9bA0UMgEuw">
+      <children xsi:type="TalendProperties:FolderItem" xmi:id="_uzeTzwDCEd2S9bA0UMgEuw"/>
     </folders>
     <migrationTasks>org.talend.repository.localprovider.RemoveRoutineFolderTask</migrationTasks>
     <migrationTasks>org.talend.repository.localprovider.model.migration.ChangeXmiSerialization</migrationTasks>
@@ -110,5 +110,5 @@
     <migrationTasks>org.talend.repository.model.migration.ReplaceMultiFlowBytReplicateMigrationTask</migrationTasks>
     <migrationTasks>org.talend.repository.migration.upgradeAttributestAdvancedXML</migrationTasks>
   </TalendProperties:Project>
-  <TalendProperties:User xmi:id="_oED14PwqEdyxS5fl8dCDdw" login="exportUser@talend.com"/>
+  <TalendProperties:User xmi:id="_uzeT0ADCEd2S9bA0UMgEuw" login="exportUser@talend.com"/>
 </xmi:XMI>

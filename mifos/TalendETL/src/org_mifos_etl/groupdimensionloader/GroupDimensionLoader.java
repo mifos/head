@@ -435,8 +435,10 @@ public class GroupDimensionLoader {
 	}
 
 	private class group_dimStruct {
-
-		short customer_level_id;
+		private static final int DEFAULT_HASHCODE = 1;
+		private static final int PRIME = 31;
+		private int hashCode = DEFAULT_HASHCODE;
+		public boolean hashCodeDirty = true;
 
 		String global_cust_num;
 
@@ -445,8 +447,6 @@ public class GroupDimensionLoader {
 		Short center_id;
 
 		Short loan_officer_id;
-
-		Short status_id;
 
 		String external_id;
 
@@ -462,63 +462,59 @@ public class GroupDimensionLoader {
 
 		Short updated_by;
 
-		int version_no;
+		@Override
+		public int hashCode() {
+			if (this.hashCodeDirty) {
+				final int prime = PRIME;
+				int result = DEFAULT_HASHCODE;
+
+				result = prime
+						* result
+						+ ((this.global_cust_num == null) ? 0
+								: this.global_cust_num.hashCode());
+
+				this.hashCode = result;
+				this.hashCodeDirty = false;
+			}
+			return this.hashCode;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			final group_dimStruct other = (group_dimStruct) obj;
+
+			if (this.global_cust_num == null) {
+				if (other.global_cust_num != null)
+					return false;
+			} else if (!this.global_cust_num.equals(other.global_cust_num))
+				return false;
+
+			return true;
+		}
 
 	}
 
 	private class row1Struct {
 
-		int CUSTOMER_ID;
-
-		short CUSTOMER_LEVEL_ID;
-
 		String GLOBAL_CUST_NUM;
 
 		Short LOAN_OFFICER_ID;
 
-		Short CUSTOMER_FORMEDBY_ID;
-
-		Short STATUS_ID;
-
-		Short BRANCH_ID;
-
 		String DISPLAY_NAME;
 
-		String FIRST_NAME;
-
-		String LAST_NAME;
-
-		String SECOND_LAST_NAME;
-
-		String DISPLAY_ADDRESS;
-
 		String EXTERNAL_ID;
-
-		java.util.Date DATE_OF_BIRTH;
-
-		Short GROUP_FLAG;
-
-		Short TRAINED;
-
-		java.util.Date TRAINED_DATE;
-
-		Integer PARENT_CUSTOMER_ID;
 
 		java.util.Date CREATED_DATE;
 
 		java.util.Date UPDATED_DATE;
 
-		String SEARCH_ID;
-
-		Integer MAX_CHILD_COUNT;
-
-		Short HO_UPDATED;
-
-		Short CLIENT_CONFIDENTIAL;
-
 		java.util.Date MFI_JOINING_DATE;
-
-		String GOVERNMENT_ID;
 
 		java.util.Date CUSTOMER_ACTIVATION_DATE;
 
@@ -526,11 +522,7 @@ public class GroupDimensionLoader {
 
 		Short UPDATED_BY;
 
-		Short BLACKLISTED;
-
-		String DISCRIMINATOR;
-
-		int VERSION_NO;
+		Integer PARENT_CUSTOMER_ID;
 
 	}
 
@@ -540,57 +532,19 @@ public class GroupDimensionLoader {
 		private int hashCode = DEFAULT_HASHCODE;
 		public boolean hashCodeDirty = true;
 
-		int CUSTOMER_ID;
-
-		short CUSTOMER_LEVEL_ID;
-
 		String GLOBAL_CUST_NUM;
 
 		Short LOAN_OFFICER_ID;
 
-		Short CUSTOMER_FORMEDBY_ID;
-
-		Short STATUS_ID;
-
-		Short BRANCH_ID;
-
 		String DISPLAY_NAME;
 
-		String FIRST_NAME;
-
-		String LAST_NAME;
-
-		String SECOND_LAST_NAME;
-
-		String DISPLAY_ADDRESS;
-
 		String EXTERNAL_ID;
-
-		java.util.Date DATE_OF_BIRTH;
-
-		Short GROUP_FLAG;
-
-		Short TRAINED;
-
-		java.util.Date TRAINED_DATE;
-
-		Integer PARENT_CUSTOMER_ID;
 
 		java.util.Date CREATED_DATE;
 
 		java.util.Date UPDATED_DATE;
 
-		String SEARCH_ID;
-
-		Integer MAX_CHILD_COUNT;
-
-		Short HO_UPDATED;
-
-		Short CLIENT_CONFIDENTIAL;
-
 		java.util.Date MFI_JOINING_DATE;
-
-		String GOVERNMENT_ID;
 
 		java.util.Date CUSTOMER_ACTIVATION_DATE;
 
@@ -598,19 +552,13 @@ public class GroupDimensionLoader {
 
 		Short UPDATED_BY;
 
-		Short BLACKLISTED;
-
-		String DISCRIMINATOR;
-
-		int VERSION_NO;
+		Integer PARENT_CUSTOMER_ID;
 
 		@Override
 		public int hashCode() {
 			if (this.hashCodeDirty) {
 				final int prime = PRIME;
 				int result = DEFAULT_HASHCODE;
-
-				result = prime * result + (int) this.CUSTOMER_ID;
 
 				result = prime
 						* result
@@ -632,9 +580,6 @@ public class GroupDimensionLoader {
 			if (getClass() != obj.getClass())
 				return false;
 			final after_tMysqlInput_1Struct other = (after_tMysqlInput_1Struct) obj;
-
-			if (this.CUSTOMER_ID != other.CUSTOMER_ID)
-				return false;
 
 			if (this.GLOBAL_CUST_NUM == null) {
 				if (other.GLOBAL_CUST_NUM != null)
@@ -696,40 +641,15 @@ public class GroupDimensionLoader {
 			conn_tMysqlOutput_1 = (java.sql.Connection) globalMap
 					.get("conn_tMysqlConnection_2");
 
-			java.sql.DatabaseMetaData dbMetaData_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.getMetaData();
-			java.sql.ResultSet rsTable_tMysqlOutput_1 = dbMetaData_tMysqlOutput_1
-					.getTables(null, null, null, new String[] { "TABLE" });
-			boolean whetherExist_tMysqlOutput_1 = false;
-			while (rsTable_tMysqlOutput_1.next()) {
-				String table_tMysqlOutput_1 = rsTable_tMysqlOutput_1
-						.getString("TABLE_NAME");
-				if (table_tMysqlOutput_1.equalsIgnoreCase("group_dim")) {
-					whetherExist_tMysqlOutput_1 = true;
-					break;
-				}
-			}
-			if (!whetherExist_tMysqlOutput_1) {
-				java.sql.Statement stmtCreate_tMysqlOutput_1 = conn_tMysqlOutput_1
-						.createStatement();
-				stmtCreate_tMysqlOutput_1
-						.execute("CREATE TABLE `"
-								+ tableName_tMysqlOutput_1
-								+ "`(`customer_level_id` SMALLINT(5)  not null,`global_cust_num` VARCHAR(100)  not null,`display_name` VARCHAR(200)  ,`center_id` SMALLINT(5)  ,`loan_officer_id` SMALLINT(5)  ,`status_id` SMALLINT(5)  ,`external_id` VARCHAR(50)  ,`created_date` DATE ,`updated_date` DATE ,`mfi_joining_date` DATE ,`customer_activation_date` DATE ,`created_by` SMALLINT(5)  ,`updated_by` SMALLINT(5)  ,`version_no` INT(10)  not null,primary key(`global_cust_num`))");
-			}
-			java.sql.PreparedStatement pstmt_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("SELECT COUNT(1) FROM `" + "group_dim"
-							+ "` WHERE `global_cust_num` = ?");
+			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
+					.prepareStatement("UPDATE `"
+							+ "group_dim"
+							+ "` SET `display_name` = ?,`center_id` = ?,`loan_officer_id` = ?,`external_id` = ?,`created_date` = ?,`updated_date` = ?,`mfi_joining_date` = ?,`customer_activation_date` = ?,`created_by` = ?,`updated_by` = ? WHERE `global_cust_num` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_1 = conn_tMysqlOutput_1
 					.prepareStatement("INSERT INTO `"
 							+ "group_dim"
-							+ "` (`customer_level_id`,`global_cust_num`,`display_name`,`center_id`,`loan_officer_id`,`status_id`,`external_id`,`created_date`,`updated_date`,`mfi_joining_date`,`customer_activation_date`,`created_by`,`updated_by`,`version_no`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("UPDATE `"
-							+ "group_dim"
-							+ "` SET `customer_level_id` = ?,`display_name` = ?,`center_id` = ?,`loan_officer_id` = ?,`status_id` = ?,`external_id` = ?,`created_date` = ?,`updated_date` = ?,`mfi_joining_date` = ?,`customer_activation_date` = ?,`created_by` = ?,`updated_by` = ?,`version_no` = ? WHERE `global_cust_num` = ?");
+							+ "` (`global_cust_num`,`display_name`,`center_id`,`loan_officer_id`,`external_id`,`created_date`,`updated_date`,`mfi_joining_date`,`customer_activation_date`,`created_by`,`updated_by`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 
 			/**
 			 * [tMysqlOutput_1 begin ] stop
@@ -759,9 +679,6 @@ public class GroupDimensionLoader {
 
 			// ###############################
 			// # Vars initialization
-			class Var__tMap_1__Struct {
-			}
-			Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
 			// ###############################
 
 			// ###############################
@@ -789,7 +706,7 @@ public class GroupDimensionLoader {
 			java.sql.Statement stmt_tMysqlInput_1 = conn_tMysqlInput_1
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_1 = stmt_tMysqlInput_1
-					.executeQuery("SELECT customer.CUSTOMER_ID, customer.CUSTOMER_LEVEL_ID, customer.GLOBAL_CUST_NUM,  customer.LOAN_OFFICER_ID, customer.CUSTOMER_FORMEDBY_ID, customer.STATUS_ID, customer.BRANCH_ID,  customer.DISPLAY_NAME, customer.FIRST_NAME, customer.LAST_NAME, customer.SECOND_LAST_NAME,  customer.DISPLAY_ADDRESS, customer.EXTERNAL_ID, customer.DATE_OF_BIRTH, customer.GROUP_FLAG,  customer.TRAINED, customer.TRAINED_DATE, customer.PARENT_CUSTOMER_ID, customer.CREATED_DATE,  customer.UPDATED_DATE, customer.SEARCH_ID, customer.MAX_CHILD_COUNT, customer.HO_UPDATED,  customer.CLIENT_CONFIDENTIAL, customer.MFI_JOINING_DATE, customer.GOVERNMENT_ID,  customer.CUSTOMER_ACTIVATION_DATE, customer.CREATED_BY, customer.UPDATED_BY, customer.BLACKLISTED,  customer.DISCRIMINATOR, customer.VERSION_NO  FROM customer where customer.CUSTOMER_LEVEL_ID = 2");
+					.executeQuery("SELECT customer.GLOBAL_CUST_NUM,  customer.LOAN_OFFICER_ID, customer.DISPLAY_NAME, customer.EXTERNAL_ID, customer.CREATED_DATE,  customer.UPDATED_DATE, customer.MFI_JOINING_DATE, customer.CUSTOMER_ACTIVATION_DATE,   customer.CREATED_BY, customer.UPDATED_BY, customer.PARENT_CUSTOMER_ID FROM customer where customer.CUSTOMER_LEVEL_ID = 2");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_1 = rs_tMysqlInput_1
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_1 = rsmd_tMysqlInput_1.getColumnCount();
@@ -803,51 +720,19 @@ public class GroupDimensionLoader {
 			globalMap
 					.put(
 							"tMysqlInput_1_QUERY",
-							"SELECT customer.CUSTOMER_ID, customer.CUSTOMER_LEVEL_ID, customer.GLOBAL_CUST_NUM,  customer.LOAN_OFFICER_ID, customer.CUSTOMER_FORMEDBY_ID, customer.STATUS_ID, customer.BRANCH_ID,  customer.DISPLAY_NAME, customer.FIRST_NAME, customer.LAST_NAME, customer.SECOND_LAST_NAME,  customer.DISPLAY_ADDRESS, customer.EXTERNAL_ID, customer.DATE_OF_BIRTH, customer.GROUP_FLAG,  customer.TRAINED, customer.TRAINED_DATE, customer.PARENT_CUSTOMER_ID, customer.CREATED_DATE,  customer.UPDATED_DATE, customer.SEARCH_ID, customer.MAX_CHILD_COUNT, customer.HO_UPDATED,  customer.CLIENT_CONFIDENTIAL, customer.MFI_JOINING_DATE, customer.GOVERNMENT_ID,  customer.CUSTOMER_ACTIVATION_DATE, customer.CREATED_BY, customer.UPDATED_BY, customer.BLACKLISTED,  customer.DISCRIMINATOR, customer.VERSION_NO  FROM customer where customer.CUSTOMER_LEVEL_ID = 2");
+							"SELECT customer.GLOBAL_CUST_NUM,  customer.LOAN_OFFICER_ID, customer.DISPLAY_NAME, customer.EXTERNAL_ID, customer.CREATED_DATE,  customer.UPDATED_DATE, customer.MFI_JOINING_DATE, customer.CUSTOMER_ACTIVATION_DATE,   customer.CREATED_BY, customer.UPDATED_BY, customer.PARENT_CUSTOMER_ID FROM customer where customer.CUSTOMER_LEVEL_ID = 2");
 
 			while (rs_tMysqlInput_1.next()) {
 				nb_line_tMysqlInput_1++;
 
 				if (colQtyInRs_tMysqlInput_1 < 1) {
 
-					row1.CUSTOMER_ID = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(1) != null) {
-						row1.CUSTOMER_ID = rs_tMysqlInput_1.getInt(1);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 2) {
-
-					row1.CUSTOMER_LEVEL_ID = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(2) != null) {
-						row1.CUSTOMER_LEVEL_ID = rs_tMysqlInput_1.getShort(2);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 3) {
-
 					row1.GLOBAL_CUST_NUM = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(3) != null) {
-						row1.GLOBAL_CUST_NUM = rs_tMysqlInput_1.getString(3);
+					if (rs_tMysqlInput_1.getObject(1) != null) {
+						row1.GLOBAL_CUST_NUM = rs_tMysqlInput_1.getString(1);
 					} else {
 
 						row1.GLOBAL_CUST_NUM = null;
@@ -856,14 +741,14 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 4) {
+				if (colQtyInRs_tMysqlInput_1 < 2) {
 
 					row1.LOAN_OFFICER_ID = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(4) != null) {
-						row1.LOAN_OFFICER_ID = rs_tMysqlInput_1.getShort(4);
+					if (rs_tMysqlInput_1.getObject(2) != null) {
+						row1.LOAN_OFFICER_ID = rs_tMysqlInput_1.getShort(2);
 					} else {
 
 						row1.LOAN_OFFICER_ID = null;
@@ -872,63 +757,14 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 5) {
-
-					row1.CUSTOMER_FORMEDBY_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(5) != null) {
-						row1.CUSTOMER_FORMEDBY_ID = rs_tMysqlInput_1
-								.getShort(5);
-					} else {
-
-						row1.CUSTOMER_FORMEDBY_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 6) {
-
-					row1.STATUS_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(6) != null) {
-						row1.STATUS_ID = rs_tMysqlInput_1.getShort(6);
-					} else {
-
-						row1.STATUS_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 7) {
-
-					row1.BRANCH_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(7) != null) {
-						row1.BRANCH_ID = rs_tMysqlInput_1.getShort(7);
-					} else {
-
-						row1.BRANCH_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 8) {
+				if (colQtyInRs_tMysqlInput_1 < 3) {
 
 					row1.DISPLAY_NAME = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(8) != null) {
-						row1.DISPLAY_NAME = rs_tMysqlInput_1.getString(8);
+					if (rs_tMysqlInput_1.getObject(3) != null) {
+						row1.DISPLAY_NAME = rs_tMysqlInput_1.getString(3);
 					} else {
 
 						row1.DISPLAY_NAME = null;
@@ -937,78 +773,14 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 9) {
-
-					row1.FIRST_NAME = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(9) != null) {
-						row1.FIRST_NAME = rs_tMysqlInput_1.getString(9);
-					} else {
-
-						row1.FIRST_NAME = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 10) {
-
-					row1.LAST_NAME = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(10) != null) {
-						row1.LAST_NAME = rs_tMysqlInput_1.getString(10);
-					} else {
-
-						row1.LAST_NAME = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 11) {
-
-					row1.SECOND_LAST_NAME = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(11) != null) {
-						row1.SECOND_LAST_NAME = rs_tMysqlInput_1.getString(11);
-					} else {
-
-						row1.SECOND_LAST_NAME = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 12) {
-
-					row1.DISPLAY_ADDRESS = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(12) != null) {
-						row1.DISPLAY_ADDRESS = rs_tMysqlInput_1.getString(12);
-					} else {
-
-						row1.DISPLAY_ADDRESS = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 13) {
+				if (colQtyInRs_tMysqlInput_1 < 4) {
 
 					row1.EXTERNAL_ID = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(13) != null) {
-						row1.EXTERNAL_ID = rs_tMysqlInput_1.getString(13);
+					if (rs_tMysqlInput_1.getObject(4) != null) {
+						row1.EXTERNAL_ID = rs_tMysqlInput_1.getString(4);
 					} else {
 
 						row1.EXTERNAL_ID = null;
@@ -1017,116 +789,20 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 14) {
-
-					row1.DATE_OF_BIRTH = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getString(14) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(14);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.DATE_OF_BIRTH = rs_tMysqlInput_1
-									.getTimestamp(14);
-						} else {
-							row1.DATE_OF_BIRTH = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.DATE_OF_BIRTH = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 15) {
-
-					row1.GROUP_FLAG = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(15) != null) {
-						row1.GROUP_FLAG = rs_tMysqlInput_1.getShort(15);
-					} else {
-
-						row1.GROUP_FLAG = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 16) {
-
-					row1.TRAINED = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(16) != null) {
-						row1.TRAINED = rs_tMysqlInput_1.getShort(16);
-					} else {
-
-						row1.TRAINED = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 17) {
-
-					row1.TRAINED_DATE = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getString(17) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(17);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.TRAINED_DATE = rs_tMysqlInput_1
-									.getTimestamp(17);
-						} else {
-							row1.TRAINED_DATE = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.TRAINED_DATE = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 18) {
-
-					row1.PARENT_CUSTOMER_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(18) != null) {
-						row1.PARENT_CUSTOMER_ID = rs_tMysqlInput_1.getInt(18);
-					} else {
-
-						row1.PARENT_CUSTOMER_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 19) {
+				if (colQtyInRs_tMysqlInput_1 < 5) {
 
 					row1.CREATED_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(19) != null) {
+					if (rs_tMysqlInput_1.getString(5) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(19);
+								.getString(5);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.CREATED_DATE = rs_tMysqlInput_1
-									.getTimestamp(19);
+									.getTimestamp(5);
 						} else {
 							row1.CREATED_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1137,20 +813,20 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 20) {
+				if (colQtyInRs_tMysqlInput_1 < 6) {
 
 					row1.UPDATED_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(20) != null) {
+					if (rs_tMysqlInput_1.getString(6) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(20);
+								.getString(6);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.UPDATED_DATE = rs_tMysqlInput_1
-									.getTimestamp(20);
+									.getTimestamp(6);
 						} else {
 							row1.UPDATED_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1161,85 +837,20 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 21) {
-
-					row1.SEARCH_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(21) != null) {
-						row1.SEARCH_ID = rs_tMysqlInput_1.getString(21);
-					} else {
-
-						row1.SEARCH_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 22) {
-
-					row1.MAX_CHILD_COUNT = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(22) != null) {
-						row1.MAX_CHILD_COUNT = rs_tMysqlInput_1.getInt(22);
-					} else {
-
-						row1.MAX_CHILD_COUNT = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 23) {
-
-					row1.HO_UPDATED = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(23) != null) {
-						row1.HO_UPDATED = rs_tMysqlInput_1.getShort(23);
-					} else {
-
-						row1.HO_UPDATED = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 24) {
-
-					row1.CLIENT_CONFIDENTIAL = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(24) != null) {
-						row1.CLIENT_CONFIDENTIAL = rs_tMysqlInput_1
-								.getShort(24);
-					} else {
-
-						row1.CLIENT_CONFIDENTIAL = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 25) {
+				if (colQtyInRs_tMysqlInput_1 < 7) {
 
 					row1.MFI_JOINING_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(25) != null) {
+					if (rs_tMysqlInput_1.getString(7) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(25);
+								.getString(7);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.MFI_JOINING_DATE = rs_tMysqlInput_1
-									.getTimestamp(25);
+									.getTimestamp(7);
 						} else {
 							row1.MFI_JOINING_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1250,36 +861,20 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 26) {
-
-					row1.GOVERNMENT_ID = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(26) != null) {
-						row1.GOVERNMENT_ID = rs_tMysqlInput_1.getString(26);
-					} else {
-
-						row1.GOVERNMENT_ID = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 27) {
+				if (colQtyInRs_tMysqlInput_1 < 8) {
 
 					row1.CUSTOMER_ACTIVATION_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(27) != null) {
+					if (rs_tMysqlInput_1.getString(8) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(27);
+								.getString(8);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.CUSTOMER_ACTIVATION_DATE = rs_tMysqlInput_1
-									.getTimestamp(27);
+									.getTimestamp(8);
 						} else {
 							row1.CUSTOMER_ACTIVATION_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1290,14 +885,14 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 28) {
+				if (colQtyInRs_tMysqlInput_1 < 9) {
 
 					row1.CREATED_BY = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(28) != null) {
-						row1.CREATED_BY = rs_tMysqlInput_1.getShort(28);
+					if (rs_tMysqlInput_1.getObject(9) != null) {
+						row1.CREATED_BY = rs_tMysqlInput_1.getShort(9);
 					} else {
 
 						row1.CREATED_BY = null;
@@ -1306,14 +901,14 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 29) {
+				if (colQtyInRs_tMysqlInput_1 < 10) {
 
 					row1.UPDATED_BY = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(29) != null) {
-						row1.UPDATED_BY = rs_tMysqlInput_1.getShort(29);
+					if (rs_tMysqlInput_1.getObject(10) != null) {
+						row1.UPDATED_BY = rs_tMysqlInput_1.getShort(10);
 					} else {
 
 						row1.UPDATED_BY = null;
@@ -1322,50 +917,18 @@ public class GroupDimensionLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 30) {
+				if (colQtyInRs_tMysqlInput_1 < 11) {
 
-					row1.BLACKLISTED = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(30) != null) {
-						row1.BLACKLISTED = rs_tMysqlInput_1.getShort(30);
-					} else {
-
-						row1.BLACKLISTED = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 31) {
-
-					row1.DISCRIMINATOR = null;
+					row1.PARENT_CUSTOMER_ID = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(31) != null) {
-						row1.DISCRIMINATOR = rs_tMysqlInput_1.getString(31);
+					if (rs_tMysqlInput_1.getObject(11) != null) {
+						row1.PARENT_CUSTOMER_ID = rs_tMysqlInput_1.getInt(11);
 					} else {
 
-						row1.DISCRIMINATOR = null;
+						row1.PARENT_CUSTOMER_ID = null;
 
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 32) {
-
-					row1.VERSION_NO = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(32) != null) {
-						row1.VERSION_NO = rs_tMysqlInput_1.getInt(32);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
 					}
 
 				}
@@ -1471,7 +1034,6 @@ public class GroupDimensionLoader {
 
 					// ###############################
 					// # Vars tables
-					Var__tMap_1__Struct Var = Var__tMap_1;
 					// ###############################
 
 					// ###############################
@@ -1479,12 +1041,10 @@ public class GroupDimensionLoader {
 					group_dim = null;
 
 					// # Output table : 'group_dim'
-					group_dim_tmp.customer_level_id = row1.CUSTOMER_LEVEL_ID;
 					group_dim_tmp.global_cust_num = row1.GLOBAL_CUST_NUM;
 					group_dim_tmp.display_name = row1.DISPLAY_NAME;
 					group_dim_tmp.center_id = row2.center_id;
 					group_dim_tmp.loan_officer_id = row1.LOAN_OFFICER_ID;
-					group_dim_tmp.status_id = row1.STATUS_ID;
 					group_dim_tmp.external_id = row1.EXTERNAL_ID;
 					group_dim_tmp.created_date = row1.CREATED_DATE;
 					group_dim_tmp.updated_date = row1.UPDATED_DATE;
@@ -1492,7 +1052,6 @@ public class GroupDimensionLoader {
 					group_dim_tmp.customer_activation_date = row1.CUSTOMER_ACTIVATION_DATE;
 					group_dim_tmp.created_by = row1.CREATED_BY;
 					group_dim_tmp.updated_by = row1.UPDATED_BY;
-					group_dim_tmp.version_no = row1.VERSION_NO;
 					group_dim = group_dim_tmp;
 					// ###############################
 
@@ -1513,79 +1072,234 @@ public class GroupDimensionLoader {
 					currentComponent = "tMysqlOutput_1";
 
 					whetherReject_tMysqlOutput_1 = false;
+					int updateFlag_tMysqlOutput_1 = 0;
 
-					if (group_dim.global_cust_num == null) {
-						pstmt_tMysqlOutput_1.setNull(1, java.sql.Types.VARCHAR);
+					if (group_dim.display_name == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(1,
+								java.sql.Types.VARCHAR);
 
 					} else {
 
-						pstmt_tMysqlOutput_1.setString(1,
+						pstmtUpdate_tMysqlOutput_1.setString(1,
+								group_dim.display_name);
+
+					}
+
+					if (group_dim.center_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(2,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(2,
+								group_dim.center_id);
+
+					}
+
+					if (group_dim.loan_officer_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(3,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(3,
+								group_dim.loan_officer_id);
+
+					}
+
+					if (group_dim.external_id == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(4,
+								java.sql.Types.VARCHAR);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setString(4,
+								group_dim.external_id);
+
+					}
+
+					if (group_dim.created_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = group_dim.created_date.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(5,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(5, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(5,
+								java.sql.Types.DATE);
+
+					}
+
+					if (group_dim.updated_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = group_dim.updated_date.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(6,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(6, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(6,
+								java.sql.Types.DATE);
+
+					}
+
+					if (group_dim.mfi_joining_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = group_dim.mfi_joining_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(7,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(7, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(7,
+								java.sql.Types.DATE);
+
+					}
+
+					if (group_dim.customer_activation_date != null) {
+						// timestamp < min java date value (year 1) || timestamp
+						// > max mysql value (year 10000) => set 0000-00-00 as
+						// date in MySQL
+						date_tMysqlOutput_1 = group_dim.customer_activation_date
+								.getTime();
+						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+							pstmtUpdate_tMysqlOutput_1.setString(8,
+									"0000-00-00 00:00:00");
+						} else {
+							pstmtUpdate_tMysqlOutput_1
+									.setTimestamp(8, new java.sql.Timestamp(
+											date_tMysqlOutput_1));
+						}
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setNull(8,
+								java.sql.Types.DATE);
+
+					}
+
+					if (group_dim.created_by == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(9,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(9,
+								group_dim.created_by);
+
+					}
+
+					if (group_dim.updated_by == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(10,
+								java.sql.Types.INTEGER);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setShort(10,
+								group_dim.updated_by);
+
+					}
+
+					if (group_dim.global_cust_num == null) {
+						pstmtUpdate_tMysqlOutput_1.setNull(11,
+								java.sql.Types.VARCHAR);
+
+					} else {
+
+						pstmtUpdate_tMysqlOutput_1.setString(11,
 								group_dim.global_cust_num);
 
 					}
 
-					java.sql.ResultSet rs_tMysqlOutput_1 = pstmt_tMysqlOutput_1
-							.executeQuery();
-					int checkCount_tMysqlOutput_1 = -1;
-					while (rs_tMysqlOutput_1.next()) {
-						checkCount_tMysqlOutput_1 = rs_tMysqlOutput_1.getInt(1);
+					try {
+						updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
+								.executeUpdate();
+						updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
+								+ updateFlag_tMysqlOutput_1;
+
+					} catch (Exception e) {
+						whetherReject_tMysqlOutput_1 = true;
+						System.err.print(e.getMessage());
 					}
-					if (checkCount_tMysqlOutput_1 > 0) {
+					if (updateFlag_tMysqlOutput_1 == 0) {
 
-						pstmtUpdate_tMysqlOutput_1.setShort(1,
-								group_dim.customer_level_id);
-
-						if (group_dim.display_name == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(2,
+						if (group_dim.global_cust_num == null) {
+							pstmtInsert_tMysqlOutput_1.setNull(1,
 									java.sql.Types.VARCHAR);
 
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setString(2,
+							pstmtInsert_tMysqlOutput_1.setString(1,
+									group_dim.global_cust_num);
+
+						}
+
+						if (group_dim.display_name == null) {
+							pstmtInsert_tMysqlOutput_1.setNull(2,
+									java.sql.Types.VARCHAR);
+
+						} else {
+
+							pstmtInsert_tMysqlOutput_1.setString(2,
 									group_dim.display_name);
 
 						}
 
 						if (group_dim.center_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(3,
+							pstmtInsert_tMysqlOutput_1.setNull(3,
 									java.sql.Types.INTEGER);
 
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setShort(3,
+							pstmtInsert_tMysqlOutput_1.setShort(3,
 									group_dim.center_id);
 
 						}
 
 						if (group_dim.loan_officer_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(4,
+							pstmtInsert_tMysqlOutput_1.setNull(4,
 									java.sql.Types.INTEGER);
 
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setShort(4,
+							pstmtInsert_tMysqlOutput_1.setShort(4,
 									group_dim.loan_officer_id);
 
 						}
 
-						if (group_dim.status_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(5,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(5,
-									group_dim.status_id);
-
-						}
-
 						if (group_dim.external_id == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(6,
+							pstmtInsert_tMysqlOutput_1.setNull(5,
 									java.sql.Types.VARCHAR);
 
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setString(6,
+							pstmtInsert_tMysqlOutput_1.setString(5,
 									group_dim.external_id);
 
 						}
@@ -1598,16 +1312,16 @@ public class GroupDimensionLoader {
 									.getTime();
 							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
 									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(7,
+								pstmtInsert_tMysqlOutput_1.setString(6,
 										"0000-00-00 00:00:00");
 							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(7,
+								pstmtInsert_tMysqlOutput_1.setTimestamp(6,
 										new java.sql.Timestamp(
 												date_tMysqlOutput_1));
 							}
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setNull(7,
+							pstmtInsert_tMysqlOutput_1.setNull(6,
 									java.sql.Types.DATE);
 
 						}
@@ -1620,16 +1334,16 @@ public class GroupDimensionLoader {
 									.getTime();
 							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
 									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(8,
+								pstmtInsert_tMysqlOutput_1.setString(7,
 										"0000-00-00 00:00:00");
 							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(8,
+								pstmtInsert_tMysqlOutput_1.setTimestamp(7,
 										new java.sql.Timestamp(
 												date_tMysqlOutput_1));
 							}
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setNull(8,
+							pstmtInsert_tMysqlOutput_1.setNull(7,
 									java.sql.Types.DATE);
 
 						}
@@ -1639,165 +1353,6 @@ public class GroupDimensionLoader {
 							// timestamp > max mysql value (year 10000) => set
 							// 0000-00-00 as date in MySQL
 							date_tMysqlOutput_1 = group_dim.mfi_joining_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(9,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(9,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(9,
-									java.sql.Types.DATE);
-
-						}
-
-						if (group_dim.customer_activation_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = group_dim.customer_activation_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(10,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(10,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(10,
-									java.sql.Types.DATE);
-
-						}
-
-						if (group_dim.created_by == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(11,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(11,
-									group_dim.created_by);
-
-						}
-
-						if (group_dim.updated_by == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(12,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(12,
-									group_dim.updated_by);
-
-						}
-
-						pstmtUpdate_tMysqlOutput_1.setInt(13,
-								group_dim.version_no);
-
-						if (group_dim.global_cust_num == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(14,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setString(14,
-									group_dim.global_cust_num);
-
-						}
-
-						try {
-							updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
-									+ pstmtUpdate_tMysqlOutput_1
-											.executeUpdate();
-						} catch (Exception e) {
-							whetherReject_tMysqlOutput_1 = true;
-							System.err.print(e.getMessage());
-						}
-					} else {
-
-						pstmtInsert_tMysqlOutput_1.setShort(1,
-								group_dim.customer_level_id);
-
-						if (group_dim.global_cust_num == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(2,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(2,
-									group_dim.global_cust_num);
-
-						}
-
-						if (group_dim.display_name == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(3,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(3,
-									group_dim.display_name);
-
-						}
-
-						if (group_dim.center_id == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(4,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(4,
-									group_dim.center_id);
-
-						}
-
-						if (group_dim.loan_officer_id == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(5,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(5,
-									group_dim.loan_officer_id);
-
-						}
-
-						if (group_dim.status_id == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(6,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(6,
-									group_dim.status_id);
-
-						}
-
-						if (group_dim.external_id == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(7,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(7,
-									group_dim.external_id);
-
-						}
-
-						if (group_dim.created_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = group_dim.created_date
 									.getTime();
 							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
 									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
@@ -1815,11 +1370,11 @@ public class GroupDimensionLoader {
 
 						}
 
-						if (group_dim.updated_date != null) {
+						if (group_dim.customer_activation_date != null) {
 							// timestamp < min java date value (year 1) ||
 							// timestamp > max mysql value (year 10000) => set
 							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = group_dim.updated_date
+							date_tMysqlOutput_1 = group_dim.customer_activation_date
 									.getTime();
 							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
 									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
@@ -1837,74 +1392,27 @@ public class GroupDimensionLoader {
 
 						}
 
-						if (group_dim.mfi_joining_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = group_dim.mfi_joining_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(10,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(10,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(10,
-									java.sql.Types.DATE);
-
-						}
-
-						if (group_dim.customer_activation_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = group_dim.customer_activation_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(11,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(11,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(11,
-									java.sql.Types.DATE);
-
-						}
-
 						if (group_dim.created_by == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(12,
+							pstmtInsert_tMysqlOutput_1.setNull(10,
 									java.sql.Types.INTEGER);
 
 						} else {
 
-							pstmtInsert_tMysqlOutput_1.setShort(12,
+							pstmtInsert_tMysqlOutput_1.setShort(10,
 									group_dim.created_by);
 
 						}
 
 						if (group_dim.updated_by == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(13,
+							pstmtInsert_tMysqlOutput_1.setNull(11,
 									java.sql.Types.INTEGER);
 
 						} else {
 
-							pstmtInsert_tMysqlOutput_1.setShort(13,
+							pstmtInsert_tMysqlOutput_1.setShort(11,
 									group_dim.updated_by);
 
 						}
-
-						pstmtInsert_tMysqlOutput_1.setInt(14,
-								group_dim.version_no);
 
 						try {
 							insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
@@ -1973,11 +1481,6 @@ public class GroupDimensionLoader {
 			if (pstmtInsert_tMysqlOutput_1 != null) {
 
 				pstmtInsert_tMysqlOutput_1.close();
-
-			}
-			if (pstmt_tMysqlOutput_1 != null) {
-
-				pstmt_tMysqlOutput_1.close();
 
 			}
 
@@ -2484,8 +1987,6 @@ public class GroupDimensionLoader {
 			/**
 			 * [tFileOutputDelimited_2 end ] stop
 			 */
-
-			tJava_1Process();
 
 		} catch (Exception e) {
 			throw new TalendException(this, e, currentComponent);
@@ -3506,6 +3007,42 @@ public class GroupDimensionLoader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		runningThreadCount.add(1);
+		new Thread() {
+			public void run() {
+				java.util.Map threadRunResultMap = new java.util.HashMap();
+				threadRunResultMap.put(errorCode, null);
+				threadRunResultMap.put(status, "");
+				threadLocal.set(threadRunResultMap);
+
+				try {
+					((java.util.Map) threadLocal.get()).put(errorCode, null);
+					GroupDimensionLoaderClass.tJava_1Process();
+					((java.util.Map) threadLocal.get()).put(status, "end");
+				} catch (TalendException e_tJava_1) {
+					((java.util.Map) threadLocal.get()).put(status, "failure");
+					e_tJava_1.printStackTrace();
+
+				} finally {
+				}
+
+				Integer localErrorCode = (Integer) (((java.util.Map) threadLocal
+						.get()).get(errorCode));
+				String localStatus = (String) (((java.util.Map) threadLocal
+						.get()).get(status));
+				if (localErrorCode != null) {
+					if (errorCode == null
+							|| localErrorCode.compareTo(errorCode) > 0) {
+						errorCode = localErrorCode;
+					}
+				} else if (!status.equals("failure")) {
+					status = localStatus;
+				}
+
+				runningThreadCount.add(-1);
+			}
+		}.start();
+
 		while (GroupDimensionLoaderClass.runningThreadCount.getCount() > 0) {
 			try {
 				Thread.sleep(10);
@@ -3582,6 +3119,6 @@ public class GroupDimensionLoader {
 	}
 }
 /*******************************************************************************
- * 99050 characters generated by Talend OpenStudio on the March 27, 2008 6:48:26
- * PM GMT
+ * 87880 characters generated by Talend OpenStudio on the April 2, 2008 4:20:24
+ * PM BST
  ******************************************************************************/

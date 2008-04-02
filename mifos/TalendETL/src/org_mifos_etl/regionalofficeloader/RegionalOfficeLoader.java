@@ -41,21 +41,16 @@ public class RegionalOfficeLoader {
 	private static java.util.Properties defaultProps = new java.util.Properties();
 	// create application properties with default
 	private static java.util.Properties context = new java.util.Properties();
-	private static String OLTP_DB_PASSWORD;
-	private static String OLTP_DB_USER;
-	private static String OLTP_DB_NAME;
+	private static String OLTP_DB_HOST;
 	private static String OLTP_DB_PORT;
-	private static String OLTP_HOST_NAME;
+	private static String OLTP_DB_SCHEMA;
+	private static String OLTP_DB_USER;
+	private static String OLTP_DB_PASSWORD;
 	private static String OLAP_DB_HOST;
 	private static String OLAP_DB_PORT;
-	private static String OLAP_DB_NAME;
+	private static String OLAP_DB_SCHEMA;
 	private static String OLAP_DB_USER;
 	private static String OLAP_DB_PASSWORD;
-	private static String GK_DB_HOST;
-	private static String GK_DB_PORT;
-	private static String GK_DB_SCHEMA;
-	private static String GK_DB_USER;
-	private static String GK_DB_PASSWORD;
 	private static final String jobName = "RegionalOfficeLoader";
 	private static final String projectName = "ORG_MIFOS_ETL";
 	public static Integer errorCode = null;
@@ -70,7 +65,7 @@ public class RegionalOfficeLoader {
 
 	LogCatcherUtils tLogCatcher_1 = new LogCatcherUtils();
 	StatCatcherUtils tStatCatcher_1 = new StatCatcherUtils(
-			"_QcpZoOnNEdy2I_QGIjUG2Q", "0.1");
+			"_QcpZoOnNEdy2I_QGIjUG2Q", "1.1");
 
 	private class TalendException extends Exception {
 		private Exception e = null;
@@ -153,21 +148,14 @@ public class RegionalOfficeLoader {
 		tMysqlInput_1_onSubJobError(exception);
 	}
 
-	public void tFilterColumns_2_error(Exception exception)
-			throws TalendException {
-		end_Hash.put("tFilterColumns_2", System.currentTimeMillis());
+	public void tMap_1_error(Exception exception) throws TalendException {
+		end_Hash.put("tMap_1", System.currentTimeMillis());
 		tMysqlInput_1_onSubJobError(exception);
 	}
 
 	public void tMysqlOutput_1_error(Exception exception)
 			throws TalendException {
 		end_Hash.put("tMysqlOutput_1", System.currentTimeMillis());
-		tMysqlInput_1_onSubJobError(exception);
-	}
-
-	public void tMysqlCommit_2_error(Exception exception)
-			throws TalendException {
-		end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
 		tMysqlInput_1_onSubJobError(exception);
 	}
 
@@ -191,6 +179,12 @@ public class RegionalOfficeLoader {
 			throws TalendException {
 		end_Hash.put("tMysqlOutput_5", System.currentTimeMillis());
 		tMysqlInput_1_onSubJobError(exception);
+	}
+
+	public void tMysqlCommit_2_error(Exception exception)
+			throws TalendException {
+		end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+		tMysqlCommit_2_onSubJobError(exception);
 	}
 
 	public void tMysqlCommit_1_error(Exception exception)
@@ -248,6 +242,10 @@ public class RegionalOfficeLoader {
 			throws TalendException {
 	}
 
+	public void tMysqlCommit_2_onSubJobError(Exception exception)
+			throws TalendException {
+	}
+
 	public void tMysqlCommit_1_onSubJobError(Exception exception)
 			throws TalendException {
 	}
@@ -285,12 +283,12 @@ public class RegionalOfficeLoader {
 			p.load(inStream);
 			OLTP_DB_PASSWORD = (String) p.get("OLTP_DB_PASSWORD");
 			OLTP_DB_USER = (String) p.get("OLTP_DB_USER");
-			OLTP_DB_NAME = (String) p.get("OLTP_DB_NAME");
+			OLTP_DB_SCHEMA = (String) p.get("OLTP_DB_NAME");
 			OLTP_DB_PORT = (String) p.get("OLTP_DB_PORT");
-			OLTP_HOST_NAME = (String) p.get("OLTP_HOST_NAME");
+			OLTP_DB_HOST = (String) p.get("OLTP_HOST_NAME");
 			OLAP_DB_HOST = (String) p.get("OLAP_DB_HOST");
 			OLAP_DB_PORT = (String) p.get("OLAP_DB_PORT");
-			OLAP_DB_NAME = (String) p.get("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) p.get("OLAP_DB_NAME");
 			OLAP_DB_USER = (String) p.get("OLAP_DB_USER");
 			OLAP_DB_PASSWORD = (String) p.get("OLAP_DB_PASSWORD");
 
@@ -342,7 +340,7 @@ public class RegionalOfficeLoader {
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
 			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
-					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_NAME + "?"
+					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
 			String userName_tMysqlConnection_2 = OLAP_DB_USER;
@@ -406,13 +404,13 @@ public class RegionalOfficeLoader {
 
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
-			String url_tMysqlConnection_1 = "jdbc:mysql://" + GK_DB_HOST + ":"
-					+ GK_DB_PORT + "/" + GK_DB_SCHEMA + "?"
+			String url_tMysqlConnection_1 = "jdbc:mysql://" + OLTP_DB_HOST
+					+ ":" + OLTP_DB_PORT + "/" + OLTP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
-			String userName_tMysqlConnection_1 = GK_DB_USER;
+			String userName_tMysqlConnection_1 = OLTP_DB_USER;
 
-			String password_tMysqlConnection_1 = GK_DB_PASSWORD;
+			String password_tMysqlConnection_1 = OLTP_DB_PASSWORD;
 
 			java.sql.Connection conn_tMysqlConnection_1 = java.sql.DriverManager
 					.getConnection(url_tMysqlConnection_1,
@@ -458,19 +456,13 @@ public class RegionalOfficeLoader {
 		}
 	}
 
-	private class row7Struct {
+	private class head_office_dimStruct {
 		private static final int DEFAULT_HASHCODE = 1;
 		private static final int PRIME = 31;
 		private int hashCode = DEFAULT_HASHCODE;
 		public boolean hashCodeDirty = true;
 
 		String GLOBAL_OFFICE_NUM;
-
-		short OFFICE_LEVEL_ID;
-
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
 
 		short LOCAL_REMOTE_FLAG;
 
@@ -487,8 +479,6 @@ public class RegionalOfficeLoader {
 		String OFFICE_SHORT_NAME;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -517,79 +507,7 @@ public class RegionalOfficeLoader {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			final row7Struct other = (row7Struct) obj;
-
-			if (this.GLOBAL_OFFICE_NUM == null) {
-				if (other.GLOBAL_OFFICE_NUM != null)
-					return false;
-			} else if (!this.GLOBAL_OFFICE_NUM.equals(other.GLOBAL_OFFICE_NUM))
-				return false;
-
-			return true;
-		}
-
-	}
-
-	private class row6Struct {
-		private static final int DEFAULT_HASHCODE = 1;
-		private static final int PRIME = 31;
-		private int hashCode = DEFAULT_HASHCODE;
-		public boolean hashCodeDirty = true;
-
-		String GLOBAL_OFFICE_NUM;
-
-		short OFFICE_LEVEL_ID;
-
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
-		short LOCAL_REMOTE_FLAG;
-
-		String DISPLAY_NAME;
-
-		Short CREATED_BY;
-
-		java.util.Date CREATED_DATE;
-
-		Short UPDATED_BY;
-
-		java.util.Date UPDATED_DATE;
-
-		String OFFICE_SHORT_NAME;
-
-		short STATUS_ID;
-
-		int VERSION_NO;
-
-		Short OFFICE_CODE_ID;
-
-		@Override
-		public int hashCode() {
-			if (this.hashCodeDirty) {
-				final int prime = PRIME;
-				int result = DEFAULT_HASHCODE;
-
-				result = prime
-						* result
-						+ ((this.GLOBAL_OFFICE_NUM == null) ? 0
-								: this.GLOBAL_OFFICE_NUM.hashCode());
-
-				this.hashCode = result;
-				this.hashCodeDirty = false;
-			}
-			return this.hashCode;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			final row6Struct other = (row6Struct) obj;
+			final head_office_dimStruct other = (head_office_dimStruct) obj;
 
 			if (this.GLOBAL_OFFICE_NUM == null) {
 				if (other.GLOBAL_OFFICE_NUM != null)
@@ -610,12 +528,6 @@ public class RegionalOfficeLoader {
 
 		String GLOBAL_OFFICE_NUM;
 
-		short OFFICE_LEVEL_ID;
-
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -631,8 +543,6 @@ public class RegionalOfficeLoader {
 		String OFFICE_SHORT_NAME;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -686,10 +596,6 @@ public class RegionalOfficeLoader {
 
 		short OFFICE_LEVEL_ID;
 
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -707,8 +613,6 @@ public class RegionalOfficeLoader {
 		Short parent_id;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -764,10 +668,6 @@ public class RegionalOfficeLoader {
 
 		short OFFICE_LEVEL_ID;
 
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -782,11 +682,9 @@ public class RegionalOfficeLoader {
 
 		String OFFICE_SHORT_NAME;
 
-		Short parent_id;
+		Short PARENT_OFFICE_ID;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -831,18 +729,10 @@ public class RegionalOfficeLoader {
 	}
 
 	private class row3Struct {
-		private static final int DEFAULT_HASHCODE = 1;
-		private static final int PRIME = 31;
-		private int hashCode = DEFAULT_HASHCODE;
-		public boolean hashCodeDirty = true;
 
 		String GLOBAL_OFFICE_NUM;
 
 		short OFFICE_LEVEL_ID;
-
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
 
 		short LOCAL_REMOTE_FLAG;
 
@@ -858,51 +748,13 @@ public class RegionalOfficeLoader {
 
 		String OFFICE_SHORT_NAME;
 
-		Short parent_id;
+		Short PARENT_OFFICE_ID;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
 		String parent_office_num;
-
-		@Override
-		public int hashCode() {
-			if (this.hashCodeDirty) {
-				final int prime = PRIME;
-				int result = DEFAULT_HASHCODE;
-
-				result = prime
-						* result
-						+ ((this.GLOBAL_OFFICE_NUM == null) ? 0
-								: this.GLOBAL_OFFICE_NUM.hashCode());
-
-				this.hashCode = result;
-				this.hashCodeDirty = false;
-			}
-			return this.hashCode;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			final row3Struct other = (row3Struct) obj;
-
-			if (this.GLOBAL_OFFICE_NUM == null) {
-				if (other.GLOBAL_OFFICE_NUM != null)
-					return false;
-			} else if (!this.GLOBAL_OFFICE_NUM.equals(other.GLOBAL_OFFICE_NUM))
-				return false;
-
-			return true;
-		}
 
 	}
 
@@ -916,10 +768,6 @@ public class RegionalOfficeLoader {
 
 		short OFFICE_LEVEL_ID;
 
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -934,11 +782,9 @@ public class RegionalOfficeLoader {
 
 		String OFFICE_SHORT_NAME;
 
-		Short parent_id;
+		Short PARENT_OFFICE_ID;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -992,10 +838,6 @@ public class RegionalOfficeLoader {
 
 		short OFFICE_LEVEL_ID;
 
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -1010,11 +852,9 @@ public class RegionalOfficeLoader {
 
 		String OFFICE_SHORT_NAME;
 
-		Short parent_id;
+		Short PARENT_OFFICE_ID;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -1068,10 +908,6 @@ public class RegionalOfficeLoader {
 
 		short OFFICE_LEVEL_ID;
 
-		String SEARCH_ID;
-
-		int MAX_CHILD_COUNT;
-
 		short LOCAL_REMOTE_FLAG;
 
 		String DISPLAY_NAME;
@@ -1086,11 +922,9 @@ public class RegionalOfficeLoader {
 
 		String OFFICE_SHORT_NAME;
 
-		Short parent_id;
+		Short PARENT_OFFICE_ID;
 
 		short STATUS_ID;
-
-		int VERSION_NO;
 
 		Short OFFICE_CODE_ID;
 
@@ -1141,24 +975,11 @@ public class RegionalOfficeLoader {
 
 			row1Struct row1 = new row1Struct();
 			row3Struct row3 = new row3Struct();
-			row6Struct row6 = new row6Struct();
-			row7Struct row7 = new row7Struct();
+			head_office_dimStruct head_office_dim = new head_office_dimStruct();
 			row2Struct row2 = new row2Struct();
 			row10Struct row10 = new row10Struct();
 			row4Struct row4 = new row4Struct();
 			row5Struct row5 = new row5Struct();
-
-			/**
-			 * [tMysqlCommit_2 begin ] start
-			 */
-
-			ok_Hash.put("tMysqlCommit_2", false);
-			start_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
-			currentComponent = "tMysqlCommit_2";
-
-			/**
-			 * [tMysqlCommit_2 begin ] stop
-			 */
 
 			/**
 			 * [tMysqlOutput_1 begin ] start
@@ -1219,37 +1040,45 @@ public class RegionalOfficeLoader {
 				stmtCreate_tMysqlOutput_1
 						.execute("CREATE TABLE `"
 								+ tableName_tMysqlOutput_1
-								+ "`(`GLOBAL_OFFICE_NUM` VARCHAR(100)  not null,`OFFICE_LEVEL_ID` SMALLINT(5)  not null,`SEARCH_ID` VARCHAR(100)  not null,`MAX_CHILD_COUNT` INT(10)  not null,`LOCAL_REMOTE_FLAG` SMALLINT(5)  not null,`DISPLAY_NAME` VARCHAR(200)  not null,`CREATED_BY` SMALLINT(5)  ,`CREATED_DATE` DATE ,`UPDATED_BY` SMALLINT(5)  ,`UPDATED_DATE` DATE ,`OFFICE_SHORT_NAME` VARCHAR(4)  not null,`STATUS_ID` SMALLINT(5)  not null,`VERSION_NO` INT(10)  not null,`OFFICE_CODE_ID` SMALLINT(5)  ,primary key(`GLOBAL_OFFICE_NUM`))");
+								+ "`(`GLOBAL_OFFICE_NUM` VARCHAR(100)  not null,`LOCAL_REMOTE_FLAG` SMALLINT(5)  not null,`DISPLAY_NAME` VARCHAR(200)  not null,`CREATED_BY` SMALLINT(5)  ,`CREATED_DATE` DATE ,`UPDATED_BY` SMALLINT(5)  ,`UPDATED_DATE` DATE ,`OFFICE_SHORT_NAME` VARCHAR(4)  not null,`STATUS_ID` SMALLINT(5)  not null,`OFFICE_CODE_ID` SMALLINT(5)  ,primary key(`GLOBAL_OFFICE_NUM`))");
 			}
-			java.sql.PreparedStatement pstmt_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("SELECT COUNT(1) FROM `"
+			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
+					.prepareStatement("UPDATE `"
 							+ "head_office_dim"
-							+ "` WHERE `GLOBAL_OFFICE_NUM` = ?");
+							+ "` SET `LOCAL_REMOTE_FLAG` = ?,`DISPLAY_NAME` = ?,`CREATED_BY` = ?,`CREATED_DATE` = ?,`UPDATED_BY` = ?,`UPDATED_DATE` = ?,`OFFICE_SHORT_NAME` = ?,`STATUS_ID` = ?,`OFFICE_CODE_ID` = ? WHERE `GLOBAL_OFFICE_NUM` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_1 = conn_tMysqlOutput_1
 					.prepareStatement("INSERT INTO `"
 							+ "head_office_dim"
-							+ "` (`GLOBAL_OFFICE_NUM`,`OFFICE_LEVEL_ID`,`SEARCH_ID`,`MAX_CHILD_COUNT`,`LOCAL_REMOTE_FLAG`,`DISPLAY_NAME`,`CREATED_BY`,`CREATED_DATE`,`UPDATED_BY`,`UPDATED_DATE`,`OFFICE_SHORT_NAME`,`STATUS_ID`,`VERSION_NO`,`OFFICE_CODE_ID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
-			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("UPDATE `"
-							+ "head_office_dim"
-							+ "` SET `OFFICE_LEVEL_ID` = ?,`SEARCH_ID` = ?,`MAX_CHILD_COUNT` = ?,`LOCAL_REMOTE_FLAG` = ?,`DISPLAY_NAME` = ?,`CREATED_BY` = ?,`CREATED_DATE` = ?,`UPDATED_BY` = ?,`UPDATED_DATE` = ?,`OFFICE_SHORT_NAME` = ?,`STATUS_ID` = ?,`VERSION_NO` = ?,`OFFICE_CODE_ID` = ? WHERE `GLOBAL_OFFICE_NUM` = ?");
+							+ "` (`GLOBAL_OFFICE_NUM`,`LOCAL_REMOTE_FLAG`,`DISPLAY_NAME`,`CREATED_BY`,`CREATED_DATE`,`UPDATED_BY`,`UPDATED_DATE`,`OFFICE_SHORT_NAME`,`STATUS_ID`,`OFFICE_CODE_ID`) VALUES (?,?,?,?,?,?,?,?,?,?)");
 
 			/**
 			 * [tMysqlOutput_1 begin ] stop
 			 */
 
 			/**
-			 * [tFilterColumns_2 begin ] start
+			 * [tMap_1 begin ] start
 			 */
 
-			ok_Hash.put("tFilterColumns_2", false);
-			start_Hash.put("tFilterColumns_2", System.currentTimeMillis());
-			currentComponent = "tFilterColumns_2";
+			ok_Hash.put("tMap_1", false);
+			start_Hash.put("tMap_1", System.currentTimeMillis());
+			currentComponent = "tMap_1";
+
+			// ###############################
+			// # Lookup's keys initialization
+			// ###############################
+
+			// ###############################
+			// # Vars initialization
+			// ###############################
+
+			// ###############################
+			// # Outputs initialization
+			head_office_dimStruct head_office_dim_tmp = new head_office_dimStruct();
+			// ###############################
 
 			/**
-			 * [tFilterColumns_2 begin ] stop
+			 * [tMap_1 begin ] stop
 			 */
 
 			/**
@@ -1312,17 +1141,17 @@ public class RegionalOfficeLoader {
 				stmtCreate_tMysqlOutput_5
 						.execute("CREATE TABLE `"
 								+ tableName_tMysqlOutput_5
-								+ "`(`GLOBAL_OFFICE_NUM` VARCHAR(100)  not null,`OFFICE_LEVEL_ID` SMALLINT(5)  not null,`SEARCH_ID` VARCHAR(100)  not null,`MAX_CHILD_COUNT` INT(10)  not null,`LOCAL_REMOTE_FLAG` SMALLINT(5)  not null,`DISPLAY_NAME` VARCHAR(200)  not null,`CREATED_BY` SMALLINT(5)  ,`CREATED_DATE` DATE ,`UPDATED_BY` SMALLINT(5)  ,`UPDATED_DATE` DATE ,`OFFICE_SHORT_NAME` VARCHAR(4)  not null,`STATUS_ID` SMALLINT(5)  not null,`VERSION_NO` INT(10)  not null,`OFFICE_CODE_ID` SMALLINT(5)  ,`head_office_id` SMALLINT(5)  ,primary key(`GLOBAL_OFFICE_NUM`))");
+								+ "`(`GLOBAL_OFFICE_NUM` VARCHAR(100)  not null,`LOCAL_REMOTE_FLAG` SMALLINT(5)  not null,`DISPLAY_NAME` VARCHAR(200)  not null,`CREATED_BY` SMALLINT(5)  ,`CREATED_DATE` DATE ,`UPDATED_BY` SMALLINT(5)  ,`UPDATED_DATE` DATE ,`OFFICE_SHORT_NAME` VARCHAR(4)  not null,`STATUS_ID` SMALLINT(5)  not null,`OFFICE_CODE_ID` SMALLINT(5)  ,`head_office_id` SMALLINT(5)  ,primary key(`GLOBAL_OFFICE_NUM`))");
 			}
 			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_5 = conn_tMysqlOutput_5
 					.prepareStatement("UPDATE `"
 							+ "regional_office_dim"
-							+ "` SET `OFFICE_LEVEL_ID` = ?,`SEARCH_ID` = ?,`MAX_CHILD_COUNT` = ?,`LOCAL_REMOTE_FLAG` = ?,`DISPLAY_NAME` = ?,`CREATED_BY` = ?,`CREATED_DATE` = ?,`UPDATED_BY` = ?,`UPDATED_DATE` = ?,`OFFICE_SHORT_NAME` = ?,`STATUS_ID` = ?,`VERSION_NO` = ?,`OFFICE_CODE_ID` = ?,`head_office_id` = ? WHERE `GLOBAL_OFFICE_NUM` = ?");
+							+ "` SET `LOCAL_REMOTE_FLAG` = ?,`DISPLAY_NAME` = ?,`CREATED_BY` = ?,`CREATED_DATE` = ?,`UPDATED_BY` = ?,`UPDATED_DATE` = ?,`OFFICE_SHORT_NAME` = ?,`STATUS_ID` = ?,`OFFICE_CODE_ID` = ?,`head_office_id` = ? WHERE `GLOBAL_OFFICE_NUM` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_5 = conn_tMysqlOutput_5
 					.prepareStatement("INSERT INTO `"
 							+ "regional_office_dim"
-							+ "` (`GLOBAL_OFFICE_NUM`,`OFFICE_LEVEL_ID`,`SEARCH_ID`,`MAX_CHILD_COUNT`,`LOCAL_REMOTE_FLAG`,`DISPLAY_NAME`,`CREATED_BY`,`CREATED_DATE`,`UPDATED_BY`,`UPDATED_DATE`,`OFFICE_SHORT_NAME`,`STATUS_ID`,`VERSION_NO`,`OFFICE_CODE_ID`,`head_office_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+							+ "` (`GLOBAL_OFFICE_NUM`,`LOCAL_REMOTE_FLAG`,`DISPLAY_NAME`,`CREATED_BY`,`CREATED_DATE`,`UPDATED_BY`,`UPDATED_DATE`,`OFFICE_SHORT_NAME`,`STATUS_ID`,`OFFICE_CODE_ID`,`head_office_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 
 			/**
 			 * [tMysqlOutput_5 begin ] stop
@@ -1444,7 +1273,7 @@ public class RegionalOfficeLoader {
 			java.sql.Statement stmt_tMysqlInput_1 = conn_tMysqlInput_1
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_1 = stmt_tMysqlInput_1
-					.executeQuery("SELECT office.GLOBAL_OFFICE_NUM, office.OFFICE_LEVEL_ID, office.SEARCH_ID,  office.MAX_CHILD_COUNT, office.LOCAL_REMOTE_FLAG, office.DISPLAY_NAME, office.CREATED_BY,  office.CREATED_DATE, office.UPDATED_BY, office.UPDATED_DATE, office.OFFICE_SHORT_NAME,  office.PARENT_OFFICE_ID parent_id, office.STATUS_ID, office.VERSION_NO, office.OFFICE_CODE_ID, (select global_office_num from office o where parent_id = o.office_id) parent_office_num FROM office where office.GLOBAL_OFFICE_NUM = 1 or office.GLOBAL_OFFICE_NUM = 2");
+					.executeQuery("select office.GLOBAL_OFFICE_NUM,office.OFFICE_LEVEL_ID,office.LOCAL_REMOTE_FLAG, office.DISPLAY_NAME,office.CREATED_BY,office.CREATED_DATE,office.UPDATED_BY,office.UPDATED_DATE, office.OFFICE_SHORT_NAME,office.PARENT_OFFICE_ID parent_id,office.STATUS_ID,office.OFFICE_CODE_ID, (select global_office_num from office o where parent_id = o.office_id)  parent_office_num  from office where office.OFFICE_LEVEL_ID = 1 or office.OFFICE_LEVEL_ID = 2");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_1 = rs_tMysqlInput_1
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_1 = rsmd_tMysqlInput_1.getColumnCount();
@@ -1458,7 +1287,7 @@ public class RegionalOfficeLoader {
 			globalMap
 					.put(
 							"tMysqlInput_1_QUERY",
-							"SELECT office.GLOBAL_OFFICE_NUM, office.OFFICE_LEVEL_ID, office.SEARCH_ID,  office.MAX_CHILD_COUNT, office.LOCAL_REMOTE_FLAG, office.DISPLAY_NAME, office.CREATED_BY,  office.CREATED_DATE, office.UPDATED_BY, office.UPDATED_DATE, office.OFFICE_SHORT_NAME,  office.PARENT_OFFICE_ID parent_id, office.STATUS_ID, office.VERSION_NO, office.OFFICE_CODE_ID, (select global_office_num from office o where parent_id = o.office_id) parent_office_num FROM office where office.GLOBAL_OFFICE_NUM = 1 or office.GLOBAL_OFFICE_NUM = 2");
+							"select office.GLOBAL_OFFICE_NUM,office.OFFICE_LEVEL_ID,office.LOCAL_REMOTE_FLAG, office.DISPLAY_NAME,office.CREATED_BY,office.CREATED_DATE,office.UPDATED_BY,office.UPDATED_DATE, office.OFFICE_SHORT_NAME,office.PARENT_OFFICE_ID parent_id,office.STATUS_ID,office.OFFICE_CODE_ID, (select global_office_num from office o where parent_id = o.office_id)  parent_office_num  from office where office.OFFICE_LEVEL_ID = 1 or office.OFFICE_LEVEL_ID = 2");
 
 			while (rs_tMysqlInput_1.next()) {
 				nb_line_tMysqlInput_1++;
@@ -1497,12 +1326,12 @@ public class RegionalOfficeLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 3) {
 
-					row1.SEARCH_ID = null;
+					row1.LOCAL_REMOTE_FLAG = 0;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(3) != null) {
-						row1.SEARCH_ID = rs_tMysqlInput_1.getString(3);
+						row1.LOCAL_REMOTE_FLAG = rs_tMysqlInput_1.getShort(3);
 					} else {
 
 						throw new RuntimeException(
@@ -1513,12 +1342,12 @@ public class RegionalOfficeLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 4) {
 
-					row1.MAX_CHILD_COUNT = 0;
+					row1.DISPLAY_NAME = null;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(4) != null) {
-						row1.MAX_CHILD_COUNT = rs_tMysqlInput_1.getInt(4);
+						row1.DISPLAY_NAME = rs_tMysqlInput_1.getString(4);
 					} else {
 
 						throw new RuntimeException(
@@ -1529,44 +1358,12 @@ public class RegionalOfficeLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 5) {
 
-					row1.LOCAL_REMOTE_FLAG = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(5) != null) {
-						row1.LOCAL_REMOTE_FLAG = rs_tMysqlInput_1.getShort(5);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 6) {
-
-					row1.DISPLAY_NAME = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(6) != null) {
-						row1.DISPLAY_NAME = rs_tMysqlInput_1.getString(6);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 7) {
-
 					row1.CREATED_BY = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(7) != null) {
-						row1.CREATED_BY = rs_tMysqlInput_1.getShort(7);
+					if (rs_tMysqlInput_1.getObject(5) != null) {
+						row1.CREATED_BY = rs_tMysqlInput_1.getShort(5);
 					} else {
 
 						row1.CREATED_BY = null;
@@ -1575,20 +1372,20 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 8) {
+				if (colQtyInRs_tMysqlInput_1 < 6) {
 
 					row1.CREATED_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(8) != null) {
+					if (rs_tMysqlInput_1.getString(6) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(8);
+								.getString(6);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.CREATED_DATE = rs_tMysqlInput_1
-									.getTimestamp(8);
+									.getTimestamp(6);
 						} else {
 							row1.CREATED_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1599,14 +1396,14 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 9) {
+				if (colQtyInRs_tMysqlInput_1 < 7) {
 
 					row1.UPDATED_BY = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(9) != null) {
-						row1.UPDATED_BY = rs_tMysqlInput_1.getShort(9);
+					if (rs_tMysqlInput_1.getObject(7) != null) {
+						row1.UPDATED_BY = rs_tMysqlInput_1.getShort(7);
 					} else {
 
 						row1.UPDATED_BY = null;
@@ -1615,20 +1412,20 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 10) {
+				if (colQtyInRs_tMysqlInput_1 < 8) {
 
 					row1.UPDATED_DATE = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(10) != null) {
+					if (rs_tMysqlInput_1.getString(8) != null) {
 						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(10);
+								.getString(8);
 						if (!dateString_tMysqlInput_1.equals("0000-00-00")
 								&& !dateString_tMysqlInput_1
 										.equals("0000-00-00 00:00:00")) {
 							row1.UPDATED_DATE = rs_tMysqlInput_1
-									.getTimestamp(10);
+									.getTimestamp(8);
 						} else {
 							row1.UPDATED_DATE = (java.util.Date) year0_tMysqlInput_1
 									.clone();
@@ -1639,14 +1436,46 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 11) {
+				if (colQtyInRs_tMysqlInput_1 < 9) {
 
 					row1.OFFICE_SHORT_NAME = null;
 
 				} else {
 
+					if (rs_tMysqlInput_1.getObject(9) != null) {
+						row1.OFFICE_SHORT_NAME = rs_tMysqlInput_1.getString(9);
+					} else {
+
+						throw new RuntimeException(
+								"Null value in non-Nullable column");
+					}
+
+				}
+
+				if (colQtyInRs_tMysqlInput_1 < 10) {
+
+					row1.PARENT_OFFICE_ID = null;
+
+				} else {
+
+					if (rs_tMysqlInput_1.getObject(10) != null) {
+						row1.PARENT_OFFICE_ID = rs_tMysqlInput_1.getShort(10);
+					} else {
+
+						row1.PARENT_OFFICE_ID = null;
+
+					}
+
+				}
+
+				if (colQtyInRs_tMysqlInput_1 < 11) {
+
+					row1.STATUS_ID = 0;
+
+				} else {
+
 					if (rs_tMysqlInput_1.getObject(11) != null) {
-						row1.OFFICE_SHORT_NAME = rs_tMysqlInput_1.getString(11);
+						row1.STATUS_ID = rs_tMysqlInput_1.getShort(11);
 					} else {
 
 						throw new RuntimeException(
@@ -1657,60 +1486,12 @@ public class RegionalOfficeLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 12) {
 
-					row1.parent_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(12) != null) {
-						row1.parent_id = rs_tMysqlInput_1.getShort(12);
-					} else {
-
-						row1.parent_id = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 13) {
-
-					row1.STATUS_ID = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(13) != null) {
-						row1.STATUS_ID = rs_tMysqlInput_1.getShort(13);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 14) {
-
-					row1.VERSION_NO = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(14) != null) {
-						row1.VERSION_NO = rs_tMysqlInput_1.getInt(14);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 15) {
-
 					row1.OFFICE_CODE_ID = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(15) != null) {
-						row1.OFFICE_CODE_ID = rs_tMysqlInput_1.getShort(15);
+					if (rs_tMysqlInput_1.getObject(12) != null) {
+						row1.OFFICE_CODE_ID = rs_tMysqlInput_1.getShort(12);
 					} else {
 
 						row1.OFFICE_CODE_ID = null;
@@ -1719,14 +1500,14 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_1 < 16) {
+				if (colQtyInRs_tMysqlInput_1 < 13) {
 
 					row1.parent_office_num = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getObject(16) != null) {
-						row1.parent_office_num = rs_tMysqlInput_1.getString(16);
+					if (rs_tMysqlInput_1.getObject(13) != null) {
+						row1.parent_office_num = rs_tMysqlInput_1.getString(13);
 					} else {
 
 						row1.parent_office_num = null;
@@ -1768,8 +1549,6 @@ public class RegionalOfficeLoader {
 					}
 					row3.GLOBAL_OFFICE_NUM = row1.GLOBAL_OFFICE_NUM;
 					row3.OFFICE_LEVEL_ID = row1.OFFICE_LEVEL_ID;
-					row3.SEARCH_ID = row1.SEARCH_ID;
-					row3.MAX_CHILD_COUNT = row1.MAX_CHILD_COUNT;
 					row3.LOCAL_REMOTE_FLAG = row1.LOCAL_REMOTE_FLAG;
 					row3.DISPLAY_NAME = row1.DISPLAY_NAME;
 					row3.CREATED_BY = row1.CREATED_BY;
@@ -1777,9 +1556,8 @@ public class RegionalOfficeLoader {
 					row3.UPDATED_BY = row1.UPDATED_BY;
 					row3.UPDATED_DATE = row1.UPDATED_DATE;
 					row3.OFFICE_SHORT_NAME = row1.OFFICE_SHORT_NAME;
-					row3.parent_id = row1.parent_id;
+					row3.PARENT_OFFICE_ID = row1.PARENT_OFFICE_ID;
 					row3.STATUS_ID = row1.STATUS_ID;
-					row3.VERSION_NO = row1.VERSION_NO;
 					row3.OFFICE_CODE_ID = row1.OFFICE_CODE_ID;
 					row3.parent_office_num = row1.parent_office_num;
 					nb_line_ok_tFilterRow_1++;
@@ -1789,8 +1567,6 @@ public class RegionalOfficeLoader {
 					}
 					row2.GLOBAL_OFFICE_NUM = row1.GLOBAL_OFFICE_NUM;
 					row2.OFFICE_LEVEL_ID = row1.OFFICE_LEVEL_ID;
-					row2.SEARCH_ID = row1.SEARCH_ID;
-					row2.MAX_CHILD_COUNT = row1.MAX_CHILD_COUNT;
 					row2.LOCAL_REMOTE_FLAG = row1.LOCAL_REMOTE_FLAG;
 					row2.DISPLAY_NAME = row1.DISPLAY_NAME;
 					row2.CREATED_BY = row1.CREATED_BY;
@@ -1798,9 +1574,8 @@ public class RegionalOfficeLoader {
 					row2.UPDATED_BY = row1.UPDATED_BY;
 					row2.UPDATED_DATE = row1.UPDATED_DATE;
 					row2.OFFICE_SHORT_NAME = row1.OFFICE_SHORT_NAME;
-					row2.parent_id = row1.parent_id;
+					row2.PARENT_OFFICE_ID = row1.PARENT_OFFICE_ID;
 					row2.STATUS_ID = row1.STATUS_ID;
-					row2.VERSION_NO = row1.VERSION_NO;
 					row2.OFFICE_CODE_ID = row1.OFFICE_CODE_ID;
 					row2.parent_office_num = row1.parent_office_num;
 				}
@@ -1812,381 +1587,320 @@ public class RegionalOfficeLoader {
 				if (row3 != null) {
 
 					/**
-					 * [tFilterColumns_2 main ] start
+					 * [tMap_1 main ] start
 					 */
 
-					currentComponent = "tFilterColumns_2";
+					currentComponent = "tMap_1";
 
-					row6.GLOBAL_OFFICE_NUM = row3.GLOBAL_OFFICE_NUM;
-					row6.OFFICE_LEVEL_ID = row3.OFFICE_LEVEL_ID;
-					row6.SEARCH_ID = row3.SEARCH_ID;
-					row6.MAX_CHILD_COUNT = row3.MAX_CHILD_COUNT;
-					row6.LOCAL_REMOTE_FLAG = row3.LOCAL_REMOTE_FLAG;
-					row6.DISPLAY_NAME = row3.DISPLAY_NAME;
-					row6.CREATED_BY = row3.CREATED_BY;
-					row6.CREATED_DATE = row3.CREATED_DATE;
-					row6.UPDATED_BY = row3.UPDATED_BY;
-					row6.UPDATED_DATE = row3.UPDATED_DATE;
-					row6.OFFICE_SHORT_NAME = row3.OFFICE_SHORT_NAME;
-					row6.STATUS_ID = row3.STATUS_ID;
-					row6.VERSION_NO = row3.VERSION_NO;
-					row6.OFFICE_CODE_ID = row3.OFFICE_CODE_ID;
+					boolean rejectedInnerJoin_tMap_1 = false;
+
+					// ###############################
+					// # Input tables (lookups)
+
+					// ###############################
+
+					{ // start of Var scope
+
+						// ###############################
+						// # Vars tables
+						// ###############################
+
+						// ###############################
+						// # Output tables
+						head_office_dim = null;
+
+						// # Output table : 'head_office_dim'
+						head_office_dim_tmp.GLOBAL_OFFICE_NUM = row3.GLOBAL_OFFICE_NUM;
+						head_office_dim_tmp.LOCAL_REMOTE_FLAG = row3.LOCAL_REMOTE_FLAG;
+						head_office_dim_tmp.DISPLAY_NAME = row3.DISPLAY_NAME;
+						head_office_dim_tmp.CREATED_BY = row3.CREATED_BY;
+						head_office_dim_tmp.CREATED_DATE = row3.CREATED_DATE;
+						head_office_dim_tmp.UPDATED_BY = row3.UPDATED_BY;
+						head_office_dim_tmp.UPDATED_DATE = row3.UPDATED_DATE;
+						head_office_dim_tmp.OFFICE_SHORT_NAME = row3.OFFICE_SHORT_NAME;
+						head_office_dim_tmp.STATUS_ID = row3.STATUS_ID;
+						head_office_dim_tmp.OFFICE_CODE_ID = row3.OFFICE_CODE_ID;
+						head_office_dim = head_office_dim_tmp;
+						// ###############################
+
+					} // end of Var scope
+
+					rejectedInnerJoin_tMap_1 = false;
+
 					/**
-					 * [tFilterColumns_2 main ] stop
+					 * [tMap_1 main ] stop
 					 */
-					/**
-					 * [tMysqlOutput_1 main ] start
-					 */
+					// Start of branch "head_office_dim"
+					if (head_office_dim != null) {
 
-					currentComponent = "tMysqlOutput_1";
+						/**
+						 * [tMysqlOutput_1 main ] start
+						 */
 
-					row7 = null;
-					whetherReject_tMysqlOutput_1 = false;
+						currentComponent = "tMysqlOutput_1";
 
-					if (row6.GLOBAL_OFFICE_NUM == null) {
-						pstmt_tMysqlOutput_1.setNull(1, java.sql.Types.VARCHAR);
-
-					} else {
-
-						pstmt_tMysqlOutput_1.setString(1,
-								row6.GLOBAL_OFFICE_NUM);
-
-					}
-
-					java.sql.ResultSet rs_tMysqlOutput_1 = pstmt_tMysqlOutput_1
-							.executeQuery();
-					int checkCount_tMysqlOutput_1 = -1;
-					while (rs_tMysqlOutput_1.next()) {
-						checkCount_tMysqlOutput_1 = rs_tMysqlOutput_1.getInt(1);
-					}
-					if (checkCount_tMysqlOutput_1 > 0) {
+						whetherReject_tMysqlOutput_1 = false;
+						int updateFlag_tMysqlOutput_1 = 0;
 
 						pstmtUpdate_tMysqlOutput_1.setShort(1,
-								row6.OFFICE_LEVEL_ID);
+								head_office_dim.LOCAL_REMOTE_FLAG);
 
-						if (row6.SEARCH_ID == null) {
+						if (head_office_dim.DISPLAY_NAME == null) {
 							pstmtUpdate_tMysqlOutput_1.setNull(2,
 									java.sql.Types.VARCHAR);
 
 						} else {
 
 							pstmtUpdate_tMysqlOutput_1.setString(2,
-									row6.SEARCH_ID);
+									head_office_dim.DISPLAY_NAME);
 
 						}
 
-						pstmtUpdate_tMysqlOutput_1.setInt(3,
-								row6.MAX_CHILD_COUNT);
+						if (head_office_dim.CREATED_BY == null) {
+							pstmtUpdate_tMysqlOutput_1.setNull(3,
+									java.sql.Types.INTEGER);
 
-						pstmtUpdate_tMysqlOutput_1.setShort(4,
-								row6.LOCAL_REMOTE_FLAG);
+						} else {
 
-						if (row6.DISPLAY_NAME == null) {
+							pstmtUpdate_tMysqlOutput_1.setShort(3,
+									head_office_dim.CREATED_BY);
+
+						}
+
+						if (head_office_dim.CREATED_DATE != null) {
+							// timestamp < min java date value (year 1) ||
+							// timestamp > max mysql value (year 10000) => set
+							// 0000-00-00 as date in MySQL
+							date_tMysqlOutput_1 = head_office_dim.CREATED_DATE
+									.getTime();
+							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+								pstmtUpdate_tMysqlOutput_1.setString(4,
+										"0000-00-00 00:00:00");
+							} else {
+								pstmtUpdate_tMysqlOutput_1.setTimestamp(4,
+										new java.sql.Timestamp(
+												date_tMysqlOutput_1));
+							}
+						} else {
+
+							pstmtUpdate_tMysqlOutput_1.setNull(4,
+									java.sql.Types.DATE);
+
+						}
+
+						if (head_office_dim.UPDATED_BY == null) {
 							pstmtUpdate_tMysqlOutput_1.setNull(5,
+									java.sql.Types.INTEGER);
+
+						} else {
+
+							pstmtUpdate_tMysqlOutput_1.setShort(5,
+									head_office_dim.UPDATED_BY);
+
+						}
+
+						if (head_office_dim.UPDATED_DATE != null) {
+							// timestamp < min java date value (year 1) ||
+							// timestamp > max mysql value (year 10000) => set
+							// 0000-00-00 as date in MySQL
+							date_tMysqlOutput_1 = head_office_dim.UPDATED_DATE
+									.getTime();
+							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+								pstmtUpdate_tMysqlOutput_1.setString(6,
+										"0000-00-00 00:00:00");
+							} else {
+								pstmtUpdate_tMysqlOutput_1.setTimestamp(6,
+										new java.sql.Timestamp(
+												date_tMysqlOutput_1));
+							}
+						} else {
+
+							pstmtUpdate_tMysqlOutput_1.setNull(6,
+									java.sql.Types.DATE);
+
+						}
+
+						if (head_office_dim.OFFICE_SHORT_NAME == null) {
+							pstmtUpdate_tMysqlOutput_1.setNull(7,
 									java.sql.Types.VARCHAR);
 
 						} else {
 
-							pstmtUpdate_tMysqlOutput_1.setString(5,
-									row6.DISPLAY_NAME);
+							pstmtUpdate_tMysqlOutput_1.setString(7,
+									head_office_dim.OFFICE_SHORT_NAME);
 
 						}
 
-						if (row6.CREATED_BY == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(6,
-									java.sql.Types.INTEGER);
+						pstmtUpdate_tMysqlOutput_1.setShort(8,
+								head_office_dim.STATUS_ID);
 
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(6,
-									row6.CREATED_BY);
-
-						}
-
-						if (row6.CREATED_DATE != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = row6.CREATED_DATE.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(7,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(7,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setNull(7,
-									java.sql.Types.DATE);
-
-						}
-
-						if (row6.UPDATED_BY == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(8,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(8,
-									row6.UPDATED_BY);
-
-						}
-
-						if (row6.UPDATED_DATE != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = row6.UPDATED_DATE.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtUpdate_tMysqlOutput_1.setString(9,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtUpdate_tMysqlOutput_1.setTimestamp(9,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
+						if (head_office_dim.OFFICE_CODE_ID == null) {
 							pstmtUpdate_tMysqlOutput_1.setNull(9,
-									java.sql.Types.DATE);
+									java.sql.Types.INTEGER);
+
+						} else {
+
+							pstmtUpdate_tMysqlOutput_1.setShort(9,
+									head_office_dim.OFFICE_CODE_ID);
 
 						}
 
-						if (row6.OFFICE_SHORT_NAME == null) {
+						if (head_office_dim.GLOBAL_OFFICE_NUM == null) {
 							pstmtUpdate_tMysqlOutput_1.setNull(10,
 									java.sql.Types.VARCHAR);
 
 						} else {
 
 							pstmtUpdate_tMysqlOutput_1.setString(10,
-									row6.OFFICE_SHORT_NAME);
-
-						}
-
-						pstmtUpdate_tMysqlOutput_1.setShort(11, row6.STATUS_ID);
-
-						pstmtUpdate_tMysqlOutput_1.setInt(12, row6.VERSION_NO);
-
-						if (row6.OFFICE_CODE_ID == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(13,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setShort(13,
-									row6.OFFICE_CODE_ID);
-
-						}
-
-						if (row6.GLOBAL_OFFICE_NUM == null) {
-							pstmtUpdate_tMysqlOutput_1.setNull(14,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtUpdate_tMysqlOutput_1.setString(14,
-									row6.GLOBAL_OFFICE_NUM);
+									head_office_dim.GLOBAL_OFFICE_NUM);
 
 						}
 
 						try {
+							updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
+									.executeUpdate();
 							updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
-									+ pstmtUpdate_tMysqlOutput_1
-											.executeUpdate();
+									+ updateFlag_tMysqlOutput_1;
+
 						} catch (Exception e) {
 							whetherReject_tMysqlOutput_1 = true;
 							System.err.print(e.getMessage());
 						}
-					} else {
+						if (updateFlag_tMysqlOutput_1 == 0) {
 
-						if (row6.GLOBAL_OFFICE_NUM == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(1,
-									java.sql.Types.VARCHAR);
+							if (head_office_dim.GLOBAL_OFFICE_NUM == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(1,
+										java.sql.Types.VARCHAR);
 
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(1,
-									row6.GLOBAL_OFFICE_NUM);
-
-						}
-
-						pstmtInsert_tMysqlOutput_1.setShort(2,
-								row6.OFFICE_LEVEL_ID);
-
-						if (row6.SEARCH_ID == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(3,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(3,
-									row6.SEARCH_ID);
-
-						}
-
-						pstmtInsert_tMysqlOutput_1.setInt(4,
-								row6.MAX_CHILD_COUNT);
-
-						pstmtInsert_tMysqlOutput_1.setShort(5,
-								row6.LOCAL_REMOTE_FLAG);
-
-						if (row6.DISPLAY_NAME == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(6,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(6,
-									row6.DISPLAY_NAME);
-
-						}
-
-						if (row6.CREATED_BY == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(7,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(7,
-									row6.CREATED_BY);
-
-						}
-
-						if (row6.CREATED_DATE != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = row6.CREATED_DATE.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(8,
-										"0000-00-00 00:00:00");
 							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(8,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
+
+								pstmtInsert_tMysqlOutput_1.setString(1,
+										head_office_dim.GLOBAL_OFFICE_NUM);
+
 							}
-						} else {
 
-							pstmtInsert_tMysqlOutput_1.setNull(8,
-									java.sql.Types.DATE);
+							pstmtInsert_tMysqlOutput_1.setShort(2,
+									head_office_dim.LOCAL_REMOTE_FLAG);
 
-						}
+							if (head_office_dim.DISPLAY_NAME == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(3,
+										java.sql.Types.VARCHAR);
 
-						if (row6.UPDATED_BY == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(9,
-									java.sql.Types.INTEGER);
+							} else {
 
-						} else {
+								pstmtInsert_tMysqlOutput_1.setString(3,
+										head_office_dim.DISPLAY_NAME);
+
+							}
+
+							if (head_office_dim.CREATED_BY == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(4,
+										java.sql.Types.INTEGER);
+
+							} else {
+
+								pstmtInsert_tMysqlOutput_1.setShort(4,
+										head_office_dim.CREATED_BY);
+
+							}
+
+							if (head_office_dim.CREATED_DATE != null) {
+								// timestamp < min java date value (year 1) ||
+								// timestamp > max mysql value (year 10000) =>
+								// set 0000-00-00 as date in MySQL
+								date_tMysqlOutput_1 = head_office_dim.CREATED_DATE
+										.getTime();
+								if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+										|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+									pstmtInsert_tMysqlOutput_1.setString(5,
+											"0000-00-00 00:00:00");
+								} else {
+									pstmtInsert_tMysqlOutput_1.setTimestamp(5,
+											new java.sql.Timestamp(
+													date_tMysqlOutput_1));
+								}
+							} else {
+
+								pstmtInsert_tMysqlOutput_1.setNull(5,
+										java.sql.Types.DATE);
+
+							}
+
+							if (head_office_dim.UPDATED_BY == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(6,
+										java.sql.Types.INTEGER);
+
+							} else {
+
+								pstmtInsert_tMysqlOutput_1.setShort(6,
+										head_office_dim.UPDATED_BY);
+
+							}
+
+							if (head_office_dim.UPDATED_DATE != null) {
+								// timestamp < min java date value (year 1) ||
+								// timestamp > max mysql value (year 10000) =>
+								// set 0000-00-00 as date in MySQL
+								date_tMysqlOutput_1 = head_office_dim.UPDATED_DATE
+										.getTime();
+								if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
+										|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
+									pstmtInsert_tMysqlOutput_1.setString(7,
+											"0000-00-00 00:00:00");
+								} else {
+									pstmtInsert_tMysqlOutput_1.setTimestamp(7,
+											new java.sql.Timestamp(
+													date_tMysqlOutput_1));
+								}
+							} else {
+
+								pstmtInsert_tMysqlOutput_1.setNull(7,
+										java.sql.Types.DATE);
+
+							}
+
+							if (head_office_dim.OFFICE_SHORT_NAME == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(8,
+										java.sql.Types.VARCHAR);
+
+							} else {
+
+								pstmtInsert_tMysqlOutput_1.setString(8,
+										head_office_dim.OFFICE_SHORT_NAME);
+
+							}
 
 							pstmtInsert_tMysqlOutput_1.setShort(9,
-									row6.UPDATED_BY);
+									head_office_dim.STATUS_ID);
 
-						}
+							if (head_office_dim.OFFICE_CODE_ID == null) {
+								pstmtInsert_tMysqlOutput_1.setNull(10,
+										java.sql.Types.INTEGER);
 
-						if (row6.UPDATED_DATE != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = row6.UPDATED_DATE.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(10,
-										"0000-00-00 00:00:00");
 							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(10,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
+
+								pstmtInsert_tMysqlOutput_1.setShort(10,
+										head_office_dim.OFFICE_CODE_ID);
+
 							}
-						} else {
 
-							pstmtInsert_tMysqlOutput_1.setNull(10,
-									java.sql.Types.DATE);
-
+							try {
+								insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
+										+ pstmtInsert_tMysqlOutput_1
+												.executeUpdate();
+							} catch (Exception e) {
+								whetherReject_tMysqlOutput_1 = true;
+								System.err.print(e.getMessage());
+							}
 						}
-
-						if (row6.OFFICE_SHORT_NAME == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(11,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(11,
-									row6.OFFICE_SHORT_NAME);
-
-						}
-
-						pstmtInsert_tMysqlOutput_1.setShort(12, row6.STATUS_ID);
-
-						pstmtInsert_tMysqlOutput_1.setInt(13, row6.VERSION_NO);
-
-						if (row6.OFFICE_CODE_ID == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(14,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(14,
-									row6.OFFICE_CODE_ID);
-
-						}
-
-						try {
-							insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
-									+ pstmtInsert_tMysqlOutput_1
-											.executeUpdate();
-						} catch (Exception e) {
-							whetherReject_tMysqlOutput_1 = true;
-							System.err.print(e.getMessage());
-						}
-					}
-					nb_line_tMysqlOutput_1++;
-					if (!whetherReject_tMysqlOutput_1) {
-						row7 = new row7Struct();
-						row7.GLOBAL_OFFICE_NUM = row6.GLOBAL_OFFICE_NUM;
-						row7.OFFICE_LEVEL_ID = row6.OFFICE_LEVEL_ID;
-						row7.SEARCH_ID = row6.SEARCH_ID;
-						row7.MAX_CHILD_COUNT = row6.MAX_CHILD_COUNT;
-						row7.LOCAL_REMOTE_FLAG = row6.LOCAL_REMOTE_FLAG;
-						row7.DISPLAY_NAME = row6.DISPLAY_NAME;
-						row7.CREATED_BY = row6.CREATED_BY;
-						row7.CREATED_DATE = row6.CREATED_DATE;
-						row7.UPDATED_BY = row6.UPDATED_BY;
-						row7.UPDATED_DATE = row6.UPDATED_DATE;
-						row7.OFFICE_SHORT_NAME = row6.OFFICE_SHORT_NAME;
-						row7.STATUS_ID = row6.STATUS_ID;
-						row7.VERSION_NO = row6.VERSION_NO;
-						row7.OFFICE_CODE_ID = row6.OFFICE_CODE_ID;
-					}
-					/**
-					 * [tMysqlOutput_1 main ] stop
-					 */
-					// Start of branch "row7"
-					if (row7 != null) {
-
+						nb_line_tMysqlOutput_1++;
 						/**
-						 * [tMysqlCommit_2 main ] start
+						 * [tMysqlOutput_1 main ] stop
 						 */
 
-						currentComponent = "tMysqlCommit_2";
-
-						java.sql.Connection conn_tMysqlCommit_2 = (java.sql.Connection) globalMap
-								.get("conn_");
-						if (conn_tMysqlCommit_2 != null
-								&& !conn_tMysqlCommit_2.isClosed()) {
-							conn_tMysqlCommit_2.commit();
-							conn_tMysqlCommit_2.close();
-						}
-
-						/**
-						 * [tMysqlCommit_2 main ] stop
-						 */
-
-					} // End of branch "row7"
+					} // End of branch "head_office_dim"
 
 				} // End of branch "row3"
 
@@ -2213,8 +1927,6 @@ public class RegionalOfficeLoader {
 						}
 						row10.GLOBAL_OFFICE_NUM = row2.GLOBAL_OFFICE_NUM;
 						row10.OFFICE_LEVEL_ID = row2.OFFICE_LEVEL_ID;
-						row10.SEARCH_ID = row2.SEARCH_ID;
-						row10.MAX_CHILD_COUNT = row2.MAX_CHILD_COUNT;
 						row10.LOCAL_REMOTE_FLAG = row2.LOCAL_REMOTE_FLAG;
 						row10.DISPLAY_NAME = row2.DISPLAY_NAME;
 						row10.CREATED_BY = row2.CREATED_BY;
@@ -2222,9 +1934,8 @@ public class RegionalOfficeLoader {
 						row10.UPDATED_BY = row2.UPDATED_BY;
 						row10.UPDATED_DATE = row2.UPDATED_DATE;
 						row10.OFFICE_SHORT_NAME = row2.OFFICE_SHORT_NAME;
-						row10.parent_id = row2.parent_id;
+						row10.PARENT_OFFICE_ID = row2.PARENT_OFFICE_ID;
 						row10.STATUS_ID = row2.STATUS_ID;
-						row10.VERSION_NO = row2.VERSION_NO;
 						row10.OFFICE_CODE_ID = row2.OFFICE_CODE_ID;
 						row10.parent_office_num = row2.parent_office_num;
 						nb_line_ok_tFilterRow_5++;
@@ -2248,8 +1959,6 @@ public class RegionalOfficeLoader {
 						row4 = new row4Struct();
 						row4.GLOBAL_OFFICE_NUM = row10.GLOBAL_OFFICE_NUM;
 						row4.OFFICE_LEVEL_ID = row10.OFFICE_LEVEL_ID;
-						row4.SEARCH_ID = row10.SEARCH_ID;
-						row4.MAX_CHILD_COUNT = row10.MAX_CHILD_COUNT;
 						row4.LOCAL_REMOTE_FLAG = row10.LOCAL_REMOTE_FLAG;
 						row4.DISPLAY_NAME = row10.DISPLAY_NAME;
 						row4.CREATED_BY = row10.CREATED_BY;
@@ -2257,9 +1966,8 @@ public class RegionalOfficeLoader {
 						row4.UPDATED_BY = row10.UPDATED_BY;
 						row4.UPDATED_DATE = row10.UPDATED_DATE;
 						row4.OFFICE_SHORT_NAME = row10.OFFICE_SHORT_NAME;
-						row4.parent_id = row10.parent_id;
+						row4.parent_id = row10.PARENT_OFFICE_ID;
 						row4.STATUS_ID = row10.STATUS_ID;
-						row4.VERSION_NO = row10.VERSION_NO;
 						row4.OFFICE_CODE_ID = row10.OFFICE_CODE_ID;
 						row4.parent_office_num = row10.parent_office_num;
 
@@ -2282,9 +1990,6 @@ public class RegionalOfficeLoader {
 							currentComponent = "tFilterColumns_1";
 
 							row5.GLOBAL_OFFICE_NUM = row4.GLOBAL_OFFICE_NUM;
-							row5.OFFICE_LEVEL_ID = row4.OFFICE_LEVEL_ID;
-							row5.SEARCH_ID = row4.SEARCH_ID;
-							row5.MAX_CHILD_COUNT = row4.MAX_CHILD_COUNT;
 							row5.LOCAL_REMOTE_FLAG = row4.LOCAL_REMOTE_FLAG;
 							row5.DISPLAY_NAME = row4.DISPLAY_NAME;
 							row5.CREATED_BY = row4.CREATED_BY;
@@ -2293,7 +1998,6 @@ public class RegionalOfficeLoader {
 							row5.UPDATED_DATE = row4.UPDATED_DATE;
 							row5.OFFICE_SHORT_NAME = row4.OFFICE_SHORT_NAME;
 							row5.STATUS_ID = row4.STATUS_ID;
-							row5.VERSION_NO = row4.VERSION_NO;
 							row5.OFFICE_CODE_ID = row4.OFFICE_CODE_ID;
 							row5.head_office_id = row4.head_office_id;
 							/**
@@ -2309,43 +2013,26 @@ public class RegionalOfficeLoader {
 							int updateFlag_tMysqlOutput_5 = 0;
 
 							pstmtUpdate_tMysqlOutput_5.setShort(1,
-									row5.OFFICE_LEVEL_ID);
+									row5.LOCAL_REMOTE_FLAG);
 
-							if (row5.SEARCH_ID == null) {
+							if (row5.DISPLAY_NAME == null) {
 								pstmtUpdate_tMysqlOutput_5.setNull(2,
 										java.sql.Types.VARCHAR);
 
 							} else {
 
 								pstmtUpdate_tMysqlOutput_5.setString(2,
-										row5.SEARCH_ID);
-
-							}
-
-							pstmtUpdate_tMysqlOutput_5.setInt(3,
-									row5.MAX_CHILD_COUNT);
-
-							pstmtUpdate_tMysqlOutput_5.setShort(4,
-									row5.LOCAL_REMOTE_FLAG);
-
-							if (row5.DISPLAY_NAME == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(5,
-										java.sql.Types.VARCHAR);
-
-							} else {
-
-								pstmtUpdate_tMysqlOutput_5.setString(5,
 										row5.DISPLAY_NAME);
 
 							}
 
 							if (row5.CREATED_BY == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(6,
+								pstmtUpdate_tMysqlOutput_5.setNull(3,
 										java.sql.Types.INTEGER);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setShort(6,
+								pstmtUpdate_tMysqlOutput_5.setShort(3,
 										row5.CREATED_BY);
 
 							}
@@ -2358,27 +2045,27 @@ public class RegionalOfficeLoader {
 										.getTime();
 								if (date_tMysqlOutput_5 < year1_tMysqlOutput_5
 										|| date_tMysqlOutput_5 >= year10000_tMysqlOutput_5) {
-									pstmtUpdate_tMysqlOutput_5.setString(7,
+									pstmtUpdate_tMysqlOutput_5.setString(4,
 											"0000-00-00 00:00:00");
 								} else {
-									pstmtUpdate_tMysqlOutput_5.setTimestamp(7,
+									pstmtUpdate_tMysqlOutput_5.setTimestamp(4,
 											new java.sql.Timestamp(
 													date_tMysqlOutput_5));
 								}
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setNull(7,
+								pstmtUpdate_tMysqlOutput_5.setNull(4,
 										java.sql.Types.DATE);
 
 							}
 
 							if (row5.UPDATED_BY == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(8,
+								pstmtUpdate_tMysqlOutput_5.setNull(5,
 										java.sql.Types.INTEGER);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setShort(8,
+								pstmtUpdate_tMysqlOutput_5.setShort(5,
 										row5.UPDATED_BY);
 
 							}
@@ -2391,66 +2078,63 @@ public class RegionalOfficeLoader {
 										.getTime();
 								if (date_tMysqlOutput_5 < year1_tMysqlOutput_5
 										|| date_tMysqlOutput_5 >= year10000_tMysqlOutput_5) {
-									pstmtUpdate_tMysqlOutput_5.setString(9,
+									pstmtUpdate_tMysqlOutput_5.setString(6,
 											"0000-00-00 00:00:00");
 								} else {
-									pstmtUpdate_tMysqlOutput_5.setTimestamp(9,
+									pstmtUpdate_tMysqlOutput_5.setTimestamp(6,
 											new java.sql.Timestamp(
 													date_tMysqlOutput_5));
 								}
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setNull(9,
+								pstmtUpdate_tMysqlOutput_5.setNull(6,
 										java.sql.Types.DATE);
 
 							}
 
 							if (row5.OFFICE_SHORT_NAME == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(10,
+								pstmtUpdate_tMysqlOutput_5.setNull(7,
 										java.sql.Types.VARCHAR);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setString(10,
+								pstmtUpdate_tMysqlOutput_5.setString(7,
 										row5.OFFICE_SHORT_NAME);
 
 							}
 
-							pstmtUpdate_tMysqlOutput_5.setShort(11,
+							pstmtUpdate_tMysqlOutput_5.setShort(8,
 									row5.STATUS_ID);
 
-							pstmtUpdate_tMysqlOutput_5.setInt(12,
-									row5.VERSION_NO);
-
 							if (row5.OFFICE_CODE_ID == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(13,
+								pstmtUpdate_tMysqlOutput_5.setNull(9,
 										java.sql.Types.INTEGER);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setShort(13,
+								pstmtUpdate_tMysqlOutput_5.setShort(9,
 										row5.OFFICE_CODE_ID);
 
 							}
 
 							if (row5.head_office_id == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(14,
+								pstmtUpdate_tMysqlOutput_5.setNull(10,
 										java.sql.Types.INTEGER);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setShort(14,
+								pstmtUpdate_tMysqlOutput_5.setShort(10,
 										row5.head_office_id);
 
 							}
 
 							if (row5.GLOBAL_OFFICE_NUM == null) {
-								pstmtUpdate_tMysqlOutput_5.setNull(15,
+								pstmtUpdate_tMysqlOutput_5.setNull(11,
 										java.sql.Types.VARCHAR);
 
 							} else {
 
-								pstmtUpdate_tMysqlOutput_5.setString(15,
+								pstmtUpdate_tMysqlOutput_5.setString(11,
 										row5.GLOBAL_OFFICE_NUM);
 
 							}
@@ -2479,43 +2163,26 @@ public class RegionalOfficeLoader {
 								}
 
 								pstmtInsert_tMysqlOutput_5.setShort(2,
-										row5.OFFICE_LEVEL_ID);
+										row5.LOCAL_REMOTE_FLAG);
 
-								if (row5.SEARCH_ID == null) {
+								if (row5.DISPLAY_NAME == null) {
 									pstmtInsert_tMysqlOutput_5.setNull(3,
 											java.sql.Types.VARCHAR);
 
 								} else {
 
 									pstmtInsert_tMysqlOutput_5.setString(3,
-											row5.SEARCH_ID);
-
-								}
-
-								pstmtInsert_tMysqlOutput_5.setInt(4,
-										row5.MAX_CHILD_COUNT);
-
-								pstmtInsert_tMysqlOutput_5.setShort(5,
-										row5.LOCAL_REMOTE_FLAG);
-
-								if (row5.DISPLAY_NAME == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(6,
-											java.sql.Types.VARCHAR);
-
-								} else {
-
-									pstmtInsert_tMysqlOutput_5.setString(6,
 											row5.DISPLAY_NAME);
 
 								}
 
 								if (row5.CREATED_BY == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(7,
+									pstmtInsert_tMysqlOutput_5.setNull(4,
 											java.sql.Types.INTEGER);
 
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setShort(7,
+									pstmtInsert_tMysqlOutput_5.setShort(4,
 											row5.CREATED_BY);
 
 								}
@@ -2528,29 +2195,29 @@ public class RegionalOfficeLoader {
 											.getTime();
 									if (date_tMysqlOutput_5 < year1_tMysqlOutput_5
 											|| date_tMysqlOutput_5 >= year10000_tMysqlOutput_5) {
-										pstmtInsert_tMysqlOutput_5.setString(8,
+										pstmtInsert_tMysqlOutput_5.setString(5,
 												"0000-00-00 00:00:00");
 									} else {
 										pstmtInsert_tMysqlOutput_5
 												.setTimestamp(
-														8,
+														5,
 														new java.sql.Timestamp(
 																date_tMysqlOutput_5));
 									}
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setNull(8,
+									pstmtInsert_tMysqlOutput_5.setNull(5,
 											java.sql.Types.DATE);
 
 								}
 
 								if (row5.UPDATED_BY == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(9,
+									pstmtInsert_tMysqlOutput_5.setNull(6,
 											java.sql.Types.INTEGER);
 
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setShort(9,
+									pstmtInsert_tMysqlOutput_5.setShort(6,
 											row5.UPDATED_BY);
 
 								}
@@ -2563,57 +2230,54 @@ public class RegionalOfficeLoader {
 											.getTime();
 									if (date_tMysqlOutput_5 < year1_tMysqlOutput_5
 											|| date_tMysqlOutput_5 >= year10000_tMysqlOutput_5) {
-										pstmtInsert_tMysqlOutput_5.setString(
-												10, "0000-00-00 00:00:00");
+										pstmtInsert_tMysqlOutput_5.setString(7,
+												"0000-00-00 00:00:00");
 									} else {
 										pstmtInsert_tMysqlOutput_5
 												.setTimestamp(
-														10,
+														7,
 														new java.sql.Timestamp(
 																date_tMysqlOutput_5));
 									}
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setNull(10,
+									pstmtInsert_tMysqlOutput_5.setNull(7,
 											java.sql.Types.DATE);
 
 								}
 
 								if (row5.OFFICE_SHORT_NAME == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(11,
+									pstmtInsert_tMysqlOutput_5.setNull(8,
 											java.sql.Types.VARCHAR);
 
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setString(11,
+									pstmtInsert_tMysqlOutput_5.setString(8,
 											row5.OFFICE_SHORT_NAME);
 
 								}
 
-								pstmtInsert_tMysqlOutput_5.setShort(12,
+								pstmtInsert_tMysqlOutput_5.setShort(9,
 										row5.STATUS_ID);
 
-								pstmtInsert_tMysqlOutput_5.setInt(13,
-										row5.VERSION_NO);
-
 								if (row5.OFFICE_CODE_ID == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(14,
+									pstmtInsert_tMysqlOutput_5.setNull(10,
 											java.sql.Types.INTEGER);
 
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setShort(14,
+									pstmtInsert_tMysqlOutput_5.setShort(10,
 											row5.OFFICE_CODE_ID);
 
 								}
 
 								if (row5.head_office_id == null) {
-									pstmtInsert_tMysqlOutput_5.setNull(15,
+									pstmtInsert_tMysqlOutput_5.setNull(11,
 											java.sql.Types.INTEGER);
 
 								} else {
 
-									pstmtInsert_tMysqlOutput_5.setShort(15,
+									pstmtInsert_tMysqlOutput_5.setShort(11,
 											row5.head_office_id);
 
 								}
@@ -2628,6 +2292,8 @@ public class RegionalOfficeLoader {
 								}
 							}
 							nb_line_tMysqlOutput_5++;
+							if (!whetherReject_tMysqlOutput_5) {
+							}
 							/**
 							 * [tMysqlOutput_5 main ] stop
 							 */
@@ -2671,16 +2337,19 @@ public class RegionalOfficeLoader {
 			 * [tFilterRow_1 end ] stop
 			 */
 			/**
-			 * [tFilterColumns_2 end ] start
+			 * [tMap_1 end ] start
 			 */
 
-			currentComponent = "tFilterColumns_2";
+			currentComponent = "tMap_1";
 
-			ok_Hash.put("tFilterColumns_2", true);
-			end_Hash.put("tFilterColumns_2", System.currentTimeMillis());
+			// ###############################
+			// # Lookup hashes releasing
+
+			ok_Hash.put("tMap_1", true);
+			end_Hash.put("tMap_1", System.currentTimeMillis());
 
 			/**
-			 * [tFilterColumns_2 end ] stop
+			 * [tMap_1 end ] stop
 			 */
 			/**
 			 * [tMysqlOutput_1 end ] start
@@ -2696,11 +2365,6 @@ public class RegionalOfficeLoader {
 			if (pstmtInsert_tMysqlOutput_1 != null) {
 
 				pstmtInsert_tMysqlOutput_1.close();
-
-			}
-			if (pstmt_tMysqlOutput_1 != null) {
-
-				pstmt_tMysqlOutput_1.close();
 
 			}
 
@@ -2724,18 +2388,6 @@ public class RegionalOfficeLoader {
 
 			/**
 			 * [tMysqlOutput_1 end ] stop
-			 */
-			/**
-			 * [tMysqlCommit_2 end ] start
-			 */
-
-			currentComponent = "tMysqlCommit_2";
-
-			ok_Hash.put("tMysqlCommit_2", true);
-			end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
-
-			/**
-			 * [tMysqlCommit_2 end ] stop
 			 */
 
 			/**
@@ -2812,8 +2464,57 @@ public class RegionalOfficeLoader {
 			ok_Hash.put("tMysqlOutput_5", true);
 			end_Hash.put("tMysqlOutput_5", System.currentTimeMillis());
 
+			tMysqlCommit_2Process();
 			/**
 			 * [tMysqlOutput_5 end ] stop
+			 */
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
+	public void tMysqlCommit_2Process() throws TalendException {
+		String currentComponent = "";
+		try {
+			/**
+			 * [tMysqlCommit_2 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlCommit_2", false);
+			start_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+			currentComponent = "tMysqlCommit_2";
+
+			/**
+			 * [tMysqlCommit_2 begin ] stop
+			 */
+			/**
+			 * [tMysqlCommit_2 main ] start
+			 */
+
+			currentComponent = "tMysqlCommit_2";
+
+			java.sql.Connection conn_tMysqlCommit_2 = (java.sql.Connection) globalMap
+					.get("conn_tMysqlConnection_2");
+			if (conn_tMysqlCommit_2 != null && !conn_tMysqlCommit_2.isClosed()) {
+				conn_tMysqlCommit_2.commit();
+				conn_tMysqlCommit_2.close();
+			}
+
+			/**
+			 * [tMysqlCommit_2 main ] stop
+			 */
+			/**
+			 * [tMysqlCommit_2 end ] start
+			 */
+
+			currentComponent = "tMysqlCommit_2";
+
+			ok_Hash.put("tMysqlCommit_2", true);
+			end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlCommit_2 end ] stop
 			 */
 
 		} catch (Exception e) {
@@ -3298,8 +2999,6 @@ public class RegionalOfficeLoader {
 			 * [tFileOutputDelimited_1 end ] stop
 			 */
 
-			tJava_1Process();
-
 		} catch (Exception e) {
 			throw new TalendException(this, e, currentComponent);
 		}
@@ -3314,32 +3013,6 @@ public class RegionalOfficeLoader {
 		short office_id;
 
 		String global_office_num;
-
-		short office_level_id;
-
-		String search_id;
-
-		int max_child_count;
-
-		short local_remote_flag;
-
-		String display_name;
-
-		Short created_by;
-
-		java.util.Date created_date;
-
-		Short updated_by;
-
-		java.util.Date updated_date;
-
-		String office_short_name;
-
-		short status_id;
-
-		int version_no;
-
-		Short office_code_id;
 
 		@Override
 		public int hashCode() {
@@ -3421,7 +3094,7 @@ public class RegionalOfficeLoader {
 			java.sql.Statement stmt_tMysqlInput_2 = conn_tMysqlInput_2
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_2 = stmt_tMysqlInput_2
-					.executeQuery("SELECT head_office_dim.office_id, head_office_dim.global_office_num,  head_office_dim.office_level_id, head_office_dim.search_id, head_office_dim.max_child_count,  head_office_dim.local_remote_flag, head_office_dim.display_name, head_office_dim.created_by,  head_office_dim.created_date, head_office_dim.updated_by, head_office_dim.updated_date,  head_office_dim.office_short_name, head_office_dim.status_id, head_office_dim.version_no,  head_office_dim.office_code_id  FROM head_office_dim");
+					.executeQuery("SELECT head_office_dim.office_id, head_office_dim.global_office_num FROM head_office_dim");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_2 = rs_tMysqlInput_2
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_2 = rsmd_tMysqlInput_2.getColumnCount();
@@ -3435,7 +3108,7 @@ public class RegionalOfficeLoader {
 			globalMap
 					.put(
 							"tMysqlInput_2_QUERY",
-							"SELECT head_office_dim.office_id, head_office_dim.global_office_num,  head_office_dim.office_level_id, head_office_dim.search_id, head_office_dim.max_child_count,  head_office_dim.local_remote_flag, head_office_dim.display_name, head_office_dim.created_by,  head_office_dim.created_date, head_office_dim.updated_by, head_office_dim.updated_date,  head_office_dim.office_short_name, head_office_dim.status_id, head_office_dim.version_no,  head_office_dim.office_code_id  FROM head_office_dim");
+							"SELECT head_office_dim.office_id, head_office_dim.global_office_num FROM head_office_dim");
 
 			while (rs_tMysqlInput_2.next()) {
 				nb_line_tMysqlInput_2++;
@@ -3472,231 +3145,6 @@ public class RegionalOfficeLoader {
 
 				}
 
-				if (colQtyInRs_tMysqlInput_2 < 3) {
-
-					row11.office_level_id = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(3) != null) {
-						row11.office_level_id = rs_tMysqlInput_2.getShort(3);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 4) {
-
-					row11.search_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(4) != null) {
-						row11.search_id = rs_tMysqlInput_2.getString(4);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 5) {
-
-					row11.max_child_count = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(5) != null) {
-						row11.max_child_count = rs_tMysqlInput_2.getInt(5);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 6) {
-
-					row11.local_remote_flag = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(6) != null) {
-						row11.local_remote_flag = rs_tMysqlInput_2.getShort(6);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 7) {
-
-					row11.display_name = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(7) != null) {
-						row11.display_name = rs_tMysqlInput_2.getString(7);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 8) {
-
-					row11.created_by = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(8) != null) {
-						row11.created_by = rs_tMysqlInput_2.getShort(8);
-					} else {
-
-						row11.created_by = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 9) {
-
-					row11.created_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getString(9) != null) {
-						String dateString_tMysqlInput_2 = rs_tMysqlInput_2
-								.getString(9);
-						if (!dateString_tMysqlInput_2.equals("0000-00-00")
-								&& !dateString_tMysqlInput_2
-										.equals("0000-00-00 00:00:00")) {
-							row11.created_date = rs_tMysqlInput_2
-									.getTimestamp(9);
-						} else {
-							row11.created_date = (java.util.Date) year0_tMysqlInput_2
-									.clone();
-						}
-					} else {
-						row11.created_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 10) {
-
-					row11.updated_by = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(10) != null) {
-						row11.updated_by = rs_tMysqlInput_2.getShort(10);
-					} else {
-
-						row11.updated_by = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 11) {
-
-					row11.updated_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getString(11) != null) {
-						String dateString_tMysqlInput_2 = rs_tMysqlInput_2
-								.getString(11);
-						if (!dateString_tMysqlInput_2.equals("0000-00-00")
-								&& !dateString_tMysqlInput_2
-										.equals("0000-00-00 00:00:00")) {
-							row11.updated_date = rs_tMysqlInput_2
-									.getTimestamp(11);
-						} else {
-							row11.updated_date = (java.util.Date) year0_tMysqlInput_2
-									.clone();
-						}
-					} else {
-						row11.updated_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 12) {
-
-					row11.office_short_name = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(12) != null) {
-						row11.office_short_name = rs_tMysqlInput_2
-								.getString(12);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 13) {
-
-					row11.status_id = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(13) != null) {
-						row11.status_id = rs_tMysqlInput_2.getShort(13);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 14) {
-
-					row11.version_no = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(14) != null) {
-						row11.version_no = rs_tMysqlInput_2.getInt(14);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_2 < 15) {
-
-					row11.office_code_id = null;
-
-				} else {
-
-					if (rs_tMysqlInput_2.getObject(15) != null) {
-						row11.office_code_id = rs_tMysqlInput_2.getShort(15);
-					} else {
-
-						row11.office_code_id = null;
-
-					}
-
-				}
-
 				/**
 				 * [tMysqlInput_2 begin ] stop
 				 */
@@ -3720,19 +3168,6 @@ public class RegionalOfficeLoader {
 
 				row11_HashRow.office_id = row11.office_id;
 				row11_HashRow.global_office_num = row11.global_office_num;
-				row11_HashRow.office_level_id = row11.office_level_id;
-				row11_HashRow.search_id = row11.search_id;
-				row11_HashRow.max_child_count = row11.max_child_count;
-				row11_HashRow.local_remote_flag = row11.local_remote_flag;
-				row11_HashRow.display_name = row11.display_name;
-				row11_HashRow.created_by = row11.created_by;
-				row11_HashRow.created_date = row11.created_date;
-				row11_HashRow.updated_by = row11.updated_by;
-				row11_HashRow.updated_date = row11.updated_date;
-				row11_HashRow.office_short_name = row11.office_short_name;
-				row11_HashRow.status_id = row11.status_id;
-				row11_HashRow.version_no = row11.version_no;
-				row11_HashRow.office_code_id = row11.office_code_id;
 				tHash_row11.put(row11_HashRow, row11_HashRow);
 
 				/**
@@ -4337,35 +3772,25 @@ public class RegionalOfficeLoader {
 				context.putAll(context_param);
 			}
 
-			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
-
-			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
-
-			OLTP_DB_NAME = (String) context.getProperty("OLTP_DB_NAME");
+			OLTP_DB_HOST = (String) context.getProperty("OLTP_DB_HOST");
 
 			OLTP_DB_PORT = (String) context.getProperty("OLTP_DB_PORT");
 
-			OLTP_HOST_NAME = (String) context.getProperty("OLTP_HOST_NAME");
+			OLTP_DB_SCHEMA = (String) context.getProperty("OLTP_DB_SCHEMA");
+
+			OLTP_DB_USER = (String) context.getProperty("OLTP_DB_USER");
+
+			OLTP_DB_PASSWORD = (String) context.getProperty("OLTP_DB_PASSWORD");
 
 			OLAP_DB_HOST = (String) context.getProperty("OLAP_DB_HOST");
 
 			OLAP_DB_PORT = (String) context.getProperty("OLAP_DB_PORT");
 
-			OLAP_DB_NAME = (String) context.getProperty("OLAP_DB_NAME");
+			OLAP_DB_SCHEMA = (String) context.getProperty("OLAP_DB_SCHEMA");
 
 			OLAP_DB_USER = (String) context.getProperty("OLAP_DB_USER");
 
 			OLAP_DB_PASSWORD = (String) context.getProperty("OLAP_DB_PASSWORD");
-
-			GK_DB_HOST = (String) context.getProperty("GK_DB_HOST");
-
-			GK_DB_PORT = (String) context.getProperty("GK_DB_PORT");
-
-			GK_DB_SCHEMA = (String) context.getProperty("GK_DB_SCHEMA");
-
-			GK_DB_USER = (String) context.getProperty("GK_DB_USER");
-
-			GK_DB_PASSWORD = (String) context.getProperty("GK_DB_PASSWORD");
 
 		} catch (java.io.IOException ie) {
 			System.err.println("Could not load context " + contextStr);
@@ -4381,6 +3806,42 @@ public class RegionalOfficeLoader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		runningThreadCount.add(1);
+		new Thread() {
+			public void run() {
+				java.util.Map threadRunResultMap = new java.util.HashMap();
+				threadRunResultMap.put(errorCode, null);
+				threadRunResultMap.put(status, "");
+				threadLocal.set(threadRunResultMap);
+
+				try {
+					((java.util.Map) threadLocal.get()).put(errorCode, null);
+					RegionalOfficeLoaderClass.tJava_1Process();
+					((java.util.Map) threadLocal.get()).put(status, "end");
+				} catch (TalendException e_tJava_1) {
+					((java.util.Map) threadLocal.get()).put(status, "failure");
+					e_tJava_1.printStackTrace();
+
+				} finally {
+				}
+
+				Integer localErrorCode = (Integer) (((java.util.Map) threadLocal
+						.get()).get(errorCode));
+				String localStatus = (String) (((java.util.Map) threadLocal
+						.get()).get(status));
+				if (localErrorCode != null) {
+					if (errorCode == null
+							|| localErrorCode.compareTo(errorCode) > 0) {
+						errorCode = localErrorCode;
+					}
+				} else if (!status.equals("failure")) {
+					status = localStatus;
+				}
+
+				runningThreadCount.add(-1);
+			}
+		}.start();
+
 		while (RegionalOfficeLoaderClass.runningThreadCount.getCount() > 0) {
 			try {
 				Thread.sleep(10);
@@ -4457,6 +3918,6 @@ public class RegionalOfficeLoader {
 	}
 }
 /*******************************************************************************
- * 120256 characters generated by Talend OpenStudio on the March 14, 2008
- * 2:17:06 PM GMT
+ * 106526 characters generated by Talend OpenStudio on the April 2, 2008 4:18:25
+ * PM BST
  ******************************************************************************/

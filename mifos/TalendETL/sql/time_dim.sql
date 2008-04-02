@@ -1,6 +1,5 @@
-DROP TABLE IF EXISTS `time_dim`;
 CREATE TABLE  `time_dim` (
-  `id` smallint(4) AUTO_INCREMENT NOT NULL,
+  `time_id` smallint(4) AUTO_INCREMENT NOT NULL,
   `date` date NOT NULL,
   `day_num_in_week` smallint(2) NOT NULL,
   `week_num_in_year` smallint(2) NOT NULL,
@@ -18,5 +17,5 @@ CREATE TABLE  `time_dim` (
   `last_day_in_month_flag` bit(1) NOT NULL,
   `holiday_flag` bit(1) NOT NULL,
   `holiday_name` varchar(200) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`time_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

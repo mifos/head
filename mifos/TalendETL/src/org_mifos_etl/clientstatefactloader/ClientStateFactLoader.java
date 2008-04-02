@@ -109,10 +109,15 @@ public class ClientStateFactLoader {
 		}
 	}
 
-	public void tMysqlCommit_2_error(Exception exception)
+	public void tJava_1_error(Exception exception) throws TalendException {
+		end_Hash.put("tJava_1", System.currentTimeMillis());
+		tJava_1_onSubJobError(exception);
+	}
+
+	public void tMysqlConnection_2_error(Exception exception)
 			throws TalendException {
-		end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
-		tMysqlCommit_2_onSubJobError(exception);
+		end_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
+		tMysqlConnection_2_onSubJobError(exception);
 	}
 
 	public void tMysqlConnection_1_error(Exception exception)
@@ -153,10 +158,10 @@ public class ClientStateFactLoader {
 		tMysqlInput_1_onSubJobError(exception);
 	}
 
-	public void tMysqlConnection_2_error(Exception exception)
+	public void tMysqlCommit_2_error(Exception exception)
 			throws TalendException {
-		end_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
-		tMysqlConnection_2_onSubJobError(exception);
+		end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+		tMysqlCommit_2_onSubJobError(exception);
 	}
 
 	public void tMysqlInput_2_error(Exception exception) throws TalendException {
@@ -167,6 +172,16 @@ public class ClientStateFactLoader {
 	public void tMysqlInput_4_error(Exception exception) throws TalendException {
 		end_Hash.put("tMysqlInput_4", System.currentTimeMillis());
 		tMysqlInput_4_onSubJobError(exception);
+	}
+
+	public void tMysqlInput_5_error(Exception exception) throws TalendException {
+		end_Hash.put("tMysqlInput_5", System.currentTimeMillis());
+		tMysqlInput_5_onSubJobError(exception);
+	}
+
+	public void tMysqlInput_7_error(Exception exception) throws TalendException {
+		end_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+		tMysqlInput_7_onSubJobError(exception);
 	}
 
 	public void tAdvancedHash_row2_error(Exception exception)
@@ -181,7 +196,23 @@ public class ClientStateFactLoader {
 		tMysqlInput_4_onSubJobError(exception);
 	}
 
-	public void tMysqlCommit_2_onSubJobError(Exception exception)
+	public void tAdvancedHash_row5_error(Exception exception)
+			throws TalendException {
+		end_Hash.put("tAdvancedHash_row5", System.currentTimeMillis());
+		tMysqlInput_5_onSubJobError(exception);
+	}
+
+	public void tAdvancedHash_row6_error(Exception exception)
+			throws TalendException {
+		end_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+		tMysqlInput_7_onSubJobError(exception);
+	}
+
+	public void tJava_1_onSubJobError(Exception exception)
+			throws TalendException {
+	}
+
+	public void tMysqlConnection_2_onSubJobError(Exception exception)
 			throws TalendException {
 	}
 
@@ -197,7 +228,7 @@ public class ClientStateFactLoader {
 			throws TalendException {
 	}
 
-	public void tMysqlConnection_2_onSubJobError(Exception exception)
+	public void tMysqlCommit_2_onSubJobError(Exception exception)
 			throws TalendException {
 	}
 
@@ -209,48 +240,135 @@ public class ClientStateFactLoader {
 			throws TalendException {
 	}
 
-	public void tMysqlCommit_2Process() throws TalendException {
+	public void tMysqlInput_5_onSubJobError(Exception exception)
+			throws TalendException {
+	}
+
+	public void tMysqlInput_7_onSubJobError(Exception exception)
+			throws TalendException {
+	}
+
+	public void tJava_1Process() throws TalendException {
 		String currentComponent = "";
 		try {
-			/**
-			 * [tMysqlCommit_2 begin ] start
-			 */
-
-			ok_Hash.put("tMysqlCommit_2", false);
-			start_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
-			currentComponent = "tMysqlCommit_2";
 
 			/**
-			 * [tMysqlCommit_2 begin ] stop
-			 */
-			/**
-			 * [tMysqlCommit_2 main ] start
+			 * [tJava_1 begin ] start
 			 */
 
-			currentComponent = "tMysqlCommit_2";
+			ok_Hash.put("tJava_1", false);
+			start_Hash.put("tJava_1", System.currentTimeMillis());
+			currentComponent = "tJava_1";
 
-			java.sql.Connection conn_tMysqlCommit_2 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_2");
-			if (conn_tMysqlCommit_2 != null && !conn_tMysqlCommit_2.isClosed()) {
-				conn_tMysqlCommit_2.commit();
-				conn_tMysqlCommit_2.close();
-			}
+			java.util.Properties p = new java.util.Properties();
 
-			/**
-			 * [tMysqlCommit_2 main ] stop
-			 */
-			/**
-			 * [tMysqlCommit_2 end ] start
-			 */
+			java.io.InputStream inStream = this.getClass().getClassLoader()
+					.getResourceAsStream("hibernate.properties");
 
-			currentComponent = "tMysqlCommit_2";
-
-			ok_Hash.put("tMysqlCommit_2", true);
-			end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+			p.load(inStream);
+			OLTP_DB_PASSWORD = (String) p.get("OLTP_DB_PASSWORD");
+			OLTP_DB_USER = (String) p.get("OLTP_DB_USER");
+			OLTP_DB_SCHEMA = (String) p.get("OLTP_DB_NAME");
+			OLTP_DB_PORT = (String) p.get("OLTP_DB_PORT");
+			OLTP_DB_HOST = (String) p.get("OLTP_HOST_NAME");
+			OLAP_DB_HOST = (String) p.get("OLAP_DB_HOST");
+			OLAP_DB_PORT = (String) p.get("OLAP_DB_PORT");
+			OLAP_DB_SCHEMA = (String) p.get("OLAP_DB_NAME");
+			OLAP_DB_USER = (String) p.get("OLAP_DB_USER");
+			OLAP_DB_PASSWORD = (String) p.get("OLAP_DB_PASSWORD");
 
 			/**
-			 * [tMysqlCommit_2 end ] stop
+			 * [tJava_1 begin ] stop
 			 */
+			/**
+			 * [tJava_1 main ] start
+			 */
+
+			currentComponent = "tJava_1";
+
+			/**
+			 * [tJava_1 main ] stop
+			 */
+
+			/**
+			 * [tJava_1 end ] start
+			 */
+
+			currentComponent = "tJava_1";
+
+			ok_Hash.put("tJava_1", true);
+			end_Hash.put("tJava_1", System.currentTimeMillis());
+
+			/**
+			 * [tJava_1 end ] stop
+			 */
+
+			tMysqlConnection_2Process();
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
+	public void tMysqlConnection_2Process() throws TalendException {
+		String currentComponent = "";
+		try {
+
+			/**
+			 * [tMysqlConnection_2 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlConnection_2", false);
+			start_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
+			currentComponent = "tMysqlConnection_2";
+
+			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
+
+			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
+					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
+					+ "noDatetimeStringSync=true";
+
+			String userName_tMysqlConnection_2 = OLAP_DB_USER;
+
+			String password_tMysqlConnection_2 = OLAP_DB_PASSWORD;
+
+			java.sql.Connection conn_tMysqlConnection_2 = java.sql.DriverManager
+					.getConnection(url_tMysqlConnection_2,
+							userName_tMysqlConnection_2,
+							password_tMysqlConnection_2);
+
+			conn_tMysqlConnection_2.setAutoCommit(false);
+
+			globalMap.put("conn_" + "tMysqlConnection_2",
+					conn_tMysqlConnection_2);
+
+			/**
+			 * [tMysqlConnection_2 begin ] stop
+			 */
+			/**
+			 * [tMysqlConnection_2 main ] start
+			 */
+
+			currentComponent = "tMysqlConnection_2";
+
+			/**
+			 * [tMysqlConnection_2 main ] stop
+			 */
+
+			/**
+			 * [tMysqlConnection_2 end ] start
+			 */
+
+			currentComponent = "tMysqlConnection_2";
+
+			ok_Hash.put("tMysqlConnection_2", true);
+			end_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlConnection_2 end ] stop
+			 */
+
+			tMysqlConnection_1Process();
 
 		} catch (Exception e) {
 			throw new TalendException(this, e, currentComponent);
@@ -332,6 +450,8 @@ public class ClientStateFactLoader {
 
 		Short status_id;
 
+		short time_id;
+
 		@Override
 		public int hashCode() {
 			if (this.hashCodeDirty) {
@@ -339,6 +459,8 @@ public class ClientStateFactLoader {
 				int result = DEFAULT_HASHCODE;
 
 				result = prime * result + (int) this.client_id;
+
+				result = prime * result + (int) this.time_id;
 
 				this.hashCode = result;
 				this.hashCodeDirty = false;
@@ -357,6 +479,9 @@ public class ClientStateFactLoader {
 			final client_fact_Struct other = (client_fact_Struct) obj;
 
 			if (this.client_id != other.client_id)
+				return false;
+
+			if (this.time_id != other.time_id)
 				return false;
 
 			return true;
@@ -424,6 +549,7 @@ public class ClientStateFactLoader {
 		String currentComponent = "";
 		try {
 			tMysqlInput_4Process();
+			tMysqlInput_5Process();
 
 			row3Struct row3 = new row3Struct();
 			client_fact_Struct client_fact_ = new client_fact_Struct();
@@ -436,12 +562,6 @@ public class ClientStateFactLoader {
 			start_Hash.put("tMysqlOutput_2", System.currentTimeMillis());
 			currentComponent = "tMysqlOutput_2";
 
-			int keyCount_tMysqlOutput_2 = 1;
-			if (keyCount_tMysqlOutput_2 < 1) {
-				throw new Exception(
-						"For update or delete, Schema must have a key");
-			}
-
 			int nb_line_tMysqlOutput_2 = 0;
 			int nb_line_update_tMysqlOutput_2 = 0;
 			int nb_line_inserted_tMysqlOutput_2 = 0;
@@ -451,7 +571,7 @@ public class ClientStateFactLoader {
 			int updatedCount_tMysqlOutput_2 = 0;
 			int insertedCount_tMysqlOutput_2 = 0;
 
-			String tableName_tMysqlOutput_2 = "client_fact";
+			String tableName_tMysqlOutput_2 = "client_status_fact";
 			boolean whetherReject_tMysqlOutput_2 = false;
 
 			java.util.Calendar calendar_tMysqlOutput_2 = java.util.Calendar
@@ -468,34 +588,10 @@ public class ClientStateFactLoader {
 			conn_tMysqlOutput_2 = (java.sql.Connection) globalMap
 					.get("conn_tMysqlConnection_2");
 
-			java.sql.DatabaseMetaData dbMetaData_tMysqlOutput_2 = conn_tMysqlOutput_2
-					.getMetaData();
-			java.sql.ResultSet rsTable_tMysqlOutput_2 = dbMetaData_tMysqlOutput_2
-					.getTables(null, null, null, new String[] { "TABLE" });
-			boolean whetherExist_tMysqlOutput_2 = false;
-			while (rsTable_tMysqlOutput_2.next()) {
-				String table_tMysqlOutput_2 = rsTable_tMysqlOutput_2
-						.getString("TABLE_NAME");
-				if (table_tMysqlOutput_2.equalsIgnoreCase("client_fact")) {
-					whetherExist_tMysqlOutput_2 = true;
-					break;
-				}
-			}
-			if (!whetherExist_tMysqlOutput_2) {
-				java.sql.Statement stmtCreate_tMysqlOutput_2 = conn_tMysqlOutput_2
-						.createStatement();
-				stmtCreate_tMysqlOutput_2
-						.execute("CREATE TABLE `"
-								+ tableName_tMysqlOutput_2
-								+ "`(`client_id` INT(0)  not null,`status_id` SMALLINT(0)  ,primary key(`client_id`))");
-			}
-			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_2 = conn_tMysqlOutput_2
-					.prepareStatement("UPDATE `" + "client_fact"
-							+ "` SET `status_id` = ? WHERE `client_id` = ?");
-
-			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_2 = conn_tMysqlOutput_2
-					.prepareStatement("INSERT INTO `" + "client_fact"
-							+ "` (`client_id`,`status_id`) VALUES (?,?)");
+			java.sql.PreparedStatement pstmt_tMysqlOutput_2 = conn_tMysqlOutput_2
+					.prepareStatement("INSERT INTO `"
+							+ "client_status_fact"
+							+ "` (`client_id`,`status_id`,`time_id`) VALUES (?,?,?)");
 
 			/**
 			 * [tMysqlOutput_2 begin ] stop
@@ -516,13 +612,15 @@ public class ClientStateFactLoader {
 					.get("tHash_Lookup_row4");
 			row4Struct row4HashKey = new row4Struct();
 			row4Struct row4Default = new row4Struct();
+
+			org.talend.designer.components.commons.AdvancedLookup<row5Struct> tHash_Lookup_row5 = (org.talend.designer.components.commons.AdvancedLookup<row5Struct>) globalMap
+					.get("tHash_Lookup_row5");
+			row5Struct row5HashKey = new row5Struct();
+			row5Struct row5Default = new row5Struct();
 			// ###############################
 
 			// ###############################
 			// # Vars initialization
-			class Var__tMap_2__Struct {
-			}
-			Var__tMap_2__Struct Var__tMap_2 = new Var__tMap_2__Struct();
 			// ###############################
 
 			// ###############################
@@ -662,104 +760,116 @@ public class ClientStateFactLoader {
 					row4 = fromLookup_row4;
 				}
 
-				// ###############################
+				boolean forceLooprow5 = false;
+				int sizeResultsFromLookup_row5 = -1;
 
-				{ // start of Var scope
+				boolean hasAtLeastOneValidLookup_row5 = false;
+				Object[] row5Array = null;
+
+				if (!rejectedInnerJoin_tMap_2) { // G 35
+					row5Array = tHash_Lookup_row5.getResultArray();
+
+					if (row5Array.length == 0) {
+
+						forceLooprow5 = true;
+					}
+				} // G 35
+				else { // G 36
+					forceLooprow5 = true;
+				} // G 36
+				sizeResultsFromLookup_row5 = row5Array != null ? row5Array.length
+						: -1;
+
+				for (int irow5 = 0; sizeResultsFromLookup_row5 != -1
+						&& irow5 < sizeResultsFromLookup_row5 || forceLooprow5; irow5++) {
+
+					row5Struct fromLookup_row5 = null;
+					row5Struct row5 = row5Default;
+
+					if (!forceLooprow5) { // G 46
+
+						if (irow5 < row5Array.length) {
+							fromLookup_row5 = (row5Struct) row5Array[irow5];
+							row5 = fromLookup_row5;
+						}
+
+					} // G 46
+
+					forceLooprow5 = false;
 
 					// ###############################
-					// # Vars tables
-					Var__tMap_2__Struct Var = Var__tMap_2;
-					// ###############################
 
-					// ###############################
-					// # Output tables
-					client_fact_ = null;
+					{ // start of Var scope
 
-					if (!rejectedInnerJoin_tMap_2) {
+						// ###############################
+						// # Vars tables
+						// ###############################
 
-						// # Output table : 'client_fact_'
-						client_fact__tmp.client_id = row4.client_id;
-						client_fact__tmp.status_id = row3.STATUS_ID;
-						client_fact_ = client_fact__tmp;
-					} // closing inner join bracket (2)
-					// ###############################
+						// ###############################
+						// # Output tables
+						client_fact_ = null;
 
-				} // end of Var scope
+						if (!rejectedInnerJoin_tMap_2) {
 
-				rejectedInnerJoin_tMap_2 = false;
+							// # Output table : 'client_fact_'
+							client_fact__tmp.client_id = row4.client_id;
+							client_fact__tmp.status_id = row3.STATUS_ID;
+							client_fact__tmp.time_id = row5.time_id;
+							client_fact_ = client_fact__tmp;
+						} // closing inner join bracket (2)
+						// ###############################
 
-				/**
-				 * [tMap_2 main ] stop
-				 */
-				// Start of branch "client_fact_"
-				if (client_fact_ != null) {
+					} // end of Var scope
+
+					rejectedInnerJoin_tMap_2 = false;
 
 					/**
-					 * [tMysqlOutput_2 main ] start
+					 * [tMap_2 main ] stop
 					 */
+					// Start of branch "client_fact_"
+					if (client_fact_ != null) {
 
-					currentComponent = "tMysqlOutput_2";
+						/**
+						 * [tMysqlOutput_2 main ] start
+						 */
 
-					whetherReject_tMysqlOutput_2 = false;
-					int updateFlag_tMysqlOutput_2 = 0;
+						currentComponent = "tMysqlOutput_2";
 
-					if (client_fact_.status_id == null) {
-						pstmtUpdate_tMysqlOutput_2.setNull(1,
-								java.sql.Types.INTEGER);
+						whetherReject_tMysqlOutput_2 = false;
 
-					} else {
-
-						pstmtUpdate_tMysqlOutput_2.setShort(1,
-								client_fact_.status_id);
-
-					}
-
-					pstmtUpdate_tMysqlOutput_2
-							.setInt(2, client_fact_.client_id);
-
-					try {
-						updateFlag_tMysqlOutput_2 = pstmtUpdate_tMysqlOutput_2
-								.executeUpdate();
-						updatedCount_tMysqlOutput_2 = updatedCount_tMysqlOutput_2
-								+ updateFlag_tMysqlOutput_2;
-
-					} catch (Exception e) {
-						whetherReject_tMysqlOutput_2 = true;
-						System.err.print(e.getMessage());
-					}
-					if (updateFlag_tMysqlOutput_2 == 0) {
-
-						pstmtInsert_tMysqlOutput_2.setInt(1,
-								client_fact_.client_id);
+						pstmt_tMysqlOutput_2.setInt(1, client_fact_.client_id);
 
 						if (client_fact_.status_id == null) {
-							pstmtInsert_tMysqlOutput_2.setNull(2,
+							pstmt_tMysqlOutput_2.setNull(2,
 									java.sql.Types.INTEGER);
 
 						} else {
 
-							pstmtInsert_tMysqlOutput_2.setShort(2,
+							pstmt_tMysqlOutput_2.setShort(2,
 									client_fact_.status_id);
 
 						}
 
+						pstmt_tMysqlOutput_2.setShort(3, client_fact_.time_id);
+
 						try {
 							insertedCount_tMysqlOutput_2 = insertedCount_tMysqlOutput_2
-									+ pstmtInsert_tMysqlOutput_2
-											.executeUpdate();
+									+ pstmt_tMysqlOutput_2.executeUpdate();
+							nb_line_tMysqlOutput_2++;
 						} catch (Exception e) {
 							whetherReject_tMysqlOutput_2 = true;
 							System.err.print(e.getMessage());
 						}
-					}
-					nb_line_tMysqlOutput_2++;
-					if (!whetherReject_tMysqlOutput_2) {
-					}
-					/**
-					 * [tMysqlOutput_2 main ] stop
-					 */
 
-				} // End of branch "client_fact_"
+						if (!whetherReject_tMysqlOutput_2) {
+						}
+						/**
+						 * [tMysqlOutput_2 main ] stop
+						 */
+
+					} // End of branch "client_fact_"
+
+				} // close loop of lookup 'row5'
 
 				/**
 				 * [tMysqlInput_3 end ] start
@@ -789,6 +899,9 @@ public class ClientStateFactLoader {
 			globalMap.remove("tHash_row4");
 			// ###############################
 
+			globalMap.remove("tHash_row5");
+			// ###############################
+
 			ok_Hash.put("tMap_2", true);
 			end_Hash.put("tMap_2", System.currentTimeMillis());
 
@@ -801,14 +914,9 @@ public class ClientStateFactLoader {
 
 			currentComponent = "tMysqlOutput_2";
 
-			if (pstmtUpdate_tMysqlOutput_2 != null) {
+			if (pstmt_tMysqlOutput_2 != null) {
 
-				pstmtUpdate_tMysqlOutput_2.close();
-
-			}
-			if (pstmtInsert_tMysqlOutput_2 != null) {
-
-				pstmtInsert_tMysqlOutput_2.close();
+				pstmt_tMysqlOutput_2.close();
 
 			}
 
@@ -850,7 +958,9 @@ public class ClientStateFactLoader {
 
 		int client_id;
 
-		Short status_id;
+		short status_id;
+
+		short time_id;
 
 		@Override
 		public int hashCode() {
@@ -859,6 +969,8 @@ public class ClientStateFactLoader {
 				int result = DEFAULT_HASHCODE;
 
 				result = prime * result + (int) this.client_id;
+
+				result = prime * result + (int) this.time_id;
 
 				this.hashCode = result;
 				this.hashCodeDirty = false;
@@ -877,6 +989,9 @@ public class ClientStateFactLoader {
 			final client_factStruct other = (client_factStruct) obj;
 
 			if (this.client_id != other.client_id)
+				return false;
+
+			if (this.time_id != other.time_id)
 				return false;
 
 			return true;
@@ -912,6 +1027,7 @@ public class ClientStateFactLoader {
 		String currentComponent = "";
 		try {
 			tMysqlInput_2Process();
+			tMysqlInput_7Process();
 
 			row1Struct row1 = new row1Struct();
 			client_factStruct client_fact = new client_factStruct();
@@ -924,7 +1040,7 @@ public class ClientStateFactLoader {
 			start_Hash.put("tMysqlOutput_1", System.currentTimeMillis());
 			currentComponent = "tMysqlOutput_1";
 
-			int keyCount_tMysqlOutput_1 = 1;
+			int keyCount_tMysqlOutput_1 = 2;
 			if (keyCount_tMysqlOutput_1 < 1) {
 				throw new Exception(
 						"For update or delete, Schema must have a key");
@@ -939,7 +1055,7 @@ public class ClientStateFactLoader {
 			int updatedCount_tMysqlOutput_1 = 0;
 			int insertedCount_tMysqlOutput_1 = 0;
 
-			String tableName_tMysqlOutput_1 = "client_fact";
+			String tableName_tMysqlOutput_1 = "client_status_fact";
 			boolean whetherReject_tMysqlOutput_1 = false;
 
 			java.util.Calendar calendar_tMysqlOutput_1 = java.util.Calendar
@@ -956,34 +1072,15 @@ public class ClientStateFactLoader {
 			conn_tMysqlOutput_1 = (java.sql.Connection) globalMap
 					.get("conn_tMysqlConnection_2");
 
-			java.sql.DatabaseMetaData dbMetaData_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.getMetaData();
-			java.sql.ResultSet rsTable_tMysqlOutput_1 = dbMetaData_tMysqlOutput_1
-					.getTables(null, null, null, new String[] { "TABLE" });
-			boolean whetherExist_tMysqlOutput_1 = false;
-			while (rsTable_tMysqlOutput_1.next()) {
-				String table_tMysqlOutput_1 = rsTable_tMysqlOutput_1
-						.getString("TABLE_NAME");
-				if (table_tMysqlOutput_1.equalsIgnoreCase("client_fact")) {
-					whetherExist_tMysqlOutput_1 = true;
-					break;
-				}
-			}
-			if (!whetherExist_tMysqlOutput_1) {
-				java.sql.Statement stmtCreate_tMysqlOutput_1 = conn_tMysqlOutput_1
-						.createStatement();
-				stmtCreate_tMysqlOutput_1
-						.execute("CREATE TABLE `"
-								+ tableName_tMysqlOutput_1
-								+ "`(`client_id` INT(0)  not null,`status_id` SMALLINT(0)  ,primary key(`client_id`))");
-			}
 			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("UPDATE `" + "client_fact"
-							+ "` SET `status_id` = ? WHERE `client_id` = ?");
+					.prepareStatement("UPDATE `"
+							+ "client_status_fact"
+							+ "` SET `status_id` = ? WHERE `client_id` = ? AND `time_id` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_1 = conn_tMysqlOutput_1
-					.prepareStatement("INSERT INTO `" + "client_fact"
-							+ "` (`client_id`,`status_id`) VALUES (?,?)");
+					.prepareStatement("INSERT INTO `"
+							+ "client_status_fact"
+							+ "` (`client_id`,`status_id`,`time_id`) VALUES (?,?,?)");
 
 			/**
 			 * [tMysqlOutput_1 begin ] stop
@@ -1004,13 +1101,15 @@ public class ClientStateFactLoader {
 					.get("tHash_Lookup_row2");
 			row2Struct row2HashKey = new row2Struct();
 			row2Struct row2Default = new row2Struct();
+
+			org.talend.designer.components.commons.AdvancedLookup<row6Struct> tHash_Lookup_row6 = (org.talend.designer.components.commons.AdvancedLookup<row6Struct>) globalMap
+					.get("tHash_Lookup_row6");
+			row6Struct row6HashKey = new row6Struct();
+			row6Struct row6Default = new row6Struct();
 			// ###############################
 
 			// ###############################
 			// # Vars initialization
-			class Var__tMap_1__Struct {
-			}
-			Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
 			// ###############################
 
 			// ###############################
@@ -1182,123 +1281,153 @@ public class ClientStateFactLoader {
 					row2 = fromLookup_row2;
 				}
 
-				// ###############################
+				boolean forceLooprow6 = false;
+				int sizeResultsFromLookup_row6 = -1;
 
-				{ // start of Var scope
+				boolean hasAtLeastOneValidLookup_row6 = false;
+				Object[] row6Array = null;
+
+				if (!rejectedInnerJoin_tMap_1) { // G 35
+					row6Array = tHash_Lookup_row6.getResultArray();
+
+					if (row6Array.length == 0) {
+
+						forceLooprow6 = true;
+					}
+				} // G 35
+				else { // G 36
+					forceLooprow6 = true;
+				} // G 36
+				sizeResultsFromLookup_row6 = row6Array != null ? row6Array.length
+						: -1;
+
+				for (int irow6 = 0; sizeResultsFromLookup_row6 != -1
+						&& irow6 < sizeResultsFromLookup_row6 || forceLooprow6; irow6++) {
+
+					row6Struct fromLookup_row6 = null;
+					row6Struct row6 = row6Default;
+
+					if (!forceLooprow6) { // G 46
+
+						if (irow6 < row6Array.length) {
+							fromLookup_row6 = (row6Struct) row6Array[irow6];
+							row6 = fromLookup_row6;
+						}
+
+					} // G 46
+
+					forceLooprow6 = false;
 
 					// ###############################
-					// # Vars tables
-					Var__tMap_1__Struct Var = Var__tMap_1;
-					// ###############################
 
-					// ###############################
-					// # Output tables
-					client_fact = null;
+					{ // start of Var scope
 
-					if (!rejectedInnerJoin_tMap_1) {
+						// ###############################
+						// # Vars tables
+						// ###############################
 
-						// # Output table : 'client_fact'
-						client_fact_tmp.client_id = row2.client_id;
-						client_fact_tmp.status_id = new Integer(
-								(row1.status_id == 5 && row1.flag_id == 1) ? 5
-										: (row1.status_id == 5 && row1.flag_id == 2) ? 8
-												: (row1.status_id == 5 && row1.flag_id == 3) ? 6
-														: (row1.status_id == 5 && row1.flag_id == 4) ? 7
-																: (row1.status_id == 5 && row1.flag_id == 5) ? 9
-																		: (row1.status_id == 6 && row1.flag_id == 6) ? 10
-																				: (row1.status_id == 6 && row1.flag_id == 7) ? 12
-																						: (row1.status_id == 6 && row1.flag_id == 8) ? 11
-																								: (row1.status_id == 6 && row1.flag_id == 9) ? 13
-																										: (row1.status_id == 6 && row1.flag_id == 10) ? 14
-																												: (row1.status_id == 11 && row1.flag_id == 11) ? 5
-																														: (row1.status_id == 11 && row1.flag_id == 12) ? 8
-																																: (row1.status_id == 11 && row1.flag_id == 13) ? 6
-																																		: (row1.status_id == 11 && row1.flag_id == 14) ? 7
-																																				: (row1.status_id == 11 && row1.flag_id == 15) ? 9
-																																						: (row1.status_id == 12 && row1.flag_id == 16) ? 10
-																																								: (row1.status_id == 12 && row1.flag_id == 17) ? 12
-																																										: (row1.status_id == 12 && row1.flag_id == 18) ? 11
-																																												: (row1.status_id == 12 && row1.flag_id == 19) ? 13
-																																														: (row1.status_id == 12 && row1.flag_id == 20) ? 14
-																																																: row1.status_id)
-								.shortValue();
-						client_fact = client_fact_tmp;
-					} // closing inner join bracket (2)
-					// ###############################
+						// ###############################
+						// # Output tables
+						client_fact = null;
 
-				} // end of Var scope
+						if (!rejectedInnerJoin_tMap_1) {
 
-				rejectedInnerJoin_tMap_1 = false;
+							// # Output table : 'client_fact'
+							client_fact_tmp.client_id = row2.client_id;
+							client_fact_tmp.status_id = new Integer(
+									(row1.status_id == 5 && row1.flag_id == 1) ? 5
+											: (row1.status_id == 5 && row1.flag_id == 2) ? 8
+													: (row1.status_id == 5 && row1.flag_id == 3) ? 6
+															: (row1.status_id == 5 && row1.flag_id == 4) ? 7
+																	: (row1.status_id == 5 && row1.flag_id == 5) ? 9
+																			: (row1.status_id == 6 && row1.flag_id == 6) ? 10
+																					: (row1.status_id == 6 && row1.flag_id == 7) ? 12
+																							: (row1.status_id == 6 && row1.flag_id == 8) ? 11
+																									: (row1.status_id == 6 && row1.flag_id == 9) ? 13
+																											: (row1.status_id == 6 && row1.flag_id == 10) ? 14
+																													: (row1.status_id == 11 && row1.flag_id == 11) ? 5
+																															: (row1.status_id == 11 && row1.flag_id == 12) ? 8
+																																	: (row1.status_id == 11 && row1.flag_id == 13) ? 6
+																																			: (row1.status_id == 11 && row1.flag_id == 14) ? 7
+																																					: (row1.status_id == 11 && row1.flag_id == 15) ? 9
+																																							: (row1.status_id == 12 && row1.flag_id == 16) ? 10
+																																									: (row1.status_id == 12 && row1.flag_id == 17) ? 12
+																																											: (row1.status_id == 12 && row1.flag_id == 18) ? 11
+																																													: (row1.status_id == 12 && row1.flag_id == 19) ? 13
+																																															: (row1.status_id == 12 && row1.flag_id == 20) ? 14
+																																																	: row1.status_id)
+									.shortValue();
+							client_fact_tmp.time_id = row6.time_id;
+							client_fact = client_fact_tmp;
+						} // closing inner join bracket (2)
+						// ###############################
 
-				/**
-				 * [tMap_1 main ] stop
-				 */
-				// Start of branch "client_fact"
-				if (client_fact != null) {
+					} // end of Var scope
+
+					rejectedInnerJoin_tMap_1 = false;
 
 					/**
-					 * [tMysqlOutput_1 main ] start
+					 * [tMap_1 main ] stop
 					 */
+					// Start of branch "client_fact"
+					if (client_fact != null) {
 
-					currentComponent = "tMysqlOutput_1";
+						/**
+						 * [tMysqlOutput_1 main ] start
+						 */
 
-					whetherReject_tMysqlOutput_1 = false;
-					int updateFlag_tMysqlOutput_1 = 0;
+						currentComponent = "tMysqlOutput_1";
 
-					if (client_fact.status_id == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(1,
-								java.sql.Types.INTEGER);
-
-					} else {
+						whetherReject_tMysqlOutput_1 = false;
+						int updateFlag_tMysqlOutput_1 = 0;
 
 						pstmtUpdate_tMysqlOutput_1.setShort(1,
 								client_fact.status_id);
 
-					}
-
-					pstmtUpdate_tMysqlOutput_1.setInt(2, client_fact.client_id);
-
-					try {
-						updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
-								.executeUpdate();
-						updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
-								+ updateFlag_tMysqlOutput_1;
-
-					} catch (Exception e) {
-						whetherReject_tMysqlOutput_1 = true;
-						System.err.print(e.getMessage());
-					}
-					if (updateFlag_tMysqlOutput_1 == 0) {
-
-						pstmtInsert_tMysqlOutput_1.setInt(1,
+						pstmtUpdate_tMysqlOutput_1.setInt(2,
 								client_fact.client_id);
 
-						if (client_fact.status_id == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(2,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(2,
-									client_fact.status_id);
-
-						}
+						pstmtUpdate_tMysqlOutput_1.setShort(3,
+								client_fact.time_id);
 
 						try {
-							insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
-									+ pstmtInsert_tMysqlOutput_1
-											.executeUpdate();
+							updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
+									.executeUpdate();
+							updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
+									+ updateFlag_tMysqlOutput_1;
+
 						} catch (Exception e) {
 							whetherReject_tMysqlOutput_1 = true;
 							System.err.print(e.getMessage());
 						}
-					}
-					nb_line_tMysqlOutput_1++;
-					/**
-					 * [tMysqlOutput_1 main ] stop
-					 */
+						if (updateFlag_tMysqlOutput_1 == 0) {
 
-				} // End of branch "client_fact"
+							pstmtInsert_tMysqlOutput_1.setInt(1,
+									client_fact.client_id);
+
+							pstmtInsert_tMysqlOutput_1.setShort(2,
+									client_fact.status_id);
+
+							pstmtInsert_tMysqlOutput_1.setShort(3,
+									client_fact.time_id);
+
+							try {
+								insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
+										+ pstmtInsert_tMysqlOutput_1
+												.executeUpdate();
+							} catch (Exception e) {
+								whetherReject_tMysqlOutput_1 = true;
+								System.err.print(e.getMessage());
+							}
+						}
+						nb_line_tMysqlOutput_1++;
+						/**
+						 * [tMysqlOutput_1 main ] stop
+						 */
+
+					} // End of branch "client_fact"
+
+				} // close loop of lookup 'row6'
 
 				/**
 				 * [tMysqlInput_1 end ] start
@@ -1326,6 +1455,9 @@ public class ClientStateFactLoader {
 			// ###############################
 			// # Lookup hashes releasing
 			globalMap.remove("tHash_row2");
+			// ###############################
+
+			globalMap.remove("tHash_row6");
 			// ###############################
 
 			ok_Hash.put("tMap_1", true);
@@ -1378,65 +1510,48 @@ public class ClientStateFactLoader {
 		}
 	}
 
-	public void tMysqlConnection_2Process() throws TalendException {
+	public void tMysqlCommit_2Process() throws TalendException {
 		String currentComponent = "";
 		try {
-
 			/**
-			 * [tMysqlConnection_2 begin ] start
+			 * [tMysqlCommit_2 begin ] start
 			 */
 
-			ok_Hash.put("tMysqlConnection_2", false);
-			start_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
-			currentComponent = "tMysqlConnection_2";
-
-			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
-
-			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
-					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
-					+ "noDatetimeStringSync=true";
-
-			String userName_tMysqlConnection_2 = OLAP_DB_USER;
-
-			String password_tMysqlConnection_2 = OLAP_DB_PASSWORD;
-
-			java.sql.Connection conn_tMysqlConnection_2 = java.sql.DriverManager
-					.getConnection(url_tMysqlConnection_2,
-							userName_tMysqlConnection_2,
-							password_tMysqlConnection_2);
-
-			conn_tMysqlConnection_2.setAutoCommit(false);
-
-			globalMap.put("conn_" + "tMysqlConnection_2",
-					conn_tMysqlConnection_2);
+			ok_Hash.put("tMysqlCommit_2", false);
+			start_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
+			currentComponent = "tMysqlCommit_2";
 
 			/**
-			 * [tMysqlConnection_2 begin ] stop
+			 * [tMysqlCommit_2 begin ] stop
 			 */
 			/**
-			 * [tMysqlConnection_2 main ] start
+			 * [tMysqlCommit_2 main ] start
 			 */
 
-			currentComponent = "tMysqlConnection_2";
+			currentComponent = "tMysqlCommit_2";
+
+			java.sql.Connection conn_tMysqlCommit_2 = (java.sql.Connection) globalMap
+					.get("conn_tMysqlConnection_2");
+			if (conn_tMysqlCommit_2 != null && !conn_tMysqlCommit_2.isClosed()) {
+				conn_tMysqlCommit_2.commit();
+				conn_tMysqlCommit_2.close();
+			}
 
 			/**
-			 * [tMysqlConnection_2 main ] stop
+			 * [tMysqlCommit_2 main ] stop
 			 */
+			/**
+			 * [tMysqlCommit_2 end ] start
+			 */
+
+			currentComponent = "tMysqlCommit_2";
+
+			ok_Hash.put("tMysqlCommit_2", true);
+			end_Hash.put("tMysqlCommit_2", System.currentTimeMillis());
 
 			/**
-			 * [tMysqlConnection_2 end ] start
+			 * [tMysqlCommit_2 end ] stop
 			 */
-
-			currentComponent = "tMysqlConnection_2";
-
-			ok_Hash.put("tMysqlConnection_2", true);
-			end_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
-
-			/**
-			 * [tMysqlConnection_2 end ] stop
-			 */
-
-			tMysqlConnection_1Process();
 
 		} catch (Exception e) {
 			throw new TalendException(this, e, currentComponent);
@@ -1845,6 +1960,290 @@ public class ClientStateFactLoader {
 		}
 	}
 
+	private class row5Struct {
+
+		short time_id;
+
+	}
+
+	public void tMysqlInput_5Process() throws TalendException {
+		String currentComponent = "";
+		try {
+
+			row5Struct row5 = new row5Struct();
+
+			/**
+			 * [tAdvancedHash_row5 begin ] start
+			 */
+
+			ok_Hash.put("tAdvancedHash_row5", false);
+			start_Hash.put("tAdvancedHash_row5", System.currentTimeMillis());
+			currentComponent = "tAdvancedHash_row5";
+
+			org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE matchingModeEnum_row5 = org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE.ALL_ROWS;
+			org.talend.designer.components.commons.AdvancedLookup<row5Struct> tHash_Lookup_row5 = org.talend.designer.components.commons.AdvancedLookup
+					.<row5Struct> getLookup(matchingModeEnum_row5);
+			globalMap.put("tHash_Lookup_row5", tHash_Lookup_row5);
+
+			/**
+			 * [tAdvancedHash_row5 begin ] stop
+			 */
+
+			/**
+			 * [tMysqlInput_5 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlInput_5", false);
+			start_Hash.put("tMysqlInput_5", System.currentTimeMillis());
+			currentComponent = "tMysqlInput_5";
+
+			int nb_line_tMysqlInput_5 = 0;
+			java.sql.Connection conn_tMysqlInput_5 = null;
+			conn_tMysqlInput_5 = (java.sql.Connection) globalMap
+					.get("conn_tMysqlConnection_2");
+
+			java.sql.Statement stmt_tMysqlInput_5 = conn_tMysqlInput_5
+					.createStatement();
+			java.sql.ResultSet rs_tMysqlInput_5 = stmt_tMysqlInput_5
+					.executeQuery("SELECT max(time_id) FROM time_dim");
+			java.sql.ResultSetMetaData rsmd_tMysqlInput_5 = rs_tMysqlInput_5
+					.getMetaData();
+			int colQtyInRs_tMysqlInput_5 = rsmd_tMysqlInput_5.getColumnCount();
+
+			java.util.Calendar calendar_tMysqlInput_5 = java.util.Calendar
+					.getInstance();
+			calendar_tMysqlInput_5.set(0, 0, 0, 0, 0, 0);
+			java.util.Date year0_tMysqlInput_5 = calendar_tMysqlInput_5
+					.getTime();
+
+			globalMap.put("tMysqlInput_5_QUERY",
+					"SELECT max(time_id) FROM time_dim");
+
+			while (rs_tMysqlInput_5.next()) {
+				nb_line_tMysqlInput_5++;
+
+				if (colQtyInRs_tMysqlInput_5 < 1) {
+
+					row5.time_id = 0;
+
+				} else {
+
+					if (rs_tMysqlInput_5.getObject(1) != null) {
+						row5.time_id = rs_tMysqlInput_5.getShort(1);
+					} else {
+
+						throw new RuntimeException(
+								"Null value in non-Nullable column");
+					}
+
+				}
+
+				/**
+				 * [tMysqlInput_5 begin ] stop
+				 */
+				/**
+				 * [tMysqlInput_5 main ] start
+				 */
+
+				currentComponent = "tMysqlInput_5";
+
+				/**
+				 * [tMysqlInput_5 main ] stop
+				 */
+
+				/**
+				 * [tAdvancedHash_row5 main ] start
+				 */
+
+				currentComponent = "tAdvancedHash_row5";
+
+				row5Struct row5_HashRow = new row5Struct();
+
+				row5_HashRow.time_id = row5.time_id;
+				tHash_Lookup_row5.put(row5_HashRow);
+
+				/**
+				 * [tAdvancedHash_row5 main ] stop
+				 */
+
+				/**
+				 * [tMysqlInput_5 end ] start
+				 */
+
+				currentComponent = "tMysqlInput_5";
+
+			}
+			stmt_tMysqlInput_5.close();
+
+			globalMap.put("tMysqlInput_5_NB_LINE", nb_line_tMysqlInput_5);
+
+			ok_Hash.put("tMysqlInput_5", true);
+			end_Hash.put("tMysqlInput_5", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlInput_5 end ] stop
+			 */
+
+			/**
+			 * [tAdvancedHash_row5 end ] start
+			 */
+
+			currentComponent = "tAdvancedHash_row5";
+
+			ok_Hash.put("tAdvancedHash_row5", true);
+			end_Hash.put("tAdvancedHash_row5", System.currentTimeMillis());
+
+			/**
+			 * [tAdvancedHash_row5 end ] stop
+			 */
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
+	private class row6Struct {
+
+		short time_id;
+
+	}
+
+	public void tMysqlInput_7Process() throws TalendException {
+		String currentComponent = "";
+		try {
+
+			row6Struct row6 = new row6Struct();
+
+			/**
+			 * [tAdvancedHash_row6 begin ] start
+			 */
+
+			ok_Hash.put("tAdvancedHash_row6", false);
+			start_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+			currentComponent = "tAdvancedHash_row6";
+
+			org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE matchingModeEnum_row6 = org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE.ALL_ROWS;
+			org.talend.designer.components.commons.AdvancedLookup<row6Struct> tHash_Lookup_row6 = org.talend.designer.components.commons.AdvancedLookup
+					.<row6Struct> getLookup(matchingModeEnum_row6);
+			globalMap.put("tHash_Lookup_row6", tHash_Lookup_row6);
+
+			/**
+			 * [tAdvancedHash_row6 begin ] stop
+			 */
+
+			/**
+			 * [tMysqlInput_7 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlInput_7", false);
+			start_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+			currentComponent = "tMysqlInput_7";
+
+			int nb_line_tMysqlInput_7 = 0;
+			java.sql.Connection conn_tMysqlInput_7 = null;
+			conn_tMysqlInput_7 = (java.sql.Connection) globalMap
+					.get("conn_tMysqlConnection_2");
+
+			java.sql.Statement stmt_tMysqlInput_7 = conn_tMysqlInput_7
+					.createStatement();
+			java.sql.ResultSet rs_tMysqlInput_7 = stmt_tMysqlInput_7
+					.executeQuery("SELECT max(time_id) FROM time_dim");
+			java.sql.ResultSetMetaData rsmd_tMysqlInput_7 = rs_tMysqlInput_7
+					.getMetaData();
+			int colQtyInRs_tMysqlInput_7 = rsmd_tMysqlInput_7.getColumnCount();
+
+			java.util.Calendar calendar_tMysqlInput_7 = java.util.Calendar
+					.getInstance();
+			calendar_tMysqlInput_7.set(0, 0, 0, 0, 0, 0);
+			java.util.Date year0_tMysqlInput_7 = calendar_tMysqlInput_7
+					.getTime();
+
+			globalMap.put("tMysqlInput_7_QUERY",
+					"SELECT max(time_id) FROM time_dim");
+
+			while (rs_tMysqlInput_7.next()) {
+				nb_line_tMysqlInput_7++;
+
+				if (colQtyInRs_tMysqlInput_7 < 1) {
+
+					row6.time_id = 0;
+
+				} else {
+
+					if (rs_tMysqlInput_7.getObject(1) != null) {
+						row6.time_id = rs_tMysqlInput_7.getShort(1);
+					} else {
+
+						throw new RuntimeException(
+								"Null value in non-Nullable column");
+					}
+
+				}
+
+				/**
+				 * [tMysqlInput_7 begin ] stop
+				 */
+				/**
+				 * [tMysqlInput_7 main ] start
+				 */
+
+				currentComponent = "tMysqlInput_7";
+
+				/**
+				 * [tMysqlInput_7 main ] stop
+				 */
+
+				/**
+				 * [tAdvancedHash_row6 main ] start
+				 */
+
+				currentComponent = "tAdvancedHash_row6";
+
+				row6Struct row6_HashRow = new row6Struct();
+
+				row6_HashRow.time_id = row6.time_id;
+				tHash_Lookup_row6.put(row6_HashRow);
+
+				/**
+				 * [tAdvancedHash_row6 main ] stop
+				 */
+
+				/**
+				 * [tMysqlInput_7 end ] start
+				 */
+
+				currentComponent = "tMysqlInput_7";
+
+			}
+			stmt_tMysqlInput_7.close();
+
+			globalMap.put("tMysqlInput_7_NB_LINE", nb_line_tMysqlInput_7);
+
+			ok_Hash.put("tMysqlInput_7", true);
+			end_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlInput_7 end ] stop
+			 */
+
+			/**
+			 * [tAdvancedHash_row6 end ] start
+			 */
+
+			currentComponent = "tAdvancedHash_row6";
+
+			ok_Hash.put("tAdvancedHash_row6", true);
+			end_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+
+			/**
+			 * [tAdvancedHash_row6 end ] stop
+			 */
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
 	public static boolean watch = false;
 	public static int portStats = 3334;
 	public static int portTraces = 4334;
@@ -1970,11 +2369,11 @@ public class ClientStateFactLoader {
 
 				try {
 					((java.util.Map) threadLocal.get()).put(errorCode, null);
-					ClientStateFactLoaderClass.tMysqlConnection_2Process();
+					ClientStateFactLoaderClass.tJava_1Process();
 					((java.util.Map) threadLocal.get()).put(status, "end");
-				} catch (TalendException e_tMysqlConnection_2) {
+				} catch (TalendException e_tJava_1) {
 					((java.util.Map) threadLocal.get()).put(status, "failure");
-					e_tMysqlConnection_2.printStackTrace();
+					e_tJava_1.printStackTrace();
 
 				} finally {
 				}
@@ -2065,6 +2464,6 @@ public class ClientStateFactLoader {
 	}
 }
 /*******************************************************************************
- * 59436 characters generated by Talend OpenStudio on the March 20, 2008 5:58:37
- * PM GMT
+ * 71007 characters generated by Talend OpenStudio on the April 2, 2008 4:20:48
+ * PM BST
  ******************************************************************************/
