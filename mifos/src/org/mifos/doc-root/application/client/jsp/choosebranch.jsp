@@ -80,8 +80,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button onclick="goToCancelPage();"
-								property="cancelButton" styleClass="cancelbuttn"
-								style="width:70px">
+								property="cancelButton" styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

@@ -514,7 +514,7 @@
 										<td width="17%" align="right"><mifos:mifoslabel
 											name="${customFieldDef.lookUpEntity.entityType}"
 											mandatory="${customFieldDef.mandatoryStringValue}"
-											bundle="ClientUIResources"></mifos:mifoslabel>:</td>
+											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></td>
 										<td width="83%"><c:if test="${customFieldDef.fieldType == CustomFieldType.NUMERIC.value}">
 											<mifos:mifosnumbertext name="clientCustActionForm"
 												property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
@@ -543,13 +543,12 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="button.preview"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp; &nbsp; <html-el:button
 								onclick="goToCancelPage();" property="cancelButton"
-								styleClass="cancelbuttn" style="width:70px">
+								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

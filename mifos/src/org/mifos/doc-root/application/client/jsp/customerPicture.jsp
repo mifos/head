@@ -109,7 +109,7 @@
                     </tr>
 			        <tr>
 			          <td align="center" valign="top" class="paddingleft">
-			  		  	<html-el:button onclick="goToCancelPage()" property = "cancelButton" styleClass="cancelbuttn" style="width:65px">
+			  		  	<html-el:button onclick="goToCancelPage()" property = "cancelButton" styleClass="cancelbuttn">
 					  	<mifos:mifoslabel name="button.close" bundle="ClientUIResources"></mifos:mifoslabel></html-el:button>
 			 
 			  			<br>

@@ -96,7 +96,7 @@
 
 						<tr>
 							<td class="fontnormal"><br>
-								<mifos:mifoslabel name="client.reccredate"  bundle="ClientUIResources"/>:&nbsp;
+								<mifos:mifoslabel name="client.reccredate"  bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
 								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" />
 							</td>
 						</tr>
@@ -108,7 +108,7 @@
 						<tr>
 							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
-								styleClass="buttn" style="width:165px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="client.backtodetailspage"
 									bundle="ClientUIResources" />
 							</html-el:button></td>

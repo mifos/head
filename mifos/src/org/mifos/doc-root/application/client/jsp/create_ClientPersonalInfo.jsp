@@ -668,7 +668,8 @@
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
-									<td colspan="2" class="fontnormalbold">Additional information<br>
+									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel name="client.additionalInformation"
+													bundle="ClientUIResources"/><br>
 									<br>
 									</td>
 								</tr>
@@ -720,21 +721,20 @@
 											<html:hidden property="nextOrPreview" value="preview" />
 
 											<html-el:button onclick="goToPreviewPage();"
-												property="submitButton" styleClass="buttn"
-												style="width:70px;">
+												property="submitButton" styleClass="buttn">
 												<mifos:mifoslabel name="button.preview"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:button>
 										</c:when>
 										<c:otherwise>
-											<html-el:submit styleClass="buttn" style="width:70px;">
+											<html-el:submit styleClass="buttn">
 												<mifos:mifoslabel name="button.continue"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:submit>
 										</c:otherwise>
 									</c:choose> &nbsp; &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
-										styleClass="cancelbuttn" style="width:70px">
+										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="ClientUIResources"></mifos:mifoslabel>
 									</html-el:button></td>

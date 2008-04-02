@@ -106,7 +106,7 @@
 								</c:if> <c:out value="${flagSet.statusFlag.name}" /> </span>
 							</c:forEach> </span><br>
 							<!-- System Id of the center --> <span class="fontnormal"><mifos:mifoslabel
-								name="client.SystemId" bundle="ClientUIResources"></mifos:mifoslabel>:</span>
+								name="client.SystemId" bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel></span>
 							<span class="fontnormal"><c:out
 								value="${BusinessKey.globalCustNum}" /></span><br>
 							<!-- Loan Officer of the client --> <span class="fontnormal"> <mifos:mifoslabel
@@ -190,9 +190,9 @@
 											<c:if
 												test="${loan.accountState.id==5 || loan.accountState.id==9}">
 												<span class="fontnormal"> <mifos:mifoslabel
-													name="loan.outstandingbalance" />: <c:out
+													name="loan.outstandingbalance" isColonRequired="yes"/> <c:out
 													value="${loan.loanSummary.oustandingBalance}" /><br>
-												<mifos:mifoslabel name="loan.amount_due" />: <c:out
+												<mifos:mifoslabel name="loan.amount_due" isColonRequired="yes"/> <c:out
 													value="${loan.totalAmountDue}" /> </span>
 											</c:if></td>
 										</tr>
@@ -286,7 +286,7 @@
 										</tr>
 									</table>
 									<span class="fontnormal"><mifos:mifoslabel name="client.amtdue"
-										bundle="ClientUIResources" />: <c:out
+										bundle="ClientUIResources" isColonRequired="yes"/> <c:out
 										value="${BusinessKey.customerAccount.nextDueAmount}" />
 									</span></td>
 								</tr>
@@ -388,7 +388,7 @@
 										name="client.GroupMembershipDetails"
 										bundle="ClientUIResources"></mifos:mifoslabel><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
-										name="client.MeetingsHeading" bundle="ClientUIResources" />:&nbsp;
+										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
 									<c:out
 										value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" />
 									<br>
@@ -622,14 +622,14 @@
 										<c:choose>
 											<c:when test="${cf.fieldType == 3}">
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
-													bundle="CenterUIResources"></mifos:mifoslabel>:
+													bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 									         		<span class="fontnormal"><c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,customField.fieldValue)}" />
 												</span>
 											</c:when>
 											<c:otherwise>
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
-													bundle="CenterUIResources"></mifos:mifoslabel>:
+													bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 									         		<span class="fontnormal"><c:out
 													value="${customField.fieldValue}" /> </span>
 											</c:otherwise>

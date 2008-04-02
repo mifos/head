@@ -307,7 +307,7 @@
 									items="${sessionScope.clientCustActionForm.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
 										<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
-											bundle="ClientUIResources"></mifos:mifoslabel>:
+											bundle="ClientUIResources" isColonRequired="yes"></mifos:mifoslabel>
 		                	 <span class="fontnormal">	<c:out value="${customField.fieldValue}" /></span>
 										<br>
 									</c:if>
@@ -331,12 +331,12 @@
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">&nbsp; <html-el:submit property="submitButton"
-								style="width:70px" styleClass="buttn">
+								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp; &nbsp; <html-el:button
 								onclick="goToCancelPage();" property="cancelButton"
-								styleClass="cancelbuttn" style="width:70px">
+								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

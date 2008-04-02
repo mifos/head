@@ -372,7 +372,7 @@
 										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
 												<c:if test="${cf.fieldId==customField.fieldId}">
-													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>:
+													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 										         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
 												</c:if>
 											</c:forEach>
@@ -574,28 +574,28 @@
 								<tr>
 									<td align="center">&nbsp; <html-el:button
 										property="submitButton1" styleClass="buttn"
-										onclick="setClientStatus('1');" style="width:130px">
+										onclick="setClientStatus('1');">
 										<mifos:mifoslabel name="button.SaveForLater"
 											bundle="ClientUIResources"></mifos:mifoslabel>
 									</html-el:button> &nbsp; &nbsp;
 									<c:choose>
 										<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined') eq 'Yes'}">
 											<html-el:button property="submitButton" styleClass="buttn"
-												onclick="setClientStatus('2');" style="width:130px">
+												onclick="setClientStatus('2');">
 												<mifos:mifoslabel name="button.SubmitForApproval"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:button>
 										</c:when>
 										<c:otherwise>
 											<html-el:button property="submitButton" styleClass="buttn"
-												onclick="setClientStatus('3');" style="width:80px">
+												onclick="setClientStatus('3');">
 												<mifos:mifoslabel name="button.Approved"
 													bundle="ClientUIResources"></mifos:mifoslabel>
 											</html-el:button>
 										</c:otherwise>
 									</c:choose> &nbsp; &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
-										styleClass="cancelbuttn" style="width:70px">
+										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="ClientUIResources"></mifos:mifoslabel>
 									</html-el:button></td>

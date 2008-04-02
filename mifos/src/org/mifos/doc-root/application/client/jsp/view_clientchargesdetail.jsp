@@ -126,7 +126,7 @@
 					</tr>
 					<tr>
 						<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
-							name="client.amtdue" bundle="ClientUIResources" />: <c:out
+							name="client.amtdue" bundle="ClientUIResources" isColonRequired="yes"/> <c:out
 							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
 							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
 							<html-el:link
@@ -135,7 +135,7 @@
 							</html-el:link>
 						</c:if> <br>
 						<span class="fontnormal"> <mifos:mifoslabel
-							name="client.amtoverdue" bundle="ClientUIResources" />: <c:out
+							name="client.amtoverdue" bundle="ClientUIResources" isColonRequired="yes"/> <c:out
 							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
 							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
 							<html-el:link
