@@ -1,5 +1,26 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.ppi.business;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import org.mifos.application.ppi.helpers.Country;
@@ -21,6 +42,18 @@ public class PPISurvey extends Survey {
 	private int nonPoorMin;
 	private int nonPoorMax;
 	
+
+	public static int DEFAULT_VERY_POOR_MIN = 0;
+	public static int DEFAULT_VERY_POOR_MAX = 0;
+	public static int DEFAULT_POOR_MIN = 24;
+	public static int DEFAULT_POOR_MAX = 49;
+	public static int DEFAULT_AT_RISK_MIN = 50;
+	public static int DEFAULT_AT_RISK_MAX = 74;
+	public static int DEFAULT_NON_POOR_MIN = 75;
+	public static int DEFAULT_NON_POOR_MAX = 100;
+	
+	private PpiLikelihoodChart likelihoodChart;
+	
 	public PPISurvey() {
 		super();
 	}
@@ -30,6 +63,9 @@ public class PPISurvey extends Survey {
 		setCountry(country);
 	}
 
+	/**
+	 * TODO: Not used
+	 */
 	public PPISurvey(String name, SurveyState state, SurveyType appliesTo) {
 		super(name, state, appliesTo);
 	}
@@ -119,15 +155,23 @@ public class PPISurvey extends Survey {
 		return nonPoorMax;
 	}
 	
+	public void setLikelihoodChart (PpiLikelihoodChart chart) {
+		this.likelihoodChart = chart;
+	}
+	
+	public PpiLikelihood getLikelihood (int score) {
+		if ((score < 0) || (score > 100)) throw new IllegalArgumentException("score must be between 0 and 100");
+		return likelihoodChart.getRow(score);
+	}
 	public void populateDefaultValues() {
-		setVeryPoorMin(0);
-		setVeryPoorMax(24);
-		setPoorMin(25);
-		setPoorMax(49);
-		setAtRiskMin(50);
-		setAtRiskMax(74);
-		setNonPoorMin(75);
-		setNonPoorMax(100);
+		setVeryPoorMin(DEFAULT_VERY_POOR_MIN);
+		setVeryPoorMax(DEFAULT_POOR_MAX);
+		setPoorMin(DEFAULT_POOR_MIN);
+		setPoorMax(DEFAULT_AT_RISK_MAX);
+		setAtRiskMin(DEFAULT_AT_RISK_MIN);
+		setAtRiskMax(DEFAULT_NON_POOR_MAX);
+		setNonPoorMin(DEFAULT_NON_POOR_MIN);
+		setNonPoorMax(DEFAULT_NON_POOR_MAX);
 	}
 	
 	@Override
