@@ -52,6 +52,7 @@ import org.mifos.application.office.business.OfficecFixture;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.reports.business.dto.BranchReportHeaderDTO;
+import org.mifos.application.reports.util.helpers.ReportUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -112,7 +113,8 @@ public class BranchReportServiceTest extends BranchReportTestCase {
 		BranchReportHeaderDTO returnedHeaderDTO = branchReportService
 				.getBranchReportHeaderDTO(BRANCH_ID, RUN_DATE_STR);
 		verify(officeBusinessServiceMock);
-		assertEquals(new BranchReportHeaderDTO(office, null, RUN_DATE), returnedHeaderDTO);
+		assertEquals(new BranchReportHeaderDTO(office, null, ReportUtils
+				.parseReportDate(RUN_DATE_STR)), returnedHeaderDTO);
 	}
 
 	public void testRemovesSpecifiedBranchReport() throws Exception {
@@ -188,9 +190,8 @@ public class BranchReportServiceTest extends BranchReportTestCase {
 				branchReportPersistenceMock);
 		ArrayList<BranchReportStaffingLevelSummaryBO> staffingLevelResult = new ArrayList<BranchReportStaffingLevelSummaryBO>();
 		BranchReportStaffingLevelSummaryBO totalStaffSummaryBO = BranchReportBOFixture
-								.createStaffingLevelBO(Integer.valueOf(-1));
-		staffingLevelResult
-				.add(totalStaffSummaryBO);
+				.createStaffingLevelBO(Integer.valueOf(-1));
+		staffingLevelResult.add(totalStaffSummaryBO);
 		staffingLevelResult.add(BranchReportBOFixture
 				.createStaffingLevelBO(Integer.valueOf(2)));
 		staffingLevelResult.add(BranchReportBOFixture

@@ -56,6 +56,11 @@ public class BranchReportHeaderDTO {
 	public String getBranchManagerName() {
 		return branchManagerName;
 	}
+	
+	@Override
+	public String toString() {
+		return " office:" + office.getOfficeId()+" branchManager:"+branchManagerName+" runDate:" + runDate;
+	}
 
 	@Override
 	public int hashCode() {
@@ -71,8 +76,6 @@ public class BranchReportHeaderDTO {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final BranchReportHeaderDTO other = (BranchReportHeaderDTO) obj;
