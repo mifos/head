@@ -342,7 +342,7 @@ public class GroupCustAction extends CustAction {
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		actionForm.setSearchString(null);
 		cleanUpSearch(request);
-		if (ClientRules.getCenterHierarchyExists())
+		if (ClientRules.getClientCanExistOutsideGroup())
 			SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED,
 					CustomerConstants.NO,request);
 		else
