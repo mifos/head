@@ -7,6 +7,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -60,7 +61,15 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -70,6 +79,22 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
  * in this file, that will be cleaned up as we go forward.
  */
 public class LoanCalculationTest extends MifosTestCase {
+	// these constants for parsing the spreadsheet
+	final String principal = "Principal";
+	final String loanType = "Loan Type";
+	final String annualInterest = "Annual Interest";
+	final String numberOfPayments = "Number of Payments";
+	final String paymentFrequency = "Payment Frequency";
+	final String initialRoundingMode = "InitialRoundingMode";
+	final String initialRoundOffMultiple = "InitialRoundOffMultiple";
+	final String finalRoundingMode = "FinalRoundingMode";
+	final String finalRoundOffMultiple = "FinalRoundOffMultiple";
+	final String interestRounding = "InterestRounding";
+	final String digitsAfterDecimal = "Digits After Decimal";
+	final String daysInYear = "Days in Year";
+	final String totals = "Summed Totals";
+	final String start = "Start";
+	
 
 	LoanOfferingBO loanOffering = null;
 
@@ -89,6 +114,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	private MeetingBO meeting;
 
 	private UserContext userContext;
+	
 
 	@Override
 	protected void setUp() throws Exception {
@@ -96,6 +122,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		userContext = TestObjectFactory.getContext();
 		accountPersistence = new AccountPersistence();
 	}
+
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -149,7 +176,8 @@ public class LoanCalculationTest extends MifosTestCase {
 			Date disbursementDate) {
 		((LoanBO) account).setDisbursementDate(disbursementDate);
 	}
-
+	
+	
 
 	/**
 	 * Like
@@ -270,21 +298,824 @@ public class LoanCalculationTest extends MifosTestCase {
 		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
 	}
-
-
-
-
-
-
-	/****************************************************************************/
-	/****************************************************************************/
-	/****************************************************************************/
-	/****************************************************************************/
 	
 	public static void modifyDisbursmentDate(LoanBO loan, Date disbursmentDate) {
 		loan.setDisbursementDate(disbursmentDate);
 	}
 
+
+	/* This part is for the new financial calculation */
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	
+	
+	
+
+	class LoanParameters {
+		private String principal = null;
+		private InterestType loanType = null;
+		private String annualInterest = null;
+		private short numberOfPayments = 0;
+		private RecurrenceType paymentFrequency = null;
+		
+		public LoanParameters(String principal, InterestType loanType,
+				String annualInterest, short numberOfPayments,
+				RecurrenceType paymentFrequency) {
+			super();
+			this.principal = principal;
+			this.loanType = loanType;
+			this.annualInterest = annualInterest;
+			this.numberOfPayments = numberOfPayments;
+			this.paymentFrequency = paymentFrequency;
+		}
+		
+		public LoanParameters()
+		{
+		}
+
+		public String getPrincipal() {
+			return principal;
+		}
+
+		public void setPrincipal(String principal) {
+			this.principal = principal;
+		}
+
+		public InterestType getLoanType() {
+			return loanType;
+		}
+
+		public void setLoanType(InterestType loanType) {
+			this.loanType = loanType;
+		}
+
+		public String getAnnualInterest() {
+			return annualInterest;
+		}
+
+		public void setAnnualInterest(String annualInterest) {
+			this.annualInterest = annualInterest;
+		}
+
+		public short getNumberOfPayments() {
+			return numberOfPayments;
+		}
+
+		public void setNumberOfPayments(short numberOfPayments) {
+			this.numberOfPayments = numberOfPayments;
+		}
+
+		public RecurrenceType getPaymentFrequency() {
+			return paymentFrequency;
+		}
+
+		public void setPaymentFrequency(RecurrenceType paymentFrequency) {
+			this.paymentFrequency = paymentFrequency;
+		}
+		
+	}
+	
+	class InternalConfiguration {
+		private int daysInYear = 0;
+		// right now we are just supporting CEILING, FLOOR, HALF_UP
+		private RoundingMode initialRoundingMode = null;
+		// should this be constrained to .001, .01, .5, .1, 1 as in the spreadsheet?
+		private String initialRoundOffMultiple = null; 
+		// right now we are just supporting CEILING, FLOOR, HALF_UP
+		private RoundingMode finalRoundingMode = null;
+		// should this be constrained to .001, .01, .5, .1, 1 as in the spreadsheet?
+		private String finalRoundOffMultiple = null; 
+		// right now we are just supporting CEILING, FLOOR, HALF_UP
+		private RoundingMode interestRoundingMode = null;
+		// the number of digits to use to the right of the decimal for interal caculations
+		private int internalPrecision = 13;
+		// digits after decimal right now is in the application configuration
+		private int digitsAfterDecimal = 1;
+		
+		public int getDigitsAfterDecimal() {
+			return digitsAfterDecimal;
+		}
+
+		public void setDigitsAfterDecimal(int digitsAfterDecimal) {
+			this.digitsAfterDecimal = digitsAfterDecimal;
+		}
+
+		public InternalConfiguration(int daysInYear,
+				RoundingMode initialRoundingMode,
+				String initialRoundOffMultiple, RoundingMode finalRoundingMode,
+				String finalRoundOffMultiple, RoundingMode interestRoundingMode,
+				int internalPrecision) {
+			super();
+			this.daysInYear = daysInYear;
+			this.initialRoundingMode = initialRoundingMode;
+			this.initialRoundOffMultiple = initialRoundOffMultiple;
+			this.finalRoundingMode = finalRoundingMode;
+			this.finalRoundOffMultiple = finalRoundOffMultiple;
+			this.interestRoundingMode = interestRoundingMode;
+			this.internalPrecision = internalPrecision;
+		}
+		
+		public InternalConfiguration()
+		{
+		}
+
+		public int getDaysInYear() {
+			return daysInYear;
+		}
+
+		public void setDaysInYear(int daysInYear) {
+			this.daysInYear = daysInYear;
+		}
+
+		public RoundingMode getInitialRoundingMode() {
+			return initialRoundingMode;
+		}
+
+		public void setInitialRoundingMode(RoundingMode initialRoundingMode) {
+			this.initialRoundingMode = initialRoundingMode;
+		}
+
+		public String getInitialRoundOffMultiple() {
+			return initialRoundOffMultiple;
+		}
+
+		public void setInitialRoundOffMultiple(String initialRoundOffMultiple) {
+			this.initialRoundOffMultiple = initialRoundOffMultiple;
+		}
+
+		public RoundingMode getFinalRoundingMode() {
+			return finalRoundingMode;
+		}
+
+		public void setFinalRoundingMode(RoundingMode finalRoundingMode) {
+			this.finalRoundingMode = finalRoundingMode;
+		}
+
+		public String getFinalRoundOffMultiple() {
+			return finalRoundOffMultiple;
+		}
+
+		public void setFinalRoundOffMultiple(String finalRoundOffMultiple) {
+			this.finalRoundOffMultiple = finalRoundOffMultiple;
+		}
+
+		public RoundingMode getInterestRoundingMode() {
+			return interestRoundingMode;
+		}
+
+		public void setInterestRoundingMode(RoundingMode interestRoundingMode) {
+			this.interestRoundingMode = interestRoundingMode;
+		}
+
+		public int getInternalPrecision() {
+			return internalPrecision;
+		}
+
+		public void setInternalPrecision(int internalPrecision) {
+			this.internalPrecision = internalPrecision;
+		}
+
+	}
+	
+	
+	class Results {
+		// each installment has payment = interest + principal
+		Money totalPayments = null; // sum of all payments 
+		Money totalInterest = null; // sum of all interests for all payments
+		Money totalPrincipal = null;  // sum of all principals for all payments
+		// detailed list of all payments. Each payment includes payment, interest, principal and balance
+		List<PaymentDetail> payments = null;
+		
+		public List<PaymentDetail> getPayments() {
+			return payments;
+		}
+		public void setPayments(List<PaymentDetail> payments) {
+			this.payments = payments;
+		}
+		public Money getTotalInterest() {
+			return totalInterest;
+		}
+		public void setTotalInterest(Money totalInterest) {
+			this.totalInterest = totalInterest;
+		}
+		public Money getTotalPayments() {
+			return totalPayments;
+		}
+		public void setTotalPayments(Money totalPayments) {
+			this.totalPayments = totalPayments;
+		}
+		public Money getTotalPrincipal() {
+			return totalPrincipal;
+		}
+		public void setTotalPrincipal(Money totalPrincipal) {
+			this.totalPrincipal = totalPrincipal;
+		}
+	}
+	
+class LoanTestCaseData {
+		
+		private LoanParameters loanParams = null;
+		private Results expectedResult = null;
+		InternalConfiguration internalConfig = null;
+		
+		public InternalConfiguration getInternalConfig() {
+			return internalConfig;
+		}
+
+		public void setInternalConfig(InternalConfiguration config) {
+			this.internalConfig = config;
+		}
+
+		public LoanTestCaseData()
+		{
+		}
+		
+		public Results getExpectedResult() {
+			return expectedResult;
+		}
+		public void setExpectedResult(Results expectedResult) {
+			this.expectedResult = expectedResult;
+		}
+		public LoanParameters getLoanParams() {
+			return loanParams;
+		}
+		public void setLoanParams(LoanParameters loanParams) {
+			this.loanParams = loanParams;
+		}
+	}
+	
+	private void compareResults(Results expectedResult, Results calculatedResult)
+	{
+		// this commented code will be the final code when the financial calculation is done
+		/*assertEquals(expectedResult.getTotalInterest(), 
+				calculatedResult.getTotalInterest());
+		assertEquals(expectedResult.getTotalPayments(), 
+				calculatedResult.getTotalPayments());
+		assertEquals(expectedResult.getTotalPrincipal(), 
+				calculatedResult.getTotalPrincipal());
+		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
+		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
+		assertEquals(expectedPayments.size(), calculatedPayments.size());
+		for (int i=0; i < expectedPayments.size(); i++)
+		{
+			assertEquals(expectedPayments.get(i).getBalance(), 
+					calculatedPayments.get(i).getBalance());
+			assertEquals(expectedPayments.get(i).getInterest(), 
+					calculatedPayments.get(i).getInterest());
+			assertEquals(expectedPayments.get(i).getPayment(), 
+					calculatedPayments.get(i).getPayment());
+			assertEquals(expectedPayments.get(i).getPrincipal(), 
+					calculatedPayments.get(i).getPrincipal());
+		}*/
+		
+		System.out.println("Expected Total Interest: " + expectedResult.getTotalInterest() + 
+				" - Calculated Total Interest: " + calculatedResult.getTotalInterest());
+		System.out.println("Expected Total Payments: " + expectedResult.getTotalPayments() + 
+				" - Calculated Total Payments: " + calculatedResult.getTotalPayments());
+		System.out.println("Expected Total Principal: " + expectedResult.getTotalPrincipal() + 
+				" - Calculated Total Principal: " + calculatedResult.getTotalPrincipal());
+		
+		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
+		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
+		System.out.println("Expected Number of Installments: " + expectedPayments.size() + 
+				" - Calculated Number of Installments: " + calculatedPayments.size());
+		for (int i=0; i < expectedPayments.size(); i++)
+		{
+			System.out.println("Payment #: " + (i+1));
+			System.out.println("Expected Balance: " + expectedPayments.get(i).getBalance() + 
+					" - Calculated Balance: " + calculatedPayments.get(i).getBalance());
+			System.out.println("Expected Interest: " + expectedPayments.get(i).getInterest() + 
+					" - Calculated Interest: " + calculatedPayments.get(i).getInterest());
+			System.out.println("Expected Payment: " + expectedPayments.get(i).getPayment() + 
+					" - Calculated Payment: " + calculatedPayments.get(i).getPayment());
+			System.out.println("Expected Principal: " + expectedPayments.get(i).getPrincipal() + 
+					" - Calculated Principal: " + calculatedPayments.get(i).getPrincipal());
+		}
+		
+	}
+	
+	
+	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws
+	AccountException
+	{
+		
+		/*
+		 * When constructing a "meeting" here, it looks like the frequency 
+		 * should be "EVERY_X" for weekly or monthly loan interest posting.
+		 */
+		// EVERY_WEEK, EVERY_DAY and EVERY_MONTH are defined as 1
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(loanParams.getPaymentFrequency(), EVERY_WEEK,
+						CUSTOMER_MEETING));
+
+		center = TestObjectFactory.createCenter("Center", meeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		
+		short gracePeriodDuration = 0;
+		Date startDate = new Date(System.currentTimeMillis());
+		
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", "L", ApplicableTo.GROUPS, startDate,
+				PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), 
+				Double.parseDouble(loanParams.getAnnualInterest()), loanParams.getNumberOfPayments(),
+				loanParams.getLoanType(), false, false, center
+				.getCustomerMeeting().getMeeting(), GraceType.NONE,
+				"1", "1");
+		
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+
+		AccountBO accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
+				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
+				Double.parseDouble(loanParams.getAnnualInterest()), gracePeriodDuration, 
+				new FundBO(), feeViewList, null);
+		
+		new TestObjectPersistence().persist(accountBO);
+		return accountBO;
+	}
+	
+	private Results calculatePayments(InternalConfiguration config, AccountBO accountBO, LoanParameters loanParams)
+	{
+		
+		
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
+		.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+
+	
+		MathContext context = new MathContext(config.getInternalPrecision());
+		BigDecimal totalPrincipal = new BigDecimal(0, context);
+		BigDecimal totalInterest = new BigDecimal(0, context);
+		Money totalPayments = new Money("0");
+		Results calculatedResult = new Results();
+		List<PaymentDetail> payments = new ArrayList<PaymentDetail>();
+		for (LoanScheduleEntity loanEntry : paymentsArray)
+		{
+			PaymentDetail payment = new PaymentDetail();
+			Money calculatedPayment = new Money(loanEntry.getPrincipal().getAmount().add(loanEntry.getInterest().getAmount()));
+			payment.setPayment(calculatedPayment);
+			payment.setInterest(loanEntry.getInterest());
+			payment.setPrincipal(loanEntry.getPrincipal());
+			totalPrincipal = totalPrincipal.add(loanEntry.getPrincipal().getAmount());
+			totalInterest = totalInterest.add(loanEntry.getInterest().getAmount());
+			totalPayments = totalPayments.add(calculatedPayment);
+			payments.add(payment);
+		}	
+		calculatedResult.setPayments(payments);
+		calculatedResult.setTotalInterest(new Money(totalInterest));
+		calculatedResult.setTotalPayments(totalPayments);
+		calculatedResult.setTotalPrincipal(new Money(totalPrincipal));
+		
+		// set balance after each payment 
+		Money balance = totalPayments;
+		for( PaymentDetail paymentDetail : payments)
+		{
+			Money onePayment = paymentDetail.getPayment();
+			balance = balance.subtract(onePayment);
+			paymentDetail.setBalance(balance);
+		}
+		
+		return calculatedResult;
+		
+	}
+	
+	
+	
+	private void parseLoanParams(String paramType, String line, LoanParameters loanParams)
+	{
+		String tempLine = line.substring(paramType.length(), line.length() - 1);
+		String[] tokens = tempLine.split(",");
+		for (int i=0; i < tokens.length; i++)
+		{
+			String token = tokens[i];
+			if (StringUtils.isNullAndEmptySafe(token))
+			{
+				if ((paramType.indexOf(principal)>= 0) && (loanParams.getPrincipal() == null))
+					loanParams.setPrincipal(token);
+				else if (paramType.indexOf(loanType)>= 0)
+				{
+					InterestType interestType = InterestType.valueOf(token.toUpperCase());
+					loanParams.setLoanType(interestType);
+				}
+				else if (paramType.indexOf(annualInterest)>= 0)
+				{
+					int pos = token.indexOf("%");
+					String interest = token.substring(0, pos);
+					loanParams.setAnnualInterest(interest);
+				}
+				else if (paramType.indexOf(numberOfPayments) >= 0)
+					loanParams.setNumberOfPayments(Short.parseShort(token));
+				else if (paramType.indexOf(paymentFrequency)>= 0)
+				{
+					RecurrenceType recurrenceType = RecurrenceType.valueOf(token.toUpperCase());
+					loanParams.setPaymentFrequency(recurrenceType);
+				}
+				break;
+					
+			}
+		}
+		
+		
+	}
+	
+	
+	private void parseConfigParams(String paramType, String line, InternalConfiguration config)
+	{
+		String tempLine = line.substring(paramType.length(), line.length() - 1);
+		String[] tokens = tempLine.split(",");
+		for (int i=0; i < tokens.length; i++)
+		{
+			String token = tokens[i];
+			if (StringUtils.isNullAndEmptySafe(token))
+			{
+				if (paramType.indexOf(initialRoundingMode) >= 0)
+				{
+					RoundingMode mode = RoundingMode.valueOf(token);
+					config.setInitialRoundingMode(mode);
+				}
+				else if (paramType.indexOf(initialRoundOffMultiple) >= 0)
+				{
+					config.setInitialRoundOffMultiple(token);
+				}
+				else if (paramType.indexOf(finalRoundingMode) >= 0)
+				{
+					RoundingMode mode = RoundingMode.valueOf(token);
+					config.setFinalRoundingMode(mode);
+				}
+				else if (paramType.indexOf(finalRoundOffMultiple) >= 0)
+				{
+					config.setFinalRoundOffMultiple(token);
+				}
+				else if (paramType.indexOf(interestRounding)>= 0)
+				{
+					RoundingMode mode = RoundingMode.valueOf(token);
+					config.setInterestRoundingMode(mode);
+				}
+				else if (paramType.indexOf(digitsAfterDecimal) >= 0)
+				{
+					config.setDigitsAfterDecimal(Short.parseShort(token));
+				}
+				else if (paramType.indexOf(daysInYear) >= 0)
+				{
+					config.setDaysInYear(Short.parseShort(token));
+				}
+				break;
+					
+			}
+		}
+		
+		
+	}
+	
+	private void parseTotals(String paramType, String line, Results result)
+	{
+		String tempLine = line.substring(paramType.length(), line.length() -1);
+		int index = tempLine.indexOf(paramType);
+		tempLine = tempLine.substring(index + paramType.length(), tempLine.length() -1);
+		String[] tokens = tempLine.split(",");
+		boolean totalPayments = false;
+		boolean totalInterests = true;
+		boolean totalPrincipals = true;
+		for (int i=0; i < tokens.length; i++)
+		{
+			String token = tokens[i].trim();
+			if (StringUtils.isNullAndEmptySafe(token))
+			{
+				if (totalPayments == false)
+				{
+					result.setTotalPayments(new Money(token));
+					totalPayments = true;
+					totalPrincipals = false;
+				}
+				else if (totalInterests == false)
+				{
+					result.setTotalInterest(new Money(token));
+					totalInterests = true;
+				}
+				else if (totalPrincipals == false)
+				{
+					result.setTotalPrincipal(new Money(token));
+					totalPrincipals = true;
+					totalInterests = false;
+				}
+				else 
+					return;
+					
+			}
+		}
+		
+		
+	}
+	
+	private void parsePaymentDetail(String paramType, String line, Results result)
+	{
+		
+		int index = line.indexOf(",,");
+		String tempLine = line.substring(index + 1, line.length() -1);
+		String[] tokens = tempLine.split(",");
+		boolean paymentIndex = false;
+		boolean payment = true;
+		boolean principal = true;
+		boolean interest = true;
+		boolean balance = true;
+		PaymentDetail paymentDetail = new PaymentDetail();
+		for (int i=0; i < tokens.length; i++)
+		{
+			String token = tokens[i].trim();
+			if (StringUtils.isNullAndEmptySafe(token))
+			{
+				if (paymentIndex == false)
+				{
+					int paymentNumber = Integer.parseInt(token);
+					int expectedPaymentNumber = result.getPayments().size() + 1;
+					if (paymentNumber !=  expectedPaymentNumber)
+						throw new RuntimeException("Parsing error. paymentNumber " + paymentNumber + " Expected: " + expectedPaymentNumber);
+					paymentIndex = true;
+					payment = false;
+				}
+				else if (payment == false)
+				{
+					paymentDetail.setPayment(new Money(token));
+					payment = true;
+					principal = false;
+				}
+				else if (principal == false)
+				{
+					paymentDetail.setPrincipal(new Money(token));
+					principal = true;
+					interest = false;
+				}
+				else if (interest == false)
+				{
+					paymentDetail.setInterest(new Money(token));
+					interest = true;
+					balance = false;
+				}
+				else if (balance == false)
+				{
+					paymentDetail.setBalance(new Money(token));
+					result.getPayments().add(paymentDetail);
+					return;
+				}
+			}
+		}
+		
+		
+	}
+	
+	private LoanTestCaseData loadSpreadSheetData(String fileName)
+	{
+		
+		File file = new File(fileName);
+	    FileInputStream fileInputStream = null;
+	    InputStreamReader inputStreamReader = null;
+	    BufferedReader bufferedReader = null;
+	    LoanTestCaseData testCaseData = new LoanTestCaseData();
+	    boolean startPayment = false;
+	    int paymentIndex = 0;
+	    
+
+	    try 
+	    {
+	    	fileInputStream = new FileInputStream(file);
+	    	inputStreamReader = new InputStreamReader(fileInputStream);
+	    	bufferedReader = new BufferedReader(inputStreamReader);
+	    	
+		      // dataInputStream.available() returns 0 if the file does not have more lines.
+	    	String line = null;
+	    	LoanParameters loanParams = new LoanParameters();
+	    	InternalConfiguration config = new InternalConfiguration();
+	    	Results expectedResult = new Results();
+	    	List<PaymentDetail> list = new ArrayList<PaymentDetail>();
+	    	expectedResult.setPayments(list);
+		    while ((line = bufferedReader.readLine()) != null) 
+		    {
+		       String[] tokens = line.split(",");
+		       for (int i=0; i < tokens.length; i++)
+		       {
+		    	   String token = tokens[i];
+		    	   if (StringUtils.isNullAndEmptySafe(token))
+		    	   {
+		    		   if ((token.indexOf(principal) >= 0) ||( token.indexOf(loanType) >= 0) || (token.indexOf(annualInterest) >=0)
+		    				   || (token.indexOf(numberOfPayments) >=0) || (token.indexOf(paymentFrequency) >= 0))
+		    		   {
+		    			   parseLoanParams(token, line, loanParams);
+		    			   break;
+		    		   }
+		    		   else if ((token.indexOf(initialRoundingMode) >= 0 ) || (token.indexOf(finalRoundingMode)>= 0 )
+		    		           || (token.indexOf(initialRoundOffMultiple) >= 0 )
+		    				   || (token.indexOf(finalRoundOffMultiple) >= 0 ) || (token.indexOf(interestRounding)>= 0 ) 
+		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0 ))
+		    		   {
+		    			   parseConfigParams(token, line, config);
+		    			   break;
+		    		   }
+		    		   else if (token.indexOf(totals)  >= 0)
+		    			   parseTotals(token, line, expectedResult);
+		    		   else if (token.indexOf(start)  >= 0) 
+		    		   {
+		    			   startPayment = true;
+		    			   break;
+		    		   }
+		    		   else if (startPayment)
+		    		   {
+		    			   parsePaymentDetail(token, line, expectedResult);
+		    			   paymentIndex++;
+		    			   if (paymentIndex >= loanParams.getNumberOfPayments())
+		    			   {
+		    				   testCaseData.setExpectedResult(expectedResult);
+		    				   testCaseData.setInternalConfig(config);
+		    				   testCaseData.setLoanParams(loanParams);
+		    				   return testCaseData;
+		    			   }
+		    			   break;
+		    		   }
+		    			   
+		    	   }
+		    	
+		       }
+		       
+		    }
+            if (fileInputStream != null)
+            	fileInputStream.close();
+            if (inputStreamReader != null)
+            	inputStreamReader.close();
+            if (bufferedReader != null)
+            	bufferedReader.close();
+
+	    } 
+	    catch (Exception e) 
+	    {
+	    	throw new RuntimeException(e);
+	    } 
+	    return testCaseData;
+	   
+	}
+	
+
+
+	
+	/*
+	 * This test case will populate the data classes for a loan test case with data from spreadsheet and
+	 * calculates payments and compares
+	 */
+	private void runOneTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException, PropertyNotFoundException,
+								SystemException, ApplicationException 
+	{
+
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		accountBO = setUpLoan(testCaseData.getInternalConfig(), testCaseData.getLoanParams());
+		// calculated results
+		Results calculatedResult = calculatePayments(testCaseData.getInternalConfig(), accountBO, testCaseData.getLoanParams());  
+		compareResults(testCaseData.getExpectedResult(), calculatedResult);
+		
+		
+	}
+	
+	
+	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException 
+	{
+		String rootPath = "C:\\";
+		String[] dataFileNames = {"loan-repayment-master-comma.csv"};
+		for (int i=0; i < dataFileNames.length; i++)
+			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
+	}
+	
+	/*
+	 * This test case populates data from spreadsheet for loan params and expected results
+	 */
+	public void testOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
+								SystemException, ApplicationException 
+	{
+		
+		// set up config
+		InternalConfiguration config = new InternalConfiguration();
+		config.setDaysInYear(365);
+		config.setFinalRoundingMode(RoundingMode.CEILING);
+		config.setFinalRoundOffMultiple("0.01");
+		config.setInitialRoundingMode(RoundingMode.CEILING);
+		config.setInitialRoundOffMultiple("1");
+		config.setInterestRoundingMode(RoundingMode.CEILING);
+		config.setInternalPrecision(13);
+		// the digits after decimal now has to be set in the applicationConfiguration
+
+		
+		// set up loan params
+		LoanParameters loanParams = new LoanParameters();
+		loanParams.setLoanType(InterestType.FLAT);
+		loanParams.setNumberOfPayments((short)5);
+		loanParams.setPaymentFrequency(RecurrenceType.WEEKLY);
+		loanParams.setAnnualInterest("12.00");
+		loanParams.setPrincipal("1002");
+		
+		// set up expected results
+		Results expectedResult = new Results();
+		expectedResult.setTotalInterest(new Money("11.53"));
+		expectedResult.setTotalPayments(new Money("1013.53"));  
+		expectedResult.setTotalPrincipal(new Money("1002"));  // this loan amount
+		List<PaymentDetail> list = new ArrayList<PaymentDetail>();
+		// 1st payment
+		PaymentDetail payment = new PaymentDetail();
+		payment.setPayment(new Money("203.000"));
+		payment.setInterest(new Money("2.306"));
+		payment.setBalance(new Money("810.530"));
+		payment.setPrincipal(new Money("200.694"));
+		list.add(payment);
+		//	2nd payment
+		payment = new PaymentDetail();
+		payment.setPayment(new Money("203.000"));
+		payment.setInterest(new Money("2.306"));
+		payment.setBalance(new Money("607.530"));
+		payment.setPrincipal(new Money("200.694"));
+		list.add(payment);
+		//	3rd  payment
+		payment = new PaymentDetail();
+		payment.setPayment(new Money("203.000"));
+		payment.setInterest(new Money("2.306"));
+		payment.setBalance(new Money("404.530"));
+		payment.setPrincipal(new Money("200.694"));
+		list.add(payment);
+		//	4th  payment
+		payment = new PaymentDetail();
+		payment.setPayment(new Money("203.000"));
+		payment.setInterest(new Money("2.306"));
+		payment.setBalance(new Money("201.530"));
+		payment.setPrincipal(new Money("200.694"));
+		list.add(payment);
+		//	last payment
+		payment = new PaymentDetail();
+		payment.setPayment(new Money("201.530"));
+		payment.setInterest(new Money("2.306"));
+		payment.setBalance(new Money("0"));
+		payment.setPrincipal(new Money("199.224"));
+		list.add(payment);
+		expectedResult.setPayments(list);
+		
+		expectedResult.setPayments(list);
+		
+		accountBO = setUpLoan(config, loanParams);
+		
+		// calculated results
+		Results calculatedResult = calculatePayments(config, accountBO, loanParams);  
+		compareResults(expectedResult, calculatedResult);
+		
+		
+	}
+
+
+	
+	/*
+	 * This test case is meant to reproduce issue 1648 using the new data classes
+	 */
+	public void testIssue1648New() throws NumberFormatException, PropertyNotFoundException,
+								SystemException, ApplicationException 
+	{
+		// set up config
+		InternalConfiguration config = new InternalConfiguration();
+		config.setDaysInYear(365);
+		config.setFinalRoundingMode(RoundingMode.HALF_UP);
+		config.setFinalRoundOffMultiple("0.001");
+		config.setInitialRoundingMode(RoundingMode.HALF_UP);
+		config.setInitialRoundOffMultiple("0.001");
+		config.setInterestRoundingMode(RoundingMode.HALF_UP);
+		config.setInternalPrecision(10);
+		
+		// set up loan params
+		LoanParameters loanParams = new LoanParameters();
+		loanParams.setLoanType(InterestType.DECLINING);
+		loanParams.setNumberOfPayments((short)50);
+		loanParams.setPaymentFrequency(RecurrenceType.WEEKLY);
+		loanParams.setAnnualInterest("19.0");
+		loanParams.setPrincipal("10000");
+		
+		// set up expected results
+		Results expectedResult = new Results();
+		expectedResult.setTotalInterest(new Money("956.8"));
+		expectedResult.setTotalPayments(new Money("10000.4"));  // this test doesn't compare this, I made this up
+		expectedResult.setTotalPrincipal(new Money("10000"));  // this loan amount
+		List<PaymentDetail> list = new ArrayList<PaymentDetail>();  // we don't have this info from this test
+		expectedResult.setPayments(list);
+		
+		accountBO = setUpLoan(config, loanParams);
+		
+		// calculated results
+		Results calculatedResult = calculatePayments(config, accountBO, loanParams);  
+		compareResults(expectedResult, calculatedResult);
+		
+		
+	}
+	
+	/****************************************************************************************/
+	/****************************************************************************************/
+	/****************************************************************************************/
+	
 	/*
 	 * This test case is meant to reproduce issue 1648 
 	 */
@@ -309,6 +1140,10 @@ public class LoanCalculationTest extends MifosTestCase {
 		short gracePeriodDuration = 0;
 		Date startDate = new Date(System.currentTimeMillis());
 
+		/*
+		 * When constructing a "meeting" here, it looks like the frequency 
+		 * should be "EVERY_X" for weekly or monthly loan interest posting.
+		 */
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
 						CUSTOMER_MEETING));
@@ -356,7 +1191,65 @@ public class LoanCalculationTest extends MifosTestCase {
 		assertEquals(new BigDecimal(expectedTotalInterest), totalInterest);
 		
 	}
+	
+	
+	
+	
+	class PaymentDetail{
+		Money payment = null;
+		Money principal = null;
+		Money interest = null;
+		Money balance = null;
+		
+		public PaymentDetail(Money payment, Money principal, Money interest, Money balance) {
+			super();
+			this.payment = payment;
+			this.principal = principal;
+			this.interest = interest;
+			this.balance = balance;
+		}
+		
+		public PaymentDetail()
+		{
+		}
+		
+		public Money getBalance() {
+			return balance;
+		}
 
+		public void setBalance(Money balance) {
+			this.balance = balance;
+		}
+
+		public Money getInterest() {
+			return interest;
+		}
+
+		public void setInterest(Money interest) {
+			this.interest = interest;
+		}
+
+		public Money getPayment() {
+			return payment;
+		}
+
+		public void setPayment(Money payment) {
+			this.payment = payment;
+		}
+
+		public Money getPrincipal() {
+			return principal;
+		}
+
+		public void setPrincipal(Money principal) {
+			this.principal = principal;
+		}
+
+		
+	}
+
+	
+	
 	public void testIssue1623()
 	throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException {
