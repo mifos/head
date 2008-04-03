@@ -40,17 +40,21 @@ package org.mifos.framework.util.helpers;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
 
 /**
- * This class represents Money objects in the system, it would be used for all
- * financial operations like addition,subtraction etc of monies. As of now it
+ * This class represents Money objects in the system, it should be used for all
+ * financial operations like addition,subtraction etc of money. As of now it
  * deals with only one currency but later it can be extended to handle currency
  * conversions while performing operations.This is an immutable class as the
  * money object is not supposed to be modified .
+ * 
+ * April, 2008 Money class refactoring
+ * 
  */
 public final class Money implements Serializable {
 
@@ -72,6 +76,8 @@ public final class Money implements Serializable {
 		Money.usingNewMoney = usingNewMoney;
 	}
 	
+	private static MathContext internalPrecisionAndRounding = new MathContext(13, RoundingMode.HALF_UP);
+	
 	private final MifosCurrency currency;
 
 	private final BigDecimal amount;
@@ -80,9 +86,11 @@ public final class Money implements Serializable {
 		if (usingNewMoney) {
 			this.currency = currency;
 			if (amount == null || "".equals(amount.trim())) {
+				// seems like we shouldn't allow null values for money
+				// should we throw an exception or set a zero value here?
 				this.amount = null;
 			} else {
-				this.amount = setScale(new BigDecimal(amount));
+				this.amount = new BigDecimal(amount,internalPrecisionAndRounding);
 			}
 		} else {
 			this.currency = currency;
@@ -100,7 +108,7 @@ public final class Money implements Serializable {
 			if (amount == null || "".equals(amount.trim())) {
 				this.amount = null;
 			} else {
-				this.amount = setScale(new BigDecimal(amount));
+				this.amount = new BigDecimal(amount,internalPrecisionAndRounding);
 			}
 		} else {
 			this.currency = Configuration.getInstance().getSystemConfig()
@@ -120,7 +128,7 @@ public final class Money implements Serializable {
 	public Money(MifosCurrency currency, BigDecimal amount) {
 		if (usingNewMoney) {
 			this.currency = currency;
-			this.amount = setScale(amount);
+			this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode());
 		} else {
 			this.currency = currency;
 			this.amount = setScale(amount);			
@@ -131,7 +139,7 @@ public final class Money implements Serializable {
 		if (usingNewMoney) {
 			this.currency = Configuration.getInstance().getSystemConfig()
 			.getCurrency();
-			this.amount = amount;
+			this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode());
 		} else {
 			this.currency = Configuration.getInstance().getSystemConfig()
 			.getCurrency();
@@ -147,7 +155,7 @@ public final class Money implements Serializable {
 		if (usingNewMoney) {
 			this.currency = Configuration.getInstance().getSystemConfig()
 			.getCurrency();
-			this.amount = setScale(new BigDecimal(0));
+			this.amount = new BigDecimal(0, internalPrecisionAndRounding);
 		} else {
 			this.currency = Configuration.getInstance().getSystemConfig()
 			.getCurrency();
@@ -204,9 +212,13 @@ public final class Money implements Serializable {
 				throw new IllegalArgumentException(
 						ExceptionConstants.ILLEGALMONEYOPERATION);
 		}
-		return (money == null || money.getAmount() == null || money
-				.getCurrency() == null) ? this : new Money(this.currency,
-				setScale(this.amount.add(money.getAmount())));
+		// why not disallow null amounts and currencies?
+		if (money == null || money.getAmount() == null || 
+			money.getCurrency() == null) {
+			return this;
+		} else { 
+			return new Money(currency, amount.add(money.getAmount()));
+		}
 	}
 
 	
@@ -240,9 +252,13 @@ public final class Money implements Serializable {
 				throw new IllegalArgumentException(
 						ExceptionConstants.ILLEGALMONEYOPERATION);
 		}
-		return (money == null || money.getAmount() == null || money
-				.getCurrency() == null) ? this : new Money(this.currency,
-				setScale(this.amount.subtract(money.getAmount())));
+		// why not disallow null amounts and currencies?
+		if (money == null || money.getAmount() == null || 
+			money.getCurrency() == null) {
+			return this;
+		} else { 
+			return new Money(currency, amount.subtract(money.getAmount()));
+		}
 	}
 
 	
@@ -276,9 +292,13 @@ public final class Money implements Serializable {
 				throw new IllegalArgumentException(
 						ExceptionConstants.ILLEGALMONEYOPERATION);
 		}
-		return (money == null || money.getAmount() == null || money
-				.getCurrency() == null) ? this : new Money(this.currency,
-				setScale(this.amount.multiply(money.getAmount())));
+		// why not disallow null amounts and currencies?
+		if (money == null || money.getAmount() == null || 
+			money.getCurrency() == null) {
+			return this;
+		} else { 
+			return new Money(currency, amount.multiply(money.getAmount()));
+		}
 	}
 
 	
@@ -300,12 +320,13 @@ public final class Money implements Serializable {
 	}
 
 	private Money multiply_v2(Double factor) {
-		if (factor != null)
-			return new Money(this.currency, setScale(this.amount
-					.multiply(new BigDecimal(factor))));
-		else
+		if (factor == null) {
 			throw new IllegalArgumentException(
-					ExceptionConstants.ILLEGALMONEYOPERATION);
+					ExceptionConstants.ILLEGALMONEYOPERATION);			
+		}
+		return new Money(this.currency, amount.multiply(new BigDecimal(factor))
+			.setScale(internalPrecisionAndRounding.getPrecision(), 
+					  internalPrecisionAndRounding.getRoundingMode()));
 	}
 
 	
@@ -339,9 +360,14 @@ public final class Money implements Serializable {
 				throw new IllegalArgumentException(
 						ExceptionConstants.ILLEGALMONEYOPERATION);
 		}
-		return (money == null || money.getAmount() == null || money
-				.getCurrency() == null) ? this : new Money(this.currency,
-				setScale(this.amount.divide(money.getAmount())));
+		// why not disallow null amounts and currencies?
+		if (money == null || money.getAmount() == null || 
+			money.getCurrency() == null) {
+			return this;
+		} else { 
+			return new Money(currency, amount.divide(money.getAmount(), 
+				internalPrecisionAndRounding));					
+		}
 	}
 	
 	public Money negate() {
@@ -357,9 +383,9 @@ public final class Money implements Serializable {
 		return new Money(this.currency, setScale(tempAmnt));
 	}
 
+	// no need to set scale since negation preserves scale
 	private Money negate_v2() {
-		BigDecimal tempAmnt = this.amount.negate();
-		return new Money(this.currency, setScale(tempAmnt));
+		return new Money(currency, amount.negate());
 	}
 
 	/**
@@ -400,8 +426,8 @@ public final class Money implements Serializable {
 	private static Money round_v2(Money money) {
 		if (null != money) {
 			BigDecimal roundingAmount = new BigDecimal(money.getCurrency()
-					.getRoundingAmount().doubleValue());
-			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount);
+					.getRoundingAmount().doubleValue(),internalPrecisionAndRounding);
+			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
 
 			nearestFactor = nearestFactor.setScale(
 				0, money.getCurrency().getRoundingModeEnum());
@@ -413,7 +439,7 @@ public final class Money implements Serializable {
 	}
 
 	/**
-	 * This method return true if the currecy associated with the two money
+	 * This method return true if the currency associated with the two money
 	 * objects is equal and also the compareTo method of BigDecimal return 0 for
 	 * the amount of the two money objects. It is not advisable to use equals
 	 * method of BigDecimal because it would return false for numbers like 10.0
