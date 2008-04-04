@@ -152,8 +152,7 @@ public class FinancialInitializer {
 						throw new FinancialException(
 								"updating top-level general ledger accounts (categories) not supported");
 
-					System.out
-							.println("updating general ledger account with code="
+					logger.info("updating general ledger account with code="
 									+ account.getGlCode()
 									+ ". old name="
 									+ account.getAccountName()
