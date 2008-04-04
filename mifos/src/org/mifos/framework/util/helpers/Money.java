@@ -78,6 +78,17 @@ public final class Money implements Serializable {
 	
 	private static MathContext internalPrecisionAndRounding = new MathContext(13, RoundingMode.HALF_UP);
 	
+	private static MifosCurrency defaultCurrency = null;
+	
+	public static MifosCurrency getDefaultCurrency() {
+		return defaultCurrency;
+	}
+
+	public static void setDefaultCurrency(MifosCurrency defaultCurrency) {
+		Money.defaultCurrency = defaultCurrency;
+	}
+
+	
 	private final MifosCurrency currency;
 
 	private final BigDecimal amount;
@@ -103,8 +114,7 @@ public final class Money implements Serializable {
 
 	public Money(String amount) {
 		if (usingNewMoney) {
-			this.currency = Configuration.getInstance().getSystemConfig()
-			.getCurrency();
+			this.currency = getDefaultCurrency();
 			if (amount == null || "".equals(amount.trim())) {
 				this.amount = null;
 			} else {
@@ -137,8 +147,7 @@ public final class Money implements Serializable {
 
 	public Money(BigDecimal amount) {
 		if (usingNewMoney) {
-			this.currency = Configuration.getInstance().getSystemConfig()
-			.getCurrency();
+			this.currency = getDefaultCurrency();
 			this.amount = amount.setScale(internalPrecisionAndRounding.getPrecision(), internalPrecisionAndRounding.getRoundingMode());
 		} else {
 			this.currency = Configuration.getInstance().getSystemConfig()
@@ -153,8 +162,7 @@ public final class Money implements Serializable {
 	 */
 	public Money() {
 		if (usingNewMoney) {
-			this.currency = Configuration.getInstance().getSystemConfig()
-			.getCurrency();
+			this.currency = getDefaultCurrency();
 			this.amount = new BigDecimal(0, internalPrecisionAndRounding);
 		} else {
 			this.currency = Configuration.getInstance().getSystemConfig()
@@ -297,7 +305,9 @@ public final class Money implements Serializable {
 			money.getCurrency() == null) {
 			return this;
 		} else { 
-			return new Money(currency, amount.multiply(money.getAmount()));
+			return new Money(currency, amount.multiply(money.getAmount())
+					.setScale(internalPrecisionAndRounding.getPrecision(), 
+							  internalPrecisionAndRounding.getRoundingMode()));
 		}
 	}
 
@@ -324,7 +334,7 @@ public final class Money implements Serializable {
 			throw new IllegalArgumentException(
 					ExceptionConstants.ILLEGALMONEYOPERATION);			
 		}
-		return new Money(this.currency, amount.multiply(new BigDecimal(factor))
+		return new Money(currency, amount.multiply(new BigDecimal(factor))
 			.setScale(internalPrecisionAndRounding.getPrecision(), 
 					  internalPrecisionAndRounding.getRoundingMode()));
 	}

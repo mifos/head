@@ -11,6 +11,7 @@ import javax.servlet.ServletRequestListener;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.ProcessFlowRules;
@@ -35,6 +36,7 @@ import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -79,6 +81,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					ProcessFlowRules.init();
 					initializeSecurity();
 
+					Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+					
 					// 1/4/08 Hopefully a temporary change to force Spring
 					// to initialize here (rather than in struts-config.xml
 					// prior to loading label values into a 

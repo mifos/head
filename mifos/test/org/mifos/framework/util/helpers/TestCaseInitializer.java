@@ -39,6 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
@@ -65,6 +66,11 @@ public class TestCaseInitializer {
 			/* initializeSpring needs to come before AuditConfiguration.init
 			 * in order for MasterDataEntity data to be loaded.
 			 */
+			
+			/* shouldn't we have other initialization from ApplicationInitializer in here ? */
+			
+			Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+			
 			TestUtils.initializeSpring();
 			// Spring must be initialized before FinancialInitializer
 			FinancialInitializer.initialize();

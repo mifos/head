@@ -8,6 +8,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -50,8 +51,11 @@ import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.configuration.business.AccountConfig;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -61,6 +65,7 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -569,13 +574,13 @@ class LoanTestCaseData {
 			assertEquals(expectedPayments.get(i).getPrincipal(), 
 					calculatedPayments.get(i).getPrincipal());
 		}*/
-		
-		System.out.println("Expected Total Interest: " + expectedResult.getTotalInterest() + 
-				" - Calculated Total Interest: " + calculatedResult.getTotalInterest());
-		System.out.println("Expected Total Payments: " + expectedResult.getTotalPayments() + 
-				" - Calculated Total Payments: " + calculatedResult.getTotalPayments());
-		System.out.println("Expected Total Principal: " + expectedResult.getTotalPrincipal() + 
-				" - Calculated Total Principal: " + calculatedResult.getTotalPrincipal());
+		System.out.println("Results are (Expected : Calculated : Difference)");
+		printComparison("Total Interest: ",expectedResult.getTotalInterest(),
+			calculatedResult.getTotalInterest());
+		printComparison("Total Payments: " , expectedResult.getTotalPayments(),
+			calculatedResult.getTotalPayments());
+		printComparison("Total Principal: ", expectedResult.getTotalPrincipal(), 
+			calculatedResult.getTotalPrincipal());
 		
 		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
 		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
@@ -584,22 +589,34 @@ class LoanTestCaseData {
 		for (int i=0; i < expectedPayments.size(); i++)
 		{
 			System.out.println("Payment #: " + (i+1));
-			System.out.println("Expected Balance: " + expectedPayments.get(i).getBalance() + 
-					" - Calculated Balance: " + calculatedPayments.get(i).getBalance());
-			System.out.println("Expected Interest: " + expectedPayments.get(i).getInterest() + 
-					" - Calculated Interest: " + calculatedPayments.get(i).getInterest());
-			System.out.println("Expected Payment: " + expectedPayments.get(i).getPayment() + 
-					" - Calculated Payment: " + calculatedPayments.get(i).getPayment());
-			System.out.println("Expected Principal: " + expectedPayments.get(i).getPrincipal() + 
-					" - Calculated Principal: " + calculatedPayments.get(i).getPrincipal());
+			printComparison("Balance:   ", expectedPayments.get(i).getBalance(), 
+				calculatedPayments.get(i).getBalance());
+			printComparison("Interest:  ", expectedPayments.get(i).getInterest(), 
+				calculatedPayments.get(i).getInterest());
+			printComparison("Payment:   ", expectedPayments.get(i).getPayment(), 
+				calculatedPayments.get(i).getPayment());
+			printComparison("Principal: ", expectedPayments.get(i).getPrincipal(), 
+				calculatedPayments.get(i).getPrincipal());
 		}
 		
 	}
 	
+	private void printComparison(String label, Money expected, Money calculated) {
+		System.out.println(label + expected + 
+				" : " + calculated + " : " + expected.subtract(calculated));
+	}
+	
+	private void setNumberOfInterestDays(int days) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays,new Short((short)days));
+	}
 	
 	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws
 	AccountException
 	{
+		setNumberOfInterestDays(config.getDaysInYear());
+		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
+		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -869,10 +886,10 @@ class LoanTestCaseData {
 		
 	}
 	
-	private LoanTestCaseData loadSpreadSheetData(String fileName)
+	private LoanTestCaseData loadSpreadSheetData(String fileName) throws URISyntaxException
 	{
-		
-		File file = new File(fileName);
+		File file = new File(ResourceLoader.getURI(fileName));
+		//File file = new File(fileName);
 	    FileInputStream fileInputStream = null;
 	    InputStreamReader inputStreamReader = null;
 	    BufferedReader bufferedReader = null;
@@ -966,7 +983,7 @@ class LoanTestCaseData {
 	 * calculates payments and compares
 	 */
 	private void runOneTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException, PropertyNotFoundException,
-								SystemException, ApplicationException 
+								SystemException, ApplicationException, URISyntaxException 
 	{
 
 		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
@@ -978,14 +995,15 @@ class LoanTestCaseData {
 		
 	}
 	
-	
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException 
+	SystemException, ApplicationException, URISyntaxException 
 	{
-		String rootPath = "C:\\";
-		String[] dataFileNames = {"loan-repayment-master-comma.csv"};
+		Money.setUsingNewMoney(true);
+		String rootPath = "org/mifos/application/accounts/loan/business/";
+		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
+		Money.setUsingNewMoney(false);
 	}
 	
 	/*
@@ -1315,7 +1333,7 @@ class LoanTestCaseData {
 	}
 
 	
-	
+/*	
 	public void testCreateLoanAccountWithDecliningInterestNoGracePeriod()
 			throws NumberFormatException, PropertyNotFoundException,
 			SystemException, ApplicationException {
@@ -1788,7 +1806,7 @@ class LoanTestCaseData {
 				.getOriginalPrincipal());
 
 	}
-	
+*/	
 	private java.sql.Date setDate(int dayUnit, int interval) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
