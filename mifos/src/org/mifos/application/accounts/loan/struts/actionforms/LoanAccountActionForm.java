@@ -943,20 +943,30 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
     private void validateRedoLoanPayments(HttpServletRequest request, ActionErrors errors) {
         try {
-            if (paymentDataBeans != null && paymentDataBeans.size() > 0) {
-                CustomerBO customer = getCustomer(request);
-                for (PaymentDataTemplate template : paymentDataBeans) {
-                    if (template.getTotalAmount() != null
-                            && template.getTransactionDate() != null) {
-                        if (! customer.getCustomerMeeting().getMeeting().isValidMeetingDate(
-                            template.getTransactionDate(), DateUtils.getLastDayOfNextYear())) {
-                            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE,
-                                new ActionMessage(LoanExceptionConstants.INVALIDTRANSACTIONDATE));
-                        }
-                    }
-                }
-            }
-        }
+			if (paymentDataBeans == null || paymentDataBeans.size() <= 0)
+				return;
+			CustomerBO customer = getCustomer(request);
+			for (PaymentDataTemplate template : paymentDataBeans) {
+				// No data for amount and transaction date, validation not applicable
+				if (template.getTotalAmount() == null
+						|| template.getTransactionDate() == null)
+					continue;
+				// Meeting date is invalid
+				if (!customer.getCustomerMeeting().getMeeting()
+						.isValidMeetingDate(template.getTransactionDate(),
+								DateUtils.getLastDayOfNextYear())) {
+					errors
+							.add(
+									LoanExceptionConstants.INVALIDTRANSACTIONDATE,
+									new ActionMessage(
+											LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+					continue;
+				}
+				// User has enter a payment for future date
+				validateTransactionDate(errors, template, getDisbursementDateValue(getUserContext(request)
+									.getPreferredLocale()));
+			}
+		}
         catch (MeetingException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
                     new ActionMessage(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
@@ -970,6 +980,25 @@ public class LoanAccountActionForm extends BaseActionForm {
                     new ActionMessage(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
         }
     }
+
+	void validateTransactionDate(ActionErrors errors,
+			PaymentDataTemplate template, java.util.Date disbursementDate) {
+		if (template.getTotalAmount() == null)
+			return;
+		if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(),
+				DateUtils.currentDate())) {
+			errors
+					.add(
+							LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT,
+							new ActionMessage(
+									LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
+		}
+		else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())){
+			errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE,
+					new ActionMessage(
+							LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+		}
+	}
 
     protected CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		return getCustomerBusinessService().getCustomer(customerId);

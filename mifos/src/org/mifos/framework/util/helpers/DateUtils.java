@@ -746,9 +746,12 @@ public class DateUtils {
 						getDateWithoutTimeStamp(afterDate.getTime())) < 0;
 	}
 
-	public static boolean dateFallsOnOrBeforeDate(Date beforeDate, Date afterDate) {
-		return getDateWithoutTimeStamp(beforeDate.getTime())
-		.compareTo(
-				getDateWithoutTimeStamp(afterDate.getTime())) <= 0;
+	/**
+	 * returns true if the pastDate is equal to or falls before futureDate, 
+	 * returns false if futureDate falls before pastDate
+	 */
+	public static boolean dateFallsOnOrBeforeDate(Date pastDate, Date futureDate) {
+		return getDateWithoutTimeStamp(pastDate.getTime()).compareTo(
+				getDateWithoutTimeStamp(futureDate.getTime())) <= 0;
 	}
 }

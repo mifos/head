@@ -38,6 +38,7 @@
 
 package org.mifos.application.accounts.loan.business;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -117,6 +118,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -127,8 +129,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.config.AccountingRules;
-import java.math.BigDecimal;
 
 public class LoanBO extends AccountBO {
 
