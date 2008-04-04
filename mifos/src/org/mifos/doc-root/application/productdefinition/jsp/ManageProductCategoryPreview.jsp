@@ -111,7 +111,7 @@
 							<br>
 							<br>
 							<mifos:mifoslabel
-								name="product.categoryname" bundle="ProductDefUIResources" />:<span
+								name="product.categoryname" bundle="ProductDefUIResources" isColonRequired="yes"/><span
 								class="fontnormal"> <c:out
 								value="${productCategoryActionForm.productCategoryName}" /><br>
 							<br>
@@ -122,7 +122,7 @@
 							<br>
 							<br>
 							</span> <mifos:mifoslabel name="product.status"
-								bundle="ProductDefUIResources" />: <span class="fontnormal">
+								bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}"
 										var="prdCategoryStatusObject">
 								<c:if	test="${prdCategoryStatusObject.id eq productCategoryActionForm.productCategoryStatus}">
@@ -154,11 +154,11 @@
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">&nbsp; <html-el:submit styleClass="buttn"
-								style="width:70px"  property="submitBut">
+								property="submitBut">
 								<mifos:mifoslabel name="product.butsubmit"
 									bundle="ProductDefUIResources" />
 							</html-el:submit> &nbsp; <html-el:button property="cancel"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="javascript:fnGet()">
 								<mifos:mifoslabel name="product.cancel"
 									bundle="ProductDefUIResources" />

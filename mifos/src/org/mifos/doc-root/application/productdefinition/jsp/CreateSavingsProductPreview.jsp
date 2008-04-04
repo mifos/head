@@ -132,31 +132,31 @@ explanation of the license and how it is applied.
 											<br>
 										</c:if></span>
 									<br>
-									<mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
+									<mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
 											<c:if test="${category.productCategoryID eq sessionScope.savingsproductactionform.prdCategory}">
 												<c:out value="${category.productCategoryName}" />
 											</c:if>
-										</c:forEach> <br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" /> : <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.startDate}" /> </span> <br> <mifos:mifoslabel
-											name="product.enddate" bundle="ProductDefUIResources" /> : <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.endDate}" /> </span> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" /> :
+										</c:forEach> <br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.startDate}" /> </span> <br> <mifos:mifoslabel
+											name="product.enddate" bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.endDate}" /> </span> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/>
 										<span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="ApplForList">
 												<c:if test="${ApplForList.id eq sessionScope.savingsproductactionform.prdApplicableMaster}">
 													<c:out value="${ApplForList.name}" />
 												</c:if>
 											</c:forEach> </span> <br> <br>
-										<span class="fontnormalbold"> <mifos:mifoslabel name="product.tardepwidrest" bundle="ProductDefUIResources" /></span> <br> <br> <span class="fontnormalbold"><mifos:mifoslabel name="product.typeofdep" bundle="ProductDefUIResources" />:<span
+										<span class="fontnormalbold"> <mifos:mifoslabel name="product.tardepwidrest" bundle="ProductDefUIResources" /></span> <br> <br> <span class="fontnormalbold"><mifos:mifoslabel name="product.typeofdep" bundle="ProductDefUIResources" isColonRequired="yes"/><span
 											class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsTypesList')}" var="DepositType">
 													<c:if test="${DepositType.id eq sessionScope.savingsproductactionform.savingsType}">
 														<c:out value="${DepositType.name}" />
 													</c:if>
 												</c:forEach> </span><br> <c:choose>
 												<c:when test="${sessionScope.savingsproductactionform.savingsType eq 1}">
-													<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" />:
+													<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												</c:when>
 												<c:otherwise>
-													<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" />:
+													<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												</c:otherwise>
-											</c:choose><span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" /> :<span class="fontnormal"> <c:forEach
+											</c:choose><span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.recommendedAmount}" /></span><br> <mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/><span class="fontnormal"> <c:forEach
 													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="RecAmnt">
 													<c:if test="${RecAmnt.id eq sessionScope.savingsproductactionform.recommendedAmntUnit}">
 														<c:out value="${RecAmnt.name}" />
@@ -175,13 +175,13 @@ explanation of the license and how it is applied.
 							<tr>
 								<td height="23" class="fontnormalbold">
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
+									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.interestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<mifos:mifoslabel name="product.balusedfor" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="IntCalcType">
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="IntCalcType">
 											<c:if test="${IntCalcType.id eq sessionScope.savingsproductactionform.interestCalcType}">
 												<c:out value="${IntCalcType.name}" />
 											</c:if>
@@ -189,8 +189,8 @@ explanation of the license and how it is applied.
 									<br>
 									<mifos:mifoslabel name="product.timeper" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.timeForInterestCacl}" /> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}"
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.timeForInterestCacl}" /> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}"
 											var="recType">
 											<c:if test="${recType.recurrenceId eq sessionScope.savingsproductactionform.recurTypeFortimeForInterestCacl}">
 												<c:out value="${recType.recurrenceName}" />
@@ -199,13 +199,13 @@ explanation of the license and how it is applied.
 									<br>
 									<mifos:mifoslabel name="product.freq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
+									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.freqOfInterest}" /> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
 									<br>
 									<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.minAmntForInt}" /> </span>
 									<br>
 								</td>
 							</tr>
@@ -218,16 +218,16 @@ explanation of the license and how it is applied.
 							</tr>
 							<tr>
 								<td height="23" class="fontnormalbold">
-									<mifos:mifoslabel name="product.glcodedep" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}">
+									<mifos:mifoslabel name="product.glcodedep" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}">
 											<c:if test="${glCode.glcodeId == sessionScope.savingsproductactionform.depositGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
 										</c:forEach> </span>
 									<br>
 									<mifos:mifoslabel name="product.Glcodefor" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
+									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 											<c:if test="${glCode.glcodeId == sessionScope.savingsproductactionform.interestGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
@@ -253,11 +253,11 @@ explanation of the license and how it is applied.
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn" style="width:70px" property="submitBut">
+									<html-el:submit styleClass="buttn" property="submitBut">
 										<mifos:mifoslabel name="product.butsubmit" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel(this.form)">
+									<html-el:button property="cancel" styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
 									</html-el:button>
 								</td>

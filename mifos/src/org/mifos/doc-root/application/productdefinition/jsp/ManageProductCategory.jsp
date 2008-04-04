@@ -90,9 +90,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel
-								name="product.editfields" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-								name="product.clickpreview" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-								name="product.clickcanccat" bundle="ProductDefUIResources" /> <br>
+								name="product.editCancelCat" bundle="ProductDefUIResources" /> <br>
 							<mifos:mifoslabel name="product.fieldsrequired" mandatory="yes"
 								bundle="ProductDefUIResources" /></td>
 						</tr>
@@ -116,7 +114,7 @@
 						</tr>
 						<tr class="fontnormal">
 							<td align="right" valign="top"><mifos:mifoslabel
-								name="product.desc" bundle="ProductDefUIResources" />:</td>
+								name="product.desc" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 							<td><html-el:textarea style="width:320px; height:110px;"
 								property="productCategoryDesc"
 								value="${productCategoryActionForm.productCategoryDesc}"></html-el:textarea>
@@ -124,7 +122,7 @@
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel name="product.status"
-								mandatory="yes" bundle="ProductDefUIResources" />:</td>
+								mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 							<td><mifos:select
 								property="productCategoryStatus"
 								name="productCategoryActionForm" style="width:136px;">
@@ -147,12 +145,11 @@
 						value="ProductCategories" />
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="product.preview"
 									bundle="ProductDefUIResources" />
 							</html-el:submit> &nbsp; <html-el:button property="cancel"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="javascript:fnGet()">
 								<mifos:mifoslabel name="product.cancel"
 									bundle="ProductDefUIResources" />

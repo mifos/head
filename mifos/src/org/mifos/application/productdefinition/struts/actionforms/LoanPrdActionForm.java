@@ -69,6 +69,8 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.application.login.util.helpers.LoginConstants;
 
 public class LoanPrdActionForm extends BaseActionForm {
 	private final MifosLogger logger;
@@ -1865,6 +1867,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		String forByLoanCycleAtRow = resources.getString(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
 		String forNumberOfLastLoanInstallmentAtRow =
 			resources.getString(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
+		String rateType = resources.getString("product.ratetype");
 	
 		validateStartDate(request, errors);
  		validateEndDate(request, errors);
@@ -1874,7 +1877,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 			addError(errors, "interestTypes",
 					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
 							ConfigurationConstants.INTEREST, request),
-					ProductDefinitionConstants.RATETYPE);
+					rateType);
 		validateMinMaxDefInterestRates(errors, locale, request);
 		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
 				request);
@@ -1898,6 +1901,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 		String forByLoanCycleAtRow = resources.getString(ProductDefinitionConstants.FORBYLOANCYCLEATROW);
 		String forNumberOfLastLoanInstallmentAtRow =
 			resources.getString(ProductDefinitionConstants.FORNUMBEROFLASTLOLANINSTALLMENTATROW);
+		String rateType = resources.getString("product.ratetype");
+		String status = resources.getString("product.status");
 		validateStartDateForEditPreview(request, errors);
 		validateEndDate(request, errors);
 		validateLoanAmmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
@@ -1906,11 +1911,11 @@ public class LoanPrdActionForm extends BaseActionForm {
 			addError(errors, "interestTypes",
 					ProductDefinitionConstants.ERRORSSELECTCONFIG, getLabel(
 							ConfigurationConstants.INTEREST, request),
-					ProductDefinitionConstants.RATETYPE);
+					rateType);
 		if (StringUtils.isNullOrEmpty(getPrdStatus()))
 			addError(errors, "prdStatus",
 					ProductDefinitionConstants.ERROR_SELECT,
-					ProductDefinitionConstants.STATUS);
+					status);
 		validateMinMaxDefInterestRates(errors, locale, request);
 		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
 				request);
@@ -2133,13 +2138,19 @@ public class LoanPrdActionForm extends BaseActionForm {
 	
 	private void validateInterestGLCode(HttpServletRequest request,
 			ActionErrors errors) {
-		if (StringUtils.isNullOrEmpty(getInterestGLCode()))
+		if (StringUtils.isNullOrEmpty(getInterestGLCode())) {
+			UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+			Locale locale = userContext.getPreferredLocale();
+			ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, locale);
+			String glCodeFor = resources.getString("product.glCodeFor");
 			addError(
 					errors,
 					ProductDefinitionConstants.INTERESTGLCODE,
 					ProductDefinitionConstants.ERROR_SELECT,
-					ProductDefinitionConstants.GLCODE_FOR
+					glCodeFor
 							+ getLabel(ConfigurationConstants.INTEREST, request));
+		}
 	}
 
 	public String getLoanAmtCalcType() {
@@ -2387,13 +2398,17 @@ public class LoanPrdActionForm extends BaseActionForm {
 		Double minInterest = null;
 		Double defInterest = null;
 		String label = getLabel(ConfigurationConstants.INTEREST, request);
-		
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, locale);
+		String prdrate = resources.getString("product.prdrate");
+		String min = resources.getString("product.min");
+		String max = resources.getString("product.max");
+		String defaultString = resources.getString("product.default");
 		if(!StringUtils.isNullAndEmptySafe(minInterestRate))
 		{
 			addError(errors, "minInterestRate", 
 					ProductDefinitionConstants.ERRORSENTERCONFIG,
-					ProductDefinitionConstants.MIN, label,
-					ProductDefinitionConstants.RATE);	
+					min, label, prdrate);	
 		}
 		else 
 		{
@@ -2416,8 +2431,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		{
 			addError(errors, "maxInterestRate", 
 					ProductDefinitionConstants.ERRORSENTERCONFIG,
-					ProductDefinitionConstants.MAX, label,
-					ProductDefinitionConstants.RATE);	
+					max, label, prdrate);	
 		}		
 		else 
 		{
@@ -2438,8 +2452,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		{
 			addError(errors, "defInterestRate",
 					ProductDefinitionConstants.ERRORSENTERCONFIG,
-					ProductDefinitionConstants.DEFAULT, label,
-					ProductDefinitionConstants.RATE);	
+					defaultString, label, prdrate);	
 		}
 		else 
 		{
@@ -2462,9 +2475,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 			{
 				addError(errors, "MinMaxInterestRate",
 						ProductDefinitionConstants.ERRORSMINMAXINTCONFIG,
-						ProductDefinitionConstants.MAX, label,
-						ProductDefinitionConstants.RATE,
-						ProductDefinitionConstants.MIN);
+						max, label, prdrate, min);
 			}
 			if (defInterest != null)
 			{
@@ -2472,10 +2483,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				{
 					addError(errors, "DefInterestRate",
 						ProductDefinitionConstants.ERRORSDEFINTCONFIG,
-						ProductDefinitionConstants.DEFAULT, label,
-						ProductDefinitionConstants.RATE,
-						ProductDefinitionConstants.MIN,
-						ProductDefinitionConstants.MAX);
+						defaultString, label, prdrate, min, max);
 				}
 				else
 				{

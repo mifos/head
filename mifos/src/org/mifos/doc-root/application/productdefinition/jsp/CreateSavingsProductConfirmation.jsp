@@ -64,9 +64,9 @@
 						</tr>
 						<tr>
 							<td class="fontnormalbold">
-								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" />
-								:&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.savingsassignedto" bundle="ProductDefUIResources" />:</span>
+								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" isColonRequired="yes"/>
+								&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+										name="product.savingsassignedto" bundle="ProductDefUIResources" isColonRequired="yes"/></span>
 								<c:out value="${requestScope.savingsprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
 								<html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${requestScope.savingsId}&randomNUm=${sessionScope.randomNUm}">

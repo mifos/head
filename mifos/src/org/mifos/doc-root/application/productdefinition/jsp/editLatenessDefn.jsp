@@ -96,7 +96,7 @@
 										<td width="47%"><span class="fontnormal">
 										<mifos:mifoslabel name="product.specloannodays" bundle="ProductDefUIResources" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="product.loanaccountchanged" bundle="ProductDefUIResources" />:</span></td>
+										<mifos:mifoslabel name="product.loanaccountchanged" bundle="ProductDefUIResources" isColonRequired="yes"/></span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="productType[${ctr}].latenessDays" maxValue="32767"
 											value="${productType.latenessDays}" size="4"/> <mifos:mifoslabel
@@ -132,8 +132,8 @@
 											class="fontnormal"> 
 											<mifos:mifoslabel name="product.specsavdormdays" bundle="ProductDefUIResources" />
  										    <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-											<mifos:mifoslabel name="product.savingsaccountchanged" bundle="ProductDefUIResources" />
-											:</span></td>
+											<mifos:mifoslabel name="product.savingsaccountchanged" bundle="ProductDefUIResources" isColonRequired="yes"/>
+											</span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="productType[${ctr}].dormancyDays" maxValue="32767"
 											value="${productType.dormancyDays}" size="4"/> <mifos:mifoslabel
@@ -190,12 +190,11 @@
  					<html-el:hidden property="method" value="update" /> <br>
 					<table width="98%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="product.butsubmit"
 									bundle="ProductDefUIResources" />
 							</html-el:submit> &nbsp; <html-el:button property="cancel"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn" 
 								onclick="javascript:fnCancel()">
 								<mifos:mifoslabel name="product.cancel"
 									bundle="ProductDefUIResources" />

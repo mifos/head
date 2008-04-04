@@ -136,9 +136,9 @@
 										</tr>
 										<tr>
 											<td height="23" class="fontnormalbold">
-												<span class="fontnormal"> <mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" />: 
+												<span class="fontnormal"> <mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" isColonRequired="yes"/> 
 												<c:out value="${BusinessKey.prdOfferingName}" /><br> 
-												<mifos:mifoslabel name="product.shortname"	bundle="ProductDefUIResources" />: 
+												<mifos:mifoslabel name="product.shortname"	bundle="ProductDefUIResources" isColonRequired="yes"/> 
 												<c:out value="${BusinessKey.prdOfferingShortName}" /><br> 
 												<c:if test="${BusinessKey.description != null && !(BusinessKey.description eq '')}">
 														<br>
@@ -148,11 +148,11 @@
 														<br>
 														<br>
 													</c:if> <mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />: <c:out value="${BusinessKey.prdCategory.productCategoryName}" /><br> 
-													<mifos:mifoslabel name="product.startdate"	bundle="ProductDefUIResources" />: 
+													<mifos:mifoslabel name="product.startdate"	bundle="ProductDefUIResources" isColonRequired="yes"/> 
 													<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.startDate)}" /> <br>
-													 <mifos:mifoslabel name="product.enddate"	bundle="ProductDefUIResources" />: 
+													 <mifos:mifoslabel name="product.enddate"	bundle="ProductDefUIResources" isColonRequired="yes"/>
 													 <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.endDate)}" /> <br>
-													  <mifos:mifoslabel name="product.applfor"	bundle="ProductDefUIResources" />:
+													  <mifos:mifoslabel name="product.applfor"	bundle="ProductDefUIResources" isColonRequired="yes"/>
 													  	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="ApplForList">
 																<c:if test="${ApplForList.id eq BusinessKey.prdApplicableMaster.id}">
 																	<c:out value="${ApplForList.name}" />
@@ -169,15 +169,15 @@
 															</c:forEach>
 															<br> <c:choose>
 														<c:when test="${BusinessKey.savingsType.id eq 1}">
-															<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" />:
+															<mifos:mifoslabel name="product.mandamntdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 														</c:when>
 														<c:otherwise>
-															<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" />:
+															<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 														</c:otherwise>
 														</c:choose>
 														<c:out value="${BusinessKey.recommendedAmount}" />
 														<br> 
-														<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" />: 
+														<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
 															
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="RecAmnt">
 																<c:if test="${RecAmnt.id eq BusinessKey.recommendedAmntUnit.id}">
@@ -186,7 +186,7 @@
 																</c:if>
 															</c:forEach>
 														<br> 
-														<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" />: 
+														<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
 														<c:out value="${BusinessKey.maxAmntWithdrawl}" /> </span>
 												</td>
 											</tr>
@@ -201,13 +201,13 @@
 										<tr>
 											<td height="23" class="fontnormal">
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />:
+												<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:out value="${BusinessKey.interestRate}" />
 												<mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
 												<br>
 												<mifos:mifoslabel name="product.balusedfor" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />:
+												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="IntCalcType">
 													<c:if test="${IntCalcType.id eq BusinessKey.interestCalcType.id}">
 														<c:out value="${IntCalcType.name}" />
@@ -217,7 +217,7 @@
 												<br>
 												<mifos:mifoslabel name="product.timeper" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />	:
+												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:out value="${BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurAfter}" />
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}" var="recType">
 													<c:if test="${recType.recurrenceId eq BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId}">
@@ -227,14 +227,13 @@
 												<br>
 												<mifos:mifoslabel name="product.freq" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" />
-												:
+												<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:out value="${BusinessKey.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}" />
 												<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 												<br>
 												<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />:
+												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												<c:out value="${BusinessKey.minAmntForInt}" />
 												<br>
 											</td>
@@ -248,14 +247,14 @@
 										</tr>
 										<tr>
 											<td height="23" class="fontnormalbold">
-												<span class="fontnormal"> <mifos:mifoslabel name="product.glcodedep" bundle="ProductDefUIResources" />: 
+												<span class="fontnormal"> <mifos:mifoslabel name="product.glcodedep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 												
 												<c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'depositGLCodes')}">
 														<c:if test="${glCode.glcodeId == BusinessKey.depositGLCode.glcodeId}">
 															<c:out value="${glCode.glcode}" />
 														</c:if>
 													</c:forEach> <br> <mifos:mifoslabel name="product.Glcodefor" bundle="ProductDefUIResources" /> 
-													<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />: 
+													<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/>
 													
 													<c:forEach var="glCode"	items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 														<c:if test="${glCode.glcodeId == BusinessKey.interestGLCode.glcodeId}">

@@ -189,8 +189,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="30%" align="right">
-									<mifos:mifoslabel name="product.prodinstname" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.prodinstname" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
 									<mifos:mifosalphanumtext property="prdOfferingName" />
@@ -198,8 +197,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.shortname" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.shortname" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:mifosalphanumtext property="prdOfferingShortName" maxlength="4" />
@@ -208,8 +206,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<html-el:textarea property="description" style="width:320px; height:110px;" >
@@ -218,8 +215,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.prodcat" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.prodcat" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="prdCategory">
@@ -231,8 +227,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.startdate" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.startdate" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<date:datetag property="startDate" />
@@ -241,8 +236,7 @@
 							<tr class="fontnormal">
 								<td align="right">
 									<span class="mandatorytext"></span>
-									<mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<date:datetag property="endDate" />
@@ -250,8 +244,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel mandatory="yes" name="product.applfor" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel mandatory="yes" name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="prdApplicableMaster" style="width:136px;" onchange="fnCheckAppliesTo();">
@@ -273,8 +266,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="30%" align="right">
-									<mifos:mifoslabel name="product.typeofdep" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.typeofdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
 									<mifos:select property="savingsType" style="width:136px;" onchange="fnCheckRecMand();">
@@ -286,12 +278,10 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" id="recamnt">
-									<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td align="right" id="mandamnt">
-									<mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:mifosdecimalinput property="recommendedAmount"  />
@@ -302,8 +292,7 @@
 						</script>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="recommendedAmntUnit" style="width:136px;">
@@ -318,8 +307,7 @@
 						</script>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.maxamtwid" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:mifosdecimalinput property="maxAmntWithdrawl" />
@@ -337,8 +325,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="30%" align="right">
-									<mifos:mifoslabel mandatory="yes" name="product.chgStatus" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel mandatory="yes" name="product.chgStatus" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%">
 									 <mifos:select property="status" style="width:136px;">
@@ -362,8 +349,7 @@
 							<tr class="fontnormal">
 								<td width="30%" align="right">
 									<mifos:mifoslabel mandatory="yes" name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
 									<mifos:mifosdecimalinput property="interestRate" max="100" min="0" decimalFmt="10.5" />
@@ -374,8 +360,7 @@
 								<td align="right">
 									<mifos:mifoslabel mandatory="yes" name="product.balusedfor" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="interestCalcType" style="width:136px;">
@@ -389,8 +374,7 @@
 								<td align="right" valign="top">
 									<mifos:mifoslabel mandatory="yes" name="product.timeper" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
@@ -406,8 +390,7 @@
 								<td align="right" valign="top">
 									<mifos:mifoslabel mandatory="yes" name="product.freq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
@@ -419,8 +402,7 @@
 								<td align="right">
 									<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:mifosdecimalinput property="minAmntForInt" />
@@ -438,8 +420,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="30%" align="right" valign="top" style="padding-top:8px;">
-									<mifos:mifoslabel mandatory="yes" name="product.glcodedep" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel mandatory="yes" name="product.glcodedep" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
 									<mifos:select property="depositGLCode" style="width:136px;" disabled="true">
@@ -453,8 +434,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top" style="padding-top:8px;">
 									<mifos:mifoslabel mandatory="yes" name="product.Glcodefor" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									:
+									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
 									<mifos:select property="interestGLCode" style="width:136px;" disabled="true">
@@ -476,11 +456,11 @@
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn" style="width:70px">
+									<html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="product.preview" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel()">
+									<html-el:button property="cancel" styleClass="cancelbuttn" onclick="javascript:fnCancel()">
 										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
 									</html-el:button>
 								</td>

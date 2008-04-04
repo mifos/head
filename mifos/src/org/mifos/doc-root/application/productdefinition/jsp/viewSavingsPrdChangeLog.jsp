@@ -104,7 +104,7 @@
 
 						<tr>
 							<td class="fontnormal"><br>
-								<mifos:mifoslabel name="product.recordCreationDate"  bundle="ProductDefUIResources"/>:&nbsp;
+								<mifos:mifoslabel name="product.recordCreationDate"  bundle="ProductDefUIResources" isColonRequired="yes"/>&nbsp;
 								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" />
 							</td>
 						</tr>
@@ -116,7 +116,7 @@
 						<tr>
 							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
-								styleClass="buttn" style="width:165px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="product.back"
 									bundle="ProductDefUIResources" />
 							</html-el:button></td>

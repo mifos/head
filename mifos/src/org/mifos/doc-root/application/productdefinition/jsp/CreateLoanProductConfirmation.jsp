@@ -65,9 +65,9 @@
 						</tr>
 						<tr>
 							<td class="fontnormalbold">
-								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" />
-								:<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.savingsassignedto"
-										bundle="ProductDefUIResources" />:</span>
+								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" isColonRequired="yes" />
+								<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.produceAssignedId"
+										isColonRequired="yes" bundle="ProductDefUIResources" /></span>
 								<c:out value="${requestScope.loanprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
 								<html-el:link href="loanproductaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">

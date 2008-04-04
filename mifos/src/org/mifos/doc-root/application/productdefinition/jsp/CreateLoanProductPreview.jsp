@@ -147,12 +147,13 @@
 								</tr>
 								<tr>
 									<td height="23" class="fontnormalbold"><mifos:mifoslabel
-										name="product.prodinstname" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"><c:out
+										name="product.prodinstname" bundle="ProductDefUIResources" 
+										isColonRequired="yes"/>
+									<span class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.prdOfferingName}" />
 									</span> <br>
 									<mifos:mifoslabel name="product.shortname"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+										bundle="ProductDefUIResources" isColonRequired="yes" /> <span class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.prdOfferingShortName}" />
 									</span> <br>
 									<br>
@@ -165,7 +166,7 @@
 										<br>
 									</c:if> </span> <br>
 									<mifos:mifoslabel name="product.prodcat"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes" /> <span class="fontnormal">
 									<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductCategoryList')}"
 										var="category">
@@ -175,14 +176,14 @@
 										</c:if>
 									</c:forEach> </span> <br>
 									<mifos:mifoslabel name="product.startdate"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes" /> <span class="fontnormal">
 									<c:out value="${sessionScope.loanproductactionform.startDate}" />
 									</span> <br>
 									<mifos:mifoslabel name="product.enddate"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.endDate}" /> </span> <br>
 									<mifos:mifoslabel name="product.applfor"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:forEach
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"><c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanApplForList')}"
 										var="ApplForList">
 										<c:if
@@ -195,8 +196,8 @@
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.cyclecounter" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
+										name="product.cyclecounter" bundle="ProductDefUIResources" isColonRequired="yes" />
+									<span class="fontnormal"> <c:choose>
 										<c:when
 											test="${sessionScope.loanproductactionform.loanCounter==1}">
 											<mifos:mifoslabel name="product.yes"
@@ -226,8 +227,7 @@
 										<br>
 										<table width="100%" border="0" cellpadding="3" cellspacing="0">
 											<mifos:mifoslabel name="product.calcloanamount"
-												bundle="ProductDefUIResources" />
-											:
+												bundle="ProductDefUIResources" isColonRequired="yes" />
 											<span class="fontnormal"> <mifos:mifoslabel
 												name="product.bylastloanamount"
 												bundle="ProductDefUIResources" /></span>
@@ -463,7 +463,7 @@
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+										name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes" /> <span
 										class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.maxInterestRate}" />
 									<mifos:mifoslabel name="product.perc"
@@ -472,7 +472,7 @@
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+										name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <span
 										class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.minInterestRate}" />
 									<mifos:mifoslabel name="product.perc"
@@ -481,7 +481,7 @@
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.prdrate" bundle="ProductDefUIResources" /> : <span
+										name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <span
 										class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.defInterestRate}" />
 									<mifos:mifoslabel name="product.perc"
@@ -497,7 +497,7 @@
 								</tr>
 								<tr>
 									<td height="23" class="fontnormalbold"><mifos:mifoslabel
-										name="product.freqofinst" bundle="ProductDefUIResources" /> :
+										name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes" />
 									<span class="fontnormal"> <c:out
 										value="${sessionScope.loanproductactionform.recurAfter}" /> <c:if
 										test="${sessionScope.loanproductactionform.freqOfInstallments eq 1}">
@@ -520,7 +520,7 @@
 									<c:if
 										test="${sessionScope.loanproductactionform.calcInstallmentType=='2'}">
 										<mifos:mifoslabel name="product.calcInstallment"
-											bundle="ProductDefUIResources" />: <span class="fontnormal"><mifos:mifoslabel
+											bundle="ProductDefUIResources" isColonRequired="yes" /> <span class="fontnormal"><mifos:mifoslabel
 											name="product.installbylastloanamount"
 											bundle="ProductDefUIResources" /></span>
 										<br>
@@ -619,7 +619,7 @@
 									</c:if> <c:if
 										test="${sessionScope.loanproductactionform.calcInstallmentType=='3'}">
 										<mifos:mifoslabel name="product.calcInstallment"
-											bundle="ProductDefUIResources" />: <span class="fontnormal"><mifos:mifoslabel
+											bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"><mifos:mifoslabel
 											name="product.installbyloancycle"
 											bundle="ProductDefUIResources" /></span>
 										<br>
@@ -699,7 +699,7 @@
 									</c:if> <c:if
 										test="${sessionScope.loanproductactionform.calcInstallmentType=='1'}">
 										<mifos:mifoslabel name="product.calcInstallment"
-											bundle="ProductDefUIResources" />: <span class="fontnormal"><mifos:mifoslabel
+											bundle="ProductDefUIResources" isColonRequired="yes" /> <span class="fontnormal"><mifos:mifoslabel
 											name="product.sameforallinstallment"
 											bundle="ProductDefUIResources" /></span>
 										<br>
@@ -725,7 +725,7 @@
 										</table>
 									</c:if> <br>
 									<mifos:mifoslabel name="product.gracepertype"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 									<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanGracePeriodTypeList')}"
 										var="LoanGracePeriodType">
@@ -735,7 +735,7 @@
 										</c:if>
 									</c:forEach> </span> <br>
 									<mifos:mifoslabel name="product.graceperdur"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal"><c:out
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal"><c:out
 										value="${sessionScope.loanproductactionform.gracePeriodDuration}" />
 									<c:if
 										test="${not empty sessionScope.loanproductactionform.gracePeriodDuration }">
@@ -745,8 +745,8 @@
 									<mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.deductedatdis" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:choose>
+										name="product.deductedatdis" bundle="ProductDefUIResources" isColonRequired="yes" />
+									<span class="fontnormal"> <c:choose>
 										<c:when
 											test="${sessionScope.loanproductactionform.intDedDisbursementFlag==1}">
 											<mifos:mifoslabel name="product.yes"
@@ -758,7 +758,7 @@
 										</c:otherwise>
 									</c:choose> </span> <br>
 									<mifos:mifoslabel name="product.prinlastinst"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 									<c:choose>
 										<c:when
 											test="${sessionScope.loanproductactionform.prinDueLastInstFlag==1}">
@@ -780,7 +780,7 @@
 								</tr>
 								<tr>
 									<td height="23" class="fontnormalbold"><mifos:mifoslabel
-										name="product.feestypes" bundle="ProductDefUIResources" /> :
+										name="product.feestypes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 									<span class="fontnormal"> <br>
 									<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanprdfeeselectedlist')}"
@@ -807,10 +807,10 @@
 										<br>
 									</c:forEach></span> <br>
 									<mifos:mifoslabel name="product.productglcode"
-										bundle="ProductDefUIResources" /> : <br>
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <br>
 									<mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 									<c:forEach var="glCode"
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 										<c:if
@@ -819,7 +819,7 @@
 										</c:if>
 									</c:forEach></span> <br>
 									<mifos:mifoslabel name="product.principal"
-										bundle="ProductDefUIResources" /> : <span class="fontnormal">
+										bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 									<c:forEach var="glCode"
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'principalGLCodes')}">
 										<c:if
@@ -850,11 +850,11 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px" property="submitBut">
+										property="submitBut">
 										<mifos:mifoslabel name="product.butsubmit"
 											bundle="ProductDefUIResources" />
 									</html-el:submit> &nbsp; <html-el:button property="cancel"
-										styleClass="cancelbuttn" style="width:70px"
+										styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="product.cancel"
 											bundle="ProductDefUIResources" />

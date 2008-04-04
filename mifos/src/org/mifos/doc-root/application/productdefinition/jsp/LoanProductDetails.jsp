@@ -108,7 +108,7 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdOfferingName}" /><br> <mifos:mifoslabel name="product.shortname" bundle="ProductDefUIResources" />: <c:out
+											<span class="fontnormal"> <mifos:mifoslabel name="product.prodinstname" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.prdOfferingName}" /><br> <mifos:mifoslabel name="product.shortname" bundle="ProductDefUIResources" />: <c:out
 													value="${loanPrd.prdOfferingShortName}" /><br> <c:if test="${!empty loanPrd.description}">
 													<br>
 													<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
@@ -117,10 +117,10 @@
 													<br>
 													<br>
 												</c:if> <mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdCategory.productCategoryName}" /><br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" />: <c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.startDate)}" /> <br> <mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />: <c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.endDate)}" /> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdApplicableMaster.name}" /> <br>
-												<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" />
-												: <c:choose>
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.startDate)}" /> <br> <mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.endDate)}" /> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.prdApplicableMaster.name}" /> <br>
+												<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<c:choose>
 													<c:when test="${loanPrd.includeInLoanCounter}">
 														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
 													</c:when>
@@ -135,13 +135,13 @@
 												</c:if> 
 												-->
 												<c:if test="${loanAmountType==1}">
-												<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" />: <mifos:mifoslabel name="product.sameforallloans" bundle="ProductDefUIResources" />
+												<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallloans" bundle="ProductDefUIResources" />
 													<br>
 													<table width="60%" border="0" cellspacing="0" cellpadding="3">
 														<tr>
-															<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" /></td>
-															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" /></td>
-															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" /></td>	
+															<td width="20%" class="drawtablehd"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
+															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.maxloanamt" bundle="ProductDefUIResources" /></td>
+															<td width="20%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.defamt" bundle="ProductDefUIResources" /></td>	
 														</tr>	
 														<c:forEach items="${loanPrd.loanAmountSameForAllLoan}" var="loanAmountSameForAllLoan">	
 														<tr>							
@@ -155,7 +155,7 @@
 												<c:if test="${loanAmountType=='2'}">
 													<br>
 													<table width="100%" border="0" cellpadding="3" cellspacing="0">
-													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" />: <mifos:mifoslabel name="product.bylastloanamount" bundle="ProductDefUIResources" />
+													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.bylastloanamount" bundle="ProductDefUIResources" />
 													<tr>
 															<td width="25%" class="drawtablehd" > <mifos:mifoslabel name="product.lastloanamount" bundle="ProductDefUIResources" /> </td>
 															<td width="15%" class="drawtablehd" align="right"> <mifos:mifoslabel name="product.minloanamt" bundle="ProductDefUIResources" /></td>
@@ -177,7 +177,7 @@
 												</c:if>
 												<c:if test="${loanAmountType=='3'}">
 												<br/>
-													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" />: <mifos:mifoslabel name="product.byloancycle" bundle="ProductDefUIResources" />
+													<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.byloancycle" bundle="ProductDefUIResources" />
 													<br/>
 													
 													<table width="90%" border="0" cellspacing="0" cellpadding="3">
@@ -211,11 +211,11 @@
 									<tr>
 										<td height="23" class="fontnormalbold">
 											<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.type"
-													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.interestTypes.name}" /> <br> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
-													bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel
-													name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out
+													bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.interestTypes.name}" /> <br> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel
+													name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
 													value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-													name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
+													name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
 													bundle="ProductDefUIResources" /><br> </span>
 										</td>
 									</tr>
@@ -228,7 +228,7 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" /> <c:if
+											<span class="fontnormal"> <mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" /> <c:if
 													test="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 1}">
 													<mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" />
 												</c:if> <c:if test="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 2}">
@@ -237,7 +237,7 @@
 													value="${loanPrd.minNoInstallments}" /><br> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.defNoInstallments}" />
 													-->
 													<c:if test="${installType=='1'}">
-													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources"/>: <mifos:mifoslabel name="product.sameforallinstallment" bundle="ProductDefUIResources"/>
+													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallinstallment" bundle="ProductDefUIResources"/>
 														<br>
 														<table width="80%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
@@ -256,7 +256,7 @@
 													</c:if>
 													
 													<c:if test="${installType=='2'}">
-													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources"/>: <mifos:mifoslabel name="product.installbylastloanamount" bundle="ProductDefUIResources"/>
+													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbylastloanamount" bundle="ProductDefUIResources"/>
 														<br>
 														<table width="100%" border="0" cellpadding="3" cellspacing="0">
 													<tr>
@@ -278,7 +278,7 @@
 																</table>
 													</c:if>
 													<c:if test="${installType=='3'}">
-													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources"/>: <mifos:mifoslabel name="product.installbyloancycle" bundle="ProductDefUIResources"/>
+													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.installbyloancycle" bundle="ProductDefUIResources"/>
 														<br>
 															<table width="90%" border="0" cellspacing="0" cellpadding="3">
 																<tr>
@@ -297,8 +297,8 @@
 																</c:forEach>
 																</table>
 													</c:if>
-													<br> <mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.gracePeriodType.name}" /> <br> <mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.gracePeriodDuration}" /> <mifos:mifoslabel
-													name="product.installments" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" />: <c:choose>
+													<br> <mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodType.name}" /> <br> <mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodDuration}" /> <mifos:mifoslabel
+													name="product.installments" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:choose>
 													<c:when test="${loanPrd.prinDueLastInst}">
 														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
 													</c:when>
@@ -339,11 +339,11 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.srcfunds" bundle="ProductDefUIResources" /> : <br> <c:forEach items="${loanPrd.loanOfferingFunds}" var="loanOffeingFund">
+											<span class="fontnormal"> <mifos:mifoslabel name="product.srcfunds" bundle="ProductDefUIResources" isColonRequired="yes"/> <br> <c:forEach items="${loanPrd.loanOfferingFunds}" var="loanOffeingFund">
 													<c:out value="${loanOffeingFund.fund.fundName}" />
 													<br>
-												</c:forEach> <br> <mifos:mifoslabel name="product.productglcode" bundle="ProductDefUIResources" />:<br> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />: <c:out
-													value="${loanPrd.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.principalGLcode.glcode}" /> <br> </span>
+												</c:forEach> <br> <mifos:mifoslabel name="product.productglcode" bundle="ProductDefUIResources" isColonRequired="yes"/><br> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
+													value="${loanPrd.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.principalGLcode.glcode}" /> <br> </span>
 											<br>
 											<br>
 											<span class="fontnormal"> <html-el:link

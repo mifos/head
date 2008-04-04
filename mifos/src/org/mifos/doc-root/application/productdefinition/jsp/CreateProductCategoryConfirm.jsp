@@ -63,9 +63,9 @@
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><mifos:mifoslabel
-								name="product.plsnote" bundle="ProductDefUIResources" />: <span
+								name="product.plsnote" bundle="ProductDefUIResources" isColonRequired="yes"/> <span
 								class="fontnormal"> <mifos:mifoslabel name="product.prodnum"
-								bundle="ProductDefUIResources" />:</span> <c:out
+								bundle="ProductDefUIResources" isColonRequired="yes"/></span> <c:out
 								value="${sessionScope.productCategoryActionForm.globalPrdCategoryNum}" />
 							<span class="fontnormal"><br>
 							</span><span class="fontnormal"></span><span class="fontnormal"><br>

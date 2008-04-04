@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +27,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.application.login.util.helpers.LoginConstants;
 
 public class SavingsPrdActionForm extends BaseActionForm {
 	private MifosLogger prdDefLogger = MifosLogManager
@@ -416,62 +420,72 @@ public class SavingsPrdActionForm extends BaseActionForm {
 
 	private void validateInterestRate(ActionErrors errors,
 			HttpServletRequest request) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, locale);
+		String prdrate = resources.getString("product.prdrate");
+		String balanceInterest = resources.getString("product.balanceInterest");
+		String timePeriodString = resources.getString("product.timePeriod");
+		String frequencyString = resources.getString("product.frequency");
+		String calculation = resources.getString("product.calc");
+		String postingAccounts = resources.getString("product.postingAccounts");
 		if (StringUtils.isNullOrEmpty(getInterestRate())) {
 			addError(errors, "interestRate",
 					ProductDefinitionConstants.ERROR_MANDATORY, getLabel(
 							ConfigurationConstants.INTEREST, request)
-							+ " " + ProductDefinitionConstants.RATE);
+							+ " " + prdrate);
 		} else {
 			Double intRate = getInterestRateValue();
 			if (intRate != null && intRate > 100)
 				addError(errors, "interestRate",
 						ProductDefinitionConstants.ERRORINTRATE, getLabel(
 								ConfigurationConstants.INTEREST, request)
-								+ " " + ProductDefinitionConstants.RATE);
+								+ " " + prdrate);
 		}
 		if (StringUtils.isNullOrEmpty(getInterestCalcType()))
 			addError(
 					errors,
 					"interestCalcType",
 					ProductDefinitionConstants.ERROR_SELECT,
-					ProductDefinitionConstants.BALANCE_INTEREST
+					balanceInterest
 							+ getLabel(ConfigurationConstants.INTEREST, request)
-							+ " " + ProductDefinitionConstants.CALCULATION);
+							+ " " + calculation);
 		if (StringUtils.isNullOrEmpty(getTimeForInterestCacl())) {
 			addError(
 					errors,
 					"timeForInterestCacl",
 					ProductDefinitionConstants.ERROR_MANDATORY,
-					ProductDefinitionConstants.TIME_PERIOD
+					timePeriodString
 							+ getLabel(ConfigurationConstants.INTEREST, request)
-							+ " " + ProductDefinitionConstants.CALCULATION);
+							+ " " + calculation);
 		} else {
 			int timePeriod = getTimeForInterestCalcValue();
 			if (timePeriod <= 0 || timePeriod > 32767)
 				addError(errors, "timeForInterestCacl",
 						ProductDefinitionConstants.ERRORINTRATE,
-						ProductDefinitionConstants.TIME_PERIOD
+						timePeriodString
 								+ getLabel(ConfigurationConstants.INTEREST,
 										request) + " "
-								+ ProductDefinitionConstants.CALCULATION);
+								+ calculation);
 		}
 		if (StringUtils.isNullOrEmpty(getFreqOfInterest())) {
 			addError(
 					errors,
 					"freqOfInterest",
 					ProductDefinitionConstants.ERROR_MANDATORY,
-					ProductDefinitionConstants.FREQUENCY
+					frequencyString
 							+ getLabel(ConfigurationConstants.INTEREST, request)
-							+ " " + ProductDefinitionConstants.POSTING_ACCOUNTS);
+							+ " " + postingAccounts);
 		} else {
 			int frequency = getFreqOfInterestValue();
 			if (frequency <= 0 || frequency > 32767)
 				addError(errors, "freqOfInterest",
 						ProductDefinitionConstants.ERRORINTRATE,
-						ProductDefinitionConstants.FREQUENCY
+						frequencyString
 								+ getLabel(ConfigurationConstants.INTEREST,
 										request) + " "
-								+ ProductDefinitionConstants.POSTING_ACCOUNTS);
+								+ postingAccounts);
 		}
 
 	}
@@ -561,12 +575,19 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	private void validateInterestGLCode(HttpServletRequest request,
 			ActionErrors errors) {
 		if (StringUtils.isNullOrEmpty(getInterestGLCode()))
+		{
+			UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+			Locale locale = userContext.getPreferredLocale();
+			ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, locale);
+			String glCodeFor = resources.getString("product.glCodeFor");
 			addError(
 					errors,
 					ProductDefinitionConstants.INTERESTGLCODE,
 					ProductDefinitionConstants.ERROR_SELECT,
-					ProductDefinitionConstants.GLCODE_FOR
+					glCodeFor
 							+ getLabel(ConfigurationConstants.INTEREST, request));
+		}
 	}
 
 	public void clear() {

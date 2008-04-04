@@ -90,16 +90,18 @@
 									test="${BusinessKey.prdCategoryStatus.id eq 1}">
 									<span class="fontnormal"> <img
 										src="pages/framework/images/status_activegreen.gif" width="8"
-										height="9">&nbsp;<c:out value="Active" /> </span>
+										height="9">&nbsp;<mifos:mifoslabel name="product.active"
+									bundle="ProductDefUIResources" /> </span>
 								</c:when>
 								<c:otherwise>
 									<span class="fontnormal"> <img
 										src="pages/framework/images/status_closedblack.gif" width="8"
-										height="9">&nbsp;<c:out value="Inactive" /></span>
+										height="9">&nbsp;<mifos:mifoslabel name="product.active"
+									bundle="ProductDefUIResources" /></span>
 								</c:otherwise>
 							</c:choose> <br>
 							<span class="fontnormal"><mifos:mifoslabel
-								name="product.producttype" bundle="ProductDefUIResources" />: <c:forEach
+								name="product.producttype" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:forEach
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" var="productTypeObject">
 								<c:if
 									test="${productTypeObject.productTypeID eq BusinessKey.productType.productTypeID}">

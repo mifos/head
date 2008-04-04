@@ -113,9 +113,7 @@
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
-										name="product.compfields" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.clickpreview" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clickcanc"
+										name="product.completeFieldsInstructional"
 										bundle="ProductDefUIResources" /><br>
 									<mifos:mifoslabel name="product.fieldsrequired" mandatory="yes"
 										bundle="ProductDefUIResources" /></td>
@@ -134,7 +132,7 @@
 								<tr class="fontnormal">
 									<td width="20%" align="right"><mifos:mifoslabel
 										name="product.producttype" mandatory="yes"
-										bundle="ProductDefUIResources" />:</td>
+										bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 									<td width="80%"><mifos:select name="productCategoryActionForm"
 										property="productType" style="width:136px;">
 										<c:forEach var="ProductTypeList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" >
@@ -144,12 +142,12 @@
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="product.categoryname"
-										mandatory="yes" bundle="ProductDefUIResources" />:</td>
+										mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 									<td><mifos:mifosalphanumtext property="productCategoryName" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
-										name="product.categorydesc" bundle="ProductDefUIResources" />:</td>
+										name="product.categorydesc" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 									<td><html-el:textarea style="width:320px; height:110px;"
 										property="productCategoryDesc"></html-el:textarea></td>
 								</tr>
@@ -165,12 +163,11 @@
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px">
+									<td align="center"><html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="product.preview"
 											bundle="ProductDefUIResources" />
 									</html-el:submit> &nbsp; <html-el:button property="cancel"
-										styleClass="cancelbuttn" style="width:70px"
+										styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="product.cancel"
 											bundle="ProductDefUIResources" />

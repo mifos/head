@@ -248,10 +248,7 @@
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
-										name="product.compfields" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-										name="product.clickpreview" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clickcancinfo"
-										bundle="ProductDefUIResources" /> <br>
+										name="product.completeFieldsInstructional" bundle="ProductDefUIResources" /> <br>
 									<mifos:mifoslabel name="product.fieldsrequired" mandatory="yes"
 										bundle="ProductDefUIResources" /></td>
 								</tr>
@@ -610,7 +607,8 @@
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" mandatory="yes" /> <mifos:mifoslabel
 											name="product.prdrate" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-											name="product.type" bundle="ProductDefUIResources" /> :</td>
+											name="product.type" bundle="ProductDefUIResources" 
+											isColonRequired="yes"/></td>
 										<td width="70%" valign="top"><mifos:select
 											property="interestTypes" style="width:136px;">
 											<c:forEach
@@ -626,7 +624,8 @@
 											name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
-											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
+											name="product.prdrate" bundle="ProductDefUIResources" 
+											isColonRequired="yes"/></td>
 										<td valign="top"><mifos:decimalinput
 											property="maxInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
@@ -636,7 +635,8 @@
 											name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
-											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
+											name="product.prdrate" bundle="ProductDefUIResources" 
+											isColonRequired="yes" /></td>
 										<td valign="top"><mifos:decimalinput
 											property="minInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
@@ -647,7 +647,8 @@
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
 											name="${ConfigurationConstants.SERVICE_CHARGE}"
 											bundle="ProductDefUIResources" /> <mifos:mifoslabel
-											name="product.prdrate" bundle="ProductDefUIResources" /> :</td>
+											name="product.prdrate" bundle="ProductDefUIResources" 
+											isColonRequired="yes"/></td>
 										<td valign="top"><mifos:decimalinput
 											property="defInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
@@ -690,8 +691,8 @@
 												<td width="59%" align="left" valign="top"
 													style="border: 1px solid #CECECE;">
 												<div id="weekDIV" style="height:40px; width:380px;"><mifos:mifoslabel
-													name="product.enterfoll" bundle="ProductDefUIResources" />
-												:
+													name="product.enterfoll" bundle="ProductDefUIResources" 
+													isColonRequired="yes" />
 												<table border="0" cellspacing="0" cellpadding="2">
 													<tr class="fontnormal">
 														<td colspan="3"><mifos:mifoslabel
@@ -1038,7 +1039,7 @@
 										<tr class="fontnormal">
 											<td align="right" valign="top"><mifos:mifoslabel
 												name="product.attachfeestypes"
-												bundle="ProductDefUIResources" /> :</td>
+												bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 											<td valign="top">
 											<table width="80%" border="0" cellspacing="0" cellpadding="0">
 												<tr>
@@ -1073,7 +1074,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td width="30%" align="right" valign="top"><mifos:mifoslabel
-												name="product.srcfunds" bundle="ProductDefUIResources" /> :</td>
+												name="product.srcfunds" bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 											<td width="70%" valign="top">
 											<table width="80%" border="0" cellspacing="0" cellpadding="0">
 												<tr>
@@ -1104,7 +1105,7 @@
 												<tr class="fontnormal">
 													<td width="15%"><mifos:mifoslabel
 														name="${ConfigurationConstants.SERVICE_CHARGE}"
-														bundle="ProductDefUIResources" /> :</td>
+														bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 													<td width="85%"><mifos:select
 														property="interestGLCode" style="width:136px;">
 														<c:forEach
@@ -1116,7 +1117,7 @@
 												</tr>
 												<tr class="fontnormal">
 													<td><mifos:mifoslabel name="product.principal"
-														bundle="ProductDefUIResources" /> :</td>
+														bundle="ProductDefUIResources" isColonRequired="yes" /></td>
 													<td><mifos:select property="principalGLCode"
 														style="width:136px;">
 														<c:forEach
@@ -1140,12 +1141,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center"><html-el:submit styleClass="buttn"
-												style="width:70px"
 												onclick="transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
 												<mifos:mifoslabel name="product.preview"
 													bundle="ProductDefUIResources" />
 											</html-el:submit> &nbsp; <html-el:button property="cancel"
-												styleClass="cancelbuttn" style="width:70px"
+												styleClass="cancelbuttn"
 												onclick="javascript:fnCancel(this.form)">
 												<mifos:mifoslabel name="product.cancel"
 													bundle="ProductDefUIResources" />
