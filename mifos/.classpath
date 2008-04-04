@@ -8,7 +8,11 @@
 	<classpathentry kind="lib" path="lib/relaxngDatatype.jar"/>
 	<classpathentry kind="lib" path="lib/struts-1.2.7.jar"/>
 	<classpathentry kind="lib" path="lib/jsp-api.jar"/>
-	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/javax.servlet.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://java.sun.com/products/servlet/2.5/docs/servlet-2_5-mr2/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-validator.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar">
@@ -63,7 +67,11 @@
 			<attribute name="javadoc_location" value="http://commons.apache.org/configuration/apidocs_1.4/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://commons.apache.org/lang/api/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/strutstest-2.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-modules-cache.jar"/>

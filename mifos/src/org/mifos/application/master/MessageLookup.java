@@ -62,6 +62,12 @@ public class MessageLookup implements MessageSourceAware {
 		return messageLookupInstance;
 	}
 	
+	/**
+	 * Use {@link #getInstance()} instead.
+	 */
+	private MessageLookup() {
+	}
+	
 	public String lookup(LocalizedTextLookup namedObject, Locale locale) {
 		return lookup(namedObject.getPropertiesKey(), locale);		
 	}

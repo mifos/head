@@ -90,7 +90,7 @@ public class ConfigurationManager implements Configuration {
 		
 	}
 
-	public ConfigurationManager() {
+	private ConfigurationManager() {
 		ConfigurationFactory factory = new ConfigurationFactory();
 		URL configURL = getClass().getResource(FACTORY_CONFIG);
 		factory.setConfigurationURL(configURL);

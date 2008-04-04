@@ -34,7 +34,7 @@ import org.mifos.application.master.persistence.Upgrade183;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 186;
+	public static final int APPLICATION_VERSION = 187;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -82,18 +82,8 @@ public class DatabaseVersionPersistence {
 		register179(register);
 		register(register, new Upgrade183());
 		register185(register);
+		register187(register);
 		return Collections.unmodifiableMap(register);
-	}
-
-	private static void register185(Map<Integer, Upgrade> register) {
-		register(register, new CompositeUpgrade(new AddReport(185, (short) 0,
-				ReportsCategoryBO.ANALYSIS,
-				"Collection Sheet Report",
-				"collection_sheet_report",
-				"CollectionSheetReport.rptdesign", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
-				"Permissions-CanViewCollectionSheetReport",
-				SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
-				SecurityConstants.ANALYSIS)));
 	}
 
 	private static void register101(Map<Integer, Upgrade> register) {
@@ -276,15 +266,41 @@ public class DatabaseVersionPersistence {
 	}	
 
 	private static void register179(Map<Integer, Upgrade> register) {
+		// FIXME: instead of having a new "system information" category for
+		// the role/permission, just put it under
+		// SecurityConstants.CONFIGURATION_MANAGEMENT
 		register(register, new CompositeUpgrade(
 				new AddActivity(179, 
 						"Permissions-SystemInformation", 
-						(short) 227, null),
+						SecurityConstants.SYSTEM_INFORMATION, null),
 				new AddActivity(179, 
 						"Permissions-CanViewSystemInformation",
-						(short) 228, new Short("227"))));
+						SecurityConstants.CAN_VIEW_SYSTEM_INFO,
+						SecurityConstants.SYSTEM_INFORMATION)));
 	}
-	
+
+	private static void register185(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(new AddReport(185, (short) 0,
+				ReportsCategoryBO.ANALYSIS,
+				"Collection Sheet Report",
+				"collection_sheet_report",
+				"CollectionSheetReport.rptdesign", SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT), new AddActivity(185,
+				"Permissions-CanViewCollectionSheetReport",
+				SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT,
+				SecurityConstants.ANALYSIS)));
+	}
+
+	/**
+	 * Adds activity/role/permission data for viewing of install-time
+	 * configuration settings. 
+	 */
+	private static void register187(Map<Integer, Upgrade> register) {
+		register(register, new AddActivity(187,
+				"Permissions-CanViewOrganizationSettings",
+				SecurityConstants.CAN_VIEW_ORGANIZATION_SETTINGS,
+				SecurityConstants.CONFIGURATION_MANAGEMENT));
+	}
+
 	private final Connection connection;
 	private final Map<Integer, Upgrade> registeredUpgrades;
 

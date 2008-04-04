@@ -179,7 +179,7 @@ public class CollectionSheetHelper extends TaskHelper {
 	 * Fetches number of days in advance the collection sheet should be
 	 * generated.
 	 */
-	public int getDaysInAdvance() throws PersistenceException {
+	public static int getDaysInAdvance() throws PersistenceException {
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		return configMgr.getInt(ConfigConstants.COLLECTION_SHEET_DAYS_IN_ADVANCE);
 	}

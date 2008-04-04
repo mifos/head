@@ -79,7 +79,7 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 		savingsBO = getSavingsAccount(center,"SAVINGS_OFFERING", "SAV");
 		CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
 		
-		assertEquals(collectionSheetHelper.getDaysInAdvance(), daysInAdvance);
+		assertEquals(CollectionSheetHelper.getDaysInAdvance(), daysInAdvance);
 
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {

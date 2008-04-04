@@ -476,8 +476,14 @@ public interface SecurityConstants {
 	public final short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
 	
 	public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
+	
+	// FIXME: remove this; CONFIGURATION_MANAGEMENT should be parent for
+	// CAN_VIEW_SYSTEM_INFO
+	public final short SYSTEM_INFORMATION = 227;
 
-	// System information
+	/** Can view database driver version, svn build revision, etc. */
 	public final short CAN_VIEW_SYSTEM_INFO = 228;
 	
+	/** Can view install-time configuration settings. */
+	public final short CAN_VIEW_ORGANIZATION_SETTINGS = 230;
 }
