@@ -79,7 +79,7 @@
 						<table width="60%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
-									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" />:</span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" isColonRequired="yes"/></span>&nbsp;&nbsp;&nbsp;&nbsp; 
 									<html-el:link  href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="Savings.makeDepositWithdrawl" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -178,7 +178,7 @@
 						<table width="96%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td>
-									<html-el:submit styleClass="buttn" style="width:165px;">
+									<html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="Savings.btnreturntodetails" />
 									</html-el:submit>
 								</td>

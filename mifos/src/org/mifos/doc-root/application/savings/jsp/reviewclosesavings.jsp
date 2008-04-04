@@ -104,20 +104,20 @@
           </table>
             <br>            <table width="96%" border="0" cellspacing="0" cellpadding="3">
               <tr>
-                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.dateOfTrxn"/>:</td>
+                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.dateOfTrxn" isColonRequired="yes"/></td>
                 <td class="fontnormal">
                <%-- <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,sessionScope.accountPayment.paymentDate)}" />--%>
                 <c:out value="${sessionScope.savingsClosureForm.trxnDate}"/>
                 </td>
               </tr>
               <tr>
-                <td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.amount"/>: </td>
+                <td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.amount" isColonRequired="yes"/></td>
                 <td width="78%" class="fontnormal">
                    	<c:out value="${accountPayment.amount}"/>
                 </td>
               </tr>
               <tr>
-                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.modeOfPayment"/>: </td>
+                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.modeOfPayment" isColonRequired="yes"/></td>
                 <td class="fontnormal">
                 <c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
                  	<c:if test="${payment.id == sessionScope.savingsClosureForm.paymentTypeId}">
@@ -143,7 +143,7 @@
 				  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
               <tr>
                 <td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-                <mifos:mifoslabel name="Savings.clientName"/>:</td>
+                <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
                 <td class="fontnormal">
 	                <c:choose>
 			              <c:when test="${BusinessKey.customer.customerId == sessionScope.savingsClosureForm.customerId}">
@@ -161,7 +161,7 @@
               </tr>
              </c:if>
               <tr>
-                <td align="right" valign="top" class="fontnormalbold"><mifos:mifoslabel name="Savings.notes"/>:</td>
+                <td align="right" valign="top" class="fontnormalbold"><mifos:mifoslabel name="Savings.notes" isColonRequired="yes"/></td>
                 <td class="fontnormal">
 	                <c:out value="${sessionScope.savingsClosureForm.notes}"/>
                  </td>
@@ -171,7 +171,7 @@
               </tr>
               <tr>
                 <td height="3" colspan="2">
-                <html-el:button property="editButton" styleClass="insidebuttn" 	style="width:115px;" onclick="fnEditCloseAccount(this.form)">
+                <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEditCloseAccount(this.form)">
 					<mifos:mifoslabel name="Savings.editTransaction" />                   		
 				</html-el:button>
                 </td>
@@ -186,11 +186,11 @@
             <table width="96%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">               
-                <html-el:button property="closeButton" styleClass="buttn" style="width:70px;" onclick="javascript:funCloseAccount(this.form)">
+                <html-el:button property="closeButton" styleClass="buttn" onclick="javascript:funCloseAccount(this.form)">
 						<mifos:mifoslabel name="loan.submit" />
 	  		    </html-el:button>
                   &nbsp;
-                <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+                <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 			   </html-el:button>
                </td>

@@ -71,9 +71,7 @@
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">
 									<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
 										<html-el:link href="editStatusAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-											<mifos:mifoslabel name="Savings.Edit" />
-											<mifos:mifoslabel name="Savings.account" />
-											<mifos:mifoslabel name="Savings.status" />
+											<mifos:mifoslabel name="Savings.editAccountStatus" />
 										</html-el:link>
 									</c:if>
 									<br>
@@ -182,10 +180,10 @@
 									<p>
 										<span class="fontnormal"> <c:choose>
 												<c:when test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />:
+													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" isColonRequired="yes"/>
 	                  </c:when>
 												<c:otherwise>
-													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />:
+													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
 											</c:choose> <c:out value="${BusinessKey.recommendedAmount}" /> <c:choose>
 												<c:when test="${BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
@@ -216,10 +214,10 @@
 
 											 </span>
 										<br>
-										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />:
+										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
 										<c:out value="${BusinessKey.savingsOffering.maxAmntWithdrawl}" />
 										<br>
-										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc" />
+										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /><mifos:mifoslabel name="Savings.perc" />
 										</span>
 										<br>
 										
@@ -329,13 +327,13 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.activationDate)}" />
+               		<mifos:mifoslabel name="Savings.dateAccountOpened" isColonRequired="yes"/> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.activationDate)}" />
 					 </span></td>
 			  </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                	<mifos:mifoslabel name="Savings.totalDeposits"/>:
+                	<mifos:mifoslabel name="Savings.totalDeposits" isColonRequired="yes"/>
                 	<c:out value="${BusinessKey.savingsPerformance.totalDeposits}" />
 
                 </span></td>
@@ -343,18 +341,18 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalInterestEarned"/>: <c:out value="${BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
+                <mifos:mifoslabel name="Savings.totalInterestEarned" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls"/>: <c:out value="${BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+                <mifos:mifoslabel name="Savings.totalWithdrawls" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
               </tr>
                <c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Savings.missedDeposits"/>: <c:out value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	                <mifos:mifoslabel name="Savings.missedDeposits" isColonRequired="yes"/> <c:out value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
 	  			  </tr>
 	  			</c:if>
 						</table>

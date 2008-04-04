@@ -83,7 +83,7 @@
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td><img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17"></td>
-                    <td class="timelineboldorange"><mifos:mifoslabel name="Savings.review&Submit"/>t</td>
+                    <td class="timelineboldorange"><mifos:mifoslabel name="Savings.review&Submit"/></td>
                   </tr>
                 </table></td>
             </tr>
@@ -115,7 +115,7 @@
                 <br>
                   <span class="fontnormalbold">
                   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client')}" var="client" />
-                  	<mifos:mifoslabel name="Savings.accountOwner"/>: 
+                  	<mifos:mifoslabel name="Savings.accountOwner" isColonRequired="yes"/>
                   	</span><c:out value="${client.displayName}" /></td>
               </tr>
             </table>
@@ -132,7 +132,7 @@
                      <span class="fontnormalbold">
                      <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'prd')}" var="savingsOffering" />
                      <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-                     <mifos:mifoslabel name="Savings.instanceName"/>:</span>
+                     <mifos:mifoslabel name="Savings.instanceName" isColonRequired="yes"/></span>
                      <span class="fontnormal">
                      	<c:out value="${savingsOffering.prdOfferingName}"/><br><br>
                      </span>
@@ -140,10 +140,10 @@
                      	<mifos:mifoslabel name="Savings.instanceInformation"/>
                      </span>
                      <br>
-                      <mifos:mifoslabel name="Savings.description"/>: 
+                      <mifos:mifoslabel name="Savings.description" isColonRequired="yes"/>
                       <c:out value="${savingsOffering.description}"/><br> <br>                    
                       <span class="fontnormalbold">
-                        <mifos:mifoslabel name="Savings.typeOfDeposits"/>:
+                        <mifos:mifoslabel name="Savings.typeOfDeposits" isColonRequired="yes"/>
                       </span>
                       <span class="fontnormal">
 					 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" 
@@ -158,12 +158,12 @@
 						  
                       </span><br>
                       <span class="fontnormalbold">
-                        <mifos:mifoslabel name="Savings.maxAmountPerWithdrawl"/>: 
+                        <mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/>
                       </span><c:out value="${savingsOffering.maxAmntWithdrawl}"/><br>                        
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.balanceUsedFor"/>
 		                <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-		                <mifos:mifoslabel name="Savings.rateCalculation"/>:
+		                <mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                       </span> 
                       		 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalTypes')}" 
 											var="IntCalTypes">
@@ -176,7 +176,7 @@
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.timePeriodFor"/>
                   		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  		<mifos:mifoslabel name="Savings.rateCalculation"/>: 
+                  		<mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                       </span>
                       	<c:out value="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurAfter}"/>
                   	  	<c:if test="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
@@ -188,7 +188,7 @@
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.frequencyOf"/>
                  		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                 		<mifos:mifoslabel name="Savings.postingToAccounts"/>: 
+                 		<mifos:mifoslabel name="Savings.postingToAccounts" isColonRequired="yes"/>
                       </span>
                         <c:out value="${savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}"/>
                   	    <c:if test="${savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurrenceType.recurrenceId == 2}">
@@ -197,11 +197,11 @@
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="Savings.minBalanceRequired"/>
                   		<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                 		<mifos:mifoslabel name="Savings.rateCalculation"/>: 
+                 		<mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                       </span><c:out value="${savingsOffering.minAmntForInt}" /><br>
                       <span class="fontnormalbold">
                         <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  		<mifos:mifoslabel name="Savings.rate"/>:
+                  		<mifos:mifoslabel name="Savings.rate" isColonRequired="yes"/>
                       </span>
                       <span class="fontnormal">
 	                        <c:out value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
@@ -210,10 +210,10 @@
                     <span class="fontnormalbold">
                     <c:choose>
 	                  <c:when test="${savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit"/>: 
+	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" isColonRequired="yes"/>
 	                  </c:when>
 	                  <c:otherwise>
-	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit"/>: 
+	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
 	                </c:choose>
                     </span>
@@ -248,7 +248,7 @@
                     <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 						<c:forEach var="cf" items="${sessionScope.savingsActionForm.accountCustomFieldSet}">
 							<c:if test="${cfdef.fieldId==cf.fieldId}">
-								<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>: 
+								<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources" isColonRequired="yes"></mifos:mifoslabel>
 		        		  	 	<span class="fontnormal">
 									<c:out value="${cf.fieldValue}"/>
 								</span><br>
@@ -259,7 +259,7 @@
                     <br>
                 </c:if>  
                     <span class="fontnormal">
-                    <html-el:button property="editButton" styleClass="insidebuttn" style="width:220px;"	onclick="fnCreateEdit(this.form)">
+                    <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnCreateEdit(this.form)">
                    		<mifos:mifoslabel name="Savings.Edit"/>&nbsp;<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>&nbsp;<mifos:mifoslabel name="Savings.accountInformation"/>
 					</html-el:button> 
      			 </span> </td>
@@ -275,7 +275,7 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:button property="saveForLaterButton" styleClass="buttn"	style="width:100px;" onclick="javascript:setAccountState(this.form,13)">
+                  <html-el:button property="saveForLaterButton" styleClass="buttn"	onclick="javascript:setAccountState(this.form,13)">
 						<mifos:mifoslabel name="loan.saveForLater" />
 				 </html-el:button>
 &nbsp;
@@ -283,21 +283,21 @@
 				<c:when test="${sessionScope.isPendingApproval == true}">
 					<html-el:button
 						property="approvedButton" styleClass="buttn"
-						style="width:130px;" onclick="javascript:setAccountState(this.form,14)">
+						onclick="javascript:setAccountState(this.form,14)">
 						<mifos:mifoslabel name="loan.submitForApproval" />
 					</html-el:button>
 				</c:when>
 				<c:otherwise>
 					<html-el:button
 						property="approvedButton" styleClass="buttn"
-						style="width:130px;" onclick="javascript:setAccountState(this.form,16)">
+						onclick="javascript:setAccountState(this.form,16)">
 						<mifos:mifoslabel name="loan.approved" />
 					</html-el:button>
 				</c:otherwise>
 			</c:choose>
 &nbsp;
       
-				<html-el:button property="cancelButton" styleClass="cancelbuttn" style="width:70px;" onclick="javascript:fun_createCancel(this.form)">
+				<html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="javascript:fun_createCancel(this.form)">
 						<mifos:mifoslabel name="loan.cancel" />
 				</html-el:button>
                   </td>

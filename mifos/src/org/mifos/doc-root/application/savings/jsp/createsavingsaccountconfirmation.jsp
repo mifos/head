@@ -61,7 +61,7 @@
           </tr>
           <tr>
             <td class="fontnormalbold">
-            	<mifos:mifoslabel name="Savings.pleaseNote"/>:
+            	<mifos:mifoslabel name="Savings.pleaseNote" isColonRequired="yes"/>
             	<span class="fontnormal">
             	<mifos:mifoslabel name="Savings.ANew"/>
             	<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>

@@ -101,10 +101,10 @@
                     <mifos:mifoslabel name="Savings.accountDetails"/><br>                    
                     <c:choose>
 	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />: 
+	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" isColonRequired="yes"/>
 	                  </c:when>
 	                  <c:otherwise>
-	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit"/>: 
+	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
 	                </c:choose>
                 </span> 
@@ -138,7 +138,7 @@
                   <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 						<c:forEach var="cf" items="${savingsActionForm.accountCustomFieldSet}">
 							<c:if test="${cfdef.fieldId==cf.fieldId}">
-								<span class="fontnormalbold"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources"></mifos:mifoslabel>:</span> 
+								<span class="fontnormalbold"><mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="GroupUIResources" isColonRequired="yes"></mifos:mifoslabel></span> 
 		        		  	 	<span class="fontnormal">
 									<c:out value="${cf.fieldValue}"/>
 								</span><br>
@@ -148,7 +148,7 @@
                   <br>
                   </c:if>
                   <span class="fontnormal">
-	                  <html-el:button property="editButton" styleClass="insidebuttn" style="width:70px;" onclick="fnEdit(this.form)">
+	                  <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
 							<mifos:mifoslabel name="Savings.Edit" />
 							<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 							<mifos:mifoslabel name="Savings.accountInformation" />
@@ -168,11 +168,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-				<html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="javascript:fnUpdate(this.form)">
+				<html-el:button property="submitButton" styleClass="buttn" onclick="javascript:fnUpdate(this.form)">
 						<mifos:mifoslabel name="loan.submit" />
 				  </html-el:button>
 				  &nbsp;
-				 <html-el:button property="cancelButton" onclick="javascript:fun_editCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+				 <html-el:button property="cancelButton" onclick="javascript:fun_editCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                 </td>

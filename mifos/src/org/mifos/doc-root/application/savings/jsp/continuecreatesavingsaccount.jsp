@@ -106,7 +106,7 @@
                 <mifos:mifoslabel name="Savings.completeTheFieldsBelow"/>
                 <mifos:mifoslabel name="Savings.clickContinue"/>
 				<mifos:mifoslabel name="Savings.clickCancel"/>
-                <br> <font color="#FF0000">*</font><mifos:mifoslabel name="Savings.fieldsRequired"/>
+                <br><mifos:mifoslabel name="Savings.fieldsRequired" mandatory="yes"/>
                 </td>
               </tr>
               <tr>
@@ -119,7 +119,7 @@
                 <br>
                   <span class="fontnormalbold">
                   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client')}" var="client" />
-                  <mifos:mifoslabel name="Savings.accountOwner"/>: </span>
+                  <mifos:mifoslabel name="Savings.accountOwner" isColonRequired="yes"/></span>
                   <c:out value="${client.displayName}" />
                  </td>
               </tr>
@@ -129,12 +129,11 @@
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
                   <td width="35%" align="right" class="fontnormal">
-                  <span class="mandatorytext"><font color="#FF0000">*</font></span>
-                  <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-                  <mifos:mifoslabel name="Savings.instanceName"/>:</td>
+                  <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" mandatory="yes"/>
+                  <mifos:mifoslabel name="Savings.instanceName" isColonRequired="yes"/></td>
                   <td width="65%">
                   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'prd')}" var="savingsOffering" />
-                  	<mifos:select name="savingsActionForm" property="selectedPrdOfferingId" onchange="javascript:fun_refresh(this.form)" style="width:136px;">
+                  	<mifos:select name="savingsActionForm" property="selectedPrdOfferingId" onchange="javascript:fun_refresh(this.form)">
 						<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}" 
 											var="savingsPrdOfferings">
 											<html-el:option value="${savingsPrdOfferings.prdOfferingId}">${savingsPrdOfferings.prdOfferingName}</html-el:option>
@@ -153,7 +152,7 @@
                 </tr>
                 <tr class="fontnormal">
                   <td align="right" valign="top">
-                  	<mifos:mifoslabel name="Savings.description"/>:
+                  	<mifos:mifoslabel name="Savings.description" isColonRequired="yes"/>
                   </td>
                   
                   <td valign="top">
@@ -161,7 +160,7 @@
                   </td>
                 </tr>
                 <tr class="fontnormal">
-                  <td align="right"><mifos:mifoslabel name="Savings.typeOfDeposits"/>:</td>
+                  <td align="right"><mifos:mifoslabel name="Savings.typeOfDeposits" isColonRequired="yes"/></td>
                   <td valign="top">
                   
 							 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" 
@@ -174,7 +173,7 @@
                   </td>
                 </tr>
                 <tr class="fontnormal">
-                  <td width="35%" align="right"><mifos:mifoslabel name="Savings.maxAmountPerWithdrawl"/>:<br></td>
+                  <td width="35%" align="right"><mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" isColonRequired="yes"/><br></td>
                   <td width="65%" valign="top">
 	                  <c:out value="${savingsOffering.maxAmntWithdrawl}" />
                   </td>
@@ -199,7 +198,7 @@
                   <td align="right">
                   <mifos:mifoslabel name="Savings.timePeriodFor"/>
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  <mifos:mifoslabel name="Savings.rateCalculation"/>:
+                  <mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
                         <c:out value="${savingsOffering.timePerForInstcalc.meeting.meetingDetails.recurAfter}"/>
@@ -215,7 +214,7 @@
                   <td align="right">
                   <mifos:mifoslabel name="Savings.frequencyOf"/>
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  <mifos:mifoslabel name="Savings.postingToAccounts"/>:
+                  <mifos:mifoslabel name="Savings.postingToAccounts" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
 	                  <c:out value="${savingsOffering.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}"/>
@@ -228,7 +227,7 @@
                   <td align="right">
                   <mifos:mifoslabel name="Savings.minBalanceRequired"/>
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  <mifos:mifoslabel name="Savings.rateCalculation"/>: 
+                  <mifos:mifoslabel name="Savings.rateCalculation" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
 	                  <c:out value="${savingsOffering.minAmntForInt}" />
@@ -237,7 +236,7 @@
                 <tr class="fontnormal">
                   <td align="right">
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
-                  <mifos:mifoslabel name="Savings.rate"/>: 
+                  <mifos:mifoslabel name="Savings.rate" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
                   	<c:out value="${savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc"/>
@@ -258,10 +257,10 @@
                   <td width="35%" align="right" class="fontnormal">
 	                <c:choose>
 	                  <c:when test="${savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" mandatory="yes"/>: 
+	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" mandatory="yes" isColonRequired="yes"/>
 	                  </c:when>
 	                  <c:otherwise>
-	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit"/>: 
+	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
 	                </c:choose>
                   </td>
@@ -337,11 +336,11 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:submit styleClass="buttn" style="width:70px;" >
+                  <html-el:submit styleClass="buttn" >
 						<mifos:mifoslabel name="loan.preview" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn" >
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                   </td>

@@ -40,6 +40,8 @@ package org.mifos.application.accounts.savings.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,13 +53,16 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -82,6 +87,11 @@ public class SavingsActionForm extends AccountAppActionForm {
 			HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = new ActionErrors();
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE, locale);
+		String mandatoryAmount = resources.getString("Savings.mandatoryAmountForDeposit");
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 
@@ -102,13 +112,13 @@ public class SavingsActionForm extends AccountAppActionForm {
 						// check for mandatory amount
 						errors.add(SavingsConstants.MANDATORY,
 								new ActionMessage(SavingsConstants.MANDATORY,
-										SavingsConstants.MANDATORY_AMOUNT));
+										mandatoryAmount));
 					}
 					validateCustomFields(request,errors);
 				} catch (PageExpiredException e) {
 					errors.add(SavingsConstants.MANDATORY, new ActionMessage(
 							SavingsConstants.MANDATORY,
-							SavingsConstants.MANDATORY_AMOUNT));
+							mandatoryAmount));
 				}
 			}
 		}

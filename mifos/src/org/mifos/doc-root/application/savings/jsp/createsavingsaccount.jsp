@@ -112,7 +112,7 @@
                 <mifos:mifoslabel name="Savings.instance"/>
 				<mifos:mifoslabel name="Savings.clickContinue"/>
 				<mifos:mifoslabel name="Savings.clickCancel"/>
-<br>            <font color="#FF0000">*</font><mifos:mifoslabel name="Savings.fieldsRequired"/> </td>
+<br>            <mifos:mifoslabel name="Savings.fieldsRequired" mandatory="yes"/> </td>
               </tr>
 
 
@@ -131,9 +131,8 @@
               <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
                   <td width="30%" align="right" class="fontnormal">
-                  <span class="mandatorytext"><font color="#FF0000">*</font></span>
-                  <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-                  <mifos:mifoslabel name="Savings.instanceName"/>:</td>
+                  <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" mandatory="yes"/>
+                  <mifos:mifoslabel name="Savings.instanceName" isColonRequired="yes"/></td>
                   <td width="70%">
 
              		<mifos:select name="savingsActionForm" property="selectedPrdOfferingId">
@@ -155,11 +154,11 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:submit styleClass="buttn" style="width:70px;" >
+                  <html-el:submit styleClass="buttn">
 						<mifos:mifoslabel name="loan.continue" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+    			  <html-el:button property="cancelButton" onclick="javascript:fun_createCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                   </td>

@@ -103,8 +103,8 @@
 				  				(customerLevel==CustomerLevel.GROUP.value and 
 				  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 						<tr>
-			                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
-	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+			                <td align="right" class="fontnormal">
+	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
 								<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
 							</td>
 			                <td>				  				
@@ -200,11 +200,11 @@
               </tr>
               <tr>
                 <td align="center">
-					<html-el:submit styleClass="buttn" style="width:130px;">
+					<html-el:submit styleClass="buttn">
 						<mifos:mifoslabel name="Savings.reviewTransaction" />
 					</html-el:submit>
                   &nbsp;
-                  <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+                  <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 							<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 				  </html-el:button>
                 </td>

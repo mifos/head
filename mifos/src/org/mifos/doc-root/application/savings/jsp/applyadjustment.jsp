@@ -93,14 +93,14 @@
                 <td width="34%" class="fontnormal">
                 <mifos:mifoslabel name="savings.Last" bundle="SavingsUIResources" />
                 <c:out value="${accountActionValue.name}"/>
-                <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" />:
+                <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" isColonRequired="yes" />
                   <c:out value="${BusinessKey.lastPmnt.amount}"/></td>
                 </tr>
               <tr>
                 <td class="fontnormal">
                 <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" mandatory="yes"/>
                 <c:out value="${accountActionValue.name}"/>
-                <mifos:mifoslabel name="Savings.amount" />:
+                <mifos:mifoslabel name="Savings.amount" isColonRequired="yes" />
                    <c:if test="${param.method == 'load'}">
 						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
 					</c:if>
@@ -109,7 +109,7 @@
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
                     &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-                  	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
+                  	<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></c:if>
                   	<c:choose>
 	              		<c:when test="${!empty clientName}">
 							(<c:out value="${clientName}"/>)
@@ -145,11 +145,11 @@
             <table width="95%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">
-                <html-el:submit styleClass="buttn" style="width:125px;" >
+                <html-el:submit styleClass="buttn" >
 						<mifos:mifoslabel name="Savings.reviewAdjustment" />
 	  		    </html-el:submit>
 &nbsp;
-			    <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+			    <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 			    </html-el:button>
                 </td>

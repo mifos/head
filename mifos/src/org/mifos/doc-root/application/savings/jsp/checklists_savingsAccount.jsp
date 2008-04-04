@@ -48,7 +48,7 @@
 						</tr>
 						<tr>
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
-								name="savings.NewStatus" bundle="SavingsUIResources"></mifos:mifoslabel>:
+								name="savings.NewStatus" bundle="SavingsUIResources" isColonRequired="yes"></mifos:mifoslabel>
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editSavingsStatusActionForm.newStatusId}"
 								moduleName="accounts.savings" /><c:out
@@ -113,7 +113,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button property="editInfo"
-								value="Edit Status" styleClass="insidebuttn" style="width:65px;"
+								styleClass="insidebuttn"
 								onclick="GoToEditPage(this.form)">
 								<mifos:mifoslabel name="savings.EditStatus"
 									bundle="SavingsUIResources"></mifos:mifoslabel>
@@ -127,10 +127,10 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:submit property="btn"
-								styleClass="buttn" style="width:70px;">
+								styleClass="buttn">
 								<mifos:mifoslabel name="savings.Submit" bundle="SavingsUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button property="btn"
-								styleClass="cancelbuttn" style="width:70px"
+								styleClass="cancelbuttn"
 								onclick="goToCancelPage(this.form)">
 								<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

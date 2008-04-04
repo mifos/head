@@ -81,7 +81,7 @@
 	                <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
 	                <mifos:mifoslabel name="Savings.accountDetailsPage"/>
              		<br>
-                  <font color="#FF0000">*</font><mifos:mifoslabel name="Savings.fieldsRequired"/> 
+                  <mifos:mifoslabel name="Savings.fieldsRequired" mandatory="yes"/> 
                 </td>
               </tr>
               <tr>
@@ -103,10 +103,10 @@
                 <td width="30%" align="right" class="fontnormal">                
                  <c:choose>
 	                  <c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
-	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" mandatory="yes"/>: 
+	                  	<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" mandatory="yes" isColonRequired="yes"/> 
 	                  </c:when>
 	                  <c:otherwise>
-	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit"/>: 
+	                  <mifos:mifoslabel name="Savings.recommendedAmountForDeposit" isColonRequired="yes"/>
 	                  </c:otherwise>
 	                </c:choose>
                  </td>
@@ -152,7 +152,7 @@
                  <c:if test="${cfdef.fieldId==cf.fieldId}">
               	  <tr class="fontnormal">
 	               <td width="30%" align="right">
-					<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources"></mifos:mifoslabel>:
+					<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources" isColonRequired="yes"></mifos:mifoslabel>
 					</td>
 	               <td width="70%">
 	                  <c:if test="${cfdef.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">  
@@ -182,11 +182,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit styleClass="buttn" style="width:70px;" >
+                <html-el:submit styleClass="buttn" >
 						<mifos:mifoslabel name="loan.preview" />
 				  </html-el:submit>
 &nbsp;
-    			  <html-el:button property="cancelButton" onclick="javascript:fun_editCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+    			  <html-el:button property="cancelButton" onclick="javascript:fun_editCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="loan.cancel" />
 				  </html-el:button>
                 </td>

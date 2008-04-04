@@ -81,8 +81,7 @@
 								<td class="fontnormal">
 									<br>
 									<mifos:mifoslabel name="Savings.provideDetailsToClose" />
-									<span class="fontnormalRed">*</span>
-									<mifos:mifoslabel name="Savings.fieldsRequired" />
+									<mifos:mifoslabel name="Savings.fieldsRequired" mandatory="yes"/>
 								</td>
 							</tr>
 
@@ -101,8 +100,7 @@
 							</tr>
 							<tr>
 								<td align="right" class="fontnormal">
-									<mifos:mifoslabel name="Savings.dateOfTrxn" />
-									:
+									<mifos:mifoslabel name="Savings.dateOfTrxn" isColonRequired="yes"/>
 								</td>
 								<td class="fontnormal">
 									<%--<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,sessionScope.accountPayment.paymentDate)}" />--%>
@@ -111,8 +109,7 @@
 							</tr>
 							<tr>
 								<td width="24%" align="right" class="fontnormal">
-									<mifos:mifoslabel name="Savings.amount" />
-									:
+									<mifos:mifoslabel name="Savings.amount" isColonRequired="yes"/>
 								</td>
 								<td width="76%" valign="top" class="fontnormal">
 									<c:out value="${accountPayment.amount}" />
@@ -120,8 +117,7 @@
 							</tr>
 							<tr>
 								<td align="right" class="fontnormal">
-									<mifos:mifoslabel name="Savings.modeOfPayment" mandatory="yes" />
-									:
+									<mifos:mifoslabel name="Savings.modeOfPayment" mandatory="yes" isColonRequired="yes"/>
 								</td>
 								<td>
 									<mifos:select name="savingsClosureForm" property="paymentTypeId">
@@ -153,8 +149,8 @@
 						  				(customerLevel==CustomerLevel.GROUP.value and 
 						  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 								<tr>
-					                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
-			            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+					                <td align="right" class="fontnormal">
+			            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
 										<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
 									</td>
 					                <td>				  				
@@ -177,9 +173,7 @@
 					  		</c:choose>
 						<tr>
 								<td align="right" valign="top" class="fontnormal">
-									<span class="fontnormalRed">*</span>
-									<mifos:mifoslabel name="Savings.notes" />
-									:
+									<mifos:mifoslabel name="Savings.notes" mandatory="yes" isColonRequired="yes"/>
 								</td>
 								<td>
 									<html-el:textarea property="notes" cols="37" style="width:320px; height:110px;" />
@@ -199,11 +193,11 @@
 							</tr>
 							<tr>
 								<td align="center">
-									<html-el:submit styleClass="buttn" style="width:70px;">
+									<html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="loan.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+									<html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="loan.cancel" />
 									</html-el:button>
 								</td>

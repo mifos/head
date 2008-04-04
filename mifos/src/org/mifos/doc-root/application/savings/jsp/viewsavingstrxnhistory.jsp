@@ -84,7 +84,7 @@
 					<td align="center">
 					   <html-el:button property="returnToAccountDetailsbutton"
 					       onclick="javascript:fun_editCancel(this.form)"
-						     styleClass="buttn" style="width:165px;">
+						     styleClass="buttn">
 						<mifos:mifoslabel name="Savings.returnToAccountDetails"/>
 						</html-el:button>
 					</td>

@@ -188,7 +188,7 @@
               </tr>
               <tr>
                 <td height="3" colspan="2">
-                <html-el:button property="editButton" styleClass="insidebuttn" 	style="width:115px;" onclick="fnEditPayment(this.form)">
+                <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEditPayment(this.form)">
 					<mifos:mifoslabel name="Savings.editTransaction" />                   		
 				</html-el:button>
                 </td>
@@ -203,11 +203,11 @@
             <table width="96%" border="0" cellspacing="0" cellpadding="1">
               <tr>
                 <td align="center">
-                <html-el:button property="submitButton" styleClass="buttn" style="width:70px;" onclick="javascript:funMakePayment(this.form)">
+                <html-el:button property="submitButton" styleClass="buttn" onclick="javascript:funMakePayment(this.form)">
 						<mifos:mifoslabel name="savings.Submit" bundle="SavingsUIResources"/>
 	  		    </html-el:button>
 &nbsp;
-		      <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn" style="width:70px;">
+		      <html-el:button property="cancelButton" onclick="javascript:funCancel(this.form)" styleClass="cancelbuttn">
 						<mifos:mifoslabel name="savings.Cancel" bundle="SavingsUIResources"/>
 			   </html-el:button>
                 </td>
