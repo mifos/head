@@ -26,6 +26,7 @@ import java.util.Collections;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.Survey;
+import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
@@ -73,6 +74,19 @@ public class PPISurvey extends Survey {
 	public PPISurvey(String name, SurveyState state, SurveyType appliesTo, Country country) {
 		super(name, state, appliesTo);
 		setCountry(country);
+	}
+
+	
+	/**
+	 * implements a dispatch pattern so that a client will get the correct
+	 * class of survey without having to invoke instanceOf(). This method
+	 * overrides the superclass method to return
+	 * <p>
+	 * @see {@link PpiSurvey.createInstance()}
+	 */
+
+	public SurveyInstance createSurveyInstance() {
+		return new PpiSurveyInstance();
 	}
 
 	public void setCountry(Country country) {

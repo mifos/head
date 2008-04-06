@@ -52,6 +52,14 @@ public class TestPPISurvey {
 	}
 	
 	@Test
+	public void testCreateSurveyInstance() throws Exception {
+		Survey survey = new PPISurvey();
+		SurveyInstance instance = survey.createInstance();
+		assertTrue("Instance should be instance of PpiSurveyInstance",
+				PPISurvey.class.isInstance(survey));
+		}
+
+	@Test
 	public void createSurvey() throws Exception {
 		PPISurvey survey = makePPISurvey("PPI Test Survey");
 		

@@ -538,7 +538,7 @@ public class SurveyInstanceAction extends BaseAction {
 					.toString() + ppi);
 		}
 		
-		SurveyInstance instance = new SurveyInstance();
+		SurveyInstance instance = survey.createInstance();
 
 		instance.setSurvey(survey);
 		Set<SurveyResponse> surveyResponses = new TreeSet<SurveyResponse>();
@@ -669,8 +669,12 @@ public class SurveyInstanceAction extends BaseAction {
 
 		PersonnelBO officer = getOfficerByInputString(officerName);
 
-		SurveyInstance instance = new SurveyInstance();
-
+		/*
+		 * Dispatch instance creation to the survey, to be sure that correct type
+		 * of instance is created (SurveyInstance versus PpiSurveyInstance).
+		 */
+		SurveyInstance instance = survey.createInstance();
+		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
 		instance.setCompletedStatus(status);
@@ -689,6 +693,13 @@ public class SurveyInstanceAction extends BaseAction {
 			instance.setAccount((AccountBO) businessObject);
 		}
 
+		/*
+		 *TODO: fix this convoluted logic. Currently it resembles how you would add responses to a
+		 * database table that has a many-one relationship with its owner in the survey
+		 * instance table: create the response row,
+		 * then set the foreign key.
+		 * Instead, use Hibernate's ability to manage collections for you automatically.
+		 */
 		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
 		List<String> responseKeys = new LinkedList<String>();
 		String prefix = "response_";

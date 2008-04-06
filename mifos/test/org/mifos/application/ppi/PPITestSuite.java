@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.ppi.business.PpiLikelihoodChartTest;
 import org.mifos.application.ppi.business.PpiLikelihoodTest;
+import org.mifos.application.ppi.business.PpiSurveyInstanceTest;
 import org.mifos.application.ppi.business.TestPPIChoice;
 import org.mifos.application.ppi.business.TestPPISurvey;
 import org.mifos.application.ppi.helpers.TestXmlPPIParser;
@@ -20,6 +21,7 @@ public class PPITestSuite extends TestSuite {
 		testSuite.addTestSuite(TestPPIAction.class);
 		testSuite.addTest(PpiLikelihoodChartTest.suite());
 		testSuite.addTest(PpiLikelihoodTest.suite());
+		testSuite.addTest(PpiSurveyInstanceTest.suite());
 		return testSuite;
 	}
 }

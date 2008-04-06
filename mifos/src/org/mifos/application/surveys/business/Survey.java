@@ -1,4 +1,42 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.surveys.business;
+
+/**
+ * The superclass of surveys in MifOS. There are two types of surveys managed by MifOS:
+ * <ul>
+ * <li> Custom surveys that a client can define.
+ * <li> PPI surveys that are associated with a PPI Scorecard for a country
+ * </ul>
+ * This class serves a dual purpose:
+ * <ul>
+ * <li> It defines the state and behavior common to both types of surveys.
+ * <li> Instances of the class represent custom surveys, since there is no subclass
+ * for custom surveys
+ * </ul>
+ * PPI surveys are represented as instances of the subclass {@link PpiSurvey}.
+ * <p>
+ * TODO: this needs to be fixed. There should be a subclass for custom surveys, to avoid
+ * awkward coding such as appliesTo.
+ */
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +79,17 @@ public class Survey implements Serializable {
 	// for hibernate and jsp
 	public String getAppliesTo() {
 		return appliesTo.getValue();
+	}
+	
+	/**
+	 * implements a dispatch pattern so that a client will get the correct
+	 * class of survey without having to invoke instanceOf(). Since this class
+	 * represents custom surveys, the client gets a (custom) SurveyInstance instance.
+	 * <p>
+	 * @see {@link PpiSurvey.createInstance()}
+	 */
+	public SurveyInstance createInstance() {
+		return new SurveyInstance();
 	}
 	
 	public SurveyType getAppliesToAsEnum() {

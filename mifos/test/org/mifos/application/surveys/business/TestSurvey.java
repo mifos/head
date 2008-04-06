@@ -18,6 +18,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
@@ -56,6 +57,13 @@ public class TestSurvey extends MifosTestCase {
 		super.tearDown();
 	}
 	
+	public void testCreateSurveyInstance() throws Exception {
+		Survey survey = new Survey();
+		SurveyInstance instance = survey.createInstance();
+		assertTrue("Instance should be instance of SurveyInstance, not PpiSurveyInstance",
+				!(PPISurvey.class.isInstance(survey)));
+		}
+		
 	public void testSurveyType() {
 		assertEquals("client", SurveyType.CLIENT.getValue());
 		assertEquals("group", SurveyType.GROUP.getValue());

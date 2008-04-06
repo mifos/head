@@ -2,6 +2,7 @@ package org.mifos.application.surveys.business;
 
 import java.util.Date;
 
+import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -265,4 +266,14 @@ public class SurveyResponse implements Comparable<SurveyResponse> {
 		return getSurveyQuestion().compareTo(o.getSurveyQuestion());
 	}
 
+	/**
+	 * this method is added to test PpiSurveyInstance.computeScore
+	 * That method needs to query each response for its points.
+	 * TODO: This needs to be cleaned up so that the method is queried
+	 * only for PpiSurveyInstances.
+	 */
+	public int getPoints() {
+		PPIChoice choice = (PPIChoice) getChoiceValue();
+		return choice.getPoints();
+	}
 }
