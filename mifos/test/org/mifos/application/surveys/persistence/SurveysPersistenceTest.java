@@ -92,7 +92,7 @@ public class SurveysPersistenceTest extends MifosTestCase {
 	}
 	
 	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(TestPPIChoice.class);
+		return new JUnit4TestAdapter(SurveysPersistenceTest.class);
 	}
 
 }
