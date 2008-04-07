@@ -146,6 +146,7 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
        drop database if exists mifos
        create database mifos
        grant all privileges on mifos.* to mifos identified by 'mifos'
+       grant all privileges on test.* to mifos identified by 'mifos'
 
    Then reinvoke the ant build_db target.
 
