@@ -18,16 +18,21 @@
 		</list>
 		
 		<joined-subclass table="PPI_SURVEY" name="org.mifos.application.ppi.business.PPISurvey">
-				<key column="SURVEY_ID"/>
-				<property name="veryPoorMin" column="VERY_POOR_MIN"/>
-				<property name="veryPoorMax" column="VERY_POOR_MAX"/>
-				<property name="poorMin" column="POOR_MIN"/>
-				<property name="poorMax" column="POOR_MAX"/>
-				<property name="atRiskMin" column="AT_RISK_MIN"/>
-				<property name="atRiskMax" column="AT_RISK_MAX"/>
-				<property name="nonPoorMin" column="NON_POOR_MIN"/>
-				<property name="nonPoorMax" column="NON_POOR_MAX"/>
-				<property name="country" column="COUNTRY_ID"/>
+			<key column="SURVEY_ID"/>
+			<property name="veryPoorMin" column="VERY_POOR_MIN"/>
+			<property name="veryPoorMax" column="VERY_POOR_MAX"/>
+			<property name="poorMin" column="POOR_MIN"/>
+			<property name="poorMax" column="POOR_MAX"/>
+			<property name="atRiskMin" column="AT_RISK_MIN"/>
+			<property name="atRiskMax" column="AT_RISK_MAX"/>
+			<property name="nonPoorMin" column="NON_POOR_MIN"/>
+			<property name="nonPoorMax" column="NON_POOR_MAX"/>
+			<property name="country" column="COUNTRY_ID"/>
+			<list name="likelihoods" lazy="true" inverse="true" cascade="save-update">
+				<key column="SURVEY_ID" not-null="true"/>
+				<index column="LIKELIHOOD_ORDER"/>
+				<one-to-many class="org.mifos.application.ppi.business.PPILikelihood"/>
+			</list>
 		</joined-subclass>
 	</class>
 	<query name="surveys.retrieveAllSurveys">

@@ -16,15 +16,12 @@ import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 
-//import org.mifos.framework.persistence.Persistence;
-
 public class PPIPersistence extends SurveysPersistence {
 	
 	public PPISurvey retrieveActivePPISurvey() {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_ACTIVE_PPI);
-		if (query.list().size() > 0)
-			return (PPISurvey) query.list().get(0);
-		return null;
+		List list = query.list();
+		return list.size() > 0 ? (PPISurvey) list.get(0) : null;
 	}
 	
 	public List<PPISurvey> retrieveAllPPISurveys() {
@@ -35,9 +32,8 @@ public class PPIPersistence extends SurveysPersistence {
 	public PPISurvey retrievePPISurveyByCountry(int country) {
 		Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_RETRIEVE_PPI_BY_COUNTRY);
 		query.setParameter("COUNTRY", country);
-		if (query.list().size() > 0)
-			return (PPISurvey) query.list().get(0);
-		return null;
+		List list = query.list();
+		return list.size() > 0 ? (PPISurvey) list.get(0) : null;
 	}
 	
 	public PPISurvey retrievePPISurveyByCountry(Country country) {
@@ -53,12 +49,7 @@ public class PPIPersistence extends SurveysPersistence {
 	 */
 	public PPISurvey getPPISurvey(int id) {
 		Survey retrieved = (Survey) getSession().get(PPISurvey.class, id);
-		if (retrieved instanceof PPISurvey) {
-			return (PPISurvey) retrieved;
-		}
-		else {
-			return null;
-		}
+		return retrieved instanceof PPISurvey ? (PPISurvey) retrieved : null;
 	}
 	
 	/**
@@ -69,12 +60,7 @@ public class PPIPersistence extends SurveysPersistence {
 	 */
 	public PPIChoice getPPIChoice(int id) {
 		QuestionChoice retrieved = (QuestionChoice) getSession().get(PPIChoice.class, id);
-		if (retrieved instanceof PPIChoice) {
-			return (PPIChoice) retrieved;
-		}
-		else {
-			return null;
-		}
+		return retrieved instanceof PPIChoice ? (PPIChoice) retrieved : null;
 	}
 	
 	@Override

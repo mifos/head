@@ -20,7 +20,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 
-
 public class TestPPIAction extends MifosMockStrutsTestCase {
 	
 	private TestDatabase database; 

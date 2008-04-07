@@ -22,6 +22,7 @@ package org.mifos.application.ppi.business;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -30,6 +31,7 @@ import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.framework.exceptions.ValidationException;
 
 public class PPISurvey extends Survey {
 	
@@ -43,7 +45,6 @@ public class PPISurvey extends Survey {
 	private int nonPoorMin;
 	private int nonPoorMax;
 	
-
 	public static int DEFAULT_VERY_POOR_MIN = 0;
 	public static int DEFAULT_VERY_POOR_MAX = 24;
 	public static int DEFAULT_POOR_MIN = 25;
@@ -53,7 +54,7 @@ public class PPISurvey extends Survey {
 	public static int DEFAULT_NON_POOR_MIN = 75;
 	public static int DEFAULT_NON_POOR_MAX = 100;
 	
-	private PpiLikelihoodChart likelihoodChart;
+	private List<PPILikelihood> likelihoods = new ArrayList<PPILikelihood>();
 	
 	public PPISurvey() {
 		super();
@@ -169,14 +170,25 @@ public class PPISurvey extends Survey {
 		return nonPoorMax;
 	}
 	
-	public void setLikelihoodChart (PpiLikelihoodChart chart) {
-		this.likelihoodChart = chart;
+	public List<PPILikelihood> getLikelihoods() {
+		return likelihoods;
 	}
 	
-	public PpiLikelihood getLikelihood (int score) {
-		if ((score < 0) || (score > 100)) throw new IllegalArgumentException("score must be between 0 and 100");
-		return likelihoodChart.getRow(score);
+	public void setLikelihoods(List<PPILikelihood> likelihoods) throws ValidationException  {
+		PPILikelihoodValidator.validate(likelihoods);
+		this.likelihoods = likelihoods;
 	}
+	
+	public PPILikelihood getLikelihood(int score) {
+		if (score < 0 || score > 100) 
+			throw new IllegalArgumentException("score must be between 0 and 100");
+		for (PPILikelihood likelihood : likelihoods) {
+			if (score >= likelihood.getScoreFrom() && score <= likelihood.getScoreTo())
+				return likelihood;
+		}
+		return null;
+	}
+	
 	public void populateDefaultValues() {
 		setVeryPoorMin(DEFAULT_VERY_POOR_MIN);
 		setVeryPoorMax(DEFAULT_VERY_POOR_MAX);

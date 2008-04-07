@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.ppi.business.PPILikelihood" table="PPI_LIKELIHOODS">
+		<id name="likelihoodId" column="LIKELIHOOD_ID" type="integer" unsaved-value="0" access="field">
+			<generator class="native" />
+		</id>
+		<many-to-one name="survey" column="SURVEY_ID" class="org.mifos.application.surveys.business.Survey"     
+		    access="field" not-null="true"/>
+		<property name="scoreFrom" column="SCORE_FROM" />
+		<property name="scoreTo" column="SCORE_TO" />
+		<property name="bottomHalfBelowPovertyLinePercent" column="BOTTOM_HALF_BELOW" />
+		<property name="topHalfBelowPovertyLinePercent" column="TOP_HALF_BELOW" />
+		<property name="order" column="LIKELIHOOD_ORDER" access="field"/>
+	</class>
+</hibernate-mapping>
+

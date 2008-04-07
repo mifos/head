@@ -61,4 +61,26 @@
 		<choice points="0">No</choice>
 		<choice points="7">Yes</choice>
 	</question>
+	<likelihoods>
+		<likelihood scoreFrom="0" scoreTo="4" bottomHalf="82.2" topHalf="6.2" />
+		<likelihood scoreFrom="5" scoreTo="9" bottomHalf="67.5" topHalf="28.8" />
+		<likelihood scoreFrom="10" scoreTo="14" bottomHalf="61.2" topHalf="20.5" />
+		<likelihood scoreFrom="15" scoreTo="19" bottomHalf="60.4" topHalf="21.6" />
+		<likelihood scoreFrom="20" scoreTo="24" bottomHalf="38.8" topHalf="34.8" />
+		<likelihood scoreFrom="25" scoreTo="29" bottomHalf="32.9" topHalf="27.7" />
+		<likelihood scoreFrom="30" scoreTo="34" bottomHalf="23.9" topHalf="28.9" />
+		<likelihood scoreFrom="35" scoreTo="39" bottomHalf="18.4" topHalf="20.7" />
+		<likelihood scoreFrom="40" scoreTo="44" bottomHalf="6.9" topHalf="29.5" />
+		<likelihood scoreFrom="45" scoreTo="49" bottomHalf="6.7" topHalf="15.4" />
+		<likelihood scoreFrom="50" scoreTo="54" bottomHalf="1.1" topHalf="4.1" />
+		<likelihood scoreFrom="55" scoreTo="59" bottomHalf="0.5" topHalf="6.1" />
+		<likelihood scoreFrom="60" scoreTo="64" bottomHalf="0.2" topHalf="6.6" />
+		<likelihood scoreFrom="65" scoreTo="69" bottomHalf="0.0" topHalf="3.6" />
+		<likelihood scoreFrom="70" scoreTo="74" bottomHalf="0.0" topHalf="2.8" />
+		<likelihood scoreFrom="75" scoreTo="79" bottomHalf="0.0" topHalf="0.0" />
+		<likelihood scoreFrom="80" scoreTo="84" bottomHalf="0.0" topHalf="0.0" />
+		<likelihood scoreFrom="85" scoreTo="89" bottomHalf="0.0" topHalf="0.0" />
+		<likelihood scoreFrom="90" scoreTo="94" bottomHalf="0.0" topHalf="0.0" />
+		<likelihood scoreFrom="95" scoreTo="100" bottomHalf="0.0" topHalf="0.0" />
+	</likelihoods>
 </ppi>

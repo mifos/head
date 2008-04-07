@@ -1,10 +1,7 @@
 package org.mifos.application.ppi.business;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyResponse;
-import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.util.helpers.PPICalculator;
 
 public class PpiSurveyInstance extends SurveyInstance {
 
@@ -21,7 +18,7 @@ public class PpiSurveyInstance extends SurveyInstance {
 	public void initialize() {
 		this.score = computeScore();
 		PPISurvey survey = (PPISurvey)getSurvey();
-		PpiLikelihood l = survey.getLikelihood(score);
+		PPILikelihood l = survey.getLikelihood(score);
 		this.bottomHalfBelowPovertyLinePercent = l.getBottomHalfBelowPovertyLinePercent();
 		this.topHalfBelowPovertyLinePercent = l.getTopHalfBelowPovertyLinePercent();
 		this.belowPovertyLinePercent = l.getBelowPovertyLinePercent();
@@ -71,7 +68,7 @@ public class PpiSurveyInstance extends SurveyInstance {
 			System.out.println("sum = " + sum);
 		}	
 		if (sum > 100)
-			throw new RuntimeException("Index is larger that 100");
+			throw new RuntimeException("Index is larger than 100");
 		return sum;
 
 	}

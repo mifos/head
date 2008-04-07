@@ -3,15 +3,19 @@ package org.mifos.framework.persistence;
 import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import junit.framework.Assert;
+
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -73,7 +77,9 @@ public class LatestTestBase {
 		DatabaseVersionPersistence persistence =
 			new FileReadingPersistence(database.openConnection());
 		Upgrade upgrade = persistence.findUpgrade(nextVersion);
-
+		if (upgrade instanceof SqlUpgrade)
+			assertNoHardcodedLookupValues(upgrade, nextVersion);
+		
 		upgrade.upgrade(database.openConnection(), persistence);
 		DataStore upgraded = database.dataStore();
 		upgrade.downgrade(database.openConnection(), persistence);
@@ -83,4 +89,12 @@ public class LatestTestBase {
 		return upgraded;
 	}
 
+	private void assertNoHardcodedLookupValues(Upgrade upgrade, int version) throws Exception {
+		SqlUpgrade sqlUpgrade = (SqlUpgrade) upgrade;
+		String[] sqlStatements = sqlUpgrade.readFile((InputStream) sqlUpgrade.sql().getContent());
+		for (int i = 0; i < sqlStatements.length; i++) {
+			if (StringUtils.containsIgnoreCase(sqlStatements[i], "insert into lookup_value"))
+				Assert.fail("Bad developer! Upgrade " + version + " contains hard-coded lookup values");
+		}
+	}
 }

@@ -212,6 +212,7 @@
     	<mapping resource="org/mifos/application/surveys/business/QuestionChoice.hbm.xml"/>      	
      	<mapping resource="org/mifos/application/surveys/business/SurveyResponse.hbm.xml"/>  
     	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>
+    	<mapping resource="org/mifos/application/ppi/business/PPILikelihood.hbm.xml"/>
     	<mapping resource="org/mifos/application/acceptedpaymenttype/business/AcceptedPaymentType.hbm.xml" />
 		<mapping resource="org/mifos/application/acceptedpaymenttype/business/TransactionTypeEntity.hbm.xml" />
 			 

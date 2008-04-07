@@ -63,29 +63,26 @@ public class PPIAction extends PersistenceAction {
 	public ActionForward configure(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-			PPIPersistence ppiPersistence = new PPIPersistence();
-			
-			
-			
-			PPISurvey activeSurvey = ppiPersistence.retrieveActivePPISurvey();
-			
-			if (activeSurvey == null) {
-				activeSurvey = new PPISurvey();
-				activeSurvey.populateDefaultValues();
-			}
-			
-			GenericActionForm actionForm = (GenericActionForm) form;
-			
-			actionForm.setValue("veryPoorMin", activeSurvey.getVeryPoorMin());
-			actionForm.setValue("veryPoorMax", activeSurvey.getVeryPoorMax());
-			actionForm.setValue("poorMin", activeSurvey.getPoorMin());
-			actionForm.setValue("poorMax", activeSurvey.getPoorMax());
-			actionForm.setValue("atRiskMin", activeSurvey.getAtRiskMin());
-			actionForm.setValue("atRiskMax", activeSurvey.getAtRiskMax());
-			actionForm.setValue("nonPoorMin", activeSurvey.getNonPoorMin());
-			actionForm.setValue("nonPoorMax", activeSurvey.getNonPoorMax());
-			
-			request.setAttribute("countries", Arrays.asList(Country.values()));
+		PPIPersistence ppiPersistence = new PPIPersistence();
+		PPISurvey activeSurvey = ppiPersistence.retrieveActivePPISurvey();
+		
+		if (activeSurvey == null) {
+			activeSurvey = new PPISurvey();
+			activeSurvey.populateDefaultValues();
+		}
+		
+		GenericActionForm actionForm = (GenericActionForm) form;
+		
+		actionForm.setValue("veryPoorMin", activeSurvey.getVeryPoorMin());
+		actionForm.setValue("veryPoorMax", activeSurvey.getVeryPoorMax());
+		actionForm.setValue("poorMin", activeSurvey.getPoorMin());
+		actionForm.setValue("poorMax", activeSurvey.getPoorMax());
+		actionForm.setValue("atRiskMin", activeSurvey.getAtRiskMin());
+		actionForm.setValue("atRiskMax", activeSurvey.getAtRiskMax());
+		actionForm.setValue("nonPoorMin", activeSurvey.getNonPoorMin());
+		actionForm.setValue("nonPoorMax", activeSurvey.getNonPoorMax());
+		
+		request.setAttribute("countries", Arrays.asList(Country.values()));
 		
 		return mapping.findForward("configure");
 	}

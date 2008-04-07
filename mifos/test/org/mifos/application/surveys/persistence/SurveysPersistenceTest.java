@@ -1,16 +1,12 @@
 package org.mifos.application.surveys.persistence;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.ppi.business.PPIChoice;
-import org.mifos.application.ppi.business.TestPPIChoice;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;

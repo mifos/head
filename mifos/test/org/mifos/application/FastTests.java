@@ -145,7 +145,7 @@ public class FastTests extends TestSuite {
 
 		suite.addTestSuite(TestValidators.class);
 		
-		suite.addTestSuite(TestXmlPPIParser.class);
+		suite.addTest(TestXmlPPIParser.suite());
 		
 		suite.addTest(StringUtilsTest.suite());
 		suite.addTest(ChapterNumSortTest.suite());

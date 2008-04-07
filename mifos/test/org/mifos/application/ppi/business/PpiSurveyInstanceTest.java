@@ -8,12 +8,13 @@ import java.util.Set;
 
 import junit.framework.JUnit4TestAdapter;
 
+import org.apache.commons.lang.math.IntRange;
 import org.junit.Test;
 import org.mifos.application.surveys.business.SurveyResponse;
 
 public class PpiSurveyInstanceTest {
 	
-	private PpiLikelihood testLikelihood;
+	private PPILikelihood testLikelihood;
 	
 	private MockSurveyResponse createMockResponse(int points) {
 		MockSurveyResponse r = new MockSurveyResponse();
@@ -36,7 +37,7 @@ public class PpiSurveyInstanceTest {
 		
 		double delta = 0.0001;
 		PpiSurveyInstance instance = new PpiSurveyInstance();
-		PpiLikelihood likelihood = new PpiLikelihood(20.0, 30.0);
+		PPILikelihood likelihood = new PPILikelihood(0, 10, 20.0, 30.0);
 		MockPPISurvey s = new MockPPISurvey();
 		instance.setSurvey(s);
 		instance.initialize();
@@ -51,7 +52,7 @@ public class PpiSurveyInstanceTest {
 	private class MockPPISurvey extends PPISurvey {
 		
 		@Override
-		public PpiLikelihood getLikelihood(int score) {
+		public PPILikelihood getLikelihood(int score) {
 			return testLikelihood;
 		}
 		
