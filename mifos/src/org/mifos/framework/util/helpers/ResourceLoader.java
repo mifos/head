@@ -73,4 +73,17 @@ public class ResourceLoader {
 	}
 
 
+	/**
+	 * Works exactly like {@link #getURI(String)} except the
+	 * {@link URISyntaxException}, if caught, is wrapped in a
+	 * {@link RuntimeException}.
+	 */
+	public static URI findResource(String fileName) {
+		try {
+			return getURI(fileName);
+		}
+		catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

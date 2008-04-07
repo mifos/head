@@ -38,7 +38,6 @@
 
 package org.mifos.application.accounts.financial.util.helpers;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -58,8 +57,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class FinancialInitializer {
 	private static MifosLogger logger;
@@ -102,23 +99,18 @@ public class FinancialInitializer {
 	 * the initial CoA data is loaded in the database.
 	 */
 	public static void loadCOA() throws FinancialException {
-		String coaLocation = null;
 		Session session = HibernateUtil.getSessionTL();
 
-		// if data exists in the database, the only way to add GL accounts is
-		// to create a custom chart of accounts XML file and place it on the
-		// classpath
-		if (ChartOfAccountsConfig.isLoaded(session)) {
-			coaLocation = FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
-			try {
-				if (null == ResourceLoader.getURI(coaLocation))
-					return;
-			}
-			catch (URISyntaxException e) {
-				throw new FinancialException(e);
-			}
+		if (!ChartOfAccountsConfig.canLoadCoa(session)) {
+			logger.info("Chart of accounts data will not be modified since "
+					+ "the custom chart of accounts configuration file was "
+					+ "not found on the classpath.");
+			return;
 		}
-		else coaLocation = ChartOfAccountsConfig.getCoaUri();
+
+		final String coaLocation = ChartOfAccountsConfig.getCoaUri(session);
+		logger.info("going to load or modify chart of accounts "
+				+ "configuration from " + coaLocation);
 
 		ChartOfAccountsConfig coa;
 		try {
@@ -148,16 +140,10 @@ public class FinancialInitializer {
 							"chart of accounts hierarchy change not supported");
 
 				if (!account.getAccountName().equals(glAccount.name)) {
-					if (null != account.getCategoryType())
-						throw new FinancialException(
-								"updating top-level general ledger accounts (categories) not supported");
-
-					logger.info("updating general ledger account with code="
-									+ account.getGlCode()
-									+ ". old name="
-									+ account.getAccountName()
-									+ ", new name="
-									+ glAccount.name);
+					logger.info("updating general ledger account name. code="
+							+ account.getGlCode() + ". old name="
+							+ account.getAccountName() + ", new name="
+							+ glAccount.name);
 					ap.updateAccountName(account, glAccount.name);
 				}
 			}

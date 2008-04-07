@@ -130,24 +130,34 @@ public class ChartOfAccountsConfig {
 	 * Allows for easy overriding/customization of the chart of accounts by
 	 * placing a file called <code>mifosChartOfAccounts.custom.xml</code>
 	 * anywhere in the application server classpath.
-	 *  
+	 * 
 	 * @return relative path to Chart of Accounts config file that the
 	 *         {@link ResourceLoader} can use to derive the actual on-disk
 	 *         location.
 	 */
-	public static String getCoaUri() {
-		try {
-			if (null != ResourceLoader
-					.getURI(FilePaths.CHART_OF_ACCOUNTS_CUSTOM)) {
-				return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
-			}
-		}
-		catch (URISyntaxException e) {
-			// don't expect callers to deal with this low-level exception
-			throw new RuntimeException(e);
-		}
+	public static String getCoaUri(Session session) {
+		final boolean customCoaExists = (null != ResourceLoader
+				.findResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM));
+
+		if (customCoaExists)
+			return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;
+
+		// if data exists in the database, the only way to add GL accounts is
+		// to create a custom chart of accounts XML file and place it on the
+		// classpath
+		if (isLoaded(session) && !customCoaExists)
+			return null;
 
 		return FilePaths.CHART_OF_ACCOUNTS_DEFAULT;
+	}
+
+	/**
+	 * The only time you <em>can't</em> load the chart of accounts is when the
+	 * database has existing chart of accounts data, but a custom chart of
+	 * accounts configuration file is not found on the classpath.
+	 */
+	public static boolean canLoadCoa(Session session) {
+		return null != getCoaUri(session);
 	}
 
 	/**

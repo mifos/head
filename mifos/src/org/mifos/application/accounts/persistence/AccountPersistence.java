@@ -322,10 +322,6 @@ public class AccountPersistence extends Persistence {
 	private static final String LIABILITIES_GL_ACCOUNT_TAG = ".GLLiabilitiesAccount";
 	private static final String INCOME_GL_ACCOUNT_TAG = ".GLIncomeAccount";
 	private static final String EXPENDITURE_GL_ACCOUNT_TAG = ".GLExpenditureAccount";
-	private static final String ASSETS_ACCOUNT_GL_CODE = "10000";
-	private static final String LIABILITIES_ACCOUNT_GL_CODE = "20000";
-	private static final String INCOME_ACCOUNT_GL_CODE = "30000";
-	private static final String EXPENDITURE_ACCOUNT_GL_CODE = "40000";
 	
 	private void addAccountSubcategories(XMLConfiguration config, COABO coa, String path){
 		for (COABO subcat : coa.getSubCategoryCOABOs()) {
@@ -341,18 +337,23 @@ public class AccountPersistence extends Persistence {
 		Query topLevelAccounts = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_ACCOUNTS);
 		List listAccounts = topLevelAccounts.list();
 		Iterator it = listAccounts.iterator();
+		AccountPersistence ap = new AccountPersistence();
+		String assetsAccountGLCode = ap.getCategory(GLCategoryType.ASSET).getGlCode();
+		String liabilitiesAccountGLCode = ap.getCategory(GLCategoryType.LIABILITY).getGlCode();
+		String incomeAccountGLCode = ap.getCategory(GLCategoryType.INCOME).getGlCode();
+		String expenditureAccountGLCode = ap.getCategory(GLCategoryType.EXPENDITURE).getGlCode();
 		while (it.hasNext()) {
 			COABO coa = (COABO)it.next();
 			String name = coa.getAccountName();
 			String glCode = coa.getAssociatedGlcode().getGlcode();
 			String path = "ChartOfAccounts";
-			if (glCode.equals(ASSETS_ACCOUNT_GL_CODE)) {
+			if (glCode.equals(assetsAccountGLCode)) {
 				path = path + ASSETS_GL_ACCOUNT_TAG;
-			} else if (glCode.equals(LIABILITIES_ACCOUNT_GL_CODE)) {
+			} else if (glCode.equals(liabilitiesAccountGLCode)) {
 				path = path + LIABILITIES_GL_ACCOUNT_TAG;
-			} else if (glCode.equals(INCOME_ACCOUNT_GL_CODE)) {
+			} else if (glCode.equals(incomeAccountGLCode)) {
 				path = path + INCOME_GL_ACCOUNT_TAG;
-			} else if (glCode.equals(EXPENDITURE_ACCOUNT_GL_CODE)) {
+			} else if (glCode.equals(expenditureAccountGLCode)) {
 				path = path + EXPENDITURE_GL_ACCOUNT_TAG;
 			} else {
 				throw new RuntimeException("Unrecognized top level GLCode: " + glCode);

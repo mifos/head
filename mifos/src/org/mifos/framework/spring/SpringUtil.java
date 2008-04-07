@@ -20,7 +20,6 @@
  */
 package org.mifos.framework.spring;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -67,21 +66,15 @@ public class SpringUtil {
 		// required config file. exception thrown if not found.
 		configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
-		try {
-			if (null != ResourceLoader
-					.getURI(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
-				logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
-						+ " for custom bean configuration");
-				configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
-			}
-			else {
-				logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
-						+ " not found in application classpath. Ignoring.");
-			}
+		if (null != ResourceLoader
+				.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+			logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
+					+ " for custom bean configuration");
+			configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);
 		}
-		catch (URISyntaxException e) {
-			// don't expect callers to deal with this low-level exception
-			throw new RuntimeException(e);
+		else {
+			logger.debug(FilePaths.SPRING_CONFIG_CUSTOM_BEANS
+					+ " not found in application classpath. Ignoring.");
 		}
 
 		return configFiles.toArray(new String[] {});

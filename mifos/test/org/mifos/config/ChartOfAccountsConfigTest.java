@@ -131,7 +131,7 @@ public class ChartOfAccountsConfigTest {
 	@Test
 	public void testTraverse() throws Exception {
 		String invalid = "<GLAccount code=\"11100\" name=\"Petty Cash Accounts\">"
-				+ "<GLAccount code=\"11101\" name=\"Cash 1\" />"
+				+ "<GLAccount code=\"AB CD\" name=\"Cash 1\" />"
 				+ "<GLAccount code=\"11102\" name=\"Cash 2\" />"
 				+ "</GLAccount>";
 		ByteArrayInputStream bstr = new ByteArrayInputStream(invalid
@@ -146,6 +146,12 @@ public class ChartOfAccountsConfigTest {
 		assertEquals(3, accounts.size());
 
 		GLAccount expected = new GLAccount();
+		expected.glCode = "AB CD";
+		expected.name = "Cash 1";
+		expected.parentGlCode = "11100";
+		assertTrue(accounts.contains(expected));
+		
+		expected = new GLAccount();
 		expected.glCode = "11102";
 		expected.name = "Cash 2";
 		expected.parentGlCode = "11100";
