@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -275,8 +276,20 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		int instanceId = Integer.parseInt(actionForm.getValue("instanceId"));
 		SurveyInstance instance = persistence.getInstance(instanceId);
-		PPISurvey ppiSurvey = 
-			persistence.getPPISurvey(instance.getSurvey().getSurveyId());
+		
+		/*
+		 * The try-catch is a hack to get the correct Survey class for the instance.
+		 * TODO: Fix this.
+		 */
+		Survey survey = null;
+		int surveyId = instance.getSurvey().getSurveyId();
+		try{
+			survey = 
+				persistence.getPPISurvey(surveyId);
+		} catch (ObjectNotFoundException e) {
+			survey = persistence.getSurvey(surveyId);
+		}
+		
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
 		List<SurveyResponse> responses =
 			persistence.retrieveResponsesByInstance(instance);
@@ -312,11 +325,14 @@ public class SurveyInstanceAction extends BaseAction {
 		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL,
 				getRedirectUrl(surveyType, globalNum));
 		
-		if (ppiSurvey != null) {
-			instance.setSurvey(ppiSurvey);
+		/* Another hack
+		 * TODO: fix this so isInstance is not required
+		 */
+		if (PPISurvey.class.isInstance(survey)) {
+			instance.setSurvey(survey);
 			request.setAttribute("povertyBand",
 					PovertyBand.fromInt(PPICalculator.calculateScore(instance),
-							ppiSurvey));
+							(PPISurvey) survey));
 			return mapping.findForward(ActionForwards.get_success_ppi
 					.toString());
 		}
