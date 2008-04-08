@@ -146,7 +146,7 @@ public class XmlPPISurveyParser {
 			List<PPILikelihood> likelihoodsList = new ArrayList<PPILikelihood>();
 			NodeList likelihoods = docElement.getElementsByTagName("likelihood");
 			for (int i = 0; i < likelihoods.getLength(); i++) {
-				PPILikelihood likelihood = parseLikelihood(likelihoods.item(i));
+				PPILikelihood likelihood = parseLikelihood(likelihoods.item(i), i);
 				likelihood.setSurvey(survey);
 				likelihoodsList.add(likelihood);
 			}
@@ -156,12 +156,14 @@ public class XmlPPISurveyParser {
 		}
 	}
 	
-	private PPILikelihood parseLikelihood(Node node) throws ValidationException {
+	private PPILikelihood parseLikelihood(Node node, int order) throws ValidationException {
 		int scoreFrom = Integer.parseInt(node.getAttributes().getNamedItem("scoreFrom").getNodeValue());
 		int scoreTo = Integer.parseInt(node.getAttributes().getNamedItem("scoreTo").getNodeValue());
 		double bottomHalfPct = Double.parseDouble(node.getAttributes().getNamedItem("bottomHalf").getNodeValue());
 		double topHalfPct = Double.parseDouble(node.getAttributes().getNamedItem("topHalf").getNodeValue());
-		return new PPILikelihood(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
+		PPILikelihood lh = new PPILikelihood(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
+		lh.setOrder(order);
+		return lh;
 	}
 
 	public PPISurvey parse(String uri) throws Exception {
