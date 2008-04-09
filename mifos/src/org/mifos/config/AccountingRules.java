@@ -337,8 +337,12 @@ public class AccountingRules {
 
 
 	// refactor this later
+	/*
+	 * Return a decimal corresponding to the number of digits after the decimal.
+	 * For example 2 digits after the decimal should map to 0.01, one digit to 0.1 
+	 */
 	public static BigDecimal getDigitsAfterDecimalMultiple() {
-		return new BigDecimal("." + StringUtils.leftPad("1",getDigitsAfterDecimal().intValue()+1,"0"));
+		return new BigDecimal("." + StringUtils.leftPad("1",getDigitsAfterDecimal().intValue(),"0"));
 	}
 	
 	

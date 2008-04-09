@@ -126,6 +126,9 @@ public class LoanCalculationTest extends MifosTestCase {
 		super.setUp();
 		userContext = TestObjectFactory.getContext();
 		accountPersistence = new AccountPersistence();
+		Money.setUsingNewMoney(true);
+		LoanBO.setUsingNewLoanSchedulingMethod(true);
+
 	}
 
 
@@ -152,6 +155,8 @@ public class LoanCalculationTest extends MifosTestCase {
 
 		HibernateUtil.closeSession();
 		super.tearDown();
+		Money.setUsingNewMoney(false);
+		LoanBO.setUsingNewLoanSchedulingMethod(false);
 	}
 
 	
@@ -909,7 +914,6 @@ class LoanTestCaseData {
 	private LoanTestCaseData loadSpreadSheetData(String fileName) throws URISyntaxException
 	{
 		File file = new File(ResourceLoader.getURI(fileName));
-		//File file = new File(fileName);
 	    FileInputStream fileInputStream = null;
 	    InputStreamReader inputStreamReader = null;
 	    BufferedReader bufferedReader = null;
@@ -1018,14 +1022,19 @@ class LoanTestCaseData {
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
-		Money.setUsingNewMoney(true);
 		String rootPath = "org/mifos/application/accounts/loan/business/";
 		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
-		LoanBO.setUsingNewLoanSchedulingMethod(true);
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
-		Money.setUsingNewMoney(false);
-		LoanBO.setUsingNewLoanSchedulingMethod(false);
+	}
+
+	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/";
+		String[] dataFileNames = {"loan-repayment-master-issue1623.csv"};
+		for (int i=0; i < dataFileNames.length; i++)
+			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
 	}
 	
 	/*
@@ -1044,7 +1053,7 @@ class LoanTestCaseData {
 		config.setInitialRoundOffMultiple("1");
 		config.setInterestRoundingMode(RoundingMode.CEILING);
 		config.setInternalPrecision(13);
-		// the digits after decimal now has to be set in the applicationConfiguration
+		config.setDigitsAfterDecimal(3);
 
 		
 		// set up loan params
@@ -1288,71 +1297,7 @@ class LoanTestCaseData {
 		
 	}
 
-	
-	
-	public void testIssue1623()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-		
-		int digitsRightOfDecimal = 10;
-		
-		String expectedTotalInterest = "189.86";
-		
-		short numberOfInstallments = 11;
-		double interestRate = 36.0;
-		String loanAmount = "2500";
-		short gracePeriodDuration = 0;
-		InterestType interestType = InterestType.FLAT;
-		
-		Date startDate = new Date(System.currentTimeMillis());
 
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 10000.0, interestRate, numberOfInstallments,
-				interestType, false, false, center
-				.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-				loanAmount), numberOfInstallments, startDate, false, 
-				interestRate, gracePeriodDuration, new FundBO(), feeViewList, null);
-		
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(numberOfInstallments, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, numberOfInstallments);
-
-		int paymentCount = 1;
-
-		MathContext context = new MathContext(digitsRightOfDecimal);
-		BigDecimal totalPrincipal = new BigDecimal(0, context);
-		BigDecimal totalInterest = new BigDecimal(0, context);
-		
-		for (LoanScheduleEntity loanEntry : paymentsArray) {
-			System.out.println(paymentCount + " -- P: " + loanEntry.getPrincipal() + "  I: " + loanEntry.getInterest());
-			totalPrincipal = totalPrincipal.add(loanEntry.getPrincipal().getAmount());
-			totalInterest = totalInterest.add(loanEntry.getInterest().getAmount());
-			++paymentCount;
-		}
-		System.out.println("TotalPrincipal: " + totalPrincipal + "   TotalInterest: " + totalInterest);
-		
-		assertEquals(new BigDecimal(loanAmount), totalPrincipal);
-		assertEquals(new BigDecimal(expectedTotalInterest), totalInterest);
-		
-	}
 
 	
 /*	
