@@ -163,7 +163,7 @@
     <elementParameter field="CLOSED_LIST" name="QUERYSTORE_TYPE" value="BUILT_IN"/>
     <elementParameter field="CLOSED_LIST" name="REPOSITORY_QUERYSTORE_TYPE" value=""/>
     <elementParameter field="QUERYSTORE_TYPE" name="QUERYSTORE" value="&quot;&quot;"/>
-    <elementParameter field="MEMO_SQL" name="QUERY" value="&quot;select c.global_cust_num, a.global_account_num, a.created_by, a.created_date, a.updated_by, a.updated_date, a.closed_date, la.no_of_installments, la.disbursement_date, la.grace_period_duration, la.interest_at_disb from account a, loan_account la, customer c where a.account_id = la.account_id and a.customer_id = c.customer_id and la.account_id > 500000 and la.account_id &lt; 600000&quot;"/>
+    <elementParameter field="MEMO_SQL" name="QUERY" value="&quot;select c.global_cust_num, a.global_account_num, a.created_by, a.created_date, a.updated_by, a.updated_date, a.closed_date, la.no_of_installments, la.disbursement_date, la.grace_period_duration, la.interest_at_disb from account a use index (PRIMARY) , loan_account la , customer c use index (PRIMARY) where a.customer_id = c.customer_id and a.account_id = la.account_id&quot;"/>
     <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
     <elementParameter field="TEXT" name="LABEL" value="client_loan_account"/>
