@@ -9,7 +9,7 @@
 // (http://www.gnu.org/licenses/lgpl.html).
 //
 // ============================================================================ 
-package org_mifos_etl.clientloanaccountloader;
+package org_mifos_etl.groupstatefactloader;
 
 import routines.DataOperation;
 import routines.Mathematical;
@@ -28,15 +28,14 @@ import java.util.List;
 import java.math.BigDecimal;
 
 /**
- * Job: ClientLoanAccountLoader Purpose: Loads the client loan account data.<br>
- * Description: Load the client loan account data from OLTP db to the OLAP
- * schema. <br>
+ * Job: GroupStateFactLoader Purpose: Loads the group state fact<br>
+ * Description: Reads and loads the group state facts in client_fact table. <br>
  * 
  * @author ravikasar@gmail.com
  * @version 0.1
  * @status DEV
  */
-public class ClientLoanAccountLoader {
+public class GroupStateFactLoader {
 	// create and load default properties
 	private static java.util.Properties defaultProps = new java.util.Properties();
 	// create application properties with default
@@ -51,20 +50,26 @@ public class ClientLoanAccountLoader {
 	private static String OLAP_DB_SCHEMA;
 	private static String OLAP_DB_USER;
 	private static String OLAP_DB_PASSWORD;
-	private static final String jobName = "ClientLoanAccountLoader";
+	private static final String jobName = "GroupStateFactLoader";
 	private static final String projectName = "ORG_MIFOS_ETL";
 	public static Integer errorCode = null;
-	private static String currentComponent = "";
-	private static final java.util.Map<String, Long> start_Hash = new java.util.HashMap<String, Long>();
-	private static final java.util.Map<String, Long> end_Hash = new java.util.HashMap<String, Long>();
-	private static final java.util.Map<String, Boolean> ok_Hash = new java.util.HashMap<String, Boolean>();
-	private static final java.util.Map<String, Object> globalMap = new java.util.HashMap<String, Object>();
+	private static final java.util.Map<String, Long> start_Hash = java.util.Collections
+			.synchronizedMap(new java.util.HashMap<String, Long>());
+	private static final java.util.Map<String, Long> end_Hash = java.util.Collections
+			.synchronizedMap(new java.util.HashMap<String, Long>());
+	private static final java.util.Map<String, Boolean> ok_Hash = java.util.Collections
+			.synchronizedMap(new java.util.HashMap<String, Boolean>());
+	private static final java.util.Map<String, Object> globalMap = java.util.Collections
+			.synchronizedMap(new java.util.HashMap<String, Object>());
 
 	private class TalendException extends Exception {
 		private Exception e = null;
-		private ClientLoanAccountLoader c = null;
+		private GroupStateFactLoader c = null;
+		private String currentComponent = null;
 
-		private TalendException(ClientLoanAccountLoader c, Exception e) {
+		private TalendException(GroupStateFactLoader c, Exception e,
+				String errorComponent) {
+			this.currentComponent = errorComponent;
 			this.e = e;
 			this.c = c;
 		}
@@ -108,22 +113,16 @@ public class ClientLoanAccountLoader {
 		tJava_1_onSubJobError(exception);
 	}
 
-	public void tMysqlConnection_1_error(Exception exception)
-			throws TalendException {
-		end_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
-		tMysqlConnection_1_onSubJobError(exception);
-	}
-
 	public void tMysqlConnection_2_error(Exception exception)
 			throws TalendException {
 		end_Hash.put("tMysqlConnection_2", System.currentTimeMillis());
 		tMysqlConnection_2_onSubJobError(exception);
 	}
 
-	public void tMysqlCommit_1_error(Exception exception)
+	public void tMysqlConnection_1_error(Exception exception)
 			throws TalendException {
-		end_Hash.put("tMysqlCommit_1", System.currentTimeMillis());
-		tMysqlCommit_1_onSubJobError(exception);
+		end_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
+		tMysqlConnection_1_onSubJobError(exception);
 	}
 
 	public void tMysqlInput_1_error(Exception exception) throws TalendException {
@@ -153,17 +152,24 @@ public class ClientLoanAccountLoader {
 		tMysqlInput_2_onSubJobError(exception);
 	}
 
+	public void tMysqlInput_7_error(Exception exception) throws TalendException {
+		end_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+		tMysqlInput_7_onSubJobError(exception);
+	}
+
 	public void tAdvancedHash_row2_error(Exception exception)
 			throws TalendException {
 		end_Hash.put("tAdvancedHash_row2", System.currentTimeMillis());
 		tMysqlInput_2_onSubJobError(exception);
 	}
 
-	public void tJava_1_onSubJobError(Exception exception)
+	public void tAdvancedHash_row6_error(Exception exception)
 			throws TalendException {
+		end_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+		tMysqlInput_7_onSubJobError(exception);
 	}
 
-	public void tMysqlConnection_1_onSubJobError(Exception exception)
+	public void tJava_1_onSubJobError(Exception exception)
 			throws TalendException {
 	}
 
@@ -171,7 +177,7 @@ public class ClientLoanAccountLoader {
 			throws TalendException {
 	}
 
-	public void tMysqlCommit_1_onSubJobError(Exception exception)
+	public void tMysqlConnection_1_onSubJobError(Exception exception)
 			throws TalendException {
 	}
 
@@ -187,7 +193,12 @@ public class ClientLoanAccountLoader {
 			throws TalendException {
 	}
 
+	public void tMysqlInput_7_onSubJobError(Exception exception)
+			throws TalendException {
+	}
+
 	public void tJava_1Process() throws TalendException {
+		String currentComponent = "";
 		try {
 
 			/**
@@ -241,78 +252,15 @@ public class ClientLoanAccountLoader {
 			 * [tJava_1 end ] stop
 			 */
 
-			tMysqlConnection_1Process();
-
-		} catch (Exception e) {
-			throw new TalendException(this, e);
-		}
-	}
-
-	public void tMysqlConnection_1Process() throws TalendException {
-		try {
-
-			/**
-			 * [tMysqlConnection_1 begin ] start
-			 */
-
-			ok_Hash.put("tMysqlConnection_1", false);
-			start_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
-			currentComponent = "tMysqlConnection_1";
-
-			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
-
-			String url_tMysqlConnection_1 = "jdbc:mysql://" + OLAP_DB_HOST
-					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
-					+ "noDatetimeStringSync=true";
-
-			String userName_tMysqlConnection_1 = OLAP_DB_USER;
-
-			String password_tMysqlConnection_1 = OLAP_DB_PASSWORD;
-
-			java.sql.Connection conn_tMysqlConnection_1 = java.sql.DriverManager
-					.getConnection(url_tMysqlConnection_1,
-							userName_tMysqlConnection_1,
-							password_tMysqlConnection_1);
-
-			conn_tMysqlConnection_1.setAutoCommit(false);
-
-			globalMap.put("conn_" + "tMysqlConnection_1",
-					conn_tMysqlConnection_1);
-
-			/**
-			 * [tMysqlConnection_1 begin ] stop
-			 */
-			/**
-			 * [tMysqlConnection_1 main ] start
-			 */
-
-			currentComponent = "tMysqlConnection_1";
-
-			/**
-			 * [tMysqlConnection_1 main ] stop
-			 */
-
-			/**
-			 * [tMysqlConnection_1 end ] start
-			 */
-
-			currentComponent = "tMysqlConnection_1";
-
-			ok_Hash.put("tMysqlConnection_1", true);
-			end_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
-
-			/**
-			 * [tMysqlConnection_1 end ] stop
-			 */
-
 			tMysqlConnection_2Process();
 
 		} catch (Exception e) {
-			throw new TalendException(this, e);
+			throw new TalendException(this, e, currentComponent);
 		}
 	}
 
 	public void tMysqlConnection_2Process() throws TalendException {
+		String currentComponent = "";
 		try {
 
 			/**
@@ -325,13 +273,13 @@ public class ClientLoanAccountLoader {
 
 			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
 
-			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLTP_DB_HOST
-					+ ":" + OLTP_DB_PORT + "/" + OLTP_DB_SCHEMA + "?"
+			String url_tMysqlConnection_2 = "jdbc:mysql://" + OLAP_DB_HOST
+					+ ":" + OLAP_DB_PORT + "/" + OLAP_DB_SCHEMA + "?"
 					+ "noDatetimeStringSync=true";
 
-			String userName_tMysqlConnection_2 = OLTP_DB_USER;
+			String userName_tMysqlConnection_2 = OLAP_DB_USER;
 
-			String password_tMysqlConnection_2 = OLTP_DB_PASSWORD;
+			String password_tMysqlConnection_2 = OLAP_DB_PASSWORD;
 
 			java.sql.Connection conn_tMysqlConnection_2 = java.sql.DriverManager
 					.getConnection(url_tMysqlConnection_2,
@@ -369,87 +317,89 @@ public class ClientLoanAccountLoader {
 			 * [tMysqlConnection_2 end ] stop
 			 */
 
-			tMysqlCommit_1Process();
+			tMysqlConnection_1Process();
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
+	public void tMysqlConnection_1Process() throws TalendException {
+		String currentComponent = "";
+		try {
+
+			/**
+			 * [tMysqlConnection_1 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlConnection_1", false);
+			start_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
+			currentComponent = "tMysqlConnection_1";
+
+			java.lang.Class.forName("org.gjt.mm.mysql.Driver");
+
+			String url_tMysqlConnection_1 = "jdbc:mysql://" + OLTP_DB_HOST
+					+ ":" + OLTP_DB_PORT + "/" + OLTP_DB_SCHEMA + "?"
+					+ "noDatetimeStringSync=true";
+
+			String userName_tMysqlConnection_1 = OLTP_DB_USER;
+
+			String password_tMysqlConnection_1 = OLTP_DB_PASSWORD;
+
+			java.sql.Connection conn_tMysqlConnection_1 = java.sql.DriverManager
+					.getConnection(url_tMysqlConnection_1,
+							userName_tMysqlConnection_1,
+							password_tMysqlConnection_1);
+
+			conn_tMysqlConnection_1.setAutoCommit(false);
+
+			globalMap.put("conn_" + "tMysqlConnection_1",
+					conn_tMysqlConnection_1);
+
+			/**
+			 * [tMysqlConnection_1 begin ] stop
+			 */
+			/**
+			 * [tMysqlConnection_1 main ] start
+			 */
+
+			currentComponent = "tMysqlConnection_1";
+
+			/**
+			 * [tMysqlConnection_1 main ] stop
+			 */
+
+			/**
+			 * [tMysqlConnection_1 end ] start
+			 */
+
+			currentComponent = "tMysqlConnection_1";
+
+			ok_Hash.put("tMysqlConnection_1", true);
+			end_Hash.put("tMysqlConnection_1", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlConnection_1 end ] stop
+			 */
+
 			tMysqlInput_1Process();
 
 		} catch (Exception e) {
-			throw new TalendException(this, e);
+			throw new TalendException(this, e, currentComponent);
 		}
 	}
 
-	public void tMysqlCommit_1Process() throws TalendException {
-		try {
-			/**
-			 * [tMysqlCommit_1 begin ] start
-			 */
-
-			ok_Hash.put("tMysqlCommit_1", false);
-			start_Hash.put("tMysqlCommit_1", System.currentTimeMillis());
-			currentComponent = "tMysqlCommit_1";
-
-			/**
-			 * [tMysqlCommit_1 begin ] stop
-			 */
-			/**
-			 * [tMysqlCommit_1 main ] start
-			 */
-
-			currentComponent = "tMysqlCommit_1";
-
-			java.sql.Connection conn_tMysqlCommit_1 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_1");
-			if (conn_tMysqlCommit_1 != null && !conn_tMysqlCommit_1.isClosed()) {
-				conn_tMysqlCommit_1.commit();
-			}
-
-			/**
-			 * [tMysqlCommit_1 main ] stop
-			 */
-			/**
-			 * [tMysqlCommit_1 end ] start
-			 */
-
-			currentComponent = "tMysqlCommit_1";
-
-			ok_Hash.put("tMysqlCommit_1", true);
-			end_Hash.put("tMysqlCommit_1", System.currentTimeMillis());
-
-			/**
-			 * [tMysqlCommit_1 end ] stop
-			 */
-
-		} catch (Exception e) {
-			throw new TalendException(this, e);
-		}
-	}
-
-	private class loan_account_dimStruct {
+	private class client_factStruct {
 		private static final int DEFAULT_HASHCODE = 1;
 		private static final int PRIME = 31;
 		private int hashCode = DEFAULT_HASHCODE;
 		public boolean hashCodeDirty = true;
 
-		String global_account_num;
+		int group_id;
 
-		Short created_by;
+		short status_id;
 
-		java.util.Date created_date;
-
-		Short updated_by;
-
-		java.util.Date updated_date;
-
-		java.util.Date closed_date;
-
-		short NO_OF_INSTALLMENTS;
-
-		java.util.Date DISBURSEMENT_DATE;
-
-		Short GRACE_PERIOD_DURATION;
-
-		Short INTEREST_AT_DISB;
-
-		int client_id;
+		short time_id;
 
 		@Override
 		public int hashCode() {
@@ -457,7 +407,9 @@ public class ClientLoanAccountLoader {
 				final int prime = PRIME;
 				int result = DEFAULT_HASHCODE;
 
-				result = prime * result + (int) this.client_id;
+				result = prime * result + (int) this.group_id;
+
+				result = prime * result + (int) this.time_id;
 
 				this.hashCode = result;
 				this.hashCodeDirty = false;
@@ -473,9 +425,12 @@ public class ClientLoanAccountLoader {
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			final loan_account_dimStruct other = (loan_account_dimStruct) obj;
+			final client_factStruct other = (client_factStruct) obj;
 
-			if (this.client_id != other.client_id)
+			if (this.group_id != other.group_id)
+				return false;
+
+			if (this.time_id != other.time_id)
 				return false;
 
 			return true;
@@ -485,62 +440,36 @@ public class ClientLoanAccountLoader {
 
 	private class row1Struct {
 
+		Integer customer_id;
+
 		String global_cust_num;
 
-		String global_account_num;
+		Short status_id;
 
-		Short created_by;
-
-		java.util.Date created_date;
-
-		Short updated_by;
-
-		java.util.Date updated_date;
-
-		java.util.Date closed_date;
-
-		short NO_OF_INSTALLMENTS;
-
-		java.util.Date DISBURSEMENT_DATE;
-
-		Short GRACE_PERIOD_DURATION;
-
-		Short INTEREST_AT_DISB;
+		Short flag_id;
 
 	}
 
 	private class after_tMysqlInput_1Struct {
 
+		Integer customer_id;
+
 		String global_cust_num;
 
-		String global_account_num;
+		Short status_id;
 
-		Short created_by;
-
-		java.util.Date created_date;
-
-		Short updated_by;
-
-		java.util.Date updated_date;
-
-		java.util.Date closed_date;
-
-		short NO_OF_INSTALLMENTS;
-
-		java.util.Date DISBURSEMENT_DATE;
-
-		Short GRACE_PERIOD_DURATION;
-
-		Short INTEREST_AT_DISB;
+		Short flag_id;
 
 	}
 
 	public void tMysqlInput_1Process() throws TalendException {
+		String currentComponent = "";
 		try {
 			tMysqlInput_2Process();
+			tMysqlInput_7Process();
 
 			row1Struct row1 = new row1Struct();
-			loan_account_dimStruct loan_account_dim = new loan_account_dimStruct();
+			client_factStruct client_fact = new client_factStruct();
 
 			/**
 			 * [tMysqlOutput_1 begin ] start
@@ -550,7 +479,7 @@ public class ClientLoanAccountLoader {
 			start_Hash.put("tMysqlOutput_1", System.currentTimeMillis());
 			currentComponent = "tMysqlOutput_1";
 
-			int keyCount_tMysqlOutput_1 = 3;
+			int keyCount_tMysqlOutput_1 = 2;
 			if (keyCount_tMysqlOutput_1 < 1) {
 				throw new Exception(
 						"For update or delete, Schema must have a key");
@@ -565,7 +494,7 @@ public class ClientLoanAccountLoader {
 			int updatedCount_tMysqlOutput_1 = 0;
 			int insertedCount_tMysqlOutput_1 = 0;
 
-			String tableName_tMysqlOutput_1 = "client_loan_account_dim";
+			String tableName_tMysqlOutput_1 = "group_status_fact";
 			boolean whetherReject_tMysqlOutput_1 = false;
 
 			java.util.Calendar calendar_tMysqlOutput_1 = java.util.Calendar
@@ -580,17 +509,38 @@ public class ClientLoanAccountLoader {
 
 			java.sql.Connection conn_tMysqlOutput_1 = null;
 			conn_tMysqlOutput_1 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_1");
+					.get("conn_tMysqlConnection_2");
 
+			java.sql.DatabaseMetaData dbMetaData_tMysqlOutput_1 = conn_tMysqlOutput_1
+					.getMetaData();
+			java.sql.ResultSet rsTable_tMysqlOutput_1 = dbMetaData_tMysqlOutput_1
+					.getTables(null, null, null, new String[] { "TABLE" });
+			boolean whetherExist_tMysqlOutput_1 = false;
+			while (rsTable_tMysqlOutput_1.next()) {
+				String table_tMysqlOutput_1 = rsTable_tMysqlOutput_1
+						.getString("TABLE_NAME");
+				if (table_tMysqlOutput_1.equalsIgnoreCase("group_status_fact")) {
+					whetherExist_tMysqlOutput_1 = true;
+					break;
+				}
+			}
+			if (!whetherExist_tMysqlOutput_1) {
+				java.sql.Statement stmtCreate_tMysqlOutput_1 = conn_tMysqlOutput_1
+						.createStatement();
+				stmtCreate_tMysqlOutput_1
+						.execute("CREATE TABLE `"
+								+ tableName_tMysqlOutput_1
+								+ "`(`group_id` INT(0)  not null,`status_id` SMALLINT(0)  not null,`time_id` SMALLINT(5)  not null,primary key(`group_id`,`time_id`))");
+			}
 			java.sql.PreparedStatement pstmtUpdate_tMysqlOutput_1 = conn_tMysqlOutput_1
 					.prepareStatement("UPDATE `"
-							+ "client_loan_account_dim"
-							+ "` SET `created_by` = ?,`created_date` = ?,`updated_by` = ?,`updated_date` = ?,`closed_date` = ?,`NO_OF_INSTALLMENTS` = ?,`GRACE_PERIOD_DURATION` = ?,`INTEREST_AT_DISB` = ? WHERE `global_account_num` = ? AND `DISBURSEMENT_DATE` = ? AND `client_id` = ?");
+							+ "group_status_fact"
+							+ "` SET `status_id` = ? WHERE `group_id` = ? AND `time_id` = ?");
 
 			java.sql.PreparedStatement pstmtInsert_tMysqlOutput_1 = conn_tMysqlOutput_1
 					.prepareStatement("INSERT INTO `"
-							+ "client_loan_account_dim"
-							+ "` (`global_account_num`,`created_by`,`created_date`,`updated_by`,`updated_date`,`closed_date`,`NO_OF_INSTALLMENTS`,`DISBURSEMENT_DATE`,`GRACE_PERIOD_DURATION`,`INTEREST_AT_DISB`,`client_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+							+ "group_status_fact"
+							+ "` (`group_id`,`status_id`,`time_id`) VALUES (?,?,?)");
 
 			/**
 			 * [tMysqlOutput_1 begin ] stop
@@ -611,15 +561,23 @@ public class ClientLoanAccountLoader {
 					.get("tHash_Lookup_row2");
 			row2Struct row2HashKey = new row2Struct();
 			row2Struct row2Default = new row2Struct();
+
+			org.talend.designer.components.commons.AdvancedLookup<row6Struct> tHash_Lookup_row6 = (org.talend.designer.components.commons.AdvancedLookup<row6Struct>) globalMap
+					.get("tHash_Lookup_row6");
+			row6Struct row6HashKey = new row6Struct();
+			row6Struct row6Default = new row6Struct();
 			// ###############################
 
 			// ###############################
 			// # Vars initialization
+			class Var__tMap_1__Struct {
+			}
+			Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
 			// ###############################
 
 			// ###############################
 			// # Outputs initialization
-			loan_account_dimStruct loan_account_dim_tmp = new loan_account_dimStruct();
+			client_factStruct client_fact_tmp = new client_factStruct();
 			// ###############################
 
 			/**
@@ -637,12 +595,12 @@ public class ClientLoanAccountLoader {
 			int nb_line_tMysqlInput_1 = 0;
 			java.sql.Connection conn_tMysqlInput_1 = null;
 			conn_tMysqlInput_1 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_2");
+					.get("conn_tMysqlConnection_1");
 
 			java.sql.Statement stmt_tMysqlInput_1 = conn_tMysqlInput_1
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_1 = stmt_tMysqlInput_1
-					.executeQuery("select c.global_cust_num, a.global_account_num, a.created_by, a.created_date, a.updated_by, a.updated_date, a.closed_date, la.no_of_installments, la.disbursement_date, la.grace_period_duration, la.interest_at_disb from account a use index (PRIMARY) , loan_account la , customer c use index (PRIMARY) where a.customer_id = c.customer_id and a.account_id = la.account_id");
+					.executeQuery("select c.customer_id, c.global_cust_num, c.status_id, f.flag_id from customer c, customer_state s, customer_state_flag f, customer_flag_detail d where c.status_id = s.status_id and s.status_id = f.status_id and c.customer_id = d.customer_id and f.flag_id = d.flag_id and c.customer_level_id = 2");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_1 = rs_tMysqlInput_1
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_1 = rsmd_tMysqlInput_1.getColumnCount();
@@ -656,38 +614,38 @@ public class ClientLoanAccountLoader {
 			globalMap
 					.put(
 							"tMysqlInput_1_QUERY",
-							"select c.global_cust_num, a.global_account_num, a.created_by, a.created_date, a.updated_by, a.updated_date, a.closed_date, la.no_of_installments, la.disbursement_date, la.grace_period_duration, la.interest_at_disb from account a use index (PRIMARY) , loan_account la , customer c use index (PRIMARY) where a.customer_id = c.customer_id and a.account_id = la.account_id");
+							"select c.customer_id, c.global_cust_num, c.status_id, f.flag_id from customer c, customer_state s, customer_state_flag f, customer_flag_detail d where c.status_id = s.status_id and s.status_id = f.status_id and c.customer_id = d.customer_id and f.flag_id = d.flag_id and c.customer_level_id = 2");
 
 			while (rs_tMysqlInput_1.next()) {
 				nb_line_tMysqlInput_1++;
 
 				if (colQtyInRs_tMysqlInput_1 < 1) {
 
-					row1.global_cust_num = null;
+					row1.customer_id = null;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(1) != null) {
-						row1.global_cust_num = rs_tMysqlInput_1.getString(1);
+						row1.customer_id = rs_tMysqlInput_1.getInt(1);
 					} else {
 
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
+						row1.customer_id = null;
+
 					}
 
 				}
 
 				if (colQtyInRs_tMysqlInput_1 < 2) {
 
-					row1.global_account_num = null;
+					row1.global_cust_num = null;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(2) != null) {
-						row1.global_account_num = rs_tMysqlInput_1.getString(2);
+						row1.global_cust_num = rs_tMysqlInput_1.getString(2);
 					} else {
 
-						row1.global_account_num = null;
+						row1.global_cust_num = null;
 
 					}
 
@@ -695,15 +653,15 @@ public class ClientLoanAccountLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 3) {
 
-					row1.created_by = null;
+					row1.status_id = null;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(3) != null) {
-						row1.created_by = rs_tMysqlInput_1.getShort(3);
+						row1.status_id = rs_tMysqlInput_1.getShort(3);
 					} else {
 
-						row1.created_by = null;
+						row1.status_id = null;
 
 					}
 
@@ -711,159 +669,15 @@ public class ClientLoanAccountLoader {
 
 				if (colQtyInRs_tMysqlInput_1 < 4) {
 
-					row1.created_date = null;
+					row1.flag_id = null;
 
 				} else {
 
-					if (rs_tMysqlInput_1.getString(4) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(4);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.created_date = rs_tMysqlInput_1
-									.getTimestamp(4);
-						} else {
-							row1.created_date = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.created_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 5) {
-
-					row1.updated_by = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(5) != null) {
-						row1.updated_by = rs_tMysqlInput_1.getShort(5);
+					if (rs_tMysqlInput_1.getObject(4) != null) {
+						row1.flag_id = rs_tMysqlInput_1.getShort(4);
 					} else {
 
-						row1.updated_by = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 6) {
-
-					row1.updated_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getString(6) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(6);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.updated_date = rs_tMysqlInput_1
-									.getTimestamp(6);
-						} else {
-							row1.updated_date = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.updated_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 7) {
-
-					row1.closed_date = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getString(7) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(7);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.closed_date = rs_tMysqlInput_1.getTimestamp(7);
-						} else {
-							row1.closed_date = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.closed_date = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 8) {
-
-					row1.NO_OF_INSTALLMENTS = 0;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(8) != null) {
-						row1.NO_OF_INSTALLMENTS = rs_tMysqlInput_1.getShort(8);
-					} else {
-
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 9) {
-
-					row1.DISBURSEMENT_DATE = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getString(9) != null) {
-						String dateString_tMysqlInput_1 = rs_tMysqlInput_1
-								.getString(9);
-						if (!dateString_tMysqlInput_1.equals("0000-00-00")
-								&& !dateString_tMysqlInput_1
-										.equals("0000-00-00 00:00:00")) {
-							row1.DISBURSEMENT_DATE = rs_tMysqlInput_1
-									.getTimestamp(9);
-						} else {
-							row1.DISBURSEMENT_DATE = (java.util.Date) year0_tMysqlInput_1
-									.clone();
-						}
-					} else {
-						row1.DISBURSEMENT_DATE = null;
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 10) {
-
-					row1.GRACE_PERIOD_DURATION = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(10) != null) {
-						row1.GRACE_PERIOD_DURATION = rs_tMysqlInput_1
-								.getShort(10);
-					} else {
-
-						row1.GRACE_PERIOD_DURATION = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 11) {
-
-					row1.INTEREST_AT_DISB = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(11) != null) {
-						row1.INTEREST_AT_DISB = rs_tMysqlInput_1.getShort(11);
-					} else {
-
-						row1.INTEREST_AT_DISB = null;
+						row1.flag_id = null;
 
 					}
 
@@ -908,6 +722,8 @@ public class ClientLoanAccountLoader {
 					} // G 90
 					else { // G 91
 
+						rejectedInnerJoin_tMap_1 = true;
+
 					} // G 91
 
 				} // G 20
@@ -928,379 +744,154 @@ public class ClientLoanAccountLoader {
 					row2 = fromLookup_row2;
 				}
 
-				// ###############################
+				boolean forceLooprow6 = false;
+				int sizeResultsFromLookup_row6 = -1;
 
-				{ // start of Var scope
+				boolean hasAtLeastOneValidLookup_row6 = false;
+				Object[] row6Array = null;
+
+				if (!rejectedInnerJoin_tMap_1) { // G 35
+					row6Array = tHash_Lookup_row6.getResultArray();
+
+					if (row6Array.length == 0) {
+
+						forceLooprow6 = true;
+					}
+				} // G 35
+				else { // G 36
+					forceLooprow6 = true;
+				} // G 36
+				sizeResultsFromLookup_row6 = row6Array != null ? row6Array.length
+						: -1;
+
+				for (int irow6 = 0; sizeResultsFromLookup_row6 != -1
+						&& irow6 < sizeResultsFromLookup_row6 || forceLooprow6; irow6++) {
+
+					row6Struct fromLookup_row6 = null;
+					row6Struct row6 = row6Default;
+
+					if (!forceLooprow6) { // G 46
+
+						if (irow6 < row6Array.length) {
+							fromLookup_row6 = (row6Struct) row6Array[irow6];
+							row6 = fromLookup_row6;
+						}
+
+					} // G 46
+
+					forceLooprow6 = false;
 
 					// ###############################
-					// # Vars tables
-					// ###############################
 
-					// ###############################
-					// # Output tables
-					loan_account_dim = null;
+					{ // start of Var scope
 
-					// # Output table : 'loan_account_dim'
-					loan_account_dim_tmp.global_account_num = row1.global_account_num;
-					loan_account_dim_tmp.created_by = row1.created_by;
-					loan_account_dim_tmp.created_date = row1.created_date;
-					loan_account_dim_tmp.updated_by = row1.updated_by;
-					loan_account_dim_tmp.updated_date = row1.updated_date;
-					loan_account_dim_tmp.closed_date = row1.closed_date;
-					loan_account_dim_tmp.NO_OF_INSTALLMENTS = row1.NO_OF_INSTALLMENTS;
-					loan_account_dim_tmp.DISBURSEMENT_DATE = row1.DISBURSEMENT_DATE;
-					loan_account_dim_tmp.GRACE_PERIOD_DURATION = row1.GRACE_PERIOD_DURATION;
-					loan_account_dim_tmp.INTEREST_AT_DISB = row1.INTEREST_AT_DISB;
-					loan_account_dim_tmp.client_id = row2.client_id;
-					loan_account_dim = loan_account_dim_tmp;
-					// ###############################
+						// ###############################
+						// # Vars tables
+						Var__tMap_1__Struct Var = Var__tMap_1;
+						// ###############################
 
-				} // end of Var scope
+						// ###############################
+						// # Output tables
+						client_fact = null;
 
-				rejectedInnerJoin_tMap_1 = false;
+						if (!rejectedInnerJoin_tMap_1) {
 
-				/**
-				 * [tMap_1 main ] stop
-				 */
-				// Start of branch "loan_account_dim"
-				if (loan_account_dim != null) {
+							// # Output table : 'client_fact'
+							client_fact_tmp.group_id = row2.group_id;
+							client_fact_tmp.status_id = new Integer(
+									(row1.status_id == 5 && row1.flag_id == 1) ? 5
+											: (row1.status_id == 5 && row1.flag_id == 2) ? 8
+													: (row1.status_id == 5 && row1.flag_id == 3) ? 6
+															: (row1.status_id == 5 && row1.flag_id == 4) ? 7
+																	: (row1.status_id == 5 && row1.flag_id == 5) ? 9
+																			: (row1.status_id == 6 && row1.flag_id == 6) ? 10
+																					: (row1.status_id == 6 && row1.flag_id == 7) ? 12
+																							: (row1.status_id == 6 && row1.flag_id == 8) ? 11
+																									: (row1.status_id == 6 && row1.flag_id == 9) ? 13
+																											: (row1.status_id == 6 && row1.flag_id == 10) ? 14
+																													: (row1.status_id == 11 && row1.flag_id == 11) ? 5
+																															: (row1.status_id == 11 && row1.flag_id == 12) ? 8
+																																	: (row1.status_id == 11 && row1.flag_id == 13) ? 6
+																																			: (row1.status_id == 11 && row1.flag_id == 14) ? 7
+																																					: (row1.status_id == 11 && row1.flag_id == 15) ? 9
+																																							: (row1.status_id == 12 && row1.flag_id == 16) ? 10
+																																									: (row1.status_id == 12 && row1.flag_id == 17) ? 12
+																																											: (row1.status_id == 12 && row1.flag_id == 18) ? 11
+																																													: (row1.status_id == 12 && row1.flag_id == 19) ? 13
+																																															: (row1.status_id == 12 && row1.flag_id == 20) ? 14
+																																																	: row1.status_id)
+									.shortValue();
+							client_fact_tmp.time_id = row6.time_id;
+							client_fact = client_fact_tmp;
+						} // closing inner join bracket (2)
+						// ###############################
+
+					} // end of Var scope
+
+					rejectedInnerJoin_tMap_1 = false;
 
 					/**
-					 * [tMysqlOutput_1 main ] start
+					 * [tMap_1 main ] stop
 					 */
+					// Start of branch "client_fact"
+					if (client_fact != null) {
 
-					currentComponent = "tMysqlOutput_1";
+						/**
+						 * [tMysqlOutput_1 main ] start
+						 */
 
-					whetherReject_tMysqlOutput_1 = false;
-					int updateFlag_tMysqlOutput_1 = 0;
+						currentComponent = "tMysqlOutput_1";
 
-					if (loan_account_dim.created_by == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(1,
-								java.sql.Types.INTEGER);
-
-					} else {
+						whetherReject_tMysqlOutput_1 = false;
+						int updateFlag_tMysqlOutput_1 = 0;
 
 						pstmtUpdate_tMysqlOutput_1.setShort(1,
-								loan_account_dim.created_by);
+								client_fact.status_id);
 
-					}
-
-					if (loan_account_dim.created_date != null) {
-						// timestamp < min java date value (year 1) || timestamp
-						// > max mysql value (year 10000) => set 0000-00-00 as
-						// date in MySQL
-						date_tMysqlOutput_1 = loan_account_dim.created_date
-								.getTime();
-						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-							pstmtUpdate_tMysqlOutput_1.setString(2,
-									"0000-00-00 00:00:00");
-						} else {
-							pstmtUpdate_tMysqlOutput_1
-									.setTimestamp(2, new java.sql.Timestamp(
-											date_tMysqlOutput_1));
-						}
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setNull(2,
-								java.sql.Types.DATE);
-
-					}
-
-					if (loan_account_dim.updated_by == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(3,
-								java.sql.Types.INTEGER);
-
-					} else {
+						pstmtUpdate_tMysqlOutput_1.setInt(2,
+								client_fact.group_id);
 
 						pstmtUpdate_tMysqlOutput_1.setShort(3,
-								loan_account_dim.updated_by);
-
-					}
-
-					if (loan_account_dim.updated_date != null) {
-						// timestamp < min java date value (year 1) || timestamp
-						// > max mysql value (year 10000) => set 0000-00-00 as
-						// date in MySQL
-						date_tMysqlOutput_1 = loan_account_dim.updated_date
-								.getTime();
-						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-							pstmtUpdate_tMysqlOutput_1.setString(4,
-									"0000-00-00 00:00:00");
-						} else {
-							pstmtUpdate_tMysqlOutput_1
-									.setTimestamp(4, new java.sql.Timestamp(
-											date_tMysqlOutput_1));
-						}
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setNull(4,
-								java.sql.Types.DATE);
-
-					}
-
-					if (loan_account_dim.closed_date != null) {
-						// timestamp < min java date value (year 1) || timestamp
-						// > max mysql value (year 10000) => set 0000-00-00 as
-						// date in MySQL
-						date_tMysqlOutput_1 = loan_account_dim.closed_date
-								.getTime();
-						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-							pstmtUpdate_tMysqlOutput_1.setString(5,
-									"0000-00-00 00:00:00");
-						} else {
-							pstmtUpdate_tMysqlOutput_1
-									.setTimestamp(5, new java.sql.Timestamp(
-											date_tMysqlOutput_1));
-						}
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setNull(5,
-								java.sql.Types.DATE);
-
-					}
-
-					pstmtUpdate_tMysqlOutput_1.setShort(6,
-							loan_account_dim.NO_OF_INSTALLMENTS);
-
-					if (loan_account_dim.GRACE_PERIOD_DURATION == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(7,
-								java.sql.Types.INTEGER);
-
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setShort(7,
-								loan_account_dim.GRACE_PERIOD_DURATION);
-
-					}
-
-					if (loan_account_dim.INTEREST_AT_DISB == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(8,
-								java.sql.Types.INTEGER);
-
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setShort(8,
-								loan_account_dim.INTEREST_AT_DISB);
-
-					}
-
-					if (loan_account_dim.global_account_num == null) {
-						pstmtUpdate_tMysqlOutput_1.setNull(9,
-								java.sql.Types.VARCHAR);
-
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setString(9,
-								loan_account_dim.global_account_num);
-
-					}
-
-					if (loan_account_dim.DISBURSEMENT_DATE != null) {
-						// timestamp < min java date value (year 1) || timestamp
-						// > max mysql value (year 10000) => set 0000-00-00 as
-						// date in MySQL
-						date_tMysqlOutput_1 = loan_account_dim.DISBURSEMENT_DATE
-								.getTime();
-						if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-								|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-							pstmtUpdate_tMysqlOutput_1.setString(10,
-									"0000-00-00 00:00:00");
-						} else {
-							pstmtUpdate_tMysqlOutput_1
-									.setTimestamp(10, new java.sql.Timestamp(
-											date_tMysqlOutput_1));
-						}
-					} else {
-
-						pstmtUpdate_tMysqlOutput_1.setNull(10,
-								java.sql.Types.DATE);
-
-					}
-
-					pstmtUpdate_tMysqlOutput_1.setInt(11,
-							loan_account_dim.client_id);
-
-					try {
-						updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
-								.executeUpdate();
-						updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
-								+ updateFlag_tMysqlOutput_1;
-
-					} catch (Exception e) {
-						whetherReject_tMysqlOutput_1 = true;
-						System.err.print(e.getMessage());
-					}
-					if (updateFlag_tMysqlOutput_1 == 0) {
-
-						if (loan_account_dim.global_account_num == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(1,
-									java.sql.Types.VARCHAR);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setString(1,
-									loan_account_dim.global_account_num);
-
-						}
-
-						if (loan_account_dim.created_by == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(2,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(2,
-									loan_account_dim.created_by);
-
-						}
-
-						if (loan_account_dim.created_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = loan_account_dim.created_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(3,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(3,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(3,
-									java.sql.Types.DATE);
-
-						}
-
-						if (loan_account_dim.updated_by == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(4,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(4,
-									loan_account_dim.updated_by);
-
-						}
-
-						if (loan_account_dim.updated_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = loan_account_dim.updated_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(5,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(5,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(5,
-									java.sql.Types.DATE);
-
-						}
-
-						if (loan_account_dim.closed_date != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = loan_account_dim.closed_date
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(6,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(6,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(6,
-									java.sql.Types.DATE);
-
-						}
-
-						pstmtInsert_tMysqlOutput_1.setShort(7,
-								loan_account_dim.NO_OF_INSTALLMENTS);
-
-						if (loan_account_dim.DISBURSEMENT_DATE != null) {
-							// timestamp < min java date value (year 1) ||
-							// timestamp > max mysql value (year 10000) => set
-							// 0000-00-00 as date in MySQL
-							date_tMysqlOutput_1 = loan_account_dim.DISBURSEMENT_DATE
-									.getTime();
-							if (date_tMysqlOutput_1 < year1_tMysqlOutput_1
-									|| date_tMysqlOutput_1 >= year10000_tMysqlOutput_1) {
-								pstmtInsert_tMysqlOutput_1.setString(8,
-										"0000-00-00 00:00:00");
-							} else {
-								pstmtInsert_tMysqlOutput_1.setTimestamp(8,
-										new java.sql.Timestamp(
-												date_tMysqlOutput_1));
-							}
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setNull(8,
-									java.sql.Types.DATE);
-
-						}
-
-						if (loan_account_dim.GRACE_PERIOD_DURATION == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(9,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(9,
-									loan_account_dim.GRACE_PERIOD_DURATION);
-
-						}
-
-						if (loan_account_dim.INTEREST_AT_DISB == null) {
-							pstmtInsert_tMysqlOutput_1.setNull(10,
-									java.sql.Types.INTEGER);
-
-						} else {
-
-							pstmtInsert_tMysqlOutput_1.setShort(10,
-									loan_account_dim.INTEREST_AT_DISB);
-
-						}
-
-						pstmtInsert_tMysqlOutput_1.setInt(11,
-								loan_account_dim.client_id);
+								client_fact.time_id);
 
 						try {
-							insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
-									+ pstmtInsert_tMysqlOutput_1
-											.executeUpdate();
+							updateFlag_tMysqlOutput_1 = pstmtUpdate_tMysqlOutput_1
+									.executeUpdate();
+							updatedCount_tMysqlOutput_1 = updatedCount_tMysqlOutput_1
+									+ updateFlag_tMysqlOutput_1;
+
 						} catch (Exception e) {
 							whetherReject_tMysqlOutput_1 = true;
 							System.err.print(e.getMessage());
 						}
-					}
-					nb_line_tMysqlOutput_1++;
-					if (!whetherReject_tMysqlOutput_1) {
-					}
-					/**
-					 * [tMysqlOutput_1 main ] stop
-					 */
+						if (updateFlag_tMysqlOutput_1 == 0) {
 
-				} // End of branch "loan_account_dim"
+							pstmtInsert_tMysqlOutput_1.setInt(1,
+									client_fact.group_id);
+
+							pstmtInsert_tMysqlOutput_1.setShort(2,
+									client_fact.status_id);
+
+							pstmtInsert_tMysqlOutput_1.setShort(3,
+									client_fact.time_id);
+
+							try {
+								insertedCount_tMysqlOutput_1 = insertedCount_tMysqlOutput_1
+										+ pstmtInsert_tMysqlOutput_1
+												.executeUpdate();
+							} catch (Exception e) {
+								whetherReject_tMysqlOutput_1 = true;
+								System.err.print(e.getMessage());
+							}
+						}
+						nb_line_tMysqlOutput_1++;
+						/**
+						 * [tMysqlOutput_1 main ] stop
+						 */
+
+					} // End of branch "client_fact"
+
+				} // close loop of lookup 'row6'
 
 				/**
 				 * [tMysqlInput_1 end ] start
@@ -1328,6 +919,9 @@ public class ClientLoanAccountLoader {
 			// ###############################
 			// # Lookup hashes releasing
 			globalMap.remove("tHash_row2");
+			// ###############################
+
+			globalMap.remove("tHash_row6");
 			// ###############################
 
 			ok_Hash.put("tMap_1", true);
@@ -1371,17 +965,19 @@ public class ClientLoanAccountLoader {
 			ok_Hash.put("tMysqlOutput_1", true);
 			end_Hash.put("tMysqlOutput_1", System.currentTimeMillis());
 
-			tMysqlCommit_2Process();
 			/**
 			 * [tMysqlOutput_1 end ] stop
 			 */
 
+			tMysqlCommit_2Process();
+
 		} catch (Exception e) {
-			throw new TalendException(this, e);
+			throw new TalendException(this, e, currentComponent);
 		}
 	}
 
 	public void tMysqlCommit_2Process() throws TalendException {
+		String currentComponent = "";
 		try {
 			/**
 			 * [tMysqlCommit_2 begin ] start
@@ -1401,9 +997,10 @@ public class ClientLoanAccountLoader {
 			currentComponent = "tMysqlCommit_2";
 
 			java.sql.Connection conn_tMysqlCommit_2 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_1");
+					.get("conn_tMysqlConnection_2");
 			if (conn_tMysqlCommit_2 != null && !conn_tMysqlCommit_2.isClosed()) {
 				conn_tMysqlCommit_2.commit();
+				conn_tMysqlCommit_2.close();
 			}
 
 			/**
@@ -1423,7 +1020,7 @@ public class ClientLoanAccountLoader {
 			 */
 
 		} catch (Exception e) {
-			throw new TalendException(this, e);
+			throw new TalendException(this, e, currentComponent);
 		}
 	}
 
@@ -1433,7 +1030,7 @@ public class ClientLoanAccountLoader {
 		private int hashCode = DEFAULT_HASHCODE;
 		public boolean hashCodeDirty = true;
 
-		int client_id;
+		int group_id;
 
 		String global_cust_num;
 
@@ -1476,6 +1073,7 @@ public class ClientLoanAccountLoader {
 	}
 
 	public void tMysqlInput_2Process() throws TalendException {
+		String currentComponent = "";
 		try {
 
 			row2Struct row2 = new row2Struct();
@@ -1508,12 +1106,12 @@ public class ClientLoanAccountLoader {
 			int nb_line_tMysqlInput_2 = 0;
 			java.sql.Connection conn_tMysqlInput_2 = null;
 			conn_tMysqlInput_2 = (java.sql.Connection) globalMap
-					.get("conn_tMysqlConnection_1");
+					.get("conn_tMysqlConnection_2");
 
 			java.sql.Statement stmt_tMysqlInput_2 = conn_tMysqlInput_2
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_2 = stmt_tMysqlInput_2
-					.executeQuery("SELECT client_dim.client_id, client_dim.global_cust_num FROM client_dim");
+					.executeQuery("select group_id, global_cust_num from group_dim");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_2 = rs_tMysqlInput_2
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_2 = rsmd_tMysqlInput_2.getColumnCount();
@@ -1524,21 +1122,20 @@ public class ClientLoanAccountLoader {
 			java.util.Date year0_tMysqlInput_2 = calendar_tMysqlInput_2
 					.getTime();
 
-			globalMap
-					.put("tMysqlInput_2_QUERY",
-							"SELECT client_dim.client_id, client_dim.global_cust_num FROM client_dim");
+			globalMap.put("tMysqlInput_2_QUERY",
+					"select group_id, global_cust_num from group_dim");
 
 			while (rs_tMysqlInput_2.next()) {
 				nb_line_tMysqlInput_2++;
 
 				if (colQtyInRs_tMysqlInput_2 < 1) {
 
-					row2.client_id = 0;
+					row2.group_id = 0;
 
 				} else {
 
 					if (rs_tMysqlInput_2.getObject(1) != null) {
-						row2.client_id = rs_tMysqlInput_2.getInt(1);
+						row2.group_id = rs_tMysqlInput_2.getInt(1);
 					} else {
 
 						throw new RuntimeException(
@@ -1584,7 +1181,7 @@ public class ClientLoanAccountLoader {
 
 				row2Struct row2_HashRow = new row2Struct();
 
-				row2_HashRow.client_id = row2.client_id;
+				row2_HashRow.group_id = row2.group_id;
 				row2_HashRow.global_cust_num = row2.global_cust_num;
 				tHash_Lookup_row2.put(row2_HashRow);
 
@@ -1624,7 +1221,149 @@ public class ClientLoanAccountLoader {
 			 */
 
 		} catch (Exception e) {
-			throw new TalendException(this, e);
+			throw new TalendException(this, e, currentComponent);
+		}
+	}
+
+	private class row6Struct {
+
+		short time_id;
+
+	}
+
+	public void tMysqlInput_7Process() throws TalendException {
+		String currentComponent = "";
+		try {
+
+			row6Struct row6 = new row6Struct();
+
+			/**
+			 * [tAdvancedHash_row6 begin ] start
+			 */
+
+			ok_Hash.put("tAdvancedHash_row6", false);
+			start_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+			currentComponent = "tAdvancedHash_row6";
+
+			org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE matchingModeEnum_row6 = org.talend.designer.components.commons.AdvancedLookup.MATCHING_MODE.ALL_ROWS;
+			org.talend.designer.components.commons.AdvancedLookup<row6Struct> tHash_Lookup_row6 = org.talend.designer.components.commons.AdvancedLookup
+					.<row6Struct> getLookup(matchingModeEnum_row6);
+			globalMap.put("tHash_Lookup_row6", tHash_Lookup_row6);
+
+			/**
+			 * [tAdvancedHash_row6 begin ] stop
+			 */
+
+			/**
+			 * [tMysqlInput_7 begin ] start
+			 */
+
+			ok_Hash.put("tMysqlInput_7", false);
+			start_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+			currentComponent = "tMysqlInput_7";
+
+			int nb_line_tMysqlInput_7 = 0;
+			java.sql.Connection conn_tMysqlInput_7 = null;
+			conn_tMysqlInput_7 = (java.sql.Connection) globalMap
+					.get("conn_tMysqlConnection_2");
+
+			java.sql.Statement stmt_tMysqlInput_7 = conn_tMysqlInput_7
+					.createStatement();
+			java.sql.ResultSet rs_tMysqlInput_7 = stmt_tMysqlInput_7
+					.executeQuery("SELECT max(time_id) FROM time_dim");
+			java.sql.ResultSetMetaData rsmd_tMysqlInput_7 = rs_tMysqlInput_7
+					.getMetaData();
+			int colQtyInRs_tMysqlInput_7 = rsmd_tMysqlInput_7.getColumnCount();
+
+			java.util.Calendar calendar_tMysqlInput_7 = java.util.Calendar
+					.getInstance();
+			calendar_tMysqlInput_7.set(0, 0, 0, 0, 0, 0);
+			java.util.Date year0_tMysqlInput_7 = calendar_tMysqlInput_7
+					.getTime();
+
+			globalMap.put("tMysqlInput_7_QUERY",
+					"SELECT max(time_id) FROM time_dim");
+
+			while (rs_tMysqlInput_7.next()) {
+				nb_line_tMysqlInput_7++;
+
+				if (colQtyInRs_tMysqlInput_7 < 1) {
+
+					row6.time_id = 0;
+
+				} else {
+
+					if (rs_tMysqlInput_7.getObject(1) != null) {
+						row6.time_id = rs_tMysqlInput_7.getShort(1);
+					} else {
+
+						throw new RuntimeException(
+								"Null value in non-Nullable column");
+					}
+
+				}
+
+				/**
+				 * [tMysqlInput_7 begin ] stop
+				 */
+				/**
+				 * [tMysqlInput_7 main ] start
+				 */
+
+				currentComponent = "tMysqlInput_7";
+
+				/**
+				 * [tMysqlInput_7 main ] stop
+				 */
+
+				/**
+				 * [tAdvancedHash_row6 main ] start
+				 */
+
+				currentComponent = "tAdvancedHash_row6";
+
+				row6Struct row6_HashRow = new row6Struct();
+
+				row6_HashRow.time_id = row6.time_id;
+				tHash_Lookup_row6.put(row6_HashRow);
+
+				/**
+				 * [tAdvancedHash_row6 main ] stop
+				 */
+
+				/**
+				 * [tMysqlInput_7 end ] start
+				 */
+
+				currentComponent = "tMysqlInput_7";
+
+			}
+			stmt_tMysqlInput_7.close();
+
+			globalMap.put("tMysqlInput_7_NB_LINE", nb_line_tMysqlInput_7);
+
+			ok_Hash.put("tMysqlInput_7", true);
+			end_Hash.put("tMysqlInput_7", System.currentTimeMillis());
+
+			/**
+			 * [tMysqlInput_7 end ] stop
+			 */
+
+			/**
+			 * [tAdvancedHash_row6 end ] start
+			 */
+
+			currentComponent = "tAdvancedHash_row6";
+
+			ok_Hash.put("tAdvancedHash_row6", true);
+			end_Hash.put("tAdvancedHash_row6", System.currentTimeMillis());
+
+			/**
+			 * [tAdvancedHash_row6 end ] stop
+			 */
+
+		} catch (Exception e) {
+			throw new TalendException(this, e, currentComponent);
 		}
 	}
 
@@ -1637,6 +1376,20 @@ public class ClientLoanAccountLoader {
 	public static String pid = "0";
 	public static String rootPid = null;
 	public static String fatherPid = null;
+	private static ThreadLocal threadLocal = new ThreadLocal();
+	private static SyncInt runningThreadCount = new SyncInt();
+
+	private static class SyncInt {
+		private int count = 0;
+
+		public synchronized void add(int i) {
+			count += i;
+		}
+
+		public synchronized int getCount() {
+			return count;
+		}
+	}
 
 	private static java.util.Properties context_param = new java.util.Properties();
 
@@ -1676,10 +1429,10 @@ public class ClientLoanAccountLoader {
 		}
 
 		try {
-			java.io.InputStream inContext = ClientLoanAccountLoader.class
+			java.io.InputStream inContext = GroupStateFactLoader.class
 					.getClassLoader()
 					.getResourceAsStream(
-							"org_mifos_etl/clientloanaccountloader/contexts/Default.properties");
+							"org_mifos_etl/groupstatefactloader/contexts/Default.properties");
 			if (inContext != null) {
 				defaultProps.load(inContext);
 				inContext.close();
@@ -1687,9 +1440,9 @@ public class ClientLoanAccountLoader {
 			}
 
 			if (contextStr.compareTo("Default") != 0) {
-				inContext = ClientLoanAccountLoader.class.getClassLoader()
+				inContext = GroupStateFactLoader.class.getClassLoader()
 						.getResourceAsStream(
-								"org_mifos_etl/clientloanaccountloader/contexts/"
+								"org_mifos_etl/groupstatefactloader/contexts/"
 										+ contextStr + ".properties");
 				if (inContext != null) {
 					context.load(inContext);
@@ -1728,16 +1481,49 @@ public class ClientLoanAccountLoader {
 
 		long end = 0;
 		long start = System.currentTimeMillis();
-		final ClientLoanAccountLoader ClientLoanAccountLoaderClass = new ClientLoanAccountLoader();
-		try {
-			errorCode = null;
-			ClientLoanAccountLoaderClass.tJava_1Process();
-			status = "end";
-		} catch (TalendException e_tJava_1) {
-			status = "failure";
-			e_tJava_1.printStackTrace();
+		final GroupStateFactLoader GroupStateFactLoaderClass = new GroupStateFactLoader();
+		runningThreadCount.add(1);
+		new Thread() {
+			public void run() {
+				java.util.Map threadRunResultMap = new java.util.HashMap();
+				threadRunResultMap.put(errorCode, null);
+				threadRunResultMap.put(status, "");
+				threadLocal.set(threadRunResultMap);
 
-		} finally {
+				try {
+					((java.util.Map) threadLocal.get()).put(errorCode, null);
+					GroupStateFactLoaderClass.tJava_1Process();
+					((java.util.Map) threadLocal.get()).put(status, "end");
+				} catch (TalendException e_tJava_1) {
+					((java.util.Map) threadLocal.get()).put(status, "failure");
+					e_tJava_1.printStackTrace();
+
+				} finally {
+				}
+
+				Integer localErrorCode = (Integer) (((java.util.Map) threadLocal
+						.get()).get(errorCode));
+				String localStatus = (String) (((java.util.Map) threadLocal
+						.get()).get(status));
+				if (localErrorCode != null) {
+					if (errorCode == null
+							|| localErrorCode.compareTo(errorCode) > 0) {
+						errorCode = localErrorCode;
+					}
+				} else if (!status.equals("failure")) {
+					status = localStatus;
+				}
+
+				runningThreadCount.add(-1);
+			}
+		}.start();
+
+		while (GroupStateFactLoaderClass.runningThreadCount.getCount() > 0) {
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		end = System.currentTimeMillis();
 		if (watch) {
@@ -1781,7 +1567,8 @@ public class ClientLoanAccountLoader {
 		defaultProps.clear();
 		context.clear();
 		errorCode = null;
-		currentComponent = "";
+		threadLocal = new ThreadLocal();
+		runningThreadCount = new SyncInt();
 		start_Hash.clear();
 		end_Hash.clear();
 		ok_Hash.clear();
@@ -1800,6 +1587,6 @@ public class ClientLoanAccountLoader {
 	}
 }
 /*******************************************************************************
- * 49672 characters generated by Talend OpenStudio on the April 4, 2008 1:57:30
+ * 46723 characters generated by Talend OpenStudio on the April 8, 2008 4:39:15
  * PM BST
  ******************************************************************************/

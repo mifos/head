@@ -1,5 +1,14 @@
+source group_status_dim.sql
 source time_dim.sql
 source office_dim.sql
+source loan_officer_dim.sql
 source center_dim.sql
 source group_dim.sql
 source client_dim.sql
+source client_loan_account_dim.sql
+source client_status_dim.sql
+source client_loan_fact.sql
+source client_status_fact.sql
+source group_status_fact.sql
+source populate_client_status.sql
+source populate_group_status.sql

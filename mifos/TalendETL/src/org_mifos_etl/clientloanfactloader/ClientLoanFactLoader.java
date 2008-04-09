@@ -479,15 +479,13 @@ public class ClientLoanFactLoader {
 
 	private class row1Struct {
 
-		String global_cust_num;
+		BigDecimal loan_balance;
 
 		String global_account_num;
 
 		BigDecimal overdue_balance;
 
 		Short days_in_arrears;
-
-		BigDecimal loan_balance;
 
 	}
 
@@ -497,7 +495,7 @@ public class ClientLoanFactLoader {
 		private int hashCode = DEFAULT_HASHCODE;
 		public boolean hashCodeDirty = true;
 
-		String global_cust_num;
+		BigDecimal loan_balance;
 
 		String global_account_num;
 
@@ -505,18 +503,11 @@ public class ClientLoanFactLoader {
 
 		Short days_in_arrears;
 
-		BigDecimal loan_balance;
-
 		@Override
 		public int hashCode() {
 			if (this.hashCodeDirty) {
 				final int prime = PRIME;
 				int result = DEFAULT_HASHCODE;
-
-				result = prime
-						* result
-						+ ((this.global_cust_num == null) ? 0
-								: this.global_cust_num.hashCode());
 
 				result = prime
 						* result
@@ -538,12 +529,6 @@ public class ClientLoanFactLoader {
 			if (getClass() != obj.getClass())
 				return false;
 			final after_tMysqlInput_1Struct other = (after_tMysqlInput_1Struct) obj;
-
-			if (this.global_cust_num == null) {
-				if (other.global_cust_num != null)
-					return false;
-			} else if (!this.global_cust_num.equals(other.global_cust_num))
-				return false;
 
 			if (this.global_account_num == null) {
 				if (other.global_account_num != null)
@@ -664,6 +649,9 @@ public class ClientLoanFactLoader {
 
 			// ###############################
 			// # Vars initialization
+			class Var__tMap_1__Struct {
+			}
+			Var__tMap_1__Struct Var__tMap_1 = new Var__tMap_1__Struct();
 			// ###############################
 
 			// ###############################
@@ -691,7 +679,7 @@ public class ClientLoanFactLoader {
 			java.sql.Statement stmt_tMysqlInput_1 = conn_tMysqlInput_1
 					.createStatement();
 			java.sql.ResultSet rs_tMysqlInput_1 = stmt_tMysqlInput_1
-					.executeQuery("select c.global_cust_num, a.global_account_num, laa.overdue_balance, laa.days_in_arrears, la.loan_balance from loan_account la, loan_arrears_aging laa, customer c, account a where laa.account_id = la.account_id and laa.customer_id = c.customer_id and a.customer_id = c.customer_id and c.customer_level_id = 1 order by laa.days_in_arrears asc");
+					.executeQuery("select la.loan_balance, a.global_account_num , (select overdue_balance from loan_arrears_aging where loan_arrears_aging.account_id = la.account_id) as overdue_balance, (select days_in_arrears from loan_arrears_aging where loan_arrears_aging.account_id = la.account_id) as days_in_arrears from account a, loan_account la where la.account_id = a.account_id;");
 			java.sql.ResultSetMetaData rsmd_tMysqlInput_1 = rs_tMysqlInput_1
 					.getMetaData();
 			int colQtyInRs_tMysqlInput_1 = rsmd_tMysqlInput_1.getColumnCount();
@@ -705,23 +693,23 @@ public class ClientLoanFactLoader {
 			globalMap
 					.put(
 							"tMysqlInput_1_QUERY",
-							"select c.global_cust_num, a.global_account_num, laa.overdue_balance, laa.days_in_arrears, la.loan_balance from loan_account la, loan_arrears_aging laa, customer c, account a where laa.account_id = la.account_id and laa.customer_id = c.customer_id and a.customer_id = c.customer_id and c.customer_level_id = 1 order by laa.days_in_arrears asc");
+							"select la.loan_balance, a.global_account_num , (select overdue_balance from loan_arrears_aging where loan_arrears_aging.account_id = la.account_id) as overdue_balance, (select days_in_arrears from loan_arrears_aging where loan_arrears_aging.account_id = la.account_id) as days_in_arrears from account a, loan_account la where la.account_id = a.account_id;");
 
 			while (rs_tMysqlInput_1.next()) {
 				nb_line_tMysqlInput_1++;
 
 				if (colQtyInRs_tMysqlInput_1 < 1) {
 
-					row1.global_cust_num = null;
+					row1.loan_balance = null;
 
 				} else {
 
 					if (rs_tMysqlInput_1.getObject(1) != null) {
-						row1.global_cust_num = rs_tMysqlInput_1.getString(1);
+						row1.loan_balance = rs_tMysqlInput_1.getBigDecimal(1);
 					} else {
 
-						throw new RuntimeException(
-								"Null value in non-Nullable column");
+						row1.loan_balance = null;
+
 					}
 
 				}
@@ -770,22 +758,6 @@ public class ClientLoanFactLoader {
 					} else {
 
 						row1.days_in_arrears = null;
-
-					}
-
-				}
-
-				if (colQtyInRs_tMysqlInput_1 < 5) {
-
-					row1.loan_balance = null;
-
-				} else {
-
-					if (rs_tMysqlInput_1.getObject(5) != null) {
-						row1.loan_balance = rs_tMysqlInput_1.getBigDecimal(5);
-					} else {
-
-						row1.loan_balance = null;
 
 					}
 
@@ -895,6 +867,7 @@ public class ClientLoanFactLoader {
 
 						// ###############################
 						// # Vars tables
+						Var__tMap_1__Struct Var = Var__tMap_1;
 						// ###############################
 
 						// ###############################
@@ -2572,6 +2545,6 @@ public class ClientLoanFactLoader {
 	}
 }
 /*******************************************************************************
- * 74681 characters generated by Talend OpenStudio on the April 2, 2008 4:20:56
+ * 74088 characters generated by Talend OpenStudio on the April 7, 2008 1:18:28
  * PM BST
  ******************************************************************************/

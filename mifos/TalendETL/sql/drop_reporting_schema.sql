@@ -1,8 +1,16 @@
+drop table if exists `group_status_fact`;
+drop table if exists `client_status_fact`;
+drop table if exists `client_loan_fact`;
+drop table if exists `client_status_dim`;
+drop table if exists `client_loan_account_dim`;
 drop table if exists `client_dim`;
 drop table if exists `group_dim`;
-drop table if exists  `center_dim`;
+drop table if exists `center_dim`;
+drop table if exists `loan_officer_dim`;
 drop table if exists `branch_office_dim`;
 drop table if exists `area_office_dim`;
 drop table if exists `subregional_office_dim`;
 drop table if exists `regional_office_dim`;
 drop table if exists `head_office_dim`;
+drop table if exists `time_dim`;
+drop table if exists `group_status_dim`;
