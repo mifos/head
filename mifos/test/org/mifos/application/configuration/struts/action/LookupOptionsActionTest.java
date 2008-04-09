@@ -51,6 +51,7 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			,{MasterConstants.ETHINICITY, 		ConfigurationConstants.CONFIG_ETHNICITY, 		"ethnicityList"}
 			,{MasterConstants.EDUCATION_LEVEL, 	ConfigurationConstants.CONFIG_EDUCATION_LEVEL,	"educationLevelList"}
 			,{MasterConstants.CITIZENSHIP, 		ConfigurationConstants.CONFIG_CITIZENSHIP, 		"citizenshipList"}
+			,{MasterConstants.BUSINESS_ACTIVITIES, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY, "businessActivityList"}
 			,{MasterConstants.LOAN_PURPOSES, 	ConfigurationConstants.CONFIG_LOAN_PURPOSE, 	"purposesOfLoanList"}
 			,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
 			,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
@@ -113,6 +114,9 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 		String[] EXPECTED_CITIZENSHIP = {"Hindu","Muslim","Christian"};
 		assertTrue(compareLists(lookupOptionsActionForm.getCitizenships(), EXPECTED_CITIZENSHIP, 3));
 
+		String[] EXPECTED_BUSINESS_ACTIVITIES = {"Daily Labour", "Agriculture", "Animal Husbandry", "Micro Enterprise", "Production", "Trading"};
+		assertTrue(compareLists(lookupOptionsActionForm.getBusinessActivities(), EXPECTED_BUSINESS_ACTIVITIES, 6));
+		
 		String[] EXPECTED_LOAN_PURPOSES = {"0000-Animal Husbandry","0001-Cow Purchase","0002-Buffalo Purchase"};
 		//  if the empty lookup name are not removed this will go up to 131
 		assertTrue(compareLists(lookupOptionsActionForm.getPurposesOfLoan(), EXPECTED_LOAN_PURPOSES, 131));

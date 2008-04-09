@@ -54,6 +54,7 @@ public static final String CONFIG_CITIZENSHIP="ConfigCitizenship";
 public static final String CONFIG_HANDICAPPED="ConfigHandicapped";
 public static final String CONFIG_ATTENDANCE="ConfigAttendance";
 public static final String CONFIG_OFFICER_TITLE="ConfigOfficerTitle";
+public static final String CONFIG_BUSINESS_ACTIVITY="ConfigBusinessActivity";
 public static final String CONFIG_LOAN_PURPOSE="ConfigPurposeOfLoan";
 public static final String CONFIG_COLLATERAL_TYPE="ConfigCollateralType";
 public static final String CONFIG_ETHNICITY="ConfigEthnicity";

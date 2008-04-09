@@ -71,6 +71,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String handicapped;
 	private String officerTitle;
 	private String ethnicity;
+	private String businessActivity;
 	private String purposeOfLoan;
 	private String collateralType;
 	private String attendance;
@@ -82,6 +83,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private List<CustomValueListElement> ethnicities;
 	private List<CustomValueListElement> educationLevels;
 	private List<CustomValueListElement> citizenships;
+	private List<CustomValueListElement> businessActivities;
 	private List<CustomValueListElement> purposesOfLoan;
 	private List<CustomValueListElement> officerTitles;
 	private List<CustomValueListElement> handicappeds;
@@ -95,6 +97,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String[] ethnicityList;
 	private String[] educationLevelList;
 	private String[] citizenshipList;
+	private String[] businessActivityList;
 	private String[] purposeOfLoanList;
 	private String[] officerTitleList;
 	private String[] handicappedList;
@@ -183,6 +186,14 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	}
 	public String getPurposeOfLoan() {
 		return purposeOfLoan;
+	}	
+
+	public String getBusinessActivity() {
+		return businessActivity;
+	}
+
+	public void setBusinessActivity(String businessActivity) {
+		this.businessActivity = businessActivity;
 	}
 
 	public void setPurposeOfLoan(String purposeOfLoan) {
@@ -234,8 +245,17 @@ public class LookupOptionsActionForm extends BaseActionForm {
 
 	public void setEthnicities(List<CustomValueListElement> ethnicities) {
 		this.ethnicities = ethnicities;
-	}
+	}	
 	
+	public List<CustomValueListElement> getBusinessActivities() {
+		return businessActivities;
+	}
+
+	public void setBusinessActivities(
+			List<CustomValueListElement> businessActivities) {
+		this.businessActivities = businessActivities;
+	}
+
 	public List<CustomValueListElement> getPurposesOfLoan() {
 		return purposesOfLoan;
 	}
@@ -342,6 +362,10 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		{
 			return(containsOneNonNullElement(getCitizenshipList()));
 		}
+		else if (listName.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			return(containsOneNonNullElement(getBusinessActivityList()));
+		}
 		else if (listName.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
 			return(containsOneNonNullElement(getPurposesOfLoanList()));
@@ -375,6 +399,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
 	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
@@ -426,6 +451,10 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
 		{
 			checkOneList(handicappeds, errors, entity);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			checkOneList(businessActivities, errors, entity);
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
@@ -481,6 +510,10 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
 		{
 			setHandicappeds(list);
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			setBusinessActivities(list);
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
@@ -554,6 +587,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.handicapped = null;
 		this.officerTitle = null;
 		this.ethnicity = null;
+		this.businessActivity = null;
 		this.purposeOfLoan = null;
 		this.collateralType = null;
 		this.attendance = null;
@@ -563,6 +597,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.ethnicityList = null;
 		this.educationLevelList = null;
 		this.citizenshipList = null;
+		this.businessActivityList = null;
 		this.purposeOfLoanList = null;
 		this.officerTitleList = null;
 		this.handicappedList = null;
@@ -574,6 +609,7 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.ethnicities = null;
 		this.educationLevels = null;
 		this.citizenships = null;
+		this.businessActivities = null;
 		this.purposesOfLoan = null;
 		this.officerTitles = null;
 		this.handicappeds = null;
@@ -646,6 +682,14 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	public void setOfficerTitleList(String[] officerTitleList) {
 		this.officerTitleList = officerTitleList;
 	}
+	
+	public String[] getBusinessActivityList() {
+		return businessActivityList;
+	}
+
+	public void setBusinessActivityList(String[] businessActivityList) {
+		this.businessActivityList = businessActivityList;
+	}
 
 	public String[] getPurposesOfLoanList() {
 		return purposeOfLoanList;
@@ -709,6 +753,10 @@ private String getEntityType(String entity,  HttpServletRequest request)
 		else if (entity.equals(ConfigurationConstants.CONFIG_HANDICAPPED))
 		{
 			entityType = resources.getString("configuration.handicapped");
+		}
+		else if (entity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			entityType = resources.getString("configuration.businessactivity");
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{

@@ -148,6 +148,11 @@ public class LookupOptionsAction extends BaseAction {
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_CITIZENSHIP);
 		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.businessactivity"));
+			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
+		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.purposeofloan"));
@@ -210,6 +215,11 @@ public class LookupOptionsAction extends BaseAction {
 			assert(lookupOptionsActionForm.getCitizenshipList().length ==1);
             selectedValue = lookupOptionsActionForm.getCitizenshipList()[0];
 		}
+		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY))
+		{
+			assert(lookupOptionsActionForm.getBusinessActivityList().length ==1);
+            selectedValue = lookupOptionsActionForm.getBusinessActivityList()[0];
+		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE))
 		{
 			assert(lookupOptionsActionForm.getPurposesOfLoanList().length ==1);
@@ -251,6 +261,7 @@ public class LookupOptionsAction extends BaseAction {
 				configurationEntity.equals(ConfigurationConstants.CONFIG_ETHNICITY) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_EDUCATION_LEVEL) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP) ||
+				configurationEntity.equals(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) ||
@@ -324,6 +335,8 @@ public class LookupOptionsAction extends BaseAction {
 			lookupOptionsActionForm.setEducationLevels(valueList.getCustomValueListElements());
 		else if (configurationEntity.equals(MasterConstants.CITIZENSHIP))
 			lookupOptionsActionForm.setCitizenships(valueList.getCustomValueListElements());
+		else if (configurationEntity.equals(MasterConstants.BUSINESS_ACTIVITIES))
+			lookupOptionsActionForm.setBusinessActivities(valueList.getCustomValueListElements());
 		else if (configurationEntity.equals(MasterConstants.LOAN_PURPOSES))
 			lookupOptionsActionForm.setPurposesOfLoan(valueList.getCustomValueListElements());
 		else if (configurationEntity.equals(MasterConstants.COLLATERAL_TYPES))
@@ -365,6 +378,7 @@ public class LookupOptionsAction extends BaseAction {
 	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
+	    request.setAttribute(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
 	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_COLLATERAL_TYPE, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_ETHNICITY, ConfigurationConstants.CONFIG_ETHNICITY);
@@ -403,6 +417,8 @@ public class LookupOptionsAction extends BaseAction {
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
 		PopulateConfigurationListBox(MasterConstants.CITIZENSHIP, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_CITIZENSHIP);
+		PopulateConfigurationListBox(MasterConstants.BUSINESS_ACTIVITIES, masterPersistence,
+				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
 		PopulateConfigurationListBox(MasterConstants.LOAN_PURPOSES, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
 		PopulateConfigurationListBox(MasterConstants.COLLATERAL_TYPES, masterPersistence,

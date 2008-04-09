@@ -344,6 +344,47 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top" width="18%">
 									<span class="mandatorytext"></span>
+									<mifos:mifoslabel name="configuration.businessactivity"
+										isColonRequired="Yes" />
+								</td>
+								<td>
+									<table border="0" cellpadding="0" cellspacing="0" width="81%">
+										<tr>
+											<td width="15%">
+												<mifos:MifosValueList name="lookupoptionsactionform"
+													property="businessActivityList" property2="BusinessActivities"
+													size="5" style="width:136px;">
+												</mifos:MifosValueList>
+											</td>
+											<td align="left" valign="top" width="31%">
+												<br />
+												<html-el:submit property="btnAddBusinessActivity"
+													styleClass="insidebuttn"
+													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigBusinessActivity.value, 'add');">
+													<mifos:mifoslabel name="configuration.add" />
+												</html-el:submit>
+												<br>
+												<html-el:submit property="btnEditBusinessActivity"
+													styleClass="insidebuttn"
+													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigBusinessActivity.value, 'edit');">
+													<mifos:mifoslabel name="configuration.edit" />
+												</html-el:submit>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top">
+									&nbsp;
+								</td>
+								<td>
+									&nbsp;
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top" width="18%">
+									<span class="mandatorytext"></span>
 									<mifos:mifoslabel name="configuration.purposeofloan"
 										isColonRequired="Yes" />
 								</td>
@@ -583,6 +624,8 @@
 				value="${requestScope.ConfigAttendance}" />
 			<html-el:hidden property="ConfigOfficerTitle"
 				value="${requestScope.ConfigOfficerTitle}" />
+			<html-el:hidden property="ConfigBusinessActivity"
+				value="${requestScope.ConfigBusinessActivity}" />
 			<html-el:hidden property="ConfigPurposeOfLoan"
 				value="${requestScope.ConfigPurposeOfLoan}" />
 			<html-el:hidden property="ConfigCollateralType"
@@ -592,4 +635,3 @@
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
-
