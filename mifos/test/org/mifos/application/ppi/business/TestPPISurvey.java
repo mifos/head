@@ -20,6 +20,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.ppi.helpers.Country;
+import org.mifos.application.ppi.helpers.XmlPPISurveyParser;
 import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
@@ -35,6 +36,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.core.io.ClassPathResource;
 
 public class TestPPISurvey {
 	private PPIPersistence persistence;
@@ -200,6 +202,32 @@ public class TestPPISurvey {
 
 		Survey retrievedSurvey = persistence.getPPISurvey(directSurvey.getSurveyId());
 		ObjectAssert.assertInstanceOf(PPISurvey.class, retrievedSurvey);
+	}
+	
+	@Test
+	public void testLoadFromXmlAndStoreToDatabase() throws Exception {
+		XmlPPISurveyParser parser = new XmlPPISurveyParser();
+		PPISurvey survey = new PPISurvey();
+		ClassPathResource surveyXml = new ClassPathResource("org/mifos/framework/util/resources/ppi/PPISurveyINDIA.xml");
+		parser.parseInto(surveyXml.getPath(), survey);
+		
+		survey.setAppliesTo(SurveyType.CLIENT);
+		persistence.createOrUpdate(survey);
+		
+		PPISurvey retrievedSurvey = persistence.retrievePPISurveyByCountry(Country.INDIA);
+		assertEquals("PPI Survey India", retrievedSurvey.getName());
+		assertEquals(Country.INDIA, retrievedSurvey.getCountryAsEnum());
+		
+		assertEquals(10, retrievedSurvey.getQuestions().size());
+		assertEquals("children", retrievedSurvey.getQuestion(0).getShortName());
+		assertEquals("How many children aged 6 to 17 attend school?", retrievedSurvey.getQuestion(1).getQuestionText());
+		
+		assertEquals(0, retrievedSurvey.getLikelihood(2).getOrder());
+		assertEquals(1, retrievedSurvey.getLikelihood(5).getOrder());
+		assertEquals(5, retrievedSurvey.getLikelihood(25).getOrder());
+		
+		assertEquals(6.9, retrievedSurvey.getLikelihood(43).getBottomHalfBelowPovertyLinePercent());
+		assertEquals(29.5, retrievedSurvey.getLikelihood(43).getTopHalfBelowPovertyLinePercent());
 	}
 	
 	private PersonnelBO makeSystemUser() throws Exception {

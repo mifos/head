@@ -161,9 +161,9 @@ public class XmlPPISurveyParser {
 		int scoreTo = Integer.parseInt(node.getAttributes().getNamedItem("scoreTo").getNodeValue());
 		double bottomHalfPct = Double.parseDouble(node.getAttributes().getNamedItem("bottomHalf").getNodeValue());
 		double topHalfPct = Double.parseDouble(node.getAttributes().getNamedItem("topHalf").getNodeValue());
-		PPILikelihood lh = new PPILikelihood(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
-		lh.setOrder(order);
-		return lh;
+		PPILikelihood likelihood = new PPILikelihood(scoreFrom, scoreTo, bottomHalfPct, topHalfPct);
+		likelihood.setOrder(order);
+		return likelihood;
 	}
 
 	public PPISurvey parse(String uri) throws Exception {

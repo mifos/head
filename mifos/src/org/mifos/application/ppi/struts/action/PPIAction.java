@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.mifos.application.ppi.business.PPILikelihood;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.helpers.XmlPPISurveyParser;
@@ -24,6 +25,7 @@ import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
@@ -140,48 +142,52 @@ public class PPIAction extends PersistenceAction {
 		}
 		
 		try {
-		PPIPersistence ppiPersistence = new PPIPersistence();
-		
-		PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry(
-				(Country)results.get("country"));
-		
-		if (((SurveyState)results.get("state")).equals(SurveyState.ACTIVE)) {
-			List<PPISurvey> allPPISurveys = ppiPersistence.retrieveAllPPISurveys();
-			for (PPISurvey curSurvey : allPPISurveys)
-				curSurvey.setState(SurveyState.INACTIVE);
-		}
-		
-		ppiSurvey = ppiSurvey == null ?
-				new PPISurvey((Country)results.get("country")) : ppiSurvey;
-		
-		XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
-        // TODO: parseInto method parses values from the xml document and overwrites whatever is stored in the database.
-        ppiSurvey = xmlParser.parseInto(
-				"org/mifos/framework/util/resources/ppi/PPISurvey" + 
-				results.get("country") + ".xml", ppiSurvey);
-
-        // TODO: Now it appears that PPI surveys, overwrite applies to no matter what.  This needs to be fixed.
-        ppiSurvey.setAppliesTo(SurveyType.CLIENT);
-		ppiSurvey.setState((SurveyState)results.get("state"));
-
-        // TODO: Now we seem to be going back to the database for values...????
-        ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
-		ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
-		ppiSurvey.setPoorMin((Integer)results.get("poorMin"));
-		ppiSurvey.setPoorMax((Integer)results.get("poorMax"));
-		ppiSurvey.setAtRiskMin((Integer)results.get("atRiskMin"));
-		ppiSurvey.setAtRiskMax((Integer)results.get("atRiskMax"));
-		ppiSurvey.setNonPoorMin((Integer)results.get("nonPoorMin"));
-		ppiSurvey.setNonPoorMax((Integer)results.get("nonPoorMax"));
-		
-		ppiPersistence.createOrUpdate(ppiSurvey);
-		
-		if (ppiSurvey.getState() == 1) {
-			List<PPISurvey> allSurveys = ppiPersistence.retrieveAllPPISurveys();
-			for (PPISurvey currentSurvey : allSurveys) {
-				if (!currentSurvey.equals(ppiSurvey));
+			PPIPersistence ppiPersistence = new PPIPersistence();
+			
+			PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry(
+					(Country)results.get("country"));
+			
+			if (((SurveyState)results.get("state")).equals(SurveyState.ACTIVE)) {
+				for (PPISurvey curSurvey : ppiPersistence.retrieveAllPPISurveys())
+					curSurvey.setState(SurveyState.INACTIVE);
 			}
-		}
+			
+			ppiSurvey = ppiSurvey == null ?
+					new PPISurvey((Country)results.get("country")) : ppiSurvey;
+			
+			for (PPILikelihood likelihood : ppiSurvey.getLikelihoods()) {
+				ppiPersistence.delete(likelihood);
+			}
+			XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
+	        // TODO: parseInto method parses values from the xml document and overwrites whatever is stored in the database.
+	        ppiSurvey = xmlParser.parseInto(
+					"org/mifos/framework/util/resources/ppi/PPISurvey" + 
+					results.get("country") + ".xml", ppiSurvey);
+	
+	        // TODO: Now it appears that PPI surveys, overwrite applies to no matter what.  This needs to be fixed.
+	        ppiSurvey.setAppliesTo(SurveyType.CLIENT);
+			ppiSurvey.setState((SurveyState)results.get("state"));
+	
+	        // TODO: Now we seem to be going back to the database for values...????
+	        ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
+			ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
+			ppiSurvey.setPoorMin((Integer)results.get("poorMin"));
+			ppiSurvey.setPoorMax((Integer)results.get("poorMax"));
+			ppiSurvey.setAtRiskMin((Integer)results.get("atRiskMin"));
+			ppiSurvey.setAtRiskMax((Integer)results.get("atRiskMax"));
+			ppiSurvey.setNonPoorMin((Integer)results.get("nonPoorMin"));
+			ppiSurvey.setNonPoorMax((Integer)results.get("nonPoorMax"));
+			
+			
+			ppiPersistence.createOrUpdate(ppiSurvey);
+			
+			// What's going on here?
+			if (ppiSurvey.getState() == SurveyState.ACTIVE.getValue()) {
+				List<PPISurvey> allSurveys = ppiPersistence.retrieveAllPPISurveys();
+				for (PPISurvey currentSurvey : allSurveys) {
+					if (!currentSurvey.equals(ppiSurvey));
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
