@@ -20,7 +20,10 @@
  */
 package org.mifos.config;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.application.master.business.MifosCurrency;
@@ -38,6 +41,11 @@ public class AccountingRules {
 	public static final String AccountingRulesDigitsBeforeDecimalForInterest = "AccountingRules.DigitsBeforeDecimalForInterest";
 	public static final String AccountingRulesMaxInterest = "AccountingRules.MaxInterest";
 	public static final String AccountingRulesMinInterest = "AccountingRules.MinInterest";
+	
+	public static final String AccountingRulesInitialRoundingMode = "AccountingRules.InitialRoundingMode";
+	public static final String AccountingRulesInitialRoundOffMultiple = "AccountingRules.InitialRoundOffMultiple";
+	public static final String AccountingRulesFinalRoundingMode = "AccountingRules.FinalRoundingMode";
+	public static final String AccountingRulesFinalRoundOffMultiple = "AccountingRules.FinalRoundOffMultiple";
 	
 	
 	public static MifosCurrency getMifosCurrency()
@@ -252,4 +260,86 @@ public class AccountingRules {
 		return cm.getBoolean(ConfigConstants.BACK_DATED_TRANSACTIONS_ALLOWED);
 	}
 
+	
+	/*
+	 * April 7, 2008 Financial Calculation refactoring work in progress 
+	 */
+	
+	public static RoundingMode getInitialRoundingMode()
+	{
+		RoundingMode mode;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String returnStr = configMgr.getString(AccountingRulesInitialRoundingMode);
+		if (returnStr.equals("FLOOR")) {
+			mode = RoundingMode.FLOOR;
+		} else if (returnStr.equals("CEILING")) {
+			mode = RoundingMode.CEILING;
+		} else if (returnStr.equals("HALF_UP")) {
+			mode = RoundingMode.HALF_UP;
+		} else {
+			throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
+					+ returnStr);
+		}
+		return mode;
+	}
+	
+	public static RoundingMode getFinalRoundingMode()
+	{
+		RoundingMode mode;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String returnStr = configMgr.getString(AccountingRulesFinalRoundingMode);
+		if (returnStr.equals("FLOOR")) {
+			mode = RoundingMode.FLOOR;
+		} else if (returnStr.equals("CEILING")) {
+			mode = RoundingMode.CEILING;
+		} else if (returnStr.equals("HALF_UP")) {
+			mode = RoundingMode.HALF_UP;
+		} else {
+			throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
+					+ returnStr);
+		}
+		return mode;
+	}
+	
+	private static RoundingMode interestRoundingMode = RoundingMode.CEILING;
+	private static BigDecimal initialRoundOffMultiple = null;
+	private static BigDecimal finalRoundOffMultiple = null;
+	
+	/*
+	 * The methods below need to be refactored to use the ConfigurationManager to store
+	 * their values
+	 */
+	public static BigDecimal getInitialRoundOffMultiple() {
+		return initialRoundOffMultiple;
+	}
+
+	public static BigDecimal getFinalRoundOffMultiple() {
+		return finalRoundOffMultiple;
+	}
+
+	public static void setFinalRoundOffMultiple(BigDecimal finalRoundOffMultiple) {
+		AccountingRules.finalRoundOffMultiple = finalRoundOffMultiple;
+	}
+
+	public static void setInitialRoundOffMultiple(BigDecimal initialRoundOffMultiple) {
+		AccountingRules.initialRoundOffMultiple = initialRoundOffMultiple;
+	}
+
+
+	public static RoundingMode getInterestRoundingMode() {
+		return interestRoundingMode;
+	}
+
+
+	public static void setInterestRoundingMode(RoundingMode interestRoundingMode) {
+		AccountingRules.interestRoundingMode = interestRoundingMode;
+	}
+
+
+	// refactor this later
+	public static BigDecimal getDigitsAfterDecimalMultiple() {
+		return new BigDecimal("." + StringUtils.leftPad("1",getDigitsAfterDecimal().intValue()+1,"0"));
+	}
+	
+	
 }

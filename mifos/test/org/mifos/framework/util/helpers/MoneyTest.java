@@ -142,13 +142,22 @@ public class MoneyTest {
 	}
 
 	@Test
-	public void testDivide() {
+	public void testDivideByMoney() {
 		Money dividend = new Money(RUPEE, "10.0");
 		Money money = new Money(RUPEE, "20.0");
 		assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"),
 				money.divide(dividend));
 	}
 
+	@Test @Ignore
+	public void testDivideRepeating() {
+		BigDecimal dividend = new BigDecimal("3.0", Money.getInternalPrecisionAndRounding());
+		Money money = new Money(RUPEE, "10.0");
+		assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"),
+				money.divide(dividend));
+	}
+	
+	
 	@Test
 	public void testDivideWithDiffCurrencies() {
 		Money money = new Money(RUPEE, "20.0");
@@ -191,7 +200,7 @@ public class MoneyTest {
 
 	// TODO: This test is broken and needs to be fixed!
 	@Test @Ignore
-	public void testDivideRepeating() {
+	public void testDivideMoneyRepeating() {
 		Money dividend = new Money(RUPEE, "3.0");
 		Money money = new Money(RUPEE, "10.0");
 		// need to figure out what final result should be, it won't be 0.0

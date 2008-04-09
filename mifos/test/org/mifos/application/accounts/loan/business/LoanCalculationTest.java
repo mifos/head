@@ -551,10 +551,39 @@ class LoanTestCaseData {
 		}
 	}
 	
+	private void printResults(Results expectedResult, Results calculatedResult) {
+		System.out.println("Results are (Expected : Calculated : Difference)");
+		printComparison("Total Interest: ",expectedResult.getTotalInterest(),
+			calculatedResult.getTotalInterest());
+		printComparison("Total Payments: " , expectedResult.getTotalPayments(),
+			calculatedResult.getTotalPayments());
+		printComparison("Total Principal: ", expectedResult.getTotalPrincipal(), 
+			calculatedResult.getTotalPrincipal());
+		
+		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
+		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
+		System.out.println("Number of Installments: " + expectedPayments.size() + 
+				" : " + calculatedPayments.size() + " : " + (expectedPayments.size() -
+				calculatedPayments.size()));
+		for (int i=0; i < expectedPayments.size(); i++)
+		{
+			System.out.println("Payment #: " + (i+1));
+			printComparison("Balance:   ", expectedPayments.get(i).getBalance(), 
+				calculatedPayments.get(i).getBalance());
+			printComparison("Interest:  ", expectedPayments.get(i).getInterest(), 
+				calculatedPayments.get(i).getInterest());
+			printComparison("Payment:   ", expectedPayments.get(i).getPayment(), 
+				calculatedPayments.get(i).getPayment());
+			printComparison("Principal: ", expectedPayments.get(i).getPrincipal(), 
+				calculatedPayments.get(i).getPrincipal());
+		}		
+	}
+
 	private void compareResults(Results expectedResult, Results calculatedResult)
 	{
-		// this commented code will be the final code when the financial calculation is done
-		/*assertEquals(expectedResult.getTotalInterest(), 
+		printResults(expectedResult, calculatedResult);
+		
+		assertEquals(expectedResult.getTotalInterest(), 
 				calculatedResult.getTotalInterest());
 		assertEquals(expectedResult.getTotalPayments(), 
 				calculatedResult.getTotalPayments());
@@ -573,30 +602,6 @@ class LoanTestCaseData {
 					calculatedPayments.get(i).getPayment());
 			assertEquals(expectedPayments.get(i).getPrincipal(), 
 					calculatedPayments.get(i).getPrincipal());
-		}*/
-		System.out.println("Results are (Expected : Calculated : Difference)");
-		printComparison("Total Interest: ",expectedResult.getTotalInterest(),
-			calculatedResult.getTotalInterest());
-		printComparison("Total Payments: " , expectedResult.getTotalPayments(),
-			calculatedResult.getTotalPayments());
-		printComparison("Total Principal: ", expectedResult.getTotalPrincipal(), 
-			calculatedResult.getTotalPrincipal());
-		
-		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
-		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
-		System.out.println("Expected Number of Installments: " + expectedPayments.size() + 
-				" - Calculated Number of Installments: " + calculatedPayments.size());
-		for (int i=0; i < expectedPayments.size(); i++)
-		{
-			System.out.println("Payment #: " + (i+1));
-			printComparison("Balance:   ", expectedPayments.get(i).getBalance(), 
-				calculatedPayments.get(i).getBalance());
-			printComparison("Interest:  ", expectedPayments.get(i).getInterest(), 
-				calculatedPayments.get(i).getInterest());
-			printComparison("Payment:   ", expectedPayments.get(i).getPayment(), 
-				calculatedPayments.get(i).getPayment());
-			printComparison("Principal: ", expectedPayments.get(i).getPrincipal(), 
-				calculatedPayments.get(i).getPrincipal());
 		}
 		
 	}
@@ -611,12 +616,27 @@ class LoanTestCaseData {
 		configMgr.setProperty(AccountingRules.AccountingRulesNumberOfInterestDays,new Short((short)days));
 	}
 	
+	private void setInitialRoundingMode(RoundingMode mode) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, mode.toString());		
+	}
+	
+	private void setFinalRoundingMode(RoundingMode mode) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, mode.toString());		
+	}
+	
 	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws
 	AccountException
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
 		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
 		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+		setInitialRoundingMode(config.getInitialRoundingMode());
+		setFinalRoundingMode(config.getFinalRoundingMode());
+		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
+		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
+		AccountingRules.setInterestRoundingMode(config.getInterestRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -1001,9 +1021,11 @@ class LoanTestCaseData {
 		Money.setUsingNewMoney(true);
 		String rootPath = "org/mifos/application/accounts/loan/business/";
 		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
+		LoanBO.setUsingNewLoanSchedulingMethod(true);
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
 		Money.setUsingNewMoney(false);
+		LoanBO.setUsingNewLoanSchedulingMethod(false);
 	}
 	
 	/*

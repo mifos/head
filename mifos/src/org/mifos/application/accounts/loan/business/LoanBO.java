@@ -3115,6 +3115,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return unpaidInstallmentList;
 	}
 
+	
 	private Money getEarlyClosureAmount() {
 		Money amount = new Money();
 		for (AccountActionDateEntity accountActionDateEntity : getListOfUnpaidInstallments()) {
@@ -3555,7 +3556,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				feeInstallment);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Meeting schedule generated  ");
-		applyRounding_v2();
+		applyRounding_v2(loanInterest);
 	}
 	
 	private Money getLoanInterest_v2(Date installmentEndDate)
@@ -3576,16 +3577,17 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	// seems like the Double.toString call could introduce small errors
 	private Money getFlatInterestAmount_v2(Date installmentEndDate)
 			throws AccountException {
-		Double interestRate = getInterestRate();
-		Double durationInYears = getTotalDurationInYears(installmentEndDate);
-		Money interestRateM = new Money(Double.toString(interestRate));
-		Money durationInYearsM = new Money(Double.toString(durationInYears));
+		// TODO: interest rate should be a BigDecimal ?
+		Double interestRateDouble = getInterestRate();
+		// TODO: durationInYears should be a BigDeciaml ?
+		Double durationInYearsDouble = getTotalDurationInYears(installmentEndDate);
+		BigDecimal interestRate = new BigDecimal(interestRateDouble, Money.getInternalPrecisionAndRounding());
+		BigDecimal durationInYears = new BigDecimal(durationInYearsDouble, Money.getInternalPrecisionAndRounding());
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Get interest duration in years..." + durationInYears);
 		// the calls to Money.multiply() and Money.divide() round prematurely!
-		Money interest = getLoanAmount().multiply(
-				interestRateM.multiply(durationInYearsM)).divide(
-				new Money(Double.toString(100)));
+		Money interest = getLoanAmount().multiply(interestRate).multiply(durationInYears)
+			.divide(new BigDecimal("100"));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Get interest accumulated..." + interest);
 		return interest;
@@ -3835,12 +3837,10 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
 				|| getGraceType() == GraceType.NONE) {
-			Money principalPerInstallment = new Money(Double
-					.toString(getLoanAmount().getAmountDoubleValue()
-							/ getNoOfInstallments()));
-			Money interestPerInstallment = new Money(Double
-					.toString(loanInterest.getAmountDoubleValue()
-							/ getNoOfInstallments()));
+			Money principalPerInstallment = getLoanAmount()
+				.divide(new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
+			Money interestPerInstallment = loanInterest.divide(
+				new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
 			EMIInstallment installment = null;
 			for (int i = 0; i < getNoOfInstallments(); i++) {
 				installment = new EMIInstallment();
@@ -4030,30 +4030,65 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
 
-	protected final void applyRounding_v2() {
+	protected final void applyRounding_v2(Money totalInterest) {
+		// why are we checking for zero principal? what if there are still outstanding fees?
+		// shouldn't it be balance equals zero?
 		if (!isPrincipalZeroInAnyInstallmemt()) {
-			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
-			Money diffAmount = new Money();
-			int count = 0;
+			LoanScheduleEntity lastInstallment = (LoanScheduleEntity) getLastInstallmentAccountAction();
+			Money principalRunningTotal = new Money("0");
+			Money totalPaymentRunningTotal = new Money("0");
+			
 			List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
+			
+			// for now we are doing this based on working only on the complete list
+			// of installments
+			assert(unpaidInstallments.size() == this.getNoOfInstallments());
+					
 			for (AccountActionDateEntity accountActionDate : unpaidInstallments) {
-				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-				count++;
-				if (lastAccountActionDate.getInstallmentId().equals(
-						loanScheduleEntity.getInstallmentId())) {
-					continue;
-				}
-				Money totalAmount = loanScheduleEntity.getTotalDueWithFees();
-				Money roundedTotalAmount = Money.round(totalAmount);
-				loanScheduleEntity.setPrincipal(loanScheduleEntity
-						.getPrincipal().subtract(
-								totalAmount.subtract(roundedTotalAmount)));
-				diffAmount = diffAmount.add(totalAmount
-						.subtract(roundedTotalAmount));
+				LoanScheduleEntity currentInstallment = (LoanScheduleEntity) accountActionDate;
 
+				if (!currentInstallment.getInstallmentId().equals(
+						lastInstallment.getInstallmentId())) {
+					currentInstallment.setInterest(Money.round(currentInstallment.getInterest(),
+						AccountingRules.getDigitsAfterDecimalMultiple(),
+						AccountingRules.getInterestRoundingMode()));
+					currentInstallment.setPrincipal(Money.round(currentInstallment.getPrincipal(),
+							AccountingRules.getDigitsAfterDecimalMultiple(),
+							AccountingRules.getInitialRoundingMode()));
+					Money updatedInstallmentTotal = currentInstallment.getTotalDueWithFees();
+					Money roundedTotalAmount = Money.round(updatedInstallmentTotal,
+						AccountingRules.getInitialRoundOffMultiple(),
+						AccountingRules.getInitialRoundingMode());
+					Money principalAdjustment = updatedInstallmentTotal.subtract(roundedTotalAmount);
+					
+					// should principal be rounded here?
+					currentInstallment.setPrincipal(currentInstallment
+							.getPrincipal().subtract(principalAdjustment));
+					
+					principalRunningTotal = principalRunningTotal.add(currentInstallment.getPrincipal());
+					totalPaymentRunningTotal = totalPaymentRunningTotal.add(currentInstallment.getTotalDueWithFees());
+				}
 			}
-			lastAccountActionDate.setPrincipal(lastAccountActionDate
-					.getPrincipal().add(diffAmount));
+			/*
+			 * Final updated principal amount =  Initial total principal amount - Running total of true principal
+			 * Final updated payment amount =  Initial total payment amount - Running total of true payments
+			 */
+			
+			lastInstallment.setPrincipal(Money.round(
+				getLoanAmount().subtract(principalRunningTotal),
+				AccountingRules.getDigitsAfterDecimalMultiple(),
+				AccountingRules.getFinalRoundingMode()));
+			
+			Money initialTotalPaymentAmount = getLoanAmount().add(totalInterest);
+			Money finalUpdatedPaymentAmount = Money.round(
+				initialTotalPaymentAmount.subtract(totalPaymentRunningTotal),
+				AccountingRules.getFinalRoundOffMultiple(),
+				AccountingRules.getFinalRoundingMode());
+			
+			lastInstallment.setInterest(
+				Money.round(finalUpdatedPaymentAmount.subtract(lastInstallment.getPrincipal()),
+				AccountingRules.getDigitsAfterDecimalMultiple(),
+				AccountingRules.getInterestRoundingMode()));
 		}
 	}
 

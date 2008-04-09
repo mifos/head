@@ -76,7 +76,10 @@ public final class Money implements Serializable {
 		Money.usingNewMoney = usingNewMoney;
 	}
 	
-	private static MathContext internalPrecisionAndRounding = new MathContext(13, RoundingMode.HALF_UP);
+	private static int internalPrecision = 13;
+	private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
+	private static MathContext internalPrecisionAndRounding = 
+		new MathContext(internalPrecision, internalRoundingMode);
 	
 	private static MifosCurrency defaultCurrency = null;
 	
@@ -88,6 +91,13 @@ public final class Money implements Serializable {
 		Money.defaultCurrency = defaultCurrency;
 	}
 
+	public static int getInternalPrecision() {
+		return internalPrecision;
+	}
+	
+	public static MathContext getInternalPrecisionAndRounding() {
+		return internalPrecisionAndRounding;
+	}
 	
 	private final MifosCurrency currency;
 
@@ -339,11 +349,20 @@ public final class Money implements Serializable {
 					  internalPrecisionAndRounding.getRoundingMode()));
 	}
 
+	public Money multiply(BigDecimal factor) {
+		if (factor == null) {
+			throw new IllegalArgumentException(
+					ExceptionConstants.ILLEGALMONEYOPERATION);			
+		}
+		return new Money(currency, amount.multiply(factor)
+			.setScale(internalPrecisionAndRounding.getPrecision(), 
+					  internalPrecisionAndRounding.getRoundingMode()));
+	}
+
 	
 	/**
-	 * If the object passed as parameter is null or if its currency or amount is
-	 * null it returns this else performs the required operation and returns a
-	 * new Money object corresponding to the value.
+	 * Dividing by Money doesn't seem to make sense.  It should be
+	 * dividing by a BigDecimal.  This method should be eliminated.
 	 */
 	public Money divide(Money money) {
 		if (usingNewMoney) {
@@ -378,6 +397,11 @@ public final class Money implements Serializable {
 			return new Money(currency, amount.divide(money.getAmount(), 
 				internalPrecisionAndRounding));					
 		}
+	}
+
+	public Money divide(BigDecimal factor) {
+		return new Money(currency, amount.divide(factor, 
+				internalPrecisionAndRounding));					
 	}
 	
 	public Money negate() {
@@ -448,6 +472,21 @@ public final class Money implements Serializable {
 		return money;
 	}
 
+	public static Money round(Money money,BigDecimal roundOffMultiple, RoundingMode roundingMode) {
+		// should we allow a null money or throw and exception instead?
+		if (null != money) {
+			// insure that we are using the correct internal precision
+			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
+			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
+
+			nearestFactor = nearestFactor.setScale(0, roundingMode);
+
+			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+			return new Money(money.getCurrency(), roundedAmount);
+		}
+		return money;
+	}
+	
 	/**
 	 * This method return true if the currency associated with the two money
 	 * objects is equal and also the compareTo method of BigDecimal return 0 for
