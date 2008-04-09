@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="ASCII"?>
+<talendfile:ProcessType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" defaultContext="Default">
+  <context confirmationNeeded="false" name="Default">
+    <contextParameter comment="" name="FILENAME" prompt="FILENAME?" promptNeeded="false" type="id_String" value="C:/development/tools/TOS-All-r8112-V2.3.0RC1/workspace/time_dim.csv"/>
+    <contextParameter comment="" name="HOST" prompt="HOST?" promptNeeded="false" type="id_String" value="localhost"/>
+    <contextParameter comment="" name="PORT" prompt="PORT?" promptNeeded="false" type="id_String" value="3306"/>
+    <contextParameter comment="" name="DBNAME" prompt="DBNAME?" promptNeeded="false" type="id_String" value="reports"/>
+    <contextParameter comment="" name="PASSWORD" prompt="PASSWORD?" promptNeeded="false" type="id_String" value="password"/>
+    <contextParameter comment="" name="USER" prompt="USER?" promptNeeded="false" type="id_String" value="mifos"/>
+    <contextParameter comment="" name="OLTP_DB_HOST" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="9.161.146.80"/>
+    <contextParameter comment="" name="OLTP_DB_PORT" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="3306"/>
+    <contextParameter comment="" name="OLTP_DB_SCHEMA" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="grameen"/>
+    <contextParameter comment="" name="OLTP_DB_USER" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="root"/>
+    <contextParameter comment="" name="OLTP_DB_PASSWORD" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="cool4n0w"/>
+    <contextParameter comment="" name="OLAP_DB_HOST" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="localhost"/>
+    <contextParameter comment="" name="OLAP_DB_PORT" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="3306"/>
+    <contextParameter comment="" name="OLAP_DB_SCHEMA" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="test"/>
+    <contextParameter comment="" name="OLAP_DB_USER" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="mifos"/>
+    <contextParameter comment="" name="OLAP_DB_PASSWORD" prompt="new1?" promptNeeded="false" repositoryContextId="_txeUwPU1EdyckdmAHVcqPg" type="id_String" value="password"/>
+  </context>
+  <parameters>
+    <elementParameter field="TEXT" name="VERSION" value="0.1"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_X" value="0"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_Y" value="0"/>
+    <elementParameter field="CHECK" name="MULTI_THREAD_EXECATION" value="false"/>
+    <elementParameter field="CHECK" name="IMPLICIT_TCONTEXTLOAD" value="false"/>
+    <elementParameter field="CHECK" name="ON_FILES_FLAG_IMPLICIT_CONTEXT" value="false"/>
+    <elementParameter field="FILE" name="IMPLICIT_TCONTEXTLOAD_FILE" value="&quot;C:/development/tools/TOS-All-r8112-V2.3.0RC1/workspace/in.csv&quot;"/>
+    <elementParameter field="CHECK" name="ON_DATABASE_FLAG_IMPLICIT_CONTEXT" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE_IMPLICIT_CONTEXT" value="BUILT_IN"/>
+    <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE_IMPLICIT_CONTEXT" value=""/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE_IMPLICIT_CONTEXT" value="tDBInput"/>
+    <elementParameter field="TEXT" name="HOST_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PORT_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="DBNAME_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PROPERTIES_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="USER_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PASS_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="DBTABLE_IMPLICIT_CONTEXT" value="&quot;&quot;"/>
+    <elementParameter field="CLOSED_LIST" name="LOAD_NEW_VARIABLE" value="Warning"/>
+    <elementParameter field="CLOSED_LIST" name="NOT_LOAD_OLD_VARIABLE" value="Warning"/>
+    <elementParameter field="CHECK" name="PRINT_OPERATIONS" value="false"/>
+    <elementParameter field="CHECK" name="DISABLE_ERROR" value="false"/>
+    <elementParameter field="CHECK" name="DISABLE_WARNINGS" value="true"/>
+    <elementParameter field="CHECK" name="DISABLE_INFO" value="true"/>
+    <elementParameter field="CHECK" name="ON_STATCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_LOGCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_METERCATCHER_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_CONSOLE_FLAG" value="false"/>
+    <elementParameter field="CHECK" name="ON_FILES_FLAG" value="false"/>
+    <elementParameter field="DIRECTORY" name="FILE_PATH" value="&quot;C:/development/tools/TOS-All-r8112-V2.3.0RC1/workspace/.metadata&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_STATS" value="&quot;stats_file.txt&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_LOGS" value="&quot;logs_file.txt&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_METTER" value="&quot;meter_file.txt&quot;"/>
+    <elementParameter field="CHECK" name="ON_DATABASE_FLAG" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE" value="BUILT_IN"/>
+    <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE" value=""/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE" value="tDBOutput"/>
+    <elementParameter field="TEXT" name="HOST" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PORT" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="DBNAME" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PROPERTIES" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="USER" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PASS" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_STATS" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_LOGS" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_METER" value="&quot;&quot;"/>
+    <elementParameter field="CHECK" name="CATCH_RUNTIME_ERRORS" value="false"/>
+    <elementParameter field="CHECK" name="CATCH_USER_ERRORS" value="false"/>
+    <elementParameter field="CHECK" name="CATCH_USER_WARNING" value="false"/>
+    <elementParameter field="CHECK" name="CATCH_REALTIME_STATS" value="false"/>
+  </parameters>
+  <node componentName="tMysqlOutput" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="448" posY="352">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMysqlOutput_1"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.102 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
+    <elementParameter field="CHECK" name="DUMMY" value="true"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE" value="BUILT_IN"/>
+    <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE" value="__MWu4OkOEdyR85iuAJMN_w"/>
+    <elementParameter field="PROPERTY_TYPE" name="PROPERTY" value=""/>
+    <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="true"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="tMysqlConnection_1"/>
+    <elementParameter field="TEXT" name="TYPE" value="MySQL"/>
+    <elementParameter field="TEXT" name="HOST" value="&quot;localhost&quot;"/>
+    <elementParameter field="TEXT" name="PORT" value="&quot;3306&quot;"/>
+    <elementParameter field="TEXT" name="DBNAME" value="&quot;mifos&quot;"/>
+    <elementParameter field="TEXT" name="PROPERTIES" value="&quot;noDatetimeStringSync=true&quot;"/>
+    <elementParameter field="TEXT" name="USER" value="&quot;mifos&quot;"/>
+    <elementParameter field="TEXT" name="PASS" value="&quot;password&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE" value="&quot;time_dim&quot;"/>
+    <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
+    <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT"/>
+    <elementParameter field="CHECK" name="EXTENDINSERT" value="false"/>
+    <elementParameter field="LABEL" name="NOTE" value="(Not compatible with reject links)"/>
+    <elementParameter field="TEXT" name="NB_ROWS_PER_INSERT" value="100"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_FLOW:REPOSITORY_SCHEMA_TYPE" value="_JtzFwOUcEdyw77TXHobAwg - time_dim"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_FLOW:SCHEMA_TYPE" value="BUILT_IN"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_REJECT:REPOSITORY_SCHEMA_TYPE" value=""/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_REJECT:SCHEMA_TYPE" value="BUILT_IN"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
+    <elementParameter field="TABLE" name="ADD_COLS"/>
+    <elementParameter field="TEXT" name="COMMIT_EVERY" value="10000"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
+    <elementParameter field="MAPPING_TYPE" name="MAPPING" value="mysql_id"/>
+    <elementParameter field="TEXT" name="LABEL" value="mifos_schema"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value="The time_dim time dimension"/>
+    <metadata connector="FLOW" name="tMysqlOutput_1">
+      <column comment="Date in  dd-MM-yyy format" defaultValue="" key="false" name="date" nullable="false" pattern="&quot;dd/MM/yyyy&quot;" sourceType="DATE" type="id_Date"/>
+      <column comment="1=Monday.....7=Saturday" defaultValue="" key="false" length="2" name="day_num_in_week" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="week range from 1-52" defaultValue="" key="false" length="2" name="week_num_in_year" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="nth week since configured start day." defaultValue="" key="false" length="4" name="week_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. Monday (locale specific)" defaultValue="" key="false" length="50" name="day_of_week" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="min1 and max 31." defaultValue="" key="false" length="2" name="day_num_in_month" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type day starting from some configured starting day." defaultValue="" key="false" length="4" name="day_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. &quot;January&quot; (Locale specific)" defaultValue="" key="false" length="50" name="month" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="Range 1-12" defaultValue="" key="false" length="4" name="month_num_in_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type count from specified day." defaultValue="" key="false" length="4" name="month_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="calender year" defaultValue="" key="false" length="4" name="quarter_num_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="&quot;First&quot;, &quot;second&quot; ..." defaultValue="" key="false" length="50" name="quarter_name" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="" defaultValue="" key="false" length="10" name="year" nullable="false" pattern="" sourceType="YEAR" type="id_Integer"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="week_day_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="last_day_in_month_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=true, 0=false" defaultValue="" key="false" length="1" name="holiday_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="" defaultValue="" key="false" length="200" name="holiday_name" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+    </metadata>
+    <metadata connector="REJECT" name="REJECT">
+      <column comment="Date in  dd-MM-yyy format" defaultValue="" key="false" name="date" nullable="false" pattern="&quot;dd/MM/yyyy&quot;" sourceType="DATE" type="id_Date"/>
+      <column comment="1=Monday.....7=Saturday" defaultValue="" key="false" length="2" name="day_num_in_week" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="week range from 1-52" defaultValue="" key="false" length="2" name="week_num_in_year" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="nth week since configured start day." defaultValue="" key="false" length="4" name="week_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. Monday (locale specific)" defaultValue="" key="false" length="50" name="day_of_week" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="min1 and max 31." defaultValue="" key="false" length="2" name="day_num_in_month" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type day starting from some configured starting day." defaultValue="" key="false" length="4" name="day_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. &quot;January&quot; (Locale specific)" defaultValue="" key="false" length="50" name="month" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="Range 1-12" defaultValue="" key="false" length="4" name="month_num_in_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type count from specified day." defaultValue="" key="false" length="4" name="month_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="calender year" defaultValue="" key="false" length="4" name="quarter_num_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="&quot;First&quot;, &quot;second&quot; ..." defaultValue="" key="false" length="50" name="quarter_name" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="" defaultValue="" key="false" length="10" name="year" nullable="false" pattern="" sourceType="YEAR" type="id_Integer"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="week_day_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="last_day_in_month_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=true, 0=false" defaultValue="" key="false" length="1" name="holiday_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="" defaultValue="" key="false" length="200" name="holiday_name" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column defaultValue="" key="false" length="255" name="errorCode" nullable="true" precision="0" sourceType="" type="id_String"/>
+      <column defaultValue="" key="false" length="255" name="errorMessage" nullable="true" precision="0" sourceType="" type="id_String"/>
+    </metadata>
+  </node>
+  <node componentName="tMysqlConnection" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="256" posY="160">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMysqlConnection_1"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.102 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+    <elementParameter field="CHECK" name="DUMMY" value="false"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE" value="BUILT_IN"/>
+    <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE" value=""/>
+    <elementParameter field="PROPERTY_TYPE" name="PROPERTY" value=""/>
+    <elementParameter field="TEXT" name="HOST" value="OLAP_DB_HOST"/>
+    <elementParameter field="TEXT" name="TYPE" value="MySQL"/>
+    <elementParameter field="TEXT" name="PORT" value="OLAP_DB_PORT"/>
+    <elementParameter field="TEXT" name="DBNAME" value="OLAP_DB_SCHEMA"/>
+    <elementParameter field="TEXT" name="PROPERTIES" value="&quot;noDatetimeStringSync=true&quot;"/>
+    <elementParameter field="TEXT" name="USER" value="OLAP_DB_USER"/>
+    <elementParameter field="TEXT" name="PASS" value="OLAP_DB_PASSWORD"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
+    <elementParameter field="TEXT" name="LABEL" value="mifos_conn"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value="The connection object to the mifos database."/>
+  </node>
+  <node componentName="tFileInputDelimited" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="192" posY="352">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFileInputDelimited_1"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.102 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
+    <elementParameter field="CHECK" name="DUMMY" value="false"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="PROPERTY_TYPE" value="BUILT_IN"/>
+    <elementParameter field="CLOSED_LIST" name="REPOSITORY_PROPERTY_TYPE" value="_GKhEUN_OEdycu72qe-Se5Q"/>
+    <elementParameter field="PROPERTY_TYPE" name="PROPERTY" value=""/>
+    <elementParameter field="FILE" name="FILENAME" value="FILENAME"/>
+    <elementParameter field="TEXT" name="ROWSEPARATOR" value="&quot;\n&quot;"/>
+    <elementParameter field="TEXT" name="FIELDSEPARATOR" value="&quot;,&quot;"/>
+    <elementParameter field="CHECK" name="CSV_OPTION" value="false"/>
+    <elementParameter field="TEXT" name="ESCAPE_CHAR" value="&quot;&quot;&quot;"/>
+    <elementParameter field="TEXT" name="TEXT_ENCLOSURE" value="&quot;&quot;&quot;"/>
+    <elementParameter field="TEXT" name="HEADER" value="1"/>
+    <elementParameter field="TEXT" name="FOOTER" value="0"/>
+    <elementParameter field="TEXT" name="LIMIT" value=""/>
+    <elementParameter field="CHECK" name="ADVANCED_SEPARATOR" value="false"/>
+    <elementParameter field="TEXT" name="THOUSANDS_SEPARATOR" value="','"/>
+    <elementParameter field="TEXT" name="DECIMAL_SEPARATOR" value="'.'"/>
+    <elementParameter field="CHECK" name="RANDOM" value="false"/>
+    <elementParameter field="TEXT" name="NB_RANDOM" value="10"/>
+    <elementParameter field="CHECK" name="TRIMALL" value="false"/>
+    <elementParameter field="TABLE" name="TRIMSELECT">
+      <elementValue elementRef="SCHEMA_COLUMN" value="date"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="day_num_in_week"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="week_num_in_year"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="week_num_overall"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="day_of_week"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="day_num_in_month"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="day_num_overall"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="month"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="month_num_in_year"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="month_num_overall"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="quarter_num_year"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="quarter_name"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="year"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="week_day_flag"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="last_day_in_month_flag"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="holiday_flag"/>
+      <elementValue elementRef="TRIM" value="false"/>
+      <elementValue elementRef="SCHEMA_COLUMN" value="holiday_name"/>
+      <elementValue elementRef="TRIM" value="false"/>
+    </elementParameter>
+    <elementParameter field="CHECK" name="REMOVE_EMPTY_ROW" value="true"/>
+    <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
+    <elementParameter field="CHECK" name="CHECK_FIELDS_NUM" value="false"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA:REPOSITORY_SCHEMA_TYPE" value="_JtzFwOUcEdyw77TXHobAwg - time_dim"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA:SCHEMA_TYPE" value="BUILT_IN"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_REJECT:REPOSITORY_SCHEMA_TYPE" value="_GKhEUN_OEdycu72qe-Se5Q - gk_metadata"/>
+    <elementParameter field="TECHNICAL" name="SCHEMA_REJECT:SCHEMA_TYPE" value="BUILT_IN"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
+    <elementParameter field="TEXT" name="LABEL" value="time_dim_data"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value="The data file containing the data to be loaded in the time_dim time demension table."/>
+    <metadata connector="FLOW" name="tFileInputDelimited_1">
+      <column comment="Date in  dd-MM-yyy format" defaultValue="" key="false" name="date" nullable="false" pattern="&quot;dd/MM/yyyy&quot;" sourceType="DATE" type="id_Date"/>
+      <column comment="1=Monday.....7=Saturday" defaultValue="" key="false" length="2" name="day_num_in_week" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="week range from 1-52" defaultValue="" key="false" length="2" name="week_num_in_year" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="nth week since configured start day." defaultValue="" key="false" length="4" name="week_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. Monday (locale specific)" defaultValue="" key="false" length="50" name="day_of_week" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="min1 and max 31." defaultValue="" key="false" length="2" name="day_num_in_month" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type day starting from some configured starting day." defaultValue="" key="false" length="4" name="day_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. &quot;January&quot; (Locale specific)" defaultValue="" key="false" length="50" name="month" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="Range 1-12" defaultValue="" key="false" length="4" name="month_num_in_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type count from specified day." defaultValue="" key="false" length="4" name="month_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="calender year" defaultValue="" key="false" length="4" name="quarter_num_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="&quot;First&quot;, &quot;second&quot; ..." defaultValue="" key="false" length="50" name="quarter_name" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="" defaultValue="" key="false" length="10" name="year" nullable="false" pattern="" sourceType="YEAR" type="id_Integer"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="week_day_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="last_day_in_month_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=true, 0=false" defaultValue="" key="false" length="1" name="holiday_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="" defaultValue="" key="false" length="200" name="holiday_name" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+    </metadata>
+    <metadata connector="REJECT" name="REJECT">
+      <column comment="Date in  dd-MM-yyy format" defaultValue="" key="false" name="date" nullable="false" pattern="&quot;dd/MM/yyyy&quot;" sourceType="DATE" type="id_Date"/>
+      <column comment="1=Monday.....7=Saturday" defaultValue="" key="false" length="2" name="day_num_in_week" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="week range from 1-52" defaultValue="" key="false" length="2" name="week_num_in_year" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="nth week since configured start day." defaultValue="" key="false" length="4" name="week_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. Monday (locale specific)" defaultValue="" key="false" length="50" name="day_of_week" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="min1 and max 31." defaultValue="" key="false" length="2" name="day_num_in_month" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type day starting from some configured starting day." defaultValue="" key="false" length="4" name="day_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. &quot;January&quot; (Locale specific)" defaultValue="" key="false" length="50" name="month" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="Range 1-12" defaultValue="" key="false" length="4" name="month_num_in_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type count from specified day." defaultValue="" key="false" length="4" name="month_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="calender year" defaultValue="" key="false" length="4" name="quarter_num_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="&quot;First&quot;, &quot;second&quot; ..." defaultValue="" key="false" length="50" name="quarter_name" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="" defaultValue="" key="false" length="10" name="year" nullable="false" pattern="" sourceType="YEAR" type="id_Integer"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="week_day_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="last_day_in_month_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=true, 0=false" defaultValue="" key="false" length="1" name="holiday_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="" defaultValue="" key="false" length="200" name="holiday_name" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column defaultValue="" key="false" length="255" name="errorCode" nullable="true" precision="0" sourceType="" type="id_String"/>
+      <column defaultValue="" key="false" length="255" name="errorMessage" nullable="true" precision="0" sourceType="" type="id_String"/>
+    </metadata>
+  </node>
+  <node componentName="tMysqlCommit" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="608" posY="224">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tMysqlCommit_1"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.102 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+    <elementParameter field="CHECK" name="DUMMY" value="false"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="tMysqlConnection_1"/>
+    <elementParameter field="CHECK" name="CLOSE" value="true"/>
+    <elementParameter field="TEXT" name="LABEL" value="mifos_commit"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value="Used to commit the data loaded in the time_dim time dimension."/>
+    <metadata connector="FLOW" name="tMysqlCommit_1">
+      <column comment="The primary key" defaultValue="" key="true" length="4" name="id" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="Date in  dd-MM-yyy format" defaultValue="" key="false" name="date" nullable="false" pattern="&quot;dd/MM/yyyy&quot;" sourceType="DATE" type="id_Date"/>
+      <column comment="1=Monday.....7=Saturday" defaultValue="" key="false" length="2" name="day_num_in_week" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="week range from 1-52" defaultValue="" key="false" length="2" name="week_num_in_year" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="nth week since configured start day." defaultValue="" key="false" length="4" name="week_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. Monday (locale specific)" defaultValue="" key="false" length="50" name="day_of_week" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="min1 and max 31." defaultValue="" key="false" length="2" name="day_num_in_month" nullable="false" pattern="" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type day starting from some configured starting day." defaultValue="" key="false" length="4" name="day_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="eg. &quot;January&quot; (Locale specific)" defaultValue="" key="false" length="50" name="month" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="Range 1-12" defaultValue="" key="false" length="4" name="month_num_in_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="A Julian type count from specified day." defaultValue="" key="false" length="4" name="month_num_overall" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="calender year" defaultValue="" key="false" length="4" name="quarter_num_year" nullable="false" pattern="" precision="0" sourceType="SMALLINT" type="id_Short"/>
+      <column comment="&quot;First&quot;, &quot;second&quot; ..." defaultValue="" key="false" length="50" name="quarter_name" nullable="false" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+      <column comment="" defaultValue="" key="false" length="10" name="year" nullable="false" pattern="" sourceType="YEAR" type="id_Integer"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="week_day_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=True, 0= false" defaultValue="" key="false" length="1" name="last_day_in_month_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="1=true, 0=false" defaultValue="" key="false" length="1" name="holiday_flag" nullable="false" pattern="" precision="0" sourceType="BIT" type="id_Boolean"/>
+      <column comment="" defaultValue="" key="false" length="200" name="holiday_name" nullable="true" pattern="" precision="0" sourceType="VARCHAR" type="id_String"/>
+    </metadata>
+  </node>
+  <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="416" posY="160">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_1"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.101 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+    <elementParameter field="CHECK" name="DUMMY" value="false"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="&#x9;&#x9;&#x9;java.sql.Connection conn = (java.sql.Connection) (globalMap&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.get(&quot;conn_tMysqlConnection_1&quot;));&#xA;&#xA;&#x9;&#x9;&#x9;java.util.Calendar startDate = java.util.Calendar.getInstance();&#xA;&#xA;&#x9;&#x9;&#x9;java.sql.Statement stmt = conn.createStatement();&#xA;&#x9;&#x9;&#x9;boolean exists = stmt&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.execute(&quot;select time_id from time_dim_ where date like '&quot;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;+ new java.sql.Date(startDate.getTimeInMillis()) + &quot;'&quot;);&#xA;&#x9;&#x9;&#x9;if (!exists) {&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;String statementString = &quot;insert into time_dim_ (&quot;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;+ &quot;date ,day_num_in_week, week_num_in_year,&quot;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;+ &quot;day_of_week, day_num_in_month, month, &quot;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;+ &quot;month_num_in_year, quarter_num_year, quarter_name, year )&quot;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;+ &quot;values (?,?,?,?,?,?,?,?,?,?);&quot;;&#xA;&#xA;&#x9;&#x9;&#x9;java.sql.PreparedStatement statement;&#xA;&#x9;&#x9;&#x9;statement = conn.prepareStatement(statementString);&#xA;&#xA;&#x9;&#x9;&#x9;// set the date&#xA;&#x9;&#x9;&#x9;statement&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.setDate(1, new java.sql.Date(startDate.getTimeInMillis()));&#xA;&#x9;&#x9;&#x9;// set the day of the week: 1,2 ... 7&#xA;&#x9;&#x9;&#x9;statement.setInt(2, startDate.get(java.util.Calendar.DAY_OF_WEEK));&#xA;&#x9;&#x9;&#x9;// set the week of the year: 1 - 52&#xA;&#x9;&#x9;&#x9;statement.setInt(3, startDate.get(java.util.Calendar.WEEK_OF_YEAR));&#xA;&#xA;&#x9;&#x9;&#x9;// set the day of the week: SUN-SAT&#xA;&#x9;&#x9;&#x9;String dayWeekName = null;&#xA;&#x9;&#x9;&#x9;switch (startDate.get(java.util.Calendar.DAY_OF_WEEK)) {&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.SUNDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;SUNDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.MONDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;MONDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.TUESDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;TUESDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.WEDNESDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;WEDNESDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.THURSDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;THURSDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.FRIDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;FRIDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.SATURDAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayWeekName = &quot;SATURDAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;statement.setString(4, dayWeekName);&#xA;&#xA;&#x9;&#x9;&#x9;// set the day of the month: 1-31&#xA;&#x9;&#x9;&#x9;statement.setInt(5, startDate.get(java.util.Calendar.DAY_OF_MONTH));&#xA;&#xA;&#x9;&#x9;&#x9;// set the month: JAN-DEC&#xA;&#x9;&#x9;&#x9;String dayMonthName = null;&#xA;&#x9;&#x9;&#x9;switch (startDate.get(java.util.Calendar.MONTH)) {&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.JANUARY:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;JANUARY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.FEBRUARY:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;FEBRUARY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.MARCH:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;MARCH&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.APRIL:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;APRIL&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.MAY:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;MAY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.JUNE:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;JUNE&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.JULY:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;JULY&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.AUGUST:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;AUGUST&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.SEPTEMBER:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;SEPTEMBER&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.OCTOBER:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;OCTOBER&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.NOVEMBER:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;NOVEMBER&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case java.util.Calendar.DECEMBER:&#xA;&#x9;&#x9;&#x9;&#x9;dayMonthName = &quot;DECEMBER&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;statement.setString(6, dayMonthName);&#xA;&#x9;&#x9;&#x9;// set the month: 1-12&#xA;&#x9;&#x9;&#x9;statement.setInt(7, startDate.get(java.util.Calendar.MONTH) + 1);&#xA;&#xA;&#x9;&#x9;&#x9;// set the quarter 1-4&#xA;&#x9;&#x9;&#x9;int quarter = (startDate.get(java.util.Calendar.MONTH) / 3) + 1;&#xA;&#x9;&#x9;&#x9;statement.setInt(8, quarter);&#xA;&#x9;&#x9;&#x9;// set the quarter FIRST-FOURTH&#xA;&#x9;&#x9;&#x9;String quarterName = null;&#xA;&#x9;&#x9;&#x9;switch (quarter) {&#xA;&#x9;&#x9;&#x9;case 1:&#xA;&#x9;&#x9;&#x9;&#x9;quarterName = &quot;FIRST&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case 2:&#xA;&#x9;&#x9;&#x9;&#x9;quarterName = &quot;SECOND&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case 3:&#xA;&#x9;&#x9;&#x9;&#x9;quarterName = &quot;THIRD&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;case 4:&#xA;&#x9;&#x9;&#x9;&#x9;quarterName = &quot;FOURTH&quot;;&#xA;&#x9;&#x9;&#x9;&#x9;break;&#xA;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;statement.setString(9, quarterName);&#xA;&#x9;&#x9;&#x9;// set the year&#xA;&#x9;&#x9;&#x9;statement.setInt(10, startDate.get(java.util.Calendar.YEAR));&#xA;&#x9;&#x9;&#x9;statement.execute();&#xA;&#x9;&#x9;&#x9;}&#xA;"/>
+    <elementParameter field="TEXT" name="LABEL" value="__UNIQUE_NAME__"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>__UNIQUE_NAME__&lt;/b>&lt;br>__COMMENT__"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value=""/>
+    <metadata connector="FLOW" name="tJava_1"/>
+  </node>
+  <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="256" posY="32">
+    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_2"/>
+    <elementParameter field="TEXT" name="VERSION" value="0.101 (ALPHA)"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+    <elementParameter field="CHECK" name="DUMMY" value="false"/>
+    <elementParameter field="CHECK" name="TSTATCATCHER_STATS" value="false"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="java.util.Properties p = new java.util.Properties();&#xA;&#xA;java.io.InputStream inStream = this.getClass()&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getClassLoader()&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.getResourceAsStream(&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&quot;hibernate.properties&quot;);&#xA;&#xA;p.load(inStream);&#xA;OLTP_DB_PASSWORD =(String) p.get(&quot;OLTP_DB_PASSWORD&quot;);&#xA;OLTP_DB_USER = (String) p.get(&quot;OLTP_DB_USER&quot;);&#xA;OLTP_DB_SCHEMA = (String) p.get(&quot;OLTP_DB_NAME&quot;);&#xA;OLTP_DB_PORT = (String) p.get(&quot;OLTP_DB_PORT&quot;);&#xA;OLTP_DB_HOST = (String) p.get(&quot;OLTP_HOST_NAME&quot;);&#xA;OLAP_DB_HOST = (String) p.get(&quot;OLAP_DB_HOST&quot;);&#xA;OLAP_DB_PORT = (String) p.get(&quot;OLAP_DB_PORT&quot;);&#xA;OLAP_DB_SCHEMA = (String) p.get(&quot;OLAP_DB_NAME&quot;);&#xA;OLAP_DB_USER = (String) p.get(&quot;OLAP_DB_USER&quot;);&#xA;OLAP_DB_PASSWORD = (String) p.get(&quot;OLAP_DB_PASSWORD&quot;);&#xA;"/>
+    <elementParameter field="TEXT" name="LABEL" value="Connection property loader"/>
+    <elementParameter field="TEXT" name="HINT" value="&lt;b>DB_Connections&lt;/b>&lt;br>loads and initializes the DB connetion details"/>
+    <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="MEMO" name="COMMENT" value=""/>
+    <metadata connector="FLOW" name="tJava_2"/>
+  </node>
+  <connection connectorName="COMPONENT_OK" label="OnComponentOk" lineStyle="3" metaname="tMysqlOutput_1" offsetLabelX="0" offsetLabelY="0" source="tMysqlOutput_1" target="tMysqlCommit_1">
+    <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
+  </connection>
+  <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tMysqlConnection_1" offsetLabelX="0" offsetLabelY="0" outputId="1" source="tMysqlConnection_1" target="tFileInputDelimited_1">
+    <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
+  </connection>
+  <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tMysqlConnection_1" offsetLabelX="0" offsetLabelY="0" outputId="2" source="tMysqlConnection_1" target="tJava_1">
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+  </connection>
+  <connection connectorName="FLOW" label="row1" lineStyle="0" metaname="tFileInputDelimited_1" offsetLabelX="0" offsetLabelY="0" source="tFileInputDelimited_1" target="tMysqlOutput_1">
+    <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
+    <elementParameter field="CHECK" name="USEROWLABEL" value="true"/>
+    <elementParameter field="TEXT" name="METTERLABEL" value="&quot;MyLabel&quot;"/>
+    <elementParameter field="CLOSED_LIST" name="ABSOLUTE" value="Absolute"/>
+    <elementParameter field="CONNECTION_LIST" name="CONNECTIONS" value=""/>
+    <elementParameter field="TABLE" name="THRESHLODS"/>
+    <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
+  </connection>
+  <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tJava_1" offsetLabelX="0" offsetLabelY="0" source="tJava_1" target="tMysqlCommit_1">
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+  </connection>
+  <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tJava_2" offsetLabelX="0" offsetLabelY="0" source="tJava_2" target="tMysqlConnection_1">
+    <elementParameter field="CHECK" name="ACTIVATE" value="true"/>
+  </connection>
+</talendfile:ProcessType>
