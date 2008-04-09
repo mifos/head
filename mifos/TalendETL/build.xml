@@ -32,7 +32,6 @@
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/target"/>
-	<property name="dist.dir" value="${basedir}/dist"/>
 	<property name="build.classes" value="${basedir}/target/classes"/>
 			
 
@@ -46,8 +45,6 @@
         <pathelement location="${build.src.dir}"/>
         <pathelement location="${build.classes}"/>
 	</path>
-    <property name="mifos.password" value="testmifos"/>
-
     <echo level="debug">CLASSPATH - ${java.class.path}</echo>
 
 	<!--definitions & target for SVNant 
@@ -83,7 +80,6 @@
 	</target>
 
 	<target name="make_dir">
-		<mkdir dir="${dist.dir}"/>
 		<mkdir dir="${build.classes}"/>
 		<mkdir dir="${build.classes}/conf"/>
 	</target>
@@ -94,6 +90,16 @@
 				<include name="*" />
 			</fileset>
 		</copy>
+		<copy todir="${build.classes}/bin">
+			<fileset dir="${basedir}/bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.classes}/lib">
+			<fileset dir="${basedir}/lib">
+				<include name="*" />
+			</fileset>
+		</copy>		
 	</target>
 
 	<target name="clean_src_classes" description="Cleans the source classes">
@@ -104,11 +110,6 @@
 
 	<target name="clean" description="Cleans the temp build directory">
 		<delete dir="${build.dir}"/>
-	</target>
-
-	
-	<target name="clean_all" depends="clean">
-		<delete dir="${dist.dir}"/>
 	</target>
 
 	<target name="compile" depends="init,make_dir,copy_files" 
