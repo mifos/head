@@ -10,7 +10,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos</td>
+	<td>/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -322,11 +332,6 @@
 	<td>assertText</td>
 	<td>//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td/table/tbody/tr/td[1]/select/option[2]</td>
 	<td>Cheque</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Logout</td>
-	<td></td>
 </tr>
 
 </tbody></table>

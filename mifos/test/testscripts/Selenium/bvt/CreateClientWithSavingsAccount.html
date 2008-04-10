@@ -10,7 +10,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos</td>
+	<td>/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -430,7 +440,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Edit meeting schedule</td>
+	<td>link=Edit meeting schedule / Add Group</td>
 	<td></td>
 </tr>
 <tr>
@@ -575,12 +585,12 @@
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Product category : Other</td>
+	<td>Product category: Other</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Applicable for : Clients</td>
+	<td>Applicable for: Clients</td>
 	<td></td>
 </tr>
 <tr>
@@ -590,32 +600,32 @@
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Interest rate : 1 %</td>
+	<td>Interest rate: 1 %</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Balance used for Interest calculation : Minimum Balance</td>
+	<td>Balance used for Interest calculation: Minimum Balance</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Time period for Interest calculation : 15 Day(s)</td>
+	<td>Time period for Interest calculation: 15 Day(s)</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>Frequency of Interest posting to accounts : 1 month(s)</td>
+	<td>Frequency of Interest posting to accounts: 1 month(s)</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>GL code for deposits : 4602</td>
+	<td>GL code for deposits: 4602</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
-	<td>GL code for Interest : 41101</td>
+	<td>GL code for Interest: 41101</td>
 	<td></td>
 </tr>
 <tr>
@@ -730,7 +740,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
- 	<td>link=View Savings account</td>
+	<td>link=View Savings account details now</td>
 	<td></td>
 </tr>
 <tr>
@@ -898,11 +908,7 @@
 	<td>//table[3]/tbody/tr[2]/td[1]</td>
 	<td>Account balance: 14.0</td>
 </tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Logout</td>
-	<td></td>
-</tr>
+
 
 </tbody></table>
 </body>

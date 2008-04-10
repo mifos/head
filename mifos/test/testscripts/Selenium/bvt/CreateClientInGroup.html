@@ -10,7 +10,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos</td>
+	<td>/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -672,11 +682,6 @@
 	<td>assertText</td>
 	<td>//form/table[2]/tbody/tr/td[1]/table[1]/tbody/tr[3]/td/span[1]</td>
 	<td>Active</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Logout</td>
-	<td></td>
 </tr>
 
 </tbody></table>

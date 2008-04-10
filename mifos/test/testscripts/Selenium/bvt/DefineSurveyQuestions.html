@@ -10,7 +10,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos</td>
+	<td>/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -122,11 +132,6 @@
 	<td>assertText</td>
 	<td>//table[2]/tbody/tr/td[1]/span</td>
 	<td>Question: question${time}<br /> Answer type: Free text</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Logout</td>
-	<td></td>
 </tr>
 
 </tbody></table>

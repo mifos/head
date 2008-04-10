@@ -10,7 +10,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos</td>
+	<td>/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -74,46 +84,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>//tr[6]/td[1]</td>
-	<td>Very Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[6]/td[2]</td>
-	<td>0 - 100</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[7]/td[1]</td>
-	<td>Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[7]/td[2]</td>
-	<td>25 - 49</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[8]/td[1]</td>
-	<td>At Risk</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[8]/td[2]</td>
-	<td>50 - 74</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[1]</td>
-	<td>Non Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[2]</td>
-	<td>75 - 100</td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>button</td>
 	<td></td>
@@ -131,7 +101,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[9]/td[2]</td>
-	<td>0 - 100</td>
+	<td>0 - 24</td>
 </tr>
 <tr>
 	<td>assertText</td>
@@ -153,11 +123,7 @@
 	<td>//tr[11]/td[2]</td>
 	<td>50 - 74</td>
 </tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Logout</td>
-	<td></td>
-</tr>
+
 
 </tbody></table>
 </body>
