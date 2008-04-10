@@ -139,11 +139,10 @@ branchId = reportContext.getParameterValue("branchId");]]></method>
             <method name="fetch"><![CDATA[if(flag == 0) {
 	if(branchId == null || branchId == -2){
 	    row["ID"] = -2;
-	    row["Name"] = "---Select---";
-	    
+	    row["Name"] = "---Select---";	    
 	}else if(loanProducts.size() == 1) {
         row["ID"] = -2;
-	    row["Name"] = "---N/A---";
+   	    row["Name"] = "-Not Applicable-";
     }
 	flag = -1;
 	return true;
@@ -296,7 +295,7 @@ flag = 0;]]></method>
 	    
 	}else if(loanOfficers.size() == 1) {
         row["ID"] = -2;
-	    row["Name"] = "---N/A---";
+	    row["Name"] = "-Not Applicable-";
     }
 	flag = -1;
 	return true;

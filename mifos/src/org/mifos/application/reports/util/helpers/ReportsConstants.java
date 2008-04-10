@@ -89,7 +89,7 @@ public interface ReportsConstants {
 	public static final String ERROR_NOMOREDYNAMICACTIVITYID="error.noMoreDynamicActivityId";
 //added by collection sheet report module
 	public static final String SELECT_DISPLAY_NAME = "---Select---";
-	public static final String NOT_APPLICABLE_DISPLAY_NAME = "---N/A---";
+	public static final String NOT_APPLICABLE_DISPLAY_NAME = "-Not Applicable-";
 	public static final String ALL_DISPLAY_NAME = "ALL";
 	public static final Short NOT_APPLICABLE_ID = new Short("-3");
 	public static final Short SELECT_ID = new Short("-2");
