@@ -74,7 +74,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String businessActivity;
 	private String purposeOfLoan;
 	private String collateralType;
-	private String attendance;
 
 
 	private List<CustomValueListElement> salutations;
@@ -88,7 +87,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private List<CustomValueListElement> officerTitles;
 	private List<CustomValueListElement> handicappeds;
 	private List<CustomValueListElement> collateralTypes;
-	private List<CustomValueListElement> attendances;
 	
 
 	private String[] salutationList;
@@ -102,7 +100,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	private String[] officerTitleList;
 	private String[] handicappedList;
 	private String[] collateralTypeList;
-	private String[] attendanceList;
 	private String lookupValue;
 
 	public String getLookupValue() {
@@ -207,14 +204,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.collateralType = collateralType;
 	}
 	
-	public String getAttendance() {
-		return attendance;
-	}
-
-	public void setAttendance(String attendance) {
-		this.attendance = attendance;
-	}
-	
 	public List<CustomValueListElement> getSalutations() {
 		return salutations;
 	}
@@ -303,14 +292,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.collateralTypes = collateralTypes;
 	}
 	
-	public List<CustomValueListElement> getAttendances() {
-		return attendances;
-	}
-
-	public void setAttendances(List<CustomValueListElement> attendances) {
-		this.attendances = attendances;
-	}
-	
 	
 	
 	
@@ -378,10 +359,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		{
 			return(containsOneNonNullElement(getHandicappedList()));
 		}
-		else if (listName.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			return(containsOneNonNullElement(getAttendanceList()));
-		}
 		else if (listName.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
 		{
 			return(containsOneNonNullElement(getOfficerTitleList()));
@@ -397,7 +374,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 	    request.setAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
 	    request.setAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP, ConfigurationConstants.CONFIG_CITIZENSHIP);
 	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
-	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
 	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
@@ -427,10 +403,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
 			checkOneList(salutations, errors,entity);
-		}
-		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			checkOneList(attendances, errors, entity);
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
 		{
@@ -486,10 +458,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
 			setSalutations(list);
-		}
-		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			setAttendances(list);
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
 		{
@@ -590,7 +558,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.businessActivity = null;
 		this.purposeOfLoan = null;
 		this.collateralType = null;
-		this.attendance = null;
 		this.salutationList = null;
 		this.userTitleList = null;
 		this.maritalStatusList = null;
@@ -602,7 +569,6 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.officerTitleList = null;
 		this.handicappedList = null;
 		this.collateralTypeList = null;
-		this.attendanceList = null;
 		this.salutations = null;
 		this.userTitles = null;
 		this.maritalStatuses = null;
@@ -614,17 +580,8 @@ public class LookupOptionsActionForm extends BaseActionForm {
 		this.officerTitles = null;
 		this.handicappeds = null;
 		this.collateralTypes = null;
-		this.attendances = null;
 		this.lookupValue = null;
 		
-	}
-
-	public String[] getAttendanceList() {
-		return attendanceList;
-	}
-
-	public void setAttendanceList(String[] attendanceList) {
-		this.attendanceList = attendanceList;
 	}
 
 	public String[] getCitizenshipList() {
@@ -729,10 +686,6 @@ private String getEntityType(String entity,  HttpServletRequest request)
 		if (entity.equals(ConfigurationConstants.CONFIG_SALUTATION))
 		{
 			entityType = resources.getString("configuration.salutation");
-		}
-		else if (entity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			entityType = resources.getString("configuration.attendance");
 		}
 		else if (entity.equals(ConfigurationConstants.CONFIG_CITIZENSHIP))
 		{

@@ -547,40 +547,6 @@
 									&nbsp;
 								</td>
 							</tr>
-							<tr class="fontnormal">
-								<td align="right" valign="top" width="18%">
-									<mifos:mifoslabel name="configuration.attendance"
-										isColonRequired="Yes" />
-								</td>
-								<td>
-									<table border="0" cellpadding="0" cellspacing="0" width="81%">
-										<tr>
-											<td width="15%">
-												<mifos:MifosValueList name="lookupoptionsactionform"
-													property="attendanceList" property2="Attendances" size="5"
-													style="width:136px;">
-												</mifos:MifosValueList>
-												<br />
-
-											</td>
-											<td align="left" valign="top" width="31%">
-												<br />
-												<html-el:submit property="btnAddAttendance"
-													styleClass="insidebuttn"
-													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'add');">
-													<mifos:mifoslabel name="configuration.add" />
-												</html-el:submit>
-												<br>
-												<html-el:submit property="btnEditAttendance"
-													styleClass="insidebuttn"
-													onclick="setLookupOptionData(this.form.entity, this.form.addOrEdit, this.form.ConfigAttendance.value, 'edit');">
-													<mifos:mifoslabel name="configuration.edit" />
-												</html-el:submit>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
 						</table>
 
 						<table width="98%" border="0" cellpadding="0" cellspacing="0">
@@ -620,8 +586,6 @@
 				value="${requestScope.ConfigCitizenship}" />
 			<html-el:hidden property="ConfigHandicapped"
 				value="${requestScope.ConfigHandicapped}" />
-			<html-el:hidden property="ConfigAttendance"
-				value="${requestScope.ConfigAttendance}" />
 			<html-el:hidden property="ConfigOfficerTitle"
 				value="${requestScope.ConfigOfficerTitle}" />
 			<html-el:hidden property="ConfigBusinessActivity"

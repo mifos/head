@@ -52,7 +52,6 @@ public static final String CONFIG_PERSONNEL_TITLE="ConfigUserTitle";
 public static final String CONFIG_EDUCATION_LEVEL="ConfigEducationLevel";
 public static final String CONFIG_CITIZENSHIP="ConfigCitizenship";
 public static final String CONFIG_HANDICAPPED="ConfigHandicapped";
-public static final String CONFIG_ATTENDANCE="ConfigAttendance";
 public static final String CONFIG_OFFICER_TITLE="ConfigOfficerTitle";
 public static final String CONFIG_BUSINESS_ACTIVITY="ConfigBusinessActivity";
 public static final String CONFIG_LOAN_PURPOSE="ConfigPurposeOfLoan";

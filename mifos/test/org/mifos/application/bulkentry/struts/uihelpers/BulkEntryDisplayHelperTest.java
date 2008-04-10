@@ -8,6 +8,7 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import junitx.framework.StringAssert;
@@ -26,6 +27,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -121,12 +123,22 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 	public void testBuildForCenterForGetMethod() throws Exception {
 		BulkEntryBO bulkEntry = createBulkEntry();
 		StringBuilder builder = new StringBuilder();
-		new BulkEntryDisplayHelper().buildForCenter(bulkEntry
-				.getBulkEntryParent(), bulkEntry.getLoanProducts(), bulkEntry
-				.getSavingsProducts(), new MasterDataService().getMasterData(
+		
+		// Assert that the extracted attendance types are the ones expected
+		final String[] EXPECTED_ATTENDANCE_TYPES = {"P", "A", "AA", "L"};
+		List<CustomValueListElement> attendanceTypesCustomValueList = new MasterDataService().getMasterData(
 				MasterConstants.ATTENDENCETYPES, (short) 1,
 				"org.mifos.application.master.business.CustomerAttendance",
-				"attendanceId").getCustomValueListElements(), builder, Methods.get
+				"attendanceId").getCustomValueListElements();
+		List<String> attendanceTypesLookupValueList = new ArrayList<String>();
+		for(CustomValueListElement attendanceTypeCustomValueListElement: attendanceTypesCustomValueList) {
+			attendanceTypesLookupValueList.add(attendanceTypeCustomValueListElement.getLookUpValue());
+		}
+		assertEquals(Arrays.asList(EXPECTED_ATTENDANCE_TYPES), attendanceTypesLookupValueList);
+		
+		new BulkEntryDisplayHelper().buildForCenter(bulkEntry
+				.getBulkEntryParent(), bulkEntry.getLoanProducts(), bulkEntry
+				.getSavingsProducts(), attendanceTypesCustomValueList, builder, Methods.get
 				.toString(), TestObjectFactory.getContext(), (short) 1);
 		String result = builder.toString();
 

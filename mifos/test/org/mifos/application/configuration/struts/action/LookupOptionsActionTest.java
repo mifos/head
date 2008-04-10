@@ -56,7 +56,6 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 			,{MasterConstants.HANDICAPPED, 		ConfigurationConstants.CONFIG_HANDICAPPED, 		"handicappedList"}
 			,{MasterConstants.COLLATERAL_TYPES, ConfigurationConstants.CONFIG_COLLATERAL_TYPE, 	"collateralTypeList"}
 			,{MasterConstants.OFFICER_TITLES, 	ConfigurationConstants.CONFIG_OFFICER_TITLE, 	"officerTitleList"}
-			,{MasterConstants.ATTENDENCETYPES, 	ConfigurationConstants.CONFIG_ATTENDANCE, 		"attendanceList"}
 
 			};
 	
@@ -126,9 +125,6 @@ public class LookupOptionsActionTest extends MifosMockStrutsTestCase{
 
 		String[] EXPECTED_HANDICAPPED = {"Yes","No"};
 		assertTrue(compareLists(lookupOptionsActionForm.getHandicappeds(), EXPECTED_HANDICAPPED, 2));
-
-		String[] EXPECTED_ATTENDENCE = {"P","Ab","AL"};
-		assertTrue(compareLists(lookupOptionsActionForm.getAttendances(), EXPECTED_ATTENDENCE, 4));
 
 		String[] EXPECTED_OFFICER_TITLES = {"President","Vice President"};
 		assertTrue(compareLists(lookupOptionsActionForm.getOfficerTitles(), EXPECTED_OFFICER_TITLES, 2));

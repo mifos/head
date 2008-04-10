@@ -55,7 +55,6 @@ import org.mifos.application.configuration.util.helpers.LookupOptionData;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueList;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -169,11 +168,6 @@ public class LookupOptionsAction extends BaseAction {
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, label);
 			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_HANDICAPPED);
 		}
-		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.attendance"));
-			request.setAttribute(ConfigurationConstants.ENTITY, ConfigurationConstants.CONFIG_ATTENDANCE);
-		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
 		{
 			request.setAttribute(ConfigurationConstants.LOOKUP_TYPE, resources.getString("configuration.officertitle"));
@@ -235,11 +229,6 @@ public class LookupOptionsAction extends BaseAction {
 			assert(lookupOptionsActionForm.getHandicappedList().length ==1);
             selectedValue = lookupOptionsActionForm.getHandicappedList()[0];
 		}
-		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE))
-		{
-			assert(lookupOptionsActionForm.getAttendanceList().length ==1);
-            selectedValue = lookupOptionsActionForm.getAttendanceList()[0];
-		}
 		else if (configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE))
 		{
 			assert(lookupOptionsActionForm.getOfficerTitleList().length ==1);
@@ -265,7 +254,6 @@ public class LookupOptionsAction extends BaseAction {
 				configurationEntity.equals(ConfigurationConstants.CONFIG_LOAN_PURPOSE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_COLLATERAL_TYPE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_HANDICAPPED) ||
-				configurationEntity.equals(ConfigurationConstants.CONFIG_ATTENDANCE) ||
 				configurationEntity.equals(ConfigurationConstants.CONFIG_OFFICER_TITLE));
 		setLookupType(configurationEntity, request);
 		data.setValueListId(Short.parseShort(SessionUtils.getAttribute(configurationEntity, request).toString()));
@@ -343,8 +331,6 @@ public class LookupOptionsAction extends BaseAction {
 			lookupOptionsActionForm.setCollateralTypes(valueList.getCustomValueListElements());
 		else if (configurationEntity.equals(MasterConstants.HANDICAPPED))
 			lookupOptionsActionForm.setHandicappeds(valueList.getCustomValueListElements());
-		else if (configurationEntity.equals(MasterConstants.ATTENDENCETYPES))
-			lookupOptionsActionForm.setAttendances(valueList.getCustomValueListElements());
 		else if (configurationEntity.equals(MasterConstants.OFFICER_TITLES))
 			lookupOptionsActionForm.setOfficerTitles(valueList.getCustomValueListElements());
 		else
@@ -376,7 +362,6 @@ public class LookupOptionsAction extends BaseAction {
 	    request.setAttribute(ConfigurationConstants.CONFIG_EDUCATION_LEVEL, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
 	    request.setAttribute(ConfigurationConstants.CONFIG_CITIZENSHIP, ConfigurationConstants.CONFIG_CITIZENSHIP);
 	    request.setAttribute(ConfigurationConstants.CONFIG_HANDICAPPED, ConfigurationConstants.CONFIG_HANDICAPPED);
-	    request.setAttribute(ConfigurationConstants.CONFIG_ATTENDANCE, ConfigurationConstants.CONFIG_ATTENDANCE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_OFFICER_TITLE, ConfigurationConstants.CONFIG_OFFICER_TITLE);
 	    request.setAttribute(ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
 	    request.setAttribute(ConfigurationConstants.CONFIG_LOAN_PURPOSE, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
@@ -425,8 +410,6 @@ public class LookupOptionsAction extends BaseAction {
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
 		PopulateConfigurationListBox(MasterConstants.HANDICAPPED, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_HANDICAPPED);
-		PopulateConfigurationListBox(MasterConstants.ATTENDENCETYPES, masterPersistence,
-				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_ATTENDANCE);
 		PopulateConfigurationListBox(MasterConstants.OFFICER_TITLES, masterPersistence,
 				localeId, request, lookupOptionsActionForm, ConfigurationConstants.CONFIG_OFFICER_TITLE);
 		
