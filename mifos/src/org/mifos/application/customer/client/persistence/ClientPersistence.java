@@ -56,6 +56,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -99,17 +100,39 @@ public class ClientPersistence extends Persistence {
 		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
-	public boolean checkForDuplicacyOnGovtId(
-			String governmentId, Integer customerId) 
+	public boolean checkForDuplicacyOnGovtIdForNonClosedClients(
+			String governmentId, Integer customerId)
+			throws PersistenceException {
+		return checkForClientsBasedOnGovtId(
+				NamedQueryConstants.GET_NON_CLOSED_CLIENT_BASEDON_GOVTID,
+				governmentId, customerId);
+	}
+
+	public boolean checkForDuplicacyOnGovtIdForClosedClients(
+			String governmentId, Integer customerId)
 	throws PersistenceException {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
-			queryParameters.put("GOVT_ID",governmentId);
-			queryParameters.put("customerId", customerId);
-			List queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CLIENT_BASEDON_GOVTID, 
-					queryParameters);
-			return ((Long)queryResult.get(0)).intValue()>0;
+		return checkForClientsBasedOnGovtId(
+				NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID,
+				governmentId, customerId);
+	}
+
+	// Integer.valueOf(0) because of the way query is written in CustomerBO.hbm.xml
+	public boolean checkForDuplicacyOnGovtIdForClosedClients(String governmentId) throws PersistenceException {
+		return checkForDuplicacyOnGovtIdForClosedClients(
+				governmentId, Integer.valueOf(0));
+	}
+	
+	private boolean checkForClientsBasedOnGovtId(String queryName,
+			String governmentId, Integer customerId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
+		queryParameters.put("GOVT_ID", governmentId);
+		queryParameters.put("customerId", customerId);
+		queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED
+				.getValue());
+		List queryResult = executeNamedQuery(queryName, queryParameters);
+		return ((Long) queryResult.get(0)).intValue() > 0;
 	}
 	
 	public boolean checkForDuplicacyOnName(

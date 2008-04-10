@@ -92,8 +92,18 @@
 								name="client.EditPageCancelInstruction2"
 								bundle="ClientUIResources"></mifos:mifoslabel></td>
 						</tr>
+						<!-- Warning Messages -->
 						<tr>
-							<td><font class="fontnormalRedBold"><html-el:errors
+							<td>
+								<font class="fontnormalRedBold"><html-el:messages id="warningMessage" name="org.mifos.application.WARNING_MESSAGES" 
+									bundle="ClientUIResources">
+										<bean:write name="warningMessage"/>
+									</html-el:messages></font>
+							</td>
+						</tr>
+						<!-- Error Messages -->
+						<tr>
+							<td><font class="fontnormalRedBold"><html-el:errors 
 								bundle="ClientUIResources" /></font></td>
 						</tr>
 					</table>

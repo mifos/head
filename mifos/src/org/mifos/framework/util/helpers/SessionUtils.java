@@ -37,6 +37,8 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.mifos.application.util.helpers.ValidationConstants.MIFOS_WARNING_MESSAGES;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -44,6 +46,9 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -290,6 +295,18 @@ public class SessionUtils {
 		session.removeAttribute(key);
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
 				"The attribute being removed from session is" + key);
+	}
+
+	public static void addWarningMessage(HttpServletRequest request, String key)
+			throws PageExpiredException {
+		ActionMessages warningMessages = null;
+		if(request.getAttribute(MIFOS_WARNING_MESSAGES)==null) {
+			warningMessages = new ActionMessages();
+			request.setAttribute(MIFOS_WARNING_MESSAGES, warningMessages);
+		} else {
+			warningMessages = (ActionMessages) getAttribute(MIFOS_WARNING_MESSAGES, request);
+		}
+		warningMessages.add(key, new ActionMessage(key));
 	}
 
 }

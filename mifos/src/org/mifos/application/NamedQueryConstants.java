@@ -542,7 +542,8 @@ public interface NamedQueryConstants {
 	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
 	public String GET_CLIENT_BASEDON_NAME_DOB="Customer.getClientBasedOnNameAndDateOfBirth";
 	public String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER="product.getActiveOfferingsForCustomer";
-	public String GET_CLIENT_BASEDON_GOVTID="Customer.getClientBasedOnGovtId";
+	public String GET_NON_CLOSED_CLIENT_BASEDON_GOVTID="Customer.getNonClosedClientBasedOnGovtId";
+	public String GET_CLOSED_CLIENT_BASEDON_GOVTID="Customer.getClosedClientBasedOnGovtId";
 	public String GETOFFICEACTIVEPERSONNEL="getCountActivePersonnel";
 	public String GETCOUNTOFACTIVECHILDERN="getCountOfActiveChildren";
 	public String GETACTIVEPARENTS="masterdata.activeParents";

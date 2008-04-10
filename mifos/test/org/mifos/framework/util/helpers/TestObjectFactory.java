@@ -462,36 +462,40 @@ public class TestObjectFactory {
 
 	public static ClientBO createClient(String customerName,
 			CustomerStatus status, CustomerBO parentCustomer) {
-		ClientBO client = null;
+		return createClient(customerName, status, parentCustomer,getFees(), (String) null);
+	}
+
+	public static ClientBO createClient(String customerName,
+			CustomerStatus status, CustomerBO parentCustomer,
+			List<FeeView> fees, String governmentId) {
+		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
+				1, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
+		ClientNameDetailView clientNameDetailView = clientNameView(
+				NameType.MAYBE_CLIENT, customerName);
+		ClientNameDetailView spouseNameDetailView = clientNameView(
+				NameType.SPOUSE, customerName);
+		ClientBO client;
 		try {
-			Short office = SAMPLE_BRANCH_OFFICE;
-			Short formedBy = PersonnelConstants.SYSTEM_USER;
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					NameType.MAYBE_CLIENT, SAMPLE_SALUTATION, customerName,
-					"middle", customerName, "secondLast");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					NameType.SPOUSE, SAMPLE_SALUTATION, customerName, "middle",
-					customerName, "secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
-					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
-							.valueOf("41"));
 			client = new ClientBO(TestUtils.makeUserWithLocales(),
-					customerName, status, null, null, null, null, getFees(),
-					null, formedBy, office, parentCustomer, new Date(
-							1222333444000L), null, null, null, YesNoFlag.YES
-							.getValue(), clientNameDetailView,
+					customerName, status, null, null, null, null, fees, null,
+					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
+					parentCustomer, new Date(1222333444000L), governmentId, null,
+					null, YesNoFlag.YES.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null);
 			client.save();
-			HibernateUtil.commitTransaction();
 		}
 		catch (CustomerException e) {
 			throw new RuntimeException(e);
 		}
-		catch (SystemException e) {
-			throw new RuntimeException(e);
-		}
+		HibernateUtil.commitTransaction();
 		addObject(client);
 		return client;
+	}
+
+	private static ClientNameDetailView clientNameView(NameType nameType, String customerName) {
+		return new ClientNameDetailView(
+				nameType, SAMPLE_SALUTATION, customerName,
+				"middle", customerName, "secondLast");
 	}
 
 	public static ClientBO createClient(String customerName, MeetingBO meeting,

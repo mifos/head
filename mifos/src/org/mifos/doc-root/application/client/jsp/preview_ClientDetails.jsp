@@ -173,6 +173,16 @@
 							</table>
 							<!-- Preview page instruction ends--> <!-- Client information entered on the create page -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
+								<!-- Warning Messages -->
+								<tr>
+									<td>
+										<font class="fontnormalRedBold"><html-el:messages id="warningMessage" name="org.mifos.application.WARNING_MESSAGES" 
+											bundle="ClientUIResources">
+												<bean:write name="warningMessage"/>
+											</html-el:messages></font>
+									</td>
+								</tr>
+								<!-- Error Messages -->
 								<tr>
 									<td><font class="fontnormalRedBold"><html-el:errors
 										bundle="ClientUIResources" /></font></td>

@@ -37,7 +37,6 @@
  */
 
 package org.mifos.application.customer.client.struts.action;
-
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.sql.Date;
@@ -66,6 +65,7 @@ import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientNameDetailEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -89,6 +89,7 @@ import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.ValidationConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
@@ -97,6 +98,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -240,7 +242,16 @@ public class ClientCustAction extends CustAction {
 				CustomerConstants.PENDING_APPROVAL_DEFINED,
 				CustomerConstants.NO, request);
 		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		checkForGovtIdDuplicacy(request, actionForm);
 		return mapping.findForward(ActionForwards.preview_success.toString());
+	}
+
+	private void checkForGovtIdDuplicacy(HttpServletRequest request, ClientCustActionForm actionForm) throws PersistenceException, PageExpiredException {
+		if (new ClientPersistence()
+				.checkForDuplicacyOnGovtIdForClosedClients(actionForm
+						.getGovernmentId())) {
+			SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+		}
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -648,6 +659,7 @@ public class ClientCustAction extends CustAction {
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		checkForGovtIdDuplicacy(request, actionForm);
 		return mapping
 				.findForward(ActionForwards.previewEditPersonalInfo_success
 						.toString());

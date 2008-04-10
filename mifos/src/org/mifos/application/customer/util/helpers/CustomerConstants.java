@@ -279,5 +279,5 @@ public interface CustomerConstants {
 	public static final String CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION = "error.Customer.ClientHaveOpenLoanAccount";
 	public static final String SURVEY_KEY = "customerSurveys";
 	public static final String SURVEY_COUNT = "surveyCount";
-	
+	public static final String CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED = "warning.clientWithSameGovtIdExistInClosed";
 }

@@ -657,15 +657,9 @@ public class ClientBO extends CustomerBO {
 
 	private void validateForDuplicateNameOrGovtId(String displayName,
 			Date dateOfBirth, String governmentId) throws CustomerException {
-		Integer custId;
-		if (getCustomerId() == null) {
-			custId = Integer.valueOf("0");
-		} else {
-			custId = getCustomerId();
-		}
-
-		checkForDuplicates(displayName, dateOfBirth, governmentId, custId);
-
+		checkForDuplicates(displayName, dateOfBirth, governmentId,
+				getCustomerId() == null ? Integer.valueOf("0")
+						: getCustomerId());
 	}
 
 	private void validateFieldsForActiveClient(Short loanOfficerId,
@@ -684,7 +678,7 @@ public class ClientBO extends CustomerBO {
 
 		if (!StringUtils.isNullOrEmpty(governmentId)) {
 			try {
-				if (clientPersistence.checkForDuplicacyOnGovtId(governmentId,
+				if (clientPersistence.checkForDuplicacyOnGovtIdForNonClosedClients(governmentId,
 						customerId) == true) {
 					String label = 
 						MessageLookup.getInstance().lookupLabel(
