@@ -43,6 +43,7 @@
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
@@ -58,6 +59,10 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
      	
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	
+		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
+		
 		<html-el:form method="post" action="/loanAccountAction.do">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
@@ -205,13 +210,17 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr class="drawtablerow">
 							<td width="24%">&nbsp;</td>
 							<td width="20%" align="right" class="drawtablerowboldnoline">
-							<mifos:mifoslabel name="loan.original_loan" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /></td>
+							<fmt:message key="loan.originalLoan">
+							<fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /></fmt:param>
+							</fmt:message></td>
 							<td width="28%" align="right" class="drawtablerowboldnoline">
 							<mifos:mifoslabel name="loan.amt_paid" /></td>
 							<td width="28%" align="right" class="drawtablerowboldnoline">
-							<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="loan.loan_balance" /></td>
+							<fmt:message key="loan.loanBalance">
+							<fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /></fmt:param>
+							</fmt:message></td>
 						</tr>
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel
@@ -307,18 +316,23 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						</tr>
 						<tr>
 							<td height="23" colspan="2" class="fontnormal"><span
-								class="fontnormalbold"> <mifos:mifoslabel
-								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.interestRules" /></span> <span class="fontnormal"><br>
-							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.interest_type" />:&nbsp; <c:out
+								class="fontnormalbold"> 
+								<fmt:message key="interestRules">
+									<fmt:param><mifos:mifoslabel
+										name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+								</fmt:message></span> <span class="fontnormal"><br>
+							<fmt:message key="loan.interestRateType">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+							</fmt:message>:&nbsp; <c:out
 								value="${BusinessKey.interestType.name}" /> <br>
-							<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.int_rate" />:&nbsp;<span class="fontnormal"><c:out
+							<fmt:message key="loan.interestRate">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+							</fmt:message>:&nbsp;<span class="fontnormal"><c:out
 								value="${BusinessKey.interestRate}" />%&nbsp;<mifos:mifoslabel
 								name="loan.apr" /> </span><br>
-							</span> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
-							<mifos:mifoslabel name="loan.interest_disb" />:<c:choose>
+							</span> <fmt:message key="loan.interestDisbursement">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+							</fmt:message>:<c:choose>
 								<c:when test="${BusinessKey.interestDeductedAtDisbursement}">
 									<mifos:mifoslabel name="loan.yes" />
 								</c:when>

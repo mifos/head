@@ -39,6 +39,7 @@
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
@@ -107,6 +108,9 @@
 				
 			}
  		</script>
+
+        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
@@ -146,9 +150,11 @@
 						bundle="loanUIResources" /> </font>
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="loan.loan_acc_details" /><br>
+							<td colspan="2" class="fontnormalbold">
+								<fmt:message key="loan.loanAccountDetails">
+									<fmt:param><mifos:mifoslabel
+										name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message><br>
 							<br>
 							</td>
 						</tr>
@@ -166,12 +172,14 @@
 										name="selectAll1"></td>
 									<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
 										name="loan.acc_owner" /></td>
-									<td width="31%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-										name="loan.amt" /></td>
-									<td width="35%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
-										name="loan.business_work_act" /> <mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}" /></td>
+									<td width="31%" class="drawtablerowboldnolinebg">
+										<fmt:message key="loan.loanAmount">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+										</fmt:message></td>
+									<td width="35%" class="drawtablerowboldnolinebg">
+										<fmt:message key="loan.purposeOfLoan">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+										</fmt:message></td>
 								</tr>
 								<c:forEach var="client" varStatus="loopStatus1"
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
@@ -201,8 +209,7 @@
 										<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
 											property="clientDetails[${indice}].loanAmount" /></td>
 										<td width="35%" valign="top" class="drawtablerow"><mifos:select
-											property="clientDetails[${indice}].businessActivity"
-											style="width:136px;">
+											property="clientDetails[${indice}].businessActivity">
 											<c:forEach var="BusinessActivity"
 												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
 												<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
@@ -220,9 +227,11 @@
 						
 						
 						<tr class="fontnormal">
-							<td width="30%" align="right" class="fontnormal"><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" mandatory="yes" /> <mifos:mifoslabel
-								name="loan.amt" />:&nbsp;</td>
+							<td width="30%" align="right" class="fontnormal">
+								<font color="#FF0000">*</font>
+								<fmt:message key="loan.loanAmount">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>:&nbsp;</td>
 							<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
 								value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
 								name="loan.allowed_amount" />&nbsp; <c:out
@@ -233,16 +242,18 @@
 
 						</tr>
 						<tr class="fontnormal">
-							<td width="30%" align="right" class="fontnormal"><mifos:mifoslabel
-								name="${ConfigurationConstants.INTEREST}" mandatory="yes" /> <mifos:mifoslabel
-								name="loan.interest_rate" />:&nbsp;</td>
+							<td width="30%" align="right" class="fontnormal">
+								<font color="#FF0000">*</font>
+								<fmt:message key="loan.interestRate">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+								</fmt:message>:&nbsp;</td>
 							<td width="70%" valign="top"><mifos:mifosdecimalinput
 								property="interestRate"
 								value="${sessionScope.loanAccountActionForm.interestRate}"
-								decimalFmt="10.5" /> <mifos:mifoslabel
-								name="loan.allowed_interest1" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.int_rate" />&nbsp; <c:out
+								decimalFmt="10.5" /> 
+								<fmt:message key="loan.allowedInterest">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+								</fmt:message>&nbsp; <c:out
 								value="${BusinessKey.loanOffering.minInterestRate}" />&nbsp;
 							- &nbsp; <c:out
 								value="${BusinessKey.loanOffering.maxInterestRate}" />
@@ -269,9 +280,10 @@
 							<td valign="top"><date:datetag property="disbursementDate" /></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-								name="loan.interest_disb" />:&nbsp;</td>
+							<td align="right" class="fontnormal">
+								<fmt:message key="loan.interestDisbursement">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
+								</fmt:message>:&nbsp;</td>
 							<td valign="top">
 							<html-el:hidden property="intDedDisbursement" value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
 							<input type="checkbox" name="intDedDisb" onclick="setGracePeriod()" /></td>
@@ -325,7 +337,7 @@
 								keyhm="Loan.CollateralType" name="Loan.CollateralType"
 								isColonRequired="yes" bundle="loanUIResources" /></td>
 							<td valign="top"><mifos:select keyhm="Loan.CollateralType"
-								property="collateralTypeId" style="width:136px;">
+								property="collateralTypeId">
 								<c:forEach var="CollateralType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" >
 									<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
 								</c:forEach>

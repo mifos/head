@@ -39,6 +39,7 @@
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
@@ -47,6 +48,9 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+
+        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 
 		<html-el:form method="post" action="/loanAccountAction.do?method=get">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -58,14 +62,16 @@
 								<td class="headingorange">
                                     <c:choose>
 										<c:when test="${requestScope.perspective == 'redoLoan'}">
-                                            <mifos:mifoslabel name="loan.successful_recreation" />
+											<fmt:message key="loan.successfulRecreation">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+											</fmt:message>
                                         </c:when>
                                         <c:otherwise>
-                                            <mifos:mifoslabel name="loan.successful_creation" />
+											<fmt:message key="loan.successfulCreation">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+											</fmt:message>
                                         </c:otherwise>
                                     </c:choose>
-                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-									<mifos:mifoslabel name="accounts.account" />
 
 									<br>
 									<br>
@@ -79,19 +85,25 @@
 							<tr>
 								<td class="fontnormalbold">
 									<mifos:mifoslabel name="loan.plz_note" />
-									&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="loan.congo1_1" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.congo1_2" /> <c:out value='${customer.displayName}' /> <mifos:mifoslabel
-											name="loan.congo2" /> <c:out value='${requestScope.globalAccountNum}' /> <mifos:mifoslabel name="loan.congo3" /> <br> <br> <br> </span>
+									&nbsp;<span class="fontnormal">
+										<fmt:message key="loan.accountAssigned">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+											<fmt:param><c:out value='${customer.displayName}' /></fmt:param>
+											<fmt:param><c:out value='${requestScope.globalAccountNum}' /></fmt:param>
+										</fmt:message><br> <br> <br> </span>
 									<html-el:link href="loanAccountAction.do?method=get
 									&customerId=${customer.customerId}
 									&globalAccountNum=${requestScope.globalAccountNum}
 									&recordOfficeId=${requestScope.loan.office.officeId}
 									&recordLoanOfficerId=${requestScope.loan.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
-										<mifos:mifoslabel name="loan.view_loan_acc1" />
-										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-										<mifos:mifoslabel name="loan.view_loan_acc2" />
+										<fmt:message key="loan.viewLoanDetails">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+										</fmt:message>
 									</html-el:link>
-									<span class="fontnormal"><br> <br> </span><span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span><span class="fontnormal"> <br> <mifos:mifoslabel name="loan.open_new_acc" /> <c:out
-											value='${customer.displayName}' /> <br> </span>
+									<span class="fontnormal"><br> <br> </span><span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span><span class="fontnormal"> <br> 
+										<fmt:message key="loan.openNewAccountFor">
+											<fmt:param><c:out value='${customer.displayName}' /></fmt:param>
+										</fmt:message> <br> </span>
 									<table width="80%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="2%">
@@ -99,11 +111,13 @@
 											</td>
 											<td width="98%">
 												<span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="loan.open_new" />
-														<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
+														<fmt:message key="loan.openNewSavingsAccount" >
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+														</fmt:message>
 													</html-el:link> <br> <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-														<mifos:mifoslabel name="loan.open_new" />
-														<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
+														<fmt:message key="loan.openNewLoanAccount" >
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+														</fmt:message>
 													</html-el:link></span>
 											</td>
 										</tr>

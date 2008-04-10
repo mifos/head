@@ -43,6 +43,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
@@ -63,6 +64,10 @@
 					}
 		</script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		
+		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
+		
 		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(recieptDate,recieptDateFormat,recieptDateYY)">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
@@ -80,7 +85,9 @@
 							<tr>
 								<td width="70%" class="headingorange">
 									<span class="heading"> <c:out value="${param.prdOfferingName}" />&nbsp;#&nbsp; <c:out value="${param.globalAccountNum}" /> &nbsp;-&nbsp; </span>
-									<mifos:mifoslabel name="loan.repay" /><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
+									<fmt:message key="loan.repayLoan">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+									</fmt:message>
 								</td>
 							</tr>
 							<tr>

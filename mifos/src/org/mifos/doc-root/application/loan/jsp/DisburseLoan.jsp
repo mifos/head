@@ -39,6 +39,7 @@
 <%@ taglib uri="/tags/struts-html" prefix="html"%>
 <%@ taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
@@ -70,6 +71,9 @@
 
 					
 	</script>
+
+        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 		
 		<html-el:form
 			action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}"
@@ -91,8 +95,11 @@
 							<td width="70%" class="headingorange"><span class="heading">
 							<c:out value="${loanDisbursmentActionForm.prdOfferingName}" />&nbsp;#&nbsp;
 							<c:out value="${loanDisbursmentActionForm.globalAccountNum}" />
-							&nbsp;-&nbsp; </span> <mifos:mifoslabel name="loan.disburse" /><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /></td>
+							&nbsp;-&nbsp; </span> 
+							<fmt:message key="loan.disburseLoan">
+								<fmt:param><mifos:mifoslabel
+									name="${ConfigurationConstants.LOAN}" /></fmt:param>
+							</fmt:message></td>
 						</tr>
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel mandatory="Yes"
@@ -134,9 +141,11 @@
 								name="loan.disbdetails" /></td>
 						</tr>
 						<tr>
-							<td width="29%" align="right" class="fontnormal"><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
-								name="loan.amt" />:&nbsp;</td>
+							<td width="29%" align="right" class="fontnormal">
+								<fmt:message key="loan.loanAmount">
+									<fmt:param><mifos:mifoslabel
+										name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>:&nbsp;</td>
 							<td width="71%"><mifos:mifosdecimalinput
 								property="loanAmount" name="loanDisbursmentActionForm"
 								disabled="true" /></td>

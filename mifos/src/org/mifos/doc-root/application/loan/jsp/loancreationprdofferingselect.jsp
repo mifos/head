@@ -37,6 +37,7 @@
  -->
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
@@ -57,6 +58,8 @@
             }
             </SCRIPT>
         </c:if>
+        <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
         <html-el:form action="/loanAccountAction.do" >
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -80,11 +83,10 @@
 															<img src="pages/framework/images/timeline/tick.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldgray">
-															<mifos:mifoslabel name="loan.Select" />
-															<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-															<mifos:mifoslabel name="loan.Slash" />
-															<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-
+															<fmt:message key="loan.selection">
+																<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+																<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+															</fmt:message>
 														</td>
 													</tr>
 												</table>
@@ -96,8 +98,9 @@
 															<img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorange">
-															<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-															<mifos:mifoslabel name="loan.acc_info" />
+															<fmt:message key="loan.entityAccInfo">
+																<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+															</fmt:message>
 														</td>
 													</tr>
 												</table>
@@ -146,29 +149,30 @@
 												<span class="heading">
                                                     <c:choose>
                                                     <c:when test="${requestScope.perspective == 'redoLoan'}">
-                                                        <mifos:mifoslabel name="admin.redo" />
+                                                    	<fmt:message key="loan.redoAccount">
+                                                    		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+                                                    	</fmt:message>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <mifos:mifoslabel name="accounts.create" />
+                                                    	<fmt:message key="loan.createAccount">
+                                                    		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+                                                    	</fmt:message>
                                                     </c:otherwise>
                                                     </c:choose>
-                                                    <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-                                                    <mifos:mifoslabel name="accounts.account" />&nbsp;-&nbsp;
+													&nbsp;-&nbsp;
                                                 </span>
-												<mifos:mifoslabel name="loan.Enter" />
-												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-												<mifos:mifoslabel name="loan.acc_info" />
+                                                <fmt:message key="loan.enterAccInfo">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+												</fmt:message>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormal">
-												<mifos:mifoslabel name="loan.Select" />
-												<mifos:mifoslabel name="loan.a" />
-												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-												<mifos:mifoslabel name="loan.select_loan_inst" />
+												<fmt:message key="loan.selectLoanInstance">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+												</fmt:message>
 												<br>
-												<font color="#FF0000">*</font>
-												<mifos:mifoslabel name="loan.asterisk" />
+												<mifos:mifoslabel name="loan.asterisk" mandatory="yes"/>
 											</td>
 
 										</tr>
@@ -180,7 +184,7 @@
 										<tr>
 											<td class="fontnormal">
 												<br>
-												<span class="fontnormalbold"> <mifos:mifoslabel name="loan.acc_owner" />: </span>
+												<span class="fontnormalbold"> <mifos:mifoslabel name="loan.acc_owner" isColonRequired="yes"/> </span>
 												<c:out value="${sessionScope.loanAccountOwner.displayName}" />
 											</td>
 										</tr>
@@ -189,10 +193,12 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr class="fontnormal">
 											<td width="30%" align="right" class="fontnormal">
-												<span class="mandatorytext"></span>
-												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" mandatory="yes" />
-												<mifos:mifoslabel name="loan.instancename" />
+												<span class="mandatorytext"><font color="#FF0000">*</font>
+												<fmt:message key="loan.loanInstanceName">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/></fmt:param>
+												</fmt:message>
 												:
+												</span>
 											</td>
 											<td width="70%">
 												<mifos:select property="prdOfferingId">
