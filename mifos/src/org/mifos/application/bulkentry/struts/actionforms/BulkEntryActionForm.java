@@ -137,7 +137,8 @@ public class BulkEntryActionForm extends BaseActionForm {
 	}
 
 	public void setReceiptDate(String s) {
-		setReceiptDate(DateUtils.getDate(s));
+		if (!StringUtils.isNullOrEmpty(s))
+			setReceiptDate(DateUtils.getDate(s));
 	}
 	
 	public void setReceiptDate(java.util.Date date) {

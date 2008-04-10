@@ -117,8 +117,8 @@ public class DateTag extends BaseInputTag {
 			
 			XmlBuilder htmlInputsForhidden = new XmlBuilder();
 			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName());
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"Format","Value");
-			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"YY","Value");
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"Format","Value","DD/MM/YYYY");
+			htmlInputsForhidden.singleTag("input", "type","hidden","name",prepareName()+"YY","Value","");
 		
 			TagUtils.getInstance().write(this.pageContext,
 					htmlInputsForhidden.toString());

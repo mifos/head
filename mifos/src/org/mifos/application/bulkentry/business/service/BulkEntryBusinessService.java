@@ -384,9 +384,9 @@ public class BulkEntryBusinessService extends BusinessService {
 			Short attendance, List<ClientBO> clients) throws ServiceException {
 		try {
 			ClientBO client = (ClientBO) getCustomer(customerId);
-			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
+			//HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			client.handleAttendance(meetingDate, attendance);
-			HibernateUtil.getSessionTL().clear();
+			//HibernateUtil.getSessionTL().clear();
 			clients.add(client);
 		} catch (Exception e) {
 			throw new ServiceException("errors.update", e,
