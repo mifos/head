@@ -125,6 +125,16 @@
 					</displayname>
 					<linkvalue>	custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
 				</menuitem>		
+				
+				<menuitem>
+					<displayname> 
+						<namefragment>label.create</namefragment> 
+						<namefragment>label.multiple</namefragment>  
+						<namefragment>Loan</namefragment>
+						<namefragment>label.accountsSmall</namefragment>
+					</displayname>
+					<linkvalue>multipleloansaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+				</menuitem>				
 			</menugroup>
 			<menugroup>
 				<displayname> 
@@ -139,15 +149,6 @@
 						<namefragment>label.status</namefragment>
 					</displayname>
 					<linkvalue>ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
-				</menuitem>
-				<menuitem>
-					<displayname> 
-						<namefragment>label.create</namefragment> 
-						<namefragment>label.multiple</namefragment>  
-						<namefragment>Loan</namefragment>
-						<namefragment>label.accountsSmall</namefragment>
-					</displayname>
-					<linkvalue>multipleloansaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 			</menugroup>
 	</topmenutab>
