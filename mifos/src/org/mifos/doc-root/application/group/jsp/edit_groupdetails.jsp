@@ -371,7 +371,7 @@
 													<mifos:mifosalphanumtext name="groupCustActionForm" property='customField[${ctr}].fieldValue' value="${cf.fieldValue}" maxlength="200" />
 												</c:if>
 												<c:if test="${cfdef.fieldType == 3}">
-													<date:datetag property="customField[${ctr}].fieldValue" formatOrder="Y-M-D" name="GroupVO" />
+													<date:datetag property="customField[${ctr}].fieldValue" />
 												</c:if>
 												<html-el:hidden property='customField[${ctr}].fieldId' value="${cfdef.fieldId}"></html-el:hidden>
 												<html-el:hidden property='fieldTypeList' value='${cfdef.fieldType}' />
