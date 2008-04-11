@@ -3699,40 +3699,48 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 	private List<EMIInstallment> generateEMI_v2(Money loanInterest)
 	throws AccountException {
-		if (isInterestDeductedAtDisbursement()
-				&& !getLoanOffering().isPrinDueLastInst())
-			return interestDeductedAtDisbursement_v2(loanInterest);
-
-		if (getLoanOffering().isPrinDueLastInst()
-				&& !isInterestDeductedAtDisbursement()) {
-			if (getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.FLAT.getValue())) {
-				return principalInLastPayment_v2(loanInterest);
+		if (isInterestDeductedAtDisbursement()) {
+			/* 
+			 * Interest deducted at disbursement has been cut from r1.1
+			 * so throw an exception if we reach this code.
+			 */
+			throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
+			/*
+			if (getLoanOffering().isPrinDueLastInst()) {
+				return interestDeductedFirstPrincipalLast_v2(loanInterest);				
+			} else {
+				return interestDeductedAtDisbursement_v2(loanInterest);				
 			}
-			else if ((getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.DECLINING.getValue())) 
-					|| (getLoanOffering().getInterestTypes().getId().equals( 
-							InterestType.DECLINING_EPI.getValue()))) {
-				return principalInLastPaymentDecliningInterest_v2(loanInterest);
-			}
-		}
-
-		if (!getLoanOffering().isPrinDueLastInst()
-				&& !isInterestDeductedAtDisbursement()) {
-			if (getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.FLAT.getValue())) {
+			*/
+		} else {
+			
+			if (getLoanOffering().isPrinDueLastInst()) {
+				/* 
+				 * Principal due on last installment has been cut, so throw an
+				 * exception if we reach this code.
+				 */
+				throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
+				/*
+				if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.FLAT.getValue())) {
+					return principalInLastPayment_v2(loanInterest);
+				} else if ((getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING.getValue())) 
+						|| (getLoanOffering().getInterestTypes().getId().equals( 
+						InterestType.DECLINING_EPI.getValue()))) {
+					return principalInLastPaymentDecliningInterest_v2(loanInterest);				
+				}
+				*/
+			} else if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.FLAT.getValue())) {
 				return allInstallments_v2(loanInterest);
-			}
-			else if ((getLoanOffering().getInterestTypes().getId().equals(
+			} else if ((getLoanOffering().getInterestTypes().getId().equals(
 					InterestType.DECLINING.getValue())) 
 					|| (getLoanOffering().getInterestTypes().getId().equals
-							( InterestType.DECLINING_EPI.getValue()))) {
+					( InterestType.DECLINING_EPI.getValue()))) {
 				return allDecliningInstallments_v2(loanInterest);
 			}
 		}
-		if (getLoanOffering().isPrinDueLastInst()
-				&& isInterestDeductedAtDisbursement())
-			return interestDeductedFirstPrincipalLast_v2(loanInterest);
 
 		throw new AccountException(
 				AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
@@ -3849,20 +3857,16 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				emiInstallments.add(installment);
 			}
 			return emiInstallments;
-		}
-
-		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-			Money principalPerInstallment = new Money(
-					Double
-							.toString(getLoanAmount().getAmountDoubleValue()
-									/ (getNoOfInstallments() - getGracePeriodDuration())));
-			Money interestPerInstallment = new Money(Double
-					.toString(loanInterest.getAmountDoubleValue()
-							/ getNoOfInstallments()));
+		} else if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
+			Money principalPerInstallment = getLoanAmount()
+				.divide(new BigDecimal(getNoOfInstallments() - getGracePeriodDuration(),
+				Money.getInternalPrecisionAndRounding()));
+			Money interestPerInstallment = loanInterest.divide(
+					new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
 			EMIInstallment installment = null;
 			for (int i = 0; i < getGracePeriodDuration(); i++) {
 				installment = new EMIInstallment();
-				installment.setPrincipal(new Money());
+				installment.setPrincipal(new Money("0"));
 				installment.setInterest(interestPerInstallment);
 				emiInstallments.add(installment);
 			}
