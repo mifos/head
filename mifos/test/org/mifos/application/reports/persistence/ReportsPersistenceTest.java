@@ -161,7 +161,7 @@ public class ReportsPersistenceTest extends MifosTestCase {
 		assertEquals("report.jrxml", reRead.getReportJasper());
 	}
 	 public void testGetReport() {
-		 Short reportId = 1;
+		 Short reportId = 28;
 		 ReportsBO report = reportsPersistence.getReport(reportId);
 		 assertEquals(reportId, report.getReportId());
 		 }

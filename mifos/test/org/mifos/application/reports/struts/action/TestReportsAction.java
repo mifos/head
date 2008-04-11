@@ -1,10 +1,15 @@
 package org.mifos.application.reports.struts.action;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class TestReportsAction extends MifosMockStrutsTestCase {
@@ -23,16 +28,22 @@ public class TestReportsAction extends MifosMockStrutsTestCase {
 	}
 
 	@Override
-	protected void tearDown() throws Exception{
+	protected void tearDown() throws Exception {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
-	public void testVerifyForwardOfReport() {
+
+	public void testVerifyForwardOfNonExistentReportThrowsSecurityError() {
 		addRequestParameter("viewPath", "report_designer");
 		setRequestPathInfo("/reportsAction.do");
 		addRequestParameter("method", "getReportPage");
 		actionPerform();
-		verifyForwardPath("/reportsAction.do?method=load");
+		ActionErrors errors = (ActionErrors) request
+						.getAttribute(Globals.ERROR_KEY);
+		ActionMessage retrievedMessage = (ActionMessage)(errors).get(
+						SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED).next();
+		ActionMessage expectedErrorMessage = new ActionMessage(
+				SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+		assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
 	}
 }
