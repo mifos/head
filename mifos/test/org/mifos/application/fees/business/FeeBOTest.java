@@ -161,11 +161,12 @@ public class FeeBOTest extends MifosTestCase {
 				FeePayment.UPFRONT);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals(name, fee.getFeeName());
 		assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType()
 				.getId());
+		HibernateUtil.closeSession();
 	}
 
 	public void testCreateOneTimeRateFee() throws Exception {
@@ -174,12 +175,13 @@ public class FeeBOTest extends MifosTestCase {
 				FeePayment.UPFRONT);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals("Customer_OneTime_RateFee", fee.getFeeName());
 		assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType()
 				.getId());
+		HibernateUtil.closeSession();
 	}
 
 	public void testCreatePeriodicAmountFee() throws Exception {
@@ -189,12 +191,13 @@ public class FeeBOTest extends MifosTestCase {
 				FeeCategory.CENTER, "100", false, feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals("Customer_Periodic_AmountFee", fee.getFeeName());
 		assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType()
 				.getId());
+		HibernateUtil.closeSession();
 	}
 
 	public void testCreatePeriodicRateFee() throws Exception {
@@ -205,12 +208,13 @@ public class FeeBOTest extends MifosTestCase {
 				feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals("Customer_Periodic_RateFee", fee.getFeeName());
 		assertEquals(FeeCategory.CENTER.getValue(), fee.getCategoryType()
 				.getId());
+		HibernateUtil.closeSession();
 	}
 
 	public void testCreateOneTimeDefaultFee() throws Exception {
@@ -218,7 +222,7 @@ public class FeeBOTest extends MifosTestCase {
 				FeeCategory.GROUP, "100", true, FeePayment.UPFRONT);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals("Customer_OneTime_DefaultFee", fee.getFeeName());
@@ -227,6 +231,7 @@ public class FeeBOTest extends MifosTestCase {
 		assertTrue(fee.isCustomerDefaultFee());
 		assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee
 				.getCategoryType().getFeeCategory()));
+		HibernateUtil.closeSession();
 	}
 
 	public void testCreatePeriodicDefaultFee() throws Exception {
@@ -237,7 +242,7 @@ public class FeeBOTest extends MifosTestCase {
 				feefrequency);
 		fee.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
+		
 
 		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
 		assertEquals("Customer_Periodic_DefaultFee", fee.getFeeName());
@@ -246,6 +251,7 @@ public class FeeBOTest extends MifosTestCase {
 		assertEquals(true, fee.isCustomerDefaultFee());
 		assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee
 				.getCategoryType().getFeeCategory()));
+		HibernateUtil.closeSession();
 	}
 
 	public void testSaveFailure() throws Exception {

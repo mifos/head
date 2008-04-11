@@ -31,7 +31,7 @@
 
 		<subclass name="org.mifos.application.fees.business.RateFeeBO" discriminator-value="RATE">
 			<property name="rate" column="RATE" />
-			<many-to-one name="feeFormula" column="FORMULA_ID" class="org.mifos.application.fees.business.FeeFormulaEntity" insert="true" update="false" access="field" />
+			<many-to-one name="feeFormula" column="FORMULA_ID" class="org.mifos.application.fees.business.FeeFormulaEntity"  lazy="false" insert="true" update="false" access="field" />
 		</subclass>
 
 		<subclass name="org.mifos.application.fees.business.AmountFeeBO" discriminator-value="AMOUNT">
