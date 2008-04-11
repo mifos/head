@@ -38,6 +38,7 @@
 
 package org.mifos.application.customer.group.util.helpers;
 
+// FIXME: remove unused constants from this class. There are a bunch!
 public interface GroupConstants {
 	
 	public static final String BP_RESULT="result";
