@@ -620,7 +620,7 @@
 								<c:forEach var="customField" items="${BusinessKey.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
 										<c:choose>
-											<c:when test="${cf.fieldType == 3}">
+											<c:when test="${cf.fieldType == 3}"> <%-- FIXME: use a constant here instead --%>
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
 													bundle="CenterUIResources" isColonRequired="yes"></mifos:mifoslabel>
 									         		<span class="fontnormal"><c:out
