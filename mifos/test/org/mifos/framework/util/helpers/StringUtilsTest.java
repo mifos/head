@@ -1,8 +1,5 @@
-/**
- * StringUtilsTest.java
- * 
- * Copyright (c) 2005-2007 Grameen Foundation USA
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
