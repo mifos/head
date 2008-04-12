@@ -172,7 +172,7 @@
 								</tr>
 								<tr>
 									<td colspan="2" class="fontnormalbold"><html-el:button
-										property="button" styleClass="insidebuttn" style="width:140px"
+										property="button" styleClass="insidebuttn" 
 										onclick="javascript:fnEdit(this.form)">
 										<mifos:mifoslabel name="checklist.edit_button"></mifos:mifoslabel>
 									</html-el:button>
@@ -188,12 +188,12 @@
 								<tr>
 
 
-									<td align="center"><html-el:submit style="width:70px"
+									<td align="center"><html-el:submit
 										styleClass="buttn" property="submitBtn">
 
 										<mifos:mifoslabel name="checklist.button_submit" />
 
-									</html-el:submit> &nbsp; <html-el:button style="width:70px" property="cancelButton"
+									</html-el:submit> &nbsp; <html-el:button property="cancelButton"
 										styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 
 										<mifos:mifoslabel name="checklist.button_cancel" />

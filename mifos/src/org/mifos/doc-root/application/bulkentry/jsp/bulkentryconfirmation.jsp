@@ -61,8 +61,8 @@
 						</tr>
 						<tr>
 							<td class="fontnormalbold">
-								<mifos:mifoslabel name="bulkEntry.plsnote" />
-								: <span class="fontnormal"> <mifos:mifoslabel name="bulkEntry.datafor" />&nbsp;<c:out value="${requestScope.Center}" /> </span> <span class="fontnormal"><mifos:mifoslabel name="bulkEntry.hasenter" /><br> <br> <font class="fontnormalRedBold"> <html-el:messages
+								<mifos:mifoslabel name="bulkEntry.plsnote" isColonRequired="Yes" />
+								 <span class="fontnormal"> <mifos:mifoslabel name="bulkEntry.datafor" />&nbsp;<c:out value="${requestScope.Center}" /> </span> <span class="fontnormal"><mifos:mifoslabel name="bulkEntry.hasenter" /><br> <br> <font class="fontnormalRedBold"> <html-el:messages
 											id="abc" bundle="bulkEntryUIResources" /> <html-el:errors bundle="bulkEntryUIResources" /> </font> </span>
 								<html-el:link href="bulkentryaction.do?method=load">
 									<mifos:mifoslabel name="bulkEntry.entercollsheetdata" />

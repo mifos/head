@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -390,5 +391,11 @@ public abstract class BaseAction extends DispatchAction {
 		request.setAttribute(Constants.ACTION_MAPPING, mapping);
 		// welcome is a global forward, present in all actions
 		return mapping.findForward(ActionForwards.welcome.toString());
+	}
+	
+	protected ResourceBundle getResourceBundle(String resourceFileName)
+	{
+		ResourceBundle resources = ResourceBundle.getBundle(resourceFileName);
+		return resources;
 	}
 }

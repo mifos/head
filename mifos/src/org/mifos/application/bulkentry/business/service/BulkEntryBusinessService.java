@@ -482,7 +482,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			LoanAccountView loanAccountView) throws ServiceException {
 		Double amount = getDoubleValue(loanAccountsProductView
 				.getEnteredAmount());
-		if (amount > 0.0) {
+		if ((amount != null) && (amount > 0.0)) {
 			Money enteredAmount;
 			if (loanAccountsProductView.getLoanAccountViews().size() > 1)
 				enteredAmount = new Money(Configuration.getInstance()

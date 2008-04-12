@@ -87,7 +87,7 @@
 														(${checklist.customerStatus.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
-														Inactive
+														<mifos:mifoslabel name="checklist.inactive" />
 														</c:if>
 
 											</c:forEach>
@@ -103,7 +103,7 @@
 														(${checklist.customerStatus.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
-														Inactive
+														<mifos:mifoslabel name="checklist.inactive" />
 														</c:if>
 
 											</c:forEach>
@@ -119,7 +119,7 @@
 														(${checklist.customerStatus.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
-														Inactive
+														<mifos:mifoslabel name="checklist.inactive" />
 														</c:if>
 											</c:forEach>
 											<br>
@@ -134,7 +134,7 @@
 														(${checklist.accountStateEntity.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
-														Inactive
+														<mifos:mifoslabel name="checklist.inactive" />
 														</c:if>
 											</c:forEach>
 											<br>
@@ -149,7 +149,7 @@
 														(${checklist.accountStateEntity.name})
 														<c:if test="${checklist.checklistStatus == 0}">
 													<img src="pages/framework/images/status_closedblack.gif">
-														Inactive
+														<mifos:mifoslabel name="checklist.inactive" />
 														</c:if>
 											</c:forEach>
 										</td>

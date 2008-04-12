@@ -150,17 +150,17 @@
 														<td class="fontnormalbold">
 															<c:choose>
 																<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
-																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" isColonRequired="Yes"/>
 																</c:when>
 																<c:otherwise>
-																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+																	<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" isColonRequired="Yes"/>
 																</c:otherwise>
 															</c:choose>
-															:
+															
 															<c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" />
 															<br>
-															<mifos:mifoslabel name="bulkEntry.dateoftrxn" />
-															:
+															<mifos:mifoslabel name="bulkEntry.dateoftrxn" isColonRequired="Yes"/>
+															
 															<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' />
 
 														</td>
@@ -173,17 +173,17 @@
 												<table width="590" border="0" cellspacing="0" cellpadding="0">
 													<tr valign="top">
 														<td width="207" class="fontnormal">
-															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" />
-															:
+															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" isColonRequired="Yes"/>
+														
 															<c:out value="${BulkEntry.office.officeName}" />
 															<br>
-															<mifos:mifoslabel name="bulkEntry.loanofficer" />
-															:
+															<mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes" />
+															
 															<c:out value="${BulkEntry.loanOfficer.displayName}" />
 														</td>
 														<td width="383" class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.pmnttype" />
-															:
+															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
+															
 
 															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
 															<table>
@@ -228,18 +228,18 @@
 											<td align="center">
 												<c:choose>
 													<c:when test="${requestScope.isDisabled}">
-														<html-el:submit styleClass="buttn" style="width:70px" disabled="true">
+														<html-el:submit styleClass="buttn"  disabled="true">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:when>
 													<c:otherwise>
-														<html-el:submit styleClass="buttn"  style="width:70px" onclick="fnSubmit(this.form, this)">
+														<html-el:submit styleClass="buttn"  onclick="fnSubmit(this.form, this)">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:otherwise>
 												</c:choose>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="fnCancel(this.form);">
+												<html-el:button property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>

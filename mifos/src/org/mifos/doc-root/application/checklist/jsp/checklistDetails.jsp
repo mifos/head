@@ -118,8 +118,8 @@
 									</c:otherwise>
 								</c:choose>
 								<br>
-								<mifos:mifoslabel name="checklist.status" />
-								:
+								<mifos:mifoslabel name="checklist.status" isColonRequired="Yes"/>
+								
 								<c:choose>
 									<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Type') == 1}">
 										<c:out value="${checkList.customerStatus.name}" />
@@ -131,12 +131,12 @@
 									</c:otherwise>
 								</c:choose>
 								<br>
-								<mifos:mifoslabel name="checklist.createdby" />
-								:
+								<mifos:mifoslabel name="checklist.createdby" isColonRequired="Yes"/>
+								
 								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'createdname')}" />
 								<br>
-								<mifos:mifoslabel name="checklist.createddate" />
-								:
+								<mifos:mifoslabel name="checklist.createddate" isColonRequired="Yes"/>
+								
 								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,checkList.createdDate)}" />
 
 								<br>

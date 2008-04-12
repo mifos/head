@@ -183,4 +183,10 @@ public class BaseActionForm extends ValidatorActionForm {
 		}
 		return customFields.get(i);
 	}
+	
+	protected ResourceBundle getResourceBundle(String resourceFileName)
+	{
+		ResourceBundle resources = ResourceBundle.getBundle(resourceFileName);
+		return resources;
+	}
 }

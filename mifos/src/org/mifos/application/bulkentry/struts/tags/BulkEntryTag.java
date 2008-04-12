@@ -132,7 +132,7 @@ public class BulkEntryTag extends BodyTagSupport {
 		int columnSize = (2 * (loanProducts.size() + savingsProducts.size())) + 7;
 		builder.append(bulkEntryDisplayHelper.getEndTable(columnSize));
 		builder.append(bulkEntryDisplayHelper.buildTotals(totals, loanProducts
-				.size(), savingsProducts.size(), method));
+				.size(), savingsProducts.size(), method, userContext));
 	}
 
 }

@@ -2,6 +2,7 @@ package org.mifos.application.checklist.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,6 +13,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -157,6 +159,8 @@ public class ChkListActionForm extends BaseActionForm {
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
+		ResourceBundle resources = getResourceBundle(FilePaths.CHECKLIST_RESOURCE);
+		String checklistStatus = resources.getString(CheckListConstants.CHECKLIST_STATUS_RESOURCE);
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
 		if (method.equals(Methods.preview.toString()))
@@ -166,7 +170,7 @@ public class ChkListActionForm extends BaseActionForm {
 			if (StringUtils.isNullOrEmpty(getChecklistStatus()))
 				addError(errors, "checklistStatus",
 						CheckListConstants.MANDATORY,
-						CheckListConstants.CHECKLIST_STATUS);
+						checklistStatus);
 		}
 		if (!method.equals(Methods.validate.toString()))
 			request.setAttribute("methodCalled", method);
@@ -174,26 +178,33 @@ public class ChkListActionForm extends BaseActionForm {
 	}
 
 	private ActionErrors validateFields() {
+		
+		ResourceBundle resources = getResourceBundle(FilePaths.CHECKLIST_RESOURCE);
+		String checklistName = resources.getString(CheckListConstants.CHECKLIST_NAME_RESOURCE);
+		String itemsStr = resources.getString(CheckListConstants.CHECKLIST_ITEMS_RESOURCE);
+		String type = resources.getString(CheckListConstants.CHECKLIST_TYPE_RESOURCE);
+		String state = resources.getString(CheckListConstants.CHECKLIST_DISPLAY_STATUS_RESOURCE);
+		String details = resources.getString(CheckListConstants.CHECKLIST_DETAIL_RESOURCE);
 		ActionErrors errors = new ActionErrors();
 		if (StringUtils.isNullOrEmpty(getChecklistName()))
 			addError(errors, "checklistName", CheckListConstants.MANDATORY,
-					CheckListConstants.CHECKLIST_NAME);
+					checklistName);
 		else if (getChecklistName().length() > 100)
 			addError(errors, "checklistName", CheckListConstants.MAX_LENGTH,
-					CheckListConstants.CHECKLIST_NAME, "100");
+					checklistName, "100");
 		for (String items : getDetailsList())
 			if (items.length() > 250)
 				addError(errors, "details", CheckListConstants.MAX_LENGTH,
-						CheckListConstants.CHECKLIST_ITEMS, "250");
+						itemsStr, "250");
 		if (StringUtils.isNullOrEmpty(getMasterTypeId()))
 			addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
-					CheckListConstants.TYPE_COMBO);
+					type);
 		if (StringUtils.isNullOrEmpty(getStateId()))
 			addError(errors, "stateId", CheckListConstants.MANDATORY,
-					CheckListConstants.STATE_COMBO);
+					state);
 		if (getValidCheckListDetails().size() == 0)
 			addError(errors, "detailsList", CheckListConstants.MANDATORY,
-					CheckListConstants.DETAILS);
+					details);
 		return errors;
 	}
 

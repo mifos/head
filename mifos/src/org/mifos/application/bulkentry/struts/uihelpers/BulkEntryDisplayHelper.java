@@ -39,7 +39,7 @@
 package org.mifos.application.bulkentry.struts.uihelpers;
 
 import java.util.List;
-import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.jsp.JspException;
 
@@ -47,8 +47,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -61,6 +59,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -77,6 +76,10 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private StringBuilder buildStartTable(int totalProductSize) {
+		ResourceBundle resources = ResourceBundle.getBundle
+		(FilePaths.BULKENTRY_RESOURCE);
+		String dueCollections = resources.getString(BulkEntryConstants.DUE_COLLECTION);
+		String issueWithdrawal = resources.getString(BulkEntryConstants.ISSUE_WITHDRAWAL);
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
@@ -84,11 +87,12 @@ public class BulkEntryDisplayHelper {
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		builder.append("<td height=\"30\">&nbsp;&nbsp;</td>");
 		builder.append("<td align=\"center\" colspan=\"" + totalProductSize
-				+ "\">Due/Collections</td>");
+				+ "\">" + dueCollections + "</td>");
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		builder.append("<td align=\"center\" colspan=\"" + totalProductSize
-				+ "\">Issues/Withdrawals</td>");
+				+ "\">" + issueWithdrawal + "</td>");
+				
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
@@ -101,10 +105,15 @@ public class BulkEntryDisplayHelper {
 
 	private void buildProductsHeading(List<PrdOfferingBO> loanProducts,
 			List<PrdOfferingBO> savingsProducts, StringBuilder builder) {
+		ResourceBundle resources = ResourceBundle.getBundle
+		(FilePaths.BULKENTRY_RESOURCE);
+		String clientName = resources.getString(BulkEntryConstants.CLIENT_NAME);
+		String acCollection = resources.getString(BulkEntryConstants.AC_COLLECTION);
+		String attn = resources.getString(BulkEntryConstants.ATTN);
 		BulkEntryTagUIHelper.getInstance().generateStartTR(builder,
 				"fontnormal8ptbold");
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
-				"Client Name", false);
+				clientName, false);
 		builder.append("<td height=\"30\">&nbsp;&nbsp;</td>");
 		buildProductNames(loanProducts, savingsProducts, builder);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
@@ -113,10 +122,10 @@ public class BulkEntryDisplayHelper {
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 14,
-				"A/C Collections");
+				acCollection);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
 		BulkEntryTagUIHelper.getInstance().generateTD(builder, 19, "", false);
-		BulkEntryTagUIHelper.getInstance().generateTD(builder, 14, "Attn");
+		BulkEntryTagUIHelper.getInstance().generateTD(builder, 14, attn);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 	}
 
@@ -154,6 +163,13 @@ public class BulkEntryDisplayHelper {
 		Double[] centerTotals = new Double[(totalProductsSize + 1)];
 		Double[] groupTotals = new Double[(totalProductsSize + 1)];
 		MifosCurrency currency = parent.getCurrency();
+		ResourceBundle resources = ResourceBundle.getBundle
+		(FilePaths.BULKENTRY_RESOURCE);
+		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
+		String group = getLabel(ConfigurationConstants.GROUP, userContext);
+		String groupAccountStr = account.format(account, group);
+		groupAccountStr = " " + groupAccountStr + " ";
+		
 		for (BulkEntryView child : parent.getBulkEntryChildren()) {
 			buildCompleteRow(child, loanProducts, savingsProducts, parent
 					.getBulkEntryChildren().size(), 0, rowIndex, groupTotals,
@@ -165,9 +181,7 @@ public class BulkEntryDisplayHelper {
 		}
 		buildCompleteRow(parent, loanProducts, savingsProducts, parent
 				.getBulkEntryChildren().size(), 0, rowIndex, groupTotals,
-				centerTotals, getLabel(ConfigurationConstants.GROUP,
-						userContext)
-						+ " account", builder, method, 2, currency, officeId);
+				centerTotals, groupAccountStr, builder, method, 2, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 		rowIndex++;
@@ -190,6 +204,15 @@ public class BulkEntryDisplayHelper {
 		Double[] groupTotals = new Double[(totalProductsSize + 1)];
 		MifosCurrency currency = parent.getCurrency();
 		List<BulkEntryView> children = parent.getBulkEntryChildren();
+		ResourceBundle resources = ResourceBundle.getBundle
+		(FilePaths.BULKENTRY_RESOURCE);
+		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
+		String group = getLabel(ConfigurationConstants.GROUP, userContext);
+		String center = getLabel(ConfigurationConstants.CENTER, userContext);
+		String groupAccountStr = account.format(account, group);
+		groupAccountStr = " " + groupAccountStr + " ";
+		String centerAccountStr = account.format(account, center);
+		centerAccountStr = " " + centerAccountStr + " ";
 
 		for (BulkEntryView child : children) {
 			groupTotals = new Double[(totalProductsSize + 1)];
@@ -211,9 +234,7 @@ public class BulkEntryDisplayHelper {
 			}
 			buildCompleteRow(child, loanProducts, savingsProducts,
 					groupChildSize, groupInitialAccNum, rowIndex, groupTotals,
-					centerTotals, getLabel(ConfigurationConstants.GROUP,
-							userContext)
-							+ " account", builder, method, 2, currency,
+					centerTotals, groupAccountStr, builder, method, 2, currency,
 					officeId);
 			BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 			BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
@@ -224,9 +245,7 @@ public class BulkEntryDisplayHelper {
 
 		}
 		buildCompleteRow(parent, loanProducts, savingsProducts, 0, 0, rowIndex,
-				groupTotals, centerTotals, getLabel(
-						ConfigurationConstants.CENTER, userContext)
-						+ " account", builder, method, 3, currency, officeId);
+				groupTotals, centerTotals, centerAccountStr, builder, method, 3, currency, officeId);
 		BulkEntryTagUIHelper.getInstance().generateEmptyTD(builder, true);
 		BulkEntryTagUIHelper.getInstance().generateEndTR(builder);
 		getTotalForRow(builder, parent, totalProductsSize, centerTotals,
@@ -414,7 +433,7 @@ public class BulkEntryDisplayHelper {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
-					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
+					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
                 if (bulkEntryView.getAttendence() != null && (attendence.getAssociatedId().intValue()== bulkEntryView.getAttendence().intValue()))
@@ -446,7 +465,7 @@ public class BulkEntryDisplayHelper {
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)) {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
-					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
+					+ "]\"  style=\"width:80px;\" class=\"fontnormal8pt\">");
 			for (CustomValueListElement attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getAssociatedId() + "\"");
 				if (null != bulkEntryView.getAttendence()
@@ -738,15 +757,22 @@ public class BulkEntryDisplayHelper {
 			int savingsProductSize) {
 		Short customerLevel = bulkEntryView.getCustomerDetail()
 				.getCustomerLevelId();
-
+		ResourceBundle resources = ResourceBundle.getBundle
+		(FilePaths.BULKENTRY_RESOURCE);
+		String totalStr = resources.getString(BulkEntryConstants.TOTAL_GROUP_CENTER);
+		String group = getLabel(ConfigurationConstants.GROUP, userContext);
+		String center = getLabel(ConfigurationConstants.CENTER, userContext);
+		String groupTotalStr = totalStr.format(totalStr, group);
+		groupTotalStr = " " + groupTotalStr + " ";
+		String centerTotalStr = totalStr.format(totalStr, center);
+		centerTotalStr = " " + centerTotalStr + " ";
 		if (!method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
 				BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 								+ "<span class=\"fontnormal8pt\"><em>"
-								+ getLabel(ConfigurationConstants.GROUP,
-										userContext) + " Total </em></span></td>");
+								+ groupTotalStr + "</em></span></td>");
 				builder
 						.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 				for (int i = 0; i < (loanProductsSize + savingsProductSize); i++) {
@@ -795,9 +821,8 @@ public class BulkEntryDisplayHelper {
 				BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
-								+ "<span class=\"fontnormal8pt\"><em>"
-								+ getLabel(ConfigurationConstants.CENTER,
-										userContext) + " Total </em></span></td>");
+								+ "<span class=\"fontnormal8pt\"><em>"+
+								centerTotalStr + "</em></span></td>");
 				builder
 						.append("<td height=\"30\" class=\"drawtablerow\">&nbsp;&nbsp;</td>");
 
@@ -849,13 +874,9 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 					+ "<span class=\"fontnormal8pt\"><em>");
 			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
-				builder.append(getLabel(ConfigurationConstants.GROUP,
-						userContext)
-						+ " Total ");
+				builder.append( groupTotalStr );
 			} else if (customerLevel.equals(CustomerLevel.CENTER.getValue())) {
-				builder.append(getLabel(ConfigurationConstants.CENTER,
-						userContext)
-						+ " Total ");
+				builder.append(centerTotalStr);
 			}
 			builder.append("</em></span></td>");
 			builder
@@ -899,7 +920,7 @@ public class BulkEntryDisplayHelper {
 	}
 
 	public StringBuilder buildTotals(Double[] totals, int loanProductsSize,
-			int savingsPoductsSize, String method) {
+			int savingsPoductsSize, String method, UserContext userContext) {
 		Double dueColl = 0.0;
 		Double withDrawals = 0.0;
 		Double loanDisb = 0.0;
@@ -932,31 +953,40 @@ public class BulkEntryDisplayHelper {
 
 		return buildTotalstable(totalDueCollection, totalLoanDisburesed,
 				otherCollection, totalWithDrawals, totalCollection, totalIssue,
-				netCashAvailable, method);
+				netCashAvailable, method, userContext);
 	}
 
 	private StringBuilder buildTotalstable(Money dueColl, Money loanDisb,
 			Money otherColl, Money withDrawals, Money totColl, Money totIssue,
-			Money netCash, String method) {
+			Money netCash, String method, UserContext userContext) {
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE);
+		String totalCollections = resources.getString(BulkEntryConstants.TOTAL_COLLECTION);
+		String totalIssuesWithdrawals = resources.getString(BulkEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
+		String dueCollections2 = resources.getString(BulkEntryConstants.DUE_COLLECTION2);
+		String loanDisbursements = resources.getString(BulkEntryConstants.LOAN_DISBURSEMENT);
+		String total = resources.getString(BulkEntryConstants.TOTAL);
+		String netCashStr = resources.getString(BulkEntryConstants.NET_CASH);
+		String withdrawals = resources.getString(BulkEntryConstants.WITHDRAWAL);
+		String otherCollections = resources.getString(BulkEntryConstants.OTHER_COLLECTION);		
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<table width=\"95%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">");
 		builder.append("<tr class=\"fontnormal\">");
 		builder
-				.append("<td colspan=\"2\"class=\"fontnormal8ptbold\">Total Collections</td>");
+				.append("<td colspan=\"2\"class=\"fontnormal8ptbold\">" + totalCollections + "</td>");
 		builder
-				.append("<td colspan=\"4\" class=\"fontnormal8ptbold\">Total Issues/Withdrawals</td>");
+				.append("<td colspan=\"4\" class=\"fontnormal8ptbold\">" + totalIssuesWithdrawals + "</td>");
 		builder.append("</tr>");
 		if (!method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
 			builder.append("<tr class=\"fontnormal\">");
-			builder.append("<td class=\"fontnormal8pt\">Due collections:</td>");
+			builder.append("<td class=\"fontnormal8pt\">" + dueCollections2 + "</td>");
 			builder
 					.append("<td><input name=\"dueColl\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
 							+ dueColl
 							+ "\" size=\"6\" class=\"fontnormal8pt\"></td>");
 			builder
-					.append("<td class=\"fontnormal8pt\">Loan disbursements:</td>");
+					.append("<td class=\"fontnormal8pt\">" + loanDisbursements + "</td>");
 			builder
 					.append("<td colspan=\"3\"><input name=\"loanDisb\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
@@ -965,14 +995,14 @@ public class BulkEntryDisplayHelper {
 			builder.append(" </tr>");
 			builder.append("<tr class=\"fontnormal\">");
 			builder
-					.append("<td width=\"10%\" class=\"fontnormal8pt\">Other collections:</td>");
+					.append("<td width=\"10%\" class=\"fontnormal8pt\">" + otherCollections + "</td>");
 			builder
 					.append("<td width=\"9%\"><input name=\"otherColl\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
 							+ otherColl
 							+ "\" size=\"6\" class=\"fontnormal8pt\"></td>");
 			builder
-					.append("<td width=\"11%\" class=\"fontnormal8pt\">Withdrawals:</td>");
+					.append("<td width=\"11%\" class=\"fontnormal8pt\">" + withdrawals + "</td>");
 			builder
 					.append("<td colspan=\"3\"><input name=\"Withdrawals\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
@@ -981,20 +1011,20 @@ public class BulkEntryDisplayHelper {
 			builder.append(" </tr>");
 
 			builder.append(" <tr class=\"fontnormal\">");
-			builder.append("<td class=\"fontnormal8ptbold\">Total:</td>");
+			builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
 			builder
 					.append("<td><input name=\"totColl\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
 							+ totColl
 							+ "\" size=\"6\" class=\"fontnormal8pt\"></td>");
-			builder.append("<td class=\"fontnormal8ptbold\">Total:</td>");
+			builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
 			builder
 					.append("<td width=\"10%\"><input name=\"totIssue\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
 							+ totIssue
 							+ "\" size=\"6\" class=\"fontnormal8pt\"></td>");
 			builder
-					.append("<td width=\"6%\" class=\"fontnormal8ptbold\">Net Cash:</td>");
+					.append("<td width=\"6%\" class=\"fontnormal8ptbold\">" + netCashStr + "</td>");
 			builder
 					.append("<td width=\"54%\"><input name=\"netCash\" type=\"text\" disabled style=\"width:40px\""
 							+ " value=\""
@@ -1003,31 +1033,31 @@ public class BulkEntryDisplayHelper {
 			builder.append(" </tr>");
 		} else {
 			builder.append("<tr class=\"fontnormal\">");
-			builder.append("<td class=\"fontnormal8pt\">Due collections:</td>");
+			builder.append("<td class=\"fontnormal8pt\">" + dueCollections2 + "</td>");
 			builder.append("<td class=\"fontnormal8pt\">" + dueColl + "</td>");
 			builder
-					.append("<td class=\"fontnormal8pt\">Loan disbursements:</td>");
+					.append("<td class=\"fontnormal8pt\">" + loanDisbursements + "</td>");
 			builder.append("<td colspan=\"3\">" + loanDisb + "</td>");
 			builder.append(" </tr>");
 			builder.append("<tr class=\"fontnormal\">");
 			builder
-					.append("<td width=\"10%\" class=\"fontnormal8pt\">Other collections:</td>");
+					.append("<td width=\"10%\" class=\"fontnormal8pt\">" + otherCollections + "</td>");
 			builder.append("<td width=\"9%\" class=\"fontnormal8pt\">"
 					+ otherColl + "</td>");
 			builder
-					.append("<td width=\"11%\" class=\"fontnormal8pt\">Withdrawals:</td>");
+					.append("<td width=\"11%\" class=\"fontnormal8pt\">" + withdrawals + "</td>");
 			builder.append("<td colspan=\"3\">" + withDrawals + "</td>");
 			builder.append(" </tr>");
 
 			builder.append(" <tr class=\"fontnormal\">");
-			builder.append("<td class=\"fontnormal8ptbold\">Total:</td>");
+			builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
 			builder.append("<td class=\"fontnormal8ptbold\">" + totColl
 					+ "</td>");
-			builder.append("<td class=\"fontnormal8ptbold\">Total:</td>");
+			builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
 			builder.append("<td width=\"10%\" class=\"fontnormal8ptbold\">"
 					+ totIssue + "</td>");
 			builder
-					.append("<td width=\"6%\" class=\"fontnormal8ptbold\">Net Cash:</td>");
+					.append("<td width=\"6%\" class=\"fontnormal8ptbold\">" + netCashStr + "</td>");
 			if (Double.valueOf(netCash.toString()).doubleValue() < 0) {
 				builder
 						.append("<td width=\"54%\" class=\"fontnormal8ptbold\">"

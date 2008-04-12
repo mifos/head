@@ -137,10 +137,10 @@
 								<c:choose>
 
 									<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>
-										Active
+										<mifos:mifoslabel name="checklist.active" />
 									</c:when>
 									<c:otherwise>
-										Inactive
+										<mifos:mifoslabel name="checklist.inactive" />
 									</c:otherwise>
 								</c:choose>
 								</span>
@@ -161,7 +161,7 @@
 						</tr>
 						<tr>
 							<td colspan="2" class="fontnormalbold">
-							<html-el:button	property="button" styleClass="insidebuttn" style="width:140px" onclick="javascript:fnManageEdit(this.form)">
+							<html-el:button	property="button" styleClass="insidebuttn"  onclick="javascript:fnManageEdit(this.form)">
 								<mifos:mifoslabel name="checklist.edit_button"></mifos:mifoslabel>
 							</html-el:button>
 						</tr>
@@ -175,10 +175,10 @@
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 						<td align="center">
-							<html-el:submit property="submitbutton" style="width:70px" styleClass="buttn">
+							<html-el:submit property="submitbutton" styleClass="buttn">
 								<mifos:mifoslabel name="checklist.button_submit" />
 							</html-el:submit> &nbsp;
-							<html-el:button property="button" style="width:70px"	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
+							<html-el:button property="button" styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
 									<mifos:mifoslabel name="checklist.button_cancel" />
 							</html-el:button>
 						</td>

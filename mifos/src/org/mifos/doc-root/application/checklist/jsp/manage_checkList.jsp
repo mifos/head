@@ -204,7 +204,7 @@
 										<html-el:textarea property="text" value="" cols="50" rows="5" onkeypress="return restrictScript(event);"></html-el:textarea>
 									</td>
 									<td width="66%" valign="top" class="paddingleft05notop">
-									<html-el:button	property="button" styleClass="insidebuttn" style="width:65px" onclick="createCheckList();isButtonRequired()">
+									<html-el:button	property="button" styleClass="insidebuttn" onclick="createCheckList();isButtonRequired()">
 										<mifos:mifoslabel name="checklist.button_add" />
 									</html-el:button>
 									</td>
@@ -248,7 +248,7 @@
 										</c:forEach>
 
 									<div id="removeButton" style="display:none">
-										<html-el:button property="removeSelected" styleClass="insidebuttn" value="Remove Selected" style="width:120px" onclick="RemoveSelected();isButtonRequired() ">
+										<html-el:button property="removeSelected" styleClass="insidebuttn" onclick="RemoveSelected();isButtonRequired() ">
 											<mifos:mifoslabel name="checklist.button_removeselected" />
 										</html-el:button>
 									</div>
@@ -279,11 +279,11 @@
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">
-								<html-el:submit style="width:70px"	styleClass="buttn">
+								<html-el:submit	styleClass="buttn">
 								<mifos:mifoslabel name="checklist.button_preview" />
 								</html-el:submit> &nbsp;
 
-								<html-el:button property="cancelBttn" style="width:70px"	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
+								<html-el:button property="cancelBttn" 	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
 										<mifos:mifoslabel name="checklist.button_cancel" />
 								</html-el:button>
 

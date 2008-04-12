@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,11 +64,13 @@ import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -90,6 +93,7 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.config.AccountingRules;
@@ -420,6 +424,13 @@ public class BulkEntryAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("create ");
+		ResourceBundle resources = getResourceBundle(FilePaths.BULKENTRY_RESOURCE);
+		String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, getUserContext(request));
+		String attendance = resources.getString(BulkEntryConstants.ATTENDANCE);
+		String savingsWithdrawal = resources.getString(BulkEntryConstants.SAVING_WITHDRAWAL);
+		String savingsDeposit = resources.getString(BulkEntryConstants.SAVING_DEPOSITE);
+		String acCollection = resources.getString(BulkEntryConstants.AC_COLLECTION);
+		
 		// To enable cache
 		BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
 		List<String> loanAccountNums = new ArrayList<String>();
@@ -458,13 +469,13 @@ public class BulkEntryAction extends BaseAction {
 		if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
 				|| savingsWithdrawalsAccountNums.size() > 0
 				|| customerAccountNums.size() > 0 || customerNames.size() > 0) {
-			getErrorString(builder, loanAccountNums, "Loan");
+			getErrorString(builder, loanAccountNums, loan);
 			getErrorString(builder, savingsDepositAccountNums,
-					"Savings Deposit");
+					savingsDeposit);
 			getErrorString(builder, savingsWithdrawalsAccountNums,
-					"Savings Withdrawal");
-			getErrorString(builder, customerAccountNums, "A/C collections");
-			getErrorString(builder, customerNames, "Attendance");
+					savingsWithdrawal);
+			getErrorString(builder, customerAccountNums, acCollection);
+			getErrorString(builder, customerNames, attendance);
 			builder.append("<br><br>");
 			actionErrors.add(BulkEntryConstants.ERRORSUPDATE,
 					new ActionMessage(BulkEntryConstants.ERRORSUPDATE, builder

@@ -214,7 +214,6 @@
 
 											<td width="66%" valign="top" class="paddingleft05notop"><html-el:button
 												property="button" styleClass="insidebuttn"
-												style="width:65px"
 												onclick="createCheckList();isButtonRequired()">
 												<mifos:mifoslabel name="checklist.button_add" />
 											</html-el:button></td>
@@ -251,7 +250,7 @@
 											</c:forEach>
 											<div id="removeButton" style="display:none"><html-el:button
 												property="removeSelected" styleClass="insidebuttn"
-												value="Remove Selected" style="width:120px"
+												
 												onclick="RemoveSelected();isButtonRequired() ">
 												<mifos:mifoslabel name="checklist.button_removeselected" />
 											</html-el:button></div>
@@ -273,10 +272,10 @@
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit style="width:70px"
+									<td align="center"><html-el:submit
 										property="button" styleClass="buttn">
 										<mifos:mifoslabel name="checklist.button_preview" />
-									</html-el:submit> &nbsp; <html-el:button style="width:70px"
+									</html-el:submit> &nbsp; <html-el:button 
 										property="cancelBttn" styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="checklist.button_cancel" />

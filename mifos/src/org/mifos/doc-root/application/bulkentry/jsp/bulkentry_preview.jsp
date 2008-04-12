@@ -166,7 +166,7 @@
 																	<c:otherwise>
 																		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 																	</c:otherwise>
-																</c:choose>: <c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" />: <c:out
+																</c:choose>: <c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" isColonRequired="Yes"/> <c:out
 																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' /> </span>
 														</td>
 													</tr>
@@ -178,17 +178,17 @@
 												<table width="590" border="0" cellspacing="0" cellpadding="0">
 													<tr valign="top">
 														<td width="207" class="fontnormal">
-															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" />
-															:
+															<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" isColonRequired="Yes"/>
+															
 															<c:out value="${BulkEntry.office.officeName}" />
 															<br>
-															<mifos:mifoslabel name="bulkEntry.loanofficer" />
-															:
+															<mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes"/>
+															
 															<c:out value="${BulkEntry.loanOfficer.displayName}" />
 														</td>
 														<td width="383" class="fontnormal">
-															<mifos:mifoslabel name="bulkEntry.pmnttype" />
-															:
+															<mifos:mifoslabel name="bulkEntry.pmnttype" isColonRequired="Yes"/>
+															
 															<c:out value="${BulkEntry.paymentType.paymentTypeValue}" />
 															<table>
 																<tr id="BulkEntry.ReceiptId">
@@ -228,7 +228,7 @@
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td>
-												<html-el:button property="edit" styleClass="insidebuttn" style="width:70px" onclick="fnPrevious(this.form);">
+												<html-el:button property="edit" styleClass="insidebuttn"  onclick="fnPrevious(this.form);">
 													<mifos:mifoslabel name="bulkEntry.editdata" />
 												</html-el:button>
 											</td>
@@ -246,11 +246,11 @@
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px"  property="submitBttn" onclick="fnSubmit(this.form, this)">
+												<html-el:submit styleClass="buttn"  property="submitBttn" onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.submit" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="fnCancel(this.form);">
+												<html-el:button property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>

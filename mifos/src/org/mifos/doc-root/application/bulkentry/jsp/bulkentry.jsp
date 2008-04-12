@@ -47,6 +47,9 @@
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -121,7 +124,8 @@
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-
+		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.BulkEntryUIResources"/>
 		<html-el:form action="/bulkentryaction" onsubmit="return (validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(transactionDate,transactionDateFormat,transactionDateYY))">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -206,11 +210,10 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="fontnormal">
-												<mifos:mifoslabel name="bulkEntry.seloffice" />
-												<mifos:mifoslabel name="${ConfigurationConstants.OFFICE}" />
-												<mifos:mifoslabel name="bulkEntry.fromlist" />
-												<mifos:mifoslabel name="bulkEntry.selloanoffcent" />
+											<td class="fontnormal"
+												<fmt:message key="bulkEntry.selectOfficeFromList">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.OFFICE}" /></fmt:param>
+												</fmt:message>
 												<c:choose>
 													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
@@ -238,8 +241,8 @@
 											<c:when test="${requestScope.refresh==Constants.NO}">
 												<tr class="fontnormal">
 													<td align="right">
-														<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" mandatory="yes" />
-														:
+														<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" mandatory="yes" isColonRequired="Yes"/>
+														
 													</td>
 													<td>
 														<mifos:select property="officeId">
@@ -251,8 +254,8 @@
 												</tr>
 												<tr class="fontnormal">
 													<td align="right">
-														<mifos:mifoslabel name="bulkEntry.loanofficer" mandatory="yes" />
-														:
+														<mifos:mifoslabel name="bulkEntry.loanofficer" mandatory="yes" isColonRequired="Yes"/>
+														
 													</td>
 													<td>
 														<mifos:select property="loanOfficerId">
@@ -279,8 +282,8 @@
 												</tr>
 												<tr class="fontnormal">
 													<td align="right">
-														<mifos:mifoslabel name="bulkEntry.loanofficer" mandatory="yes" />
-														:
+														<mifos:mifoslabel name="bulkEntry.loanofficer" mandatory="yes" isColonRequired="Yes"/>
+														
 													</td>
 													<td>
 														<mifos:select property="loanOfficerId" onchange="fnLoadCustomers(this.form)">
@@ -296,13 +299,13 @@
 											<td width="27%" align="right">
 												<c:choose>
 													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" mandatory="yes" />
+														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" mandatory="yes" isColonRequired="Yes"/>
 													</c:when>
 													<c:otherwise>
-														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" mandatory="yes" />
+														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" mandatory="yes" isColonRequired="Yes"/>
 													</c:otherwise>
 												</c:choose>
-												:
+												
 											</td>
 											<td width="73%">
 												<mifos:select property="customerId" onchange="getLastMeetingDateForCustomer(this.form)">
@@ -330,8 +333,8 @@
 										</tr>
 										<tr class="fontnormal">
 											<td align="right">
-												<mifos:mifoslabel name="bulkEntry.pmnttype" mandatory="yes" />
-												:
+												<mifos:mifoslabel name="bulkEntry.pmnttype" mandatory="yes" isColonRequired="Yes"/>
+												
 											</td>
 											<td>
 												<mifos:select property="paymentId">
@@ -374,11 +377,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px" onclick="fnSubmit(this.form, this)">
+												<html-el:submit styleClass="buttn"  onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.cont" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="fnCancel(this.form);">
+												<html-el:button property="cancel" styleClass="cancelbuttn"  onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>

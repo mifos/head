@@ -94,5 +94,13 @@ public interface CheckListConstants {
 	public final String CHECKLIST_STATUS="checklist status";
 	public final String CHECKLIST_ITEMS="items";
 	public final String OLDCHECKLISTNAME="oldChecklistName";
+	public final String CHECKLIST_STATUS_RESOURCE = "checklist.checklistStatus";
+	public final String CHECKLIST_NAME_RESOURCE="checklist.checklist_Name";
+	public final String CHECKLIST_ITEMS_RESOURCE="checklist.items";
+	public final String CHECKLIST_TYPE_RESOURCE="checklist.checklistType";
+	public final String CHECKLIST_DISPLAY_STATUS_RESOURCE="checklist.display_status";
+	public final String CHECKLIST_DETAIL_RESOURCE="checklist.details";
+	
+	
 
 }

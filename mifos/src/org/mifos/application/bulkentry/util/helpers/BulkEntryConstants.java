@@ -80,13 +80,8 @@ public interface BulkEntryConstants {
 	public String CREATEMETHOD="create";
 	public String VALIDATEMETHOD="validate";
 	
-	public String BRANCH="branch";
-	public String LOANOFFICERS="Loan officer";
 	public String CENTER="Center";
-	public String DATEOFTRXN="Date of transaction";    
-	public String MODEOFPAYMENT="Mode of payment";
-	public String RECEIPTID="Receipt ID";
-	public String RECEIPTDATE="Receipt date";
+
 	
 	public String BULKENTRYINVALIDAMOUNT="errors.invalidamount";
 	public String INVALID_RECEIPT_DATE = "errors.invaliddate";
@@ -116,4 +111,28 @@ public interface BulkEntryConstants {
 	public String ERRORLOANS="errorloans";
 	public String ERRORSAVINGSDEPOSIT="errorsavingsdeposit";
 	public String ERRORSAVINGSWITHDRAW="errorsavingswithdraw";
+	
+	public String AC_COLLECTION = "bulkEntry.acCollection";
+	public String DUE_COLLECTION = "bulkEntry.dueCollections";
+	public String ISSUE_WITHDRAWAL = "bulkEntry.issuesWithdrawals";
+	public String ATTN = "bulkEntry.attn";
+	public String ACCOUNT_GROUP_CENTER = "bulkEntry.accountGroupCenter";
+	public String TOTAL_GROUP_CENTER = "bulkEntry.totalGroupCenter";
+	public String TOTAL = "bulkEntry.total";
+	public String TOTAL_COLLECTION = "bulkEntry.totalCollections";
+	public String TOTAL_ISSUE_WITHDRAWAL = "bulkEntry.totalIssuesWithdrawals";
+	public String DUE_COLLECTION2 = "bulkEntry.dueCollections2";
+	public String LOAN_DISBURSEMENT = "bulkEntry.loanDisbursements";
+	public String NET_CASH = "bulkEntry.netCash";
+	public String WITHDRAWAL = "bulkEntry.withdrawals";
+	public String OTHER_COLLECTION = "bulkEntry.otherCollections";
+	public String MODE_OF_PAYMENT = "bulkEntry.pmnttype";
+	public String SAVING_DEPOSITE = "bulkEntry.savingsDeposit";
+	public String SAVING_WITHDRAWAL = "bulkEntry.savingsWithdrawal";
+	public String ATTENDANCE = "bulkEntry.attendance";
+	public String CLIENT_NAME = "bulkEntry.clientName";
+	public String DATEOFTRXN="bulkEntry.dateoftrxn"; 
+	public String LOANOFFICERS="bulkEntry.loanofficer";
+	public String RECEIPTDATE="bulkEntry.rcptdate";
+
 }
