@@ -379,7 +379,7 @@
               <tr>
                 <td width="70%" class="paddingL10">
                   <span class="fontnormal8pt">
-                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=client">
+                    <a href="surveyInstanceAction.do?method=get&value(instanceId)=${surveyInstance.instanceId}&value(surveyType)=savings">
                       <c:out value="${surveyInstance.survey.name}"/>
                     </a>
                   </span>
@@ -394,7 +394,7 @@
             <tr>
               <td colspan="2" align="right" class="paddingleft05">
                 <span class="fontnormal8pt">
-                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=client">
+                  <a href="surveyInstanceAction.do?method=choosesurvey&globalNum=${BusinessKey.globalAccountNum}&surveyType=savings">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>
                   </a> <br>
                   <a href="surveysAction.do?method=mainpage">

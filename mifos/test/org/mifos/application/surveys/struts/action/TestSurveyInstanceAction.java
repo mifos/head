@@ -642,10 +642,7 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		assertEquals("groupCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(SurveyType.GROUP, globalNum));
 		assertEquals("centerCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(SurveyType.CENTER, globalNum));
 		assertEquals("loanAccountAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction.getRedirectUrl(SurveyType.LOAN, globalNum));
-		try {
-			SurveyInstanceAction.getRedirectUrl(SurveyType.SAVINGS, globalNum);
-			fail("Should have thrown a NotImplementedException");
-		} catch(NotImplementedException e) { }
+		assertEquals("savingsAction.do?method=get&globalAccountNum=12345", SurveyInstanceAction.getRedirectUrl(SurveyType.SAVINGS, globalNum));
 	}
 
 	private PersonnelBO createPersonnel(OfficeBO office,

@@ -363,18 +363,20 @@ public class SurveyInstanceAction extends BaseAction {
 
 	public static String getBusinessObjectName(BusinessObject businessObject)
 			throws Exception {
-		if (CustomerBO.class.isInstance(businessObject)) {
+		if (businessObject instanceof CustomerBO) {
 			return ((CustomerBO) businessObject).getDisplayName();
 		}
-		
-		else if (LoanBO.class.isInstance(businessObject)) {
+		else if (businessObject instanceof LoanBO) {
 			LoanBO loanBO = (LoanBO) businessObject;
 			return loanBO.getLoanOffering().getPrdOfferingName() + "# "
 					+ loanBO.getGlobalAccountNum();
 		}
-		else {
-			throw new NotImplementedException();
+		else if (businessObject instanceof SavingsBO) {
+			SavingsBO savingsBO = (SavingsBO) businessObject;
+			return savingsBO.getSavingsOffering().getPrdOfferingName() + "# "
+					+ savingsBO.getGlobalAccountNum();
 		}
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -404,23 +406,25 @@ public class SurveyInstanceAction extends BaseAction {
 	 * {@link #getBusinessObjectName(BusinessObject customer)} instead of this
 	 * method.
 	 */
-	public static String getBusinessObjectName(SurveyType surveyType,
-			String globalNum) throws Exception {
+	public static String getBusinessObjectName(SurveyType surveyType,	String globalNum) 
+			throws Exception {
 		if (surveyType == SurveyType.CLIENT || surveyType == SurveyType.CENTER
 				|| surveyType == SurveyType.GROUP) {
 			CustomerBO customer = CustomerBusinessService.getInstance()
 					.findBySystemId(globalNum);
 			return customer.getDisplayName();
-		}
-		else if (surveyType == SurveyType.LOAN) {
+		} else if (surveyType == SurveyType.LOAN) {
 			LoanBusinessService service = new LoanBusinessService();
 			LoanBO loanBO = service.findBySystemId(globalNum);
 			return loanBO.getLoanOffering().getPrdOfferingName() + "# "
 					+ globalNum;
+		} else if (surveyType == SurveyType.SAVINGS) {
+			SavingsBusinessService service = new SavingsBusinessService();
+			SavingsBO savingsBO = service.findBySystemId(globalNum);
+			return savingsBO.getSavingsOffering().getPrdOfferingName() + "# "
+					+ globalNum;
 		}
-		else {
-			throw new NotImplementedException();
-		}
+		throw new NotImplementedException();
 	}
 
 	public static BusinessObject getBusinessObject(SurveyType surveyType,
@@ -437,26 +441,21 @@ public class SurveyInstanceAction extends BaseAction {
 			GroupBO group = (GroupBO) CustomerBusinessService.getInstance()
 			.findBySystemId(globalNum, CustomerLevel.GROUP.getValue());
 			return group;
-		}
-		else if (surveyType == SurveyType.LOAN) {
+		} else if (surveyType == SurveyType.LOAN) {
 			LoanBusinessService service = new LoanBusinessService();
 			LoanBO loanBO = service.findBySystemId(globalNum);
 			return loanBO;
-		}
-		else if (surveyType == SurveyType.SAVINGS) {
+		} else if (surveyType == SurveyType.SAVINGS) {
 			SavingsBusinessService service = new SavingsBusinessService();
 			SavingsBO savingsBO = service.findBySystemId(globalNum);
 			return savingsBO;
 		}
-		else {
-			throw new NotImplementedException();
-		}
+		throw new NotImplementedException();
 	}
 
 	public ActionForward choosesurvey(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
 		UserContext userContext = getUserContext(request);
 		
 		Map<String, Object> results;
@@ -475,23 +474,16 @@ public class SurveyInstanceAction extends BaseAction {
 
 		SurveysPersistence persistence = new SurveysPersistence();
 		String globalNum = (String) results.get("globalNum");
-		SurveyType surveyType = SurveyType.fromString(request
-				.getParameter("surveyType"));
-		request.getSession().setAttribute(SurveysConstants.KEY_GLOBAL_NUM,
-				globalNum);
-		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE,
-				surveyType);
+		SurveyType surveyType = SurveyType.fromString(request.getParameter("surveyType"));
+		request.getSession().setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
+		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
 
-		BusinessObject businessObject =
-			getBusinessObject(surveyType, globalNum);
-		request.getSession().setAttribute(Constants.BUSINESS_KEY,
-				businessObject);
+		BusinessObject businessObject = getBusinessObject(surveyType, globalNum);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY,businessObject);
 		String displayName = getBusinessObjectName(businessObject);
-		request.setAttribute(
-				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
 
-		List<Survey> surveys = 
-			persistence.retrieveSurveysByTypeAndState(
+		List<Survey> surveys = persistence.retrieveSurveysByTypeAndState(
 					surveyType, SurveyState.ACTIVE);
 		request.setAttribute(SurveysConstants.KEY_SURVEYS_LIST, surveys);
 		return mapping.findForward(ActionForwards.choose_survey.toString());
@@ -742,13 +734,14 @@ public class SurveyInstanceAction extends BaseAction {
 		else if (type == SurveyType.GROUP) {
 			return "groupCustAction.do?method=get&globalCustNum=" + globalNum;
 		}
-		
 		else if (type == SurveyType.CENTER) {
 			return "centerCustAction.do?method=get&globalCustNum=" + globalNum;
 		}
-		
 		else if (type == SurveyType.LOAN) {
 			return "loanAccountAction.do?method=get&globalAccountNum=" + globalNum;
+		}
+		else if (type == SurveyType.SAVINGS) {
+			return "savingsAction.do?method=get&globalAccountNum=" + globalNum;
 		}
 		throw new NotImplementedException();
 	}
