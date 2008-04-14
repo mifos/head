@@ -56,15 +56,12 @@ Detailed Instructions
 1. Obtain the prerequisite software. You will need the following
    packages:
 
-       Java 2 Standard Edition SDK 5.0 or later
-       MySQL 4.1.16 or later
-       A servlet container. Options include:
-           Tomcat 5.5 or later
-           JBoss 4.0.3SP1 or later
-           Jetty 5.1 or later
+       Java 2 Standard Edition SDK 5.0 (note that Java 6 is not supported yet)
+       Database - MySQL 5.0
+       Application server - Tomcat 6.0 
        Apache Ant 1.7.0 or later
 
-If you are just deploying, Java, mySQL, and JBOSS are required. 
+If you are just deploying (not building from source code), Java, MySQL, and Tomcat are required. 
 
 2. Install the prerequisite software.
 
@@ -75,15 +72,14 @@ Note: Try not to install the packages in non-standard locations, and on *nix and
 try to avoid install directories with spaces, for obvious reasons. 
 /opt (on *nix and OS X) and C:\ (on Windows) are probably safe places.
 
-See wiki page http://mifos.org/developers/install-mifos/developers/install-mifos/install-cygwin for notes 
-on getting up and running on windows with cygwin.  
 
-
-JBoss and MySQL on Windows choose "Program Files" as the default location on Windows; 
+Tomcat and MySQL on Windows choose "Program Files" as the default location on Windows; 
 this does not seem to cause problems. MySQL may require a custom installation 
 in order to choose a non-standard location.
 
-You may need to set lower_case_table_name=1 parameter on mysqld to avoid table-name case errors when building/running the junit test suite in linux.  See this page fro more details: http://www.mysql.org/doc/refman/5.0/en/identifier-case-sensitivity.html
+You may need to set lower_case_table_name=1 parameter on mysqld to avoid table-name case errors 
+when building/running the junit test suite in linux.  
+See this page fro more details: http://www.mysql.org/doc/refman/5.0/en/identifier-case-sensitivity.html
 
 
 3. Set up the Environment.
@@ -94,29 +90,15 @@ You may need to set lower_case_table_name=1 parameter on mysqld to avoid table-n
 
    
 JAVA_HOME	The location of your JDK install
-JBOSS_HOME	The location of your JBoss install (if using JBoss)
+CATALINA_HOME	The location of your Tomcat install 
 ANT_HOME	The location of your Ant install
-PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your path or visible to your IDE, if you choose to build and debug in something like Eclipse or NetBeans.
+PATH		Ensure that JAVA_HOME/bin, CATALINA_HOME/bin, and ANT_HOME/bin are in your path or visible to your IDE, 
+		if you choose to build and debug in something like Eclipse or NetBeans.
+
+    It's often convenient to have these set from a script.
 
 
-   It's often convenient to have these set from a script.
-
-4. Create a Mifos server instance under JBoss
-
-   We will use the 'default' configuration that comes with the JBoss
-   distribution as our template. Make a copy of
-   $JBOSS_HOME/server/default and its contents to
-   $JBOSS_HOME/server/mifos. On *nix:
-
-       cp -pr $JBOSS_HOME/server/default $JBOSS_HOME/server/mifos
-
-   Be sure that a full copy of default is made, and not a symbolic
-   link, as this can have undesirable consequences. On Windows,
-   perform a copy operation of $JBOSS_HOME/server/default in Windows
-   Explorer, renaming it to $JBOSS_HOME/server/mifos.  Also, you do need 
-   a full copy of the default and not the "all" or "minimal". (case sensitive)
-
-5. Configure the mifos build
+4. Configure the mifos build
 
    There are some configuration files in the directory called conf.
    You shouldn't need to change very many things here.  The files 
@@ -129,7 +111,7 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
    settings "hibernate.connection.username" and "hibernate.connection.password"
    should also be adjusted to match the configuration of your mysql server.
    
-6. Install the mifos database
+5. Install the mifos database
    Invoke the ant target 'build_db' to install the mifos
    database:
 
@@ -150,7 +132,7 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
 
    Then reinvoke the ant build_db target.
 
-7. Build the software
+6. Build the software
 
    Invoke the build:
 
@@ -160,25 +142,26 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
    a runnable Mifos war.  To see a list of useful build targets we've
    pre-defined, invoke ant with the -p switch.
 
-  if ant fail at "build_test_db" task, verify that  "testdb.user" 
-  and "testdb.pwd" is  correctly specified in "build.properties" 
-  under "conf" folder of mifos as per your Mysql environment
-
+   if ant faild at "build_test_db" task, verify that  "testdb.user" 
+   and "testdb.pwd" is  correctly specified in "build.properties" 
+   under "conf" folder of mifos as per your Mysql environment
 
 If you want to skip running the junit tests, you can do so with:
 
-ant clean copy_files compile war 
+	ant clean copy_files compile war 
 
 
-8. Deploy Mifos
+7. Deploy Mifos
 
-   copy dist/mifos.war to $JBOSS_HOME/server/mifos/deploy
+   copy dist/mifos.war to $CATALINA_HOME/webapps/
 
-   For jetty, copy it to the webapps subdirectory of the directory
-       where you unpacked jetty.
-   
+ 
    The war file contains default database parameters like 
    username=root, password=mysql.
+   
+
+**Note the instructions below for setting up non-default settings may not work - this is being investigated currently.
+
    If you want non-default settings, create a file deploymifosDB.properties
    
    Here is an example of what to put in that file:
@@ -195,40 +178,32 @@ ant clean copy_files compile war
 
    Copy the above contents into the file and change the relevant values. 
 
-   For JBOSS, put the file into the server $JBOSS_HOME/server/mifos/conf folder.
+   Put the file into the server $CATALINA_HOME/conf folder.
 
-   If the above mentioned file is not present the application 
-   takes the default parameters 
-   present in the war file for database connection.
+   If the above mentioned file is not present the application takes the default parameters present in the war file for database connection.
 
-9. Start Mifos
+8. Start Mifos
 
-   Start JBoss, specifying 'mifos' as the server configuration. For
-   example:
+   Start Tomcat:
 
-       $JBOSS_HOME/bin/run.sh -c mifos
+       $CATALINA_HOME/bin/startup.sh
 
    or, on Windows:
-       %JBOSS_HOME%/bin/run.bat -c mifos
+       %CATALINA_HOME%/bin/startup.bat -c mifos
        
-   Jetty example:
-       cd <directory in which you installed jetty>
-       java -jar start.jar
-
 Now, time to try it out!  You should be able to go to:
       http://localhost:8080/mifos
 
 
-10. Stopping Mifos
+9. Stopping Mifos
 
-   Stop the JBoss/jetty/tomcat web server as described in the web
-   server documentation, with CTRL-C at
-   the console, or using the shutdown scripts provided with the web
+   Stop the Tomcat web server as described in the web  server documentation, 
+   with CTRL-C at the console, or using the shutdown scripts provided with the web
    server distribution.
 
-11. Securing Mifos
+10. Securing Mifos
 
-   The default install of JBoss exposes a JMX management
+   The default install of Tomcat exposes a management
    console. Consult the JBoss documentation for steps on how to secure
    the management facility.
 
