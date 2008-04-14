@@ -277,8 +277,21 @@
 	    		((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
 	    ]]>
     </query>					  
-	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
- 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =date(:DATE_OFBIRTH) and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =date(:DATE_OFBIRTH) and client.customerId !=:customerId)]]>
+	<query name="Customer.getClosedClientBasedOnNameAndDateOfBirth">
+ 	    <![CDATA[select count(*) 
+ 	    	from org.mifos.application.customer.client.business.ClientBO as client 
+ 	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
+ 	    	and client.customerStatus.id=:clientStatus
+			and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+		]]>
+	</query>
+	<query name="Customer.getNonClosedClientBasedOnNameAndDateOfBirth">
+ 	    <![CDATA[select count(*) 
+ 	    	from org.mifos.application.customer.client.business.ClientBO as client 
+ 	    	where client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth=date(:DATE_OFBIRTH) 
+ 	    	and client.customerStatus.id!=:clientStatus
+			and ((:customerId = 0) or (:customerId != 0 and client.customerId !=:customerId))
+		]]>
 
 <!--  NOTE: care must be taken with the query above to use java.sql.Date objects and not java.util.Date objects when clients
 		A more defensive query would be as below, where we explicity ignore time information more fine grained than "day".

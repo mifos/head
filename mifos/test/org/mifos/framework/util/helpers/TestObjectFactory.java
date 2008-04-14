@@ -462,12 +462,13 @@ public class TestObjectFactory {
 
 	public static ClientBO createClient(String customerName,
 			CustomerStatus status, CustomerBO parentCustomer) {
-		return createClient(customerName, status, parentCustomer,getFees(), (String) null);
+		return createClient(customerName, status, parentCustomer,getFees(), (String) null, 
+				new Date(1222333444000L));
 	}
 
 	public static ClientBO createClient(String customerName,
 			CustomerStatus status, CustomerBO parentCustomer,
-			List<FeeView> fees, String governmentId) {
+			List<FeeView> fees, String governmentId, Date dateOfBirth) {
 		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
 				1, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
 		ClientNameDetailView clientNameDetailView = clientNameView(
@@ -479,7 +480,7 @@ public class TestObjectFactory {
 			client = new ClientBO(TestUtils.makeUserWithLocales(),
 					customerName, status, null, null, null, null, fees, null,
 					PersonnelConstants.SYSTEM_USER, SAMPLE_BRANCH_OFFICE,
-					parentCustomer, new Date(1222333444000L), governmentId, null,
+					parentCustomer, dateOfBirth, governmentId, null,
 					null, YesNoFlag.YES.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null);
 			client.save();

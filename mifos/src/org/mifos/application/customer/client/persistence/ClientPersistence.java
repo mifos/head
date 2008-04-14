@@ -64,6 +64,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientPersistence extends Persistence {
 
@@ -100,6 +101,7 @@ public class ClientPersistence extends Persistence {
 		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
+    // Returns true if another client with same govt id is found with a state other than closed
 	public boolean checkForDuplicacyOnGovtIdForNonClosedClients(
 			String governmentId, Integer customerId)
 			throws PersistenceException {
@@ -108,23 +110,21 @@ public class ClientPersistence extends Persistence {
 				governmentId, customerId);
 	}
 
-	public boolean checkForDuplicacyOnGovtIdForClosedClients(
-			String governmentId, Integer customerId)
-	throws PersistenceException {
+	// Integer.valueOf(0) because of the way query is written in CustomerBO.hbm.xml
+	// Returns true if another client in closed state with same govt id is found
+	public boolean checkForDuplicacyOnGovtIdForClosedClients(String governmentId) throws PersistenceException {
 		return checkForClientsBasedOnGovtId(
 				NamedQueryConstants.GET_CLOSED_CLIENT_BASEDON_GOVTID,
-				governmentId, customerId);
-	}
-
-	// Integer.valueOf(0) because of the way query is written in CustomerBO.hbm.xml
-	public boolean checkForDuplicacyOnGovtIdForClosedClients(String governmentId) throws PersistenceException {
-		return checkForDuplicacyOnGovtIdForClosedClients(
 				governmentId, Integer.valueOf(0));
 	}
 	
 	private boolean checkForClientsBasedOnGovtId(String queryName,
 			String governmentId, Integer customerId)
 			throws PersistenceException {
+		
+		// if government id is null or empty, do not match against closed client's government id, doesn't make sense 
+		if(StringUtils.isNullOrEmpty(governmentId)) return false;
+		
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
 		queryParameters.put("GOVT_ID", governmentId);
@@ -135,19 +135,35 @@ public class ClientPersistence extends Persistence {
 		return ((Long) queryResult.get(0)).intValue() > 0;
 	}
 	
-	public boolean checkForDuplicacyOnName(
-			String name, Date dob, Integer customerId) 
-	throws PersistenceException {
-			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("clientName",name);
-			queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
-			queryParameters.put("DATE_OFBIRTH", dob);
-			queryParameters.put("customerId", customerId);
-			List queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_CLIENT_BASEDON_NAME_DOB, 
-					queryParameters);
-			return ((Number)queryResult.get(0)).intValue()>0;
-			
+	// returns true if a duplicate client is found with same display name and dob in state other than closed 
+	public boolean checkForDuplicacyForNonClosedClientsOnNameAndDob(String name,
+			Date dob, Integer customerId) throws PersistenceException {
+		return checkForDuplicacyBasedOnName(
+				NamedQueryConstants.GET_NON_CLOSED_CLIENT_BASED_ON_NAME_DOB, name,
+				dob, customerId);
+	}
+
+	// returns true if a duplicate client is found with same display name and dob in closed state
+	public boolean checkForDuplicacyForClosedClientsOnNameAndDob(String name,
+			Date dob) throws PersistenceException {
+		return checkForDuplicacyBasedOnName(
+				NamedQueryConstants.GET_CLOSED_CLIENT_BASED_ON_NAME_DOB, name,
+				dob, Integer.valueOf(0));
+	}
+	
+	private boolean checkForDuplicacyBasedOnName(String queryName, String name,
+			Date dob, Integer customerId) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("clientName", name);
+		queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
+		queryParameters.put("DATE_OFBIRTH", dob);
+		queryParameters.put("customerId", customerId);
+		queryParameters.put("clientStatus", CustomerStatus.CLIENT_CLOSED
+				.getValue());
+		List queryResult = executeNamedQuery(
+				queryName,
+				queryParameters);
+		return ((Number) queryResult.get(0)).intValue() > 0;
 	}
 
 	public Blob createBlob(InputStream picture) throws PersistenceException{

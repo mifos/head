@@ -242,15 +242,32 @@ public class ClientCustAction extends CustAction {
 				CustomerConstants.PENDING_APPROVAL_DEFINED,
 				CustomerConstants.NO, request);
 		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
-		checkForGovtIdDuplicacy(request, actionForm);
+		checkForGovtIdAndDisplayNameDobDuplicacy(request, actionForm);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
-	private void checkForGovtIdDuplicacy(HttpServletRequest request, ClientCustActionForm actionForm) throws PersistenceException, PageExpiredException {
-		if (new ClientPersistence()
-				.checkForDuplicacyOnGovtIdForClosedClients(actionForm
-						.getGovernmentId())) {
-			SessionUtils.addWarningMessage(request, CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+	private void checkForGovtIdAndDisplayNameDobDuplicacy(
+			HttpServletRequest request, ClientCustActionForm actionForm)
+			throws PersistenceException, PageExpiredException {
+		ClientPersistence clientPersistence = new ClientPersistence();
+		String governmentId = actionForm.getGovernmentId();
+		/* If govt id is not null or empty, check if client with same govt id is present in closed state and display warning 
+		 * otherwise if govt id is null or empty, and display name + dob combination is present in closed state display warning
+		*/
+		if (!StringUtils.isNullOrEmpty(governmentId)
+				&& clientPersistence
+						.checkForDuplicacyOnGovtIdForClosedClients(governmentId)) {
+			SessionUtils.addWarningMessage(request,
+					CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
+		}
+		else if (StringUtils.isNullOrEmpty(governmentId)
+				&& clientPersistence
+						.checkForDuplicacyForClosedClientsOnNameAndDob(
+								actionForm.getClientName().getDisplayName(), DateUtils
+										.getDateAsSentFromBrowser(actionForm
+												.getDateOfBirth()))) {
+			SessionUtils.addWarningMessage(request,
+					CustomerConstants.CLIENT_WITH_SAME_GOVT_ID_EXIST_IN_CLOSED);
 		}
 	}
 
@@ -659,7 +676,7 @@ public class ClientCustAction extends CustAction {
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
-		checkForGovtIdDuplicacy(request, actionForm);
+		checkForGovtIdAndDisplayNameDobDuplicacy(request, actionForm);
 		return mapping
 				.findForward(ActionForwards.previewEditPersonalInfo_success
 						.toString());

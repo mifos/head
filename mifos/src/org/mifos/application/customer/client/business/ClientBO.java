@@ -696,7 +696,7 @@ public class ClientBO extends CustomerBO {
 			}
 		} else {
 			try {
-				if (clientPersistence.checkForDuplicacyOnName(name, dob,
+				if (clientPersistence.checkForDuplicacyForNonClosedClientsOnNameAndDob(name, dob,
 						customerId) == true) {
 					throw new CustomerException(
 						CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,

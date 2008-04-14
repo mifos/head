@@ -540,7 +540,8 @@ public interface NamedQueryConstants {
 	public String GETCHILDCOUNT="office.getChlidCount";
 	public String CHECKOFFICENAMEUNIQUENESS="office.getOfficeWithName";
 	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
-	public String GET_CLIENT_BASEDON_NAME_DOB="Customer.getClientBasedOnNameAndDateOfBirth";
+	public String GET_NON_CLOSED_CLIENT_BASED_ON_NAME_DOB="Customer.getNonClosedClientBasedOnNameAndDateOfBirth";
+	public String GET_CLOSED_CLIENT_BASED_ON_NAME_DOB="Customer.getClosedClientBasedOnNameAndDateOfBirth";
 	public String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER="product.getActiveOfferingsForCustomer";
 	public String GET_NON_CLOSED_CLIENT_BASEDON_GOVTID="Customer.getNonClosedClientBasedOnGovtId";
 	public String GET_CLOSED_CLIENT_BASEDON_GOVTID="Customer.getClosedClientBasedOnGovtId";
