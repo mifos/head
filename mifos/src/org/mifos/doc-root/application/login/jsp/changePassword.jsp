@@ -103,11 +103,10 @@
 	<table width="93%" border="0" cellpadding="0" cellspacing="0">
 		<tr>
 			<td align="center"> <html-el:submit
-				style="width:70px" styleClass="buttn">
+				styleClass="buttn">
 				<mifos:mifoslabel name="login.submit" bundle="LoginUIResources"/>
 			</html-el:submit>&nbsp; <html-el:button property="cancel"
-				styleClass="cancelbuttn" style="width:70px"
-				onclick="fnCancel()">
+				styleClass="cancelbuttn" onclick="fnCancel()">
 				<mifos:mifoslabel name="login.cancel" bundle="LoginUIResources"/>
 			</html-el:button></td>
 		</tr>

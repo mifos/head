@@ -233,13 +233,12 @@ function goToCancelPage(){
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<!-- Next are submit and cancel button -->
-									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px;">
+									<td align="center"><html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="meeting.button.save"
 											bundle="MeetingResources"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
-										value="Cancel" styleClass="cancelbuttn" style="width:70px">
+										value="Cancel" styleClass="cancelbuttn">
 										<mifos:mifoslabel name="office.button.cancel"
 											bundle="OfficeResources"></mifos:mifoslabel>
 									</html-el:button></td>

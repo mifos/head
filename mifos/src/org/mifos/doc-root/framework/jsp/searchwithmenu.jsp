@@ -18,8 +18,7 @@
 	<table width="143" border="0" cellspacing="0" cellpadding="10">
 		<tr>
 			<td align="right"><input type="button" name="Button33" value="Search"
-				onClick="" class="buttn"
-				style="width:60px;"></td>
+				onClick="" class="buttn"></td>
 		</tr>
 	</table>
 

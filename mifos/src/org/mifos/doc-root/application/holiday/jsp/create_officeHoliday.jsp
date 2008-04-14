@@ -159,13 +159,13 @@
 								<c:when
 									test="${(BusinessKey.accountType.accountTypeId!=1) }"> <!--&& (holidayActionForm.amount == '0.0'||holidayActionForm.amount=='0')}"-->
 									<html-el:submit styleClass="buttn"
-										style="width:130px;" property="Preview"> 
+										property="Preview"> 
 										<mifos:mifoslabel name="holiday.button.preview" bundle="HolidayUIResources"><!--holiday.reviewtransaction"-->
 										</mifos:mifoslabel>
 									</html-el:submit>
 								</c:when>
 								<c:otherwise>
-									<html-el:submit styleClass="buttn" style="width:130px;" property="Preview">
+									<html-el:submit styleClass="buttn" property="Preview">
 										<mifos:mifoslabel name="holiday.reviewtransaction"  bundle="HolidayUIResources">
 										</mifos:mifoslabel>
 									</html-el:submit>
@@ -173,14 +173,14 @@
 							</c:choose> &nbsp; <c:choose>
 								<c:when test="${param.input == 'loan'}">
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewHolidays()"><!--ViewHolidays(this.form)"-->
+										onclick="ViewHolidays()"><!--ViewHolidays(this.form)"-->
 										<mifos:mifoslabel name="holiday.button.cancel" bundle="HolidayUIResources"></mifos:mifoslabel>
 									</html-el:button>
 
 								</c:when>
 								<c:otherwise>
 									<html-el:button styleClass="cancelbuttn" property="Cancel"
-										style="width:65px;" onclick="ViewHolidays()">
+										onclick="ViewHolidays()">
 										<mifos:mifoslabel name="holiday.button.cancel" bundle="HolidayUIResources"></mifos:mifoslabel>
 									</html-el:button>
 
