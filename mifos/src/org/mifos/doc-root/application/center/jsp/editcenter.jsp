@@ -198,8 +198,7 @@
 								<!-- MFI Joining Date -->
 								<tr class="fontnormal">
 									<td align="right">
-										<mifos:mifoslabel name="Center.MfiJoiningDate" bundle="CenterUIResources"></mifos:mifoslabel>
-										:
+										<mifos:mifoslabel name="Center.MfiJoiningDate" bundle="CenterUIResources" mandatory="yes" isColonRequired="yes"></mifos:mifoslabel>
 									</td>
 									<td>
 										<date:datetag property="mfiJoiningDate" renderstyle="simple"/>
