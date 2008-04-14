@@ -222,19 +222,15 @@ public class SurveyInstanceAction extends BaseAction {
 	public static String getGlobalNum(SurveyInstance instance) {
 		SurveyType type = instance.getSurvey().getAppliesToAsEnum();
 		if (type == SurveyType.ALL) {
-			String globalNum = instance.getCustomer().getGlobalCustNum();
-			if (globalNum == null) {
-				globalNum = instance.getAccount().getGlobalAccountNum();
-			}
-			return globalNum;
+			if (instance.getCustomer() != null)
+				return instance.getCustomer().getGlobalCustNum();
+			return instance.getAccount().getGlobalAccountNum();
 		}
 		else if (type == SurveyType.CLIENT || type == SurveyType.CENTER
 				|| type == SurveyType.GROUP) {
 			return instance.getCustomer().getGlobalCustNum();
 		}
-		else {
-			return instance.getAccount().getGlobalAccountNum();
-		}
+		return instance.getAccount().getGlobalAccountNum();
 	}
 	
 	public ActionForward delete(ActionMapping mapping, ActionForm form,
