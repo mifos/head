@@ -138,21 +138,33 @@
 		</sql>
     </target>	
 	
-    <target name="execute_master_etl" depends="compile, create_schema">
+    <target name="execute_master_etl" depends="compile">
         <echo>Executing MifOS ETLs</echo>
+    	
+    	 <tstamp>
+    	    <format property="start.etl" pattern="EEE, d MMM yyyy HH:mm:ss:S Z"/>
+    	 </tstamp>    	
 
-    	<java
+    	 <java
             classname="org_mifos_etl.masteretlloader.MasterETLLoader"
             maxmemory="${max.memory}"
             fork="true"
 			dir="${basedir}">
-            <arg value="--context=Default"/>
+            <arg value="context=Default"/>
             <classpath>
 				<path refid="class.path"/>
 				<pathelement location="${build.classes}"/>
             	<pathelement location="${conf.dir}"/>
             </classpath>
         </java>
+ 		 
+    	<tstamp>
+    		<format property="stop.etl" pattern="EEE, d MMM yyyy HH:mm:ss:S Z"/>
+    	</tstamp> 
+    	<echo>Successfully executed all the ETLs</echo>
+    	<echo>ETL Execution started at  :${start.etl}</echo>
+    	<echo>ETL Execution finished at :${stop.etl}</echo>
+    	
     </target>	
 
 </project>
