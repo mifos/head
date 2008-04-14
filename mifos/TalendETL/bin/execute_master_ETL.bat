@@ -1,1 +1,3 @@
+echo Started execution of ETLs at %TIME%
 java -Xms128m -Xmx1024m -classpath %classpath%;.;..\;..\conf;..\lib\activation.jar;..\lib\axis.jar;..\lib\javacsv.jar;..\lib\jaxrpc.jar;..\lib\mail.jar;..\lib\saaj.jar;..\lib\systemRoutines.jar;..\lib\advancedLookupLib.jar;..\lib\userRoutines.jar;..\lib\commons-discovery-0.2.jar;..\lib\mysql-connector-java-5.1.0-bin.jar;..\lib\talend_file_enhanced_20070724.jar;..\lib\commons-collections-3.2.jar org_mifos_etl.masteretlloader.MasterETLLoader --context=Default
+echo Finished execution at %TIME%
