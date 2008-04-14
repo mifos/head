@@ -59,7 +59,7 @@ public class TestSurvey extends MifosTestCase {
 	
 	public void testCreateSurveyInstance() throws Exception {
 		Survey survey = new Survey();
-		SurveyInstance instance = survey.createInstance();
+		SurveyInstance instance = survey.createSurveyInstance();
 		assertTrue("Instance should be instance of SurveyInstance, not PpiSurveyInstance",
 				!(PPISurvey.class.isInstance(survey)));
 		}

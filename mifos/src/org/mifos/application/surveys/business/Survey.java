@@ -88,7 +88,7 @@ public class Survey implements Serializable {
 	 * <p>
 	 * @see {@link PpiSurvey.createInstance()}
 	 */
-	public SurveyInstance createInstance() {
+	public SurveyInstance createSurveyInstance() {
 		return new SurveyInstance();
 	}
 	

@@ -29,6 +29,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.ppi.business.PPISurveyInstance;
 import org.mifos.application.ppi.helpers.Country;
 import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -489,12 +490,10 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(nonPoorMax)", "100");
 		addRequestParameter("method","preview");
 		actionPerform();
-		//verifyForward("preview_success");
 		verifyNoActionErrors();
 
 		addRequestParameter("method","update");
 		actionPerform();
-		//verifyForward("update_success");
 		verifyNoActionErrors();
 
 		ClientBO client = createClient();
@@ -527,8 +526,6 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter("method", "preview");
 		actionPerform();
-//		verifyForward("preview_success_ppi");
-//		verifyForward("preview_success");
 		verifyNoActionErrors();
 
 		addRequestParameter("method", "create");
@@ -541,7 +538,11 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
-		assertTrue(PPISurvey.class.isInstance(retrievedInstance.getSurvey()));
+		assertTrue(retrievedInstance instanceof PPISurveyInstance);
+		assertTrue(retrievedInstance.getSurvey() instanceof PPISurvey);
+		assertEquals(0, ((PPISurveyInstance)retrievedInstance).getScore());
+		assertEquals(82.2, ((PPISurveyInstance)retrievedInstance).getBottomHalfBelowPovertyLinePercent());
+		assertEquals(6.2, ((PPISurveyInstance)retrievedInstance).getTopHalfBelowPovertyLinePercent());
 	}
 
 	public void testChooseSurveyForClient() throws Exception {

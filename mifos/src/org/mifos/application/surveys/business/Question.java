@@ -89,7 +89,6 @@ public class Question implements Serializable, Comparable<Question> {
 	}
 
 	public void setNumericMax(Integer numericMax) {
-		
 		this.numericMax = numericMax;
 	}
 

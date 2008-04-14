@@ -85,9 +85,9 @@ public class PPISurvey extends Survey {
 	 * <p>
 	 * @see {@link PpiSurvey.createInstance()}
 	 */
-
+	@Override
 	public SurveyInstance createSurveyInstance() {
-		return new PpiSurveyInstance();
+		return new PPISurveyInstance();
 	}
 
 	public void setCountry(Country country) {

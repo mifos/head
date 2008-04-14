@@ -7,6 +7,7 @@ import org.mifos.application.surveys.business.SurveyResponse;
 
 public class PPICalculator {
 	
+	// TODO: am I now redundant? see PPISurveyInstance.computeScore()
 	public static int calculateScore(SurveyInstance instance) {
 		int sum = 0;
 		

@@ -35,6 +35,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.ppi.business.PPISurveyInstance;
 import org.mifos.application.ppi.helpers.PovertyBand;
 import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.SurveysConstants;
@@ -284,15 +285,13 @@ public class SurveyInstanceAction extends BaseAction {
 		Survey survey = null;
 		int surveyId = instance.getSurvey().getSurveyId();
 		try{
-			survey = 
-				persistence.getPPISurvey(surveyId);
+			survey = persistence.getPPISurvey(surveyId);
 		} catch (ObjectNotFoundException e) {
 			survey = persistence.getSurvey(surveyId);
 		}
 		
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
-		List<SurveyResponse> responses =
-			persistence.retrieveResponsesByInstance(instance);
+		List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance);
 		instance.setSurveyResponses(new TreeSet<SurveyResponse>(responses));
 		BusinessObject businessObject;
 		String businessObjectName;
@@ -303,42 +302,31 @@ public class SurveyInstanceAction extends BaseAction {
 		// this is kinda a hack... pass it in from the referring page... but 
 		// probably better than trying to retrieve each from from the db
 		if (surveyType == SurveyType.ALL) {
-			surveyType = SurveyType.fromString(
-					actionForm.getValue("surveyType"));
+			surveyType = SurveyType.fromString(actionForm.getValue("surveyType"));
 		}
 		
 		globalNum = getGlobalNum(instance);
 		businessObjectName = getBusinessObjectName(surveyType, globalNum);
-		
 		businessObject = getBusinessObject(surveyType, globalNum);
 		
 		request.setAttribute(SurveysConstants.KEY_GLOBAL_NUM, globalNum);
 		request.setAttribute(SurveysConstants.KEY_INSTANCE, instance);
-		request.setAttribute(
-				SurveysConstants.KEY_INSTANCE_RESPONSES, responses);
-		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME,
-				businessObjectName);
-		request.getSession().setAttribute(Constants.BUSINESS_KEY,
-				businessObject);
-		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE,
-				surveyType);
-		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL,
-				getRedirectUrl(surveyType, globalNum));
+		request.setAttribute(SurveysConstants.KEY_INSTANCE_RESPONSES, responses);
+		request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, businessObjectName);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, businessObject);
+		request.getSession().setAttribute(SurveysConstants.KEY_BUSINESS_TYPE, surveyType);
+		request.setAttribute(SurveysConstants.KEY_REDIRECT_URL, getRedirectUrl(surveyType, globalNum));
 		
 		/* Another hack
-		 * TODO: fix this so isInstance is not required
+		 * TODO: fix this so instanceof is not required
 		 */
-		if (PPISurvey.class.isInstance(survey)) {
+		if (survey instanceof PPISurvey) {
 			instance.setSurvey(survey);
-			request.setAttribute("povertyBand",
-					PovertyBand.fromInt(PPICalculator.calculateScore(instance),
-							(PPISurvey) survey));
-			return mapping.findForward(ActionForwards.get_success_ppi
-					.toString());
+			request.setAttribute("povertyBand", 
+					PovertyBand.fromInt(((PPISurveyInstance) instance).getScore(), (PPISurvey) survey));
+			return mapping.findForward(ActionForwards.get_success_ppi.toString());
 		}
-		else
-			return mapping.findForward(ActionForwards.get_success
-				.toString());
+		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
 	public ActionForward create_entry(ActionMapping mapping, ActionForm form,
@@ -369,7 +357,7 @@ public class SurveyInstanceAction extends BaseAction {
 		String displayName = getBusinessObjectName(businessObject);
 		request.setAttribute(
 				SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
-		if (PPISurvey.class.isInstance(survey))
+		if (survey instanceof PPISurvey)
 			return mapping.findForward(ActionForwards.create_entry_success_ppi
 					.toString());
 		else
@@ -525,7 +513,7 @@ public class SurveyInstanceAction extends BaseAction {
 				SurveysConstants.KEY_SURVEY);
 		survey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, survey.getSurveyId());
 		String ppi = "";
-		if (PPISurvey.class.isInstance(survey))
+		if (survey instanceof PPISurvey)
 			ppi = "_ppi";
 		
 		Map<String, Object> results = null;
@@ -554,7 +542,7 @@ public class SurveyInstanceAction extends BaseAction {
 					.toString() + ppi);
 		}
 		
-		SurveyInstance instance = survey.createInstance();
+		SurveyInstance instance = survey.createSurveyInstance();
 
 		instance.setSurvey(survey);
 		Set<SurveyResponse> surveyResponses = new TreeSet<SurveyResponse>();
@@ -582,23 +570,20 @@ public class SurveyInstanceAction extends BaseAction {
 		
 		instance.setSurveyResponses(surveyResponses);
 		
-		if (PPISurvey.class.isInstance(survey)) {
+		if (survey instanceof PPISurvey) {
+			((PPISurveyInstance) instance).initialize();
 			request.setAttribute("povertyBand",
-					PovertyBand.fromInt(PPICalculator.calculateScore(instance),
-							(PPISurvey)survey));
+					PovertyBand.fromInt(((PPISurveyInstance) instance).getScore(), (PPISurvey)survey));
 		}
 		
-		actionForm.setValue("instanceStatus", Integer.toString(status
-				.getValue()));
+		actionForm.setValue("instanceStatus", Integer.toString(status.getValue()));
 		
 		request.setAttribute("surveyInstance", instance);
 		request.setAttribute("dateSurveyed", actionForm
 				.getDateValue("dateSurveyed"));
 		request.setAttribute("officerName", actionForm.getValue("officerName"));
 		
-		
-		return mapping.findForward(
-				ActionForwards.preview_success.toString() + ppi);
+		return mapping.findForward(	ActionForwards.preview_success.toString() + ppi);
 	}
 	
 	public ActionForward clear(ActionMapping mapping, ActionForm form,
@@ -674,8 +659,7 @@ public class SurveyInstanceAction extends BaseAction {
 		SurveysPersistence persistence = new SurveysPersistence();
 		PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
-		BusinessObject businessObject = (BusinessObject) results
-				.get(Constants.BUSINESS_KEY);
+		BusinessObject businessObject = (BusinessObject) results.get(Constants.BUSINESS_KEY);
 
 		// partially completed instances not supported yet
 		InstanceStatus status = InstanceStatus.COMPLETED; 
@@ -689,20 +673,18 @@ public class SurveyInstanceAction extends BaseAction {
 		 * Dispatch instance creation to the survey, to be sure that correct type
 		 * of instance is created (SurveyInstance versus PpiSurveyInstance).
 		 */
-		SurveyInstance instance = survey.createInstance();
+		SurveyInstance instance = survey.createSurveyInstance();
 		
 		instance.setSurvey(survey);
 		instance.setDateConducted(dateConducted);
 		instance.setCompletedStatus(status);
 		instance.setOfficer(officer);
 		
-		
 		UserContext userContext = getUserContext(request);
-		PersonnelBO currentUser = 
-			personnelPersistence.getPersonnelById(userContext.getId());
+		PersonnelBO currentUser = personnelPersistence.getPersonnelById(userContext.getId());
 		instance.setCreator(currentUser);
 		
-		if (CustomerBO.class.isInstance(businessObject)) {
+		if (businessObject instanceof CustomerBO) {
 			instance.setCustomer((CustomerBO) businessObject);
 		}
 		else { // Account
@@ -716,7 +698,7 @@ public class SurveyInstanceAction extends BaseAction {
 		 * then set the foreign key.
 		 * Instead, use Hibernate's ability to manage collections for you automatically.
 		 */
-		List<SurveyResponse> surveyResponses = new ArrayList<SurveyResponse>();
+		Set<SurveyResponse> surveyResponses = new TreeSet<SurveyResponse>();
 		List<String> responseKeys = new LinkedList<String>();
 		String prefix = "response_";
 		for (String key : formInputs.keySet()) {
@@ -729,19 +711,20 @@ public class SurveyInstanceAction extends BaseAction {
 			SurveyResponse surveyResponse = new SurveyResponse();
 			surveyResponse.setSurveyQuestion(survey.getSurveyQuestionById(
 					Integer.parseInt(key.substring(prefix.length()))));
-			String stringValue = (String) formInputs.get(key);
-			surveyResponse.setStringValue(stringValue);
+			surveyResponse.setStringValue((String) formInputs.get(key));
 			surveyResponse.setInstance(instance);
 			surveyResponses.add(surveyResponse);
 			persistence.createOrUpdate(surveyResponse);
 		}
 		
+		instance.setSurveyResponses(surveyResponses);
+		if (instance instanceof PPISurveyInstance)
+			((PPISurveyInstance) instance).initialize();
+		
 		persistence.createOrUpdate(instance);
 		SurveyType businessType = (SurveyType) request.getSession()
 				.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
-		String redirectUrl =
-			getRedirectUrl(businessType, getGlobalNum(instance));
-		response.sendRedirect(redirectUrl);
+		response.sendRedirect(getRedirectUrl(businessType, getGlobalNum(instance)));
 		return null;
 	}
 	
@@ -749,11 +732,10 @@ public class SurveyInstanceAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SurveyType businessType = (SurveyType) request.getSession()
-		.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
+			.getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
 		String globalNum = (String)request.getSession()
-		.getAttribute(SurveysConstants.KEY_GLOBAL_NUM);
-		String redirectUrl = getRedirectUrl(businessType, globalNum);
-		response.sendRedirect(redirectUrl);
+			.getAttribute(SurveysConstants.KEY_GLOBAL_NUM);
+		response.sendRedirect(getRedirectUrl(businessType, globalNum));
 		return null;
 	}
 	
@@ -772,9 +754,7 @@ public class SurveyInstanceAction extends BaseAction {
 		else if (type == SurveyType.LOAN) {
 			return "loanAccountAction.do?method=get&globalAccountNum=" + globalNum;
 		}
-		else {
-			throw new NotImplementedException();
-		}
+		throw new NotImplementedException();
 	}
 
 	@Override
