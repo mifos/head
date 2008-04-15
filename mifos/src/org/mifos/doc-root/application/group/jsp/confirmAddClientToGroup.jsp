@@ -45,6 +45,8 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -57,6 +59,8 @@
 	addGroupMembershipForm.submit();
   }
 </script>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="addGroupMembershipAction.do?method=updateParent"
 			onsubmit="func_disableSubmitBtn('submitButton');">
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
@@ -77,23 +81,23 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
-								name="client.Add" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
+								value="${BusinessKey.displayName}" /> - </span> 
+								<fmt:message key="Group.Add">
+				  <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  </fmt:message>
 							<mifos:mifoslabel name="client.MembershipLink"
 								bundle="ClientUIResources"></mifos:mifoslabel> <span></span></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
-								name="client.EditGroupInstructions1" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="client.EditGroupInstructions2"
-								bundle="ClientUIResources"></mifos:mifoslabel>
-              				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
-  							<mifos:mifoslabel
-								name="client.EditGroupInstructions3" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel><br>
+							<td class="fontnormal">
+							<fmt:message key="Group.EditGroupInstructions">
+				  			<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  			<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+
+				  			</fmt:message>
+							
+							<br>
 						</td>
 
 						</tr>
@@ -104,7 +108,11 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><br>
-							</span>Change Group Membership: <span class="fontnormal"><c:out
+							</span>
+							<fmt:message key="Group.changeMembership">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
+							<span class="fontnormal"><c:out
 								value="${sessionScope.addGroupMembershipForm.parentGroupName}" /> <br>
 							</span></td>
 						</tr>
@@ -120,12 +128,12 @@
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center">&nbsp; <html-el:submit property="submitButton"
-								style="width:70px" styleClass="buttn">
+								styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp; &nbsp; <html-el:button
 								onclick="goToCancelPage();" property="cancelButton"
-								styleClass="cancelbuttn" style="width:70px">
+								styleClass="cancelbuttn" >
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

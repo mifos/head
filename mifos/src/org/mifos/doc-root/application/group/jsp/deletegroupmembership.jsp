@@ -50,6 +50,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script>
@@ -58,6 +59,8 @@
 		groupTransferActionForm.submit();
 	    }
 	</script>
+	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupTransferAction.do?method=removeGroupMemberShip">
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
@@ -79,10 +82,10 @@
                 <tr>
                   <td width="62%" class="headingorange">
 					<span class="heading">
-					<c:out value="${BusinessKey.displayName}" /> </span> - <mifos:mifoslabel
-						name="Groupe.remove" bundle="GroupUIResources" /> <mifos:mifoslabel
-						name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-						name="Group.membership" bundle="GroupUIResources" />
+					<c:out value="${BusinessKey.displayName}" /> </span> - 
+						<fmt:message key="Group.removeMembership">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+						</fmt:message>
 				  </td>
 				</tr>
 			</table>
@@ -142,10 +145,11 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="fontnormalbold"><br><span class="fontnormal">
-							<mifos:mifoslabel name="Group.transferbranchMsg3" /> <mifos:mifoslabel
-								name="Group.editMag2" /> <mifos:mifoslabel
-								name="Group.editGrpMemberShip" /> <mifos:mifoslabel
-								name="Group.dot" /> </span></td>
+							<mifos:mifoslabel name="Group.transferbranchMsg3" /> 
+								<fmt:message key="Group.editMag2ReturnToEdit">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+						</fmt:message>
+								</span></td>
 						</tr>
 					</table>
 					
@@ -157,13 +161,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp; &nbsp; <html-el:button onclick="goToCancelPage();"
-								property="cancelButton" styleClass="cancelbuttn"
-								style="width:70px">
+								property="cancelButton" styleClass="cancelbuttn">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>

@@ -6,6 +6,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script type="text/javascript">
  
  function goToCancelPage()
@@ -18,6 +19,8 @@
  </script>
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <html-el:form method="post" action="centerCustAction.do">
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -41,10 +44,9 @@
 									<td><img src="pages/framework/images/timeline/bigarrow.gif"
 										width="17" height="17"></td>
 									<td class="timelineboldorange">
-									<mifos:mifoslabel
-										name="Group.select" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel
-										name="${ConfigurationConstants.CENTER}"></mifos:mifoslabel></td>
+									<fmt:message key="Center.select">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+									</fmt:message></td>
 								</tr>
 							</table>
 							</td>

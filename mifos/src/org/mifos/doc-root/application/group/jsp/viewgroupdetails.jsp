@@ -45,9 +45,12 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set
@@ -71,10 +74,11 @@
 								class="fontnormal"><c:if
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
 								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-									<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.status1"
-										bundle="GroupUIResources"></mifos:mifoslabel>
+									
+									<fmt:message key="Group.editStatus">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>
+										
 								</a>
 							</c:if></td>
 						</tr>
@@ -98,25 +102,29 @@
 								name="Group.loanofficer" bundle="GroupUIResources"></mifos:mifoslabel>
 							<c:out value="${BusinessKey.personnel.displayName}" /> </span><br>
 							<br>
-							<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
-								name="Group.S" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="Group.assigned1" bundle="GroupUIResources" /></span>
+							<span class="fontnormalbold">
+								<fmt:message key="Group.clientAssign" >
+				  				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  				</fmt:message>
+								</span>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
 								<span class="fontnormal"> <a
 									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${BusinessKey.customerId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="Group.Add" bundle="GroupUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></a>
+				
+								<fmt:message key="Group.Add" >
+				  				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  				</fmt:message>
+								</a>
 								</span>
 							</c:if> <br>
-							<span class="fontnormal"> <mifos:mifoslabel
-								name="Group.groupdetailMsg1" bundle="GroupUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="Group.groupdetailMsg2"
-								bundle="GroupUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
+							<span class="fontnormal"> 
+							
+								
+								<fmt:message key="Group.groupdetailViewMsg" >
+				  				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  				</fmt:message>
 							<br>
 							</span>
 							<div id="Layer2"
@@ -150,10 +158,11 @@
 
 								</c:when>
 								<c:otherwise>
-									<mifos:mifoslabel name="Group.noclientsavailable1"
-										bundle="GroupUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel name="Group.noclientsavailable2"
-										bundle="GroupUIResources" />
+									
+										<fmt:message key="Group.noclientsavailable" >
+				  						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  						</fmt:message>
+							<br>
 								</c:otherwise>
 							</c:choose> </span><br>
 							</div>
@@ -306,9 +315,9 @@
 					<table width="96%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td width="65%" align="left" valign="top"
-								class="tableContentLightBlue"><span class="fontnormalbold"> <mifos:mifoslabel
-								name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="Group.charges" bundle="GroupUIResources"></mifos:mifoslabel>
+								class="tableContentLightBlue"><span class="fontnormalbold"> <fmt:message key="Group.charges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>
 							</span>
 							<table width="95%" border="0" align="center" cellpadding="0"
 								cellspacing="0">
@@ -390,24 +399,26 @@
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 
 						<tr>
-							<td width="63%" height="23" class="headingorange"><mifos:mifoslabel
-								name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>
+							<td width="63%" height="23" class="headingorange"><fmt:message key="Group.groupinformation">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message>
 							</td>
 							<td width="37%" align="right" class="fontnormal"><html-el:link
 								action="groupCustAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
-								<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-								<mifos:mifoslabel name="Group.groupinformation"
-									bundle="GroupUIResources"></mifos:mifoslabel>
+								
+									<fmt:message key="Group.editInformation">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
 							</html-el:link></td>
 						</tr>
 
 						<tr>
 							<td colspan="2" class="fontnormalbold"><span class="fontnormal">
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="Group.approvaldate"
-								bundle="GroupUIResources"></mifos:mifoslabel> <c:out
+							
+								<fmt:message key="Group.approvaldate">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
+								<c:out
 								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
 							<br></td>
 						</tr>
@@ -561,13 +572,14 @@
 								<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist') == true}">
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td width="59%" class="fontnormalbold"><mifos:mifoslabel
-												name="Group.centermembership&meetingdetails"
-												bundle="GroupUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-												name="${ConfigurationConstants.CENTER}"></mifos:mifoslabel>
-											<mifos:mifoslabel name="Group.membership"
-												bundle="GroupUIResources"></mifos:mifoslabel> <span
-												class="fontnormalRed"><br>
+											<td width="59%" class="fontnormalbold">
+											
+												<fmt:message key="Group.centermembership&meetingdetails">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+									</fmt:message><span
+												class="fontnormalRed">
+												
+												<br>
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" />&nbsp; <c:out
 												value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,sessionScope.UserContext)}" /><br>
@@ -580,11 +592,12 @@
 												value="${BusinessKey.parentCustomer.displayName}" /><br>
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal">
-											<html-el:link href="groupTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
-												name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}">
-											</mifos:mifoslabel> <mifos:mifoslabel name="Group.membership"
-												bundle="GroupUIResources"></mifos:mifoslabel> </html-el:link></td>
+											<html-el:link href="groupTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> 
+											
+												<fmt:message key="Group.editMembership">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+												</fmt:message> 
+												</html-el:link></td>
 										</tr>
 									</table>
 								</c:when>
@@ -645,33 +658,41 @@
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
-								name="Group.s" bundle="GroupUIResources" /> <c:out
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								
+								<fmt:message key="Group.hashof">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+					</fmt:message> 
+								<c:out
 								value="${BusinessKey.performanceHistory.activeClientCount}" />
 							</span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.Amountoflast" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								<fmt:message key="Group.Amountoflast">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>  
+								<mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
 							<c:out
 								value="${BusinessKey.performanceHistory.lastGroupLoanAmount}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.Avgindividual" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="Group.size" bundle="GroupUIResources" /> <c:out
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+							
+								<fmt:message key="Group.Avgindividual">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+					</fmt:message>   
+								<c:out
 								value="${BusinessKey.performanceHistory.avgLoanAmountForMember}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.Total" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-								name="Group.portfolio" bundle="GroupUIResources" /> <c:out
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								<fmt:message key="Group.totalPortfolio">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+					</fmt:message>    
+								
+								<c:out
 								value="${BusinessKey.performanceHistory.totalOutStandingLoanAmount}" /></span></td>
 						</tr>
 						<tr>

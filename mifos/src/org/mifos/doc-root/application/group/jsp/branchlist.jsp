@@ -41,12 +41,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script language="javascript">
   function goToCancelPage(){
 	groupCustActionForm.action="groupCustAction.do?method=cancel";
 	groupCustActionForm.submit();
   }
 </script>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="groupCustAction.do?method=preview">
@@ -63,8 +66,11 @@
                 <td width="33%"><table border="0" cellspacing="0" cellpadding="0">
                     <tr>
                       <td><img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17"></td>
-                      <td class="timelineboldorange"><mifos:mifoslabel name="Group.choosebranch" bundle="GroupUIResources"/> 
-                      <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></td>
+                      <td class="timelineboldorange">
+                      <fmt:message key="Group.choosebranch">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+						</fmt:message>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -72,7 +78,11 @@
                   <table border="0" cellspacing="0" cellpadding="0">
                     <tr>
                       <td><img src="pages/framework/images/timeline/orangearrow.gif" width="17" height="17"></td>
-                      <td class="timelineboldorangelight"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"/></td>
+                      <td class="timelineboldorangelight">
+                      <fmt:message key="Group.groupinformation">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -94,8 +104,14 @@
                         <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td class="headingorange">
-                  <span class="heading"><mifos:mifoslabel name="Group.createnew" bundle="GroupUIResources"/> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /> - </span>
-                  <mifos:mifoslabel name="Group.choosebranch" bundle="GroupUIResources"/> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></td>
+                  <span class="heading">
+                  <fmt:message key="Group.createnew">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message> - </span>
+                  <fmt:message key="Group.choosebranch">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+				</fmt:message>
+                  </td>
                 </tr>
                 <tr>
                   <td class="fontnormal"><mifos:mifoslabel name="Group.clickoffice" bundle="GroupUIResources"/>
@@ -112,7 +128,7 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+                    <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                   </td>

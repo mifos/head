@@ -45,6 +45,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
  <tiles:put name="body" type="string">
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script>
@@ -61,6 +62,8 @@ function meetingpopup(){
   
 </script>
 <SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do?method=update"  onsubmit="func_disableSubmitBtn('submitBtn')"> 
  <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
      <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -78,21 +81,23 @@ function meetingpopup(){
                 <c:out value="${sessionScope.groupCustActionForm.displayName}"/>
                      - 
                 </span>
-                 <mifos:mifoslabel name="Group.preview" bundle="GroupUIResources">  </mifos:mifoslabel>
-                 <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
-                 <mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>                                  
+                 <fmt:message key="Group.previewInformation">
+					<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message>                                 
                 </td>
                 </tr>
               <tr>
                 <td class="fontnormal">
                 <mifos:mifoslabel name="Group.previewcreatepagehead1" bundle="GroupUIResources"></mifos:mifoslabel>
-                <mifos:mifoslabel name="Group.editpreviewMsg1" bundle="GroupUIResources"></mifos:mifoslabel>
-                <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>                
-                <mifos:mifoslabel name="Group.editpreviewMsg2" bundle="GroupUIResources"></mifos:mifoslabel>                
-                <mifos:mifoslabel name="Group.editMag2" bundle="GroupUIResources"></mifos:mifoslabel> 
-				<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-				<mifos:mifoslabel name="Group.editMag3" bundle="GroupUIResources"></mifos:mifoslabel>
-                 
+               
+				
+				<fmt:message key="Group.editpreviewMsg">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message> 
+               
+                <fmt:message key="Group.editMag2ReturnToDetail">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message> 
                  </td>
               </tr>
               <tr>
@@ -107,8 +112,9 @@ function meetingpopup(){
             
               <tr>
                 <td width="100%" height="23" class="fontnormalboldorange">
-				  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>                
-                  <mifos:mifoslabel name="Group.groupinformation"  bundle="GroupUIResources"></mifos:mifoslabel>
+                  <fmt:message key="Group.groupinformation">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message> 
                 </td>
               </tr>
               
@@ -267,8 +273,10 @@ function meetingpopup(){
     			</c:forEach> 
 		      <br>
 		      </c:if>
-	<html-el:button property="editInfo" styleClass="insidebuttn" style="width:130px;" onclick="GoToEditPage()">
-		<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"/><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><c:out value=" "/><mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"/>
+	<html-el:button property="editInfo" styleClass="insidebuttn"  onclick="GoToEditPage()">
+		<fmt:message key="Group.editInformation">
+				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				</fmt:message> 
 	</html-el:button>
 </td>
               </tr>
@@ -282,10 +290,10 @@ function meetingpopup(){
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit property="submitBtn" style="width:70px" styleClass="buttn">
+                <html-el:submit property="submitBtn"  styleClass="buttn">
 			       <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
                 </html-el:submit>
-                <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage(this.form)">
+                <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 	                   <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                 </html-el:button>
                 </td>

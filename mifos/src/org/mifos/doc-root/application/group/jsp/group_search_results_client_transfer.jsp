@@ -42,6 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -51,6 +52,8 @@
 	clientTransferActionForm.submit();
   }
 </script>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form method="post" action ="clientTransferAction.do?method=cancel">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
@@ -73,23 +76,24 @@
                   <td width="62%" class="headingorange">
                   <span class="heading">
                   <c:out value="${BusinessKey.displayName}"/>
-                  </span> - <mifos:mifoslabel name="Group.change"/> 
-                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-                  <mifos:mifoslabel name="Group.membership"/></td>
+                  </span> - <fmt:message key="Group.changeMembership">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+								</fmt:message></td>
                 </tr>
               </table>
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td class="fontnormalbold"> 
                   <span class="fontnormal">
-                  <mifos:mifoslabel name="Group.groupdetailMsg1"/>
-                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-                  <mifos:mifoslabel name="Group.nameToChangeThe"/>
-                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/> 
-                  <mifos:mifoslabel name="Group.membership"/>. 
-                  <mifos:mifoslabel name="Group.editMag2"/> 
-                  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-                  <mifos:mifoslabel name="Group.editMag3"/></span> </td>
+                  <fmt:message key="Group.groupdetailMsg">
+				  <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  </fmt:message>
+				  
+                  <fmt:message key="Group.editMag2ReturnToDetail">
+				  <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  </fmt:message>
+				  
+                  </span> </td>
                 </tr>
               </table>
               
@@ -102,7 +106,7 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
                   <mifos:mifoslabel name="Group.groupname"/></td>
                   <td width="80%"><html-el:text property="searchString" maxlength="200"/>
-	                  <html-el:submit styleClass="buttn" style="width:70px;">
+	                  <html-el:submit styleClass="buttn" >
 	                  	<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
 	                  </html-el:submit>
 				  </td>
@@ -126,7 +130,7 @@
               <table width="96%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center">
-                  <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+                  <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	    	        <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 		    	  </html-el:button>
                   </td>

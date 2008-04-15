@@ -317,7 +317,7 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						<tr>
 							<td height="23" colspan="2" class="fontnormal"><span
 								class="fontnormalbold"> 
-								<fmt:message key="interestRules">
+								<fmt:message key="loan.interestRules">
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 								</fmt:message></span> <span class="fontnormal"><br>

@@ -170,16 +170,7 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	private String getResourcebundleName(String moduleName) {
-		if (moduleName.lastIndexOf("\\") > -1)
-			moduleName = moduleName.substring(moduleName.lastIndexOf("\\") + 1,
-					moduleName.length());
-		else if (moduleName.lastIndexOf("/") > -1)
-			moduleName = moduleName.substring(moduleName.lastIndexOf("/") + 1,
-					moduleName.length());
-		if (moduleName.contains("UIResources"))
-			return moduleName;
-		else
-			return moduleName + "UIResources";
+		return "LookupValueMessages";
 
 	}
 

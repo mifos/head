@@ -51,6 +51,7 @@
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
@@ -61,6 +62,8 @@
 			customerAccountActionForm.submit();
 		}
 </script>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 	  <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
@@ -68,8 +71,9 @@
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
 				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-	          	   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-			<mifos:mifoslabel name="Group.charges" bundle="GroupUIResources"/>
+	          	   <fmt:message key="Group.charges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>
 	          	</html-el:link></span>
 
 			</tr>
@@ -127,7 +131,7 @@
 					<td align="center">
 					   <html-el:button property="returnToAccountDetailsbutton"
 					       onclick="fun_cancel();"
-						     styleClass="buttn" style="width:165px;">
+						     styleClass="buttn">
 						<mifos:mifoslabel name="label.backtodetailspage" bundle="CustomerUIResources"/>
 						</html-el:button>
 					</td>

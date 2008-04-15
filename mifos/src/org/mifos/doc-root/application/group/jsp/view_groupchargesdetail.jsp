@@ -50,6 +50,7 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
@@ -58,13 +59,15 @@
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivities')}"
 			   var="recentActivities" />
 	<tiles:put name="body" type="string">
-
+	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+	<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-				</span><span class="fontnormal8ptbold"> <mifos:mifoslabel
-					name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-					name="Group.charges" bundle="GroupUIResources" /></span></td>
+				</span><span class="fontnormal8ptbold"> <fmt:message key="Group.charges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>
+					</span></td>
 			</tr>
 		</table>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -75,9 +78,12 @@
 					<font class="fontnormalRedBold"><html-el:errors
 						bundle="CenterUIResources" /></font>
 					<tr>
-						<td width="70%" class="headingorange"><mifos:mifoslabel
-							name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-							name="Group.charges" bundle="GroupUIResources" /></td>
+						<td width="70%" class="headingorange">
+						<fmt:message key="Group.charges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+					</fmt:message>
+							
+							</td>
 					</tr>
 					<tr>
 						<td align="right" class="headingorange"><img

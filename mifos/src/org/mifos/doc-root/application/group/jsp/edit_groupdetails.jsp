@@ -45,6 +45,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -66,6 +67,8 @@
 </script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
+		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<html-el:form action="groupCustAction.do?method=previewManage" onsubmit="return chkForValidDates()">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -81,19 +84,19 @@
 							<tr>
 								<td class="headingorange">
 									<span class="heading"> <c:out value="${BusinessKey.displayName}" /> - </span>
-									<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>
-
+									<fmt:message key="Group.editInformation">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
 								</td>
 							</tr>
 							<tr>
 								<td class="fontnormal">
 									<mifos:mifoslabel name="Group.editMsg1" bundle="GroupUIResources"></mifos:mifoslabel>
 									<mifos:mifoslabel name="Group.createpagehead2" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.editMag2" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.editMag3" bundle="GroupUIResources"></mifos:mifoslabel>
+									<fmt:message key="Group.editMag2ReturnToDetail">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
+									
 									<span class="mandatorytext"><font color="#FF0000"><br> *</font></span>
 									<mifos:mifoslabel name="Group.createpagehead4" bundle="GroupUIResources"></mifos:mifoslabel>
 								</td>
@@ -108,9 +111,9 @@
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}">
-									</mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
+									<fmt:message key="Group.groupDetail">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
 									<br>
 									<br>
 								</td>
@@ -230,11 +233,10 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="25%" align="right" valign="top" class="fontnormal" style="padding-top:8px;">
-									<mifos:mifoslabel name="Group.assignclientstogrouptitles1" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.assignclientstogrouptitles2" bundle="GroupUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-									<mifos:mifoslabel name="Group.assignclientstogrouptitles3" bundle="GroupUIResources"></mifos:mifoslabel>
+									<fmt:message key="Group.assignclientstogrouptitles">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message>
 
 								</td>
 								<td width="75%">
@@ -360,8 +362,8 @@
 									<c:if test="${cfdef.fieldId==cf.fieldId}">
 										<tr class="fontnormal">
 											<td width="25%" align="right">
-												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources"></mifos:mifoslabel>
-												:
+												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" mandatory="${cfdef.mandatoryStringValue}" bundle="GroupUIResources" isColonRequired="Yes"></mifos:mifoslabel>
+												
 											</td>
 											<td width="75%">
 												<c:if test="${cfdef.fieldType == 1}">
@@ -396,11 +398,11 @@
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit value="Preview" styleClass="buttn" style="width:70px;">
+									<html-el:submit  styleClass="buttn" >
 										<mifos:mifoslabel name="button.preview" bundle="GroupUIResources"></mifos:mifoslabel>
 									</html-el:submit>
 									&nbsp; &nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage(this.form)">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage(this.form)">
 										<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 									</html-el:button>
 								</td>

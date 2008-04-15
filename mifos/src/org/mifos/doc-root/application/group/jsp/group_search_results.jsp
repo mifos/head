@@ -1,10 +1,47 @@
-
+<!-- /**
+ 
+ * group_search-result.jsp    version: 1.0
+ 
+ 
+ 
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ 
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+ 
+ * All rights reserved.
+ 
+ 
+ 
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+ 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+ 
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ 
+ * and how it is applied. 
+ 
+ *
+ 
+ */-->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <script type="text/javascript">
 
@@ -17,7 +54,8 @@ function goToCancelPage()
 </script>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="groupCustAction.do">
 	<table width="90%" border="0" align="center" cellpadding="0"
 		cellspacing="0">
@@ -36,7 +74,10 @@ function goToCancelPage()
 						<tr>
 							<td><img src="pages/framework/images/timeline/bigarrow.gif"
 								width="17" height="17"></td>
-							<td class="timelineboldorange"><mifos:mifoslabel name="Group.select" /> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />/<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></td>
+							<td class="timelineboldorange"><fmt:message key="Group.selectOr">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+						    </fmt:message></td>
 						</tr>
 					</table>
 					</td>
@@ -79,14 +120,20 @@ function goToCancelPage()
 				class="paddingleftCreates">
 			<table width="96%" border="0" cellspacing="0" cellpadding="3">
 				<tr>
-					<td class="headingorange"><span class="heading"><mifos:mifoslabel name="Group.createnew" />
-                  <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /> - </span><mifos:mifoslabel name="Group.select" />  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></td>
+					<td class="headingorange"><span class="heading"><fmt:message key="Group.createnew">
+				  	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  	</fmt:message> - </span><fmt:message key="Group.select">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+							</fmt:message></td>
 				</tr>
 				<tr>
 					<td class="fontnormalbold">
-					<span class="fontnormal"><mifos:mifoslabel name="Group.searchmsg1" />
-					<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-					<mifos:mifoslabel name="Group.createpagehead3" /></span>
+					<span class="fontnormal">
+					<fmt:message key="Group.searchmsg1">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+							</fmt:message>
+							<mifos:mifoslabel name="Group.createpagehead3" />
+					</span>
 					</td>
 				</tr>
 			</table>
@@ -105,7 +152,7 @@ function goToCancelPage()
 				<tr>
 					<td><span class="fontnormal"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></span> <html-el:text
 						property="searchString" maxlength="200"/>  <html-el:submit
-						styleClass="buttn" style="width:70px;">
+						styleClass="buttn" >
 						<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
 					</html-el:submit></td>
 				</tr>
@@ -119,7 +166,7 @@ function goToCancelPage()
 			<table width="96%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td align="center"><html-el:button property="cancelBtn"
-						styleClass="cancelbuttn" style="width:70px"
+						styleClass="cancelbuttn"
 						onclick="goToCancelPage()">
 						<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 					</html-el:button></td>

@@ -44,6 +44,7 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -95,6 +96,8 @@
 
 </script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 		<html-el:form action="groupCustAction.do?method=preview" onsubmit="return chkForValidDates()">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -121,12 +124,14 @@
 														<td class="timelineboldgray">
 															<c:choose>
 																<c:when test="${CenterHierarchyExist == true}">
-																	<mifos:mifoslabel name="Group.select" bundle="GroupUIResources"></mifos:mifoslabel>
-																	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"></mifos:mifoslabel>
+																	<fmt:message key="Group.select">
+																	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+																	</fmt:message>
 																</c:when>
 																<c:otherwise>
-																	<mifos:mifoslabel name="Group.choosebranch" bundle="GroupUIResources"></mifos:mifoslabel>
-																	<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"></mifos:mifoslabel>
+																	<fmt:message key="Group.choosebranch">
+																	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+																	</fmt:message>
 																</c:otherwise>
 															</c:choose>
 														</td>
@@ -140,8 +145,9 @@
 															<img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorange">
-															<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-															<mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>
+															<fmt:message key="Group.groupinformation">
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+															</fmt:message>
 														</td>
 													</tr>
 												</table>
@@ -170,10 +176,12 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="Group.createnew" bundle="GroupUIResources"></mifos:mifoslabel> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel> - </span>
-												<mifos:mifoslabel name="Group.enter" bundle="GroupUIResources"></mifos:mifoslabel>
-												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-												<mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"></mifos:mifoslabel>
+												<span class="heading"> <fmt:message key="Group.createnew">
+				  								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  								</fmt:message> - </span>
+												<fmt:message key="Group.enterInformation">
+				  								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  								</fmt:message>
 											</td>
 										</tr>
 										<tr>
@@ -213,8 +221,9 @@
 														<html-el:hidden	property="loanOfficerId" value="${sessionScope.groupCustActionForm.parentCustomer.personnel.personnelId}" /> <br>
 													</span>
 													<span class="fontnormalbold">
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}">												</mifos:mifoslabel>
-														<mifos:mifoslabel name="Group.assigned" bundle="GroupUIResources"/>
+														<fmt:message key="Group.centerAssign" >
+				  										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				  										</fmt:message>
 													</span>
 													<span class="fontnormal">
 														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.displayName}" /><br>
@@ -239,7 +248,8 @@
 									<tr>
 										<td class="fontnormal">
 											<br>
-											<span class="fontnormalbold"> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " />
+											<span class="fontnormalbold"> 
+											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " />
 												<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/>
 											</span>
 											<c:out value="${sessionScope.groupCustActionForm.officeName}" />
@@ -254,9 +264,9 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
-												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}">
-												</mifos:mifoslabel>
-												<mifos:mifoslabel name="Group.details" bundle="GroupUIResources"></mifos:mifoslabel>
+												<fmt:message key="Group.groupDetail">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+												</fmt:message>
 												<br>
 												<br>
 											</td>
@@ -580,11 +590,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px;">
+												<html-el:submit styleClass="buttn" >
 													<mifos:mifoslabel name="button.preview" bundle="GroupUIResources"></mifos:mifoslabel>
 												</html-el:submit>
 												&nbsp;&nbsp;
-												<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+												<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage()">
 													<mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
 												</html-el:button>
 											</td>

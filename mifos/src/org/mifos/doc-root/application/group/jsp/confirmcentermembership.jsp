@@ -42,6 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 
 <tiles:insert definition=".withmenu">
@@ -53,6 +54,8 @@
 	groupTransferActionForm.submit();
   }
 </script>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="/groupTransferAction.do?method=transferToCenter" onsubmit="func_disableSubmitBtn('submitBtn')">
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
@@ -73,17 +76,16 @@
                   	<span class="heading">
 	                  <c:out value="${BusinessKey.displayName}"/> - 
     	            </span> 
-        	            <mifos:mifoslabel name="Group.change" bundle="GroupUIResources"></mifos:mifoslabel>
-        	            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
-        	            <mifos:mifoslabel name="Group.membership" bundle="GroupUIResources"></mifos:mifoslabel>
+        	            <fmt:message key="Group.changeMembership">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+						</fmt:message>
         	            <br><br>
                     <span class="fontnormal">
-                            <mifos:mifoslabel name="Group.confirmcenterMsg1" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.confirmcenterMsg2" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
-                            <mifos:mifoslabel name="Group.confirmcenterMsg3" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel><br>
+                            <fmt:message key="Group.confirmcenterMsg1">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+							</fmt:message>
+                            <br>
 		                    <mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
                     </span></td>
                 </tr>
@@ -97,10 +99,9 @@
                 <tr>
                   <td class="fontnormalbold"> <span class="fontnormal"><br>
                     </span>
-                        <mifos:mifoslabel name="Group.change" bundle="GroupUIResources"></mifos:mifoslabel>
-                        <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
-                        <mifos:mifoslabel name="Group.membership" bundle="GroupUIResources"></mifos:mifoslabel>
-                        
+                        <fmt:message key="Group.changeMembership">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+						</fmt:message>
                     <span class="fontnormal"> 
 	                  <c:out value="${sessionScope.groupTransferActionForm.centerName}"/>
              
@@ -116,11 +117,11 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr class="fontnormal">
                   <td width="80%" align="center"><br>
-                    <html-el:submit property="submitBtn" styleClass="buttn" style="width:70px;" >
+                    <html-el:submit property="submitBtn" styleClass="buttn" >
 		                <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
 	                </html-el:submit>
         	        	&nbsp; &nbsp;
-    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                   </td>

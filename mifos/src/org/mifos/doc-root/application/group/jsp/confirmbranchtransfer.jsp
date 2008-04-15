@@ -42,6 +42,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -55,6 +56,8 @@
   }
 </script>
  <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 <html-el:form action="/groupTransferAction.do?method=transferToBranch"  onsubmit="func_disableSubmitBtn('submitBtn')">
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
@@ -92,17 +95,17 @@
             <table width="95%" border="0" cellpadding="3" cellspacing="0">
               <tr class="fontnormal">
                  <td width="94%"><span class="fontnormal">
-                 	<mifos:mifoslabel name="Group.sureToTransfer" bundle="GroupUIResources"/>
-    		            <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-    		            <mifos:mifoslabel name="Group.to" bundle="GroupUIResources"/> &quot;
+                 <fmt:message key="Group.sureToTransferTo">
+				  <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  </fmt:message>
+                 	 &quot;
 	    		           <c:out value="${sessionScope.groupTransferActionForm.officeName}"/>
             		    &quot; ?<br>
     		                <br>
         		            <mifos:mifoslabel name="Group.transferbranchMsg3" bundle="GroupUIResources"></mifos:mifoslabel>
-        		            <mifos:mifoslabel name="Group.transferbranchMsg2" bundle="GroupUIResources"></mifos:mifoslabel>
-        		             <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-		                  <mifos:mifoslabel name="Group.transferbranchMsg2_1" bundle="GroupUIResources"></mifos:mifoslabel>
-        		          <mifos:mifoslabel name="Group.transferbranchMsg2_2" bundle="GroupUIResources"></mifos:mifoslabel>
+				  			<fmt:message key="Group.transferbranchMsg2">
+				  			<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  			</fmt:message>  
         		             <br>
                 		</span>
                  </td>
@@ -117,11 +120,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-	                <html-el:submit property="submitBtn" styleClass="buttn" style="width:70px;" >
+	                <html-el:submit property="submitBtn" styleClass="buttn" >
 		                <mifos:mifoslabel name="button.submit" bundle="GroupUIResources"></mifos:mifoslabel>
 	                </html-el:submit>
         	        	&nbsp; &nbsp;
-    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+    	            <html-el:button property="cancelBtn"  styleClass="cancelbuttn"  onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="GroupUIResources"></mifos:mifoslabel>
                     </html-el:button>
                 </td></tr>
