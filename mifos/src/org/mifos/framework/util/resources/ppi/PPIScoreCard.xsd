@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ppi">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="questions"/>
+        <xs:element ref="likelihoods"/>
+      </xs:sequence>
+      <xs:attribute name="country" use="required" type="xs:string"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="questions">
+  	<xs:complexType>
+  		<xs:sequence>
+        	<xs:element minOccurs="1" maxOccurs="unbounded" ref="question"/>
+		</xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  <xs:element name="question">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="text"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="choice"/>
+      </xs:sequence>
+      <xs:attribute name="mandatory" use="required" type="xs:boolean"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="order" use="required" type="xs:nonNegativeInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="text" type="xs:string"/>
+  <xs:element name="choice">
+    <xs:complexType mixed="true">
+      <xs:attribute name="points" use="required" type="xs:nonNegativeInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="likelihoods">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="likelihood"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="likelihood">
+    <xs:complexType>
+      <xs:attribute name="bottomHalf" use="required" type="xs:decimal"/>
+      <xs:attribute name="scoreFrom" use="required" type="xs:nonNegativeInteger"/>
+      <xs:attribute name="scoreTo" use="required" type="xs:nonNegativeInteger"/>
+      <xs:attribute name="topHalf" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

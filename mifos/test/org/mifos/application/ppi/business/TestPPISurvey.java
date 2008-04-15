@@ -219,8 +219,8 @@ public class TestPPISurvey {
 		assertEquals(Country.INDIA, retrievedSurvey.getCountryAsEnum());
 		
 		assertEquals(10, retrievedSurvey.getQuestions().size());
-		assertEquals("children", retrievedSurvey.getQuestion(0).getShortName());
-		assertEquals("How many children aged 6 to 17 attend school?", retrievedSurvey.getQuestion(1).getQuestionText());
+		assertEquals("Number of children", retrievedSurvey.getQuestion(0).getShortName());
+		assertEquals("What is the household's primary energy source for cooking?", retrievedSurvey.getQuestion(1).getQuestionText());
 		
 		assertEquals(0, retrievedSurvey.getLikelihood(2).getOrder());
 		assertEquals(1, retrievedSurvey.getLikelihood(5).getOrder());

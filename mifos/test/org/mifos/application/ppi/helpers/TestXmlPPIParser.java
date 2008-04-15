@@ -72,11 +72,13 @@ public class TestXmlPPIParser {
 	private String getMockXmlSurvey() {
 		StringBuffer xml = new StringBuffer("<?xml version=\"1.0\"?>\n");
 		xml.append("<ppi country=\"INDIA\" name=\"Test PPI Survey\">\n");
-		xml.append("	<question name=\"Test Question\" mandatory=\"true\" order=\"0\">\n");
-		xml.append("		<text>What is your question?</text>\n");
-		xml.append("		<choice points=\"0\">What?</choice>");
-		xml.append("		<choice points=\"7\">Why?</choice>\n");
-		xml.append("	</question>\n");
+		xml.append("	<questions>\n");
+		xml.append("	    <question name=\"Test Question\" mandatory=\"true\" order=\"0\">\n");
+		xml.append("		    <text>What is your question?</text>\n");
+		xml.append("		    <choice points=\"0\">What?</choice>");
+		xml.append("		    <choice points=\"7\">Why?</choice>\n");
+		xml.append("	    </question>\n");
+		xml.append("	</questions>\n");
 		xml.append("	<likelihoods>\n");
 		xml.append("		<likelihood scoreFrom=\"0\" scoreTo=\"10\" bottomHalf=\"70\" topHalf=\"10\" />\n");
 		xml.append("		<likelihood scoreFrom=\"11\" scoreTo=\"20\" bottomHalf=\"60\" topHalf=\"9\" />\n");
