@@ -48,6 +48,8 @@ import org.xml.sax.SAXException;
 
 public class XmlPPISurveyParser {
 	
+	private static final int MAXIMUM_POINTS_PER_SURVEY = 100;
+
 	/** TODO: Should be private */
 	public PPISurvey parseInto(String uri, PPISurvey survey)
             throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
@@ -122,7 +124,27 @@ public class XmlPPISurveyParser {
 			surveyQuestion.setOrder(order);
 		}
 		
+		try {
+			verifyQuestionPoints(surveyQuestions);
+		} catch (ValidationException e) {
+			throw new IllegalStateException(e);
+		}
 		survey.setQuestions(surveyQuestions);
+	}
+
+	private void verifyQuestionPoints(List<SurveyQuestion> surveyQuestions) throws ValidationException {
+		int totalPoints = 0;
+		for (SurveyQuestion surveyQuestion : surveyQuestions) {
+			int largestChoice = 0;
+			for (QuestionChoice qc : surveyQuestion.getQuestion().getChoices()) {
+				PPIChoice choice = (PPIChoice) qc;
+				if (choice.getPoints() > largestChoice)
+					largestChoice = choice.getPoints();
+			}
+			totalPoints += largestChoice;
+		}
+		if (totalPoints > MAXIMUM_POINTS_PER_SURVEY)
+			throw new ValidationException("Question choices amount to more than 100 points.");
 	}
 
 	private void parseQuestionChoices(Element questionNode, Question question, boolean emptyQuestionList) {
@@ -182,6 +204,8 @@ public class XmlPPISurveyParser {
 		return parseInto(document, new PPISurvey());
 	}
 	
+	// TODO: doesn't look like this method is used anywhere, do we need it?
+	@Deprecated
 	public Document buildXmlFrom(PPISurvey survey) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();

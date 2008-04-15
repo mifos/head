@@ -38,7 +38,7 @@ public class TestXmlPPIParser {
 		comparisonSurvey.addQuestion(question, true);
 		
 		PPISurvey generatedSurvey = parser.parse(
-				new ByteArrayInputStream(getXmlSurvey().getBytes("UTF-8")));
+				new ByteArrayInputStream(getMockXmlSurvey().getBytes("UTF-8")));
 		
 		assertEquals(comparisonSurvey.toString(), generatedSurvey.toString());
 	}
@@ -46,7 +46,7 @@ public class TestXmlPPIParser {
 	@Test
 	public void testParse() throws Exception {
 		PPISurvey survey = parser.parse(
-			new ByteArrayInputStream(getXmlSurvey().getBytes("UTF-8")));
+			new ByteArrayInputStream(getMockXmlSurvey().getBytes("UTF-8")));
 		
 		assertEquals(Country.INDIA, survey.getCountryAsEnum());
 		assertEquals("Test PPI Survey", survey.getName());
@@ -60,29 +60,51 @@ public class TestXmlPPIParser {
 	}
 	
 	@Test
-	public void testChangeName() throws Exception {
+	public void testMaximumPoints() throws Exception {
 		try {
-			PPISurvey survey = parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyINDIA.xml");
-			PPISurvey surveyNew = parser.parse("org/mifos/framework/util/resources/ppi/PPISurveyINDIA.xml");
-			surveyNew.getQuestions().get(0).getQuestion().setShortName("Completely new and unheard of name!");
-			
-			Document document = parser.buildXmlFrom(surveyNew);
-			surveyNew = parser.parseInto(document, new PPISurvey());
-			assertFalse(survey.toString().equals(surveyNew.toString()));
-		}
-		catch (IllegalStateException e) {
-			// TODO: IllegalStateException will be thrown by parser.parse() until likelihoods are
-			// added to PPISurveyINDIA.xml
+			parser.parse(new ByteArrayInputStream(getInvalidXmlSurvey().getBytes("UTF-8")));
+			fail("should have thrown an exception");
+		} catch (IllegalStateException e) {
+			assertEquals("org.mifos.framework.exceptions.ValidationException: Question choices amount to more than 100 points.", e.getMessage());
 		}
 	}
 	
-	private String getXmlSurvey() {
+	private String getMockXmlSurvey() {
 		StringBuffer xml = new StringBuffer("<?xml version=\"1.0\"?>\n");
 		xml.append("<ppi country=\"INDIA\" name=\"Test PPI Survey\">\n");
 		xml.append("	<question name=\"Test Question\" mandatory=\"true\" order=\"0\">\n");
 		xml.append("		<text>What is your question?</text>\n");
 		xml.append("		<choice points=\"0\">What?</choice>");
 		xml.append("		<choice points=\"7\">Why?</choice>\n");
+		xml.append("	</question>\n");
+		xml.append("	<likelihoods>\n");
+		xml.append("		<likelihood scoreFrom=\"0\" scoreTo=\"10\" bottomHalf=\"70\" topHalf=\"10\" />\n");
+		xml.append("		<likelihood scoreFrom=\"11\" scoreTo=\"20\" bottomHalf=\"60\" topHalf=\"9\" />\n");
+		xml.append("		<likelihood scoreFrom=\"21\" scoreTo=\"30\" bottomHalf=\"50\" topHalf=\"8\" />\n");
+		xml.append("		<likelihood scoreFrom=\"31\" scoreTo=\"40\" bottomHalf=\"40\" topHalf=\"7\" />\n");
+		xml.append("		<likelihood scoreFrom=\"41\" scoreTo=\"50\" bottomHalf=\"30\" topHalf=\"6\" />\n");
+		xml.append("		<likelihood scoreFrom=\"51\" scoreTo=\"60\" bottomHalf=\"20\" topHalf=\"5\" />\n");
+		xml.append("		<likelihood scoreFrom=\"61\" scoreTo=\"70\" bottomHalf=\"10\" topHalf=\"4\" />\n");
+		xml.append("		<likelihood scoreFrom=\"71\" scoreTo=\"80\" bottomHalf=\"0\" topHalf=\"3\" />\n");
+		xml.append("		<likelihood scoreFrom=\"81\" scoreTo=\"90\" bottomHalf=\"0\" topHalf=\"0\" />\n");
+		xml.append("		<likelihood scoreFrom=\"91\" scoreTo=\"100\" bottomHalf=\"0\" topHalf=\"0\" />\n");
+		xml.append("	</likelihoods>\n");
+		xml.append("</ppi>");
+		return xml.toString();
+	}
+	
+	private String getInvalidXmlSurvey() {
+		StringBuffer xml = new StringBuffer("<?xml version=\"1.0\"?>\n");
+		xml.append("<ppi country=\"INDIA\" name=\"Test PPI Survey\">\n");
+		xml.append("	<question name=\"Test Question1\" mandatory=\"true\" order=\"0\">\n");
+		xml.append("		<text>What is your question1?</text>\n");
+		xml.append("		<choice points=\"0\">What?</choice>");
+		xml.append("		<choice points=\"23\">Why?</choice>\n");
+		xml.append("	</question>\n");
+		xml.append("	<question name=\"Test Question2\" mandatory=\"true\" order=\"1\">\n");
+		xml.append("		<text>What is your question2?</text>\n");
+		xml.append("		<choice points=\"10\">What?</choice>");
+		xml.append("		<choice points=\"80\">Why?</choice>\n");
 		xml.append("	</question>\n");
 		xml.append("	<likelihoods>\n");
 		xml.append("		<likelihood scoreFrom=\"0\" scoreTo=\"10\" bottomHalf=\"70\" topHalf=\"10\" />\n");

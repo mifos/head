@@ -59,7 +59,7 @@
 	<question name="own cooker" mandatory="true" order="9">
 		<text>Does the household own a pressure cooker or pressure pan?</text>
 		<choice points="0">No</choice>
-		<choice points="7">Yes</choice>
+		<choice points="5">Yes</choice>
 	</question>
 	<likelihoods>
 		<likelihood scoreFrom="0" scoreTo="4" bottomHalf="82.2" topHalf="6.2" />
