@@ -1022,7 +1022,7 @@ class LoanTestCaseData {
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
@@ -1031,7 +1031,7 @@ class LoanTestCaseData {
 	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-issue1623.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
