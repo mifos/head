@@ -191,7 +191,6 @@ public class ActivityMapper {
 		addChecklistMappings();
 		addFeeMappings();
 		addSavingProductMappings();
-		addManageRolesPermissionsMappings();
 		addOfficeMappings();
 		addCustomerSearchMappings();
 		
@@ -327,25 +326,6 @@ public class ActivityMapper {
 				SecurityConstants.OFFICE_EDIT_OFFICE);
 		activityMap.put("/offAction-getAllOffices", SecurityConstants.VIEW);
 		activityMap.put("/offAction-updateCache", SecurityConstants.VIEW);
-	}
-
-	private void addManageRolesPermissionsMappings() {
-		activityMap.put("/manageRolesAndPermission-manage",
-				SecurityConstants.VIEW);
-		activityMap
-				.put("/manageRolesAndPermission-get", SecurityConstants.VIEW);
-		activityMap.put("/manageRolesAndPermission-load",
-				SecurityConstants.ROLES_CREATE_ROLES);
-		activityMap.put("/manageRolesAndPermission-create",
-				SecurityConstants.ROLES_CREATE_ROLES);
-		activityMap.put("/manageRolesAndPermission-update",
-				SecurityConstants.ROLES_EDIT_ROLES);
-		activityMap.put("/manageRolesAndPermission-cancel",
-				SecurityConstants.VIEW);
-		activityMap.put("/manageRolesAndPermission-preview",
-				SecurityConstants.ROLES_DELETE_ROLES);
-		activityMap.put("/manageRolesAndPermission-delete",
-				SecurityConstants.ROLES_DELETE_ROLES);
 	}
 
 	private void addSavingProductMappings() {

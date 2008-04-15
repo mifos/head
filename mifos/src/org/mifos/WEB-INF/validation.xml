@@ -55,24 +55,6 @@
 				</var>
 			</field>
 		</form>
-		<!-- Roles and permission Form -->
-		<form name="/manageRolesAndPermission">
-			<field property="name" depends="required,mask,maxlength">
-				<msg name="mask" key="roleandpermission.rolename.maskmsg" bundle="RolesAndPermissionResources" />
-				<msg name="required" key="roleandpermission.rolename.required" bundle="RolesAndPermissionResources" />
-				<msg name="maxlength" key="roleandpermission.rolename.required" bundle="RolesAndPermissionResources" />
-				<arg0 key="roleandpermission.rolename.displayname" resource="RolesAndPermissionResources" />
-				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
-				<var>
-					<var-name>mask</var-name>
-					<var-value>^[^`'"]*$</var-value>
-				</var>
-				<var>
-					<var-name>maxlength</var-name>
-					<var-value>50</var-value>
-				</var>
-			</field>
-		</form>
 		<!-- office Form -->
 		<form name="/OfficeAction">
 			<field property="officeName" depends="required,maxlength">
