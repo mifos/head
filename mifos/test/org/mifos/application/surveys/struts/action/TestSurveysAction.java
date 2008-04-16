@@ -26,10 +26,8 @@ import org.mifos.framework.util.helpers.Constants;
 public class TestSurveysAction extends MifosMockStrutsTestCase {
 	
 	ActionMapping moduleMapping;
-	private Survey testSurvey;
 	private Question question;
 	private Question question2;
-	
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -40,43 +38,10 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		
-		testSurvey = null;
 	}
 		
-	private void deleteSurvey(Survey survey) {
-		SurveyQuestion surveyQuestion = null;
-		ListIterator<SurveyQuestion> it = survey.getQuestions().listIterator();
-		Set<Question> qset = new HashSet<Question>();
-		while (it.hasNext()) { 
-			surveyQuestion = it.next();
-			it.remove();
-			Question q = surveyQuestion.getQuestion();
-			qset.add(q);
-			HibernateUtil.getSessionTL().delete(surveyQuestion);
-		}
-		for (Question q : qset) {
-			HibernateUtil.getSessionTL().delete(q);
-		}
-		HibernateUtil.getSessionTL().delete(survey);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.flushAndCloseSession();
-	}
-	
 	@Override
 	protected void tearDown() throws Exception {
-		/*if (testSurvey != null) {
-			//HibernateUtil.getSessionTL().delete(testSurvey);
-			testSurvey = (Survey)HibernateUtil.getSessionTL().get(Survey.class, testSurvey.getSurveyId());
-			deleteSurvey(testSurvey);
-		}*/
-/*		if (question != null) {
-			HibernateUtil.getSessionTL().delete(question);
-		}
-		if (question2 != null) {
-			HibernateUtil.getSessionTL().delete(question2);
-		}
-*/		
 		TestDatabase.resetMySQLDatabase();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();
@@ -85,10 +50,8 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
 		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CLIENT);
 		Question question = new Question(surveyName + questionText, questionText, AnswerType.FREETEXT);
-		//new SurveysPersistence().createOrUpdate(question);
 		survey.addQuestion(question, false);
 		new SurveysPersistence().createOrUpdate(survey);
-		testSurvey = survey;
 		return survey;
 	}
 	
@@ -141,7 +104,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 
 	
 	public void testCreateEntry() throws Exception {
-		//String name = "testCreateEntry test survey name";
 		String name = "test";
 		String appliesTo = "client";
 		String state = "ACTIVE";
@@ -182,7 +144,6 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		assertEquals(1, surveysPersistence.retrieveAllSurveys().size());
 		assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
-		testSurvey = surveysPersistence.retrieveAllSurveys().get(0);
 	}
 	
 	public void testEditEntry() throws Exception {
@@ -197,11 +158,9 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String state = "INACTIVE";
 		String name = "test";
 		String appliesTo = "client";
-		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE,SurveyType.fromString(appliesTo));
+		Survey oldSurvey = new Survey(name, SurveyState.ACTIVE, SurveyType.fromString(appliesTo));
 		oldSurvey.addQuestion(question2, true);
 		surveysPersistence.createOrUpdate(oldSurvey);
-		
-		//database.installInThreadLocal();
 		
 		int surveyId = surveysPersistence.retrieveAllSurveys().get(0).getSurveyId();
 		setRequestPathInfo("/surveysAction");
@@ -219,11 +178,8 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		
-		GenericActionForm actionForm = (GenericActionForm) getActionForm();
-		name = actionForm.getValue("name");
-		
-		addRequestParameter("value(name)", name);
-		addRequestParameter("value(appliesTo)", appliesTo);
+		addRequestParameter("value(name)", "new name");
+		addRequestParameter("value(appliesTo)", "all");
 		addRequestParameter("value(state)", state);
 		addRequestParameter("method", "preview_update");
 		actionPerform();
@@ -235,10 +191,11 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		
 		List<Survey> listSurvey = surveysPersistence.retrieveAllSurveys();
 		assertEquals(1, listSurvey.size());
-		assertEquals(oldSurvey.getName(), listSurvey.get(0).getName());
-		assertEquals(surveyId, listSurvey.get(0).getSurveyId());
-		assertEquals(2, listSurvey.get(0).getQuestions().size());
-		testSurvey = listSurvey.get(0);
+		Survey survey = listSurvey.get(0);
+		assertEquals("new name", survey.getName());
+		assertEquals(SurveyType.ALL, survey.getAppliesToAsEnum());
+		assertEquals(SurveyState.INACTIVE, survey.getStateAsEnum());
+		assertEquals(surveyId, survey.getSurveyId());
+		assertEquals(2, survey.getQuestions().size());
 	}
-	
 }

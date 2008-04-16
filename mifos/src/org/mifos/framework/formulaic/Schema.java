@@ -110,9 +110,7 @@ public class Schema extends BaseValidator {
 		
 		try {
 			data = (Map<String, Object>) objectData;
-		}
-		
-		catch (ClassCastException e) {
+		} catch (ClassCastException e) {
 			throw makeError(objectData, ErrorType.WRONG_TYPE);
 		}
 		

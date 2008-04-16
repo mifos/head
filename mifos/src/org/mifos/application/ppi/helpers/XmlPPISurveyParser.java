@@ -34,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPILikelihood;
 import org.mifos.application.ppi.business.PPISurvey;
+import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyQuestion;
@@ -48,8 +49,6 @@ import org.xml.sax.SAXException;
 
 public class XmlPPISurveyParser {
 	
-	private static final int MAXIMUM_POINTS_PER_SURVEY = 100;
-
 	/** TODO: Should be private */
 	public PPISurvey parseInto(String uri, PPISurvey survey)
             throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
@@ -143,7 +142,7 @@ public class XmlPPISurveyParser {
 			}
 			totalPoints += largestChoice;
 		}
-		if (totalPoints > MAXIMUM_POINTS_PER_SURVEY)
+		if (totalPoints > SurveysConstants.MAX_POINTS_PER_PPI_SURVEY)
 			throw new ValidationException("Question choices amount to more than 100 points.");
 	}
 

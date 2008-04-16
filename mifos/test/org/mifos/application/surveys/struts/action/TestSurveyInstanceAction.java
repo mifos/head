@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -129,10 +128,12 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 		response1.setSurveyQuestion(surveyQuestion1);
 		response1.setStringValue("3");
 		response1.setInstance(sampleInstance);
+		
 		SurveyResponse response2 = new SurveyResponse();
 		response2.setSurveyQuestion(surveyQuestion2);
 		response2.setStringValue("question2 answer");
 		response2.setInstance(sampleInstance);
+		
 		persistence.createOrUpdate(response1);
 		persistence.createOrUpdate(response2);
 		persistence.createOrUpdate(sampleInstance);
