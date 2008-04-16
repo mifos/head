@@ -83,9 +83,7 @@
 															<img src="pages/framework/images/timeline/orangearrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorangelight">
-															<mifos:mifoslabel name="Fees.review" />
-															&amp;
-															<mifos:mifoslabel name="Fees.submit" />
+															<mifos:mifoslabel name="Fees.reviewAndSubmit" />
 														</td>
 													</tr>
 												</table>
@@ -137,7 +135,7 @@
 												<mifos:mifoslabel name="Fees.feeappliesto" mandatory="yes" />
 											</td>
 											<td valign="top">
-												<mifos:select property="categoryType" style="width:136px;" onchange="onPageLoad();">
+												<mifos:select property="categoryType" onchange="onPageLoad();">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CategoryList')}" var="category">
 														<html-el:option value="${category.id}">${category.name}</html-el:option>
 													</c:forEach>
@@ -190,7 +188,7 @@
 														</mifos:select>
 													</div>
 													<div id="customerTimeOfChargeDiv">
-														<mifos:select property="customerCharge" style="width:180px;">
+														<mifos:select property="customerCharge">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CustomerTimeOfCharges')}" var="customerTimeOfCharge">
 																<html-el:option value="${customerTimeOfCharge.id}">${customerTimeOfCharge.name}</html-el:option>
 															</c:forEach>
@@ -357,11 +355,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit property="preview" styleClass="buttn" style="width:70px">
+												<html-el:submit property="preview" styleClass="buttn">
 													<mifos:mifoslabel name="Fees.preview" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel(this.form)">
+												<html-el:button property="cancel" styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 													<mifos:mifoslabel name="Fees.cancel" />
 												</html-el:button>
 											</td>

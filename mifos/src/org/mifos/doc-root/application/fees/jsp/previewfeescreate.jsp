@@ -87,11 +87,7 @@
 															<img src="pages/framework//images/timeline/bigarrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorange">
-															<mifos:mifoslabel name="Fees.review">
-															</mifos:mifoslabel>
-															&amp;
-															<mifos:mifoslabel name="Fees.submit">
-															</mifos:mifoslabel>
+															<mifos:mifoslabel name="Fees.reviewAndSubmit"/>
 														</td>
 													</tr>
 												</table>
@@ -108,9 +104,7 @@
 										<tr>
 											<td class="headingorange">
 												<span class="heading"> <mifos:mifoslabel name="Fees.definenewfee" /> - </span>
-												<mifos:mifoslabel name="Fees.review" />
-												&amp;
-												<mifos:mifoslabel name="Fees.submit" />
+												<mifos:mifoslabel name="Fees.reviewAndSubmit" />
 											</td>
 										</tr>
 										<tr>
@@ -241,11 +235,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit property="submitBtn" styleClass="buttn" style="width:70px;">
+												<html-el:submit property="submitBtn" styleClass="buttn">
 													<mifos:mifoslabel name="Fees.submit" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel(this.form)">
+												<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 													<mifos:mifoslabel name="Fees.cancel" />
 												</html-el:button>
 											</td>

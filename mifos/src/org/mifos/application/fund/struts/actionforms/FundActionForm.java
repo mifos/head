@@ -38,18 +38,24 @@
 
 package org.mifos.application.fund.struts.actionforms;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.fund.util.helpers.FundConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class FundActionForm extends BaseActionForm {	
@@ -98,19 +104,31 @@ public class FundActionForm extends BaseActionForm {
 
 	private void validateForPreview(HttpServletRequest request,
 			ActionErrors errors) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+				(FilePaths.FUND_UI_RESOURCE_PROPERTYFILE, locale);
+		String fundName = resources.getString("funds.fundName");
+		String fundCode = resources.getString("funds.fundCode");
 		logger.debug("start validateForPreview method of Fund Action form method :"	+ fundName);
 		if (StringUtils.isNullOrEmpty(getFundName()))
-			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, FundConstants.FUNDNAME);
+			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, fundName);
 		if (StringUtils.isNullOrEmpty(getFundCode()))
-			addError(errors, "fundCode", FundConstants.ERROR_SELECT, FundConstants.FUND_CODE);
+			addError(errors, "fundCode", FundConstants.ERROR_SELECT, fundCode);
 		logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
 	}
 	
 	private void validateForPreviewManage(HttpServletRequest request,
 			ActionErrors errors) {
 		logger.debug("start validateForPreviewManage method of Fund Action form method :"	+ fundName);
-		if (StringUtils.isNullOrEmpty(getFundName()))
-			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, FundConstants.FUNDNAME);
+		if (StringUtils.isNullOrEmpty(getFundName())) {
+			UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+			Locale locale = userContext.getPreferredLocale();
+			ResourceBundle resources = ResourceBundle.getBundle
+			(FilePaths.FUND_UI_RESOURCE_PROPERTYFILE, locale);
+			String fundName = resources.getString("funds.fundName");
+			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, fundName);
+		}
 		logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
 	}
 }

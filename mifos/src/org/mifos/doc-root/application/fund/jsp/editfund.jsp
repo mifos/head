@@ -108,7 +108,7 @@
                 </tr>
                 <tr class="fontnormal">
                   <td align="right" valign="top">
-                 		 <mifos:mifoslabel name="funds.fundcode" mandatory="yes" bundle="fundUIResources"/>:
+                 		 <mifos:mifoslabel name="funds.fundcode" mandatory="yes" bundle="fundUIResources" isColonRequired="yes"/>
                   </td>
                   <td valign="top">
                   <c:out value="${sessionScope.fundActionForm.fundCode}"/>
@@ -126,10 +126,10 @@
                 <tr>
                   <td align="center">
                   
-                <html-el:submit style="width:65px;"	property="button" styleClass="buttn">
+                <html-el:submit property="button" styleClass="buttn">
 							<mifos:mifoslabel name="funds.preview" bundle="fundUIResources"/>
 				</html-el:submit>&nbsp;
-				<html-el:button property="calcelButton" style="width:65px;"	styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
+				<html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
 							<mifos:mifoslabel name="funds.cancel"  bundle="fundUIResources"/>
 				</html-el:button>     
                   </td>

@@ -123,7 +123,7 @@
 									<mifos:mifoslabel name="Fees.status" mandatory="yes" />
 								</td>
 								<td valign="top">
-									<mifos:select property="feeStatus" style="width:136px;">
+									<mifos:select property="feeStatus">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'StatusList')}" var="status">
 											<html-el:option value="${status.id}">${status.name}</html-el:option>
 										</c:forEach>
@@ -142,11 +142,11 @@
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="previewBtn" styleClass="buttn" style="width:65px">
+									<html-el:submit property="previewBtn" styleClass="buttn">
 										<mifos:mifoslabel name="Fees.preview" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>

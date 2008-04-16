@@ -126,6 +126,8 @@ public interface FilePaths {
 	public static final String OFFICERESOURCEPATH = LOCALIZED_RESOURCE_PATH + "OfficeUIResources";
 	//"org/mifos/application/personnel/util/resources/PersonnelUIResources"
 	public static final String PERSONNELUIRESOURCESPATH = LOCALIZED_RESOURCE_PATH + "PersonnelUIResources";
+	//"org/mifos/application/personnel/util/resources/PersonnelUIResources"
+	public static final String FUND_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "FundUIResources";
 	// "org.mifos.application.productdefinition.util.resources.ProductDefinitionResources"
 	public static final String PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "ProductDefinitionResources";
 	public static final String UI_RESOURCE_PROPERTYFILE = LOCALIZED_RESOURCE_PATH + "UIResources";

@@ -85,8 +85,7 @@
 												src="pages/framework/images/timeline/orangearrow.gif"
 												width="17" height="17"></td>
 											<td class="timelineboldorangelight"><mifos:mifoslabel
-												name="funds.review" bundle="fundUIResources" /> &amp; <mifos:mifoslabel
-												name="funds.sub" bundle="fundUIResources" /></td>
+												name="funds.reviewAndSubmit" bundle="fundUIResources" /></td>
 										</tr>
 									</table>
 									</td>
@@ -126,16 +125,15 @@
 								<tr class="fontnormal">
 									<td width="27%" align="right"><mifos:mifoslabel
 										name="funds.fund_name" mandatory="yes"
-										bundle="fundUIResources" />:</td>
+										bundle="fundUIResources" isColonRequired="yes"/></td>
 									<td width="73%" valign="top"><mifos:mifosalphanumtext
 										property="fundName" maxlength="100" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
 										name="funds.fundcode" mandatory="yes"
-										bundle="fundUIResources" />:</td>
-									<td valign="top"><mifos:select property="fundCode"
-										style="width:136px;">
+										bundle="fundUIResources" isColonRequired="yes"/></td>
+									<td valign="top"><mifos:select property="fundCode">
 										<c:forEach
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'allFunds')}"
 											var="fund">
@@ -152,11 +150,11 @@
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit style="width:65px;"
+									<td align="center"><html-el:submit
 										property="button" styleClass="buttn">
 										<mifos:mifoslabel name="funds.preview"
 											bundle="fundUIResources" />
-									</html-el:submit>&nbsp; <html-el:button property="calcelButton" style="width:65px;"
+									</html-el:submit>&nbsp; <html-el:button property="calcelButton"
 										styleClass="cancelbuttn"
 										onclick="javascript:fnCreateCancel();">
 										<mifos:mifoslabel name="funds.cancel" bundle="fundUIResources" />

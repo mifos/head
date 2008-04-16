@@ -40,10 +40,15 @@
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.FeesUIResources?"/>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
@@ -136,10 +141,10 @@
 									<br>
 									<c:choose>
 										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
-											<mifos:mifoslabel name="Fees.amountcalculatedas" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:out value="${BusinessKey.rate}" />
-											<mifos:mifoslabel name="Fees.ofa" bundle="FeesUIResources"></mifos:mifoslabel>
-											<c:out value="${BusinessKey.feeFormula.name}" />
+											<fmt:message key="Fees.amountCalcComplete">
+												<fmt:param><c:out value="${BusinessKey.rate}" /></fmt:param>
+												<fmt:param><c:out value="${BusinessKey.feeFormula.name}" /></fmt:param>
+											</fmt:message>
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="Fees.amount" bundle="FeesUIResources"></mifos:mifoslabel>

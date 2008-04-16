@@ -140,11 +140,11 @@
 						<table width="93%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center">
-									<html-el:submit property="submitBtn" styleClass="buttn" style="width:65px">
+									<html-el:submit property="submitBtn" styleClass="buttn">
 										<mifos:mifoslabel name="Fees.submit" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancelBtn" styleClass="cancelbuttn" style="width:65px" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
+									<html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="javascript:fnOnEditCancel(${BusinessKey.feeId})">
 										<mifos:mifoslabel name="Fees.cancel" />
 									</html-el:button>
 								</td>

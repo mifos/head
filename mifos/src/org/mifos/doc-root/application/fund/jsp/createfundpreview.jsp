@@ -85,9 +85,7 @@
                     <tr>
                       <td><img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17"></td>
                       <td class="timelineboldorange">
-                      <mifos:mifoslabel name="funds.review" bundle="fundUIResources"/>                      
-                       &amp;
-                      <mifos:mifoslabel name="funds.sub" bundle="fundUIResources"/> 
+                      <mifos:mifoslabel name="funds.reviewAndSubmit" bundle="fundUIResources"/> 
                       </td>
                     </tr>
                   </table>
@@ -106,9 +104,7 @@
                 <span class="heading">
 				<mifos:mifoslabel name="funds.new_fund" bundle="fundUIResources"/>
               	 - </span>
-              	 <mifos:mifoslabel name="funds.review" bundle="fundUIResources"/>                      
-              	 &amp; 
-              	 <mifos:mifoslabel name="funds.submit" bundle="fundUIResources"/>
+              	 <mifos:mifoslabel name="funds.reviewAndSubmit" bundle="fundUIResources"/>
               	 </td>
               </tr>
               <tr>
@@ -139,7 +135,7 @@
 		    	<br>      
 		    	
 		    	<span class="fontnormalbold">
-		        <mifos:mifoslabel name="funds.fundcode" bundle="fundUIResources"/>:
+		        <mifos:mifoslabel name="funds.fundcode" bundle="fundUIResources" isColonRequired="yes"/>
 		        </span>
 		        <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'allFunds')}" var="fund">
 					<c:if test="${fund.fundCodeId == sessionScope.fundActionForm.fundCode}">
@@ -170,10 +166,10 @@
             <table width="93%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                <html-el:submit style="width:65px;"	property="button" styleClass="buttn">
+                <html-el:submit property="button" styleClass="buttn">
 							<mifos:mifoslabel name="funds.submit" bundle="fundUIResources"/>
 				</html-el:submit>&nbsp;
-				<html-el:button property="calcelButton" style="width:65px;"	styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
+				<html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
 							<mifos:mifoslabel name="funds.cancel" bundle="fundUIResources"/>
 				</html-el:button>                
                 </td>
