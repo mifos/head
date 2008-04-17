@@ -179,8 +179,8 @@
 										
 									<tr class="fontnormal">
 										<td align="right" valign="top">
-											<mifos:mifoslabel name="reports.ShowWhenStatus"  mandatory="yes"/>
-											:
+											<mifos:mifoslabel name="reports.ShowWhenStatus"  mandatory="yes" isColonRequired="Yes"/>
+											
 										</td>
 										<td valign="top">
 											<table width="80%" border="0" cellspacing="0" cellpadding="0">
@@ -219,11 +219,11 @@
 						<table width="90%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px;" onclick="transferData(this.form.statusList);">
+										onclick="transferData(this.form.statusList);">
 										<mifos:mifoslabel name="reports.preview"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage(this.form);" property="cancelButton"
-										value="Cancel" styleClass="cancelbuttn" style="width:70px">
+										value="Cancel" styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="reports.cancel"/>
 									</html-el:button></td>
 								</tr>

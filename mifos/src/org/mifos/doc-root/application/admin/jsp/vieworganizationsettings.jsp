@@ -57,23 +57,23 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.fiscalyear" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.workingDays" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.workingDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.workingDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.allowCalDefForNextYear" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.allowCalDefForNextYear" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.allowCalDefForNextYear}"/>
 								<mifos:mifoslabel name="VOS.daysBeforeYearEnd" bundle="viewOrganizationSettingsUIResources" />
 								<br/>
-								<mifos:mifoslabel name="VOS.startOfWeek" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.startOfWeek" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.startOfWeek}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.offDays" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.offDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.offDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.weekDays" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.weekDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.weekDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.holidayMeeting" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.holidayMeeting" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.holidayMeeting}"/>
 								<br/>
 								<br/>
@@ -84,10 +84,10 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.locale" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.country" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.country" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.localeCountryCode}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.language" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.language" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.localeLanguageCode}"/>
 								<br/>
 								<br/>
@@ -98,28 +98,28 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.accountingrules" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.currency" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.currency" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.currency}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.maxInterest" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.maxInterest" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.maxInterest}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.minInterest" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.minInterest" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.minInterest}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.digitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.digitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.digitsAfterDecimal}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.digitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.digitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.digitsBeforeDecimal}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.intDigitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.intDigitsAfterDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.intDigitsAfterDecimal}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.intDigitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.intDigitsBeforeDecimal" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.minInterest}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.interestDays" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.interestDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.interestDays}"/>
 								<br/>
 								<br/>
@@ -130,16 +130,16 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.clientrules" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.centerHierarchyExists" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.centerHierarchyExists" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.centerHierarchyExists}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.loansForGroups" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.loansForGroups" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.loansForGroups}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.clientsOutsideGroups" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.clientsOutsideGroups" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.clientsOutsideGroups}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.nameSequence" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.nameSequence" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.nameSequence}"/>
 								<br/>
 								<br/>
@@ -152,19 +152,19 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.optionalstate" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.clientPendingState" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.clientPendingState" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.clientPendingState}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.groupPendingState" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.groupPendingState" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.groupPendingState}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.loanDisbursedState" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.loanDisbursedState" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.loanDisbursedState}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.loanPendingState" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.loanPendingState" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.loanPendingState}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.savingsPendingState" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.savingsPendingState" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/>
 								<c:out value="${orgSettings.savingsPendingState}"/>
 								<br/>
 								<br/>
@@ -175,14 +175,14 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="VOS.miscellaneous" bundle="viewOrganizationSettingsUIResources" />
 							<span class="fontnormal">
 								<br/>
-								<mifos:mifoslabel name="VOS.sessionTimeout" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.sessionTimeout" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> :
 								<c:out value="${orgSettings.sessionTimeout}"/>
 								<mifos:mifoslabel name="VOS.minutes" bundle="viewOrganizationSettingsUIResources" />
 								<br/>
-								<mifos:mifoslabel name="VOS.collectionSheetAdvanceDays" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.collectionSheetAdvanceDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.collectionSheetAdvanceDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.backDatedTransactions" bundle="viewOrganizationSettingsUIResources" /> :
+								<mifos:mifoslabel name="VOS.backDatedTransactions" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.backDatedTransactions}"/>
 								<br/>
 								<br/>

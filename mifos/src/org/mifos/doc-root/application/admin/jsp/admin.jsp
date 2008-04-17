@@ -20,9 +20,13 @@ explanation of the license and how it is applied.
 --%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -68,7 +72,7 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-					<span class="fontnormalbold"> Offices</span><br>
+					<span class="fontnormalbold"> <mifos:mifoslabel name="admin.office" bundle="adminUIResources" /></span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 						<tr class="fontnormal">
 							<td width="3%"><img
@@ -233,9 +237,7 @@ explanation of the license and how it is applied.
 					<br>
 					<!-- Manage products mix  -->
 					<span class="fontnormalbold">
-					<mifos:mifoslabel name="admin.Manage" />
-					<mifos:mifoslabel name="admin.product" />
-					<mifos:mifoslabel name="admin.mix" />
+					<mifos:mifoslabel name="admin.manageProductMix" />
 					</span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 						<tr class="fontnormal">
@@ -244,14 +246,10 @@ explanation of the license and how it is applied.
 								height="11"></td>
 							<td width="97%"><html-el:link
 								href="productMixAction.do?method=viewAllProductMix&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.View" />
-								<mifos:mifoslabel name="admin.products" />
-								<mifos:mifoslabel name="admin.mix" />
+								<mifos:mifoslabel name="admin.viewProductsMix" />
 								</html-el:link> | <html-el:link
 								href="productMixAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.define" />
-								<mifos:mifoslabel name="admin.products"/>
-								<mifos:mifoslabel name="admin.mix"/>
+								<mifos:mifoslabel name="admin.defineProductsMix"/>
 								</html-el:link></td>
 						</tr>
 					</table>
@@ -259,10 +257,9 @@ explanation of the license and how it is applied.
 					
 					<!--  -->
 					<span class="fontnormalbold">
-					<mifos:mifoslabel name="admin.Manage" />
-
-					<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-					<mifos:mifoslabel name="admin.products" />
+					<fmt:message key="admin.manageProducts">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+					</fmt:message>
 					</span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
 						<tr class="fontnormal">
@@ -272,22 +269,22 @@ explanation of the license and how it is applied.
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link
 								href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.View" />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-								<mifos:mifoslabel name="admin.products" />
+								<fmt:message key="admin.viewProducts">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>
 								</html-el:link> | <html-el:link
 								href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.definenew" />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-								<mifos:mifoslabel name="admin.product" />
+								<fmt:message key="admin.defineNewProduct">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>
 								</html-el:link></td>
 						</tr>
 					</table>
 					<br>
 					<span class="fontnormalbold">
-					<mifos:mifoslabel name="admin.Manage" />
-					<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
-					<mifos:mifoslabel name="admin.products" />
+					<fmt:message key="admin.manageProducts">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+					</fmt:message>
 
 					</span><br>
 					<table width="90%" border="0" cellspacing="0" cellpadding="0">
@@ -298,14 +295,15 @@ explanation of the license and how it is applied.
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link
 								href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.View" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
-								<mifos:mifoslabel name="admin.products" />
+								<fmt:message key="admin.viewProducts">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+								</fmt:message>
 									</html-el:link> | <html-el:link
 								href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.definenew" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
-								<mifos:mifoslabel name="admin.product" /></html-el:link></td>
+								<fmt:message key="admin.defineNewProduct">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+								</fmt:message>
+								</html-el:link></td>
 						</tr>
 					</table>
 					<br>

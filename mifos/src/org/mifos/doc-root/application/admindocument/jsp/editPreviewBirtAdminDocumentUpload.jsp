@@ -137,15 +137,15 @@
 							<table width="90%" border="0" cellspacing="0" cellpadding="3">
 								<tr class="fontnormal">
 									<td height="23" class="fontnormal"><mifos:mifoslabel
-										name="reports.admindocumenttitle" />:<span class="fontnormal">
+										name="reports.admindocumenttitle" isColonRequired="Yes"/><span class="fontnormal">
 									<c:out
 										value="${birtAdminDocumentUploadActionForm.adminiDocumentTitle}" />
 									<br />
-									<mifos:mifoslabel name="reports.accountType" />:<span
+									<mifos:mifoslabel name="reports.accountType" isColonRequired="Yes"/><span
 										class="fontnormal"> <c:out
 										value="${birtAdminDocumentUploadActionForm.accountTypeName}" />
 									<br />
-									<mifos:mifoslabel name="reports.ShowWhenStatus" /> : 
+									<mifos:mifoslabel name="reports.ShowWhenStatus" isColonRequired="Yes"/>  
 									<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedStatus')}"
 										var="selectedStatus">
@@ -174,12 +174,11 @@
 							<br>
 							<table width="90%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px;">
+									<td align="center"><html-el:submit styleClass="buttn">
 										<mifos:mifoslabel name="reports.submit"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button onclick="goToCancelPage(this.form);"
 										property="cancelButton" value="Cancel"
-										styleClass="cancelbuttn" style="width:70px">
+										styleClass="cancelbuttn" >
 										<mifos:mifoslabel name="reports.cancel" />
 									</html-el:button></td>
 								</tr>

@@ -230,11 +230,11 @@
                         <tbody>
                             <tr>
                                 <td align="center">&nbsp; <html-el:submit property="submitBtn"
-										styleClass="buttn" style="width:70px;" onclick="transferData(this.form.fees);transferData(this.form.disbursements);transferData(this.form.repayments);transferData(this.form.deposits);transferData(this.form.withdrawals);">
+										styleClass="buttn" onclick="transferData(this.form.fees);transferData(this.form.disbursements);transferData(this.form.repayments);transferData(this.form.deposits);transferData(this.form.withdrawals);">
 										<mifos:mifoslabel name="acceptedPaymentType.Submit">
 											</mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
-										styleClass="cancelbuttn" style="width:70px"
+										styleClass="cancelbuttn" 
 										onclick="location.href='acceptedPaymentTypeAction.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}'">
 										<mifos:mifoslabel name="acceptedPaymentType.Cancel">
 											</mifos:mifoslabel>
