@@ -1,3 +1,23 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -116,7 +136,7 @@
 									</td>
 									<td>
 									    <select style="width:136px;" name="reportCategoryId">
-									      <option value="-1" selected>--Select--</option>
+									      <option value="-1" selected><mifos:mifoslabel name="select" bundle="UIResources"/></option>
 									      <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>
 									          <option <c:if test="${birtReportsUploadActionForm.reportCategoryId == reportCategory.reportCategoryId}">selected="true"</c:if>value="${reportCategory.reportCategoryId}">${reportCategory.reportCategoryName}</option>
 									      </c:forEach>
@@ -143,12 +163,11 @@
 						  </table><br>	
 						<table width="90%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px;">
-										<mifos:mifoslabel name="reports.preview"></mifos:mifoslabel>
+									<td align="center"><html-el:submit styleClass="buttn">
+										<mifos:mifoslabel name="reports.preview"/>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage(this.form);" property="cancelButton"
-										value="Cancel" styleClass="cancelbuttn" style="width:70px">
+										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="reports.cancel"/>
 									</html-el:button></td>
 								</tr>

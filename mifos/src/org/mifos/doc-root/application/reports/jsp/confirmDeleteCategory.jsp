@@ -1,40 +1,23 @@
-<!-- 
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
 
-/**
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
- * Copyright (c) 2005-2006 Grameen Foundation USA
+    http://www.apache.org/licenses/LICENSE-2.0
 
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
 
- * All rights reserved.
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
 
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
- */
-
--->
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
@@ -108,15 +91,14 @@
 						<tr>
 							<td align="center">
 							<% if (null == request.getAttribute(org.apache.struts.Globals.ERROR_KEY)) { %>
-							<html-el:submit styleClass="buttn" style="width:70px;">
+							<html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="reportsCategory.submit" bundle="reportsCategoryUIResources" />
 							</html-el:submit>
 							<% } %>
 							&nbsp;
 							<html-el:button
 								onclick="goToCancelPage(this.form)"  property="SS"
-								styleClass="cancelbuttn" style="width:70px;">
-
+								styleClass="cancelbuttn">
 								<mifos:mifoslabel name="reportsCategory.cancel"
 									bundle="reportsCategoryUIResources" />
 							</html-el:button></td>
