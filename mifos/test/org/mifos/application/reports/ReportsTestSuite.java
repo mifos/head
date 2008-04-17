@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.reports.business.service.ReportsBusinessServiceTest;
+import org.mifos.application.reports.persistence.AddReportUpgradeTest;
 import org.mifos.application.reports.persistence.ReportsPersistenceTest;
 import org.mifos.application.reports.struts.action.ReportsUserParamsActionTest;
 import org.mifos.application.reports.struts.action.TestReportsAction;
@@ -16,6 +17,7 @@ public class ReportsTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestReportsAction.class);
 		testSuite.addTestSuite(ReportsBusinessServiceTest.class);
 		testSuite.addTestSuite(ReportsUserParamsActionTest.class);
+		testSuite.addTestSuite(AddReportUpgradeTest.class);
 		return testSuite;
 	}
 

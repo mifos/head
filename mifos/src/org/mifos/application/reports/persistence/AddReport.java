@@ -13,6 +13,7 @@ import org.mifos.framework.persistence.Upgrade;
 
 public class AddReport extends Upgrade {
 
+	private static final int HIGHER_VERSION = 185;
 	private  short newId;
 	private final short category;
 	private final String name;
@@ -20,15 +21,14 @@ public class AddReport extends Upgrade {
 	private final String design;
 	private Short activityId;
 
+	/**
+	 * Activity ID is non-null for Database version > 184. Please use 
+	 * the other contructor.
+	 */
+	@Deprecated
 	public AddReport(int higherVersion, short newId, short category, 
 		String name, String identifier, String design) {
-		super(higherVersion);
-		this.newId = newId;
-		this.category = category;
-		this.name = name;
-		this.identifier = identifier;
-		this.design = design;
-		this.activityId = null;
+		this(higherVersion, newId, category, name, identifier, design, null);
 	}
 	
 	public AddReport(int higherVersion, short newId, short category, 
@@ -45,6 +45,10 @@ public class AddReport extends Upgrade {
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException {
+		doUpgrade(connection);
+	}
+
+	void doUpgrade(Connection connection) throws SQLException {
 		insertIntoReport(connection);
 		insertIntoReportJasperMap(connection);
 	}
@@ -75,19 +79,35 @@ public class AddReport extends Upgrade {
 		if (newId == 0)
 			newId = getNextReportId(connection);
 		PreparedStatement statement = connection.prepareStatement(
-			"INSERT INTO REPORT(REPORT_ID, REPORT_CATEGORY_ID," +
-			"REPORT_NAME,REPORT_IDENTIFIER, REPORT_ACTIVE, ACTIVITY_ID)" +
-			"VALUES(?,?,?,?,?,?)");
+			isLowerVersion()?getSqlForLowerVersion():getSqlForHigherVersion());
 		statement.setShort(1, newId);
 		statement.setShort(2, category);
 		statement.setString(3, name);
 		statement.setString(4, identifier);
-		statement.setShort(5, ReportsBO.ACTIVE);
-		statement.setShort(6, activityId);
+		if(!isLowerVersion()) {
+			statement.setShort(5, ReportsBO.ACTIVE);
+			statement.setShort(6, activityId);
+		}
 		statement.executeUpdate();
 		statement.close();
 	}
 
+	private boolean isLowerVersion() {
+		return higherVersion()<HIGHER_VERSION;
+	}
+
+	private String getSqlForLowerVersion() {
+		return "INSERT INTO REPORT(REPORT_ID, REPORT_CATEGORY_ID," +
+		"REPORT_NAME,REPORT_IDENTIFIER)" +
+		"VALUES(?,?,?,?)";
+	}
+
+	private String getSqlForHigherVersion() {
+		return "INSERT INTO REPORT(REPORT_ID, REPORT_CATEGORY_ID," +
+		"REPORT_NAME,REPORT_IDENTIFIER, REPORT_ACTIVE, ACTIVITY_ID)" +
+		"VALUES(?,?,?,?,?,?)";
+	}
+	
 	private void insertIntoReportJasperMap(Connection connection) 
 	throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(
