@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- viewPPIInstanceDetails.jsp -->
+
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -104,7 +125,7 @@ tr.bg0 {
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
-		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
+		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources" isColonRequired="yes"/></span>
 		</td>
 		<td width="70%">
 		<span class="fontnormal8pt"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.retrievedInstance.dateConducted)}" /></span>
@@ -112,7 +133,7 @@ tr.bg0 {
 	</tr>
 	<tr>
 		<td height="30" align="right">
-		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
+		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources" isColonRequired="yes"/></span></td>
 		<td height="30" class="fontnormal">
 		<c:out value="${retrievedInstance.officer.displayName}"/>&nbsp;
 		</td>
@@ -125,7 +146,7 @@ tr.bg0 {
 	<tr>
 		<td class="bottomBorder">&nbsp;</td>
 		<td class="fontnormal8ptbold bottomBorder" align="center" width="6%">
-		<mifos:mifoslabel name="PPI.Points" bundle="PPIUIResources"/>:
+		<mifos:mifoslabel name="PPI.Points" bundle="PPIUIResources" isColonRequired="yes"/>
 		</td>
 	</tr>
 </table>
@@ -174,7 +195,7 @@ tr.bg0 {
 <table border="0" cellpadding="0" cellspacing="0" width="95%">
 	<tr class="bg1">
 		<td class="bottomBorder" align="right">
-		<strong><mifos:mifoslabel name="PPI.TOTAL" bundle="PPIUIResources"/>:&nbsp;</strong>
+		<strong><mifos:mifoslabel name="PPI.TOTAL" bundle="PPIUIResources" isColonRequired="yes"/>&nbsp;</strong>
 		</td>
 		<td class="bottomBorder sideBorders" height="24" width="6%" align="center">
 		<strong><c:out value="${povertyBand.points}"/></strong>
@@ -183,7 +204,7 @@ tr.bg0 {
 	<tr class="bg1">
 		<td colspan="2" align="right">
 		<strong>
-		<mifos:mifoslabel name="PPI.Status" bundle="PPIUIResources"/>: 
+		<mifos:mifoslabel name="PPI.Status" bundle="PPIUIResources" isColonRequired="yes"/> 
 		<mifos:mifoslabel name="PPI.Band.${povertyBand.enumBand.value}" bundle="PPIUIResources"/>
 		</strong>
 		</td>
@@ -193,10 +214,10 @@ tr.bg0 {
 <table width="93%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
         <td align="center">
-        <html-el:button property="calcelButton" style="width:135px;" styleClass="buttn" onclick="window.location='${requestScope.returnUrl}'">
+        <html-el:button property="calcelButton" styleClass="buttn" onclick="window.location='${requestScope.returnUrl}'">
         <mifos:mifoslabel name="Surveys.button.backtodetailspage" bundle="SurveysUIResources" />
         </html-el:button>&nbsp; 
-        <html-el:button property="delete" style="width:135px;" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
+        <html-el:button property="delete" onclick="window.location='surveyInstanceAction.do?method=delete&value(instanceId)=${requestScope.retrievedInstance.instanceId}&value(surveyType)=${sessionScope.businessObjectType.value}'" styleClass="buttn">
         <mifos:mifoslabel name="Surveys.button.delete" bundle="SurveysUIResources" />
         </html-el:button>
     	</td>

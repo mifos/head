@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- question_details.jsp -->
+
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
@@ -36,8 +57,8 @@
 		</font>
       <br/>
 <span class="fontnormal">
-		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Question"/>: <c:out value="${question.questionText}"/><br/>
-		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answertype"/>: 
+		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Question" isColonRequired="yes"/> <c:out value="${question.questionText}"/><br/>
+		<mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answertype" isColonRequired="yes"/> 
 <c:choose>
 <c:when test="${question.answerType == 1}"><mifos:mifoslabel name="Surveys.Multiselect"/></c:when>
 <c:when test="${question.answerType == 2}"><mifos:mifoslabel name="Surveys.Freetext"/></c:when>
@@ -46,11 +67,11 @@
 <c:when test="${question.answerType == 5}"><mifos:mifoslabel name="Surveys.Date"/></c:when>
 </c:choose><br/>
 <c:choose>
-<c:when test="${question.answerType == 3}"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer"/>:
+<c:when test="${question.answerType == 3}"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer" isColonRequired="yes"/>
                   <mifos:mifoslabel name="Surveys.between"/><c:out value="${question.numericMin}"/> 
                   <mifos:mifoslabel name="Surveys.and"/> <c:out value="${question.numericMax}"/>
 </c:when>
-<c:when test="${question.answerType == 1 || question.answerType == 4}"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer"/>: 
+<c:when test="${question.answerType == 1 || question.answerType == 4}"><mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Answer" isColonRequired="yes"/> 
 <c:forEach var="choice" items="${question.choices}" varStatus="ptr"><c:out value="${choice.choiceText}"/>
                     <c:if test="${not ptr.last}">, </c:if>
 </c:forEach>

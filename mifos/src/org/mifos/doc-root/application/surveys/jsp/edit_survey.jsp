@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- edit_survey.jsp -->
+
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
@@ -86,7 +107,9 @@
                           </c:forEach>
                         </html-el:select>
                       <td valign="top">
-                        <input id="AddButton" type="button" class="insidebuttn" value="Add &gt;&gt;" style="width:65px"  onclick="submitSurveyForm('add_new_question_edit')"/>
+                      	<html-el:button property="button" styleClass="insidebuttn" onclick="submitSurveyForm('add_new_question_edit')">
+                			<mifos:mifoslabel name="Surveys.Add" bundle="SurveysUIResources"/>  &gt;&gt;
+                  		</html-el:button>
                       </td>
                     </tr>
                   </table>
@@ -109,7 +132,9 @@
                            <html-el:checkbox property="value(mandatory_${question.questionId})" value="1"/>
                            </td>
                            <td class="drawtablerow">
-                             <input type="button" onclick="submitSurveyForm('delete_new_question_edit&value(questionNum)=${question.questionId}')" value="Delete" class="buttn"/>
+                           	 <html-el:button property="button" styleClass="buttn" onclick="submitSurveyForm('delete_new_question_edit&value(questionNum)=${question.questionId}')">
+                				<mifos:mifoslabel name="Surveys.Delete" bundle="SurveysUIResources"/>
+                  			 </html-el:button>
                            </td>
                          </tr>
                        </c:forEach>
@@ -127,10 +152,10 @@
                   <table width="93%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td align="center">
-                        <html-el:submit style="width:65px;" property="button" styleClass="buttn">
+                        <html-el:submit property="button" styleClass="buttn">
                           <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
                         </html-el:submit>&nbsp; 
-                        <html-el:button property="calcelButton" style="width:65px;" styleClass="cancelbuttn"
+                        <html-el:button property="calcelButton" styleClass="cancelbuttn"
                         onclick="window.location='surveysAction.do?method=get&value(surveyId)=${BusinessKey.surveyId}'">
                           <mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
                         </html-el:button>

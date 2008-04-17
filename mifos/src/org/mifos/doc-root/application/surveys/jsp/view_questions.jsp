@@ -1,10 +1,34 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- view_questions.jsp -->
+
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -84,18 +108,22 @@
 		<td width="75" class="fontnormalboldgray">
 		<c:choose>
 		<c:when test="${itemOffset > 1}"><html-el:link action="questionsAction.do?method=viewQuestions&itemOffset=${itemOffset - 20}">
-			Previous</html-el:link></c:when>
-		<c:otherwise>Previous</c:otherwise>
+			<mifos:mifoslabel name="Previous" bundle="Resources"/></html-el:link></c:when>
+		<c:otherwise><mifos:mifoslabel name="Previous" bundle="Resources" /></c:otherwise>
 		</c:choose>
 		</td>
 		<td align="center" class="fontnormalbold">
-		Questions <c:out value="${itemOffset}"/>-<c:out value="${itemOffset + count - 1}"/>
-		of <c:out value="${length}"/></td>
+			<fmt:message key="Surveys.PagedQuestions">
+				<fmt:param value="${itemOffset}"/>
+				<fmt:param value="${itemOffset + count - 1}"/>
+				<fmt:param value="${itemOffset + count - 1}"/>
+			</fmt:message>
+		</td>
 		<td width="75" align="right" class="fontnormalboldgray">
 		<c:choose>
 		<c:when test="${itemOffset + 20 < length}"><html-el:link action="questionsAction.do?method=viewQuestions&itemOffset=${itemOffset + 20}">
-			Next</html-el:link></c:when>
-		<c:otherwise>Next</c:otherwise>
+			<mifos:mifoslabel name="Next" bundle="Resources"/></html-el:link></c:when>
+		<c:otherwise><mifos:mifoslabel name="Next" bundle="Resources"/></c:otherwise>
 		</c:choose>
 		</td>
 	  </tr>

@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- preview_ppi_instance.jsp -->
+
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -105,7 +126,7 @@ tr.bg0 {
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
-		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources"/>:</span>
+		<red>*</red><span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.dateofsurvey" bundle="SurveysUIResources" isColonRequired="yes"/></span>
 		</td>
 		<td width="70%">
 		<span class="fontnormal8pt"><date:datetag property="dateSurveyed" renderstyle="simplemapped" isDisabled="yes"/></span>
@@ -113,7 +134,7 @@ tr.bg0 {
 	</tr>
 	<tr>
 		<td height="30" align="right">
-		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources"/>:</span></td>
+		<span class="fontnormal8ptbold"><mifos:mifoslabel name="Surveys.instance.surveyedby" bundle="SurveysUIResources" isColonRequired="yes"/></span></td>
 		<td height="30" class="fontnormal">
 		<c:out value="${requestScope.officerName}"/>&nbsp;
 		</td>
@@ -126,7 +147,7 @@ tr.bg0 {
 	<tr>
 		<td class="bottomBorder">&nbsp;</td>
 		<td class="fontnormal8ptbold bottomBorder" align="center" width="6%">
-		<mifos:mifoslabel name="PPI.Points" bundle="PPIUIResources"/>:
+		<mifos:mifoslabel name="PPI.Points" bundle="PPIUIResources" isColonRequired="yes"/>
 		</td>
 	</tr>
 </table>
@@ -178,28 +199,28 @@ tr.bg0 {
 	<tr class="bg1">
 		<td colspan="2" align="right">
 		<strong>
-		<mifos:mifoslabel name="PPI.Status" bundle="PPIUIResources"/>: 
-		<mifos:mifoslabel name="PPI.Band.${povertyBand.enumBand.value}" bundle="PPIUIResources"/>
+			<mifos:mifoslabel name="PPI.Status" bundle="PPIUIResources" isColonRequired="yes"/>
+			<mifos:mifoslabel name="PPI.Band.${povertyBand.enumBand.value}" bundle="PPIUIResources"/>
 		</strong>
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<html-el:button property="edit" style="width:65px;" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('edit')">
-		<mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" />
+		<html-el:button property="edit" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('edit')">
+			<mifos:mifoslabel name="Surveys.button.edit" bundle="SurveysUIResources" />
 		</html-el:button>
 		</td>
 	</tr>
 </table>
 <br><hr>
 <table width="93%" border="0" cellpadding="0" cellspacing="0">
-<tr>
+	<tr>
 		<td align="center">
-		<html-el:submit style="width:65px;" property="button" styleClass="buttn">
-		<mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources" />
+		<html-el:submit property="button" styleClass="buttn">
+			<mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources" />
 		</html-el:submit>&nbsp; 
-		<html-el:button property="cancelButton" style="width:65px;" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('back')">
-		<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
+		<html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('back')">
+			<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 		</html-el:button>
 		</td>
 	</tr>

@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- edit_preview_office.jsp -->
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -155,7 +176,7 @@ function goToCancelPage(id){
 							<span class="fontnormal">
 							 <html-el:button
 								onclick="goToPreviousPage();" property="cancelButton"
-								styleClass="insidebuttn" style="width:150px">
+								styleClass="insidebuttn">
 								<mifos:mifoslabel name="Office.edit" />
 							</html-el:button></span></td>
 						</tr>
@@ -173,11 +194,10 @@ function goToCancelPage(id){
 						<tr>
 							<td align="center">&nbsp; <!-- Next are submit and cancel button -->
 
-							<html-el:submit styleClass="buttn" style="width:70px;"></html-el:submit>
+							<html-el:submit styleClass="buttn"></html-el:submit>
 							&nbsp; <html-el:button
 								onclick="goToCancelPage(${BusinessKey.officeId});"
-								property="cancelButton" value="Cancel" styleClass="cancelbuttn"
-								style="width:70px">
+								property="cancelButton" value="Cancel" styleClass="cancelbuttn">
 								<mifos:mifoslabel name="Office.cancel" />
 							</html-el:button></td>
 						</tr>

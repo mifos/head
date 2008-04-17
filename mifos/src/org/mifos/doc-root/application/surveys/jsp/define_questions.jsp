@@ -1,3 +1,24 @@
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- define_questions.jsp -->
+
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
@@ -57,7 +78,7 @@
               <tr id="choiceInputsElement1" class="fontnormal">
                 <td align="right"><mifos:mifoslabel name="Surveys.Answerchoice" bundle="SurveysUIResources"/></td>
                 <td><html-el:text property="value(choice)" styleId="choice" disabled="true"/>
-                  <button id="AddButton" class="insidebuttn" style="width:65px" onclick="submitQuestionForm('addChoice')">
+                  <button id="AddButton" class="insidebuttn" onclick="submitQuestionForm('addChoice')">
                   <mifos:mifoslabel name="Surveys.Add" bundle="SurveysUIResources"/> &gt;&gt;
                   </button>
                   </td>
@@ -152,8 +173,7 @@
                      <mifos:mifoslabel name="Surveys.button.submit" bundle="SurveysUIResources"/>
                    </button>
 
-&nbsp; <html-el:button property="cancelButton" style="width:65px;"
-										styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
+&nbsp; <html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">
 										<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
 									</html-el:button></td>
 								</tr>
