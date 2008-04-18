@@ -346,8 +346,7 @@ public class MasterPersistence extends Persistence {
 	public LookUpValueLocaleEntity retrieveOneLookUpValueLocaleEntity(
 			short localeId, int lookUpId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("aLocaleId", new SupportedLocalesEntity(Short
-				.valueOf(localeId)));
+		queryParameters.put("aLocaleId", Short.valueOf(localeId));
 		queryParameters.put("aLookUpId", lookUpId);
 		Object obj = execUniqueResultNamedQuery(
 				NamedQueryConstants.GETLOOKUPVALUELOCALE, queryParameters);

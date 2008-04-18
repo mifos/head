@@ -82,15 +82,14 @@ public class ActivityGeneratorTest extends TestCase {
 		LookUpValueLocaleEntity lookUpValueLocaleEntity = mp
 				.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
 						.intValue());
-		assertEquals("Can create funds", lookUpValueLocaleEntity
-				.getLookUpValue());
+		assertNull( lookUpValueLocaleEntity.getLookUpValue());
 
 		ActivityGenerator.changeActivityMessage((short) 3, localeId, "wahaha");
 		lookUpValueLocaleEntity = mp.retrieveOneLookUpValueLocaleEntity(
 				localeId, lookUpId.intValue());
 
 		assertEquals("wahaha", lookUpValueLocaleEntity.getLookUpValue());
-		ActivityGenerator.changeActivityMessage((short) 3, localeId, "Can create funds");
+		ActivityGenerator.changeActivityMessage((short) 3, localeId, null);
 
 	}
 	

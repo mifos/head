@@ -17,7 +17,7 @@
 -- apply Index.sql
 -- apply all upgrades to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(190);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(191);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3341,10 +3341,10 @@ INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE)
 -- INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(26,7,'Center Meeting Schedule','kendra_meeting');
 -- INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(27,4,'Loan Status Report',NULL); 
 
-INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
-  VALUES(28,6,'Detailed Aging of Portfolio at Risk','aging_portfolio_at_risk');
-INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
-  VALUES(29,6,'Active Loans By Loan Officer','active_loans_by_loan_officer');
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER, ACTIVITY_ID) 
+  VALUES(28,6,'Detailed Aging of Portfolio at Risk','aging_portfolio_at_risk', 207);
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER, ACTIVITY_ID) 
+  VALUES(29,6,'Active Loans By Loan Officer','active_loans_by_loan_officer', 212);
 INSERT INTO REPORT(REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER, ACTIVITY_ID, REPORT_ACTIVE) 
   VALUES(6,'Collection Sheet Report','collection_sheet_report',229,1);
 
