@@ -67,8 +67,9 @@ explanation of the license and how it is applied.
 						  </td>
                         </tr>
                         <tr>
-                          <td class="fontnormal"><mifos:mifoslabel name="reports.editreporttips" bundle="reportsUIResources" /><span class="mandatorytext">
-                          <font color="#FF0000"><br> *</font></span><mifos:mifoslabel name="reports.editreporttipswithasterisk" bundle="reportsUIResources" /></td>
+                          <td class="fontnormal">
+                          	<mifos:mifoslabel name="reports.previewreporttips" bundle="reportsUIResources" />
+                          </td>
                         </tr>
 					</table>
 					</td>

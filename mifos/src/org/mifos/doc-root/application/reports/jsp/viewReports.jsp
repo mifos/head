@@ -33,6 +33,10 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ReportsUIResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -56,25 +60,26 @@ explanation of the license and how it is applied.
         <tr>
           <td align="left" valign="top" class="paddingL15T15">
           	<table width="95%" border="0" cellpadding="3" cellspacing="0">
-            	<tr>
-	              	<td class="headingorange">
-	              		<span class="headingorange">
-	              			<mifos:mifoslabel name="admin.viewreports" />
-	              		</span>
+            	<tr class="headingorange">
+	              	<td>
+	              		<mifos:mifoslabel name="admin.viewreports" />
 	              	</td>
             	</tr>
-            	<tr>
-              		<td valign="top" class="fontnormalbold"> 
-              			<span class="fontnormal">
-				 			<mifos:mifoslabel name="admin.infoclickonlabel" />
-				 			<mifos:mifoslabel name="reports.labelinfo" bundle="reportsUIResources" /> 
-							<html-el:link href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">
-								<mifos:mifoslabel name="reports.linkinfo" bundle="reportsUIResources" />
-							</html-el:link>
-		              		<br />
-		          			<br />
-		            	</span>
+            	<tr class="headingorange">
+              		<td valign="top" class="fontnormal"> 
+				 		<mifos:mifoslabel name="reports.changeReportInfo" />
+				 		<br />
+				 		<fmt:message key="reports.createNewReportInfo">
+				 			<fmt:param>
+								<html-el:link href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">
+									<mifos:mifoslabel name="reports.newReportLinkText" bundle="reportsUIResources" />
+								</html-el:link>
+							</fmt:param>
+				 		</fmt:message>
+		              	<br />
+		          		<br />
 		            </td>
+		        </tr>
               		<table width="95%" border="0" cellpadding="3" cellspacing="0">
               		<tr>
               			<td>
@@ -105,7 +110,8 @@ explanation of the license and how it is applied.
 				                    			<span class="fontnormal"> 
 	    			                				<c:out value="${report.reportName}"/>
 														<c:if test="${report.isActive == '0'}">
-															&nbsp;&nbsp;<img src="pages/framework/images/status_closedblack.gif" width="8" height="9" />inactive
+															&nbsp;&nbsp;<img src="pages/framework/images/status_closedblack.gif" width="8" height="9" />
+															<mifos:mifoslabel name = "reports.inactive" bundle="reportsUIResources" />
                                 						</c:if>
 	                    						</span>
 		                    				</td>
