@@ -62,6 +62,11 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
+/*
+ * LoanTrxnDetailEntity encapsulates a financial transaction
+ * such as disbursing a loan or making a payment on a loan.
+ * Possible types of transactions are described by AccountActionTypes.
+ */
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
 	private final Money principalAmount;

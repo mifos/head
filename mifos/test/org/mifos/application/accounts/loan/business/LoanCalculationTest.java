@@ -44,6 +44,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -71,6 +72,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
@@ -556,7 +558,8 @@ class LoanTestCaseData {
 		}
 	}
 	
-	private void printResults(Results expectedResult, Results calculatedResult) {
+	private void printResults(Results expectedResult, Results calculatedResult, String testName) {
+		System.out.println("Running test: " + testName);
 		System.out.println("Results are (Expected : Calculated : Difference)");
 		printComparison("Total Interest: ",expectedResult.getTotalInterest(),
 			calculatedResult.getTotalInterest());
@@ -584,28 +587,28 @@ class LoanTestCaseData {
 		}		
 	}
 
-	private void compareResults(Results expectedResult, Results calculatedResult)
+	private void compareResults(Results expectedResult, Results calculatedResult, String testName)
 	{
-		printResults(expectedResult, calculatedResult);
+		printResults(expectedResult, calculatedResult, testName);
 		
-		assertEquals(expectedResult.getTotalInterest(), 
+		assertEquals(testName, expectedResult.getTotalInterest(), 
 				calculatedResult.getTotalInterest());
-		assertEquals(expectedResult.getTotalPayments(), 
+		assertEquals(testName, expectedResult.getTotalPayments(), 
 				calculatedResult.getTotalPayments());
-		assertEquals(expectedResult.getTotalPrincipal(), 
+		assertEquals(testName, expectedResult.getTotalPrincipal(), 
 				calculatedResult.getTotalPrincipal());
 		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
 		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
-		assertEquals(expectedPayments.size(), calculatedPayments.size());
+		assertEquals(testName, expectedPayments.size(), calculatedPayments.size());
 		for (int i=0; i < expectedPayments.size(); i++)
 		{
-			assertEquals(expectedPayments.get(i).getBalance(), 
+			assertEquals(testName, expectedPayments.get(i).getBalance(), 
 					calculatedPayments.get(i).getBalance());
-			assertEquals(expectedPayments.get(i).getInterest(), 
+			assertEquals(testName, expectedPayments.get(i).getInterest(), 
 					calculatedPayments.get(i).getInterest());
-			assertEquals(expectedPayments.get(i).getPayment(), 
+			assertEquals(testName, expectedPayments.get(i).getPayment(), 
 					calculatedPayments.get(i).getPayment());
-			assertEquals(expectedPayments.get(i).getPrincipal(), 
+			assertEquals(testName, expectedPayments.get(i).getPrincipal(), 
 					calculatedPayments.get(i).getPrincipal());
 		}
 		
@@ -631,8 +634,7 @@ class LoanTestCaseData {
 		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, mode.toString());		
 	}
 	
-	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws
-	AccountException
+	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws MeetingException, NumberFormatException, AccountException
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
 		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
@@ -648,9 +650,15 @@ class LoanTestCaseData {
 		 * should be "EVERY_X" for weekly or monthly loan interest posting.
 		 */
 		// EVERY_WEEK, EVERY_DAY and EVERY_MONTH are defined as 1
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+		MeetingBO meeting = null;
+		if (loanParams.getPaymentFrequency() == RecurrenceType.MONTHLY) {
+			meeting = new MeetingBO((short) Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+				TestObjectFactory.EVERY_MONTH, new Date(), CUSTOMER_MEETING, "meeting place");
+		} else {
+			meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(loanParams.getPaymentFrequency(), EVERY_WEEK,
 						CUSTOMER_MEETING));
+		}
 
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
@@ -1006,26 +1014,37 @@ class LoanTestCaseData {
 	 * This test case will populate the data classes for a loan test case with data from spreadsheet and
 	 * calculates payments and compares
 	 */
-	private void runOneTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException, PropertyNotFoundException,
+	private void runOneTestCaseWithDataFromSpreadSheet(String directoryName, String fileName) throws NumberFormatException, PropertyNotFoundException,
 								SystemException, ApplicationException, URISyntaxException 
 	{
 
-		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		LoanTestCaseData testCaseData = loadSpreadSheetData(directoryName + fileName);
 		accountBO = setUpLoan(testCaseData.getInternalConfig(), testCaseData.getLoanParams());
 		// calculated results
 		Results calculatedResult = calculatePayments(testCaseData.getInternalConfig(), accountBO, testCaseData.getLoanParams());  
-		compareResults(testCaseData.getExpectedResult(), calculatedResult);
+		compareResults(testCaseData.getExpectedResult(), calculatedResult, fileName);
 		
 		
 	}
 	
+	private String[] getCSVFiles(String directoryPath) throws URISyntaxException {
+		File dir = new File(ResourceLoader.getURI(directoryPath));
+	    
+	    FilenameFilter filter = new FilenameFilter() {
+	        public boolean accept(File dir, String name) {
+	            return name.endsWith(".csv");
+	        }
+	    };
+	    return dir.list(filter);
+	    		
+	}
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
-			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
+			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 	}
 
 	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
@@ -1034,7 +1053,18 @@ class LoanTestCaseData {
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-issue1623.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
-			runOneTestCaseWithDataFromSpreadSheet(rootPath + dataFileNames[i]);
+			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+	}
+
+	public void testAllTestCases() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+			tearDown();
+			setUp();
+		}
 	}
 	
 	/*
@@ -1113,7 +1143,7 @@ class LoanTestCaseData {
 		
 		// calculated results
 		Results calculatedResult = calculatePayments(config, accountBO, loanParams);  
-		compareResults(expectedResult, calculatedResult);
+		compareResults(expectedResult, calculatedResult, "testOneExampleOfTestCaseFromSpreadSheet");
 		
 		
 	}
@@ -1156,7 +1186,7 @@ class LoanTestCaseData {
 		
 		// calculated results
 		Results calculatedResult = calculatePayments(config, accountBO, loanParams);  
-		compareResults(expectedResult, calculatedResult);
+		compareResults(expectedResult, calculatedResult, "testIssue1648New");
 		
 		
 	}
