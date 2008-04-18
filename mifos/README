@@ -160,8 +160,6 @@ If you want to skip running the junit tests, you can do so with:
    username=root, password=mysql.
    
 
-**Note the instructions below for setting up non-default settings may not work - this is being investigated currently.
-
    If you want non-default settings, create a file deploymifosDB.properties
    
    Here is an example of what to put in that file:
@@ -178,7 +176,7 @@ If you want to skip running the junit tests, you can do so with:
 
    Copy the above contents into the file and change the relevant values. 
 
-   Put the file into the server $CATALINA_HOME/conf folder.
+   Put the file into the server $CATALINA_HOME/lib folder.  Note that these settings will apply to the whole server instance.
 
    If the above mentioned file is not present the application takes the default parameters present in the war file for database connection.
 
