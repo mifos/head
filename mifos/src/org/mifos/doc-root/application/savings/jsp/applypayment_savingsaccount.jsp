@@ -47,6 +47,9 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
+	<script src="pages/framework/js/conversion.js"></script>
+		<script src="pages/framework/js/con_en.js"></script>
+		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<script language="javascript">
 		function funCancel(form){

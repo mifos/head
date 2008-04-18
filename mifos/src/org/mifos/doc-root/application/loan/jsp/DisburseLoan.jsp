@@ -50,6 +50,10 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
+	<script src="pages/framework/js/conversion.js"></script>
+	<script src="pages/framework/js/con_en.js"></script>
+	<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 	<body onload="disableFields()">
 		<script>

@@ -1,88 +1,48 @@
-/**
-
- * CreateLoanAccount.js    version: 1
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
- 
-	/**
-	* This function is being used for cancel button.
-	* @param form form currently selected 
-	*/
- 				function fun_cancel(form)
-					{
-						form.action="custSearchAction.do?method=loadMainSearch";
-						form.submit();
-					}
-	
-		
-	/**
-	* This function is being used for submit button.If select is selected then 
-	* it will throw a message to select some value otherwise it will call load method to go to the next page.
-	* @param form form currently selected. 
-	* @param selectbox property of the select box. 
-	*/				
-				
-				function fun_submit(form)
-					{
-						if(document.getElementsByName("selectedPrdOfferingId")[0].value=="") 
-							{
-								//alert("Please select loan instance name");
-								return false;
-							}
-						else
-						{
-						
-							loanActionForm.action="loanAction.do?method=load";
-							
-							func_disableSubmitBtn("continueBtn");
-							
-							return true;
-						}
-						
-								
-					}
-					
- 				function CalculateTotalLoanAmount(length)
-				{
-
-				document.forms["loanAccountActionForm"].elements["loanAmount"].value="0.0";
-				for(var i=0,l=length; i<l; i++)
-					{
-						if (document.forms["loanAccountActionForm"].elements["clients["+i+"]"].checked==true)
-						{
-						document.forms["loanAccountActionForm"].elements["loanAmount"].value=parseInt(document.forms["loanAccountActionForm"].elements["clientDetails["+i+"].loanAmount"].value)+parseInt(document.forms["loanAccountActionForm"].elements["loanAmount"].value);
-						}
-					}
-				}
+function fun_cancel(form)
+{
+	form.action="custSearchAction.do?method=loadMainSearch";
+	form.submit();
+}
+function fun_submit(form)
+{
+	if(document.getElementsByName("selectedPrdOfferingId")[0].value=="") 
+	{
+		return false;
+	}
+	else
+	{
+		loanActionForm.action="loanAction.do?method=load";
+		func_disableSubmitBtn("continueBtn");
+		return true;
+	}
+}
+function CalculateTotalLoanAmount(length)
+{
+	document.forms["loanAccountActionForm"].elements["loanAmount"].value="0.0";
+	for(var i=0,l=length; i<l; i++)
+	{
+		if (document.forms["loanAccountActionForm"].elements["clients["+i+"]"].checked==true)
+		{
+			document.forms["loanAccountActionForm"].elements["loanAmount"].value=parseInt(document.forms["loanAccountActionForm"].elements["clientDetails["+i+"].loanAmount"].value)+parseInt(document.forms["loanAccountActionForm"].elements["loanAmount"].value);
+		}
+	}
+}

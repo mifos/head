@@ -36,51 +36,20 @@
 
  */
 
-/********************************************************************************
-* This file contains the javascript functions for the SPANISH language
-* author - Rajender saini
-* version - 1
-/
-
-/*********************************************************************************
-* function for doing the validation in Spanish 
-*  function name : validateSpanish
-*  arg1(txt) -  string you want to validate
-*  arg2(min) - Min value it can take 
-*  arg3(max) - Max value it can take 
-*  usage - for validation of valuse entered in  Spanish 
-************************************************************************************/
 function es_ES_validate(txt,min,max)
 {
       var 	asci_txt="";
-
 	  asci_txt=genricConvertor(txt,spanishToAsci);
-	   
       return envalidate(asci_txt,min,max);
 }
-
-/*********************************************************************************
-* function for doing the validation in SPANISH
-*  function name :  spanishToAsci
-*  usage - for coverting SPANISH decimal numbers to ascii 
-************************************************************************************/
-
 function spanishToAsci(char_code)
 {
        return genericMap(char_code,SPANISH.CODE_0,SPANISH.CODE_9,SPANISH.CODE_DECIMAL);
 }
-/*************************************************************************************
-* function es_ES_OnkeyPress
-* arg1 (e) - event object
-* usage - This function is called when key is pressed while focus is in inputbox and locale is Spanish
-***************************************************************************************/
-
 function es_ES_OnkeyPress(fmt,element,e)
 {
 	return genericOnkeyPress(fmt,element,e,SPANISH.CODE_0,SPANISH.CODE_9,SPANISH.CODE_DECIMAL);
 }
-
-
 function es_ESAlertRange(min,max)
 {
    alert(" Valore entrado debe estar en la gama : " + min + " - " + max);

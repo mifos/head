@@ -51,6 +51,9 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
+		<script src="pages/framework/js/conversion.js"></script>
+		<script src="pages/framework/js/con_en.js"></script>
+		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
 		<script>
 			function showMeetingFrequency(){
 				if (document.savingsproductactionform.freqOfInterest[0].checked == true){

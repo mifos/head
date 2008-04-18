@@ -48,6 +48,10 @@
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
+		<script src="pages/framework/js/conversion.js"></script>
+		<script src="pages/framework/js/con_en.js"></script>
+		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		
 		<html-el:form action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>

@@ -1,40 +1,23 @@
-<!--
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
 
- * Loancreationdetails.jsp  version: xxx
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
 
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
-
-
- * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
- *
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the
-
- * License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
-
- * and how it is applied.
-
- *
-
- -->
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- loancretiondetails.jsp -->
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -50,11 +33,15 @@
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
-		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
-		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<script src="pages/application/meeting/js/meeting.js">
-
+		<SCRIPT type="text/javascript" SRC="pages/application/loan/js/CreateLoanAccount.js"></SCRIPT>
+		<SCRIPT type="text/javascript" SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
+		<script type="text/javascript" src="pages/application/loan/js/loan.js"></script>
+		<script type="text/javascript" src="pages/application/meeting/js/meeting.js"></script>
+		<script type="text/javascript" src="pages/framework/js/conversion.js"></script>
+		<script type="text/javascript" src="pages/framework/js/con_en.js"></script>
+		<script type="text/javascript" src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		
         <c:if test="${requestScope.perspective == 'redoLoan'}">
             <SCRIPT>
             function fun_cancel(form)
@@ -63,126 +50,6 @@
             }
             </SCRIPT>
 		</c:if>
-
-		<script>
-			function selectAll(x) {
-				for(var i=0,l=x.form.length; i<l; i++)
-				{
-					if(x.form[i].type == 'checkbox' && x.form[i].name != 'selectAll1'){
-						x.form[i].checked=x.checked
-					}
-				}
-			}
-	
-			function selectAllCheck(x){
-				var checked = true;
-				for(var i=0,l=x.form.length; i<l; i++){
-					if(x.form[i].type == 'checkbox' && x.form[i].name != 'selectAll1'){
-						if(x.form[i].checked == false){
-							checked = false;
-						}
-					}
-				}
-				for(var i=0,l=x.form.length; i<l; i++){
-					if(x.form[i].type == 'checkbox' && x.form[i].name == 'selectAll1'){
-						x.form[i].checked = checked;
-					}
-				}
-			}
-			function fun_saveForLater(form) {
-				form.method.value="create";
-				form.stateSelected.value="1";
-				form.action="multipleloansaction.do";
-				form.submit();
-				func_disableSubmitBtn("saveForLaterButton");
-			}
-			function fun_submitForApproval(form) {
-				form.method.value="create";
-				form.stateSelected.value="2";
-				form.action="multipleloansaction.do";
-				form.submit();
-				func_disableSubmitBtn("submitForApprovalButton");
-				
-			}
-			function fun_approved(form) {
-				form.method.value="create";
-				form.stateSelected.value="3";
-				form.action="multipleloansaction.do";
-				form.submit();
-				func_disableSubmitBtn("approvedButton");
-				
-			}
-			function intDedAtDisb() {
-					if(document.getElementsByName("gracePeriodTypeId")[0].value==1) {
-						document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-					} else  {
-						if(document.getElementsByName("intDedDisbursement")[0].checked==true) {
-						    document.getElementsByName("gracePeriodDuration")[0].value="0";
-							document.getElementsByName("gracePeriodDuration")[0].disabled=true;
-						}else{
-							document.getElementsByName("gracePeriodDuration")[0].disabled=false;
-						}
-					}
-				}
-
-				function displayAmount(listBox, textBox,index ){
-					//The fee combo box
-					var comboBox = document.getElementsByName(listBox)[0];
-					//The amount text box
-					var amountField = document.getElementsByName(textBox)[0];
-					//If no fee is selected then the amount field displays nothing
-					if(comboBox.selectedIndex==0)
-						amountField.value = "";
-					else{
-						var indexSelectedFee = comboBox.selectedIndex-1;
-						var formula = "";
-						if (loanAccountActionForm.selectedFeeAmntList[indexSelectedFee]!= undefined){
-							//obtaining the fee amount for a particular fee
-							var amount=loanAccountActionForm.selectedFeeAmntList[indexSelectedFee].value;
-							//assigning the value of the fee amount to the text box
-							amountField.value = amount;
-							formula = loanAccountActionForm.feeFormulaList[indexSelectedFee].value
-						}
-						else{
-							amountField.value=loanAccountActionForm.selectedFeeAmntList.value;
-							formula = loanAccountActionForm.feeFormulaList.value
-						}
-						var span = document.getElementsByName("feeFormulaSpan"+index)[0];
-						span.innerHTML =formula;
-					}
-				}  
-
-				function displayFormula(listBox, textBox,index ){
-					//The fee combo box
-					var comboBox = document.getElementsByName(listBox)[0];
-					//The amount text box
-					var amountField = document.getElementsByName(textBox)[0];
-					//If no fee is selected then the amount field displays nothing
-					if(comboBox.selectedIndex==0)
-						amountField.value = "";
-					else{
-						var indexSelectedFee = comboBox.selectedIndex-1;
-						var formula = "";
-						if (loanAccountActionForm.selectedFeeAmntList[indexSelectedFee]!= undefined){
-							formula = loanAccountActionForm.feeFormulaList[indexSelectedFee].value
-						}
-						else{
-							formula = loanAccountActionForm.feeFormulaList.value
-						}
-						var span = document.getElementsByName("feeFormulaSpan"+index)[0];
-						span.innerHTML =formula;
-					}
-				}
-
-				function fun_refresh(form)
-					{
-
-							form.action="loanAccountAction.do?method=load";
-							form.submit();
-
-					}
-				
- 		</script>
 
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>

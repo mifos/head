@@ -47,6 +47,10 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
+		<script src="pages/framework/js/conversion.js"></script>
+		<script src="pages/framework/js/con_en.js"></script>
+		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
+		
 		<html-el:form action="/feeaction.do?method=editPreview">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
