@@ -302,35 +302,44 @@ public class MeetingBO extends BusinessObject {
 		return (currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
 	}
 	
-	public Date getNextScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
-		validateMeetingDate(meetingDate);
-		Date currentScheduleDate=getNextDate(getFirstDate(getStartDate()));
-		//Date currentScheduleDate=getNextDate(getStartDate());
-		for(; currentScheduleDate.compareTo(meetingDate)<=0;
-			currentScheduleDate=getNextDate(currentScheduleDate));
-		
+	
+	/**
+	 * start from the next schedule date after the first valid date falling after start date, 
+	 * and loop till current schedule date is after meeting date
+	 */
+	public Date getNextScheduleDateAfterRecurrence(Date meetingDate)
+			throws MeetingException {
+		Date currentScheduleDate = getNextScheduleDateAfterRecurrenceWithoutAdjustment(meetingDate);
 		//return HolidayUtils.adjustDate(HolidayUtils.getCalendar(currentScheduleDate), this).getTime();
-		return HolidayUtils.adjustDate(DateUtils.getCalendarDate(currentScheduleDate.getTime()), this).getTime();
+		return HolidayUtils.adjustDate(
+				DateUtils.getCalendarDate(currentScheduleDate.getTime()), this)
+				.getTime();
 		//return currentScheduleDate;
 	}
-	
-	
-	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date meetingDate)throws MeetingException{
-		validateMeetingDate(meetingDate);
-		Date currentScheduleDate=getNextDate(getFirstDate(getStartDate()));
+
+	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date afterDate)throws MeetingException{
+		validateMeetingDate(afterDate);
+		Date from = getFirstDate(getStartDate());
+		Date currentScheduleDate=getNextDate(from);
 		//Date currentScheduleDate=getNextDate(getStartDate());
-		for(; currentScheduleDate.compareTo(meetingDate)<=0;
-			currentScheduleDate=getNextDate(currentScheduleDate));
-		
+		while(currentScheduleDate.compareTo(afterDate)<=0) {
+			currentScheduleDate=getNextDate(currentScheduleDate);
+		}
 		return currentScheduleDate;
 	}
 	
 	public Date getPrevScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
 		validateMeetingDate(meetingDate);
 		Date prevScheduleDate=null;
-		for(Date currentScheduleDate=getNextDate(getStartDate()); 
-			(currentScheduleDate.compareTo(meetingDate)<0);
-			prevScheduleDate = currentScheduleDate,currentScheduleDate = getNextDate(currentScheduleDate));
+		/* Current schedule date as next meeting date after start date till this date is after given meeting date
+		 * or increment current schedule date to next meeting date from current schedule date
+		 * return the last but one current schedule date as prev schedule date
+		 */
+		Date currentScheduleDate=getNextDate(getStartDate());		
+		while(currentScheduleDate.compareTo(meetingDate)<0){
+			prevScheduleDate = currentScheduleDate;
+			currentScheduleDate = getNextDate(currentScheduleDate);
+		}
 		return prevScheduleDate;
 	}
 	
@@ -338,9 +347,9 @@ public class MeetingBO extends BusinessObject {
 	public List<Date> getAllDates(Date endDate)throws MeetingException{
 		validateEndDate(endDate);
 		List meetingDates= new ArrayList();
-		for(Date meetingDate = getFirstDate(getStartDate()); meetingDate.compareTo(endDate)<=0; meetingDate = getNextDate(meetingDate))
+		for (Date meetingDate = getFirstDate(getStartDate()); meetingDate
+				.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate))
 			meetingDates.add(meetingDate);
-			
 		return meetingDates;
 	}
 	
@@ -356,18 +365,23 @@ public class MeetingBO extends BusinessObject {
 		}
 		return meetingDates;
 	}
-	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(int occurrences)throws MeetingException{
+
+	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(
+			int occurrences) throws MeetingException {
 		validateOccurences(occurrences);
-		List meetingDates=new ArrayList();
+		List meetingDates = new ArrayList();
 		Date meetingDate = getFirstDateWithRepaymentIndepOfMeetingEnabled(getStartDate());
-		
-		for(int dateCount=0;dateCount<occurrences ;dateCount++){
+
+		for (int dateCount = 0; dateCount < occurrences; dateCount++) {
 			//meetingDates.add(meetingDate);
-			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+			meetingDates.add(HolidayUtils.adjustDate(
+					DateUtils.getCalendarDate(meetingDate.getTime()), this)
+					.getTime());
 			meetingDate = getNextDateWithRepaymentIndepOfMeetingEnabled(meetingDate);
 		}
 		return meetingDates;
 	}
+	
 	private void validateMeetingDate(Date meetingDate)throws MeetingException{
 		if (meetingDate==null)
 			throw new MeetingException(MeetingConstants.INVALID_MEETINGDATE);
@@ -428,12 +442,18 @@ public class MeetingBO extends BusinessObject {
 		return gc.getTime();		
 	}
 	
-	private Date getFirstDateForWeek(Date startDate){
+	Date getFirstDateForWeek(Date startDate) {
 		gc.setTime(startDate);
-		if (gc.get(Calendar.DAY_OF_WEEK)> getMeetingDetails().getWeekDay().getValue()){
-			gc.add(Calendar.WEEK_OF_MONTH,1);
+
+		// Jump to next week if the required weekday has passed for current week
+		if (gc.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay()
+				.getValue()) {
+			gc.add(Calendar.WEEK_OF_MONTH, 1);
 		}
-		gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
+		
+		// Set the day of week as the require weekday
+		gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay()
+				.getValue());
 		return gc.getTime();
 	}
 	
@@ -443,6 +463,11 @@ public class MeetingBO extends BusinessObject {
 		return gc.getTime();
 	}
 	
+	/**
+	 * for monthly on date return the next date falling on the same day. 
+	 * If date has passed, pass in the date of next month, 
+	 * adjust to day number if day number exceed total number of days in month 
+	 */
 	private Date getFirstDateForMonth(Date startDate){
 		Date scheduleDate=null;
 		gc.setTime(startDate);
@@ -499,6 +524,10 @@ public class MeetingBO extends BusinessObject {
 		return scheduleDate;
 	}
 	
+	/**
+	 * for monthly is on date add the number of months after which meeting is to recur, 
+	 * and then adjust the date for day on which meeting is to occur
+	 */
 	private Date getNextDateForMonth(Date startDate){
 		Date scheduleDate=null;
 		gc.setTime(startDate);

@@ -120,7 +120,7 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		AccountPaymentEntity payment1 = savings1.getAccountPayments()
 				.iterator().next();
 		assertEquals(500.0, payment1.getAmount().getAmountDoubleValue());
-		assertEquals(helper.getDate("31/05/2006"), savings1
+		assertEquals(helper.getDate("30/04/2006"), savings1
 				.getNextIntPostDate());
 
 		assertEquals(1, savings1.getSavingsActivityDetails().size());
@@ -140,7 +140,7 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		AccountPaymentEntity payment4 = savings4.getAccountPayments()
 				.iterator().next();
 		assertEquals(800.4, payment4.getAmount().getAmountDoubleValue());
-		assertEquals(helper.getDate("31/05/2006"), savings4
+		assertEquals(helper.getDate("30/04/2006"), savings4
 				.getNextIntPostDate());
 
 		assertEquals(1, savings1.getSavingsActivityDetails().size());

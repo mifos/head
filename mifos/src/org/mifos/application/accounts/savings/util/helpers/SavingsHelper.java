@@ -58,6 +58,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
@@ -89,6 +90,10 @@ public class SavingsHelper {
 		cal.setTime(getFiscalStartDate());
 	}
 
+	/*
+	 * set the day number as 1 for interest calculation and 31 for interest posting date
+	 * and get the meeting date according to the rules set for meeting
+	 */
 	public Date getNextScheduleDate(Date accountActivationDate,
 			Date currentScheduleDate, MeetingBO meeting)
 			throws MeetingException {
@@ -121,6 +126,10 @@ public class SavingsHelper {
 		return new Date(date.getTime());
 	}
 
+	/**
+	 * start from getting a next schedule date after fiscal start date and loop till get a 
+	 * meeting date after account activation date
+	 */
 	private Date getFirstDate(MeetingBO meeting,
 			Date accountActivationDate) throws MeetingException {
 		Date date = null;
@@ -142,6 +151,8 @@ public class SavingsHelper {
 			}
 			else if(meeting.getMeetingTypeEnum() == 
 				MeetingType.SAVINGS_INTEREST_POSTING) {
+//				meeting.setStartDate(getFiscalEndDate());
+				meeting.setStartDate(DateUtils.getDatePlusXDays(getFiscalStartDate(), -1));
 				meeting.getMeetingDetails().getMeetingRecurrence()
 					.setDayNumber(SavingsConstants.POSTING_DAY);
 			}
