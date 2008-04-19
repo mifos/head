@@ -4118,4 +4118,23 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return isDisbursementDateAfterCustomerActivationDate(disbursementDate, customer)
 				&& isDisbursementDateAfterProductStartDate(disbursementDate, loanOffering);
 	}
+	
+	/*
+	 * The method calculate999Account() is temporarily implemented and should not be used except in the LoanCalculationTest
+	 */
+	
+	public Money calculate999Account()
+	{
+		Set<AccountPaymentEntity> payments = getAccountPayments();
+		if (payments.size() != noOfInstallments )
+			throw new RuntimeException("Can't calculate 999 account because all payments are not paid.");
+	
+		Money actualTotalAmount = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid()).add(
+		                          loanSummary.getPrincipalPaid()).add(loanSummary.getPenaltyPaid());
+		Money rawTotalAmount = loanSummary.getOriginalFees().add(loanSummary.getOriginalInterest()).add
+        (loanSummary.getOriginalPrincipal()).add(loanSummary.getOriginalPenalty());
+		return actualTotalAmount.subtract(rawTotalAmount);
+	}
+	
+	
 }

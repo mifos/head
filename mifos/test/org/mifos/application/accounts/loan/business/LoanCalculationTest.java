@@ -21,13 +21,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
+import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
+import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -43,9 +50,14 @@ import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -59,6 +71,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.AccountConfig;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -101,6 +114,11 @@ public class LoanCalculationTest extends MifosTestCase {
 	final String daysInYear = "Days in Year";
 	final String totals = "Summed Totals";
 	final String start = "Start";
+	final String gracePeriodType = "GracePeriodType";
+	final String gracePeriod = "GracePeriod";
+	final String calculatedTotals = "Calculated Totals";
+	String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
+
 	
 
 	LoanOfferingBO loanOffering = null;
@@ -314,6 +332,116 @@ public class LoanCalculationTest extends MifosTestCase {
 	public static void modifyDisbursmentDate(LoanBO loan, Date disbursmentDate) {
 		loan.setDisbursementDate(disbursmentDate);
 	}
+	
+	/* This part is for the testing of 999 account */
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	
+	
+	private AccountBO setUpLoanFor999AccountTest(InternalConfiguration config, LoanParameters loanParams, Results calculatedResults) throws
+	AccountException, PersistenceException
+	{
+		setNumberOfInterestDays(config.getDaysInYear());
+		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
+		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+		setInitialRoundingMode(config.getInitialRoundingMode());
+		setFinalRoundingMode(config.getFinalRoundingMode());
+		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
+		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
+		AccountingRules.setInterestRoundingMode(config.getInterestRoundingMode());
+		
+		/*
+		 * When constructing a "meeting" here, it looks like the frequency 
+		 * should be "EVERY_X" for weekly or monthly loan interest posting.
+		 */
+		// EVERY_WEEK, EVERY_DAY and EVERY_MONTH are defined as 1
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(loanParams.getPaymentFrequency(), EVERY_WEEK,
+						CUSTOMER_MEETING));
+		
+		center = TestObjectFactory.createCenter("Center", meeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		
+		Date startDate = new Date(System.currentTimeMillis());
+		
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", "L", ApplicableTo.GROUPS, startDate,
+				PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), 
+				Double.parseDouble(loanParams.getAnnualInterest()), loanParams.getNumberOfPayments(),
+				loanParams.getLoanType(), false, false, center
+				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
+				"1", "1");
+		
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+
+		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
+				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
+				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
+				new FundBO(), feeViewList, null);
+		
+		//loan.setLoanMeeting(meeting);
+		
+		PaymentData paymentData = null;
+        Set<AccountActionDateEntity> actionDateEntities = loan
+		.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
+        
+        LoanScheduleEntity loanSchedule = null;
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+		for (int i = 0; i < paymentsArray.length; i++) {
+			loanSchedule = paymentsArray[i];
+            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+			loan.applyPayment(paymentData, true);
+			
+		}
+		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account());
+		new TestObjectPersistence().persist(loan);
+		return loan;
+	}
+	
+	private void compare999Account(Money expected999Account , Money calculated999Account, String testName)
+	{
+		System.out.println("Running test: " + testName);
+		System.out.println("Results   (Expected : Calculated : Difference)");
+		printComparison("999 Account:   ", expected999Account, 
+				calculated999Account);
+		// assertEquals(expected999Account, calculated999Account);
+	}
+	
+	private void runOne999AccountTestCaseWithDataFromSpreadSheet(String fileName) throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		Results calculatedResults = new Results();
+		accountBO = setUpLoanFor999AccountTest(testCaseData.getInternalConfig(), testCaseData.getLoanParams(), calculatedResults);
+		compare999Account(testCaseData.getExpectedResult().getAccount999(), calculatedResults.getAccount999(), fileName);
+
+	}
+	
+	public void test999Account() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+		String dataFileName = "account999-test1.csv";
+		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);
+	}
+	
+	
+	/* end of of 999 account testing */
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	/****************************************************************************/
+	
+	
 
 
 	/* This part is for the new financial calculation */
@@ -405,6 +533,9 @@ public class LoanCalculationTest extends MifosTestCase {
 		private int internalPrecision = 13;
 		// digits after decimal right now is in the application configuration
 		private int digitsAfterDecimal = 1;
+		// grace period type
+		private GraceType gracePeriodType = GraceType.NONE; 
+		private short gracePeriod = 0; 
 		
 		public int getDigitsAfterDecimal() {
 			return digitsAfterDecimal;
@@ -418,7 +549,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				RoundingMode initialRoundingMode,
 				String initialRoundOffMultiple, RoundingMode finalRoundingMode,
 				String finalRoundOffMultiple, RoundingMode interestRoundingMode,
-				int internalPrecision) {
+				int internalPrecision, GraceType gracePeriodType, short gracePeriod) {
 			super();
 			this.daysInYear = daysInYear;
 			this.initialRoundingMode = initialRoundingMode;
@@ -427,6 +558,8 @@ public class LoanCalculationTest extends MifosTestCase {
 			this.finalRoundOffMultiple = finalRoundOffMultiple;
 			this.interestRoundingMode = interestRoundingMode;
 			this.internalPrecision = internalPrecision;
+			this.gracePeriodType = gracePeriodType;
+			this.gracePeriod = gracePeriod;
 		}
 		
 		public InternalConfiguration()
@@ -489,6 +622,22 @@ public class LoanCalculationTest extends MifosTestCase {
 			this.internalPrecision = internalPrecision;
 		}
 
+		public short getGracePeriod() {
+			return gracePeriod;
+		}
+
+		public void setGracePeriod(short gracePeriod) {
+			this.gracePeriod = gracePeriod;
+		}
+
+		public GraceType getGracePeriodType() {
+			return gracePeriodType;
+		}
+
+		public void setGracePeriodType(GraceType gracePeriodType) {
+			this.gracePeriodType = gracePeriodType;
+		}
+
 	}
 	
 	
@@ -499,6 +648,8 @@ public class LoanCalculationTest extends MifosTestCase {
 		Money totalPrincipal = null;  // sum of all principals for all payments
 		// detailed list of all payments. Each payment includes payment, interest, principal and balance
 		List<PaymentDetail> payments = null;
+		Money roundedTotalInterest = null;
+		Money account999 = null;
 		
 		public List<PaymentDetail> getPayments() {
 			return payments;
@@ -523,6 +674,18 @@ public class LoanCalculationTest extends MifosTestCase {
 		}
 		public void setTotalPrincipal(Money totalPrincipal) {
 			this.totalPrincipal = totalPrincipal;
+		}
+		public Money getAccount999() {
+			return account999;
+		}
+		public void setAccount999(Money account999) {
+			this.account999 = account999;
+		}
+		public Money getRoundedTotalInterest() {
+			return roundedTotalInterest;
+		}
+		public void setRoundedTotalInterest(Money roundedTotalInterest) {
+			this.roundedTotalInterest = roundedTotalInterest;
 		}
 	}
 	
@@ -634,7 +797,9 @@ class LoanTestCaseData {
 		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, mode.toString());		
 	}
 	
+
 	private AccountBO setUpLoan(InternalConfiguration config, LoanParameters loanParams) throws MeetingException, NumberFormatException, AccountException
+
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
 		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
@@ -664,7 +829,6 @@ class LoanTestCaseData {
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
 		
-		short gracePeriodDuration = 0;
 		Date startDate = new Date(System.currentTimeMillis());
 		
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -672,7 +836,7 @@ class LoanTestCaseData {
 				PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), 
 				Double.parseDouble(loanParams.getAnnualInterest()), loanParams.getNumberOfPayments(),
 				loanParams.getLoanType(), false, false, center
-				.getCustomerMeeting().getMeeting(), GraceType.NONE,
+				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
 				"1", "1");
 		
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -682,8 +846,9 @@ class LoanTestCaseData {
 		AccountBO accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
-				Double.parseDouble(loanParams.getAnnualInterest()), gracePeriodDuration, 
+				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
 				new FundBO(), feeViewList, null);
+		
 		
 		new TestObjectPersistence().persist(accountBO);
 		return accountBO;
@@ -750,7 +915,11 @@ class LoanTestCaseData {
 					loanParams.setPrincipal(token);
 				else if (paramType.indexOf(loanType)>= 0)
 				{
-					InterestType interestType = InterestType.valueOf(token.toUpperCase());
+					InterestType interestType = null;
+					if (token.equals("Fixed Principal"))
+							interestType = InterestType.DECLINING_EPI;
+					else
+						interestType = InterestType.valueOf(token.toUpperCase());
 					loanParams.setLoanType(interestType);
 				}
 				else if (paramType.indexOf(annualInterest)>= 0)
@@ -786,7 +955,7 @@ class LoanTestCaseData {
 			{
 				if (paramType.indexOf(initialRoundingMode) >= 0)
 				{
-					RoundingMode mode = RoundingMode.valueOf(token);
+					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setInitialRoundingMode(mode);
 				}
 				else if (paramType.indexOf(initialRoundOffMultiple) >= 0)
@@ -795,7 +964,7 @@ class LoanTestCaseData {
 				}
 				else if (paramType.indexOf(finalRoundingMode) >= 0)
 				{
-					RoundingMode mode = RoundingMode.valueOf(token);
+					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setFinalRoundingMode(mode);
 				}
 				else if (paramType.indexOf(finalRoundOffMultiple) >= 0)
@@ -804,7 +973,7 @@ class LoanTestCaseData {
 				}
 				else if (paramType.indexOf(interestRounding)>= 0)
 				{
-					RoundingMode mode = RoundingMode.valueOf(token);
+					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setInterestRoundingMode(mode);
 				}
 				else if (paramType.indexOf(digitsAfterDecimal) >= 0)
@@ -814,6 +983,23 @@ class LoanTestCaseData {
 				else if (paramType.indexOf(daysInYear) >= 0)
 				{
 					config.setDaysInYear(Short.parseShort(token));
+				}
+				else if (paramType.indexOf(gracePeriodType)>= 0)
+				{
+					GraceType type = null;
+					if (token.toUpperCase().equals("ALL"))
+						type = GraceType.GRACEONALLREPAYMENTS;
+					else if (token.toUpperCase().equals("PRINCIPAL"))
+						type = GraceType.PRINCIPALONLYGRACE;
+					else 
+						type = GraceType.NONE;
+					
+					config.setGracePeriodType(type);
+				}
+				else if (paramType.indexOf(gracePeriod)>= 0)
+				{
+					if (config.getGracePeriodType() != GraceType.NONE)
+						config.setGracePeriod(Short.parseShort(token));
 				}
 				break;
 					
@@ -860,6 +1046,19 @@ class LoanTestCaseData {
 			}
 		}
 		
+		
+	}
+	
+	private void parse999Account(String paramType, String line, Results result)
+	{
+		String tempLine = line.substring(paramType.length(), line.length() -1);
+		int index = tempLine.indexOf(paramType);
+		tempLine = tempLine.substring(index + paramType.length(), tempLine.length() -1);
+		String[] tokens = tempLine.split(",");
+		if (tokens.length < 7)
+			return;
+		result.setRoundedTotalInterest(new Money(tokens[5]));
+		result.setAccount999((new Money(tokens[6])));
 		
 	}
 	
@@ -960,11 +1159,14 @@ class LoanTestCaseData {
 		    		   else if ((token.indexOf(initialRoundingMode) >= 0 ) || (token.indexOf(finalRoundingMode)>= 0 )
 		    		           || (token.indexOf(initialRoundOffMultiple) >= 0 )
 		    				   || (token.indexOf(finalRoundOffMultiple) >= 0 ) || (token.indexOf(interestRounding)>= 0 ) 
-		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0 ))
+		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0)
+		    				   || (token.indexOf(gracePeriodType) >= 0) || (token.indexOf(gracePeriod) >= 0 ))
 		    		   {
 		    			   parseConfigParams(token, line, config);
 		    			   break;
 		    		   }
+		    		   else if (token.indexOf(calculatedTotals) == 0)
+		    		       parse999Account(token, line, expectedResult);
 		    		   else if (token.indexOf(totals)  >= 0)
 		    			   parseTotals(token, line, expectedResult);
 		    		   else if (token.indexOf(start)  >= 0) 
@@ -1027,6 +1229,7 @@ class LoanTestCaseData {
 		
 	}
 	
+
 	private String[] getCSVFiles(String directoryPath) throws URISyntaxException {
 		File dir = new File(ResourceLoader.getURI(directoryPath));
 	    
@@ -1038,10 +1241,10 @@ class LoanTestCaseData {
 	    return dir.list(filter);
 	    		
 	}
+
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
@@ -1050,10 +1253,12 @@ class LoanTestCaseData {
 	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
+
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = {"loan-repayment-master-issue1623.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+
 	}
 
 	public void testAllTestCases() throws Exception 
