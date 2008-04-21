@@ -98,7 +98,7 @@ explanation of the license and how it is applied.
 					WHERE laa.customer_id=c.customer_id
 					AND c.customer_level_id=1
 					AND c.branch_id = :officeId
-					AND days_in_arrears > 30
+					AND days_in_arrears > :daysInArrears
 					AND laa.unpaid_balance_currency_id=:currencyId
 					AND laa.overdue_balance_currency_id=:currencyId
 		]]>

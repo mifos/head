@@ -95,6 +95,6 @@ public interface IBranchReportService {
 			throws ServiceException;
 
 	public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(
-			Short branchId, MifosCurrency currency) throws ServiceException;
+			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) throws ServiceException;
 
 }

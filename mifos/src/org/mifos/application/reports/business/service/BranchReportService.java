@@ -293,10 +293,10 @@ public class BranchReportService implements IBranchReportService {
 	}
 
 	public BranchReportLoanArrearsProfileBO extractLoansInArrearsCount(
-			Short branchId, MifosCurrency currency) throws ServiceException {
+			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) throws ServiceException {
 		try {
 			return branchReportPersistence
-					.extractLoansArrearsProfileForBranch(branchId, currency);
+					.extractLoansArrearsProfileForBranch(branchId, currency, daysInArrearsForRisk);
 		}
 		catch (PersistenceException e) {
 			throw new ServiceException(e);

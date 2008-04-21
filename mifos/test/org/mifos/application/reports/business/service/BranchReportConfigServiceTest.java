@@ -56,6 +56,11 @@ public class BranchReportConfigServiceTest extends MifosTestCase {
 		MifosCurrency currency = branchReportConfigService.getCurrency();
 		assertNotNull(currency);
 	}
+	
+	public void testGetDaysInArrearsForRisk() throws Exception {
+		Integer daysInArrearsForRisk = branchReportConfigService.getDaysInArrearsForRisk();
+		assertNotNull(daysInArrearsForRisk);
+	}
 
 	@Override
 	protected void setUp() throws Exception {

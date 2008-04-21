@@ -74,6 +74,7 @@ import org.mifos.application.branchreport.BranchReportLoanDetailsBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -236,11 +237,11 @@ public class BranchReportPersistence extends Persistence {
 	}
 
 	public BranchReportLoanArrearsProfileBO extractLoansArrearsProfileForBranch(
-			Short branchId, MifosCurrency currency) throws PersistenceException {
+			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) throws PersistenceException {
 
 		List<Object[]> riskListResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK,
-				populateQueryParamsWithBranchAndCurrency(branchId, currency));
+				populateQueryParamsWithBranchCurrencyRiskDays(branchId, currency, daysInArrearsForRisk));
 		LoanArrearsProfileForLoansAtRisk profileForLoansAtRisk = riskListResult
 				.isEmpty() ? new LoanArrearsProfileForLoansAtRisk(currency)
 				: new LoanArrearsProfileForLoansAtRisk(riskListResult.get(0),
@@ -355,6 +356,14 @@ public class BranchReportPersistence extends Persistence {
 		params.put(CURRENCY_ID, currency.getCurrencyId());
 		return params;
 	}
+
+	private Map<String, Object> populateQueryParamsWithBranchCurrencyRiskDays(
+			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) {
+		Map<String, Object> params = populateQueryParamsWithBranchAndCurrency(
+				branchId, currency);
+		params.put(QueryParamConstants.DAYS_IN_ARREARS, daysInArrearsForRisk);
+		return params;
+	}	
 
 	private static class LoanArrearsProfileForBranch {
 		private Integer loansInArrears;

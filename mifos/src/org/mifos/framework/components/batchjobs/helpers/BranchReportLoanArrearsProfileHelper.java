@@ -54,6 +54,6 @@ public class BranchReportLoanArrearsProfileHelper {
 			throws ServiceException {
 		return branchReportService.extractLoansInArrearsCount(branchReport
 				.getBranchId(), branchReportConfigService
-				.getCurrency());
+				.getCurrency(), branchReportConfigService.getDaysInArrearsForRisk());
 	}
 }

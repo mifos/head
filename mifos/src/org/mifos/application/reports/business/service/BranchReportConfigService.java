@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource;
 
 public class BranchReportConfigService extends ConfigService {
 
+	private static final String DAYS_IN_ARREARS_FOR_RISK = "days.in.arrears.for.risk";
 	private static final String CURRENCY_ID = "currency.id";
 	private static final String REPLACEMENT_FIELD_VALUE = "replacement.field.value";
 	private static final String REPLACEMENT_FIELD_ID = "replacement.field.id";
@@ -69,6 +70,10 @@ public class BranchReportConfigService extends ConfigService {
 		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	public Integer getDaysInArrearsForRisk() throws ServiceException {
+		return Integer.parseInt(getProperty(DAYS_IN_ARREARS_FOR_RISK));
 	}
 
 }
