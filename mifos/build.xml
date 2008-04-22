@@ -162,6 +162,9 @@
 
 		</javac>
 	</target>
+	
+	<!-- task to minify javascript files (remove comments & whitespace for faster downloads) -->
+	<taskdef name="jsmin" classname="net.matthaynes.jsmin.JSMin_Task" classpath="${lib.dir}/jsmin.0.2.2.jar"/>
 
 	<!--
 	Note that my.hibernate.properties and my.HibernateTest.properties,
@@ -228,6 +231,10 @@
 				<include name="*.jasper"/>
 			</fileset>
 		</copy>
+		<jsmin force="true">
+       		<fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
+       		<fileset dir="${build.src.dir}/webcontent" includes="**/*.js"/>
+		</jsmin>
 	</target>
 
 	<target name="integrate_birt_web_viewer">
