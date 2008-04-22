@@ -197,7 +197,9 @@ public class AccountingRules {
 		return mode;
 	}
 	
-	
+	/*
+	 * Expected to return either 360 or 365
+	 */
 	public static Short getNumberOfInterestDays()
 	{
 		Short days;

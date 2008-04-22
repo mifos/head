@@ -2097,7 +2097,12 @@ private Money getLoanInterest(Date installmentEndDate)
 		if (meetingFrequency.equals(RecurrenceType.WEEKLY)) {
 			period = getInterestDays() / (getDaysInWeek() * recurAfter);
 
-		}
+		} 
+		/*
+		 * The use of monthly interest here does not distinguish between
+		 * the 360 (with equal 30 day months) and the 365 day year cases. 
+		 * Should it?
+		 */ 
 		else if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
 			period = getInterestDays() / (getDaysInMonth() * recurAfter);
 		}
@@ -3573,14 +3578,12 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return null;
 	}
 
-	// why not pass "100" as a string rather than Double.toString(100)?
-	// seems like the Double.toString call could introduce small errors
 	private Money getFlatInterestAmount_v2(Date installmentEndDate)
 			throws AccountException {
 		// TODO: interest rate should be a BigDecimal ?
 		Double interestRateDouble = getInterestRate();
 		// TODO: durationInYears should be a BigDeciaml ?
-		Double durationInYearsDouble = getTotalDurationInYears(installmentEndDate);
+		Double durationInYearsDouble = getTotalDurationInYears_v2(installmentEndDate);
 		BigDecimal interestRate = new BigDecimal(interestRateDouble, Money.getInternalPrecisionAndRounding());
 		BigDecimal durationInYears = new BigDecimal(durationInYearsDouble, Money.getInternalPrecisionAndRounding());
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -4096,6 +4099,8 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 	}
 
+	
+	
 	static boolean isDisbursementDateAfterCustomerActivationDate(
 			Date disbursementDate, CustomerBO customer) {
 		return DateUtils.dateFallsOnOrBeforeDate(customer.getCustomerActivationDate(),

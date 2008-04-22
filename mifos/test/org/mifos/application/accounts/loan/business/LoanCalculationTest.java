@@ -2,56 +2,42 @@ package org.mifos.application.accounts.loan.business;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
-import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
-import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -63,13 +49,10 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.business.AccountConfig;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -77,17 +60,10 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 
 
 
@@ -133,19 +109,14 @@ public class LoanCalculationTest extends MifosTestCase {
 	protected CustomerBO group = null;
 
 	private CustomerBO client = null;
-
-	private AccountPersistence accountPersistence = null;
-
-	private MeetingBO meeting;
-
+	
 	private UserContext userContext;
 	
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		userContext = TestObjectFactory.getContext();
-		accountPersistence = new AccountPersistence();
+
 		Money.setUsingNewMoney(true);
 		LoanBO.setUsingNewLoanSchedulingMethod(true);
 
@@ -1245,12 +1216,14 @@ class LoanTestCaseData {
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
-		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
+		
+		String[] dataFileNames = {"testcases-2008-04-16.set1.03.csv"};
+		//String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 	}
 
-	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
+	public void xtestIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 
@@ -1261,7 +1234,7 @@ class LoanTestCaseData {
 
 	}
 
-	public void testAllTestCases() throws Exception 
+	public void xtestAllTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		String[] dataFileNames = getCSVFiles(rootPath);
@@ -1275,7 +1248,7 @@ class LoanTestCaseData {
 	/*
 	 * This test case populates data from spreadsheet for loan params and expected results
 	 */
-	public void testOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
+	public void xtestOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
 								SystemException, ApplicationException 
 	{
 		
@@ -1358,7 +1331,7 @@ class LoanTestCaseData {
 	/*
 	 * This test case is meant to reproduce issue 1648 using the new data classes
 	 */
-	public void testIssue1648New() throws NumberFormatException, PropertyNotFoundException,
+	public void xtestIssue1648New() throws NumberFormatException, PropertyNotFoundException,
 								SystemException, ApplicationException 
 	{
 		// set up config
@@ -1403,7 +1376,7 @@ class LoanTestCaseData {
 	/*
 	 * This test case is meant to reproduce issue 1648 
 	 */
-	public void testIssue1648()
+	public void xtestIssue1648()
 	throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException {
 		
@@ -1450,8 +1423,6 @@ class LoanTestCaseData {
 		
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(numberOfInstallments, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
 
 		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
 		.getAccountActionDates();
@@ -1532,934 +1503,6 @@ class LoanTestCaseData {
 		
 	}
 
-
-
-	
-/*	
-	public void testCreateLoanAccountWithDecliningInterestNoGracePeriod()
-			throws NumberFormatException, PropertyNotFoundException,
-			SystemException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3,
-				InterestType.DECLINING, false, false, center
-						.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), startDate, false, // 6
-				// installments
-				1.2, (short) 0, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-				.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "50.9", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "50.9", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "50.9", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "50.9", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "51.0", "0.0",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "45.6", "0.0",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-				.getLoanSummary();
-
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithDecliningInterestGraceAllRepayments()
-			throws NumberFormatException, PropertyNotFoundException,
-			SystemException, ApplicationException {
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", ApplicableTo.GROUPS, new Date(System
-						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, (short) 3, InterestType.DECLINING, false, false, center
-						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), new Date(System
-						.currentTimeMillis()), false, // 6 installments
-				1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-				.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (1 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (2 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (3 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (4 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (5 + graceDuration)),
-				"51.0", "0.0", fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (6 + graceDuration)),
-				"45.6", "0.0", fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-				.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithDecliningInterestGracePrincipalOnly()
-			throws NumberFormatException, PropertyNotFoundException,
-			SystemException, ApplicationException {
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, new Date(System
-						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, (short) 3, InterestType.DECLINING, false, false, center
-						.getCustomerMeeting().getMeeting(),
-				GraceType.PRINCIPALONLYGRACE, "1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), new Date(System
-						.currentTimeMillis()), false, // 6 installments
-				1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-				.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "0.0", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "0.0", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "75.0", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "75.0", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "75.0", "0.1",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "75.1", "0.0",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-				.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithDecliningInterestPrincipalDueOnLastInstallment()
-			throws NumberFormatException, PropertyNotFoundException,
-			SystemException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "Loan".substring(0, 1), ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3,
-				InterestType.DECLINING, false, true, center
-						.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), startDate, false, // 6
-				// installments
-				1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-				.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "0.0", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "0.0", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "0.0", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "0.0", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "0.0", "0.1",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "300.0", "0.1",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-				.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithEqualPrincipalDecliningInterestNoGracePeriod()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3,
-				InterestType.DECLINING_EPI, false, false, center
-				.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), startDate, false, // 6
-						// installments
-						1.2, (short) 0, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "50.9", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "50.9", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "50.9", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "50.9", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "50.0", "0.0",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "46.4", "0.0",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-		.getLoanSummary();
-
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-
-	public void testCreateLoanAccountWithEqualPrincipalDecliningInterestGraceAllRepayments()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", ApplicableTo.GROUPS, new Date(System
-						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
-						1.2, (short) 3, InterestType.DECLINING_EPI, false, false, center
-						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), new Date(System
-								.currentTimeMillis()), false, // 6 installments
-								1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (1 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (2 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (3 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (4 + graceDuration)),
-				"50.9", "0.1", fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (5 + graceDuration)),
-				"50.0", "0.0", fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * (6 + graceDuration)),
-				"46.4", "0.0", fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-		.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithEqualPrincipalDecliningInterestGracePrincipalOnly()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, new Date(System
-						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
-						1.2, (short) 3, InterestType.DECLINING_EPI, false, false, center
-						.getCustomerMeeting().getMeeting(),
-						GraceType.PRINCIPALONLYGRACE, "1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), new Date(System
-								.currentTimeMillis()), false, // 6 installments
-								1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "0.0", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "0.0", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "75.0", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "75.0", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "75.0", "0.1",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "75.0", "0.0",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-		.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-
-	public void testCreateLoanAccountWithEqualPrincipalDecliningInterestPrincipalDueOnLastInstallment()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-		Date startDate = new Date(System.currentTimeMillis());
-
-		short graceDuration = (short) 2;
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "Loan".substring(0, 1), ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3,
-				InterestType.DECLINING_EPI, false, true, center
-				.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), startDate, false, // 6
-						// installments
-						1.2, graceDuration, new FundBO(), feeViewList, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		HashMap fees0 = new HashMap();
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 6);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 1), "0.0", "0.1",
-				fees0, paymentsArray[0]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 2), "0.0", "0.1",
-				fees0, paymentsArray[1]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 3), "0.0", "0.1",
-				fees0, paymentsArray[2]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 4), "0.0", "0.1",
-				fees0, paymentsArray[3]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 5), "0.0", "0.1",
-				fees0, paymentsArray[4]);
-
-		checkLoanScheduleEntity(incrementCurrentDate(14 * 6), "300.0", "0.1",
-				fees0, paymentsArray[5]);
-
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-		.getLoanSummary();
-		assertEquals(new Money("300.0"), loanSummaryEntity
-				.getOriginalPrincipal());
-
-	}
-*/	
-	private java.sql.Date setDate(int dayUnit, int interval) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-		calendar.add(dayUnit, interval);
-		return new java.sql.Date(calendar.getTimeInMillis());
-	}
-
-	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
-			boolean isInterestDedAtDisb, List<FeeView> feeViews,
-			Short noOfinstallments, Double interestRate)
-			throws NumberFormatException, AccountException, SystemException,
-			ApplicationException {
-		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_APPROVED, new Money("300.0"),
-				noOfinstallments, new Date(System.currentTimeMillis()),
-				isInterestDedAtDisb, interestRate, (short) 0, new FundBO(),
-				feeViews, null, Double.parseDouble(loanOffering
-						.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(),false,null);
-		loan.save();
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
-		accountBO = TestObjectFactory.getObject(AccountBO.class, loan
-				.getAccountId());
-		return (LoanBO) accountBO;
-	}
-
-	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
-			boolean isInterestDedAtDisb, List<FeeView> feeViews,
-			Short noOfinstallments) throws NumberFormatException,
-			AccountException, SystemException, ApplicationException {
-		return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb,
-				feeViews, noOfinstallments, 10.0);
-	}
-
-	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
-		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOAN_ACTIVE);
-	}
-
-	private LoanOfferingBO createLoanOffering(boolean principalAtLastInst,
-			PrdStatus status) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createLoanOffering("Loan",
-				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()),
-				status, 300.0, 1.2, 3, InterestType.FLAT, true,
-				principalAtLastInst, meeting);
-	}
-
-	private List<FeeView> getFeeViews() {
-		FeeBO fee1 = TestObjectFactory.createOneTimeAmountFee(
-				"One Time Amount Fee", FeeCategory.LOAN, "120.0",
-				FeePayment.TIME_OF_DISBURSMENT);
-		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
-				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
-		List<FeeView> feeViews = new ArrayList<FeeView>();
-		FeeView feeView1 = new FeeView(userContext, fee1);
-		FeeView feeView2 = new FeeView(userContext, fee3);
-		feeViews.add(feeView1);
-		feeViews.add(feeView2);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		return feeViews;
-	}
-
-	private void deleteFee(List<FeeView> feeViews) {
-		for (FeeView feeView : feeViews) {
-			TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(
-					FeeBO.class, feeView.getFeeIdValue()));
-		}
-
-	}
-
-	private AccountBO getLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		createInitialCustomers();
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		return TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-	}
-
-
-	private void createInitialCustomers() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-	}
-
-	private void changeFirstInstallmentDateToNextDate(AccountBO accountBO) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day + 1);
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			((LoanScheduleEntity) accountActionDateEntity)
-					.setActionDate(new java.sql.Date(currentDateCalendar
-							.getTimeInMillis()));
-			break;
-		}
-	}
-
-	private AccountBO applyPaymentandRetrieveAccount() throws AccountException,
-			SystemException {
-		Date startDate = new Date(System.currentTimeMillis());
-		PaymentData paymentData = PaymentData.createPaymentData(new Money(
-				Configuration.getInstance().getSystemConfig().getCurrency(),
-				"212.0"), accountBO.getPersonnel(), Short.valueOf("1"),
-				startDate);
-		paymentData.setRecieptDate(startDate);
-		paymentData.setRecieptNum("5435345");
-
-		accountBO.applyPaymentWithPersist(paymentData);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.getSessionTL().flush();
-		HibernateUtil.closeSession();
-		return TestObjectFactory.getObject(AccountBO.class, accountBO
-				.getAccountId());
-	}
-
-	private AccountBO getLoanAccountWithMiscFeeAndPenalty(AccountState state,
-			Date startDate, int disbursalType, Money miscFee, Money miscPenalty) {
-		LoanBO accountBO = getLoanAccount(state, startDate, disbursalType);
-		for (AccountActionDateEntity accountAction : accountBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-			if (accountActionDateEntity.getInstallmentId().equals(
-					Short.valueOf("1"))) {
-				accountActionDateEntity.setMiscFee(miscFee);
-				accountActionDateEntity.setMiscPenalty(miscPenalty);
-				break;
-			}
-		}
-		LoanSummaryEntity loanSummaryEntity = accountBO.getLoanSummary();
-		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees()
-				.add(miscFee));
-		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity
-				.getOriginalPenalty().add(miscPenalty));
-		TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
-		testObjectPersistence.update(accountBO);
-		return testObjectPersistence.getObject(LoanBO.class, accountBO
-				.getAccountId());
-	}
-
-	private void changeInstallmentDate(AccountBO accountBO, int numberOfDays,
-			Short installmentId) {
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			if (accountActionDateEntity.getInstallmentId()
-					.equals(installmentId)) {
-				Calendar dateCalendar = new GregorianCalendar();
-				dateCalendar.setTimeInMillis(accountActionDateEntity
-						.getActionDate().getTime());
-				int year = dateCalendar.get(Calendar.YEAR);
-				int month = dateCalendar.get(Calendar.MONTH);
-				int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
-				dateCalendar = new GregorianCalendar(year, month, day
-						- numberOfDays);
-				((LoanScheduleEntity) accountActionDateEntity)
-						.setActionDate(new java.sql.Date(dateCalendar
-								.getTimeInMillis()));
-				break;
-			}
-		}
-	}
-
-	private AccountBO getLoanAccountWithPerformanceHistory() {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		/*((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
-		 TestObjectFactory.updateObject(client);*/
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
-				AccountState.LOAN_APPROVED, startDate, loanOffering);
-		((ClientBO) client).getClientPerformanceHistory().updateLoanCounter(
-				loanOffering, YesNoFlag.YES);
-		TestObjectFactory.updateObject(client);
-		TestObjectFactory.updateObject(accountBO);
-		return accountBO;
-	}
-
-	private AccountBO getLoanAccountWithPerformanceHistory(AccountState state,
-			Date startDate, int disbursalType) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		// ((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
-		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", client, state, startDate, loanOffering,
-				disbursalType);
-		((ClientBO) client).getClientPerformanceHistory().updateLoanCounter(
-				loanOffering, YesNoFlag.YES);
-		return accountBO;
-
-	}
-
-	private AccountBO getLoanAccountWithGroupPerformanceHistory(
-			AccountState state, Date startDate, int disbursalType) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", ApplicableTo.CLIENTS, startDate, PrdStatus.LOAN_ACTIVE,
-				300.0, 1.2, 3, InterestType.FLAT, true, true, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, state, startDate, loanOffering,
-				disbursalType);
-		return accountBO;
-
-	}
-
-	private AccountActionDateEntity getLastInstallmentAccountAction(
-			LoanBO loanBO) {
-		AccountActionDateEntity nextAccountAction = null;
-		if (loanBO.getAccountActionDates() != null
-				&& loanBO.getAccountActionDates().size() > 0) {
-			for (AccountActionDateEntity accountAction : loanBO
-					.getAccountActionDates()) {
-				if (null == nextAccountAction)
-					nextAccountAction = accountAction;
-				else if (nextAccountAction.getInstallmentId() < accountAction
-						.getInstallmentId())
-					nextAccountAction = accountAction;
-			}
-		}
-		return nextAccountAction;
-	}
-
-	private void changeFirstInstallmentDate(AccountBO accountBO,
-			int numberOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day
-				- numberOfDays);
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			((LoanScheduleEntity) accountActionDateEntity)
-					.setActionDate(new java.sql.Date(currentDateCalendar
-							.getTimeInMillis()));
-			break;
-		}
-	}
-
-	private void changeFirstInstallmentDate(AccountBO accountBO) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			((LoanScheduleEntity) accountActionDateEntity)
-					.setActionDate(new java.sql.Date(currentDateCalendar
-							.getTimeInMillis()));
-			break;
-		}
-	}
-
-	private AccountBO saveAndFetch(AccountBO account) throws Exception {
-		TestObjectFactory.updateObject(account);
-		HibernateUtil.closeSession();
-		return accountPersistence.getAccount(account.getAccountId());
-	}
-
-	private java.sql.Date offSetCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
-		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
-	}
-
-	private LoanBO getLoanAccount(AccountState state, Date startDate,
-			int disbursalType) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, state, startDate, loanOffering,
-				disbursalType);
-
-	}
-
-	private Date incrementCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
-		return DateUtils.getDateWithoutTimeStamp(currentDateCalendar
-				.getTimeInMillis());
-	}
-
-	private void checkLoanScheduleEntity(Date date, String principal,
-			String interest, String miscFee, String miscPenalty,
-			String penalty, Map fees, Map feesPaid, String totalFeeDue,
-			String totalDueWithFees, LoanScheduleEntity entity) {
-		if (date != null) {
-			assertDate(date, entity);
-		}
-
-		if (principal != null) {
-			assertEquals(new Money(principal), entity.getPrincipal());
-		}
-		if (interest != null) {
-			assertEquals(new Money(interest), entity.getInterest());
-		}
-
-		if (miscFee != null) {
-			assertEquals(new Money(miscFee), entity.getMiscFee());
-		}
-
-		if (miscPenalty != null) {
-			assertEquals(new Money(miscPenalty), entity.getMiscPenalty());
-		}
-
-		if (penalty != null) {
-			assertEquals(new Money(penalty), entity.getPenalty());
-		}
-
-		if (fees != null) {
-			checkFees(fees, entity, false);
-		}
-
-		if (feesPaid != null) {
-			checkFees(feesPaid, entity, true);
-		}
-
-		if (totalFeeDue != null) {
-			checkTotalDue(totalFeeDue, entity);
-		}
-
-		if (totalDueWithFees != null) {
-			checkTotalDueWithFees(totalDueWithFees, entity);
-		}
-	}
-
-	private void checkTotalDueWithFees(String totalDueWithFees,
-			LoanScheduleEntity entity) {
-		assertEquals(new Money(totalDueWithFees), entity.getTotalDueWithFees());
-	}
-
-	private void checkTotalDue(String totalFeeDue, LoanScheduleEntity entity) {
-		assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
-	}
-
-	private void checkLoanScheduleEntity(Date date, String principal,
-			String interest, Map fees, LoanScheduleEntity entity) {
-		if (date != null) {
-			assertDate(date, entity);
-		}
-
-		assertEquals(new Money(principal), entity.getPrincipal());
-		assertEquals(new Money(interest), entity.getInterest());
-
-		checkFees(fees, entity, false);
-	}
-
-	private void assertDate(Date date, LoanScheduleEntity entity) {
-		assertEquals(DateUtils.getDateWithoutTimeStamp(date.getTime()),
-				DateUtils.getDateWithoutTimeStamp(entity.getActionDate()
-						.getTime()));
-	}
-
-	private void checkFees(Map expectedFess, String totalFeeDue,
-			LoanScheduleEntity entity) {
-		checkFees(expectedFess, entity, false);
-		assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
-	}
-
-	private void checkPrincipalAndInterest(String principal, String interest,
-			LoanScheduleEntity entity) {
-		assertEquals(new Money(principal), entity.getPrincipal());
-		assertEquals(new Money(interest), entity.getInterest());
-	}
-
-	private void checkFees(Map expected, LoanScheduleEntity loanScheduleEntity,
-			boolean checkPaid) {
-		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = loanScheduleEntity
-				.getAccountFeesActionDetails();
-		assertEquals("fees were " + feeNames(accountFeesActionDetails),
-				expected.size(), accountFeesActionDetails.size());
-
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-
-			if (expected.get(accountFeesActionDetailEntity.getFee()
-					.getFeeName()) != null) {
-				assertEquals(new Money((String) expected
-						.get(accountFeesActionDetailEntity.getFee()
-								.getFeeName())),
-						checkPaid ? accountFeesActionDetailEntity
-								.getFeeAmountPaid()
-								: accountFeesActionDetailEntity.getFeeAmount());
-			}
-			else {
-
-				assertFalse("Fee amount not found for "
-						+ accountFeesActionDetailEntity.getFee().getFeeName(),
-						true);
-			}
-		}
-	}
-
-	private String feeNames(Collection<AccountFeesActionDetailEntity> details) {
-		StringBuilder debugString = new StringBuilder();
-		for (Iterator<AccountFeesActionDetailEntity> iter = details.iterator(); iter
-				.hasNext();) {
-			AccountFeesActionDetailEntity detail = iter.next();
-			debugString.append(detail.getFee().getFeeName());
-			if (iter.hasNext()) {
-				debugString.append(", ");
-			}
-		}
-		return debugString.toString();
-	}
-
-	// altered form protected
 	public static LoanScheduleEntity[] getSortedAccountActionDateEntity(
 			Set<AccountActionDateEntity> actionDateCollection, int expectedCount) {
 
@@ -2473,48 +1516,6 @@ class LoanTestCaseData {
 		}
 
 		return sortedList;
-	}
-
-	private void createInitialObjects() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-	}
-
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		Date startDate = new Date(System.currentTimeMillis());
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-
-	}
-
-	private AccountBO createLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				startDate, meeting);
-		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
-				loanOffering);
-		return accountBO;
-	}
-
-	private List<CustomFieldView> getCustomFields() {
-		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
-				CustomFieldType.ALPHA_NUMERIC));
-		return fields;
 	}
 
 }
