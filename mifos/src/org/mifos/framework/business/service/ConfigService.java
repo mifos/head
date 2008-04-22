@@ -66,4 +66,8 @@ public abstract class ConfigService {
 		String[] values = getProperty(key).split(CSV_DELIMITER);
 		return CollectionUtils.asList(values);
 	}
+	
+	protected boolean isPropertyPresent(String key) {
+		return config.containsKey(key);
+	}
 }

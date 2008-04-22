@@ -3,14 +3,21 @@ package org.mifos.application.reports.business.service;
 import static org.mifos.application.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
 import static org.mifos.framework.util.helpers.NumberUtils.*;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficecFixture;
+import org.mifos.application.personnel.business.CustomerFixture;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelFixture;
+import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
@@ -40,9 +47,29 @@ public class AbstractCollectionSheetTestCase extends MifosTestCase {
 	protected static final PersonnelBO LOAN_OFFICER = PersonnelFixture
 			.createLoanOfficer(LOAN_OFFICER_SHORT_ID);
 	protected CollectionSheetService collectionSheetService;
-	protected CollSheetCustBO center;
-	protected CollSheetCustBO group;
+	protected CollSheetCustBO centerCollectionSheet;
+	protected CollSheetCustBO groupCollectionSheet;
+	
+	protected static final Integer PERSONNEL_ANY_ID = Integer.valueOf(100);
+	protected static final Short PERSONNEL_ANY_SHORT_ID = convertIntegerToShort(PERSONNEL_ANY_ID);
 
+	protected List<OfficeBO> branchOffices;
+	protected List<SelectionItem> branchOfficesSelectionItems;
+	protected List<PersonnelBO> loanOfficers;
+	protected List<SelectionItem> loanOfficersSelectionItems;
+	protected List<CustomerBO> centers;
+	protected List<SelectionItem> centerSelectionItems;
+	protected static final PersonnelBO ANY_PERSONNEL = PersonnelFixture
+			.createNonLoanOfficer(PERSONNEL_ANY_SHORT_ID);
+	protected PersonnelBO anyPersonnel;
+	protected OfficeBO anyOffice;
+	protected CenterBO center;
+	protected static final OfficeBO OFFICE = OfficecFixture
+			.createOffice(BRANCH_SHORT_ID);
+	protected static final SelectionItem OFFICE_SELECTION_ITEM = new SelectionItem(
+			OFFICE.getOfficeId(), OFFICE.getOfficeName());
+
+	
 	protected Integer s2i(Short s) {
 		return NumberUtils.convertShortToInteger(s);
 	}
@@ -75,13 +102,38 @@ public class AbstractCollectionSheetTestCase extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		center = new CollSheetCustBO();
-		center.populateInstanceForTest(CENTER_ID, "Sample Center",
+		centerCollectionSheet = new CollSheetCustBO();
+		centerCollectionSheet.populateInstanceForTest(CENTER_ID, "Sample Center",
 				CustomerLevel.CENTER.getValue(), ANY_SHORT_ID, "",
 				LOAN_OFFICER_SHORT_ID);
-		group = new CollSheetCustBO();
-		group.populateInstanceForTest(GROUP_ID, "Sample Group",
+		groupCollectionSheet = new CollSheetCustBO();
+		groupCollectionSheet.populateInstanceForTest(GROUP_ID, "Sample Group",
 				CustomerLevel.GROUP.getValue(), ANY_SHORT_ID, "",
 				LOAN_OFFICER_SHORT_ID);
+		branchOffices = new ArrayList<OfficeBO>();
+		branchOfficesSelectionItems = new ArrayList<SelectionItem>();
+		loanOfficers = new ArrayList<PersonnelBO>();
+		loanOfficersSelectionItems = new ArrayList<SelectionItem>();
+		centers = new ArrayList<CustomerBO>();
+		centerSelectionItems = new ArrayList<SelectionItem>();
+		for (int i = 0; i < MAX_COUNT; i++) {
+			OfficeBO office = OfficecFixture.createOffice(String.valueOf(i));
+			branchOffices.add(office);
+			branchOfficesSelectionItems.add(new SelectionItem(office
+					.getOfficeId(), office.getOfficeName()));
+			PersonnelBO loanOfficer = PersonnelFixture
+					.createPersonnel(new Short(String.valueOf(i)));
+			loanOfficers.add(loanOfficer);
+			loanOfficersSelectionItems.add(new SelectionItem(loanOfficer
+					.getPersonnelId(), loanOfficer.getDisplayName()));
+			CenterBO centerBO = CustomerFixture.createCenterBO(Integer
+					.valueOf(i), LOAN_OFFICER);
+			centers.add(centerBO);
+			centerSelectionItems.add(new SelectionItem(i2s(centerBO
+					.getCustomerId()), centerBO.getDisplayName()));
+		}
+		anyPersonnel = PersonnelFixture.createPersonnel(ANY_SHORT_ID);
+		anyOffice = OfficecFixture.createOffice(ANY_SHORT_ID);
+		center = CustomerFixture.createCenterBO(CENTER_ID, LOAN_OFFICER);
 	}
 }

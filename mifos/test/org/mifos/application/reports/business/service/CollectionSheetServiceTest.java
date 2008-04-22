@@ -28,21 +28,21 @@ public class CollectionSheetServiceTest extends AbstractCollectionSheetTestCase 
 				.getCollectionSheetForCustomerOnMeetingDate(meetingDate,
 						CENTER_ID, LOAN_OFFICER_SHORT_ID, CustomerLevel.CENTER);
 		assertEquals(1, retrievedCenterCollectionSheets.size());
-		assertEquals(center, retrievedCenterCollectionSheets.get(0));
+		assertEquals(centerCollectionSheet, retrievedCenterCollectionSheets.get(0));
 	}
 
 	public void testReturnsCollectionSheetsForGroup() throws Exception {
 		List<CollSheetCustBO> meetingsForGroups = collectionSheetService
-				.getCollectionSheetForGroups(meetingDate, center,
+				.getCollectionSheetForGroups(meetingDate, centerCollectionSheet,
 						LOAN_OFFICER_SHORT_ID);
 		assertEquals(2, meetingsForGroups.size());
-		assertTrue(meetingsForGroups.contains(group));
+		assertTrue(meetingsForGroups.contains(groupCollectionSheet));
 		assertTrue(meetingsForGroups.contains(anotherGroup));
 	}
 
 	public void testCollectionSheetForIndividualCustomer() throws Exception {
 		List<CollSheetCustBO> collectionSheet = collectionSheetService
-				.getCollectionSheetForCustomers(meetingDate, group,
+				.getCollectionSheetForCustomers(meetingDate, groupCollectionSheet,
 						LOAN_OFFICER_SHORT_ID);
 		assertEquals(2, collectionSheet.size());
 	}
@@ -65,18 +65,18 @@ public class CollectionSheetServiceTest extends AbstractCollectionSheetTestCase 
 				ANY_SHORT_ID, "", LOAN_OFFICER_SHORT_ID);
 
 		generatedCollectionSheets = new HashSet<CollSheetCustBO>();
-		group.setParentCustomerId(CENTER_ID);
+		groupCollectionSheet.setParentCustomerId(CENTER_ID);
 		groupUnderDifferentLoanOfficer.setParentCustomerId(CENTER_ID);
 		anotherGroup.setParentCustomerId(CENTER_ID);
-		generatedCollectionSheets.add(center);
+		generatedCollectionSheets.add(centerCollectionSheet);
 		generatedCollectionSheets.add(centerUnderDifferentLoanOfficer);
-		generatedCollectionSheets.add(group);
+		generatedCollectionSheets.add(groupCollectionSheet);
 		generatedCollectionSheets.add(groupUnderDifferentLoanOfficer);
 		generatedCollectionSheets.add(anotherGroup);
 
 
 		generatedCollectionSheets.addAll(generateClientCollectionSheets(300,
-				group, LOAN_OFFICER_SHORT_ID));
+				groupCollectionSheet, LOAN_OFFICER_SHORT_ID));
 		generatedCollectionSheets.addAll(generateClientCollectionSheets(302,
 				anotherGroup, LOAN_OFFICER_SHORT_ID));
 		generatedCollectionSheets.addAll(generateClientCollectionSheets(304,

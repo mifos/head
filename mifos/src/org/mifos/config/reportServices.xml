@@ -52,7 +52,7 @@
 		class="org.mifos.application.reports.business.service.ReportsParameterService">
 		<constructor-arg ref="selectionItemPersistence" />
 	</bean>
-	<bean id="cascadignReportParameterService"
+	<bean id="cascadingReportParameterService"
 		class="org.mifos.application.reports.business.service.CascadingReportParameterService">
 		<constructor-arg
 			type="org.mifos.application.reports.business.service.IReportsParameterService"
@@ -83,10 +83,9 @@
 		class="org.mifos.application.reports.business.service.CollectionSheetReportService">
 		<constructor-arg ref="collectionSheetService" />
 		<constructor-arg ref="officeBusinessService" />
-		<constructor-arg ref="personnelBusinessService" />
 		<constructor-arg ref="accountBusinessService" />
 		<constructor-arg ref="reportProductOfferingService" />
-		<constructor-arg ref="cascadignReportParameterService" />
+		<constructor-arg ref="cascadingReportParameterService" />
 	</bean>
 	<bean id="collectionSheetReportService" factory-method="decorate"
 		class="org.mifos.framework.business.service.ServiceDecoratorFactory">

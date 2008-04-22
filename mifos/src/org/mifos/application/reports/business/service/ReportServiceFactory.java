@@ -25,6 +25,7 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ReportServiceFactory {
+	private static final String CASCADING_REPORT_PARAMETER_SERVICE = "cascadingReportParameterService";
 	private static final String BRANCH_CASH_CONFIRMATION_REPORT_SERVICE = "branchCashConfirmationReportService";
 	private static final String BRANCH_CASH_CONFIRMATION_CONFIG_SERVICE_BEAN = "branchCashConfirmationConfigService";
 	private static final String BRANCH_REPORT_SERVICE_BEAN = "branchReportService";
@@ -86,5 +87,10 @@ public class ReportServiceFactory {
 				new UserActivityAndServiceLogger(
 						"BranchCashConfirmationReportService", userId))
 				: serviceBean;
+	}
+	
+	public static CascadingReportParameterService getCascadingReportParameterService() {
+		return (CascadingReportParameterService) classPathXmlApplicationContext
+				.getBean(CASCADING_REPORT_PARAMETER_SERVICE);
 	}
 }

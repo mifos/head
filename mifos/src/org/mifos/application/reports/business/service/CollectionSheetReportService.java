@@ -23,9 +23,6 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.reports.business.dto.CollectionSheetReportDTO;
-import org.mifos.application.reports.ui.DateSelectionItem;
-import org.mifos.application.reports.ui.SelectionItem;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
@@ -36,7 +33,6 @@ import org.springframework.core.io.ClassPathResource;
 public class CollectionSheetReportService implements
 		ICollectionSheetReportService {
 	private final OfficeBusinessService officeBusinessService;
-	private final PersonnelBusinessService personnelBusinessService;
 	private final CollectionSheetService collectionSheetService;
 	private final AccountBusinessService accountBusinessService;
 	private final ReportProductOfferingService reportProductOfferingService;
@@ -44,14 +40,12 @@ public class CollectionSheetReportService implements
 
 	CollectionSheetReportService(CollectionSheetService collectionSheetService,
 			OfficeBusinessService officeBusinessService,
-			PersonnelBusinessService personnelBusinessService,
 			AccountBusinessService accountBusinessService,
 			ReportProductOfferingService reportProductOfferingService,
 			CascadingReportParameterService cascadingReportParameterService) {
 		super();
 		this.collectionSheetService = collectionSheetService;
 		this.officeBusinessService = officeBusinessService;
-		this.personnelBusinessService = personnelBusinessService;
 		this.accountBusinessService = accountBusinessService;
 		this.reportProductOfferingService = reportProductOfferingService;
 		this.cascadingReportParameterService = cascadingReportParameterService;
@@ -59,46 +53,13 @@ public class CollectionSheetReportService implements
 
 	CollectionSheetReportService() {
 		this(new CollectionSheetService(), new OfficeBusinessService(),
-				new PersonnelBusinessService(), new AccountBusinessService(),
-				new ReportProductOfferingService(new LoanPrdBusinessService(),
+				new AccountBusinessService(), new ReportProductOfferingService(new LoanPrdBusinessService(),
 						new SavingsPrdBusinessService(), new ClassPathResource(
 								REPORT_PRODUCT_OFFERING_CONFIG)),
 				new CascadingReportParameterService(
 						new ReportsParameterService(),
 						new PersonnelBusinessService(),
 						new CustomerBusinessService()));
-	}
-
-	public List<SelectionItem> getBranchOffices(Integer userId)
-			throws ServiceException {
-		return cascadingReportParameterService
-				.getBranchOfficesUnderUser(personnelBusinessService
-						.getPersonnel(convertIntegerToShort(userId)));
-	}
-
-	public List<SelectionItem> getActiveLoanOfficers(Integer userId,
-			Integer branchIdIntValue) throws ServiceException {
-		return cascadingReportParameterService
-				.getActiveLoanOfficersUnderUserInBranch(
-						personnelBusinessService
-								.getPersonnel(convertIntegerToShort(userId)),
-						convertIntegerToShort(branchIdIntValue));
-	}
-
-	public List<SelectionItem> getActiveCentersForLoanOfficer(
-			Integer loanOfficerIdIntValue, Integer branchIdIntValue)
-			throws ServiceException {
-		return cascadingReportParameterService
-				.getActiveCentersInBranchForLoanOfficer(
-						convertIntegerToShort(branchIdIntValue),
-						convertIntegerToShort(loanOfficerIdIntValue));
-	}
-
-	public List<DateSelectionItem> getMeetingDatesForCenter(Integer branchId,
-			Integer centerId, Integer officerId) throws ServiceException {
-		return cascadingReportParameterService.getMeetingDates(
-				convertIntegerToShort(branchId),
-				convertIntegerToShort(officerId), centerId);
 	}
 
 	public List<CollectionSheetReportDTO> getCollectionSheets(Integer branchId,
@@ -184,11 +145,6 @@ public class CollectionSheetReportService implements
 			e.printStackTrace();
 		}
 		return collectionSheetReport;
-	}
-
-
-	public void invalidateCachedReportParameters() {
-		cascadingReportParameterService.invalidate();
 	}
 
 	CollSheetLnDetailsEntity getLoanProduct(CollSheetCustBO collectionSheet,

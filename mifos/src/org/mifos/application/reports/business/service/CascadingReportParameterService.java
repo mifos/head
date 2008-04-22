@@ -28,6 +28,7 @@ import static org.mifos.application.reports.ui.SelectionItem.NA_LOAN_OFFICER_SEL
 import static org.mifos.application.reports.ui.SelectionItem.SELECT_BRANCH_OFFICE_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.SELECT_CENTER_SELECTION_ITEM;
 import static org.mifos.application.reports.ui.SelectionItem.SELECT_LOAN_OFFICER_SELECTION_ITEM;
+import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
 import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
 
 import java.util.ArrayList;
@@ -61,18 +62,16 @@ public class CascadingReportParameterService {
 
 	public List<SelectionItem> getBranchOfficesUnderUser(PersonnelBO user)
 			throws ServiceException {
-		List<SelectionItem> offices = new ArrayList<SelectionItem>();
-		ArrayList<SelectionItem> branchOffices = new ArrayList<SelectionItem>();
-
 		if (user == null)
 			return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
 
-		offices = reportsParameterService.getActiveBranchesUnderUser(user
+		List<SelectionItem> offices = reportsParameterService.getActiveBranchesUnderUser(user
 				.getOfficeSearchId());
 
 		if (offices.isEmpty())
 			return CollectionUtils.asList(NA_BRANCH_OFFICE_SELECTION_ITEM);
 
+		ArrayList<SelectionItem> branchOffices = new ArrayList<SelectionItem>();
 		branchOffices.add(SELECT_BRANCH_OFFICE_SELECTION_ITEM);
 		branchOffices.addAll(offices);
 		return branchOffices;
@@ -147,8 +146,11 @@ public class CascadingReportParameterService {
 		return activeCenters;
 	}
 
-	public List<DateSelectionItem> getMeetingDates(Short branchId,
-			Short officerId, Integer customerId) throws ServiceException {
+	public List<DateSelectionItem> getMeetingDatesForCollectionSheet(
+			Integer branchIdInt, Integer officerIdInt, Integer customerId)
+			throws ServiceException {
+		Short branchId = convertIntegerToShort(branchIdInt);
+		Short officerId = convertIntegerToShort(officerIdInt);
 		List<DateSelectionItem> meetingDates = new ArrayList<DateSelectionItem>();
 		if (branchId == null
 				|| SELECT_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchId)
@@ -230,5 +232,25 @@ public class CascadingReportParameterService {
 
 	public void invalidate() {
 		reportsParameterService.invalidate();
+	}
+
+	public List<SelectionItem> getBranchOffices(Integer userId)
+			throws ServiceException {
+		return getBranchOfficesUnderUser(personnelBusinessService
+				.getPersonnel(convertIntegerToShort(userId)));
+	}
+
+	public List<SelectionItem> getActiveLoanOfficers(Integer userId,
+			Integer branchId) throws ServiceException {
+		return getActiveLoanOfficersUnderUserInBranch(personnelBusinessService
+				.getPersonnel(convertIntegerToShort(userId)),
+				convertIntegerToShort(branchId));
+	}
+
+	public List<SelectionItem> getActiveCentersForLoanOfficer(
+			Integer loanOfficerId, Integer branchId) throws ServiceException {
+		return getActiveCentersInBranchForLoanOfficer(
+				convertIntegerToShort(branchId),
+				convertIntegerToShort(loanOfficerId));
 	}
 }

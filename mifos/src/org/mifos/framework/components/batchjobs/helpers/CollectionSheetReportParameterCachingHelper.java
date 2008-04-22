@@ -43,13 +43,12 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.reports.business.service.CascadingReportParameterService;
 import org.mifos.application.reports.business.service.ReportServiceFactory;
-import org.mifos.application.reports.business.service.ICollectionSheetReportService;
 import org.mifos.application.reports.ui.SelectionItem;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.NumberUtils;
 
@@ -63,9 +62,9 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		ICollectionSheetReportService collectionSheetService = ReportServiceFactory
-				.getCacheEnabledCollectionSheetReportService();
-		collectionSheetService.invalidateCachedReportParameters();
+		CascadingReportParameterService cascadingReportParameterService = ReportServiceFactory
+				.getCascadingReportParameterService();
+		cascadingReportParameterService.invalidate();
 		try {
 			List<OfficeBO> branchOffices = new OfficeBusinessService()
 					.getBranchOffices();
@@ -73,23 +72,21 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 
 				Integer officeId = NumberUtils
 						.convertShortToInteger(branchOffice.getOfficeId());
-				collectionSheetService.getActiveLoanOfficers(MIFOS_USER_ID,
-						officeId);
+				cascadingReportParameterService.getActiveLoanOfficers(
+						MIFOS_USER_ID, officeId);
 				Integer allLoanOfficerId = convertShortToInteger(SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
 						.getId());
-				collectionSheetService.getActiveCentersForLoanOfficer(
+				cascadingReportParameterService.getActiveCentersForLoanOfficer(
 						allLoanOfficerId, officeId);
-				collectionSheetService
-						.getMeetingDatesForCenter(
+				cascadingReportParameterService
+						.getMeetingDatesForCollectionSheet(
 								officeId,
+								allLoanOfficerId,
 								convertShortToInteger(SelectionItem.ALL_CENTER_SELECTION_ITEM
-										.getId()), allLoanOfficerId);
+										.getId()));
 			}
 		}
 		catch (ServiceException e) {
-			throw new BatchJobException(e);
-		}
-		catch (PersistenceException e) {
 			throw new BatchJobException(e);
 		}
 	}

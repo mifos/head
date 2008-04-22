@@ -12,15 +12,7 @@
         </structure>
     </list-property>
     <parameters>
-        <scalar-parameter name="userId" id="215" extends="MifosReport.userId">
-            <property name="valueType">static</property>
-            <property name="dataType">integer</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
-        <scalar-parameter name="branchId" id="217">
+        <scalar-parameter name="branchId" id="602">
             <property name="valueType">dynamic</property>
             <property name="dataType">integer</property>
             <text-property name="promptText">Select Branch</text-property>
@@ -44,9 +36,16 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
+        <scalar-parameter name="userId" id="601" extends="MifosReport.userId">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
     </parameters>
     <data-sources>
-        <script-data-source name="MifosCollectionSheet" id="219" extends="MifosReport.MifosCollectionSheet"/>
         <script-data-source name="BranchCashConfirmation" id="220">
             <method name="open"><![CDATA[try {
 	logger = Packages.java.util.logging.Logger.getLogger("");
@@ -57,13 +56,16 @@
 	    return Packages.org.mifos.framework.util.helpers.MoneyFactory.createMoney(configService.getCurrency(), 
 	    			new Packages.java.math.BigDecimal(amount==null?0:amount)).toString();
     }			
+    displaySignatureColumn = function() {
+    	return configService.displaySignatureColumn();
+    }
 } catch (e) {
 	logger.info("BCCReport: Ds-open: exception : BranchCashConfirmationDataSource: "+e);
 }]]></method>
         </script-data-source>
+        <script-data-source name="ReportParameterDataSource" id="599" extends="MifosReport.ReportParameterDataSource"/>
     </data-sources>
     <data-sets>
-        <script-data-set name="BranchOffices" id="214" extends="MifosReport.BranchOffices"/>
         <script-data-set name="CenterRecoveries" id="221">
             <list-property name="resultSetHints">
                 <structure>
@@ -303,6 +305,7 @@
     logger.info("Branch Cash Confirmation Report: Disbursements: fetch: exception : "+e);
 }]]></method>
         </script-data-set>
+        <script-data-set name="BranchOffices" id="600" extends="MifosReport.BranchOffices"/>
     </data-sets>
     <styles>
         <style name="pageHeaderLeft" id="427">
@@ -1457,6 +1460,12 @@
                     <grid id="562">
                         <property name="style">signatureBlock</property>
                         <property name="width">100%</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getBranchCashConfirmationConfigService().displaySignatureColumn()</expression>
+                            </structure>
+                        </list-property>
                         <column id="563"/>
                         <column id="564"/>
                         <column id="565"/>

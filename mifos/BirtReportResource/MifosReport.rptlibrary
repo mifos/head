@@ -4,7 +4,7 @@
     <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
     <property name="units">in</property>
     <property name="includeResource">BirtReportResource/CollectionSheetReportResources</property>
-    <property name="comments">Copyright (c) 2006 &lt;&lt;Grameen Foundation Inc.>></property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <property name="theme">defaultTheme</property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="25">
@@ -143,418 +143,23 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <script-data-source name="MifosCollectionSheet" id="31">
+        <script-data-source name="ReportParameterDataSource" id="32">
             <method name="open"><![CDATA[logger = Packages.java.util.logging.Logger.getLogger("");
 
 ALL_ID = new Packages.java.lang.Integer(-1);
 SELECT_ID = new Packages.java.lang.Integer(-2);
 NA_ID = new Packages.java.lang.Integer(-3);
 userId = params["userId"];
-CUSTOMER_LEVEL_GROUP  = 2;
-CUSTOMER_LEVEL_CENTER = 3;
-MAX_PRODUCT_COUNT = 2;
-//user config variable: customerLevel
-//set this to either CUSTOMER_LEVEL_CENTER or CUSTOMER_LEVEL_GROUP
-customerLevel = CUSTOMER_LEVEL_CENTER;
-
-customerLevelLabel = (customerLevel == CUSTOMER_LEVEL_CENTER) ? "Center" : "Group";
-
 try {
 	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
-    //collectionSheetService = new Packages.org.mifos.application.reports.business.service.CollectionSheetReportService();
-    collectionSheetService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
+    reportParameterService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>
-            <method name="close"><![CDATA[collectionSheetService = null;]]></method>
         </script-data-source>
     </data-sources>
     <data-sets>
-        <script-data-set name="Collections" id="32">
-            <list-property name="resultSetHints">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">member_id</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">group_id</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">center_id</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">member_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">group_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">center_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">loan_1_balance</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">loan_1_issues</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">loan_1_due</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">loan_2_balance</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">loan_2_issues</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">loan_2_due</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">savings_1_balance</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">savings_1_due</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">savings_2_balance</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
-                    <property name="name">savings_2_due</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">other_fee</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">18</property>
-                    <property name="name">other_fine</property>
-                    <property name="dataType">float</property>
-                </structure>
-                <structure>
-                    <property name="position">19</property>
-                    <property name="name">loan_officer_id</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">20</property>
-                    <property name="name">loan_officer_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">21</property>
-                    <property name="name">branch_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">22</property>
-                    <property name="name">loan_1_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">loan_2_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
-                    <property name="name">savings_1_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">25</property>
-                    <property name="name">savings_2_name</property>
-                    <property name="dataType">string</property>
-                </structure>
-                <structure>
-                    <property name="position">26</property>
-                    <property name="name">customer_level_label</property>
-                    <property name="dataType">string</property>
-                </structure>
-            </list-property>
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">member_id</property>
-                </structure>
-                <structure>
-                    <property name="columnName">group_id</property>
-                </structure>
-                <structure>
-                    <property name="columnName">center_id</property>
-                </structure>
-                <structure>
-                    <property name="columnName">member_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">balance_bskl</property>
-                </structure>
-                <structure>
-                    <property name="columnName">center_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_1_balance</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_2_balance</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_1_balance</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_2_balance</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_1_due</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_2_due</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_1_due</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_2_due</property>
-                </structure>
-                <structure>
-                    <property name="columnName">group_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">kendra_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_officer_id</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_officer_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">branch_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_1_issues</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_2_issues</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_1_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">loan_2_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_1_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">savings_2_name</property>
-                </structure>
-                <structure>
-                    <property name="columnName">customer_level_label</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">member_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">group_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">center_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">member_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">group_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">center_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">loan_1_balance</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">loan_1_issues</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">loan_1_due</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">loan_2_balance</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">loan_2_issues</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">loan_2_due</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">savings_1_balance</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">savings_1_due</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">savings_2_balance</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">savings_2_due</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">other_fee</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">18</property>
-                        <property name="name">other_fine</property>
-                        <property name="dataType">float</property>
-                    </structure>
-                    <structure>
-                        <property name="position">19</property>
-                        <property name="name">loan_officer_id</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">20</property>
-                        <property name="name">loan_officer_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">21</property>
-                        <property name="name">branch_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">22</property>
-                        <property name="name">loan_1_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">loan_2_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
-                        <property name="name">savings_1_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">25</property>
-                        <property name="name">savings_2_name</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">26</property>
-                        <property name="name">customer_level_label</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">MifosCollectionSheet</property>
-            <method name="open"><![CDATA[collectionSheetReportsIterator = collectionSheetService.getCollectionSheets(params["branchId"],params["loanOfficerId"],
-    params["centerId"],params["meetingDate"], customerLevel).iterator();]]></method>
-            <method name="fetch"><![CDATA[if(!collectionSheetReportsIterator.hasNext()) return false;
-var collectionSheetRow = collectionSheetReportsIterator.next();
-row["member_id"] = collectionSheetRow.getCustomerId();
-row["group_id"] = collectionSheetRow.getGroupId();
-row["center_id"] = collectionSheetRow.getCenterId();
-row["loan_officer_id"] = collectionSheetRow.getLoanOfficerId();
-row["member_name"] = collectionSheetRow.getCustomerName();
-row["branch_name"] = collectionSheetRow.getBranchName();
-row["center_name"] = collectionSheetRow.getCenterName();
-row["group_name"] = collectionSheetRow.getGroupName();
-row["loan_officer_name"] = collectionSheetRow.getLoanOfficerName();
-row["customer_level_label"] = customerLevelLabel;
-
-for(var i=0;i<MAX_PRODUCT_COUNT;i++){
-	var loanProduct = collectionSheetRow.getLoanProduct(i);
-	row["loan_"+(i+1)+"_balance"] = loanProduct.getBalance();
-	row["loan_"+(i+1)+"_due"] = loanProduct.getDue();
-	row["loan_"+(i+1)+"_issues"] = loanProduct.getIssues();
-	row["loan_"+(i+1)+"_name"] = loanProduct.getOfferingShortName();
-}
-
-for(var i=0;i<MAX_PRODUCT_COUNT;i++){
-	var savingsProduct = collectionSheetRow.getSavingsProduct(i);
-	row["savings_"+(i+1)+"_balance"] = savingsProduct.getBalance();
-	row["savings_"+(i+1)+"_due"] = savingsProduct.getDue();
-	row["savings_"+(i+1)+"_name"] = savingsProduct.getOfferingShortName();
-}
-
-row["other_fine"] = collectionSheetRow.getOtherFine();
-row["other_fee"] = collectionSheetRow.getOtherFee();
-
-return true;]]></method>
-            <method name="close"><![CDATA[collectionSheetReportsIterator=null;]]></method>
-        </script-data-set>
-        <script-data-set name="BranchOffices" id="33">
+        <script-data-set name="BranchOffices" id="34">
             <list-property name="resultSetHints">
                 <structure>
                     <property name="position">1</property>
@@ -589,9 +194,9 @@ return true;]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">MifosCollectionSheet</property>
+            <property name="dataSource">ReportParameterDataSource</property>
             <method name="open"><![CDATA[try {
-	branchOfficeIterator = collectionSheetService.getBranchOffices(userId).iterator();
+	branchOfficeIterator = reportParameterService.getBranchOffices(userId).iterator();
 } catch(e) {
 	logger.info("MCSReport: BranchOffices: open: exception : "+e);
 }]]></method>
@@ -602,7 +207,7 @@ row["ds_branchId"] = branchOffice.getId();
 row["ds_branchName"] = branchOffice.getDisplayName();
 return true;]]></method>
         </script-data-set>
-        <script-data-set name="LoanOfficers" id="34">
+        <script-data-set name="LoanOfficers" id="35">
             <list-property name="resultSetHints">
                 <structure>
                     <property name="position">0</property>
@@ -637,10 +242,10 @@ return true;]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">MifosCollectionSheet</property>
+            <property name="dataSource">ReportParameterDataSource</property>
             <method name="open"><![CDATA[try {
 	var branchId = params["branchId"];
-	loanOfficerIterator = collectionSheetService.getActiveLoanOfficers(userId, branchId).iterator();
+	loanOfficerIterator = reportParameterService.getActiveLoanOfficers(userId, branchId).iterator();
 } catch(e) {
 	logger.info("MCSReport: LoanOfficers: open: exception : "+e);
 }]]></method>
@@ -652,7 +257,7 @@ row["ds_loanOfficerName"] = loanOfficer.getDisplayName();
 return true;]]></method>
             <method name="close"><![CDATA[loanOfficerIterator = null;]]></method>
         </script-data-set>
-        <script-data-set name="Centers" id="35">
+        <script-data-set name="Centers" id="36">
             <list-property name="resultSetHints">
                 <structure>
                     <property name="position">0</property>
@@ -687,23 +292,16 @@ return true;]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">MifosCollectionSheet</property>
+            <property name="dataSource">ReportParameterDataSource</property>
             <method name="open"><![CDATA[try {
 	var branch = params["branchId"];
 	var officer = params["loanOfficerId"];
 	
 	if(!(officer instanceof Packages.java.lang.Integer)) {
 		var pbs = new Packages.org.mifos.application.personnel.business.service.PersonnelBusinessService();
-		//logger.info("User"+params["userId"]);
-		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? -2 : -1;
+		officer = pbs.getPersonnel(Packages.java.lang.Short.valueOf(""+params["userId"])).isLoanOfficer() ? SELECT_ID : ALL_ID;
 	}  
-	if(customerLevel == CUSTOMER_LEVEL_CENTER){
-	    centerIterator = collectionSheetService.getActiveCentersForLoanOfficer(officer, branch).iterator();
-	}else if(customerLevel == CUSTOMER_LEVEL_GROUP){
-	    centerIterator = collectionSheetService.getActiveGroupsForLoanOfficer(officer,branch).iterator();
-	}else{
-	    logger.info("MCSReport : Centers open: Invalid customer level:" + customerLevel);
-	}
+    centerIterator = reportParameterService.getActiveCentersForLoanOfficer(officer, branch).iterator();
 } catch(e) {
 	logger.info("MCSReport: CenterOffices: open: exception : "+e);
 }]]></method>
@@ -715,7 +313,7 @@ row["ds_centerName"] = center.getDisplayName();
 return true;]]></method>
             <method name="close"><![CDATA[centerIterator = null;]]></method>
         </script-data-set>
-        <script-data-set name="MeetingDates" id="36">
+        <script-data-set name="MeetingDates" id="37">
             <list-property name="resultSetHints">
                 <structure>
                     <property name="position">1</property>
@@ -750,7 +348,7 @@ return true;]]></method>
                     </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">MifosCollectionSheet</property>
+            <property name="dataSource">ReportParameterDataSource</property>
             <method name="open"><![CDATA[try {
 	var branchId = params["branchId"];
 	var loanOfficerId = params["loanOfficerId"];
@@ -765,16 +363,8 @@ return true;]]></method>
 		centerId = SELECT_ID.equals(loanOfficerId)? SELECT_ID : ALL_ID;		
 	}
 	
-	if(customerLevel == 3){
-        meetingDateIterator = collectionSheetService.getMeetingDatesForCenter(
-		    branchId, centerId,loanOfficerId).iterator();	
-	}else if(customerLevel == 2){
-	    meetingDateIterator = collectionSheetService.getMeetingDatesForGroup(
-		    branchId, centerId,loanOfficerId).iterator();	
-	}else {
-	    logger.info("MCSReport: MeetingDates: open: invalid customerLevel:" + customerLevel);
-	}
-	
+    meetingDateIterator = reportParameterService.getMeetingDatesForCenter(
+		    branchId, loanOfficerId, centerId).iterator();	
 } catch(e) {
 	logger.info("MCSReport: MeetingDates: open: exception : "+e);
 }]]></method>
@@ -916,6 +506,6 @@ return true;]]></method>
         </theme>
     </themes>
     <page-setup>
-        <simple-master-page name="NewSimpleMasterPage" id="37"/>
+        <simple-master-page name="NewSimpleMasterPage" id="38"/>
     </page-setup>
 </library>
