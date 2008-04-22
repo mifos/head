@@ -59,7 +59,6 @@
         <pathelement location="${build.src.dir}"/>
         <pathelement location="${build.classes}"/>
 	</path>
-    <property name="mifos.password" value="testmifos"/>
 
     <echo level="debug">CLASSPATH - ${java.class.path}</echo>
 
@@ -446,8 +445,8 @@
 			<transaction src="./sql/latest-schema.sql" />
 			<transaction src="./sql/latest-data.sql" />
 			<!-- <transaction src="./sql/Index.sql" /> -->
+			<transaction src="./sql/init_mifos_password.sql" />
 		</sql>
-        <antcall target="update_mifos_password"/>
     </target>
 
 	<target name="build_db" description="Builds the application database">
@@ -464,8 +463,8 @@
 			<transaction src="./sql/latest-data.sql" />
 			<transaction src="./sql/custom_data.sql" />
 			<!-- <transaction src="./sql/Index.sql" /> -->
+			<transaction src="./sql/init_mifos_password.sql" />
 		</sql>
-        <antcall target="update_mifos_password"/>
     </target>
 
 	<target name="build_test_db">
@@ -490,25 +489,6 @@
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>
 	</target>
-
-    <target name="update_mifos_password" depends="compile, compile_test, copy_files, copy_test_files">
-        <echo>Updating Mifos user password</echo>
-        <!-- For security I added this class to the test directory so that
-                 it isn't included in the deployment -->
-        <java
-            classname="org.mifos.cli.admin.UpdateMifosPassword"
-            failonerror="true"
-            fork="true"
-            maxmemory="${profile.memory}"
-			dir="${basedir}">
-            <arg value="${mifos.password}"/>
-            <classpath>
-				<path refid="class.path"/>
-				<pathelement location="${build.classes}"/>
-                <pathelement location="${test.classes}"/>
-            </classpath>
-        </java>
-    </target>
 
     <target name="run_test_parallel_2"
 		depends="clean,compile,copy_files,compile_test,copy_test_files">

@@ -168,6 +168,11 @@ public class TestDatabase implements SessionOpener {
 		SqlUpgrade.execute(new FileInputStream("sql/latest-data.sql"), connection);
 		SqlUpgrade.execute(new FileInputStream("sql/custom_data.sql"), connection);
 		SqlUpgrade.execute(new FileInputStream("sql/testdbinsertionscript.sql"), connection);
+
+		// Don't execute "sql/init_mifos_password.sql" ... this is only for
+		// "production" databases (those that Mifos running under an app
+		// server will connect to).
+
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		

@@ -24,6 +24,10 @@ import org.mifos.cli.BaseMifosCommandLine;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
+/**
+ * @deprecated in favor of <code>sql/init_mifos_password.sql</code> script.
+ *             Will be removed in a future release.
+ */
 public class UpdateMifosPassword extends BaseMifosCommandLine {
     public static void main(String[] args)
             throws PersistenceException {
