@@ -85,7 +85,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	final String initialRoundOffMultiple = "InitialRoundOffMultiple";
 	final String finalRoundingMode = "FinalRoundingMode";
 	final String finalRoundOffMultiple = "FinalRoundOffMultiple";
-	final String interestRounding = "InterestRounding";
+	final String currencyRounding = "CurrencyRounding";
 	final String digitsAfterDecimal = "Digits After Decimal";
 	final String daysInYear = "Days in Year";
 	final String totals = "Summed Totals";
@@ -321,7 +321,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		setFinalRoundingMode(config.getFinalRoundingMode());
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
-		AccountingRules.setInterestRoundingMode(config.getInterestRoundingMode());
+		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -499,7 +499,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		// should this be constrained to .001, .01, .5, .1, 1 as in the spreadsheet?
 		private String finalRoundOffMultiple = null; 
 		// right now we are just supporting CEILING, FLOOR, HALF_UP
-		private RoundingMode interestRoundingMode = null;
+		private RoundingMode currencyRoundingMode = null;
 		// the number of digits to use to the right of the decimal for interal caculations
 		private int internalPrecision = 13;
 		// digits after decimal right now is in the application configuration
@@ -519,7 +519,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		public InternalConfiguration(int daysInYear,
 				RoundingMode initialRoundingMode,
 				String initialRoundOffMultiple, RoundingMode finalRoundingMode,
-				String finalRoundOffMultiple, RoundingMode interestRoundingMode,
+				String finalRoundOffMultiple, RoundingMode currencyRoundingMode,
 				int internalPrecision, GraceType gracePeriodType, short gracePeriod) {
 			super();
 			this.daysInYear = daysInYear;
@@ -527,7 +527,7 @@ public class LoanCalculationTest extends MifosTestCase {
 			this.initialRoundOffMultiple = initialRoundOffMultiple;
 			this.finalRoundingMode = finalRoundingMode;
 			this.finalRoundOffMultiple = finalRoundOffMultiple;
-			this.interestRoundingMode = interestRoundingMode;
+			this.currencyRoundingMode = currencyRoundingMode;
 			this.internalPrecision = internalPrecision;
 			this.gracePeriodType = gracePeriodType;
 			this.gracePeriod = gracePeriod;
@@ -577,12 +577,12 @@ public class LoanCalculationTest extends MifosTestCase {
 			this.finalRoundOffMultiple = finalRoundOffMultiple;
 		}
 
-		public RoundingMode getInterestRoundingMode() {
-			return interestRoundingMode;
+		public RoundingMode getCurrencyRoundingMode() {
+			return currencyRoundingMode;
 		}
 
-		public void setInterestRoundingMode(RoundingMode interestRoundingMode) {
-			this.interestRoundingMode = interestRoundingMode;
+		public void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
+			this.currencyRoundingMode = currencyRoundingMode;
 		}
 
 		public int getInternalPrecision() {
@@ -779,7 +779,7 @@ class LoanTestCaseData {
 		setFinalRoundingMode(config.getFinalRoundingMode());
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
-		AccountingRules.setInterestRoundingMode(config.getInterestRoundingMode());
+		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -942,10 +942,10 @@ class LoanTestCaseData {
 				{
 					config.setFinalRoundOffMultiple(token);
 				}
-				else if (paramType.indexOf(interestRounding)>= 0)
+				else if (paramType.indexOf(currencyRounding)>= 0)
 				{
 					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
-					config.setInterestRoundingMode(mode);
+					config.setCurrencyRoundingMode(mode);
 				}
 				else if (paramType.indexOf(digitsAfterDecimal) >= 0)
 				{
@@ -1129,7 +1129,7 @@ class LoanTestCaseData {
 		    		   }
 		    		   else if ((token.indexOf(initialRoundingMode) >= 0 ) || (token.indexOf(finalRoundingMode)>= 0 )
 		    		           || (token.indexOf(initialRoundOffMultiple) >= 0 )
-		    				   || (token.indexOf(finalRoundOffMultiple) >= 0 ) || (token.indexOf(interestRounding)>= 0 ) 
+		    				   || (token.indexOf(finalRoundOffMultiple) >= 0 ) || (token.indexOf(currencyRounding)>= 0 ) 
 		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0)
 		    				   || (token.indexOf(gracePeriodType) >= 0) || (token.indexOf(gracePeriod) >= 0 ))
 		    		   {
@@ -1216,14 +1216,16 @@ class LoanTestCaseData {
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
+		//String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 		
-		String[] dataFileNames = {"testcases-2008-04-16.set1.03.csv"};
-		//String[] dataFileNames = {"loan-repayment-master-test1.csv"};
+		//String[] dataFileNames = {"testcases-2008-04-22.set1.01.csv"};
+		String[] dataFileNames = {"loan-repayment-master-test1.csv"};
 		for (int i=0; i < dataFileNames.length; i++)
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 	}
 
-	public void xtestIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
+	public void testIssue1623FromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 
@@ -1234,9 +1236,9 @@ class LoanTestCaseData {
 
 	}
 
-	public void xtestAllTestCases() throws Exception 
+	public void testAllFlatInterestTestCases() throws Exception 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
@@ -1259,7 +1261,7 @@ class LoanTestCaseData {
 		config.setFinalRoundOffMultiple("0.01");
 		config.setInitialRoundingMode(RoundingMode.CEILING);
 		config.setInitialRoundOffMultiple("1");
-		config.setInterestRoundingMode(RoundingMode.CEILING);
+		config.setCurrencyRoundingMode(RoundingMode.CEILING);
 		config.setInternalPrecision(13);
 		config.setDigitsAfterDecimal(3);
 
@@ -1341,7 +1343,7 @@ class LoanTestCaseData {
 		config.setFinalRoundOffMultiple("0.001");
 		config.setInitialRoundingMode(RoundingMode.HALF_UP);
 		config.setInitialRoundOffMultiple("0.001");
-		config.setInterestRoundingMode(RoundingMode.HALF_UP);
+		config.setCurrencyRoundingMode(RoundingMode.HALF_UP);
 		config.setInternalPrecision(10);
 		
 		// set up loan params

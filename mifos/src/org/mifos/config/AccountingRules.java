@@ -302,7 +302,7 @@ public class AccountingRules {
 		return mode;
 	}
 	
-	private static RoundingMode interestRoundingMode = RoundingMode.CEILING;
+	private static RoundingMode currencyRoundingMode = RoundingMode.CEILING;
 	private static BigDecimal initialRoundOffMultiple = null;
 	private static BigDecimal finalRoundOffMultiple = null;
 	
@@ -327,13 +327,13 @@ public class AccountingRules {
 	}
 
 
-	public static RoundingMode getInterestRoundingMode() {
-		return interestRoundingMode;
+	public static RoundingMode getCurrencyRoundingMode() {
+		return currencyRoundingMode;
 	}
 
 
-	public static void setInterestRoundingMode(RoundingMode interestRoundingMode) {
-		AccountingRules.interestRoundingMode = interestRoundingMode;
+	public static void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
+		AccountingRules.currencyRoundingMode = currencyRoundingMode;
 	}
 
 

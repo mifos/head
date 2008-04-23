@@ -4058,7 +4058,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 						lastInstallment.getInstallmentId())) {
 					currentInstallment.setInterest(Money.round(currentInstallment.getInterest(),
 						AccountingRules.getDigitsAfterDecimalMultiple(),
-						AccountingRules.getInterestRoundingMode()));
+						AccountingRules.getCurrencyRoundingMode()));
 					currentInstallment.setPrincipal(Money.round(currentInstallment.getPrincipal(),
 							AccountingRules.getDigitsAfterDecimalMultiple(),
 							AccountingRules.getInitialRoundingMode()));
@@ -4095,7 +4095,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			lastInstallment.setInterest(
 				Money.round(finalUpdatedPaymentAmount.subtract(lastInstallment.getPrincipal()),
 				AccountingRules.getDigitsAfterDecimalMultiple(),
-				AccountingRules.getInterestRoundingMode()));
+				AccountingRules.getCurrencyRoundingMode()));
 		}
 	}
 
