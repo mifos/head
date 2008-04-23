@@ -8,7 +8,7 @@ public class FlowManagerHelper {
 		super();
 	}
 
-	public static Object getFlow(FlowManager flowManager, String flowKey,
+	public static Object getFromSession(FlowManager flowManager, String flowKey,
 			String key) {
 		try {
 			return flowManager.getFromFlow(flowKey, key);

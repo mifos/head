@@ -45,8 +45,8 @@ public class FlowManagerHelperTest extends MifosMockStrutsTestCase {
 				Constants.FLOWMANAGER, request.getSession());
 		assertEquals(
 			"test", 
-			(String)flowManagerHelper.getFlow(manager, flowKey, "test"));
+			(String)flowManagerHelper.getFromSession(manager, flowKey, "test"));
 		addRequestParameter(Constants.CURRENTFLOWKEY, "");
-		assertNull(flowManagerHelper.getFlow(manager, null, "test"));
+		assertNull(flowManagerHelper.getFromSession(manager, null, "test"));
 	}
 }

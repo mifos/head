@@ -37,7 +37,16 @@
 		<one-to-one name="address"	class="org.mifos.application.office.business.OfficeAddressEntity"	cascade="all" property-ref="office" />
 	</class>
 	<query name="masterdata.activeBranches">
-        <![CDATA[select new org.mifos.application.office.business.OfficeView(office.officeId, office.officeName,office.level.id,office.versionNo) from org.mifos.application.office.business.OfficeBO office where office.level.id=:levelId and office.status.id=:statusId and (office.searchId = :OFFICESEARCHID or office.searchId like :OFFICE_LIKE_SEARCHID) order by office.officeName]]>
+        <![CDATA[
+        select new org.mifos.application.office.business.OfficeView(
+            office.officeId, office.officeName,office.level.id,office.versionNo
+            )
+        from org.mifos.application.office.business.OfficeBO office
+        where office.level.id=:levelId
+          and office.status.id=:statusId
+          and (office.searchId = :OFFICESEARCHID or office.searchId like :OFFICE_LIKE_SEARCHID)
+          order by office.officeName
+        ]]>
     </query>
     <query name="office.getOfficeSearchId">
             <![CDATA[select office.searchId from org.mifos.application.office.business.OfficeBO office where office.officeId = :OFFICE_ID]]>
