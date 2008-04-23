@@ -16,6 +16,7 @@ import org.mifos.application.accounts.business.AddAccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
+import org.mifos.application.master.persistence.Upgrade155;
 import org.mifos.application.master.persistence.Upgrade167;
 import org.mifos.application.master.persistence.Upgrade169;
 import org.mifos.application.master.persistence.Upgrade173;
@@ -73,6 +74,7 @@ public class DatabaseVersionPersistence {
 		register144(register);
 		register145(register);
 		register146(register);
+		register(register, new Upgrade155());
 		register(register, new Upgrade167());
 		register(register, new Upgrade169());
 		register170(register);
