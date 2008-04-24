@@ -45,6 +45,7 @@ import java.math.RoundingMode;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.config.AccountingRules;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -80,8 +81,12 @@ public final class Money implements Serializable {
 	private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
 	private static MathContext internalPrecisionAndRounding = 
 		new MathContext(internalPrecision, internalRoundingMode);
+	private static MathContext currencyPrecisionAndRounding = 
+		new MathContext(AccountingRules.getDigitsAfterDecimal(), 
+				AccountingRules.getRoundingRule(RoundingMode.HALF_UP));
 	
 	private static MifosCurrency defaultCurrency = null;
+	
 	
 	public static MifosCurrency getDefaultCurrency() {
 		return defaultCurrency;
@@ -479,6 +484,21 @@ public final class Money implements Serializable {
 			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
 			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
 
+			nearestFactor = nearestFactor.setScale(0, roundingMode);
+
+			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
+			return new Money(money.getCurrency(), roundedAmount);
+		}
+		return money;
+	}
+	
+	public static Money roundToCurrencyPrecision(Money money) {
+		if (null != money) {
+			BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();
+			// insure that we are using the correct internal precision
+			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
+			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
+            RoundingMode roundingMode =  AccountingRules.getRoundingRule(RoundingMode.HALF_UP);
 			nearestFactor = nearestFactor.setScale(0, roundingMode);
 
 			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);

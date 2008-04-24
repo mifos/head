@@ -52,6 +52,11 @@
 			<column name="PENALTY_PAID_CURRENCY_ID" />
 			<column name="PENALTY_PAID" />
 		</property>
+		<property name="rawAmountTotal" 
+			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="RAW_AMOUNT_TOTAL_CURRENCY_ID" />
+			<column name="RAW_AMOUNT_TOTAL" />
+		</property>
 		<one-to-one name="loan" 
 			class="org.mifos.application.accounts.loan.business.LoanBO" 
 			access="field" />

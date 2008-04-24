@@ -242,6 +242,12 @@ public class AccountingRules {
 		configMgr.setProperty(AccountingRulesDigitsAfterDecimalForInterest, value);
 	}
 	
+	public static void setRoundingRule(RoundingMode mode)
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesRoundingRule, mode.name());
+	}
+	
 	/**
 	 * Head Office can specify whether/not system will accept back-dated
 	 * transactions. This is an MFI-wide setting and will be applicable to all

@@ -169,6 +169,7 @@ public class LoanBO extends AccountBO {
 	private FundBO fund;
 
 	private Boolean redone;
+	
 
 	/**
 	 Is this used?  Is it related to the activity IDs in places
@@ -203,6 +204,9 @@ public class LoanBO extends AccountBO {
 	private RankOfDaysEntity monthRank;
 
 	private Short recurMonth;
+	
+	private Money rawAmountTotal;
+
 	
 
 	protected LoanBO() {		
@@ -446,6 +450,7 @@ public class LoanBO extends AccountBO {
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 	    generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 	    this.loanSummary = buildLoanSummary();
+	    
 	    this.maxMinLoanAmount = null;
 		this.maxMinNoOfInstall = null;
 		addcustomFields(customFields);
@@ -2233,6 +2238,7 @@ private Money getLoanInterest(Date installmentEndDate)
 				}
 			}
 		}
+		buildRawAmountTotal();
 	}
 
 	private void validateSize(List installmentDates, List EMIInstallments)
@@ -2835,7 +2841,39 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			}
 		}
 		fees = fees.add(getDisbursementFeeAmount());
-		return new LoanSummaryEntity(this, loanAmount, interest, fees);
+		return new LoanSummaryEntity(this, loanAmount, interest, fees, rawAmountTotal);
+		
+		
+	}
+	
+	private void buildRawAmountTotal() {
+		if (!isUsingNewLoanSchedulingMethod())
+		{
+			return;
+		}
+		Money interest = new Money();
+		Money fees = new Money();
+		Set<AccountActionDateEntity> actionDates = getAccountActionDates();
+		if (actionDates != null && actionDates.size() > 0) {
+			for (AccountActionDateEntity accountActionDate : actionDates) {
+				LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
+				interest = interest.add(loanSchedule.getInterest());
+				fees = fees.add(loanSchedule.getTotalFees());
+			}
+		}
+		fees = fees.add(getDisbursementFeeAmount());
+		Money rawAmount = new Money();
+		rawAmount = rawAmount.add(interest).add(fees);
+		if (loanSummary == null)
+		{
+			rawAmount = Money.roundToCurrencyPrecision(rawAmount);
+			// save it to LoanBO first and when loan summary is created it will be retrieved and save to loan summary
+			setRawAmountTotal(rawAmount);
+		}
+		else
+		{
+			loanSummary.setRawAmountTotal(rawAmount);
+		}
 	}
 
 	private Money getDisbursementFeeAmount() {
@@ -3562,6 +3600,8 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Meeting schedule generated  ");
 		applyRounding_v2(loanInterest);
+		
+		
 	}
 	
 	private Money getLoanInterest_v2(Date installmentEndDate)
@@ -4125,21 +4165,52 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	}
 	
 	/*
-	 * The method calculate999Account() is temporarily implemented and should not be used except in the LoanCalculationTest
+	 * Existing loan accounts before Mifos 1.1 release will have loan_summary.raw_amount_total = 0
+	 */
+	public boolean isLegacyLoan()
+	{
+
+		if (!isUsingNewLoanSchedulingMethod())
+		{
+			return true;
+		}
+		if ((loanSummary == null) || (loanSummary.getRawAmountTotal() == null))
+		{
+			return true;
+		}
+		Money defaultAmount = new Money("0");
+		Money rawAmountTotal = loanSummary.getRawAmountTotal();
+		return rawAmountTotal.equals(defaultAmount);
+	}
+	
+	/*
+	 * 999 Account = interest paid + fees paid - (raw interest + raw fees)
+	 * Notes: loan accounts before Mifos 1.1 release will have their 999 accounts calculated the old way
+	 * which is the difference between the last payment rounded amount and original amount
 	 */
 	
 	public Money calculate999Account()
 	{
-		Set<AccountPaymentEntity> payments = getAccountPayments();
-		if (payments.size() != noOfInstallments )
-			throw new RuntimeException("Can't calculate 999 account because all payments are not paid.");
-	
-		Money actualTotalAmount = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid()).add(
-		                          loanSummary.getPrincipalPaid()).add(loanSummary.getPenaltyPaid());
-		Money rawTotalAmount = loanSummary.getOriginalFees().add(loanSummary.getOriginalInterest()).add
-        (loanSummary.getOriginalPrincipal()).add(loanSummary.getOriginalPenalty());
-		return actualTotalAmount.subtract(rawTotalAmount);
+		Money account999 = new Money("0");
+		if (isLegacyLoan())
+		{
+			return account999;
+		}
+		
+		Money rawAmountTotal = loanSummary.getRawAmountTotal();
+		Money interestAndFeesPaidTotal = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid());
+		account999 = interestAndFeesPaidTotal.subtract(rawAmountTotal);
+		return account999;
 	}
+
+	public Money getRawAmountTotal() {
+		return rawAmountTotal;
+	}
+
+	public void setRawAmountTotal(Money rawAmountTotal) {
+		this.rawAmountTotal =  rawAmountTotal;
+	}
+
 	
 	
 }

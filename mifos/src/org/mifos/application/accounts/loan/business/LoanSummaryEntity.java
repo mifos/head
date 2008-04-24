@@ -64,21 +64,37 @@ public class LoanSummaryEntity extends PersistentObject {
 	private Money feesPaid;
 
 	private Money penaltyPaid;
+	
+	private Money rawAmountTotal;
+	
+
+	public Money getRawAmountTotal() {
+		return rawAmountTotal;
+	}
+
+	public void setRawAmountTotal(Money rawAmountTotal) {
+		this.rawAmountTotal = rawAmountTotal;
+	}
+
+	
 
 	protected LoanSummaryEntity() {
 		super();
 		this.accountId = null;
 		this.loan = null;
 	}
+	
+	
 
 	public LoanSummaryEntity(LoanBO loan, Money originalPrincipal,
-			Money originalInterest, Money originalFees) {
+			Money originalInterest, Money originalFees,  Money rawAmountTotal) {
 		super();
 		this.accountId = null;
 		this.loan = loan;
 		this.originalPrincipal = originalPrincipal;
 		this.originalInterest = originalInterest;
 		this.originalFees = originalFees;
+		this.rawAmountTotal = rawAmountTotal;
 		this.originalPenalty = new Money();
 		this.principalPaid = new Money();
 		this.interestPaid = new Money();
@@ -209,10 +225,18 @@ public class LoanSummaryEntity extends PersistentObject {
 		originalFees = originalFees.subtract(fees);
 		originalPenalty = originalPenalty.subtract(penalty);
 		originalInterest = originalInterest.subtract(interest);
+		if (loan.isUsingNewLoanSchedulingMethod())
+		{
+			rawAmountTotal = rawAmountTotal.subtract(interest.add(fees));
+		}
 	}
 	
 	void updateOriginalFees(Money charge){
 		setOriginalFees(getOriginalFees().add(charge));
+		if (loan.isUsingNewLoanSchedulingMethod())
+		{
+			rawAmountTotal = rawAmountTotal.add(charge);
+		}
 	}
 	
 	void updateOriginalPenalty(Money charge){
