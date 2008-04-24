@@ -11,7 +11,7 @@ InitialRoundingMode ,,,HALF_UP,,CEILING,,,,,
 InitialRoundOffMultiple,,,1,,0.1,,,,,
 FinalRoundingMode,,,HALF_UP,,HALF_UP,,,,,
 FinalRoundOffMultiple,,,0.1,,0.1,,,,,
-InterestRounding,,,HALF_UP,,CEILING,,,,,
+CurrencyRounding,,,HALF_UP,,CEILING,,,,,
 GracePeriodType,,,None,,None,,,,,
 GracePeriod,,,3,,3,,,,,
 

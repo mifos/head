@@ -3682,24 +3682,24 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		int daysInMonth = getDaysInMonth();
 
 		Short recurrenceType = this.getLoanMeeting().getMeetingDetails()
-		.getRecurrenceType().getRecurrenceId();
-		int duration = getNoOfInstallments()
-		* this.getLoanMeeting().getMeetingDetails().getRecurAfter();
-		if (interestDays == AccountConstants.INTEREST_DAYS_360) {
+			.getRecurrenceType().getRecurrenceId();
+		int duration = getNoOfInstallments() * this.getLoanMeeting()
+			.getMeetingDetails().getRecurAfter();
+		
+		if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
+			double totalMonthDays = duration * daysInMonth;
+			double durationInYears = totalMonthDays
+			/ AccountConstants.INTEREST_DAYS_360;
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+			.debug("Get total month days.." + totalMonthDays);
+			return durationInYears;
+		} else if (interestDays == AccountConstants.INTEREST_DAYS_360) {
 			if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
 				double totalWeekDays = duration * daysInWeek;
 				double durationInYears = totalWeekDays
 				/ AccountConstants.INTEREST_DAYS_360;
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug("Get total week days.." + totalWeekDays);
-				return durationInYears;
-			}
-			else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
-				double totalMonthDays = duration * daysInMonth;
-				double durationInYears = totalMonthDays
-				/ AccountConstants.INTEREST_DAYS_360;
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug("Get total month days.." + totalMonthDays);
 				return durationInYears;
 			}
 			throw new AccountException(
@@ -3711,25 +3711,6 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				.debug("Get interest week 365 days");
 				double totalWeekDays = duration * daysInWeek;
 				double durationInYears = totalWeekDays
-				/ AccountConstants.INTEREST_DAYS_365;
-				return durationInYears;
-			}
-			else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug("Get interest month 365 days");
-
-				// will have to consider inc/dec time in some countries
-				Long installmentStartTime = getDisbursementDate().getTime();
-				Long installmentEndTime = installmentEndDate.getTime();
-				Long diffTime = installmentEndTime - installmentStartTime;
-				double daysDiff = diffTime / (1000 * 60 * 60 * 24);
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug("Get start date..");
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug("Get end date..");
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug("Get diff in days..." + daysDiff);
-				double durationInYears = daysDiff
 				/ AccountConstants.INTEREST_DAYS_365;
 				return durationInYears;
 			}
