@@ -1,11 +1,9 @@
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION;
 
-import java.io.File;
+import java.sql.ResultSet;
 
 import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
@@ -16,7 +14,7 @@ import org.junit.Test;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /*
- * This class runs tests on database upgrade and downgrade scripts (both SQL
+ * This class runs tests on database upgrade scripts (both SQL
  * based and java based).  It uses a version of the database referred to as
  * a "checkpoint" as a starting point.  The database checkpoint version that
  * it starts with can be adjusted by updating sql/latest-schema-checkupoint.sql
@@ -25,7 +23,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * The static variable DatabaseVersionPersistence.LATEST_CHECKPOINT_VERSION 
  * must then be set to the database version number of the latest-xxx.sql files 
  * that have been used to update the latest-xxx-checkpoint.sql files.  
- * This test will run upgrade/downgrade scripts using LATEST_CHECKPOINT_VERSION
+ * This test will run upgrade scripts using LATEST_CHECKPOINT_VERSION
  * as a starting point.  In general LATEST_CHECKPOINT_VERSION should be a 
  * database version that is at least 3-5 upgrades ago in order to allow for 
  * fixes to be made to recent upgrades when necessary.
@@ -100,12 +98,6 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 		assertEquals("", database.dumpForComparison());
 	}
 	
-	@Test
-	public void downgradesFromCheckpoint() throws Exception {
-		DataStore current = latestCheckpointVersion();
-		current = upAndBack(LATEST_CHECKPOINT_VERSION, current);
-	}
-	
 	private static DataStore latestCheckpointVersion;
 
 	private DataStore latestCheckpointVersion() throws Exception {
@@ -118,38 +110,30 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 	}
 	
 	@Test
-	public void noDowngradeWithoutUpgradeAfterCheckpoint() throws Exception {
-		for (int version = LATEST_CHECKPOINT_VERSION;
-			version < APPLICATION_VERSION;
-			++version) {
-			String upgrade = "sql/upgrade_to_" + version + ".sql";
-			String downgrade = "sql/downgrade_from_" + version + ".sql";
-			if (new File(downgrade).exists()
-				&& ! new File(upgrade).exists()) {
-				fail("found " + downgrade + " without " + upgrade);
-			}
-		}
-	}
-	
-	@Test
 	public void afterLookupValuesAfterCheckpoint() throws Exception {
 		Database database = new Database(latestCheckpointVersion());
 		
-		/* A customer will typically add records such as these during
-		   customization.  */
-		int lookupId = largestLookupId(database.openConnection());
-		int nextLookupId = lookupId + 1;
-		database.execute("insert into " +
-				"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
+		int nextLookupId = largestLookupId(database.openConnection()) + 1;
+		database.execute("insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
 				"VALUES(" + nextLookupId + ", 19,' ')");
-		database.execute("insert into " +
-				"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
+		database.execute("insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
 				"VALUES(1," + nextLookupId + ",'Martian')");
 		
-		upAndBack(LATEST_CHECKPOINT_VERSION, database.dataStore());
+		upgrade(LATEST_CHECKPOINT_VERSION, database.dataStore());
+		
+		// Assert that custom values have been retained
+		ResultSet rs = database.query("select * from lookup_value where lookup_id=" + nextLookupId);
+		rs.next();
+		assertEquals(19, rs.getInt("entity_id"));
+		assertEquals(" ", rs.getString("lookup_name"));
+		
+		rs = database.query("select * from lookup_value_locale where lookup_id=" + nextLookupId);
+		rs.next();
+		assertEquals(1, rs.getInt("locale_id"));
+		assertEquals("Martian", rs.getString("lookup_value"));
+		rs.close();
 	}
 
-	
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(LatestTestAfterCheckpoint.class);
 	}

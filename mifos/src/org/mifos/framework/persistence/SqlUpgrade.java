@@ -1,7 +1,6 @@
 package org.mifos.framework.persistence;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,10 +37,6 @@ public class SqlUpgrade extends Upgrade {
 	
 	@Override
 	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-		execute(
-			new FileInputStream(
-				"sql/downgrade_from_" + higherVersion() + ".sql"),
-			connection);
 	}
 	
 	public static void execute(InputStream stream, Connection conn) 
@@ -68,22 +63,11 @@ public class SqlUpgrade extends Upgrade {
 			StringBuffer sql = new StringBuffer();
 			String line;
 			while ((line = in.readLine()) != null) {
-	            if (line.startsWith("//")) {
+	            if (line.startsWith("//") || line.startsWith("--")) {
 	                continue;
 	            }
-	            if (line.startsWith("--")) {
-	                continue;
-	            }
-	            //StringTokenizer st = new StringTokenizer(line);
-	            //if (st.hasMoreTokens()) {
-	            //    String token = st.nextToken();
-	            //    if ("REM".equalsIgnoreCase(token)) {
-	            //        continue;
-	            //    }
-	            //}
 	        
 	            line = line.trim();
-	            
 	            if ("".equals(line)) {
 	            	continue;
 	            }
@@ -94,7 +78,6 @@ public class SqlUpgrade extends Upgrade {
 	            // SQL defines "--" as a comment to EOL
 	            // and in Oracle it may contain a hint
 	            // so we cannot just remove it, instead we must end it
-	
 	            if (line.indexOf("--") >= 0) {
 	                sql.append("\n");
 	            }

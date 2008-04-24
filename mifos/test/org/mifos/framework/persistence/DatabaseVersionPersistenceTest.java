@@ -116,21 +116,19 @@ public class DatabaseVersionPersistenceTest {
 
 	private DatabaseVersionPersistence sqlFor89And90() {
 		return new DatabaseVersionPersistence(null) {
-		@Override
-		URL lookup(String name) {
-			if ("upgrade_to_89.sql".equals(name) 
-				|| "upgrade_to_90.sql".equals(name)) {
-				try {
-					return new URL("file:" + name);
-				} catch (MalformedURLException e) {
-					throw (AssertionFailedError)new AssertionFailedError().initCause(e);
+			@Override
+			URL lookup(String name) {
+				if ("upgrade_to_89.sql".equals(name) 
+					|| "upgrade_to_90.sql".equals(name)) {
+					try {
+						return new URL("file:" + name);
+					} catch (MalformedURLException e) {
+						throw (AssertionFailedError)new AssertionFailedError().initCause(e);
+					}
 				}
-			}
-			else {
 				throw new AssertionFailedError("got unexpected " + name);
 			}
-		}
-};
+		};
 	}
 
 	@Test public void detectDowngrade() throws Exception {
@@ -145,49 +143,6 @@ public class DatabaseVersionPersistenceTest {
 				"your database needs to be downgraded from 88 to 87", 
 				e.getMessage());
 		}
-	}
-	
-	@Test public void sqlDowngrade() throws Exception {
-		DatabaseVersionPersistence persistence = 
-			sqlFor89And90();
-		List<Upgrade> upgrades = persistence.downgrades(88, 89);
-		assertEquals(1, upgrades.size());
-		SqlUpgrade first = (SqlUpgrade) upgrades.get(0);
-		assertEquals(89, first.higherVersion());
-	}
-	
-	@Test public void javaDowngrade() throws Exception {
-		Database database = new Database();
-		DatabaseVersionPersistence persistence = 
-			javaOnlyPersistence(database);
-		List<Upgrade> upgrades = persistence.downgrades(68, 69);
-		assertEquals(1, upgrades.size());
-		DummyUpgrade first = (DummyUpgrade) upgrades.get(0);
-		assertEquals(69, first.higherVersion());
-	}
-	
-	@Test public void javaAndSqlDowngrade() throws Exception {
-		Database database = new Database();
-		DatabaseVersionPersistence persistence = 
-			javaAndSqlPersistence(database);
-		try {
-			persistence.downgrades(68, 69);
-			fail();
-		}
-		catch (IllegalStateException e) {
-			assertEquals(
-				"Found upgrade to 69 both in java and in upgrade_to_69.sql",
-				e.getMessage());
-		}
-	}
-	
-	@Test public void downgradesInOrderOfExecution() throws Exception {
-		DatabaseVersionPersistence persistence = 
-			sqlFor89And90();
-		List<Upgrade> upgrades = persistence.downgrades(88, 90);
-		assertEquals(2, upgrades.size());
-		assertEquals(90, ((SqlUpgrade) upgrades.get(0)).higherVersion());
-		assertEquals(89, ((SqlUpgrade) upgrades.get(1)).higherVersion());
 	}
 	
 	@Test public void readEmpty() throws Exception {

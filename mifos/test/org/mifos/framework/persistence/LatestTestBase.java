@@ -10,12 +10,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import junit.framework.Assert;
-
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
-import org.apache.commons.lang.StringUtils;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -53,13 +51,13 @@ public class LatestTestBase {
 		return largestLookupId;
 	}
 
-	protected DataStore upAndBack(int fromVersion, DataStore current) throws Exception {
+	protected DataStore upgrade(int fromVersion, DataStore current) throws Exception {
 		for (int currentVersion = fromVersion; 
 			currentVersion < APPLICATION_VERSION;
 			++currentVersion) {
 			int higherVersion = currentVersion + 1;
 			try {
-				current = upAndBack(current, higherVersion);
+				current = upgrade(current, higherVersion);
 			}
 			catch (Exception failure) {
 				throw new Exception("Cannot upgrade to " + higherVersion,
@@ -69,32 +67,23 @@ public class LatestTestBase {
 		return current;
 	}
 
-	protected DataStore upAndBack(DataStore current, int nextVersion) 
-	throws Exception {
+	protected DataStore upgrade(DataStore current, int nextVersion) throws Exception {
 		Database database = new Database(current);
-		String before = new SqlDumper(false).dump(database.dataStore());
-
 		DatabaseVersionPersistence persistence =
 			new FileReadingPersistence(database.openConnection());
 		Upgrade upgrade = persistence.findUpgrade(nextVersion);
 		if (upgrade instanceof SqlUpgrade)
-			assertNoHardcodedLookupValues(upgrade, nextVersion);
+			assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);
 		
 		upgrade.upgrade(database.openConnection(), persistence);
-		DataStore upgraded = database.dataStore();
-		upgrade.downgrade(database.openConnection(), persistence);
-		String after = new SqlDumper(false).dump(database.dataStore());
-		assertEquals("for higherVersion=" + nextVersion, before, after);
-		
-		return upgraded;
+		return database.dataStore();
 	}
 
-	private void assertNoHardcodedLookupValues(Upgrade upgrade, int version) throws Exception {
-		SqlUpgrade sqlUpgrade = (SqlUpgrade) upgrade;
-		String[] sqlStatements = sqlUpgrade.readFile((InputStream) sqlUpgrade.sql().getContent());
+	private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
+		String[] sqlStatements = upgrade.readFile((InputStream) upgrade.sql().getContent());
 		for (int i = 0; i < sqlStatements.length; i++) {
-			if (StringUtils.containsIgnoreCase(sqlStatements[i], "insert into lookup_value"))
-				Assert.fail("Bad developer! Upgrade " + version + " contains hard-coded lookup values");
+			Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues.checkLookupValue(sqlStatements[i]));
+			Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues.checkLookupValueLocale(sqlStatements[i]));
 		}
 	}
 }

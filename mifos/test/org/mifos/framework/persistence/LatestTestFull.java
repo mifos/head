@@ -1,11 +1,9 @@
 package org.mifos.framework.persistence;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 
-import java.io.File;
+import java.sql.ResultSet;
 
 import junit.framework.JUnit4TestAdapter;
 import net.sourceforge.mayfly.Database;
@@ -15,10 +13,10 @@ import net.sourceforge.mayfly.dump.SqlDumper;
 import org.junit.Test;
 
 /*
- * This class runs tests on database upgrade and downgrade scripts (both SQL
+ * This class runs tests on database upgrade scripts (both SQL
  * based and java based).  It uses the earliest version of the database
- * that supported upgrade/downgrade scripts as a starting point and will run
- * through all upgrades and downgrades.  You can exptect this to take a long
+ * that supported upgrade scripts as a starting point and will run
+ * through all upgrades.  You can expect this to take a long
  * time to run.
  */
 public class LatestTestFull extends LatestTestBase {
@@ -43,12 +41,6 @@ public class LatestTestFull extends LatestTestBase {
 	    return database.dataStore();
 	}
 
-	@Test
-	public void downgrades() throws Exception {
-		DataStore current = firstNumberedVersion();
-		current = upAndBack(current);
-	}
-
 	private static DataStore firstNumberedVersion;
 
 	private DataStore firstNumberedVersion() throws Exception {
@@ -61,38 +53,31 @@ public class LatestTestFull extends LatestTestBase {
 	}
 
 	@Test
-	public void noDowngradeWithoutUpgrade() throws Exception {
-		for (int version = FIRST_NUMBERED_VERSION;
-			version < APPLICATION_VERSION;
-			++version) {
-			String upgrade = "sql/upgrade_to_" + version + ".sql";
-			String downgrade = "sql/downgrade_from_" + version + ".sql";
-			if (new File(downgrade).exists()
-				&& ! new File(upgrade).exists()) {
-				fail("found " + downgrade + " without " + upgrade);
-			}
-		}
-	}
-
-
-	@Test
 	public void afterLookupValues() throws Exception {
 		Database database = new Database(firstNumberedVersion());
-		
-		/* A customer will typically add records such as these during
-		   customization.  */
-		database.execute("insert into " +
-			"LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
+		/* A customer will typically add records such as these during customization.  */
+		database.execute("insert into LOOKUP_VALUE(LOOKUP_ID, ENTITY_ID, LOOKUP_NAME) " +
 			"VALUES(569,19,' ')");
-		database.execute("insert into " +
-			"LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
+		database.execute("insert into LOOKUP_VALUE_LOCALE(LOCALE_ID, LOOKUP_ID, LOOKUP_VALUE) " +
 			"VALUES(1,569,'Martian')");
 
-		upAndBack(database.dataStore());
+		upgrade(database.dataStore());
+		
+		// Assert that custom values have been retained
+		ResultSet rs = database.query("select * from lookup_value where lookup_id=569");
+		rs.next();
+		assertEquals(19, rs.getInt("entity_id"));
+		assertEquals(" ", rs.getString("lookup_name"));
+		
+		rs = database.query("select * from lookup_value_locale where lookup_id=569");
+		rs.next();
+		assertEquals(1, rs.getInt("locale_id"));
+		assertEquals("Martian", rs.getString("lookup_value"));
+		rs.close();
 	}
 
-	private DataStore upAndBack(DataStore current) throws Exception {
-		return upAndBack(FIRST_NUMBERED_VERSION, current);
+	private DataStore upgrade(DataStore current) throws Exception {
+		return upgrade(FIRST_NUMBERED_VERSION, current);
 	}
 
 	public static junit.framework.Test suite() {

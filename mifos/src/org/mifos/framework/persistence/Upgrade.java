@@ -9,7 +9,6 @@ import java.sql.Statement;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.StringUtils;
 
-
 public abstract class Upgrade {
 
 	private final int higherVersion;
@@ -19,23 +18,21 @@ public abstract class Upgrade {
 	protected Upgrade(int higherVersion) {
 		this.higherVersion = higherVersion;
 	}
-
 	
 	abstract public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 
+	@Deprecated
 	abstract public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 	
 	public static boolean validateLookupValueKey(String format, String key)
 	{
-		boolean result = false;
 		if (!StringUtils.isNullAndEmptySafe(key))
-			return result;
+			return false;
 		if (!key.startsWith(format, 0))
-			return result;
-		result = true;
-		return result;
+			return false;
+		return true;
 	}
 	
 
@@ -51,6 +48,7 @@ public abstract class Upgrade {
 		changeVersion(connection, higherVersion(), lowerVersion());
 	}
 
+	@Deprecated
 	protected void downgradeVersion(Connection connection) throws SQLException {
 		changeVersion(connection, lowerVersion(), higherVersion());
 	}
@@ -99,7 +97,6 @@ public abstract class Upgrade {
 		return insertLookupValue(connection, lookupEntity, " ");
 	}
 	
-	
 	/*
 	 * This method is used for version 174 and lower and must not be used after 174
 	 */
@@ -128,7 +125,7 @@ public abstract class Upgrade {
 		statement.close();
 		return newLookupId;
 	}
-
+	
 	private int largestLookupId(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
 		ResultSet results = statement.executeQuery(
