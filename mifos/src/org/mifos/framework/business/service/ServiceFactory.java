@@ -21,11 +21,8 @@ public class ServiceFactory {
 	}
 
 	/**
-	 * deprecated
-	 * This method is deprecated.
-	 * 
-	 * Instead just call the constructor of the business service directly.
-	 * for example, new ConfigurationBusinessService();
+	 * @deprecated Call the constructor of the business service directly. For
+	 *             example, <code>new ConfigurationBusinessService();</code>
 	 */
 	public BusinessService getBusinessService(BusinessServiceName key)
 			throws ServiceUnavailableException {
