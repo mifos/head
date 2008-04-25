@@ -27,9 +27,8 @@ public enum LoanArrearsAgingPeriod implements Serializable {
 	THREE_WEEK("3", 15, 21),
 	FOUR_WEEK("4", 22, 28),
 	FIVE_TO_EIGHT_WEEK("5-8", 29, 56),
-	NINE_TO_SIXTEEN_WEEK("9-16", 57, 112),
-	SEVENTEEN_TO_THIRTY_TWO_WEEk("17-32", 113, 224),
-	THIRTY_TWO_AND_MORE_WEEK("32+", 225, Integer.MAX_VALUE);
+	NINE_TO_TWELVE_WEEK("9-12", 57, 84),
+	MORE_THAN_TWELVE("12+", 85, Integer.MAX_VALUE-1);
 
 	private final Integer minDays;
 	private final Integer maxDays;
