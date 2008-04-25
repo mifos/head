@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
@@ -33,25 +33,23 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionF
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.application.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.client.business.LoanCounter;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
-import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.application.customer.client.business.LoanCounter;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -61,20 +59,20 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
-import org.mifos.application.master.business.CustomValueListElement;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.RankOfDaysEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -108,7 +106,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -514,9 +511,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
 		setDataIntoForm(loanOffering, loanActionForm, request);
 		loadCreateMasterData(loanActionForm, request); 
-	    int recurrenceId = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();
-		SessionUtils.setAttribute(LoanConstants.RECURRENCEID, recurrenceId,
-				request);
+	    RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+		SessionUtils.setAttribute(LoanConstants.RECURRENCEID, recurrenceType.getValue(), request);
 	    CustomerBO customerBO = (CustomerBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
 	    if (customerBO == null)
@@ -524,8 +520,11 @@ public class LoanAccountAction extends AccountAppAction {
 	    	customerBO = (CustomerBO)SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
 					
 	    }
-		loanActionForm.setMonthWeek(customerBO.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay().getValue().toString());
-		if (recurrenceId==2) loanActionForm.setMonthRank(customerBO.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekRank().getValue().toString());
+		MeetingDetailsEntity meetingDetails = customerBO.getCustomerMeeting().getMeeting().getMeetingDetails();
+		if (recurrenceType == RecurrenceType.WEEKLY)
+			loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
+		if (recurrenceType == RecurrenceType.MONTHLY && meetingDetails.getWeekRank() != null)  
+			loanActionForm.setMonthRank(meetingDetails.getWeekRank().getValue().toString());
 		
 		SessionUtils.removeAttribute(LoanConstants.LOANOFFERING, request);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
@@ -704,12 +703,12 @@ public class LoanAccountAction extends AccountAppAction {
         if (null != repIndepOfMeetingEnabled
 				&& 0 != repIndepOfMeetingEnabled.intValue()){
         	isRepaymentIndepOfMeetingEnabled=true;	
-        int recurrenceId = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();
-        	if(recurrenceId==1)
-        		newMeetingForRepaymentDay = new MeetingBO(recurrenceId,Short.valueOf(loanActionForm.getMonthWeek()),Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request)
+        RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+        	if(recurrenceType==RecurrenceType.WEEKLY)
+        		newMeetingForRepaymentDay = new MeetingBO(recurrenceType.getValue(),Short.valueOf(loanActionForm.getMonthWeek()),Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request)
     					.getPreferredLocale()),
     		MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
-        		else if(recurrenceId==2)
+        		else if(recurrenceType==RecurrenceType.MONTHLY)
         			newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanActionForm.getMonthWeek()),Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request)
         					.getPreferredLocale()),
         		MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),Short.valueOf(loanActionForm.getMonthRank()));
@@ -926,7 +925,7 @@ public class LoanAccountAction extends AccountAppAction {
 		
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		String perspective = loanActionForm.getPerspective();
-		Integer recurrenceId=(Integer) SessionUtils.getAttribute(LoanConstants.RECURRENCEID,request);
+		Short recurrenceId=(Short) SessionUtils.getAttribute(LoanConstants.RECURRENCEID,request);
 		 ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 			Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
 					.getConfigurationKeyValueInteger(
@@ -952,9 +951,8 @@ public class LoanAccountAction extends AccountAppAction {
 			if (null != repaymentIndepOfMeetingIsEnabled
 					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
 
-				if (recurrenceId==2)	
-				loan
-						.setMonthRank((RankOfDaysEntity) new MasterPersistence()
+				if (recurrenceId==RecurrenceType.MONTHLY.getValue())	
+				loan.setMonthRank((RankOfDaysEntity) new MasterPersistence()
 								.retrieveMasterEntity(
 										Short.valueOf(loanActionForm
 												.getMonthRank()),
@@ -963,8 +961,7 @@ public class LoanAccountAction extends AccountAppAction {
 				loan.setMonthWeek((WeekDaysEntity) new MasterPersistence()
 						.retrieveMasterEntity(Short.valueOf(loanActionForm
 								.getMonthWeek()), WeekDaysEntity.class, null));
-				loan
-						.setRecurMonth(Short.valueOf(loanActionForm
+				loan.setRecurMonth(Short.valueOf(loanActionForm
 								.getRecurMonth()));
 				
 			}
@@ -980,9 +977,8 @@ public class LoanAccountAction extends AccountAppAction {
     					if (null != repaymentIndepOfMeetingIsEnabled
 					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
 	
-	if (recurrenceId==2)   						
-				loan
-						.setMonthRank((RankOfDaysEntity) new MasterPersistence()
+	if (recurrenceId == RecurrenceType.MONTHLY.getValue())   						
+				loan.setMonthRank((RankOfDaysEntity) new MasterPersistence()
 								.retrieveMasterEntity(
 										Short.valueOf(loanActionForm
 												.getMonthRank()),
@@ -990,8 +986,7 @@ public class LoanAccountAction extends AccountAppAction {
 				loan.setMonthWeek((WeekDaysEntity) new MasterPersistence()
 						.retrieveMasterEntity(Short.valueOf(loanActionForm
 								.getMonthWeek()), WeekDaysEntity.class, null));
-				loan
-						.setRecurMonth(Short.valueOf(loanActionForm
+				loan.setRecurMonth(Short.valueOf(loanActionForm
 								.getRecurMonth()));
 			}        
     		loan.save(loanActionForm.getState());
