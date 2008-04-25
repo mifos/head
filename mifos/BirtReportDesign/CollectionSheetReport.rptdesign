@@ -1142,7 +1142,7 @@ return true;]]></method>
                 </structure>
                 <structure>
                     <property name="name">rpt_meetingDate</property>
-                    <expression name="expression">new Packages.org.mifos.framework.util.helpers.DateUtils.getLocalizedDateFormat().format(params["meetingDate"])</expression>
+                    <expression name="expression">row["meeting_date"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -1198,6 +1198,11 @@ return true;]]></method>
                     <property name="name">savings_2_name</property>
                     <expression name="expression">dataSetRow["savings_2_name"]</expression>
                     <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">meeting_date</property>
+                    <expression name="expression">dataSetRow["meeting_date"]</expression>
+                    <property name="dataType">any</property>
                 </structure>
             </list-property>
             <column id="175">

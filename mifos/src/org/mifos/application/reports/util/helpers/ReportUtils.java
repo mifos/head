@@ -22,6 +22,8 @@ package org.mifos.application.reports.util.helpers;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.mifos.framework.util.LocalizationConverter;
+
 public class ReportUtils {
 
 	public static Date parseReportDate(String runDate) throws ParseException {
@@ -29,7 +31,7 @@ public class ReportUtils {
 	}
 
 	public static String toDisplayDate(Date date) {
-		return ReportsConstants.REPORT_DATE_FORMAT.format(date);
+		return LocalizationConverter.getInstance().getDateFormatWithFullYear().format(date);
 	}
 
 	public static String reportDatePattern() {

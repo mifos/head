@@ -1,11 +1,12 @@
 package org.mifos.application.reports.business.dto;
 
+import static org.mifos.application.reports.util.helpers.ReportUtils.toDisplayDate;
+
 import java.util.Date;
 
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
 
 // Understands collection sheet report properties
@@ -100,7 +101,7 @@ public class CollectionSheetReportDTO {
 	}
 	
 	public String getMeetingDate() {
-		return DateUtils.getLocalizedDateFormat().format(meetingDate);
+		return toDisplayDate(meetingDate);
 	}	
 
 	public Double getOtherFee() {

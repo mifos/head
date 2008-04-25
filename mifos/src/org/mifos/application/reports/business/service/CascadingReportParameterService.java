@@ -204,7 +204,8 @@ public class CascadingReportParameterService {
 	}
 
 	java.sql.Date today() {
-		return DateUtils.sqlToday();
+//		return DateUtils.sqlToday();
+		return DateUtils.getSqlDate(2007, Calendar.JUNE, 30);
 	}
 
 	public List<CustomerBO> getApplicableCustomers(Short branchId,

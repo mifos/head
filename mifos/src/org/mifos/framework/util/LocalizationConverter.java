@@ -340,24 +340,35 @@ public class LocalizationConverter {
 	}
 	
 	
-	public DateFormat getDateFormat()
-	{
+	public DateFormat getDateFormat() {
 		if (currentLocale == null)
-			throw new RuntimeException("The current locale is not set for LocalizationConverter.");
+			throw new RuntimeException(
+					"The current locale is not set for LocalizationConverter.");
 		// dateLocale is the English locale used temporarily because 1.1 release doesn't
 		// support date/time/double localization yet
 		Locale[] locales = DateFormat.getInstance().getAvailableLocales();
 		boolean find = supportThisLocale(locales, dateLocale);
 		if (find == false)
-			throw new RuntimeException("DateFormat class doesn't support this country code: " +
-					dateLocale.getCountry() + " and language code: " + dateLocale.getLanguage());
-
-		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT, dateLocale);
+			throw new RuntimeException(
+					"DateFormat class doesn't support this country code: "
+							+ dateLocale.getCountry() + " and language code: "
+							+ dateLocale.getLanguage());
+		
+		DateFormat format = DateFormat.getDateInstance(DateFormat.SHORT,
+				dateLocale);
 		//DateFormat simpleFormat = SimpleDateFormat.getDateInstance(DateFormat.SHORT, decimalFormatLocale);
 		return format;
-		
-	}
-	
-	
 
+	}
+
+	/** 
+	 * Use this if you want the year part to have 4 digits 
+	 **/
+	public DateFormat getDateFormatWithFullYear() {
+		DateFormat dateFormat = getDateFormat();
+		if (SimpleDateFormat.class.equals(dateFormat.getClass()))
+			return new SimpleDateFormat(((SimpleDateFormat) dateFormat)
+					.toPattern().replace("yy", "yyyy"));
+		return dateFormat;
+	}
 }

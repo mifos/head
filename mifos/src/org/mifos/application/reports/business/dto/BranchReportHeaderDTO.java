@@ -19,10 +19,11 @@
  */
 package org.mifos.application.reports.business.dto;
 
+import static org.mifos.application.reports.util.helpers.ReportUtils.toDisplayDate;
+
 import java.util.Date;
 
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportHeaderDTO {
 
@@ -49,7 +50,7 @@ public class BranchReportHeaderDTO {
 	}
 
 	public String getReportDate() {
-		return DateUtils.getLocalizedDateFormat().format(runDate);
+		return toDisplayDate(runDate);
 	}
 
 	public String getBranchManagerName() {

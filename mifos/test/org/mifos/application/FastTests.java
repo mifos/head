@@ -68,6 +68,7 @@ import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
+import org.mifos.framework.util.LocalizationConverterTest;
 import org.mifos.framework.util.helpers.ChapterNumSortTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -150,6 +151,7 @@ public class FastTests extends TestSuite {
 		suite.addTest(StringUtilsTest.suite());
 		suite.addTest(ChapterNumSortTest.suite());
 		suite.addTest(ProperlyAdaptedJUnit4Test.suite());
+		suite.addTest(LocalizationConverterTest.suite());
 		return suite;
 	}
 
