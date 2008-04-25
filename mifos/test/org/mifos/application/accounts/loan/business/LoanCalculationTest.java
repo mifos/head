@@ -1282,7 +1282,7 @@ class LoanTestCaseData {
 	    return dir.list(filter);
 	    		
 	}
-
+	
 	public void testCaseWithDataFromSpreadSheets() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
@@ -1311,9 +1311,11 @@ class LoanTestCaseData {
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
-			tearDown();
-			setUp();
+			if (dataFileNames[i].startsWith("testcases-flat-2008-04-24.set1")) {
+				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
 		}
 	}
 	
