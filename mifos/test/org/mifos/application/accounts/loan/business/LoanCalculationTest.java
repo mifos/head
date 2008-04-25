@@ -806,8 +806,11 @@ class LoanTestCaseData {
 		assertEquals(testName, expectedPayments.size(), calculatedPayments.size());
 		for (int i=0; i < expectedPayments.size(); i++)
 		{
+			/*
+			 * Do not assert balance since it is derived from loan information
 			assertEquals(testName, expectedPayments.get(i).getBalance(), 
 					calculatedPayments.get(i).getBalance());
+			 */
 			assertEquals(testName, expectedPayments.get(i).getInterest(), 
 					calculatedPayments.get(i).getInterest());
 			assertEquals(testName, expectedPayments.get(i).getPayment(), 
@@ -928,15 +931,29 @@ class LoanTestCaseData {
 		calculatedResult.setTotalPayments(totalPayments);
 		calculatedResult.setTotalPrincipal(new Money(totalPrincipal));
 		
-		// set balance after each payment 
-		Money balance = totalPayments;
-		for( PaymentDetail paymentDetail : payments)
-		{
-			Money onePayment = paymentDetail.getPayment();
-			balance = balance.subtract(onePayment);
-			paymentDetail.setBalance(balance);
+		/*
+		 * Set balance after each installment is paid.
+		 * For flat-interest loans, balance is total of all remaining payments.
+		 * For declining-interest loans, balance is total remaining principal.
+		 */  
+		if (loanParams.loanType.getValue()==InterestType.FLAT.getValue()) {
+			Money balance = totalPayments;
+			for( PaymentDetail paymentDetail : payments)
+			{
+				Money onePayment = paymentDetail.getPayment();
+				balance = balance.subtract(onePayment);
+				paymentDetail.setBalance(balance);
+			}
 		}
-		
+		else if (loanParams.loanType.getValue()==InterestType.DECLINING.getValue()) {
+			Money balance = new Money (totalPrincipal);
+			for( PaymentDetail paymentDetail : payments)
+			{
+				balance = balance.subtract(paymentDetail.getPrincipal());
+				paymentDetail.setBalance(balance);
+			}
+		}
+			
 		return calculatedResult;
 		
 	}
@@ -1312,6 +1329,19 @@ class LoanTestCaseData {
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
 			if (dataFileNames[i].startsWith("testcases-flat-2008-04-24.set1")) {
+				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+	}
+
+	public void testAllDecliningInterestTestCases() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (dataFileNames[i].startsWith("testcases-declining-interest-2008-04-23.set1")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();

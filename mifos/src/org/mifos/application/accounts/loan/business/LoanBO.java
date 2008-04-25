@@ -2091,6 +2091,30 @@ private Money getLoanInterest(Date installmentEndDate)
 		return new Money(Double.toString(interest));
 	}
 
+	/**
+	 * Returns the number of payment periods in the fiscal year for this loan.
+	 * 
+	 * This method contains two defects that are corrected in the _v2 version. The defects
+	 * are described below.
+	 * 
+	 * KEITH TODO: This appears to be incorrect. For example, if
+	 *     fiscal year = 360 days
+	 *     interest rate = 1 percent
+	 *     recurrence = every 1 week
+	 * then the correct result should be
+	 *                        ______
+	 *     360 / (7 * 1) = 51.428571
+	 * But because the three factors are ints or shorts, the calculation is
+	 * rounded to the nearest integer, 51.0.
+	 * 
+	 * I have corrected the method here, but am not sure if this is correct
+	 * Should the method return the number of periods rounded to the nearest integer?
+	 * Note that the spreadsheet assumes that the number of periods is an exact floating point
+	 * number, not rounded.
+	 * 
+	 * Ththe formula is incorrect for monthly loans, when fiscal year is 365. You should just
+	 * divide recurAfter by 12.
+	 */
 	private double getDecliningInterestAnnualPeriods() {
 		RecurrenceType meetingFrequency = getLoanMeeting().getMeetingDetails()
 				.getRecurrenceTypeEnum();
@@ -2114,7 +2138,6 @@ private Money getLoanInterest(Date installmentEndDate)
 
 		return period;
 	}
-
 
 	private double getTotalDurationInYears(Date installmentEndDate)
 			throws AccountException {
@@ -3590,6 +3613,13 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0) {
+			/*
+			 * KEITH TODO: The loan interest is not correct for declining balance modes, and appears
+			 * to be causing unit test to fail for this mode.
+			 * For declining-balance loans, to calculate the loan interest you must either
+			 * (a) apply a complicated formula
+			 * (b) compute the sum of interest paid across all installments.
+			 */
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
 			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
 		}
@@ -3638,38 +3668,53 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 	/*
 	 * double --> BigDecimal
+	 * 
+	 * KEITH TODO: This calculation does not seem to be relevant to calculating
+	 * a loan schedule for declining interest. Once the payment per period is
+	 * calculated (Pi/(1-(1+i)^-n), the interest portion of the payment 
+	 * is calculated dynamically for each payment.
+	 * 
+	 * Moreover, the calculated value seems to feed back into the calculations
+	 * somewhere, throwing off the unit tests for declining interest. For example
+	 * the first test data set expects interest of 0.195 but this class
+	 * calculates it as 1000.195, which is the value that this method returns.
+	 * 
+	 * FYI the formula for computing the total amount paid is
+	 *     A = p * n
+	 * where
+	 *     A = total amount paid
+	 *     p = payment per installment
+	 *     n = number of installments
+	 * 
+	 *     P = principal
+	 *     i = interest per period
+	 *     n = number of payments
+	 * The total interest paid is
+	 *     I = A - P
+	 * where
+	 *     P = principal
+	 *     
+	 * NOTE: These formulas are EXACT and do not take into account rounding modes, which will throw
+	 * off the calculations. I think the only correct way to calculate the interest is to
+	 * first compute the repayment schedule, and then add up the interest paid for each installment.
 	 */
 	private Money getDecliningInterestAmount_v2(Date installmentEndDate)
 			throws AccountException {
-
-		double annualPeriod = getDecliningInterestAnnualPeriods();
-		Double interestRate = getInterestRate();
-		//i*P / [1- (1+i)^-n]
-
-		Double durationInYears = getTotalDurationInYears_v2(installmentEndDate);
-		double interestRatePerPeriod = interestRate / 100 / annualPeriod;
-
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"DecliningInterestCalculator:getInterest duration in years..."
-						+ durationInYears);
 
 		int usedPeriods = getNoOfInstallments();
 		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
 			usedPeriods = usedPeriods - getGracePeriodDuration();
 		}
 
-		double interest = getLoanAmount().getAmountDoubleValue()
-				* (interestRate / 100 / annualPeriod)
-				/ (1.00d - Math.pow(1.00d + interestRatePerPeriod, -1.00d
-						* usedPeriods));
+		Money totalPayments = getPaymentPerPeriodForDecliningInterest_v2().multiply((double) usedPeriods);
+		Money totalInterest = totalPayments.subtract(getLoanAmount());
 
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"DecliningInterestCalculator:getInterest interest accumulated..."
-						+ interest);
+						+ totalInterest);
 
-
-		return new Money(Double.toString(interest));
+		return totalInterest;
 	}
 	
 	/*
@@ -3905,24 +3950,74 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
 
+	/*
+	 * Calculates equal payments per period for fixed payment, declining-interest loan type.
+	 * Uses formula from 
+	 *         http://confluence.mifos.org:9090/display/Main/Declining+Balance+Example+Calcs
+	 * The formula is copied here:
+	 *         EMI = P * i / [1- (1+i)^-n]
+	 *      where
+	 *         p = principal (amount of loan)
+     *         i = rate of interest per installment period
+     *         n = no. of installments
+     *         
+     * Translated into program variables and method calls:
+     * 
+	 *         paymentPerPeriod = interestFractionalRatePerPeriod * getLoanAmount()
+	 *                            / ( 1 - (1 + interestFractionalRatePerPeriod) ^ (-getNoOfInstallments()))
+	 *           
+	 * NOTE: Use double here, not BigDecimal, to calculate the factor that getLoanAmount() is 
+	 * multiplied by. Since calculations all involve small
+	 * quantities, 64-bit precision is sufficient. It is is more accurate 
+	 * to use floating-point, for quantities of small magnitude (say for very small interest rates)
+	 * 
+	 * NOTE: These calculations do not take into account EPI or grace period adjustments.
+	 */
+	private Money getPaymentPerPeriodForDecliningInterest_v2() {
+		double factor = getInterestFractionalRatePerInstallment_v2() 
+		                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), -getNoOfInstallments()));
+		Money paymentPerPeriod = getLoanAmount().multiply(new BigDecimal(factor,Money.getInternalPrecisionAndRounding()));
+		return paymentPerPeriod;
+	}
+
+	private double getInterestFractionalRatePerInstallment_v2() {
+		double f = interestRate / getDecliningInterestAnnualPeriods_v2() / 100;
+		return f;
+	}
+	/**
+	 * Return the list if payment installments for declining interest method.
+	 * KEITH TODO: method parameter loanInterest is not used.
+	 * NOTE: currently does not take into account grace period adjustments or EPI
+	 */
 	private List<EMIInstallment> allDecliningInstallments_v2(Money loanInterest)
 			throws AccountException {
 
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		
 		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
 				|| getGraceType() == GraceType.NONE) {
 
-			double principalBalance = getLoanAmount().getAmountDoubleValue();
-			double principalPerInstallmentEqual = getLoanAmount().getAmountDoubleValue()
-							/ getNoOfInstallments();
-
-			EMIInstallment installment = null;
-			double principalPaidCurrentPeriod = 0;
-			double interestPerInstallment = 0;
+			Money paymentPerPeriod = getPaymentPerPeriodForDecliningInterest_v2();
+			
+			//Now calculate the details of each installment. These are the exact values, and have not been
+			//adjusted for rounding and precision factors.
+			Money principalBalanceRemaining = getLoanAmount();
+			
 			for (int i = 0; i < getNoOfInstallments(); i++) {
 
-				installment = new EMIInstallment();
+				EMIInstallment installment = new EMIInstallment();
+				
+				Money interestThisPeriod = principalBalanceRemaining.multiply(getInterestFractionalRatePerInstallment_v2());
+				Money principalThisPeriod = paymentPerPeriod.subtract(interestThisPeriod);
+				
+				installment.setInterest(interestThisPeriod);
+				installment.setPrincipal(principalThisPeriod);
+				principalBalanceRemaining = principalBalanceRemaining.subtract(principalThisPeriod);
 
+				/*
+				 * 
+				 * original logic commented out
+				 * 
 				if (principalBalance > 0) {
 					interestPerInstallment = Math
 							.abs(principalBalance
@@ -3948,6 +4043,8 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 						.toString(principalPaidCurrentPeriod)));
 				principalBalance = principalBalance
 						- principalPaidCurrentPeriod;
+				*/
+				
 				emiInstallments.add(installment);
 			}
 
@@ -4057,6 +4154,41 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
+	
+	/**
+	 * Corrects two defects:
+	 * <ul>
+	 * <li>period was being rounded to the closest integer because all of the factors involved in
+	 *     the calculation are integers. First, convert the factors to double values.
+	 * <li>calculation uses the wrong formula for monthly installments. Whether fiscal year is 360 or
+	 *     365, just consider a month to be 1/12 of a year.
+	 */
+	private double getDecliningInterestAnnualPeriods_v2() {
+		RecurrenceType meetingFrequency = getLoanMeeting().getMeetingDetails()
+				.getRecurrenceTypeEnum();
+
+		short recurAfter = getLoanMeeting().getMeetingDetails().getRecurAfter();
+
+		double period = 0;
+
+		double numInterestDays = getInterestDays();
+		double numDaysInWeek = getDaysInWeek();
+		if (meetingFrequency.equals(RecurrenceType.WEEKLY)) {
+			period = ((double) getInterestDays()) / (double)((getDaysInWeek() * recurAfter));
+
+		} 
+		/*
+		 * The use of monthly interest here does not distinguish between
+		 * the 360 (with equal 30 day months) and the 365 day year cases. 
+		 * Should it?
+		 */ 
+		else if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
+			period = recurAfter *  12;
+		}
+
+		return period;
+	}
+
 
 	protected final void applyRounding_v2(Money totalInterest) {
 		// why are we checking for zero principal? what if there are still outstanding fees?
