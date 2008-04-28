@@ -699,7 +699,7 @@ public class BulkEntryDisplayHelper {
 		if (method.equals(BulkEntryConstants.GETMETHOD)) {
 			totalAmount = customerAccountView.getTotalAmountDue()
 					.getAmountDoubleValue();
-			amount = totalAmount.toString();
+			amount = new Money(totalAmount.toString()).toString();
 		} else if (method.equals(BulkEntryConstants.PREVIOUSMETHOD)
 				|| method.equals(BulkEntryConstants.VALIDATEMETHOD)
 				|| method.equals(BulkEntryConstants.PREVIEWMETHOD)) {

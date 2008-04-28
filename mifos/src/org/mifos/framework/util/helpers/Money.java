@@ -128,21 +128,7 @@ public final class Money implements Serializable {
 	}
 
 	public Money(String amount) {
-		if (usingNewMoney) {
-			this.currency = getDefaultCurrency();
-			if (amount == null || "".equals(amount.trim())) {
-				this.amount = null;
-			} else {
-				this.amount = new BigDecimal(amount,internalPrecisionAndRounding);
-			}
-		} else {
-			this.currency = Configuration.getInstance().getSystemConfig()
-			.getCurrency();
-			if (amount == null || "".equals(amount.trim()))
-				this.amount = null;
-			else
-				this.amount = setScale(new BigDecimal(amount));
-		}
+		this(Configuration.getInstance().getSystemConfig().getCurrency(), amount);
 	}
 
 	/**
