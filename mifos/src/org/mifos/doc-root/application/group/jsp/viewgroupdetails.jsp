@@ -671,9 +671,9 @@
 							<td class="paddingL10"><span class="fontnormal8pt"> 
 								<fmt:message key="Group.Amountoflast">
 						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
-					</fmt:message>  
-								<mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+					</fmt:message>:  
+								
 							<c:out
 								value="${BusinessKey.performanceHistory.lastGroupLoanAmount}" /></span></td>
 						</tr>
@@ -709,9 +709,10 @@
 						</tr>
 						<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isGroupLoanAllowed') == true}">
 							<tr>
-								<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-									name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel> <mifos:mifoslabel
-									name="label.loancyclecounter" isColonRequired="Yes" bundle="CustomerUIResources"></mifos:mifoslabel>
+								<td class="paddingL10"><span class="fontnormal8pt"> 
+									<fmt:message key="Group.loancyclecounter">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/></fmt:param>
+									</fmt:message>:
 								</span></td>
 							</tr>
 

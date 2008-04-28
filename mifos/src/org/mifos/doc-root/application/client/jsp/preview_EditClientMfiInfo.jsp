@@ -39,11 +39,15 @@
  -->
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -86,13 +90,10 @@
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel
 								name="client.CreatePreviewPageInstruction"
-								bundle="ClientUIResources"></mifos:mifoslabel> &nbsp; <mifos:mifoslabel
-								name="client.EditPageCancelInstruction1"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditPageCancelInstruction2"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
+								bundle="ClientUIResources"></mifos:mifoslabel> &nbsp; 
+								<fmt:message key="EditPageCancelInstruction">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" bundle="ClientUIResources"/></fmt:param>
+								</fmt:message></td>
 
 						</tr>
 					</table>
@@ -125,13 +126,15 @@
 								</span>
 								<span class="fontnormalbold">
 								<c:if test="${CenterHierarchyExist == true}">
-									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-									<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
+									<fmt:message key="client.Centers">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+									</fmt:message></span>
 									<span class="fontnormal"><c:out	value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /><br></span>
 									</c:if>
 									<span class="fontnormalbold">
-									  <mifos:mifoslabel	name="${ConfigurationConstants.GROUP}" />
-									  <mifos:mifoslabel	name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
+									<fmt:message key="client.Centers">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+									</fmt:message></span>
 									  <span class="fontnormal"><c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" /></span>
 									  <span class="fontnormal"><br></span>
 							</c:if> <br>

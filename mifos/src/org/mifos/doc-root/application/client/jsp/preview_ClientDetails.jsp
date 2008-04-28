@@ -41,10 +41,14 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -153,22 +157,21 @@
 							<td align="left" valign="top" class="paddingleftCreates"><!-- Preview page instruction -->
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
-									<td class="headingorange"><span class="heading"><mifos:mifoslabel
-										name="client.CreatePreviewPageTitle"
-										bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-										name="${ConfigurationConstants.CLIENT}" /> </span> <mifos:mifoslabel
+									<td class="headingorange"><span class="heading">
+										<fmt:message key="client.createNewClient">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+										</fmt:message> </span> <mifos:mifoslabel
 										name="client.CreatePreviewReviewSubmitTitle"
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
 										name="client.CreatePreviewPageInstruction"
-										bundle="ClientUIResources"></mifos:mifoslabel> &nbsp; <mifos:mifoslabel
-										name="client.PreviewEditCancelInstruction1"
-										bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-										name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-										name="client.PreviewEditCancelInstruction2"
-										bundle="ClientUIResources"></mifos:mifoslabel></td>
+										bundle="ClientUIResources"></mifos:mifoslabel> &nbsp; 
+										<fmt:message key="client.PreviewEditCancelInstruction">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+										</fmt:message>
+									</td>
 								</tr>
 							</table>
 							<!-- Preview page instruction ends--> <!-- Client information entered on the create page -->
@@ -190,9 +193,10 @@
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
-										name="${ConfigurationConstants.BRANCHOFFICE}" /> <mifos:mifoslabel
-										name="client.BranchSelected" bundle="ClientUIResources"></mifos:mifoslabel></span>
+									<td class="fontnormal"><span class="fontnormalbold"> 
+										<fmt:message key=CreatePreviewPageTitle>
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+										</fmt:message></span>
 									<c:choose>
 										<c:when	test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeName}" />

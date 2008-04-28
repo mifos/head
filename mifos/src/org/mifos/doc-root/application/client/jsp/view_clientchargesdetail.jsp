@@ -43,6 +43,7 @@
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
@@ -50,6 +51,9 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
@@ -61,9 +65,10 @@
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />  
-				</span><span class="fontnormal8ptbold"> <mifos:mifoslabel
-					name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-					name="client.clientcharges" bundle="ClientUIResources" /></span></td>
+				</span><span class="fontnormal8ptbold"> 
+					<fmt:message key="client.clientcharges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+					</fmt:message></span></td>
 			</tr>
 		</table>
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -73,9 +78,10 @@
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					
 					<tr>
-						<td width="70%" class="headingorange"><mifos:mifoslabel
-							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-							name="client.clientcharges" bundle="ClientUIResources" /></td>
+						<td width="70%" class="headingorange">
+					<fmt:message key="client.clientcharges">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+					</fmt:message></td>
 					</tr>
 					<tr>
 						<td width="70%" class="headingorange"><font class="fontnormalRedBold"><html-el:errors

@@ -43,10 +43,14 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -180,8 +184,10 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="headingorange">
-										<span class="heading"> <mifos:mifoslabel name="client.CreateTitle" bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /> </span>
+										<span class="heading"> 
+											<fmt:message key="client.createNewClient">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+											</fmt:message> </span>
 											<mifos:mifoslabel name="client.CreatePersonalInformationTitle"
 												bundle="ClientUIResources"></mifos:mifoslabel>
 									</td>
@@ -192,11 +198,9 @@
 										<c:when test="${param.method eq 'prevPersonalInfo'}">
 											<mifos:mifoslabel name="client.PreviewEditInfoInstruction"
 												bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="client.PreviewEditCancelInstruction1"
-												bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-											<mifos:mifoslabel name="client.PreviewEditCancelInstruction2"
-												bundle="ClientUIResources"></mifos:mifoslabel>
+											<fmt:message key="client.PreviewEditCancelInstruction">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+											</fmt:message>
 											<span class="mandatorytext"><font color="#FF0000">*</font></span>
 											<mifos:mifoslabel name="client.FieldInstruction"
 												bundle="ClientUIResources"></mifos:mifoslabel>
@@ -232,9 +236,10 @@
 									<!-- Displaying the selected office name -->
 									<table width="93%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
-											<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
-												name="${ConfigurationConstants.BRANCHOFFICE}" /> <mifos:mifoslabel
-												name="client.BranchSelected" bundle="ClientUIResources"></mifos:mifoslabel></span>
+											<td class="fontnormal"><span class="fontnormalbold">
+												<fmt:message key="client.BranchSelected">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+												</fmt:message></span>
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeName}" /></td>
 										</tr>
 										<tr>
@@ -251,8 +256,9 @@
 												<tr>
 											<td>
 													<span class="fontnormalbold">
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+														<fmt:message key="client.assigned">
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+														</fmt:message>
 													</span>
 													<span class="fontnormal">
 														<c:out value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" />
@@ -260,8 +266,9 @@
 										<tr>
 											<td>
 													<span class="fontnormalbold">
-														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+														<fmt:message key="client.assigned">
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+														</fmt:message>
 													</span>
 													<span class="fontnormal">
 														<c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" />
@@ -270,8 +277,9 @@
 												<c:otherwise><tr>
 											<td>
 													<span class="fontnormalbold">
-														<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-														<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources" />
+														<fmt:message key="client.assigned">
+															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+														</fmt:message>
 													</span>
 													<span class="fontnormal">
 														<c:out value="${sessionScope.clientCustActionForm.parentGroup.displayName}" />
@@ -304,9 +312,10 @@
 
 										<!-- Displaying the selected office name -->
 										<tr>
-											<td class="fontnormal"><span class="fontnormalbold"> <mifos:mifoslabel
-												name="${ConfigurationConstants.BRANCHOFFICE}" /> <mifos:mifoslabel
-												name="client.BranchSelected" bundle="ClientUIResources"></mifos:mifoslabel></span>
+											<td class="fontnormal"><span class="fontnormalbold">
+											<fmt:message key="client.BranchSelected">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+											</fmt:message></span>
 											<c:out value="${sessionScope.clientCustActionForm.officeName}" /></td>
 										</tr>
 									</table>

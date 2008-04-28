@@ -44,10 +44,14 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -119,13 +123,11 @@
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel
 								name="client.PreviewEditInfoInstruction"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditPageCancelInstruction1"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditPageCancelInstruction2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <span
+								bundle="ClientUIResources"></mifos:mifoslabel> 
+								<fmt:message key="client.EditPageCancelInstruction">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"
+										bundle="ClientUIResources"/></fmt:param>
+								</fmt:message> <span
 								class="mandatorytext"><font color="#FF0000">*</font></span> <mifos:mifoslabel
 								name="client.FieldInstruction" bundle="ClientUIResources"></mifos:mifoslabel>
 							</td>
@@ -344,7 +346,7 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr class="fontnormal">
 								  <td width="14%"><mifos:mifoslabel name="client.Relationship" bundle="ClientUIResources"></mifos:mifoslabel>
-									<mifos:select	style="width:80px;" name="clientCustActionForm"
+									<mifos:select name="clientCustActionForm"
 										property="spouseName.nameType" size="1">
 										<c:forEach var="spouseEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'spouseEntity')}" >
 											<html-el:option value="${spouseEntityList.id}">${spouseEntityList.name}</html-el:option>

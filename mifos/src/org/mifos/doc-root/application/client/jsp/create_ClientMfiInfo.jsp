@@ -43,8 +43,12 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -171,9 +175,10 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="headingorange"><%-- Displaying the heading of the page based on whether the user is comign first time or to edit the information --%>
-										<span class="heading"> <mifos:mifoslabel
-												name="client.CreateTitle" bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+										<span class="heading"> 
+											<fmt:message key=client.createNewClient">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+											</fmt:message>
 											</span>
 											<mifos:mifoslabel name="client.CreateMfiInformationTitle"
 												bundle="ClientUIResources"></mifos:mifoslabel>
@@ -185,11 +190,9 @@
 										<c:when test="${param.method eq 'prevMFIInfo'}">
 											<mifos:mifoslabel name="client.PreviewEditInfoInstruction"
 												bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="client.PreviewEditCancelInstruction1"
-												bundle="ClientUIResources"></mifos:mifoslabel>
-											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-											<mifos:mifoslabel name="client.PreviewEditCancelInstruction2"
-												bundle="ClientUIResources"></mifos:mifoslabel>
+											<fmt:message key="client.PreviewEditCancelInstruction">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+											</fmt:message>
 											<span class="mandatorytext"><font color="#FF0000">*</font></span>
 											<mifos:mifoslabel name="client.FieldInstruction"
 												bundle="ClientUIResources"></mifos:mifoslabel>
@@ -390,9 +393,9 @@
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="4" class="fontnormalbold">
-										<mifos:mifoslabel name="client.create" bundle="ClientUIResources"/>
-										<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-										<mifos:mifoslabel name="client.accounts" bundle="ClientUIResources"/>
+										<fmt:message key="client.createAccounts">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/></fmt:param>
+										</fmt:message>
 										<br><br>
 									</td>
 								</tr>
@@ -402,8 +405,9 @@
 									</bean:define>
 									<tr>
 										<td width="27%" align="right" class="fontnormal">
-											<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-											<mifos:mifoslabel name="client.instanceName" bundle="ClientUIResources" isColonRequired="yes"/>
+											<fmt:message key="client.savingsInstanceName">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/></fmt:param>
+											</fmt:message>:
 										</td>
 										<td width="73%" class="fontnormal">
 											<mifos:select name="clientCustActionForm" property="savingsOffering[${savingsCtr}]">

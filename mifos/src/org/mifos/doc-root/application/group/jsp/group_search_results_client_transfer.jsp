@@ -103,8 +103,9 @@
                 </tr>
                 <tr class="fontnormal">
                   <td width="20%" align="right">
-                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-                  <mifos:mifoslabel name="Group.groupname"/></td>
+                  <fmt:message key="Group.groupname">
+					<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				  </fmt:message></td>
                   <td width="80%"><html-el:text property="searchString" maxlength="200"/>
 	                  <html-el:submit styleClass="buttn" >
 	                  	<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>

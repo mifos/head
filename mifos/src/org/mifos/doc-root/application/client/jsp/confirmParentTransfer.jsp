@@ -39,12 +39,16 @@
  -->
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -77,22 +81,19 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
-								name="client.EditLink" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="client.MembershipLink"
-								bundle="ClientUIResources"></mifos:mifoslabel> <span></span></td>
+								value="${BusinessKey.displayName}" /> - </span> 
+							<fmt:message key="client.editMembership">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
+							</fmt:message> <span></span></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
-								name="client.EditGroupInstructions1" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="client.EditGroupInstructions2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditGroupInstructions3" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel><br>
+							<td class="fontnormal">
+								<fmt:message key="client.EditGroupInstructions1">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
+								</fmt:message><br>
 							<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
 							</td>
 

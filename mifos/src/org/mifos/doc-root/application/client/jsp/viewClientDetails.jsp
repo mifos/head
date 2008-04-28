@@ -41,11 +41,16 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
+
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -81,11 +86,9 @@
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${BusinessKey.customerStatus.id != 6}">
 								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
-									<mifos:mifoslabel name="client.EditLink"
-										bundle="ClientUIResources"></mifos:mifoslabel>
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-									<mifos:mifoslabel name="client.StatusLink"
-										bundle="ClientUIResources"></mifos:mifoslabel>
+									<fmt:message key="client.editStatus">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+									</fmt:message>
 								</a>
 							</c:if> <br>
 							</span></td>
@@ -270,9 +273,10 @@
 					<table width="96%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td width="65%" height="69" align="left" valign="top"
-								class="tableContentLightBlue"><span class="fontnormalbold"><mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-								name="client.clientcharges" bundle="ClientUIResources" /></span>
+								class="tableContentLightBlue"><span class="fontnormalbold">
+								<fmt:message key="client.clientcharges">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+								</fmt:message></span>
 							<table width="95%" border="0" align="center" cellpadding="0"
 								cellspacing="0">
 								<tr>
@@ -342,9 +346,10 @@
 						</tr>
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><span
-								class="fontnormal"> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.ClientStartDate" bundle="ClientUIResources"></mifos:mifoslabel>:
+								class="fontnormal"> 
+								<fmt:message key="client.ClientStartDate">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
+								</fmt:message>:
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
 								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
@@ -380,13 +385,15 @@
 									<td width="61%" class="fontnormalbold">
 									<c:choose>
 										<c:when test="${BusinessKey.clientUnderGroup}">
-											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+											<fmt:message key="client.GroupMembershipDetails">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+											</fmt:message>
 										</c:when>
 										<c:otherwise>
-											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" />
-										</c:otherwise></c:choose> <mifos:mifoslabel
-										name="client.GroupMembershipDetails"
-										bundle="ClientUIResources"></mifos:mifoslabel><br>
+											<fmt:message key="client.GroupMembershipDetails">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+											</fmt:message>
+										</c:otherwise></c:choose><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
 										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
 									<c:out
@@ -406,16 +413,9 @@
 										<c:when test="${BusinessKey.clientUnderGroup}">
 											<html-el:link
 												action="clientTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-												<mifos:mifoslabel name="client.EditLink"
-													bundle="ClientUIResources" />
-
-												<mifos:mifoslabel name="client.EditRemoveSeparator"
-													bundle="ClientUIResources" />
-												<mifos:mifoslabel name="client.RemoveLink"
-													bundle="ClientUIResources" />
-												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-												<mifos:mifoslabel name="client.MembershipLink"
-													bundle="ClientUIResources" />
+												<fmt:message key="client.EditRemoveMembership">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+												</fmt:message>
 											</html-el:link>
 											<br>
 										</c:when>
@@ -423,12 +423,9 @@
 											<%--<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'configurationLSM')} eq 'No'}">--%>
 												<html-el:link
 													action="clientTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-													<mifos:mifoslabel name="client.EditLink"
-														bundle="ClientUIResources" />
-													<mifos:mifoslabel
-														name="${ConfigurationConstants.BRANCHOFFICE}" />
-													<mifos:mifoslabel name="client.MembershipLink"
-														bundle="ClientUIResources" />
+													<fmt:message key="client.editMembership">
+														<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
+													</fmt:message>
 												</html-el:link>
 											<%--</c:if>--%>
 											<br>
@@ -668,22 +665,23 @@
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /><mifos:mifoslabel
-								name="client.CycleNo" bundle="ClientUIResources" /> <c:out
-								value="${BusinessKey.performanceHistory.loanCycleNumber}" /></span></td>
+							<td class="paddingL10"><span class="fontnormal8pt">
+								<fmt:message key="client.CycleNo" > 
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>
+								<c:out value="${BusinessKey.performanceHistory.loanCycleNumber}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="client.LastLoanAmount" bundle="ClientUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
+							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
+								key="client.LastLoanAmount"> <fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
 							<c:out
 								value="${BusinessKey.performanceHistory.lastLoanAmount}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-								name="client.NoOfActive" bundle="ClientUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
+							<td class="paddingL10"><span class="fontnormal8pt"><fmt:message
+								key="client.NoOfActive"> <fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}"/></fmt:param></fmt:message>:
 							<c:out
 								value="${BusinessKey.performanceHistory.noOfActiveLoans}" /></span></td>
 						</tr>
@@ -694,9 +692,9 @@
 								value="${BusinessKey.performanceHistory.delinquentPortfolioAmount}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="client.Total" bundle="ClientUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
+							<td class="paddingL10"><span class="fontnormal8pt"> <fmt:message
+								key="client.Total"> <fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.SAVINGS}"/></fmt:param></fmt:message>
 							<c:out
 								value="${BusinessKey.performanceHistory.totalSavingsAmount}" /></span></td>
 						</tr>

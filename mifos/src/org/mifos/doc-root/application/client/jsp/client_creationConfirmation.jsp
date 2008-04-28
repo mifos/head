@@ -40,9 +40,13 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <!-- Inserting tile defintion for header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
@@ -54,9 +58,10 @@
 				<table width="98%" border="0" cellspacing="0" cellpadding="3">
 					<!-- Center confirmation message -->
 					<tr>
-						<td class="headingorange"><mifos:mifoslabel
-							name="client.ConfirmationMessage" bundle="ClientUIResources"></mifos:mifoslabel>
-						<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /><br>
+						<td class="headingorange">
+							<fmt:message key="client.ConfirmationMessage">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+							</fmt:message><br>
 						<br>
 						</td>
 					</tr>
@@ -70,14 +75,10 @@
 							bundle="ClientUIResources"></mifos:mifoslabel></span> <c:out
 							value="${sessionScope.clientCustActionForm.globalCustNum}" /> <span
 							class="fontnormal"><br>
-						<mifos:mifoslabel name="client.Confirmation.Information1"
-							bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-							name="client.Confirmation.Information2"
-							bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-							name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
-							name="client.Confirmation.Information3"
-							bundle="ClientUIResources"></mifos:mifoslabel> <br>
+						<fmt:message key="client.Confirmation.Information">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+						</fmt:message> <br>
 						<br>
 						</span> <!-- Link to view the center details -->
 						<c:choose>
@@ -89,10 +90,9 @@
 						</c:otherwise>
 						</c:choose>
 
-						<mifos:mifoslabel name="client.ViewClientDetailsLink1"
-							bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
-							name="client.ViewClientDetailsLink2" bundle="ClientUIResources"></mifos:mifoslabel>
+						<fmt:message key="client.ViewClientDetailsLink">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+						</fmt:message>
 						</a> <span class="fontnormal"><br>
 						<br>
 						</span><span class="fontnormalboldorange"> <mifos:mifoslabel
@@ -101,31 +101,26 @@
 						</span><br>
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<span class="fontnormal"></span>
-							<mifos:mifoslabel name="client.AccountsHeading"
-								bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+							<fmt:message key="client.AccountsHeading">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+							</fmt:message>
 							<br>
 						</c:if> <span class="fontnormal"> <!-- Link to create a new savings  account link -->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link
 								href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.clientCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="client.CreateNewClientLink"
-									bundle="ClientUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
-								<mifos:mifoslabel name="client.SavingsAccountLink"
-									bundle="ClientUIResources" />
-
+								<fmt:message key="client.CreateNewClientLink">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+								</fmt:message>
 							</html-el:link>
 							<br>
 						</c:if> <!-- Link to create a new loan  account link --> <!-- bug id 29352. Added if condition to show link to open accounts if only client is active-->
 						<c:if test="${requestScope.clientVO.statusId == 3}">
 							<html-el:link
 								href="loanAction.do?method=getPrdOfferings&customer.customerId=${sessionScope.clientCustActionForm.customerId}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="client.CreateNewClientLink"
-									bundle="ClientUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
-								<mifos:mifoslabel name="client.SavingsAccountLink"
-									bundle="ClientUIResources" />
+								<fmt:message key="client.CreateNewClientLink">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>
 							</html-el:link>
 							<br>
 						</c:if> <!-- Link to create a new group -->
@@ -138,14 +133,14 @@
 						</c:otherwise>
 						</c:choose>
 
-						<mifos:mifoslabel name="client.CreateNewClientLink"
-							bundle="ClientUIResources" /> <mifos:mifoslabel
-							name="${ConfigurationConstants.GROUP}" /> </a> <br>
+						<fmt:message key="client.createNewClient">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+						</fmt:message> </a> <br>
 						<!-- Link to create a new client --> <a
 							href="groupCustAction.do?method=loadSearch&input=createClient&recordOfficeId=0&recordLoanOfficerId=0" />
-						<mifos:mifoslabel name="client.CreateNewClientLink"
-							bundle="ClientUIResources" /> <mifos:mifoslabel
-							name="${ConfigurationConstants.CLIENT}" /> </a></span></td>
+						<fmt:message key="client.createNewClient">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+						</fmt:message> </a></span></td>
 					</tr>
 				</table>
 				<br>

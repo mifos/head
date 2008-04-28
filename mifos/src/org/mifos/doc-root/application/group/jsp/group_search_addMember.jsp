@@ -110,9 +110,10 @@
 								bundle="GroupUIResources" /></font></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-								name="Group.groupname" /></td>
+							<td align="right">
+								<fmt:message key="Group.groupname">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+								</fmt:message>:</td>
 							<td><html-el:text property="searchString" maxlength="200" />
 							</td>
 						</tr>

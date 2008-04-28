@@ -42,10 +42,14 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -82,12 +86,10 @@
 						<tr>
 							<td class="fontnormal"><mifos:mifoslabel
 								name="client.PreviewEditInfoInstruction"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditPageCancelInstruction1"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.EditPageCancelInstruction2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <span
+								bundle="ClientUIResources"></mifos:mifoslabel> 
+								<fmt:message key="client.EditPageCancelInstruction">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
+								</fmt:message> <span
 								class="mandatorytext"><font color="#FF0000">*</font></span> <mifos:mifoslabel
 								name="client.FieldInstruction" bundle="ClientUIResources"></mifos:mifoslabel>
 							</td>
@@ -110,7 +112,7 @@
 								<td width="17%" align="right"><mifos:mifoslabel
 									name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></td>
 								<td width="83%">
-									<mifos:select property="loanOfficerId"	style="width:136px;">
+									<mifos:select property="loanOfficerId">
 										<c:forEach var="loanOfficersList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" >
 											<html-el:option value="${loanOfficersList.personnelId}">${loanOfficersList.displayName}</html-el:option>
 										</c:forEach>

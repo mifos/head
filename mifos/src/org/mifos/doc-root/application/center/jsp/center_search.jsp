@@ -42,8 +42,13 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
+
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
  <script type="text/javascript">
@@ -112,9 +117,9 @@
               </tr>
               <tr>
                 <td class="fontnormalbold"> <span class="fontnormal">
-                <mifos:mifoslabel name="Center.SearchInstructions1"  bundle="CenterUIResources"></mifos:mifoslabel>
-                <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-                <mifos:mifoslabel name="Center.SearchInstructions2"  bundle="CenterUIResources"></mifos:mifoslabel>
+                <fmt:message key="Center.SearchInstructions">
+	                <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></fmt:param>
+                </fmt:message>
                 <mifos:mifoslabel name="Center.CreatePageCancelInstruction"  bundle="CenterUIResources"></mifos:mifoslabel>
                 </span>
                   </td>

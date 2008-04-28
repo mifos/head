@@ -120,7 +120,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td width="25%" align="right">
-									<mifos:mifoslabel name="Group.groupname" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
+									<mifos:mifoslabel name="Group.name" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
 								</td>
 								<td width="75%">
 									<mifos:mifosalphanumtext property="displayName" />

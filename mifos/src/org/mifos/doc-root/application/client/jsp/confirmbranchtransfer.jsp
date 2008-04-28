@@ -39,12 +39,16 @@
  -->
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".detailsCustomer">
 	<tiles:put name="body" type="string">
@@ -84,15 +88,11 @@
 							<td></td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
-								name="client.ConfirmBranchInstructions1"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.BRANCHOFFICE}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="client.ConfirmBranchInstructions2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
-								name="client.ConfirmBranchInstructions3"
-								bundle="ClientUIResources"></mifos:mifoslabel></td>
+							<td class="fontnormal">
+								<fmt:message key="client.ConfirmBranchInstructions">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/></fmt:param>
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
+								</fmt:message></td>
 						</tr>
 					</table>
 					<br>

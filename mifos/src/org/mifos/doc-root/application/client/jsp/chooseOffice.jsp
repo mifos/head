@@ -2,8 +2,12 @@
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/officetags" prefix="office"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ClientUIResources"/>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -52,8 +56,9 @@
 									<td><img src="pages/framework/images/timeline/orangearrow.gif"
 										width="17" height="17"></td>
 									<td class="timelineboldorangelight">
-									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-									<mifos:mifoslabel name="client.Information" bundle="ClientUIResources"></mifos:mifoslabel></td>
+									<fmt:message key="client.clientInformation">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+									</fmt:message></td>
 								</tr>
 							</table>
 							</td>
@@ -78,22 +83,24 @@
 					<td align="left" valign="top" class="paddingleftCreates">
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td class="headingorange"><span class="heading"> <mifos:mifoslabel
-								name="client.CreateTitle" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel>
+							<td class="headingorange"><span class="heading"> 
+								<fmt:message key="client.createNewClient">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
+								</fmt:message>
 
-							- </span> <mifos:mifoslabel name="client.SelectBranchHeading"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.BRANCHOFFICE}"></mifos:mifoslabel>
+							- </span> <fmt:message key="client.selectABranch">
+								<fmt:param><mifos:mifoslabel
+								name="${ConfigurationConstants.BRANCHOFFICE}"/></fmt:param>
+							</fmt:message>
 							</td>
 						</tr>
 						<tr>
-							<td class="fontnormal"><mifos:mifoslabel
-								name="client.SelectBranchInstructions1"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.BRANCHOFFICE}"></mifos:mifoslabel>
-							<mifos:mifoslabel name="client.SelectBranchInstructions2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
+							<td class="fontnormal">
+								<fmt:param key="client.SelectBranchInstructions">
+									<fmt:param><mifos:mifoslabel
+										name="${ConfigurationConstants.BRANCHOFFICE}"/></fmt:param>
+								</fmt:param>
+							<mifos:mifoslabel
 								name="client.CreatePageCancelInstruction1"
 								bundle="ClientUIResources"></mifos:mifoslabel> </td>
 

@@ -137,7 +137,10 @@ function goToCancelPage()
                   <td>&nbsp;</td>
                 </tr>
                 <tr class="fontnormal">
-                  <td align="right"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></td>
+                  <td align="right">
+                  	<fmt:message key="Group.groupname">
+                  		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+                  	</fmt:message></td>
                   <td>
                   	<html-el:text property="searchString" maxlength="200"/>
                   </td>
@@ -163,7 +166,10 @@ function goToCancelPage()
                   <c:if test="${groupHierarchyRequired eq 'No'}">
                    <a href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0&amp;currentFlowKey=${requestScope.currentFlowKey}"> 
                   <br>
-                    <mifos:mifoslabel name="Group.clickheretocontinueif" /> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel name="Group.membershipisnotrequiredforyour" /> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />.</a>
+                  	<fmt:message key="Group.membershipNotRequired">
+                    	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param> 
+                    	<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+                    </fmt:message></a>
                   </c:if>
                   </td>
                 </tr>
