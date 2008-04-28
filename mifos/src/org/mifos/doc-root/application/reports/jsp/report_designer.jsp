@@ -71,7 +71,7 @@ explanation of the license and how it is applied.
 				              <tr>
 				                <td width="63%" class="headingorange">
 				                <span class="headingorange">
-				                <mifos:mifoslabel name="reports.upload_report" bundle="reportsUIResources"/>				                	
+				                <mifos:mifoslabel name="reports.uploadreport" bundle="reportsUIResources"/>				                	
 				                </span>
 				                </td>
 				              </tr>
