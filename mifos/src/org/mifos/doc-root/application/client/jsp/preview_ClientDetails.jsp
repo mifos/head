@@ -194,7 +194,7 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td class="fontnormal"><span class="fontnormalbold"> 
-										<fmt:message key=CreatePreviewPageTitle>
+										<fmt:message key="CreatePreviewPageTitle">
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
 										</fmt:message></span>
 									<c:choose>
