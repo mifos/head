@@ -176,7 +176,7 @@
 								<tr>
 									<td class="headingorange"><%-- Displaying the heading of the page based on whether the user is comign first time or to edit the information --%>
 										<span class="heading"> 
-											<fmt:message key=client.createNewClient">
+											<fmt:message key="client.createNewClient">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
 											</fmt:message>
 											</span>
