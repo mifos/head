@@ -1206,7 +1206,7 @@ return true;]]></method>
                 </structure>
             </list-property>
             <column id="175">
-                <property name="width">1cm</property>
+                <property name="width">2cm</property>
             </column>
             <column id="176">
                 <property name="width">4cm</property>
@@ -1250,9 +1250,7 @@ return true;]]></method>
             <column id="978">
                 <property name="width">1.7cm</property>
             </column>
-            <column id="866">
-                <property name="width">1cm</property>
-            </column>
+            <column id="866"/>
             <group id="727">
                 <property name="groupName">loan_officer_group</property>
                 <property name="interval">none</property>
@@ -2694,6 +2692,7 @@ return true;]]></method>
                             <property name="borderRightColor">#808080</property>
                             <property name="borderRightStyle">solid</property>
                             <property name="borderRightWidth">thin</property>
+                            <property name="paddingLeft">0pt</property>
                         </cell>
                         <cell id="351">
                             <property name="style">groupFooter</property>
@@ -2889,6 +2888,8 @@ return true;]]></method>
                         <property name="borderTopColor">#808080</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
+                        <property name="paddingLeft">5pt</property>
+                        <property name="textAlign">left</property>
                         <data id="261">
                             <structure name="numberFormat">
                                 <property name="category">Custom</property>
