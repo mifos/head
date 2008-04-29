@@ -96,10 +96,10 @@
 						</tr>
 						<tr>
 							<td class="fontnormal">
-								<fmt:param key="client.SelectBranchInstructions">
+								<fmt:message key="client.SelectBranchInstructions">
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.BRANCHOFFICE}"/></fmt:param>
-								</fmt:param>
+								</fmt:message>
 							<mifos:mifoslabel
 								name="client.CreatePageCancelInstruction1"
 								bundle="ClientUIResources"></mifos:mifoslabel> </td>
