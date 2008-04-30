@@ -953,7 +953,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	public ArrayList eligibleLoanAmount(String calaculateValue,
 			LoanOfferingBO loanOfferingBO) {
 		ArrayList list = new ArrayList();
-		if ((checkLoanAmountType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)
+		if ((isLoanAmountTypeSameForAllLoan())
 				&& calaculateValue == null) {
 			Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoanItr = loanOfferingBO
 					.getLoanAmountSameForAllLoan().iterator();
@@ -965,7 +965,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				list.add(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
 			}
 		}
-		if (checkLoanAmountType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
+		if (isLoanAmountTypeAsOfLastLoanAmount()) {
 			Iterator<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoanAmountBOItr = loanOfferingBO
 					.getLoanAmountFromLastLoan().iterator();
 			while (loanAmountFromLastLoanAmountBOItr.hasNext()) {
@@ -989,7 +989,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				}
 			}
 		}
-		if (checkLoanAmountType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE) {
+		if (isLoanAmountTypeFromLoanCycle()) {
 			Iterator<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycleBOItr = loanOfferingBO
 					.getLoanAmountFromLoanCycle().iterator();
 			while (loanAmountFromLoanCycleBOItr.hasNext()) {
@@ -1019,8 +1019,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	public ArrayList eligibleNoOfInstall(String calaculateValue,
 			LoanOfferingBO loanOfferingBO) {
 		ArrayList list = new ArrayList();
-		if ((checkNoOfInstallType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)
-				&& calaculateValue == null) {
+		if (isNoOfInstallSameForAllLoan() && calaculateValue == null) {
 			Iterator<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoanItr = loanOfferingBO
 					.getNoOfInstallSameForAllLoan().iterator();
 			while (noOfInstallSameForAllLoanItr.hasNext()) {
@@ -1031,7 +1030,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				list.add(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
 			}
 		}
-		if (checkNoOfInstallType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
+		if (isNoOfInstallFromLastLoan()) {
 			Iterator<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoanAmountBOItr = loanOfferingBO
 					.getNoOfInstallFromLastLoan().iterator();
 			while (noOfInstallFromLastLoanAmountBOItr.hasNext()) {
@@ -1055,7 +1054,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				}
 			}
 		}
-		if (checkNoOfInstallType(loanOfferingBO) == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE) {
+		if (isNoOfInstallFromLoanCycle()) {
 			Iterator<NoOfInstallFromLoanCycleBO> noOfInstallFromFromLoanCycleBOItr = loanOfferingBO
 					.getNoOfInstallFromLoanCycle().iterator();
 			while (noOfInstallFromFromLoanCycleBOItr.hasNext()) {
@@ -1271,33 +1270,33 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	/**
 	 * it will check the type of product
 	 */
-	public int checkLoanAmountType(LoanOfferingBO loanOffering) {
-		if (!(loanOffering.getLoanAmountSameForAllLoan().isEmpty())) {
+	public int checkLoanAmountType() {
+		if (!getLoanAmountSameForAllLoan().isEmpty()) {
 			return ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
 		}
-		else if (!loanOffering.getLoanAmountFromLastLoan().isEmpty()) {
+		else if (!getLoanAmountFromLastLoan().isEmpty()) {
 			return ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
 		}
-		else if (!(loanOffering.getLoanAmountFromLoanCycle().isEmpty())) {
+		else if (!getLoanAmountFromLoanCycle().isEmpty()) {
 			return ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
 		}
-		return 0;
+		return ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
 	}
 
 	/**
 	 * it will check the type of installment 
 	 */
-	public int checkNoOfInstallType(LoanOfferingBO loanOffering) {
-		if (!(loanOffering.getNoOfInstallSameForAllLoan().isEmpty())) {
+	public int checkNoOfInstallType() {
+		if (!getNoOfInstallSameForAllLoan().isEmpty()) {
 			return ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
 		}
-		else if (!(loanOffering.getNoOfInstallFromLastLoan().isEmpty())) {
+		else if (!getNoOfInstallFromLastLoan().isEmpty()) {
 			return ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
 		}
-		else if (!(loanOffering.getNoOfInstallFromLoanCycle().isEmpty())) {
+		else if (!getNoOfInstallFromLoanCycle().isEmpty()) {
 			return ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
 		}
-		return 0;
+		return ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
 	}
 
 	@Override
@@ -1355,6 +1354,30 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			loanOffering.setDefNoInstallments(noOfInstallSameForAllLoanBO
 					.getDefaultNoOfInstall());
 		}
+	}
+
+	public boolean isLoanAmountTypeAsOfLastLoanAmount() {
+		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+	}
+
+	public boolean isLoanAmountTypeSameForAllLoan() {
+		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+	}
+
+	public boolean isLoanAmountTypeFromLoanCycle() {
+		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+	}
+
+	public boolean isNoOfInstallFromLastLoan() {
+		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+	}
+
+	public boolean isNoOfInstallSameForAllLoan() {
+		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+	}
+
+	public boolean isNoOfInstallFromLoanCycle() {
+		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
 	}
 
 	public static LoanOfferingBO createInstanceForTest(UserContext userContext, String prdOfferingName,

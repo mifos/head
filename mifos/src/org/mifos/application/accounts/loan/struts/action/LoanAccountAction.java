@@ -511,7 +511,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
 		setDataIntoForm(loanOffering, loanActionForm, request);
 		loadCreateMasterData(loanActionForm, request); 
-	    RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+	    RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting()
+	    		.getMeetingDetails().getRecurrenceTypeEnum();
 		SessionUtils.setAttribute(LoanConstants.RECURRENCEID, recurrenceType.getValue(), request);
 	    CustomerBO customerBO = (CustomerBO) request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
@@ -1388,33 +1389,32 @@ public class LoanAccountAction extends AccountAppAction {
 	public void updateLoanOffering(LoanOfferingBO loanOffering,
 			LoanAccountActionForm loanAccountActionForm) throws Exception {
 
-		if (loanOffering.checkLoanAmountType(loanOffering) == 2) {
+		if (loanOffering.isLoanAmountTypeAsOfLastLoanAmount()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingLoanAmountFromLastLoan(loanOffering,
 					getCustomerLastMaxLoanAmount(customer));
 		}
-		if (loanOffering.checkNoOfInstallType(loanOffering) == 2) {
+		if (loanOffering.isNoOfInstallFromLastLoan()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingNoOfInstallFromLastLoan(loanOffering,
 					getCustomerLastMaxLoanAmount(customer));
 		}
-		if (loanOffering.checkLoanAmountType(loanOffering) == 1) {
+		if (loanOffering.isLoanAmountTypeSameForAllLoan()) {
 			setUpdatedLoanOfferingLoanAmountSameForAllLoan(loanOffering);
 		}
-		if (loanOffering.checkNoOfInstallType(loanOffering) == 1) {
+		if (loanOffering.isNoOfInstallSameForAllLoan()) {
 			setUpdatedLoanOfferingNoOfInstallSameForAllLoan(loanOffering);
 		}
-		if (loanOffering.checkLoanAmountType(loanOffering) == 3) {
+		if (loanOffering.isLoanAmountTypeFromLoanCycle()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingLoanAmountFromLoanCycle(loanOffering,
 					getCustomerMaxLoanCycle(customer, loanOffering
 							.getPrdOfferingId()));
 		}
-
-		if (loanOffering.checkNoOfInstallType(loanOffering) == 3) {
+		if (loanOffering.isNoOfInstallFromLoanCycle()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingNoOfInstallFromLoanCycle(loanOffering,
