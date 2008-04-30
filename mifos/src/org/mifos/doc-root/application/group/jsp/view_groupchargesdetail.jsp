@@ -281,7 +281,7 @@
 							<tr class="fontnormal">
 								<td width="15%"><c:out value="${recurrenceFees.fees.feeName}" />:</td>
 
-								<td width="30%"><c:out value="${recurrenceFees.feeAmount}" />&nbsp;&nbsp;
+								<td width="30%"><c:out value="${recurrenceFees.accountFeeAmount}" />&nbsp;&nbsp;
 								( <mifos:mifoslabel name="Fees.labelRecurEvery"
 									bundle="FeesUIResources" /> <c:out
 									value="${recurrenceFees.fees.feeFrequency.feeMeetingFrequency.meetingDetails.recurAfter}"></c:out>
