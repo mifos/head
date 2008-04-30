@@ -1871,7 +1871,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 	
 		validateStartDate(request, errors);
  		validateEndDate(request, errors);
-		validateLoanAmmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
+		validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
 		validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow, forNumberOfLastLoanInstallmentAtRow);
 		if (StringUtils.isNullOrEmpty(getInterestTypes()))
 			addError(errors, "interestTypes",
@@ -1905,7 +1905,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		String status = resources.getString("product.status");
 		validateStartDateForEditPreview(request, errors);
 		validateEndDate(request, errors);
-		validateLoanAmmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
+		validateLoanAmount(errors, locale, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow);
 		validateLoanInstallments(errors, sameForAllLoans, forByLastLoanAtRow, forByLoanCycleAtRow,forNumberOfLastLoanInstallmentAtRow );
 		if (StringUtils.isNullOrEmpty(getInterestTypes()))
 			addError(errors, "interestTypes",
@@ -2162,28 +2162,29 @@ public class LoanPrdActionForm extends BaseActionForm {
 	}
 
 
-	private void validateLoanAmmount(ActionErrors errors, Locale locale, String sameForAllLoans, 
+	private void validateLoanAmount(ActionErrors errors, Locale locale, String sameForAllLoans, 
 			String forByLastLoanAtRow, String forByLoanCycleAtRow){
-		String calctype = getLoanAmtCalcType();
 		Integer startRange;
 		Integer endRange;
 		String minLoanAmt = null;
 		String maxLoanAmt = null;
 		String defLoanAmt = null;
 		
-		if (!StringUtils.isNullAndEmptySafe(calctype)){
+		if (!StringUtils.isNullAndEmptySafe(getLoanAmtCalcType())){
 			addError(errors,ProductDefinitionConstants.ERRORCALCLOANAMOUNTTYPE,
 					ProductDefinitionConstants.ERRORCALCLOANAMOUNTTYPE);
 		}
-		else{
-			if(calctype.equals("1"))
+		
+		if (errors.isEmpty()){
+			short calctype = Short.parseShort(getLoanAmtCalcType());
+			if(calctype == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)
 			{
 				// same for all loans
 				validateMinMaxDefLoanAmounts(errors,getMaxLoanAmount(),getMinLoanAmount(),getDefaultLoanAmount(),
 						 sameForAllLoans, "", locale);
 				
 			}
-			else if(calctype.equals("2"))
+			else if(calctype == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN)
 				{
 					// by last loan amount
 					// First Row
@@ -2251,7 +2252,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 							forByLastLoanAtRow, "6", locale);							
 
 				}	
-				else if(calctype.equals("3"))			
+				else if(calctype == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE)			
 				{
 					// by loan cycle
 					// first row
@@ -2301,15 +2302,15 @@ public class LoanPrdActionForm extends BaseActionForm {
 	
 	private void setLoanAmounts(Double minLoanAmt, Double maxLoanAmt, Double defLoanAmt, String rownum)
 	{
-		String calctype = getLoanAmtCalcType();
+		short calctype = Short.parseShort(getLoanAmtCalcType());
 		
-			if (calctype.equals("1"))
+			if (calctype == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)
 			{
 				minLoanAmountValue = minLoanAmt;
 				maxLoanAmountValue = maxLoanAmt;
 				defaultLoanAmountValue = defLoanAmt;
 			}
-			else if (calctype.equals("1"))
+			else if (calctype == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN)
 			{
 				if (rownum.equals("1"))
 				{
@@ -2348,7 +2349,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					lastLoanDefaultLoanAmt6Value = defLoanAmt;
 				}
 			}
-			else if (calctype.equals("3"))
+			else if (calctype == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE)
 			{
 				if (rownum.equals("1"))
 				{
@@ -2593,21 +2594,21 @@ public class LoanPrdActionForm extends BaseActionForm {
 	private void validateLoanInstallments(ActionErrors errors, String sameForAllLoans, 
 			String forByLastLoanAtRow, String forByLoanCycleAtRow,
 			String forNumberOfLastLoanInstallmentAtRow){
-		String calcinsttype = getCalcInstallmentType();
 		String minLoanAmt;
 		String maxLoanAmt;
 		String defLoanAmt;	
 		Integer startRange;
 		Integer endRange;
 		
-		if(!StringUtils.isNullAndEmptySafe(calcinsttype))
+		if(!StringUtils.isNullAndEmptySafe(getCalcInstallmentType()))
 		{
 			addError(errors,ProductDefinitionConstants.ERRORCALCINSTALLMENTTYPE,
 					ProductDefinitionConstants.ERRORCALCINSTALLMENTTYPE);			
 		}
-		else
-		{
-			if(calcinsttype.equals("1"))
+		
+		if (errors.isEmpty()) {
+			short calcinsttype = Short.parseShort(getCalcInstallmentType());
+			if(calcinsttype == ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN)
 			{
 				// same for all loans 	
 				minLoanAmt = (getMinNoInstallments()==null ||getMinNoInstallments().equals(""))?null:getMinNoInstallments();
@@ -2616,7 +2617,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				validateMinMaxDefInstallments(errors,maxLoanAmt,minLoanAmt,defLoanAmt,sameForAllLoans, "");
 			}
 			else
-			if(calcinsttype.equals("2"))
+			if(calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN)
 			{
 				// number of installments  by last loan amount
 				// first row
@@ -2681,7 +2682,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				
 			}
 			else
-			if(calcinsttype.equals("3"))
+			if(calcinsttype == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE)
 			{
 				// by loan cycle
 				//first row 
