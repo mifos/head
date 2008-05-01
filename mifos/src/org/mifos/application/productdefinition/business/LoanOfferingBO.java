@@ -1,41 +1,22 @@
-/**
-
- * LoanOffering.java    version: xxx
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
-
 package org.mifos.application.productdefinition.business;
 
 
@@ -116,6 +97,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private final Set<LoanOfferingFeesEntity> loanOfferingFees;
 
+	// FIXME: the implementation of defaults for loan amounts and number of
+	// installments requires the inclusion of branching logic wherever loan
+	// offerings are instantiated, such as LoanPrdActionForm,
+	// LoanProductDetails.jsp,CreateMultipleLoanAccountsSearchResults.jsp, etc.
 	private final Set<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoan;
 
 	private final Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle;
@@ -270,13 +255,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
 		this.loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
 		this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
-		if (loanAmtCalcType.equals("1")) {
+		if (new Short(loanAmtCalcType).equals(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)) {
 			loanAmountSameForAllLoan.add(new LoanAmountSameForAllLoanBO(Double
 					.parseDouble(minLoanAmount.toString()), Double
 					.parseDouble(maxLoanAmount.toString()), Double
 					.parseDouble(defaultLoanAmount.toString()), this));
 		}
-		if (calcInstallmentType.equals("1")) {
+		if (new Short(calcInstallmentType).equals(ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN)) {
 			noOfInstallSameForAllLoan.add(new NoOfInstallSameForAllLoanBO(
 					(Short.parseShort(minNoInstallments.toString())), Short
 							.parseShort(maxNoInstallments.toString()), Short
@@ -1093,6 +1078,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountSameForAllLoan.clear();
+			// FIXME: does form logic belong in this class?
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
 					loanPrdActionForm.getLastLoanMinLoanAmt1Value(),
 					loanPrdActionForm.getLastLoanMaxLoanAmt1Value(),
@@ -1176,6 +1162,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountSameForAllLoan.clear();
+			// FIXME: what are these hardcoded values like new Short("0")? can
+			// we use an enum instead?
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
 					loanPrdActionForm.getCycleLoanMinLoanAmt1Value(),
 					loanPrdActionForm.getCycleLoanMaxLoanAmt1Value(),
@@ -1212,6 +1200,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.noOfInstallFromLoanCycle.clear();
 			this.noOfInstallFromLastLoan.clear();
 			this.noOfInstallSameForAllLoan.clear();
+			// FIXME: what are these hardcoded values like new Short("0")? can
+			// we use an enum instead?
 			addNoOfInstallFromLoanCycle(new NoOfInstallFromLoanCycleBO(Short
 					.valueOf(loanPrdActionForm.getMinCycleInstallment1()),
 					Short.valueOf(loanPrdActionForm.getMaxCycleInstallment1()),
@@ -1268,7 +1258,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	}
 
 	/**
-	 * it will check the type of product
+	 * Reveals method used to determine loan amount. For instance: same for all
+	 * loans, based on last loan, or based on loan cycle.
 	 */
 	public int checkLoanAmountType() {
 		if (!getLoanAmountSameForAllLoan().isEmpty()) {
@@ -1284,7 +1275,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	}
 
 	/**
-	 * it will check the type of installment 
+	 * Reveals method used to determine number of loan installments. For
+	 * instance: same for all loans, based on last loan, or based on loan
+	 * cycle.
 	 */
 	public int checkNoOfInstallType() {
 		if (!getNoOfInstallSameForAllLoan().isEmpty()) {
@@ -1380,6 +1373,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
 	}
 
+	// FIXME: move this into test code.
 	public static LoanOfferingBO createInstanceForTest(UserContext userContext, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
