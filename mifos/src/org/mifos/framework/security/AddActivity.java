@@ -120,17 +120,6 @@ public class AddActivity extends Upgrade {
 		statement.close();
 	}
 
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
-			SQLException {
-		short lookupId = findLookupId(connection, newActivityId);
-		deleteFromRolesActivity(connection);
-		deleteFromActivity(connection);
-		deleteFromLookupValueLocale(connection, lookupId);
-		deleteFromLookupValue(connection, lookupId);
-		downgradeVersion(connection);
-	}
-
 	private static short findLookupId(Connection connection, short activityId)
 			throws SQLException {
 		PreparedStatement statement = connection
@@ -148,15 +137,6 @@ public class AddActivity extends Upgrade {
 			throw new RuntimeException(
 					"unable to downgrade: no activity with id " + activityId);
 		}
-	}
-
-	private void deleteFromRolesActivity(Connection connection)
-			throws SQLException {
-		PreparedStatement statement = connection
-				.prepareStatement("delete from ROLES_ACTIVITY where ACTIVITY_ID = ?");
-		statement.setInt(1, newActivityId);
-		statement.executeUpdate();
-		statement.close();
 	}
 
 	private void deleteFromActivity(Connection connection) throws SQLException {

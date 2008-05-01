@@ -8,11 +8,9 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.hibernate.Session;
 import org.junit.Test;
-import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.Upgrade;
-import org.mifos.framework.security.AddActivity;
 
 
 public class AddAccountActionTest {
@@ -22,7 +20,6 @@ public class AddAccountActionTest {
 	@Test
 	public void startFromStandardStore() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
 		
 		Upgrade upgrade = new AddAccountAction(
 			72,
@@ -31,10 +28,6 @@ public class AddAccountActionTest {
 			"Send money to orphans");
 
 		upgradeAndCheck(database, upgrade);
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-
-		assertEquals(start, afterUpAndDownGrade);
 	}
 
 	private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) 
@@ -62,7 +55,6 @@ public class AddAccountActionTest {
 	@Test 
 	public void constructorTest() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
 		short newId = 31000;
 		AddAccountAction upgrade = null;
 		try
@@ -97,9 +89,6 @@ public class AddAccountActionTest {
 		AccountActionEntity action = (AccountActionEntity) session.get(
 				AccountActionEntity.class, newId);
 		assertEquals(goodKey, action.getLookUpValue().getLookUpName());
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-		assertEquals(start, afterUpAndDownGrade);
 	}
 
 	public static junit.framework.Test suite() {

@@ -71,18 +71,6 @@ public class AddAccountStateFlag extends Upgrade {
 		upgradeVersion(connection);
 	}
 
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
-			SQLException {
-		short lookupId = findLookupId(connection);
-
-		deleteFromFlags(connection);
-		deleteFromLookupValueLocale(connection, lookupId);
-		deleteFromLookupValue(connection, lookupId);
-
-		downgradeVersion(connection);
-	}
-
 	private void addFlag(Connection connection, 
 		int newFlagId, String description, int lookupId) 
 	throws SQLException {
@@ -99,32 +87,4 @@ public class AddAccountStateFlag extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
-
-	private short findLookupId(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"select LOOKUP_ID " +
-			"from ACCOUNT_STATE_FLAG where FLAG_ID = ?");
-		statement.setInt(1, newFlagId);
-		ResultSet results = statement.executeQuery();
-		if (results.next()) {
-			short lookupId = results.getShort("LOOKUP_ID");
-			statement.close();
-			return lookupId;
-		}
-		else {
-			statement.close();
-			throw new RuntimeException(
-				"unable to downgrade: no account state flag " + newFlagId);
-		}
-	}
-	
-	private void deleteFromFlags(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from ACCOUNT_STATE_FLAG where FLAG_ID = ?");
-		statement.setInt(1, newFlagId);
-		statement.executeUpdate();
-		statement.close();
-	}
-	
-
 }

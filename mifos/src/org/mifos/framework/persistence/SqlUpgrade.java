@@ -35,10 +35,6 @@ public class SqlUpgrade extends Upgrade {
 		runScript(connection);
 	}
 	
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-	}
-	
 	public static void execute(InputStream stream, Connection conn) 
 	throws SQLException {
 		String[] sqls = readFile(stream);

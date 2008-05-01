@@ -85,7 +85,7 @@ public class Upgrade176 extends Upgrade {
 			// looks like a fresh database, at least in terms of the chart of
 			// accounts data. Blow away all chart of accounts tables and let
 			// FinancialInitializer do its thing.
-			SqlUpgrade upgrade = dvp.findUpgradeDowngradeScript(this
+			SqlUpgrade upgrade = dvp.findUpgradeScript(this
 					.higherVersion(), "upgrade_to_176_conditional.sql");
 
 			upgrade.runScript(connection);
@@ -112,20 +112,6 @@ public class Upgrade176 extends Upgrade {
 					+ "' WHERE COA_Name = 'EXPENDITURE'");
 		}
 		upgradeVersion(connection);
-	}
-
-	@Override
-	public void downgrade(Connection connection,
-			DatabaseVersionPersistence databaseVersionPersistence)
-			throws IOException, SQLException {
-		execute(connection, "ALTER TABLE coa DROP COLUMN CATEGORY_TYPE");
-		if (isTableEmpty("coa", connection)) {
-			SqlUpgrade upgrade = databaseVersionPersistence
-					.findUpgradeDowngradeScript(this.higherVersion(),
-							"downgrade_from_176_conditional.sql");
-			upgrade.runScript(connection);
-		}
-		downgradeVersion(connection);
 	}
 
 }

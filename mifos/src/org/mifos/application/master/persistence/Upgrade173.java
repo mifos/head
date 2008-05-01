@@ -70,7 +70,7 @@ public class Upgrade173 extends Upgrade {
 	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		if (noOfficesHaveBeenCreatedByEndUsers(connection)) {
-			SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeDowngradeScript(this.higherVersion(),"upgrade_to_173_conditional.sql");
+			SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeScript(this.higherVersion(),"upgrade_to_173_conditional.sql");
 			upgrade.runScript(connection);
 		}
 		upgradeVersion(connection);
@@ -84,15 +84,6 @@ public class Upgrade173 extends Upgrade {
 	 */
 	private boolean noOfficesHaveBeenCreatedByEndUsers(Connection connection) throws SQLException {
 		return countRows(connection, "OFFICE") == 1;
-	}
-
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-		if (noOfficesHaveBeenCreatedByEndUsers(connection)) {
-			SqlUpgrade upgrade = databaseVersionPersistence.findUpgradeDowngradeScript(this.higherVersion(),"downgrade_from_173_conditional.sql");
-			upgrade.runScript(connection);
-		}
-		downgradeVersion(connection);
 	}
 
 }

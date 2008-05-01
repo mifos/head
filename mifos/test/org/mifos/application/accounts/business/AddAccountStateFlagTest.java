@@ -53,10 +53,6 @@ public class AddAccountStateFlagTest {
 			"Rejected because feet are too big");
 
 		upgradeAndCheck(database, upgrade);
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-
-		assertEquals(start, afterUpAndDownGrade);
 	}
 
 	private void upgradeAndCheck(TestDatabase database, Upgrade upgrade) 
@@ -100,7 +96,6 @@ public class AddAccountStateFlagTest {
 	public void constructorTest() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
 		short newId = 31500;
-		String start = database.dumpForComparison();
 		AddAccountStateFlag upgrade = null;
 		try
 		{
@@ -135,9 +130,6 @@ public class AddAccountStateFlagTest {
 		AccountStateFlagEntity flag = (AccountStateFlagEntity) session.get(
 				AccountStateFlagEntity.class, newId);
 		assertEquals(goodKey, flag.getLookUpValue().getLookUpName());
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-		assertEquals(start, afterUpAndDownGrade);
 		MifosConfiguration.getInstance().init();
 
 	}

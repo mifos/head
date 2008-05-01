@@ -30,15 +30,6 @@ public class CompositeUpgrade extends Upgrade {
 	}
 
 	@Override
-	@Deprecated
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
-			SQLException {
-		for (int i = upgrades.length - 1; i >= 0; --i) {
-			upgrades[i].downgrade(connection, databaseVersionPersistence);
-		}
-	}
-
-	@Override
 	public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
 		for (Upgrade upgrade : upgrades) {
 			upgrade.upgrade(connection, databaseVersionPersistence);

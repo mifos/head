@@ -435,8 +435,7 @@ public class DatabaseVersionPersistence {
 		return getClass().getResource(name);
 	}
 	
-	@Deprecated
-	public SqlUpgrade findUpgradeDowngradeScript(int higherVersion, String scriptName) {
+	public SqlUpgrade findUpgradeScript(int higherVersion, String scriptName) {
 		// Currently, SQL files are located in the same package as
 		// DatabaseVersionPersistence so we need to load the file from this class
 		URL url = lookup(scriptName);
@@ -461,15 +460,6 @@ public class DatabaseVersionPersistence {
 		}
 	}
 	
-	@Deprecated
-	public List<Upgrade> downgrades(int downgradeTo, int databaseVersion) {
-		List<Upgrade> downgrades = new ArrayList<Upgrade>();
-		for (int higherVersion = databaseVersion; higherVersion > downgradeTo; --higherVersion) {
-			downgrades.add(findUpgrade(higherVersion));
-		}
-		return Collections.unmodifiableList(downgrades);
-	}
-
 	public void upgradeDatabase() throws Exception {
 		Connection conn = getConnection();
 		try {

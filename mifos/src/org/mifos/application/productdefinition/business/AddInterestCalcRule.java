@@ -72,18 +72,6 @@ public class AddInterestCalcRule extends Upgrade {
 		upgradeVersion(connection);
 	}
 
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
-			SQLException {
-		short lookupId = findLookupId(connection);
-
-		deleteFromInterestTypes(connection);
-		deleteFromLookupValueLocale(connection, lookupId);
-		deleteFromLookupValue(connection, lookupId);
-
-		downgradeVersion(connection);
-	}
-
 	private void addInterestType(Connection connection, 
 		int newRuleId, String description, int lookupId) 
 	throws SQLException {
@@ -99,29 +87,4 @@ public class AddInterestCalcRule extends Upgrade {
 		statement.close();
 	}
 
-	private short findLookupId(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"select LOOKUP_ID " +
-			"from INTEREST_TYPES where INTEREST_TYPE_ID = ?");
-		statement.setInt(1, newRuleId);
-		ResultSet results = statement.executeQuery();
-		if (results.next()) {
-			short lookupId = results.getShort("LOOKUP_ID");
-			statement.close();
-			return lookupId;
-		}
-		else {
-			statement.close();
-			throw new RuntimeException(
-				"unable to downgrade: no Interest type " + newRuleId);
-		}
-	}
-	
-	private void deleteFromInterestTypes(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from INTEREST_TYPES where INTEREST_TYPE_ID = ?");
-		statement.setInt(1, newRuleId);
-		statement.executeUpdate();
-		statement.close();
-	}
 }

@@ -22,10 +22,6 @@ public abstract class Upgrade {
 	abstract public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
 	throws IOException, SQLException;
 
-	@Deprecated
-	abstract public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
-	throws IOException, SQLException;
-	
 	public static boolean validateLookupValueKey(String format, String key)
 	{
 		if (!StringUtils.isNullAndEmptySafe(key))
@@ -34,7 +30,6 @@ public abstract class Upgrade {
 			return false;
 		return true;
 	}
-	
 
 	public int higherVersion() {
 		return higherVersion;
@@ -46,11 +41,6 @@ public abstract class Upgrade {
 
 	protected void upgradeVersion(Connection connection) throws SQLException {
 		changeVersion(connection, higherVersion(), lowerVersion());
-	}
-
-	@Deprecated
-	protected void downgradeVersion(Connection connection) throws SQLException {
-		changeVersion(connection, lowerVersion(), higherVersion());
 	}
 
 	private void changeVersion(Connection connection, 

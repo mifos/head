@@ -26,22 +26,6 @@ public class UpgradeTest {
 		);
 	}
 	
-	@Test public void decrementVersion() throws Exception {
-		Database database = DummyUpgrade.databaseWithVersionTable(54);
-		new DummyUpgrade(54).downgradeVersion(database.openConnection());
-		assertEquals(53, 
-			new DatabaseVersionPersistence(database.openConnection()).read()
-		);
-	}
-	
-	@Test public void notReadyToDecrement() throws Exception {
-		Database database = DummyUpgrade.databaseWithVersionTable(54);
-		new DummyUpgrade(55).downgradeVersion(database.openConnection());
-		assertEquals(54, 
-			new DatabaseVersionPersistence(database.openConnection()).read()
-		);
-	}
-	
 	@Test 
 	public void validateLookupValueKeyTest() throws Exception {
 		String validKey = "Permissions-Groups-CanBlacklistAGroup";

@@ -47,7 +47,6 @@ public class AddInterestCalcRuleTest {
 	@Test 
 	public void constructorTest() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
 		short newRuleId = 2555;
 		short categoryId = 1;
 		String description = "DecliningBalance";
@@ -85,10 +84,6 @@ public class AddInterestCalcRuleTest {
 		InterestTypesEntity entity = (InterestTypesEntity) session.get(
 				InterestTypesEntity.class, newRuleId);
 		assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-		assertEquals(start, afterUpAndDownGrade);
-
 	}
 
 	public static junit.framework.Test testSuite() {

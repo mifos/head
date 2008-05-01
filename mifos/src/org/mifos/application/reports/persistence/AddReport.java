@@ -122,30 +122,4 @@ public class AddReport extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
-
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
-	throws IOException, SQLException {
-		deleteFromReport(connection);
-		deleteFromReportJasperMap(connection);
-	}
-
-	private void deleteFromReport(Connection connection) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"DELETE FROM REPORT where report_id = ?");
-		statement.setShort(1, newId);
-		statement.executeUpdate();
-		statement.close();
-	}
-
-	private void deleteFromReportJasperMap(Connection connection) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"DELETE FROM report_jasper_map where report_id = ?");
-		statement.setShort(1, newId);
-		statement.executeUpdate();
-		statement.close();
-	}
-
 }

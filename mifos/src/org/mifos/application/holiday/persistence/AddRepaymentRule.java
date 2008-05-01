@@ -73,41 +73,4 @@ public class AddRepaymentRule extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
-
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence)
-	throws IOException, SQLException {
-		short lookupId = findLookupId(connection);
-		deleteFromRepaymentRules(connection);
-		deleteFromLookupValueLocale(connection, lookupId);
-		deleteFromLookupValue(connection, lookupId);
-		downgradeVersion(connection);
-	}
-	
-	private void deleteFromRepaymentRules(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from REPAYMENT_RULE where REPAYMENT_RULE_ID = ?");
-		statement.setShort(1, type.getValue());
-		statement.executeUpdate();
-		statement.close();
-	}
-
-	private short findLookupId(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"select REPAYMENT_RULE_LOOKUP_ID " +
-			"from REPAYMENT_RULE where REPAYMENT_RULE_ID = ?");
-		statement.setShort(1, type.getValue());
-		ResultSet results = statement.executeQuery();
-		if (results.next()) {
-			short lookupId = results.getShort("REPAYMENT_RULE_LOOKUP_ID");
-			statement.close();
-			return lookupId;
-		}
-		else {
-			statement.close();
-			throw new RuntimeException(
-				"unable to downgrade: no repayment rule for" + type.name());
-		}
-	}
-
 }

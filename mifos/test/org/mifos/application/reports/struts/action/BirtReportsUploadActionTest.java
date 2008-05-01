@@ -117,7 +117,6 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 
 		}
 		catch (Exception e) {
-			activity.downgrade(HibernateUtil.getSessionTL().connection(), null);
 			HibernateUtil.startTransaction();
 			new RolesPermissionsPersistence().delete(request
 					.getAttribute("report"));
@@ -126,7 +125,6 @@ public class BirtReportsUploadActionTest extends MifosMockStrutsTestCase {
 		}
 
 		// Undo
-		activity.downgrade(HibernateUtil.getSessionTL().connection(), null);
 		ReportsBO report = (ReportsBO) request.getAttribute("report");
 		removeReport(report.getReportId());
 	}

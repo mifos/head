@@ -63,7 +63,6 @@ import org.mifos.framework.formulaic.TestValidators;
 import org.mifos.framework.persistence.CompositeUpgradeTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
-import org.mifos.framework.persistence.DowngraderTest;
 import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
@@ -129,7 +128,6 @@ public class FastTests extends TestSuite {
 		
 		suite.addTestSuite(DatabaseVersionFilterTest.class);
 		suite.addTest(DatabaseVersionPersistenceTest.suite());
-		suite.addTest(DowngraderTest.suite());
 		suite.addTest(UpgradeTest.suite());
 		suite.addTest(CompositeUpgradeTest.suite());
 		

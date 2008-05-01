@@ -46,13 +46,7 @@ public class AddActivityTest {
 	@Test
 	public void startFromStandardStore() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
-
-		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-
-		assertEquals(start, afterUpAndDownGrade);
+		upgradeAndCheck(database);
 	}
 
 	@Test
@@ -137,7 +131,6 @@ public class AddActivityTest {
 	@Test 
 	public void constructorTest() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
 		short newId = 30000;
 		AddActivity upgrade = null;
 		try
@@ -171,9 +164,6 @@ public class AddActivityTest {
 		assertEquals(null, fetched.getParent());
 		assertEquals(null, fetched.getActivityName());
 		assertEquals(goodKey, fetched.getActivityNameLookupValues().getLookUpName());
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-		assertEquals(start, afterUpAndDownGrade);
 	}
 
 	public static junit.framework.Test testSuite() {

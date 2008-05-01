@@ -21,13 +21,7 @@ public class AddFieldTest {
 	@Test
 	public void startFromStandardStore() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
-
-		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-
-		assertEquals(start, afterUpAndDownGrade);
+		upgradeAndCheck(database);
 	}
 
 	/*INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)

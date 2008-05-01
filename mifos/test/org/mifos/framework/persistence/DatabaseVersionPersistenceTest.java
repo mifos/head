@@ -272,11 +272,6 @@ public class DatabaseVersionPersistenceTest {
 		Upgrade upgrade = new Upgrade(79) {
 
 			@Override
-			public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) {
-				throw new RuntimeException("not implemented");
-			}
-
-			@Override
 			public void upgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) {
 				throw new RuntimeException("tried but failed");
 			}
@@ -327,9 +322,9 @@ public class DatabaseVersionPersistenceTest {
 	@Test public void javaConditional() throws Exception {
 		Database database = new Database();
 		DatabaseVersionPersistence persistence = conditionalPersistence(database);
-		SqlUpgrade found = persistence.findUpgradeDowngradeScript(10, CONDITIONAL_UPGRADE_10_NAME);
+		SqlUpgrade found = persistence.findUpgradeScript(10, CONDITIONAL_UPGRADE_10_NAME);
 		assertTrue(found != null);
-		SqlUpgrade found_downgrade = persistence.findUpgradeDowngradeScript(10,CONDITIONAL_DOWNGRADE_10_NAME);
+		SqlUpgrade found_downgrade = persistence.findUpgradeScript(10,CONDITIONAL_DOWNGRADE_10_NAME);
 		assertTrue(found_downgrade != null);
 	}
 

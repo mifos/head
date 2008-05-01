@@ -63,24 +63,4 @@ public class Upgrade127 extends Upgrade {
 		upgradeVersion(connection);
 	}
 
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) 
-	throws IOException, SQLException {
-		execute(connection, "DROP TABLE PRD_OFFERING_MIX");
-		
-		execute(connection, 
-			"ALTER TABLE PRD_OFFERING DROP COLUMN PRD_MIX_FLAG");
-
-		changeActivityMessage(connection, CAN_EDIT_PRODUCT_MIX, 
-			ENGLISH_LOCALE, "Can Edit product mix");
-		changeActivityMessage(connection, CAN_DEFINE_PRODUCT_MIX, 
-			ENGLISH_LOCALE, "Can Define product mix");
-		changeActivityMessage(connection, PRODUCT_MIX, 
-			ENGLISH_LOCALE, "Product mix");
-
-		reparentActivity(connection, PRODUCT_MIX, null);
-
-		downgradeVersion(connection);
-	}
-
 }

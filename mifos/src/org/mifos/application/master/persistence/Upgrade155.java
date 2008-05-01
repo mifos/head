@@ -2,11 +2,8 @@ package org.mifos.application.master.persistence;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.persistence.Upgrade;
 
@@ -26,30 +23,4 @@ public class Upgrade155 extends Upgrade {
 		upgradeVersion(connection);
 	}
 	
-	@Override
-	public void downgrade(Connection connection,
-			DatabaseVersionPersistence databaseVersionPersistence)
-			throws IOException, SQLException {
-		short lookupIdIcelandic = getLookupIdForSupporteLanguageId(connection, 2);
-		execute(connection, "DELETE FROM SUPPORTED_LOCALE WHERE LOCALE_ID = 2 AND LOCALE_NAME = \'Icelandic\'");
-		execute(connection, "DELETE FROM LANGUAGE WHERE LANG_ID = 2 AND LANG_NAME = \'Icelandic\'");
-		deleteFromLookupValue(connection, lookupIdIcelandic);
-		execute(connection, "DELETE FROM COUNTRY WHERE COUNTRY_ID = 7 AND COUNTRY_NAME = \'Iceland\'");
-		downgradeVersion(connection);
-	}
-	
-	private short getLookupIdForSupporteLanguageId(Connection connection, int languageId) throws SQLException {
-		Statement statement = connection.createStatement();
-		try {
-			ResultSet results = statement.executeQuery(
-			"select LOOKUP_ID from LANGUAGE where LANG_ID = " + languageId);
-			if (!results.next()) {
-				throw new SystemException(SystemException.DEFAULT_KEY, 
-				"Query failed on table LANGUAGE for LANG_ID: " + languageId);
-			}
-			return results.getShort(1);
-		} finally {
-			statement.close();
-		}
-	}
 }

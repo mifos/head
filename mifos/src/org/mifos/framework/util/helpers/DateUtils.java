@@ -49,8 +49,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-
-import org.mifos.config.Localization;
+import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.LocalizationConverter;
@@ -556,26 +555,16 @@ public class DateUtils {
 		return format.format(date);
 	}
 
-
-	/**
-	 * Nothing to instantiate here.
-	 */
-	private DateUtils() {
-	}
-
 	public static Date getCurrentDateWithoutTimeStamp() {
-		Calendar currentDateCalendar = getCurrentDateCalendar();
-		return new Date(currentDateCalendar.getTimeInMillis());
+		return getDateWithoutTimeStamp(System.currentTimeMillis());
 	}
 
 	public static Date getDateWithoutTimeStamp(long timeInMills) {
-		Calendar dateCalendar = new GregorianCalendar();
-		dateCalendar.setTimeInMillis(timeInMills);
-		int year = dateCalendar.get(Calendar.YEAR);
-		int month = dateCalendar.get(Calendar.MONTH);
-		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
-		dateCalendar = new GregorianCalendar(year, month, day);
-		return new Date(dateCalendar.getTimeInMillis());
+		return getDateWithoutTimeStamp(new Date(timeInMills));
+	}
+	
+	public static Date getDateWithoutTimeStamp(Date date) {
+		return org.apache.commons.lang.time.DateUtils.truncate(date, Calendar.DATE);
 	}
 
 	public static Calendar getCalendarDate(long timeInMills) {
@@ -753,5 +742,17 @@ public class DateUtils {
 	public static boolean dateFallsOnOrBeforeDate(Date pastDate, Date futureDate) {
 		return getDateWithoutTimeStamp(pastDate.getTime()).compareTo(
 				getDateWithoutTimeStamp(futureDate.getTime())) <= 0;
+	}
+
+	public static Date add(Date date, int calendarField, int toAdd) {
+		return org.apache.commons.lang.time.DateUtils.add(date, calendarField, toAdd);
+	}
+	
+	public static Date addWeeks(Date date, int weeksToAdd) {
+		return addDays(date, weeksToAdd*7);
+	}
+
+	public static Date addDays(Date date, int daysToAdd) {
+		return add(date, Calendar.DATE, daysToAdd);
 	}
 }

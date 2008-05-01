@@ -80,7 +80,6 @@ public class Upgrade183 extends Upgrade{
 	
 	private  void updateDuplicateLookUpName(Connection connection, String lookUpName, short count) throws SQLException
 	{
-		  
 		Statement statement = connection.createStatement();
 		String query = "select lookup_id from lookup_value where lookup_name=\'" + lookUpName + "\' order by lookup_id";
 		try 
@@ -104,8 +103,6 @@ public class Upgrade183 extends Upgrade{
 	
 	private  void fixDuplicateLookUpNames(Connection connection) throws SQLException
 	{
-		
-        
 		Statement statement = connection.createStatement();
 		String query = "select lookup_name, count(lookup_name) from lookup_value group by lookup_name having count(lookup_name) > 1";
 		try 
@@ -138,57 +135,9 @@ public class Upgrade183 extends Upgrade{
 		upgradeVersion(connection);
 	}
 	
-	private void updateLookUpNameWithBlank(Connection connection, Short lookUpId, String lookUpName) throws SQLException
-	{
-		execute(connection, "UPDATE  LOOKUP_VALUE SET LOOKUP_NAME = \'" + lookUpName + "\' WHERE LOOKUP_ID="+ lookUpId);
-	}
-	
 	private void addUniqueToLookUpName(Connection connection) throws SQLException
 	{
 		execute(connection, "CREATE UNIQUE INDEX LOOKUP_NAME_IDX ON LOOKUP_VALUE(LOOKUP_NAME)");
 	}
 	
-	private void dropUniqueToLookUpName(Connection connection) throws SQLException
-	{
-		execute(connection, "DROP INDEX LOOKUP_NAME_IDX");
-	}
-	
-	private  void updateLookUpNamesWithBlanks(Connection connection) throws SQLException
-	{
-        
-		Statement statement = connection.createStatement();
-		String query = "select lookup_id from lookup_value where lookup_name like \'DBUpgrade%\'";
-		try {
-			ResultSet results = statement.executeQuery(query);
-			if (results != null)
-			{
-				while (results.next()) {
-					String updateName = " ";
-					Short lookUpId = results.getShort(1);
-					if (lookUpId.equals((short)223) || lookUpId.equals((short)224) ||
-							lookUpId.equals((short)259) || lookUpId.equals((short)263))
-						updateName = "";
-					updateLookUpNameWithBlank(connection, lookUpId, updateName);
-					
-				}
-			}
-
-		} finally {
-			statement.close();
-		}
-		
-	}
-	
-
-	
-	@Override
-	public void downgrade(Connection connection,
-			DatabaseVersionPersistence databaseVersionPersistence) throws SQLException
-	{
-		dropUniqueToLookUpName(connection);
-		updateLookUpNamesWithBlanks(connection);
-		downgradeVersion(connection);
-		
-	}
-
 }

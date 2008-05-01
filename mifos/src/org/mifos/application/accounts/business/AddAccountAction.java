@@ -71,41 +71,4 @@ public class AddAccountAction extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
-
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException, SQLException {
-		short lookupId = findLookupId(connection);
-		deleteFromAccountAction(connection);
-		deleteFromLookupValueLocale(connection, lookupId);
-		deleteFromLookupValue(connection, lookupId);
-		downgradeVersion(connection);
-	}
-
-	private short findLookupId(Connection connection) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"select LOOKUP_ID " +
-			"from ACCOUNT_ACTION where ACCOUNT_ACTION_ID = ?");
-		statement.setInt(1, action);
-		ResultSet results = statement.executeQuery();
-		if (results.next()) {
-			short lookupId = results.getShort("LOOKUP_ID");
-			statement.close();
-			return lookupId;
-		}
-		else {
-			statement.close();
-			throw new RuntimeException(
-				"unable to downgrade: no activity with id " + action);
-		}
-	}
-
-	private void deleteFromAccountAction(Connection connection) 
-	throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"delete from ACCOUNT_ACTION where ACCOUNT_ACTION_ID = ?");
-		statement.setInt(1, action);
-		statement.executeUpdate();
-		statement.close();
-	}
-
 }

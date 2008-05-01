@@ -20,13 +20,7 @@ public class AddReportTest {
 	@Test
 	public void startFromStandardStore() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
-		String start = database.dumpForComparison();
-
-		Upgrade upgrade = upgradeAndCheck(database);
-		upgrade.downgrade(database.openConnection(), null);
-		String afterUpAndDownGrade = database.dumpForComparison();
-
-		assertEquals(start, afterUpAndDownGrade);
+		upgradeAndCheck(database);
 	}
 
 	private Upgrade upgradeAndCheck(TestDatabase database) 

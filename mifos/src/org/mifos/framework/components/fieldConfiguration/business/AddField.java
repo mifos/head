@@ -50,15 +50,4 @@ public class AddField extends Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
-
-	@Override
-	public void downgrade(Connection connection, DatabaseVersionPersistence databaseVersionPersistence) throws IOException,
-			SQLException {
-		PreparedStatement statement = connection.prepareStatement(
-			"DELETE FROM FIELD_CONFIGURATION WHERE FIELD_CONFIG_ID=?");
-		statement.setInt(1, newFieldId);
-		statement.executeUpdate();
-		statement.close();
-	}
-
 }
