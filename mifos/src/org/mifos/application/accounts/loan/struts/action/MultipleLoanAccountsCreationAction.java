@@ -128,9 +128,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("Inside load method");
-		List<OfficeView> activeBranches = ((MasterDataService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.MasterDataService))
+		List<OfficeView> activeBranches = new MasterDataService()
 				.getActiveBranches(getUserContext(request).getBranchId());
 		SessionUtils.setCollectionAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches,
@@ -198,15 +196,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		logger.debug("Inside getPrdOfferings method");
 
 		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-		CustomerBO customer = ((CustomerBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Customer))
+		CustomerBO customer = new CustomerBusinessService()
 				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
 		customer.getOffice().getOfficeId();
 		customer.getPersonnel().getPersonnelId();
 		loanActionForm.setCenterSearchId(customer.getSearchId());
-		List<LoanOfferingBO> loanOfferings = ((LoanPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.LoanProduct))
+		List<LoanOfferingBO> loanOfferings = new LoanPrdBusinessService()
 				.getApplicablePrdOfferings(new CustomerLevelEntity(
 						CustomerLevel.CLIENT));
 		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
@@ -229,9 +224,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		if (clients == null || clients.size() == 0) {
 			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
 		}
-		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.LoanProduct)).getLoanOffering(
+		LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(
 				getShortValue(loanActionForm.getPrdOfferingId()),
 				getUserContext(request).getLocaleId());
 		setClientDetails(loanActionForm, loanOffering, clients);
@@ -239,9 +232,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 				LoanConstants.MULTIPLE_LOANS_CLIENTS_LIST, clients, request);
 		SessionUtils
 				.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
-						((MasterDataService) ServiceFactory.getInstance()
-								.getBusinessService(
-										BusinessServiceName.MasterDataService))
+						new MasterDataService()
 								.retrieveMasterEntities(
 										MasterConstants.LOAN_PURPOSES,
 										getUserContext(request).getLocaleId()),
@@ -280,16 +271,13 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside create method");
 		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-		CustomerBO center = ((CustomerBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Customer))
+		CustomerBO center = new CustomerBusinessService()
 				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
 		checkPermissionForCreate(getShortValue(loanActionForm
 				.getStateSelected()), getUserContext(request), null, center
 				.getOffice().getOfficeId(), center.getPersonnel()
 				.getPersonnelId());
-		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.LoanProduct))
+		LoanOfferingBO loanOffering = new LoanPrdBusinessService()
 				.getLoanOffering(getShortValue(loanActionForm
 						.getPrdOfferingId()));
 		List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm
@@ -298,9 +286,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		if (applicableClientDetails != null
 				&& applicableClientDetails.size() > 0) {
 			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-				CustomerBO client = ((CustomerBusinessService) ServiceFactory
-						.getInstance().getBusinessService(
-								BusinessServiceName.Customer))
+				CustomerBO client = new CustomerBusinessService()
 						.getCustomer(getIntegerValue(clientDetail.getClientId()));
 				LoanBO loan = LoanBO.createLoan(getUserContext(request), loanOffering,
 						client, AccountState
@@ -392,8 +378,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 				clientDetail
 						.setClientId(getStringValue(client.getCustomerId()));
 				clientDetail.setClientName(client.getDisplayName());
+				// FIXME: use a "smart" default
 				clientDetail.setLoanAmount(loanOffering.getDefaultLoanAmount()
 						.toString());
+				// TODO: set loan amount min for this client for this loan
+				// TODO: set loan amount max for this client for this loan
+				// TODO: set #installments for this client for this loan
 				clientDetails.add(clientDetail);
 			}
 		}
