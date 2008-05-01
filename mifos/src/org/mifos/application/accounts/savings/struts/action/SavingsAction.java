@@ -19,6 +19,7 @@
  */
 package org.mifos.application.accounts.savings.struts.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -637,11 +638,11 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 	}
 
-	private Double removeSign(Money amount) {
+	private BigDecimal removeSign(Money amount) {
 		if (amount.getAmountDoubleValue() < 0)
-			return amount.negate().getAmountDoubleValue();
+			return amount.negate().getAmount();
 		else
-			return amount.getAmountDoubleValue();
+			return amount.getAmount(); 
 	}
 
 	protected void checkPermissionForCreate(Short newState,
