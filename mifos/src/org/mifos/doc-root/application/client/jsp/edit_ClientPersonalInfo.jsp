@@ -1,42 +1,23 @@
-<!--
-/**
+<%--
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
 
-* editClientPersonalInfo    version: 1.0
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
 
-* Copyright (c) 2005-2006 Grameen Foundation USA
-
-* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
-* All rights reserved.
-
-
-
-* Apache License
-* Copyright (c) 2005-2006 Grameen Foundation USA
-*
-
-* Licensed under the Apache License, Version 2.0 (the "License"); you may
-* not use this file except in compliance with the License. You may obtain
-* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-*
-
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and limitations under the
-
-* License.
-*
-* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
-
-* and how it is applied.
-
-*
-
-*/
- -->
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- edit_ClientPersonalInfo.jsp -->
 
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 
@@ -57,45 +38,13 @@
 	<tiles:put name="body" type="string">
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
+		<script language="javascript" src="pages/application/client/js/client.js" />
 		<script>
-
 		function goToCancelPage(){
-		clientCustActionForm.action="clientCustAction.do?method=cancel";
-		clientCustActionForm.submit();
-	  }
-	  function chkForValidDates(){
-		if(!(chkForDateOfBirthDate())){
-			return false;
+			clientCustActionForm.action="clientCustAction.do?method=cancel";
+			clientCustActionForm.submit();
 		}
-		if (clientCustActionForm.fieldTypeList.length!= undefined && clientCustActionForm.fieldTypeList.length!= null){
-			for(var i=0; i <=clientCustActionForm.fieldTypeList.length;i++){
-				if (clientCustActionForm.fieldTypeList[i]!= undefined){
-					if(clientCustActionForm.fieldTypeList[i].value == "3"){
-						var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-						var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
-					 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
-						var dateValue = customFieldDate.value;
-						if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-							return false;
-					}
-				}
-		 	}
-		 }
-	  }
-
-	  function chkForDateOfBirthDate(){
-		 var statusIdValue = document.getElementById("status").value;
-	  	 if (statusIdValue!=3){
-	  	 	var dateOfBirth = document.getElementById("dateOfBirth");
-	  	 	var dateOfBirthFormat = document.getElementById("dateOfBirthFormat");
-	  	 	var dateOfBirthYY = document.getElementById("dateOfBirthYY");
-			return (validateMyForm(dateOfBirth,dateOfBirthFormat,dateOfBirthYY));
-	 	 }
-	 	 else{
-	 	 	return true;
-	 	 }
-	  }
-	</script>
+		</script>
 	<html-el:form action="clientCustAction.do?method=previewEditPersonalInfo"
 			enctype="multipart/form-data" onsubmit="return chkForValidDates()">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
