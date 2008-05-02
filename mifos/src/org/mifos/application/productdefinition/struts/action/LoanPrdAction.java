@@ -873,7 +873,7 @@ public class LoanPrdAction extends BaseAction {
 			}
 		}
 
-		if (loanProduct.isNoOfInstallSameForAllLoan()) {
+		if (loanProduct.isNoOfInstallTypeSameForAllLoan()) {
 			loanPrdActionForm
 					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN));
 			Iterator<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoanItr = loanProduct
@@ -892,7 +892,7 @@ public class LoanPrdAction extends BaseAction {
 								.getDefaultNoOfInstall()));
 			}
 		}
-		if (loanProduct.isNoOfInstallFromLastLoan()) {
+		if (loanProduct.isNoOfInstallTypeFromLastLoan()) {
 			loanPrdActionForm
 					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN));
 			Iterator<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastAmountItr = loanProduct
@@ -1002,7 +1002,7 @@ public class LoanPrdAction extends BaseAction {
 								.getEndRange().intValue());
 			}
 		}
-		if (loanProduct.isNoOfInstallFromLoanCycle()) {
+		if (loanProduct.isNoOfInstallTypeFromLoanCycle()) {
 			loanPrdActionForm
 					.setCalcInstallmentType(getStringValue(ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE));
 			Iterator<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycleItr = loanProduct

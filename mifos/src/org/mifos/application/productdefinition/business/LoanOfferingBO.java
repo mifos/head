@@ -1004,7 +1004,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	public ArrayList eligibleNoOfInstall(String calaculateValue,
 			LoanOfferingBO loanOfferingBO) {
 		ArrayList list = new ArrayList();
-		if (isNoOfInstallSameForAllLoan() && calaculateValue == null) {
+		if (isNoOfInstallTypeSameForAllLoan() && calaculateValue == null) {
 			Iterator<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoanItr = loanOfferingBO
 					.getNoOfInstallSameForAllLoan().iterator();
 			while (noOfInstallSameForAllLoanItr.hasNext()) {
@@ -1015,7 +1015,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				list.add(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
 			}
 		}
-		if (isNoOfInstallFromLastLoan()) {
+		if (isNoOfInstallTypeFromLastLoan()) {
 			Iterator<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoanAmountBOItr = loanOfferingBO
 					.getNoOfInstallFromLastLoan().iterator();
 			while (noOfInstallFromLastLoanAmountBOItr.hasNext()) {
@@ -1039,7 +1039,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				}
 			}
 		}
-		if (isNoOfInstallFromLoanCycle()) {
+		if (isNoOfInstallTypeFromLoanCycle()) {
 			Iterator<NoOfInstallFromLoanCycleBO> noOfInstallFromFromLoanCycleBOItr = loanOfferingBO
 					.getNoOfInstallFromLoanCycle().iterator();
 			while (noOfInstallFromFromLoanCycleBOItr.hasNext()) {
@@ -1361,15 +1361,15 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
 	}
 
-	public boolean isNoOfInstallFromLastLoan() {
+	public boolean isNoOfInstallTypeFromLastLoan() {
 		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
 	}
 
-	public boolean isNoOfInstallSameForAllLoan() {
+	public boolean isNoOfInstallTypeSameForAllLoan() {
 		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
 	}
 
-	public boolean isNoOfInstallFromLoanCycle() {
+	public boolean isNoOfInstallTypeFromLoanCycle() {
 		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
 	}
 

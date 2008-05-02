@@ -1395,7 +1395,7 @@ public class LoanAccountAction extends AccountAppAction {
 			setUpdatedLoanOfferingLoanAmountFromLastLoan(loanOffering,
 					getCustomerLastMaxLoanAmount(customer));
 		}
-		if (loanOffering.isNoOfInstallFromLastLoan()) {
+		if (loanOffering.isNoOfInstallTypeFromLastLoan()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingNoOfInstallFromLastLoan(loanOffering,
@@ -1404,7 +1404,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (loanOffering.isLoanAmountTypeSameForAllLoan()) {
 			setUpdatedLoanOfferingLoanAmountSameForAllLoan(loanOffering);
 		}
-		if (loanOffering.isNoOfInstallSameForAllLoan()) {
+		if (loanOffering.isNoOfInstallTypeSameForAllLoan()) {
 			setUpdatedLoanOfferingNoOfInstallSameForAllLoan(loanOffering);
 		}
 		if (loanOffering.isLoanAmountTypeFromLoanCycle()) {
@@ -1414,7 +1414,7 @@ public class LoanAccountAction extends AccountAppAction {
 					getCustomerMaxLoanCycle(customer, loanOffering
 							.getPrdOfferingId()));
 		}
-		if (loanOffering.isNoOfInstallFromLoanCycle()) {
+		if (loanOffering.isNoOfInstallTypeFromLoanCycle()) {
 			CustomerBO customer = getCustomer(loanAccountActionForm
 					.getCustomerIdValue());
 			setUpdatedLoanOfferingNoOfInstallFromLoanCycle(loanOffering,
