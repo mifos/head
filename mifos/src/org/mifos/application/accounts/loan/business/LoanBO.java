@@ -4302,17 +4302,21 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	 * which is the difference between the last payment rounded amount and original amount
 	 */
 	
-	public Money calculate999Account()
+	public Money calculate999Account(boolean lastPayment)
 	{
 		Money account999 = new Money("0");
 		if (isLegacyLoan())
 		{
 			return account999;
 		}
-		
+		Money origInterestAndFees = loanSummary.getOriginalFees().add(loanSummary.getOriginalInterest());
+		Money paidInterestAndFees = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid());
+		if (lastPayment)
+		{	
+			assert(origInterestAndFees == paidInterestAndFees);
+		}
 		Money rawAmountTotal = loanSummary.getRawAmountTotal();
-		Money interestAndFeesPaidTotal = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid());
-		account999 = interestAndFeesPaidTotal.subtract(rawAmountTotal);
+		account999 = origInterestAndFees.subtract(rawAmountTotal);
 		return account999;
 	}
 

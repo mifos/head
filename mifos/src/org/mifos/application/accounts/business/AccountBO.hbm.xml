@@ -58,7 +58,7 @@
 				class="org.mifos.application.accounts.business.AccountFeesEntity"
 				column="ACCOUNT_FEE_ID" />
 		</set>
-		<set name="accountPayments" cascade="all" inverse="true"
+		<set name="accountPayments" cascade="all" inverse="true" 
 			table="ACCOUNT_PAYMENT" lazy="true" order-by="PAYMENT_ID desc">
 			<key column="ACCOUNT_ID" />
 			<one-to-many

@@ -54,74 +54,6 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 		
 		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
 		.getAccountTrxn();
-		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
-		if (loan.isLegacyLoan())
-		{
-			logTransactions_v1(loanTrxn);
-		}
-		else
-		{
-			logTransactions_v2(loanTrxn);
-		}
-		
-
-		
-	}
-	
-	private void logTransactions_v2(LoanTrxnDetailEntity loanTrxn) throws FinancialException
-	{
-		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
-		.getLoanOffering().getPrincipalGLcode();
-
-		Money amountToPost = loanTrxn.getPrincipalAmount();
-		
-		
-			FinancialActionBO finActionPrincipal = FinancialActionCache
-				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
-		addAccountEntryDetails(amountToPost,
-				finActionPrincipal, getGLcode(finActionPrincipal
-						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
-		
-		addAccountEntryDetails(amountToPost,
-				finActionPrincipal, glcodeCredit, FinancialConstants.CREDIT);
-		
-		boolean isLastPayment = ((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
-		if (isLastPayment)
-		{
-			Money account999 = ((LoanBO)loanTrxn.getAccount()).calculate999Account();
-			Money zeroAmount = new Money("0");
-			// only log if amount > or < 0
-			if (account999.equals(zeroAmount))
-			{
-				return;
-			}
-			
-			FinancialActionBO finActionRounding = FinancialActionCache
-			.getFinancialAction(FinancialActionConstants.ROUNDING);
-			GLCodeEntity code1 = null; 
-			GLCodeEntity code2 = null;
-			if (account999.getAmountDoubleValue() > 0)
-			{
-				// this code is defined as below in chart of account 
-				// <GLAccount code="31401" name="Income from 999 Account" />
-				code1 = glcodeCredit;
-				code2 = getGLcode(finActionRounding.getApplicableCreditCharts()); 
-				
-			}
-			else if (account999.getAmountDoubleValue() < 0)
-			{
-				code1 = getGLcode(finActionRounding.getApplicableDebitCharts());
-				code2 = glcodeCredit;
-				account999 = account999.negate();
-			}
-			addAccountEntryDetails(account999, finActionRounding, code1, FinancialConstants.DEBIT);
-			addAccountEntryDetails(account999, finActionRounding, code2, FinancialConstants.CREDIT);	
-			
-		}
-	}
-	
-	private void logTransactions_v1(LoanTrxnDetailEntity loanTrxn) throws FinancialException
-	{
 		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
 		.getLoanOffering().getPrincipalGLcode();
 
@@ -141,8 +73,14 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 		
 		addAccountEntryDetails(amountToPost,
 				finActionPrincipal, glcodeCredit, FinancialConstants.CREDIT);
+		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
+		// the new version of financial calculation will log 999 account to interest account and not to the principal account
+		if (!loan.isLegacyLoan())
+		{
+			return;
+		}
 		
-		
+		// v1 version log the 999 account to the principal account
 		// check if rounding is required
 		FinancialActionBO finActionRounding = FinancialActionCache
 		.getFinancialAction(FinancialActionConstants.ROUNDING);
@@ -169,5 +107,8 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 					FinancialConstants.CREDIT);
 			
 		}
+		
+		
 	}
+	
 }

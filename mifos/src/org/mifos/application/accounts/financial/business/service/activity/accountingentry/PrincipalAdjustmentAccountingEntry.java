@@ -28,6 +28,12 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
 		addAccountEntryDetails(removeSign(loanTrxn.getPrincipalAmount()),
 				finActionPrincipal, glcodeCredit, FinancialConstants.DEBIT);
 
+		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
+		if (!loan.isLegacyLoan())
+		{
+			return;
+		}
+	
 		// check if rounding is required
 		Money roundedAmount = Money.round(loanTrxn.getPrincipalAmount());
 		if (!roundedAmount.equals(loanTrxn.getPrincipalAmount())) {
@@ -44,7 +50,7 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
 					getGLcode(finActionRounding.getApplicableCreditCharts()),
 					FinancialConstants.DEBIT);
 		}
-
 	}
+
 
 }

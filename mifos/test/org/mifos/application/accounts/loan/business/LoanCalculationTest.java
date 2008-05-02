@@ -46,6 +46,8 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -104,6 +106,14 @@ public class LoanCalculationTest extends MifosTestCase {
 	final String gracePeriodType = "GracePeriodType";
 	final String gracePeriod = "GracePeriod";
 	final String calculatedTotals = "Calculated Totals";
+	final String feeFrequency = "FeeFrequency";
+	final String feeType = "FeeType";
+	final String feeValue = "FeeValue";
+	final String feePercentage = "FeePercentage";
+	final String amountAndInterest = "Principal+Interest";
+	final String interest = "Interest";
+	final String amount = "Principal";
+	final String account999 = "Account 999";
 	String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/";
 
 	
@@ -320,7 +330,195 @@ public class LoanCalculationTest extends MifosTestCase {
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+	private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(String fileName, 
+			int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment) throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		Results calculatedResults = new Results();
+		InternalConfiguration config = testCaseData.getInternalConfig();
+		LoanParameters loanParams = testCaseData.getLoanParams();
+		accountBO = setUpLoanFor999AccountTestLoanReversal(config, loanParams, calculatedResults, paymentToReverse, payLastPayment);
+		
+		Set<AccountPaymentEntity> paymentList = ((LoanBO)accountBO).getAccountPayments();
+		int i=0;
+		for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) 
+		{
+			AccountPaymentEntity payment = paymentIterator.next();
+			Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
+			for (AccountTrxnEntity transaction : transactionList)
+			{
+				Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity)transaction).getFinancialTransactions();
+				for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) 
+				{
+					FinancialTransactionBO financialTransaction = iterator.next();
+					if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
+							|| financialTransaction.getPostedAmount().negate().equals(testCaseData.getExpectedResult().getAccount999()))
+					{
+						i++;
+						String debitOrCredit = "Credit";
+						if (financialTransaction.getDebitCreditFlag() == 0)
+							debitOrCredit = "Debit";
+						System.out.println("Posted amount: " + financialTransaction.getPostedAmount().getAmountDoubleValue() +
+								           " Debit/Credit: " + debitOrCredit +
+								           " GLCode: " + financialTransaction.getGlcode().getGlcode() +
+								           " Transaction Id: " + financialTransaction.getTrxnId());
+					}
 	
+				}
+			}
+		}
+		
+		assertEquals(i, expected999AccountTransactions);
+
+	}
+	
+	private AccountBO setUpLoanFor999AccountTestLoanReversal(InternalConfiguration config, LoanParameters loanParams, 
+			Results calculatedResults, int paymentToReverse, boolean payLastPayment) throws
+	AccountException, PersistenceException, MeetingException
+	{
+		setNumberOfInterestDays(config.getDaysInYear());
+		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
+		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
+		setInitialRoundingMode(config.getInitialRoundingMode());
+		setFinalRoundingMode(config.getFinalRoundingMode());
+		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
+		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
+		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
+		AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
+		
+		/*
+		 * When constructing a "meeting" here, it looks like the frequency 
+		 * should be "EVERY_X" for weekly or monthly loan interest posting.
+		 */
+		// EVERY_WEEK, EVERY_DAY and EVERY_MONTH are defined as 1
+		MeetingBO meeting = null;
+		if (loanParams.getPaymentFrequency() == RecurrenceType.MONTHLY) {
+			meeting = new MeetingBO((short) Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+				TestObjectFactory.EVERY_MONTH, new Date(), CUSTOMER_MEETING, "meeting place");
+		} else {
+			meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(loanParams.getPaymentFrequency(), EVERY_MONTH,
+						CUSTOMER_MEETING));
+		}
+		
+		center = TestObjectFactory.createCenter("Center", meeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		
+		Date startDate = new Date(System.currentTimeMillis());
+		
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", "L", ApplicableTo.GROUPS, startDate,
+				PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), 
+				Double.parseDouble(loanParams.getAnnualInterest()), loanParams.getNumberOfPayments(),
+				loanParams.getLoanType(), false, false, center
+				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
+				"1", "1");
+		
+		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+
+		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
+				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
+				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
+				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
+				new FundBO(), feeViewList, null);
+       
+		
+		PaymentData paymentData = null;
+        Set<AccountActionDateEntity> actionDateEntities = loan
+		.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
+        
+        LoanScheduleEntity loanSchedule = null;
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+        
+		for (int i = 0; i < paymentsArray.length; i++) {
+			loanSchedule = paymentsArray[i];
+            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+			loan.applyPayment(paymentData, true);
+			if (i==(paymentToReverse-1))
+				break;
+			
+		}
+		boolean lastPayment = paymentToReverse == paymentsArray.length;
+		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
+		new TestObjectPersistence().persist(loan);
+		loan.adjustLastPayment("Adjust last payment");
+		new TestObjectPersistence().persist(loan);
+		if (payLastPayment)
+		{
+			for (int i = paymentToReverse -1; i < paymentsArray.length; i++) {
+				loanSchedule = paymentsArray[i];
+	            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+				paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+				loan.applyPayment(paymentData, true);
+				new TestObjectPersistence().persist(loan);
+			}
+		
+		}
+		
+		return loan;
+	}
+
+	
+	//	 verify that 999 account transactions are logged after last payment is made
+	public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+		String dataFileName = "account999-test2.csv";
+		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
+	}
+	
+	//	 verify that 999 account transactions are logged after last payment is made
+	public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException
+	{
+		String dataFileName = "account999-test1.csv";
+		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
+	}
+	
+	
+	
+	public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception 
+	{
+		String dataFileName = "account999-test3.csv";
+		int expected999AccountTransactions = 4;
+		int paymentToReverse = 3;
+		boolean payLastPayment = false;
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+				paymentToReverse, payLastPayment);	
+	}
+	
+	// no 999account should be logged in this case
+	public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception
+	{
+		String dataFileName = "account999-test3.csv";
+		int expected999AccountTransactions = 0;
+		int paymentToReverse = 2;
+		boolean payLastPayment = false;
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+				paymentToReverse, payLastPayment);	
+	}
+	
+	//	payment is reversed and repay to the last payment
+	public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+		String dataFileName = "account999-test3.csv";
+		int expected999AccountTransactions = 2;
+		int paymentToReverse = 2;
+		boolean payLastPayment = true;
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+				paymentToReverse, payLastPayment);	
+	}
 	
 	private AccountBO setUpLoanFor999AccountTest(InternalConfiguration config, LoanParameters loanParams, Results calculatedResults) throws
 	AccountException, PersistenceException, MeetingException
@@ -388,9 +586,9 @@ public class LoanCalculationTest extends MifosTestCase {
             Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			loan.applyPayment(paymentData, true);
-			
 		}
-		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account());
+		boolean lastPayment = true;
+		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
 		new TestObjectPersistence().persist(loan);
 		return loan;
 	}
@@ -420,7 +618,10 @@ public class LoanCalculationTest extends MifosTestCase {
 		{
 			AccountPaymentEntity payment = paymentIterator.next();
 			if (i == loanParams.getNumberOfPayments())
+			{
 				lastPmt = payment;
+				break;
+			}
 			i++;
 		}
 		Set<AccountTrxnEntity> transactionList = lastPmt.getAccountTrxns();
@@ -452,20 +653,9 @@ public class LoanCalculationTest extends MifosTestCase {
 
 	}
 	
-	public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException, URISyntaxException
-	{
-		String dataFileName = "account999-test1.csv";
-		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
-	}
 	
-	public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException, URISyntaxException 
-	{
-		String dataFileName = "account999-test2.csv";
-		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
-	}
-
+	
+	//	 verify that 999 account transactions are logged after last payment is made
 	public void testPositive999AccountTest2() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
@@ -577,7 +767,43 @@ public class LoanCalculationTest extends MifosTestCase {
 		// grace period type
 		private GraceType gracePeriodType = GraceType.NONE; 
 		private short gracePeriod = 0; 
+		private FeeFrequencyType feeFrequency;  // if feeFrequency is null there is no fee setting for the loan
+		private FeeFormula feeType;
+		private String feeValue = null;
+		private String feePercentage = null;
 		
+		public FeeFrequencyType getFeeFrequency() {
+			return feeFrequency;
+		}
+
+		public void setFeeFrequency(FeeFrequencyType feeFrequency) {
+			this.feeFrequency = feeFrequency;
+		}
+
+		public String getFeePercentage() {
+			return feePercentage;
+		}
+
+		public void setFeePercentage(String feePercentage) {
+			this.feePercentage = feePercentage;
+		}
+
+		public FeeFormula getFeeType() {
+			return feeType;
+		}
+
+		public void setFeeType(FeeFormula feeType) {
+			this.feeType = feeType;
+		}
+
+		public String getFeeValue() {
+			return feeValue;
+		}
+
+		public void setFeeValue(String feeValue) {
+			this.feeValue = feeValue;
+		}
+
 		public int getDigitsAfterDecimal() {
 			return digitsAfterDecimal;
 		}
@@ -686,6 +912,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		// each installment has payment = interest + principal
 		Money totalPayments = null; // sum of all payments 
 		Money totalInterest = null; // sum of all interests for all payments
+		Money totalFee = null;
 		Money totalPrincipal = null;  // sum of all principals for all payments
 		// detailed list of all payments. Each payment includes payment, interest, principal and balance
 		List<PaymentDetail> payments = null;
@@ -727,6 +954,13 @@ public class LoanCalculationTest extends MifosTestCase {
 		}
 		public void setRoundedTotalInterest(Money roundedTotalInterest) {
 			this.roundedTotalInterest = roundedTotalInterest;
+		}
+		
+		public Money getTotalFee() {
+			return totalFee;
+		}
+		public void setTotalFee(Money totalFee) {
+			this.totalFee = totalFee;
 		}
 	}
 	
@@ -1001,6 +1235,22 @@ class LoanTestCaseData {
 		
 	}
 	
+	private String getToken(String line, String param)
+	{
+		int index = line.indexOf(param);
+		line = line.substring(index + param.length(), line.length() - 1);
+		
+		String[] tokens = line.split(",");
+		String token = null;
+		for (int j=0; j < tokens.length; j++) 
+		{
+			token = tokens[j];
+			if (StringUtils.isNullAndEmptySafe(token))
+				break;
+		}
+		return token;
+	}
+	
 	
 	private void parseConfigParams(String paramType, String line, InternalConfiguration config)
 	{
@@ -1015,34 +1265,67 @@ class LoanTestCaseData {
 				{
 					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setInitialRoundingMode(mode);
+					token = getToken(tempLine, feeFrequency);
+					if (token.toUpperCase().equals("PERIODIC"))
+						config.setFeeFrequency(FeeFrequencyType.PERIODIC);
+					else if (token.toUpperCase().equals("NONE"))
+						config.setFeeFrequency(FeeFrequencyType.ONETIME);
+					else
+						config.setFeeFrequency(null);
 				}
 				else if (paramType.indexOf(initialRoundOffMultiple) >= 0)
 				{
 					config.setInitialRoundOffMultiple(token);
+					token = getToken(tempLine, feeType);
+					if (token.equals(amountAndInterest))
+						config.setFeeType(FeeFormula.AMOUNT_AND_INTEREST);
+					else if (token.equals(interest))
+						config.setFeeType(FeeFormula.INTEREST);
+					else
+						config.setFeeType(FeeFormula.AMOUNT);
 				}
 				else if (paramType.indexOf(finalRoundingMode) >= 0)
 				{
 					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setFinalRoundingMode(mode);
+					token = getToken(tempLine, feeValue);
+					config.setFeeValue(token);
 				}
 				else if (paramType.indexOf(finalRoundOffMultiple) >= 0)
 				{
 					config.setFinalRoundOffMultiple(token);
+					token = getToken(tempLine, feePercentage);
+					int pos = token.indexOf("%");
+					token = token.substring(0, pos);
+					config.setFeePercentage(token);
 				}
 				else if (paramType.indexOf(currencyRounding)>= 0)
 				{
 					RoundingMode mode = RoundingMode.valueOf(token.toUpperCase());
 					config.setCurrencyRoundingMode(mode);
+					token = getToken(tempLine, gracePeriodType);
+					GraceType type = null;
+					if (token.toUpperCase().equals("ALL"))
+						type = GraceType.GRACEONALLREPAYMENTS;
+					else if (token.toUpperCase().equals("PRINCIPAL"))
+						type = GraceType.PRINCIPALONLYGRACE;
+					else 
+						type = GraceType.NONE;
+					
+					config.setGracePeriodType(type);
+					
 				}
 				else if (paramType.indexOf(digitsAfterDecimal) >= 0)
 				{
 					config.setDigitsAfterDecimal(Short.parseShort(token));
+					token = getToken(tempLine, gracePeriod);
+					config.setGracePeriod(Short.parseShort(token));
 				}
 				else if (paramType.indexOf(daysInYear) >= 0)
 				{
 					config.setDaysInYear(Short.parseShort(token));
 				}
-				else if (paramType.indexOf(gracePeriodType)>= 0)
+				/*else if (paramType.indexOf(gracePeriodType)>= 0)
 				{
 					GraceType type = null;
 					if (token.toUpperCase().equals("ALL"))
@@ -1058,7 +1341,7 @@ class LoanTestCaseData {
 				{
 					if (config.getGracePeriodType() != GraceType.NONE)
 						config.setGracePeriod(Short.parseShort(token));
-				}
+				}*/
 				break;
 					
 			}
@@ -1075,6 +1358,7 @@ class LoanTestCaseData {
 		String[] tokens = tempLine.split(",");
 		boolean totalPayments = false;
 		boolean totalInterests = true;
+		boolean totalFee = true;
 		boolean totalPrincipals = true;
 		for (int i=0; i < tokens.length; i++)
 		{
@@ -1091,6 +1375,12 @@ class LoanTestCaseData {
 				{
 					result.setTotalInterest(new Money(token));
 					totalInterests = true;
+					totalFee = false;
+				}
+				else if (totalFee == false)
+				{
+					result.setTotalFee(new Money(token));
+					totalFee = true;
 				}
 				else if (totalPrincipals == false)
 				{
@@ -1113,10 +1403,21 @@ class LoanTestCaseData {
 		int index = tempLine.indexOf(paramType);
 		tempLine = tempLine.substring(index + paramType.length(), tempLine.length() -1);
 		String[] tokens = tempLine.split(",");
-		if (tokens.length < 7)
+		if (tokens.length < 2)
 			return;
-		result.setRoundedTotalInterest(new Money(tokens[5]));
-		result.setAccount999((new Money(tokens[6])));
+		result.setAccount999(new Money(tokens[1]).negate());
+		
+	}
+	
+	private void parseRoundedTotalInterest(String paramType, String line, Results result)
+	{
+		String tempLine = line.substring(paramType.length(), line.length() -1);
+		int index = tempLine.indexOf(paramType);
+		tempLine = tempLine.substring(index + paramType.length(), tempLine.length() -1);
+		String[] tokens = tempLine.split(",");
+		if (tokens.length < 8)
+			return;
+		result.setRoundedTotalInterest(new Money(tokens[3]));
 		
 	}
 	
@@ -1131,6 +1432,7 @@ class LoanTestCaseData {
 		boolean principal = true;
 		boolean interest = true;
 		boolean balance = true;
+		boolean fee = true;
 		PaymentDetail paymentDetail = new PaymentDetail();
 		for (int i=0; i < tokens.length; i++)
 		{
@@ -1162,6 +1464,12 @@ class LoanTestCaseData {
 				{
 					paymentDetail.setInterest(new Money(token));
 					interest = true;
+					fee = false;
+				}
+				else if (fee == false)
+				{
+					paymentDetail.setFee(new Money(token));
+					fee = true;
 					balance = false;
 				}
 				else if (balance == false)
@@ -1217,14 +1525,16 @@ class LoanTestCaseData {
 		    		   else if ((token.indexOf(initialRoundingMode) >= 0 ) || (token.indexOf(finalRoundingMode)>= 0 )
 		    		           || (token.indexOf(initialRoundOffMultiple) >= 0 )
 		    				   || (token.indexOf(finalRoundOffMultiple) >= 0 ) || (token.indexOf(currencyRounding)>= 0 ) 
-		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0)
-		    				   || (token.indexOf(gracePeriodType) >= 0) || (token.indexOf(gracePeriod) >= 0 ))
+		    				   || (token.indexOf(digitsAfterDecimal) >= 0 ) || (token.indexOf(daysInYear) >= 0))
+		    				   
 		    		   {
 		    			   parseConfigParams(token, line, config);
 		    			   break;
 		    		   }
 		    		   else if (token.indexOf(calculatedTotals) == 0)
-		    		       parse999Account(token, line, expectedResult);
+		    			   parseRoundedTotalInterest(token, line, expectedResult);
+		    		   else if (token.indexOf(account999) == 0)
+		    			   parse999Account(token, line, expectedResult);
 		    		   else if (token.indexOf(totals)  >= 0)
 		    			   parseTotals(token, line, expectedResult);
 		    		   else if (token.indexOf(start)  >= 0) 
@@ -1558,6 +1868,7 @@ class LoanTestCaseData {
 		Money payment = null;
 		Money principal = null;
 		Money interest = null;
+		Money fee = null;
 		Money balance = null;
 		
 		public PaymentDetail(Money payment, Money principal, Money interest, Money balance) {
@@ -1602,6 +1913,14 @@ class LoanTestCaseData {
 
 		public void setPrincipal(Money principal) {
 			this.principal = principal;
+		}
+
+		public Money getFee() {
+			return fee;
+		}
+
+		public void setFee(Money fee) {
+			this.fee = fee;
 		}
 
 		

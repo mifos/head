@@ -46,6 +46,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.framework.util.helpers.Money;
 
 public class InterestAccountingEntry extends BaseAccountingEntry {
 	@Override
@@ -63,7 +64,54 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
 
 		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,
 				glcodeCredit, FinancialConstants.CREDIT);
+		
+		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
+		// the new version of financial calculation will log 999 account to interest account
+		if (!loan.isLegacyLoan())
+		{
+			boolean isLastPayment = ((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
+			if (isLastPayment)
+			{
+				log999Account(loanTrxn, isLastPayment, glcodeCredit);
+			}
+		}
 
+	}
+	
+	private void log999Account(LoanTrxnDetailEntity loanTrxn, boolean isLastPayment, GLCodeEntity glcodeCredit) throws FinancialException
+	{
+	
+		
+		Money account999 = ((LoanBO)loanTrxn.getAccount()).calculate999Account(isLastPayment);
+		Money zeroAmount = new Money("0");
+		// only log if amount > or < 0
+		if (account999.equals(zeroAmount))
+		{
+			return;
+		}
+		
+		FinancialActionBO finActionRounding = FinancialActionCache
+		.getFinancialAction(FinancialActionConstants.ROUNDING);
+		GLCodeEntity codeToDebit = null; 
+		GLCodeEntity codeToCredit = null;
+		if (account999.getAmountDoubleValue() > 0)
+		{
+			// this code is defined as below in chart of account 
+			// <GLAccount code="31401" name="Income from 999 Account" />
+			codeToDebit = glcodeCredit;
+			codeToCredit = getGLcode(finActionRounding.getApplicableCreditCharts()); 
+			
+		}
+		else if (account999.getAmountDoubleValue() < 0)
+		{
+			codeToDebit = getGLcode(finActionRounding.getApplicableDebitCharts());
+			codeToCredit = glcodeCredit;
+			account999 = account999.negate();
+		}
+		addAccountEntryDetails(account999, finActionRounding, codeToDebit, FinancialConstants.DEBIT);
+		addAccountEntryDetails(account999, finActionRounding, codeToCredit, FinancialConstants.CREDIT);	
+			
+		
 	}
 
 }

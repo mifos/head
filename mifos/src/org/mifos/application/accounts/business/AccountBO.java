@@ -53,6 +53,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
+import java.util.List;
+
+
 
 public class AccountBO extends BusinessObject {
 
@@ -246,7 +249,9 @@ public class AccountBO extends BusinessObject {
 
 	protected void addAccountPayment(AccountPaymentEntity payment) {
 		if (accountPayments == null)
+		{
 			accountPayments = new LinkedHashSet<AccountPaymentEntity>();
+		}
 		accountPayments.add(payment);
 	}
 
@@ -535,17 +540,16 @@ public class AccountBO extends BusinessObject {
 		}
 		return 0;
 	}
-	
+	//	 this method will be refactored to be more efficient
 	public AccountPaymentEntity getLastPmnt() {
-		AccountPaymentEntity accntPmnt = null;
+		AccountPaymentEntity lastPmnt = null;
 		for (AccountPaymentEntity accntPayment : accountPayments) {
-			accntPmnt = accntPayment;
+			lastPmnt = accntPayment;
 			break;
 		}
-		return accntPmnt;
+		return lastPmnt;
 	}
-	
-	
+	// this method will be refactored to be more efficient
 	public AccountPaymentEntity getLastPmntToBeAdjusted() {
 		AccountPaymentEntity accntPmnt = null;
 		int i = 0;

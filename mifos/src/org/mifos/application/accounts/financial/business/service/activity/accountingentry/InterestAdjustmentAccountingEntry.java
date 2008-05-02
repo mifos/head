@@ -16,15 +16,31 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
 				.getAccountTrxn();
+		LoanBO loan =  (LoanBO)loanTrxn.getAccount();
+		if (loan.isLegacyLoan())
+		{
+			logTransactions_v1(loanTrxn);
+		}
+		else
+		{
+			logTransactions_v2(loanTrxn);
+		}
+		
+
+		
+	}
+	
+	private void logTransactions_v1(LoanTrxnDetailEntity loanTrxn) throws FinancialException
+	{
 		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
-				.getLoanOffering().getInterestGLcode();
+		.getLoanOffering().getInterestGLcode();
 
 		FinancialActionBO finActionInterest = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
 		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
 				getGLcode(finActionInterest.getApplicableDebitCharts()),
 				FinancialConstants.CREDIT);
-
+		
 		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
 				glcodeCredit, FinancialConstants.DEBIT);
 
@@ -45,5 +61,56 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 					FinancialConstants.CREDIT);
 		}
 
+	}
+	
+	private void logTransactions_v2(LoanTrxnDetailEntity loanTrxn) throws FinancialException
+	{
+	
+		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
+		.getLoanOffering().getInterestGLcode();
+
+		FinancialActionBO finActionInterest = FinancialActionCache
+				.getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
+		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
+				getGLcode(finActionInterest.getApplicableDebitCharts()),
+				FinancialConstants.CREDIT);
+		
+		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
+				glcodeCredit, FinancialConstants.DEBIT);
+		boolean isLastPayment = ((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
+		if (!isLastPayment)
+		{
+			return;
+		}
+		Money account999 = ((LoanBO)loanTrxn.getAccount()).calculate999Account(!isLastPayment);
+		Money zeroAmount = new Money("0");
+		// only log if amount > or < 0
+		if (account999.equals(zeroAmount))
+		{
+			return;
+		}
+		
+		FinancialActionBO finActionRounding = FinancialActionCache
+		.getFinancialAction(FinancialActionConstants.ROUNDING);
+		GLCodeEntity codeToDebit = null; 
+		GLCodeEntity codeToCredit = null;
+		if (account999.getAmountDoubleValue() > 0)
+		{
+			// this code is defined as below in chart of account 
+			// <GLAccount code="31401" name="Income from 999 Account" />
+			codeToDebit = getGLcode(finActionRounding.getApplicableCreditCharts()); 
+			codeToCredit = glcodeCredit;
+		}
+		else if (account999.getAmountDoubleValue() < 0)
+		{
+			codeToDebit = glcodeCredit;
+			codeToCredit = getGLcode(finActionRounding.getApplicableDebitCharts());
+			account999 = account999.negate();
+			
+		}
+		addAccountEntryDetails(account999, finActionRounding, codeToDebit, FinancialConstants.DEBIT);
+		addAccountEntryDetails(account999, finActionRounding, codeToCredit, FinancialConstants.CREDIT);	
+			
+		
 	}
 }
