@@ -892,6 +892,38 @@ public class CustomerPersistence extends Persistence {
 				" where customer.searchId like :parentSearchId"
 				+ " and customer.office.officeId = :parentOfficeId";
 		Session session = HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		Query update = session.createQuery(hql);
+		update.setParameter("parentLoanOfficer", parentLO);
+		update.setParameter("parentSearchId", parentSearchId + ".%");
+		update.setParameter("parentOfficeId", parentOfficeId);
+		update.executeUpdate();	}
+	
+	/**
+	 * Update loan officer for all children accounts.
+	 * 
+	 * This method was introduced for when a center is assigned
+	 * a new loan officer, and this loan officer needs to be
+	 * re-assigned not just for the center's groups and clients,
+	 * but for each account belonging to those customers.
+	 * 
+	 * Note: Required as to fix issues 1570 and 1804 
+	 * 
+	 * @param parentLO the parent loan officer
+	 * @param parentSearchId the parent search id
+	 * @param parentOfficeId the parent office id
+	 */
+	public void updateLOsForAllChildrenAccounts(Short parentLO, String parentSearchId,
+			Short parentOfficeId) {
+		String hql = "update AccountBO account " +
+				" set account.personnel.personnelId = :parentLoanOfficer " +
+				" where account.customer.customerId IN (" 
+				+ " select customer.customerId from CustomerBO customer where "
+				+ " customer.searchId like :parentSearchId"
+				+ " and customer.office.officeId = :parentOfficeId"
+				+ ")";
+		Session session = HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
 		Query update = session.createQuery(hql);
 		update.setParameter("parentLoanOfficer", parentLO);
 		update.setParameter("parentSearchId", parentSearchId + ".%");

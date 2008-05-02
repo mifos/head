@@ -1056,9 +1056,14 @@ public abstract class CustomerBO extends BusinessObject {
 
 		try {
 			if (isLOChanged(loanOfficerId)) {
+				// If a new loan officer has been assigned, then propagate this
+				// change to the customer's children and to their associated accounts.
 				new CustomerPersistence()
 						.updateLOsForAllChildren(loanOfficerId, getSearchId(),
 								getOffice().getOfficeId());
+				new CustomerPersistence()
+						.updateLOsForAllChildrenAccounts(loanOfficerId, getSearchId(),
+						getOffice().getOfficeId());
 				if (loanOfficerId != null)
 					this.personnel = new PersonnelPersistence()
 							.getPersonnel(loanOfficerId);

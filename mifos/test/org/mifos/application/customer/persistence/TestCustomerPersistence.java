@@ -893,6 +893,26 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(newLO.getPersonnelId(), client.getPersonnel()
 				.getPersonnelId());
 	}
+	
+	public void testUpdateLOsForAllChildrenAccounts() {
+		createCustomers(CustomerStatus.CENTER_ACTIVE,
+				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+		assertEquals(center.getPersonnel().getPersonnelId(), group
+				.getPersonnel().getPersonnelId());
+		assertEquals(center.getPersonnel().getPersonnelId(), client
+				.getPersonnel().getPersonnelId());
+		HibernateUtil.startTransaction();
+		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
+		new CustomerPersistence().updateLOsForAllChildrenAccounts(newLO
+				.getPersonnelId(), center.getSearchId(), center.getOffice()
+				.getOfficeId());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		for (AccountBO account: client.getAccounts()) {
+			assertEquals(newLO.getPersonnelId(), account.getPersonnel().getPersonnelId());
+		}		
+	}
 
 	public void testCustomerDeleteMeeting() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
