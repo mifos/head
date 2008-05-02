@@ -3589,27 +3589,36 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
  ***********************************/
 	
 	private void generateMeetingSchedule_v2(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Generating meeting schedule... ");
+		
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+						"Generating meeting schedule... ");
+		
 		if(isRepaymentIndepOfMeetingEnabled){
 			setLoanMeeting(newMeetingForRepaymentDay);
 		}
 		List<InstallmentDate> installmentDates;
 		if (isRepaymentIndepOfMeetingEnabled)
-		installmentDates = getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
-					getLoanMeeting(), noOfInstallments,
-					getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),isRepaymentIndepOfMeetingEnabled);
+			installmentDates = getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
+									getLoanMeeting(), 
+									noOfInstallments,
+									getInstallmentSkipToStartRepayment_v2(),
+									isRepaymentIndepOfMeetingEnabled);
 		else
-		installmentDates = getInstallmentDates(
-				getLoanMeeting(), noOfInstallments,
-				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled));
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Obtained intallments dates");
+			installmentDates = getInstallmentDates(
+									getLoanMeeting(), 
+									noOfInstallments,
+									getInstallmentSkipToStartRepayment_v2());
+		
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+						"Obtained intallments dates");
+		
 		Money loanInterest = getLoanInterest_v2(installmentDates.get(
 				installmentDates.size() - 1).getInstallmentDueDate());
 		List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Emi installment  obtained ");
+		
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+						"Emi installment  obtained ");
+		
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0) {
@@ -3623,22 +3632,39 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
 			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
 		}
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Fee installment obtained ");
+		
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+						"Fee installment obtained ");
+		
 		generateRepaymentSchedule(installmentDates, EMIInstallments,
 				feeInstallment);
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Meeting schedule generated  ");
+		
+				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+						"Meeting schedule generated  ");
+		
 		applyRounding_v2(loanInterest);
 		
 		
 	}
-	
+
+	/**
+	 * refactored to eliminate dependency on isRepaymentIndepOfMeetingEnabled.
+	 */
+	private Short getInstallmentSkipToStartRepayment_v2() {
+		if (isInterestDeductedAtDisbursement()
+					|| getGraceType() == GraceType.PRINCIPALONLYGRACE
+					|| getGraceType() == GraceType.NONE) {
+				return (short) 0;
+			}
+		else //getGraceType() == GraceType.ALL
+			return (short) getGracePeriodDuration();
+	}
+
 	private Money getLoanInterest_v2(Date installmentEndDate)
 	throws AccountException {
 		if (getLoanOffering().getInterestTypes().getId().equals(
 				InterestType.FLAT.getValue()))
-			return getFlatInterestAmount_v2(installmentEndDate);
+			return getFlatInterestAmount_v2();
 		if (getLoanOffering().getInterestTypes().getId().equals(
 				InterestType.DECLINING.getValue()) 
 				|| getLoanOffering().getInterestTypes().getId().equals(
@@ -3648,12 +3674,15 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return null;
 	}
 
-	private Money getFlatInterestAmount_v2(Date installmentEndDate)
+	/**
+	 * remove dependence on installmentEndDate
+	 */
+	private Money getFlatInterestAmount_v2()
 			throws AccountException {
 		// TODO: interest rate should be a BigDecimal ?
 		Double interestRateDouble = getInterestRate();
 		// TODO: durationInYears should be a BigDeciaml ?
-		Double durationInYearsDouble = getTotalDurationInYears_v2(installmentEndDate);
+		Double durationInYearsDouble = getTotalDurationInYears_v2();
 		BigDecimal interestRate = new BigDecimal(interestRateDouble, Money.getInternalPrecisionAndRounding());
 		BigDecimal durationInYears = new BigDecimal(durationInYearsDouble, Money.getInternalPrecisionAndRounding());
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -3720,7 +3749,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	/*
 	 * double --> BigDecimal
 	 */
-	private double getTotalDurationInYears_v2(Date installmentEndDate)
+	private double getTotalDurationInYears_v2()
 	throws AccountException {
 		int interestDays = getInterestDays();
 		int daysInWeek = getDaysInWeek();
@@ -3728,8 +3757,9 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 		Short recurrenceType = this.getLoanMeeting().getMeetingDetails()
 			.getRecurrenceType().getRecurrenceId();
-		int duration = getNoOfInstallments() * this.getLoanMeeting()
-			.getMeetingDetails().getRecurAfter();
+		
+		int duration = (getNoOfInstallments())
+							* this.getLoanMeeting().getMeetingDetails().getRecurAfter();
 		
 		if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
 			double totalMonthDays = duration * daysInMonth;
@@ -3802,7 +3832,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				*/
 			} else if (getLoanOffering().getInterestTypes().getId().equals(
 						InterestType.FLAT.getValue())) {
-				return allInstallments_v2(loanInterest);
+				return allFlatInstallments_v2(loanInterest);
 			} else if ((getLoanOffering().getInterestTypes().getId().equals(
 					InterestType.DECLINING.getValue())) 
 					|| (getLoanOffering().getInterestTypes().getId().equals
@@ -3907,49 +3937,117 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
-
-
-	private List<EMIInstallment> allInstallments_v2(Money loanInterest)
+	
+	/****************
+	 * Loan calculation refactoring -- Flat-installment calculations, including grace-period calculations.
+	 ****************/
+	
+	/**
+	 * Generate flat-interest installment variants based on the type of grace period.
+	 * <ul>
+	 * <li> If grace period  is none, or applies to both principal and interest, the loan
+	 *      calculations are the same.
+	 * <li> If grace period is for principal only, don't add new installments.
+	 *      The first grace installments are interest-only, and principal is paid off with 
+	 *      the remaining installments.
+	 *      NOTE: Principal-only grace period should be disable for release 1.1.
+	 * </ul>
+	 */
+	private List<EMIInstallment> allFlatInstallments_v2(Money loanInterest)
 			throws AccountException {
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
-		if (getGraceType() == GraceType.GRACEONALLREPAYMENTS
-				|| getGraceType() == GraceType.NONE) {
-			Money principalPerInstallment = getLoanAmount()
-				.divide(new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
-			Money interestPerInstallment = loanInterest.divide(
-				new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
-			EMIInstallment installment = null;
-			for (int i = 0; i < getNoOfInstallments(); i++) {
-				installment = new EMIInstallment();
-				installment.setPrincipal(principalPerInstallment);
-				installment.setInterest(interestPerInstallment);
-				emiInstallments.add(installment);
-			}
-			return emiInstallments;
-		} else if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-			Money principalPerInstallment = getLoanAmount()
-				.divide(new BigDecimal(getNoOfInstallments() - getGracePeriodDuration(),
-				Money.getInternalPrecisionAndRounding()));
-			Money interestPerInstallment = loanInterest.divide(
-					new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
-			EMIInstallment installment = null;
-			for (int i = 0; i < getGracePeriodDuration(); i++) {
-				installment = new EMIInstallment();
-				installment.setPrincipal(new Money("0"));
-				installment.setInterest(interestPerInstallment);
-				emiInstallments.add(installment);
-			}
-			for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
-				installment = new EMIInstallment();
-				installment.setPrincipal(principalPerInstallment);
-				installment.setInterest(interestPerInstallment);
-				emiInstallments.add(installment);
-			}
-			return emiInstallments;
+		
+		if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
+			emiInstallments = generateFlatInstallmentsNoGrace_v2(loanInterest);
 		}
-		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
+		else  {
+			//getGraceType() == GraceType.PRINCIPALONLYGRACE which is disabled.
+			emiInstallments = generateFlatInstallmentsInterestOnly_v2(loanInterest);
+			emiInstallments.addAll(generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2(loanInterest));
+		}
+		return emiInstallments;
 	}
-
+	
+	/**
+	 * Divide principal and interest evenly among all installments, no grace period
+	 */
+	private List<EMIInstallment> generateFlatInstallmentsNoGrace_v2 (Money loanInterest) 
+				throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		Money principalPerInstallment = getLoanAmount().divide(
+				new BigDecimal(getNoOfInstallments(), Money.getInternalPrecisionAndRounding()));
+		Money interestPerInstallment = loanInterest.divide(
+				new BigDecimal(getNoOfInstallments() ,Money.getInternalPrecisionAndRounding()));
+		for (int i = 0; i < getNoOfInstallments(); i++) {
+			EMIInstallment installment = new EMIInstallment();
+			installment.setPrincipal(principalPerInstallment);
+			installment.setInterest(interestPerInstallment);
+			emiInstallments.add(installment);
+		}
+		return emiInstallments;
+	}
+	
+	/**
+	 * Calculate the installments after grace period, in the case of principal-only grace type for a flat-interest loan.
+	 * Divide interest evenly among all installments, but divide principle evenly among installments after
+	 * the grace period.
+	 */
+	private List<EMIInstallment> generateFlatInstallmentsAfterInterestOnlyGraceInstallments_v2 (Money loanInterest) 
+				throws AccountException {
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		Money principalPerInstallment = getLoanAmount().divide(
+				new BigDecimal(getNoOfInstallments().shortValue() - getGracePeriodDuration().shortValue(),
+						       Money.getInternalPrecisionAndRounding()));
+		Money interestPerInstallment = loanInterest.divide(
+				new BigDecimal(getNoOfInstallments() ,Money.getInternalPrecisionAndRounding()));
+		for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
+			EMIInstallment installment = new EMIInstallment();
+			installment.setPrincipal(principalPerInstallment);
+			installment.setInterest(interestPerInstallment);
+			emiInstallments.add(installment);
+		}
+		return emiInstallments;
+	}
+	
+	/**
+	 * Generate zero-payment installments for the duration of the grace period.
+	 */
+	private List<EMIInstallment> generateSkippedGraceInstallments_v2() {
+		
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		Money zero = new Money(new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
+		
+		for (int i = 0; i < getGracePeriodDuration(); i++) {
+			EMIInstallment installment = new EMIInstallment();
+			installment.setInterest(zero);
+			installment.setPrincipal(zero);
+			emiInstallments.add(installment);
+			}
+		
+		return emiInstallments;
+	}
+	
+	/**
+	 * Generate interest-only payments for the duration of the grace period. Interest is divided evenly
+	 * among all installments, but only interest is paid during the grace period.
+	 */
+	private List <EMIInstallment> generateFlatInstallmentsInterestOnly_v2(Money loanInterest) {
+		
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		Money zero = new Money(new BigDecimal(0.0, Money.getInternalPrecisionAndRounding()));
+		Money interestPerInstallment = loanInterest.divide(
+				new BigDecimal(getNoOfInstallments(),Money.getInternalPrecisionAndRounding()));
+		
+		for (int i = 0; i < getGracePeriodDuration(); i++) {
+			EMIInstallment installment = new EMIInstallment();
+			installment.setInterest(interestPerInstallment);
+			installment.setPrincipal(zero);
+			emiInstallments.add(installment);
+		}
+		
+		return emiInstallments;
+	}
+	
 	/*
 	 * Calculates equal payments per period for fixed payment, declining-interest loan type.
 	 * Uses formula from 
@@ -4191,9 +4289,15 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 
 	protected final void applyRounding_v2(Money totalInterest) {
-		// why are we checking for zero principal? what if there are still outstanding fees?
-		// shouldn't it be balance equals zero?
-		if (!isPrincipalZeroInAnyInstallmemt()) {
+		
+		/********
+		 * why are we checking for zero principal? what if there are still outstanding fees? 
+		 * shouldn't it be balance equals zero?
+		 * KEITH 5/1/2008. This check prevents rounding from being applied when there is a grace period.
+		 * I've removed it to observe the behavior and to force rounding for loans with grace periods.
+		 */ 
+		
+		// if (!isPrincipalZeroInAnyInstallmemt()) {
 			LoanScheduleEntity lastInstallment = (LoanScheduleEntity) getLastInstallmentAccountAction();
 			Money principalRunningTotal = new Money("0");
 			Money totalPaymentRunningTotal = new Money("0");
@@ -4249,7 +4353,8 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				Money.round(finalUpdatedPaymentAmount.subtract(lastInstallment.getPrincipal()),
 				AccountingRules.getDigitsAfterDecimalMultiple(),
 				AccountingRules.getCurrencyRoundingMode()));
-		}
+		//}
+			int x = 0; //when debugging, stop here for inspection.
 	}
 
 	

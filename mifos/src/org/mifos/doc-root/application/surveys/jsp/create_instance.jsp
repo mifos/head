@@ -83,14 +83,25 @@ hr {
 		</td>
 	</tr>
 </table>
-<h1><c:out value="${requestScope.businessObjectName}"/> - 
-<orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange></h1>
-<span class="fontnormal"><mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/></span>
+
+<h1>
+	<c:out value="${requestScope.businessObjectName}"/> - 
+	<orange><mifos:mifoslabel name="Surveys.instance.entersurveydata" bundle="SurveysUIResources"/></orange>
+</h1>
+
+<span class="fontnormal">
+	<mifos:mifoslabel name="Surveys.instance.instructions" bundle="SurveysUIResources"/>
+</span>
 <br/>
+
 <font class="fontnormalRedBold"><html-el:errors bundle="SurveysUIResources" /></font>
 <hr>
-<h1><c:out value="${sessionScope.retrievedSurvey.name}"/></h1>
+
+<h1>
+	<c:out value="${sessionScope.retrievedSurvey.name}"/>
+</h1>
 <hr>
+
 <table width="95%" border="0" cellpadding="3" cellspacing="0">
 	<tr>
 		<td width="25%" height="30" align="right">
@@ -108,68 +119,93 @@ hr {
 		</td>
 	</tr>
 </table>
+
 <table width="95%">
 	<c:set var="count" value="1"/>
 	<c:forEach var="question" items="${sessionScope.retrievedSurvey.questions}">
 		<tr>
 			<td class="entry">
-			<h2><c:if test="${question.mandatory == 1}"><red>*</red></c:if>
-			<c:out value="${count}"/>. <c:out value="${question.question.questionText}"/>
-			</h2>
+				<h2>
+					<c:if test="${question.mandatory == 1}"><red>*</red></c:if>
+					<c:out value="${count}"/>. <c:out value="${question.question.questionText}"/>
+				</h2>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="fontnormal8pt drawtablerow">
-        <c:choose>
-          <c:when test="${question.question.answerType == 1}">
-            <c:set var="opt" value="1"/>
-            <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:checkbox property="value(response_${question.surveyQuestionId}.${opt})" value="1">
-                <c:out value="${choice.choiceText}"/>
-              </html-el:checkbox><html-el:hidden property="value(response_${question.surveyQuestionId}.${opt})" value="0"/>
-              <br>
-            <c:set var="opt" value="${opt+1}"/> 
-            </c:forEach>
-          </c:when>
-          <c:when test="${question.question.answerType == 4}">
-            <c:forEach var="choice" items="${question.question.choices}">
-              <html-el:radio property="value(response_${question.surveyQuestionId})" value="${choice.choiceId}">
-                <c:out value="${choice.choiceText}"/>
-              </html-el:radio>
-              <br>
-            </c:forEach>
-            <html-el:radio property="value(response_${question.surveyQuestionId})" value="" style="visibility:hidden;checked:true"/>
-          </c:when>
-          <c:when test="${question.question.answerType == 2}">
-            <html-el:textarea property="value(response_${question.surveyQuestionId})" cols="70" rows="10" />
-          </c:when>
-          <c:when test="${question.question.answerType == 5}">
-		        <span class="fontnormal8pt"><date:datetag property="response_${question.surveyQuestionId}" renderstyle="simplemapped"/></span>
-          </c:when>
-          <c:otherwise><html-el:text property="value(response_${question.surveyQuestionId})"/></c:otherwise>
-        </c:choose>
+        		<c:choose>
+        		
+          			<%-- multi-select response --%>
+          			
+          			<c:when test="${question.question.answerType == 1}">
+            			<c:set var="opt" value="1"/>
+            			<c:forEach var="choice" items="${question.question.choices}">
+              				<html-el:checkbox property="value(response_${question.surveyQuestionId}.${opt})" value="1">
+                				<c:out value="${choice.choiceText}"/>
+              				</html-el:checkbox>
+              				<html-el:hidden property="value(response_${question.surveyQuestionId}.${opt})" value="0"/>
+              				<br>
+            				<c:set var="opt" value="${opt+1}"/> 
+            			</c:forEach>
+          			</c:when>
+          			
+          			<%-- single-select response --%>
+          			
+          			<c:when test="${question.question.answerType == 4}">
+            			<c:forEach var="choice" items="${question.question.choices}">
+              				<html-el:radio property="value(response_${question.surveyQuestionId})" value="${choice.choiceId}">
+                				<c:out value="${choice.choiceText}"/>
+              				</html-el:radio>
+              				<br>
+            			</c:forEach>
+            			<html-el:radio property="value(response_${question.surveyQuestionId})" value="" style="visibility:hidden;checked:true"/>
+          			</c:when>
+          			
+          			<%-- free-text response --%>
+          			
+          			<c:when test="${question.question.answerType == 2}">
+            			<html-el:textarea property="value(response_${question.surveyQuestionId})" cols="70" rows="10" />
+          			</c:when>
+          			
+          			<%-- date response --%>
+          			
+          			<c:when test="${question.question.answerType == 5}">
+		        		<span class="fontnormal8pt">
+		        			<date:datetag property="response_${question.surveyQuestionId}" renderstyle="simplemapped"/>
+		        		</span>
+          			</c:when>
+          			
+          			<%-- number response? --%>
+          			
+          			<c:otherwise>
+          				<html-el:text property="value(response_${question.surveyQuestionId})"/>
+          			</c:otherwise>
+          			
+        		</c:choose>
 			</td>
 		</tr>
-	<c:set var="count" value="${count+1}"/>
+		<c:set var="count" value="${count+1}"/>
 	</c:forEach>
 		<tr>
-		<td>
-		<html-el:button property="clear" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('clear')">
-		<mifos:mifoslabel name="Surveys.button.clearall" bundle="SurveysUIResources" />
-		</html-el:button>
-		</td>
-		</tr>
+			<td>
+				<html-el:button property="clear" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('clear')">
+					<mifos:mifoslabel name="Surveys.button.clearall" bundle="SurveysUIResources" />
+				</html-el:button>
+			</td>
+			</tr>
 </table>
-<br><hr>
+<br>
+<hr>
+
 <table width="93%" border="0" cellpadding="0" cellspacing="0">
-<tr>
+	<tr>
 		<td align="center">
-		<html-el:submit property="button" styleClass="buttn">
-		<mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
-		</html-el:submit>&nbsp; 
-		<html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('back')">
-		<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
-		</html-el:button>
+			<html-el:submit property="button" styleClass="buttn">
+				<mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
+			</html-el:submit>&nbsp; 
+			<html-el:button property="cancelButton" styleClass="cancelbuttn" onclick="submitSurveyInstanceForm('back')">
+				<mifos:mifoslabel name="Surveys.button.cancel" bundle="SurveysUIResources" />
+			</html-el:button>
 		</td>
 	</tr>
 </table>
