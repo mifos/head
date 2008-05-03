@@ -540,7 +540,7 @@ public class AccountBO extends BusinessObject {
 		}
 		return 0;
 	}
-	//	 this method will be refactored to be more efficient
+	
 	public AccountPaymentEntity getLastPmnt() {
 		AccountPaymentEntity lastPmnt = null;
 		for (AccountPaymentEntity accntPayment : accountPayments) {
@@ -549,7 +549,7 @@ public class AccountBO extends BusinessObject {
 		}
 		return lastPmnt;
 	}
-	// this method will be refactored to be more efficient
+	
 	public AccountPaymentEntity getLastPmntToBeAdjusted() {
 		AccountPaymentEntity accntPmnt = null;
 		int i = 0;

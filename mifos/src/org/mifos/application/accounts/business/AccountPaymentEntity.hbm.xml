@@ -48,4 +48,9 @@
 				where accountPayment.account.accountId = :accountId)
 				]]>
 	  </query>
+	  <query name="accountPayment.allAccPayment">
+		<![CDATA[from org.mifos.application.accounts.business.AccountPaymentEntity accpayment
+				where accpayment.account.accountId = :accountId order by accpayment.paymentId desc
+				]]>
+	  </query>
 </hibernate-mapping>

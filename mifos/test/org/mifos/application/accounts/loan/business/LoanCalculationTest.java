@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,8 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -449,6 +452,11 @@ public class LoanCalculationTest extends MifosTestCase {
 		boolean lastPayment = paymentToReverse == paymentsArray.length;
 		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
 		new TestObjectPersistence().persist(loan);
+		List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
+		Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
+		for (AccountPaymentEntity payment : accountPayments)
+			list.add(payment);
+		loan.setAccountPayments(list);
 		loan.adjustLastPayment("Adjust last payment");
 		new TestObjectPersistence().persist(loan);
 		if (payLastPayment)
@@ -466,26 +474,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		return loan;
 	}
 
-	
-	//	 verify that 999 account transactions are logged after last payment is made
-	public void xtestNegative999Account() throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException, URISyntaxException 
-	{
-		String dataFileName = "account999-test2.csv";
-		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
-	}
-	
-	//	 verify that 999 account transactions are logged after last payment is made
-	public void xtest999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException, URISyntaxException
-	{
-		String dataFileName = "account999-test1.csv";
-		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
-	}
-	
-	
-	
-	public void xtest999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -496,8 +485,28 @@ public class LoanCalculationTest extends MifosTestCase {
 				paymentToReverse, payLastPayment);	
 	}
 	
+	//	 verify that 999 account transactions are logged after last payment is made
+	public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+		String dataFileName = "account999-test2.csv";
+		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
+	}
+	
+	//	 verify that 999 account transactions are logged after last payment is made
+	public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException
+	{
+		String dataFileName = "account999-test1.csv";
+		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
+	}
+	
+	
+	
+	
+	
 	// no 999account should be logged in this case
-	public void xtest999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception
 	{
 		String dataFileName = "account999-test3.csv";
@@ -509,7 +518,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	payment is reversed and repay to the last payment
-	public void xtest999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test3.csv";

@@ -153,6 +153,15 @@ public class LoanPersistence extends Persistence {
 		}
 		return null;
 	}
+	
+	public List<AccountPaymentEntity> retrieveAllAccountPayments(Integer accountId) throws PersistenceException
+	{
+		HashMap queryParameters = new HashMap();
+		queryParameters.put("accountId", accountId);
+		List<AccountPaymentEntity> accountPaymentList = executeNamedQuery(
+				NamedQueryConstants.RETRIEVE_ALL_ACCPAYMENT, queryParameters);
+		return accountPaymentList;
+	}
 
 	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
 			throws PersistenceException {
