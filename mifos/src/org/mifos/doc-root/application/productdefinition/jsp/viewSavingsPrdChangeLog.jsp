@@ -51,6 +51,10 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -71,9 +75,9 @@
 						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
-								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+								<fmt:message key="product.viewSavingsProducts">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message>
 							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>

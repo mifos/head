@@ -48,6 +48,10 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -146,9 +150,9 @@
 						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
-								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+								<fmt:message key="product.viewSavingsProducts">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message>
 							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>
@@ -162,18 +166,16 @@
 							<tr>
 								<td class="headingorange">
 									<span class="heading"><c:out value="${BusinessKey.prdOfferingName}" /> - </span>
-									<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.productinfo" bundle="ProductDefUIResources" />
+									<fmt:message key="product.editSavingsInfo">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 								</td>
 							</tr>
 							<tr>
 								<td class="fontnormal">
-									<mifos:mifoslabel name="product.editfields" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clickpreview" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.clickcancel" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.withoutsubmit" bundle="ProductDefUIResources" />
+									<fmt:message key="product.editPreviewSubmitSavings">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 									<br>
 									<mifos:mifoslabel name="product.fieldsrequired" mandatory="yes" bundle="ProductDefUIResources" />
 								</td>
@@ -184,8 +186,9 @@
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prddetails" bundle="ProductDefUIResources" />
+									<fmt:message key="product.savingsProductDetails">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 									<br>
 									<br>
 								</td>
@@ -272,7 +275,7 @@
 									<mifos:mifoslabel name="product.typeofdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td width="70%" valign="top">
-									<mifos:select property="savingsType" style="width:136px;" onchange="fnCheckRecMand();">
+									<mifos:select property="savingsType" onchange="fnCheckRecMand();">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsTypesList')}" var="type">
 											<html-el:option value="${type.id}">${type.name}</html-el:option>
 										</c:forEach>
@@ -298,7 +301,7 @@
 									<mifos:mifoslabel name="product.recamtappl" bundle="ProductDefUIResources" isColonRequired="yes"/>
 								</td>
 								<td valign="top">
-									<mifos:select property="recommendedAmntUnit" style="width:136px;">
+									<mifos:select property="recommendedAmntUnit">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecAmntUnitList')}" var="recAmntUnit">
 											<html-el:option value="${recAmntUnit.id}">${recAmntUnit.name}</html-el:option>
 										</c:forEach>
@@ -343,16 +346,19 @@
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
+									<fmt:message key="product.productRate">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 									<br>
 									<br>
 								</td>
 							</tr>
 							<tr class="fontnormal">
 								<td width="30%" align="right">
-									<mifos:mifoslabel mandatory="yes" name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
+									<fmt:message key="product.productRate">
+									<fmt:message><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:message>
+									</fmt:message>:
 								</td>
 								<td width="70%" valign="top">
 									<mifos:mifosdecimalinput property="interestRate" max="100" min="0" decimalFmt="10.5" />
@@ -361,9 +367,10 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel mandatory="yes" name="product.balusedfor" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
+									<fmt:message key="product.balUsedForCalc">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>:
 								</td>
 								<td valign="top">
 									<mifos:select property="interestCalcType" style="width:136px;">
@@ -375,9 +382,10 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top">
-									<mifos:mifoslabel mandatory="yes" name="product.timeper" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
+									<fmt:message key="product.timePerCalc">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>:
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
@@ -391,9 +399,10 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top">
-									<mifos:mifoslabel mandatory="yes" name="product.freq" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
+									<fmt:message key="freqPostAcc">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>:
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
@@ -403,9 +412,9 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right">
-									<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<fmt:message key="product.minBalForCalc">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>:
 								</td>
 								<td valign="top">
 									<mifos:mifosdecimalinput property="minAmntForInt" />
@@ -436,11 +445,13 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top" style="padding-top:8px;">
-									<mifos:mifoslabel mandatory="yes" name="product.Glcodefor" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" isColonRequired="yes"/>
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
+									<fmt:message key="product.glCodeFor">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources"/></fmt:param>
+									</fmt:message>:
 								</td>
 								<td valign="top">
-									<mifos:select property="interestGLCode" style="width:136px;" disabled="true">
+									<mifos:select property="interestGLCode" disabled="true">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}" var="glCodes">
 											<html-el:option value="${glCodes.glcodeId}">${glCodes.glcode}</html-el:option>
 										</c:forEach>

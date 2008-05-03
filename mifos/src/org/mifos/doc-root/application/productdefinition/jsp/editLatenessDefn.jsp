@@ -46,6 +46,10 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -94,9 +98,9 @@
 									</tr>
 									<tr>
 										<td width="47%"><span class="fontnormal">
-										<mifos:mifoslabel name="product.specloannodays" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="product.loanaccountchanged" bundle="ProductDefUIResources" isColonRequired="yes"/></span></td>
+										<fmt:message key="product.specLoanNoDaysAccountChanged">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+										</fmt:message>:</span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="productType[${ctr}].latenessDays" maxValue="32767"
 											value="${productType.latenessDays}" size="4"/> <mifos:mifoslabel
@@ -130,9 +134,9 @@
 									<tr>
 										<td width="47%" class="fontnormalbold"><span
 											class="fontnormal"> 
-											<mifos:mifoslabel name="product.specsavdormdays" bundle="ProductDefUIResources" />
- 										    <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-											<mifos:mifoslabel name="product.savingsaccountchanged" bundle="ProductDefUIResources" isColonRequired="yes"/>
+										<fmt:message key="product.specSavingsDormDaysAccountChanged">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+										</fmt:message>:
 											</span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="productType[${ctr}].dormancyDays" maxValue="32767"

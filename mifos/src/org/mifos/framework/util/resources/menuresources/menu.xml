@@ -31,17 +31,17 @@
 				</displayname>
 				<menuitem>
 					<displayname> 
-						<namefragment>label.opennew</namefragment> 
+						<namefragment>label.openNewLoanAccountPrefix</namefragment> 
 						<namefragment>Loan</namefragment> 
-						<namefragment>label.account</namefragment> 
+						<namefragment>label.openNewLoanAccountSuffix</namefragment> 
 					</displayname>
 					<linkvalue> custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan	</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
-						<namefragment>label.opennew</namefragment> 
+						<namefragment>label.openNewSavingsAccountPrefix</namefragment> 
 						<namefragment>Savings</namefragment>
-						<namefragment>label.account</namefragment> 
+						<namefragment>label.openNewSavingsAccountSuffix</namefragment> 
 					</displayname>
 					<linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
 				</menuitem>
@@ -110,28 +110,27 @@
 				</displayname>
 				<menuitem>
 					<displayname> 
-						<namefragment>label.create</namefragment> 
+						<namefragment>label.createSavingsAccountPrefix</namefragment> 
 						<namefragment>Savings</namefragment>
-						<namefragment>label.account</namefragment>  
+						<namefragment>label.createSavingsAccountSuffix</namefragment>  
 					</displayname>
 					<linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
 				</menuitem>
 					
 				<menuitem>
 					<displayname> 
-						<namefragment>label.create</namefragment> 
+						<namefragment>label.createLoanAccountPrefix</namefragment> 
 						<namefragment>Loan</namefragment>
-						<namefragment>label.account</namefragment>  
+						<namefragment>label.createLoanAccountSuffix</namefragment>  
 					</displayname>
 					<linkvalue>	custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
 				</menuitem>		
 				
 				<menuitem>
 					<displayname> 
-						<namefragment>label.create</namefragment> 
-						<namefragment>label.multiple</namefragment>  
+						<namefragment>label.createMultipleLoanAccountsPrefix</namefragment> 
 						<namefragment>Loan</namefragment>
-						<namefragment>label.accountsSmall</namefragment>
+						<namefragment>label.createMultipleLoanAccountsSuffix</namefragment>
 					</displayname>
 					<linkvalue>multipleloansaction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>				
@@ -144,9 +143,7 @@
 				</displayname>
 				<menuitem>
 					<displayname> 
-						<namefragment>label.change</namefragment> 
-						<namefragment>label.accountSmall</namefragment>  
-						<namefragment>label.status</namefragment>
+						<namefragment>label.changeAccountStatus</namefragment> 
 					</displayname>
 					<linkvalue>ChangeAccountStatus.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>

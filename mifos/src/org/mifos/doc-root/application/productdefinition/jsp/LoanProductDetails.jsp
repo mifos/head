@@ -20,12 +20,16 @@ explanation of the license and how it is applied.
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="/loan/loanfunctions" prefix="userfn"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -38,9 +42,9 @@ explanation of the license and how it is applied.
 					<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 						</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-							<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+							<fmt:message key="product.viewLoanProducts">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+							</fmt:message>
 						</html-el:link> / </span> <span class="fontnormal8ptbold"><c:out value="${loanPrd.prdOfferingName}" /></span>
 				</td>
 			</tr>
@@ -55,9 +59,9 @@ explanation of the license and how it is applied.
 							</td>
 							<td width="26%" align="right">
 								<html-el:link href="loanproductaction.do?method=manage&prdOfferingId=${loanPrd.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${loanPrd.prdOfferingName}">
-									<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.info" bundle="ProductDefUIResources" />
+									<fmt:message key="product.editLoanInfo">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 								</html-el:link>
 							</td>
 						</tr>
@@ -79,8 +83,9 @@ explanation of the license and how it is applied.
 									</tr>
 									<tr>
 										<td width="50%" height="23" class="fontnormalbold">
-											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-											<mifos:mifoslabel name="product.prddetails" bundle="ProductDefUIResources" />
+											<fmt:message key="product.loanProductDetails">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+											</fmt:message>
 										</td>
 									</tr>
 									<tr>
@@ -182,18 +187,26 @@ explanation of the license and how it is applied.
 								<table width="96%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
 										<td width="100%" height="23" class="fontnormalbold">
-											<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-											<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
+											<fmt:message key="product.productRate">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+											</fmt:message>
 										</td>
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.type"
-													bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.interestTypes.name}" /> <br> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
-													bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel
-													name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out
-													value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-													name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
+											<span class="fontnormal"> 
+												<fmt:message key="product.rateType">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>: <c:out value="${loanPrd.interestTypes.name}" /> <br>
+												<fmt:message key="product.maxRate">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
+												<fmt:message key="product.minRate">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param> 
+												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> 
+												<fmt:message key="product.defaultRate">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>: <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
 													bundle="ProductDefUIResources" /><br> </span>
 										</td>
 									</tr>

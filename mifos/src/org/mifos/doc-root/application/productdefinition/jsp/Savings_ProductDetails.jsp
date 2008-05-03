@@ -48,6 +48,11 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 
@@ -78,9 +83,9 @@
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
 							</html-el:link> / 
 							<a	href="savingsproductaction.do?method=search">
-								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+								<fmt:message key="product.viewSavingsProducts">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message>
 							</a> / </span><span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>
 					</td>
 				</tr>
@@ -96,9 +101,9 @@
 								<td width="32%" align="right">
 									<a	href="savingsproductaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 
-										<mifos:mifoslabel name="product.prdedit" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="product.info" bundle="ProductDefUIResources" />
+										<fmt:message key="product.editSavingsInfo">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+										</fmt:message>
 
 									</a>
 								</td>
@@ -130,8 +135,9 @@
 										</tr>
 										<tr>
 											<td width="50%" height="23" class="fontnormalbold">
-												<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.prddetails" bundle="ProductDefUIResources" />
+												<fmt:message key="product.savingsProductDetails">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>
 											</td>
 										</tr>
 										<tr>
@@ -194,20 +200,22 @@
 										<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td width="100%" height="23" class="fontnormalbold">
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />
+												<fmt:message key="product.productRate">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>
 											</td>
 										</tr>
 										<tr>
 											<td height="23" class="fontnormal">
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<fmt:message key="product.productRate">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>:
 												<c:out value="${BusinessKey.interestRate}" />
 												<mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
 												<br>
-												<mifos:mifoslabel name="product.balusedfor" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<fmt:message key="product.balUsedForCalc">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>:
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalcTypesList')}" var="IntCalcType">
 													<c:if test="${IntCalcType.id eq BusinessKey.interestCalcType.id}">
 														<c:out value="${IntCalcType.name}" />
@@ -215,9 +223,9 @@
 													</c:if>
 												</c:forEach>
 												<br>
-												<mifos:mifoslabel name="product.timeper" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<fmt:message key="product.timePerCalc">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>:
 												<c:out value="${BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurAfter}" />
 												<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}" var="recType">
 													<c:if test="${recType.recurrenceId eq BusinessKey.timePerForInstcalc.meeting.meetingDetails.recurrenceType.recurrenceId}">
@@ -225,15 +233,15 @@
 													</c:if>
 												</c:forEach>
 												<br>
-												<mifos:mifoslabel name="product.freq" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.postacc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<fmt:message key="product.freqPostAcc">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>:
 												<c:out value="${BusinessKey.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}" />
 												<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 												<br>
-												<mifos:mifoslabel name="product.minbalreq" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-												<mifos:mifoslabel name="product.calc" bundle="ProductDefUIResources" isColonRequired="yes"/>
+												<fmt:message name="product.minBalForCalc">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>:
 												<c:out value="${BusinessKey.minAmntForInt}" />
 												<br>
 											</td>

@@ -28,6 +28,16 @@ explanation of the license and how it is applied.
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.adminUIResources"/>
 
+<!--  <%
+java.util.Enumeration enn = session.getAttributeNames();
+
+while(enn.hasMoreElements()){
+	String s = enn.nextElement().toString();
+	out.println(s + " " + session.getAttribute(s).toString());
+}
+
+%> -->
+
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<html-el:form action="AdminAction.do?method=load">
@@ -269,12 +279,12 @@ explanation of the license and how it is applied.
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link
 								href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.viewProducts">
+								<fmt:message key="admin.viewLoanProducts">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>
 								</html-el:link> | <html-el:link
 								href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.defineNewProduct">
+								<fmt:message key="admin.defineNewLoanProduct">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 								</fmt:message>
 								</html-el:link></td>
@@ -295,12 +305,12 @@ explanation of the license and how it is applied.
 							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
 							<td width="97%"><html-el:link
 								href="savingsproductaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.viewProducts">
+								<fmt:message key="admin.viewSavingsProducts">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
 									</html-el:link> | <html-el:link
 								href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-								<fmt:message key="admin.defineNewProduct">
+								<fmt:message key="admin.defineNewSavingsProduct">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
 								</fmt:message>
 								</html-el:link></td>
@@ -313,13 +323,19 @@ explanation of the license and how it is applied.
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><html-el:link
-								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.disbursal" /></html-el:link></td>
+								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<fmt:message key="admin.reverseLoanDisbursal">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message></html-el:link></td>
 
                   </tr>
                   <tr class="fontnormal">
                     <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                     <td width="97%"><html-el:link
-								href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.redo" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.disbursal" /></html-el:link></td>
+								href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<fmt:message key="admin.redoLoanDisbursal">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message></html-el:link></td>
 
                   </tr>
                 </table>
@@ -330,22 +346,22 @@ explanation of the license and how it is applied.
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
-								href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.admin" /> <mifos:mifoslabel name="admin.documents" />
+								href="birtAdminDocumentUploadAction.do?method=getViewBirtAdminDocumentPage"><mifos:mifoslabel name="admin.ViewAdminDocuments" />
 								</a> | <html-el:link
-								href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.upload" /> <mifos:mifoslabel name="admin.admin" /> <mifos:mifoslabel name="admin.documents" /></html-el:link></td>
+								href="birtAdminDocumentUploadAction.do?method=getBirtAdminDocumentUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.UploadAdminDocuments" /></html-el:link></td>
                   </tr>
                   
                   <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
-								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.templates" />
+								href="birtReportsUploadAction.do?method=getViewReportPage"><mifos:mifoslabel name="admin.ViewReportsTemplates" />
 								</a> | <html-el:link
 								href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path"><mifos:mifoslabel name="admin.uploadReportTemplate" /></html-el:link></td>
                   </tr>
                    <tr class="fontnormal">
                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                    <td width="97%"><a
-								href="reportsCategoryAction.do?method=viewReportsCategory"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.reports" /> <mifos:mifoslabel name="admin.category" />
+								href="reportsCategoryAction.do?method=viewReportsCategory"><mifos:mifoslabel name="admin.ViewReportsCategory" />
 								</a> | <html-el:link
 								href="reportsCategoryAction.do?method=loadDefineNewCategoryPage"><mifos:mifoslabel name="admin.defineNewCategory" /></html-el:link></td>
                   </tr>

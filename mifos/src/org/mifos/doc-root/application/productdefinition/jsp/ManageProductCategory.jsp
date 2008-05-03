@@ -125,7 +125,7 @@
 								mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></td>
 							<td><mifos:select
 								property="productCategoryStatus"
-								name="productCategoryActionForm" style="width:136px;">
+								name="productCategoryActionForm">
 								<c:forEach var="PrdCategoryStatusList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}" >
 									<html-el:option value="${PrdCategoryStatusList.id}">${PrdCategoryStatusList.name}</html-el:option>
 								</c:forEach>

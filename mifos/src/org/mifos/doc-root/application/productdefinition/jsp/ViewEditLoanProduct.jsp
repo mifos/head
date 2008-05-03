@@ -47,6 +47,10 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -56,8 +60,10 @@
 				<td class="bluetablehead05">
 					<span class="fontnormal8pt"><html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-						</html-el:link> / </span> <span class="fontnormal8ptbold"> <mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-							name="product.products" bundle="ProductDefUIResources" /> </span>
+						</html-el:link> / </span> <span class="fontnormal8ptbold"> 
+						<fmt:message key="product.viewLoanProducts">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+						</fmt:message></span>
 				</td>
 			</tr>
 		</table>
@@ -67,8 +73,10 @@
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange">
-								<span class="headingorange"><mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.products"
-										bundle="ProductDefUIResources" /> </span>
+								<span class="headingorange">
+								<fmt:message key="product.viewLoanProducts">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message></span>
 							</td>
 						</tr>
 						<tr>
@@ -76,9 +84,9 @@
 								<span class="fontnormal"> <mifos:mifoslabel name="product.clickon" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.pro"
 										bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.makechanges" bundle="ProductDefUIResources" /> &nbsp;<html-el:link
 										href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-										<mifos:mifoslabel name="product.savingsdefnew" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-										<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
+										<fmt:message key="product.defineNew">
+										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
+										</fmt:message>
 									</html-el:link><br> <br> </span><span class="fontnormalbold"><br> </span> <span class="fontnormalbold"> </span> <font class="fontnormalRedBold"><html:errors bundle="ProductDefUIResources" /> </font>
 
 								<table width="90%" border="0" cellspacing="0" cellpadding="0">

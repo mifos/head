@@ -47,6 +47,10 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -59,9 +63,9 @@
 						<mifos:mifoslabel name="product.admin"	bundle="ProductDefUIResources" />
 					</html-el:link> / </span> 
 					<span class="fontnormal8ptbold">					
-					<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-					<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-					<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />					
+					<fmt:message key="product.viewSavingsProducts">
+					<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+					</fmt:message>
 					</span></td>
 				</tr>
 			</table>
@@ -75,22 +79,21 @@
 						<tr>
 							<td class="headingorange">
 							<span class="headingorange">
-							<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+							<fmt:message key="product.viewSavingsProducts">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+							</fmt:message>
 							</span></td>
 						</tr>
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><span
 								class="fontnormal">
-								<mifos:mifoslabel name="product.clickon" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
-								<mifos:mifoslabel name="product.makechanges" bundle="ProductDefUIResources" />								
+								<fmt:message key="product.clickToMakeChangesSavings">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+								</fmt:message>
 								<html-el:link href="savingsproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-									<mifos:mifoslabel name="product.savingsdefnew" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
-									<mifos:mifoslabel name="product.pro" bundle="ProductDefUIResources" />
+									<fmt:message key="product.defineNew">
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
+									</fmt:message>
 								</html-el:link><br>
 							<br>
 							</span>
