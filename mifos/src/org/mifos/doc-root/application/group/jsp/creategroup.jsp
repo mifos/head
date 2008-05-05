@@ -276,7 +276,10 @@
 										</tr>
 										<tr class="fontnormal">
 											<td width="21%" align="right">
-												<mifos:mifoslabel name="Group.groupname" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
+												<span class="mandatorytext"><font color="#FF0000">*</font></span>
+												<fmt:message key="Group.groupname">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+												</fmt:message>
 											</td>
 											<td width="79%">
 												<mifos:mifosalphanumtext property="displayName" maxlength="200"/>

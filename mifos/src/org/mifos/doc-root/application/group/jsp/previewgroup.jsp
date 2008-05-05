@@ -227,7 +227,9 @@
                 
                 <tr>
                   <td class="fontnormalbold">
-                  <mifos:mifoslabel name="Group.groupname" bundle="GroupUIResources"></mifos:mifoslabel>
+                  <fmt:message key="Group.groupname">
+                  <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+                  </fmt:message>
                   <span class="fontnormal"> 
 	               <c:out value="${sessionScope.groupCustActionForm.displayName}"/>  
                    <br>
