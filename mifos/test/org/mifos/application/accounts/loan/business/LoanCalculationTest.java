@@ -474,7 +474,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		return loan;
 	}
 
-	public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void xtest999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -486,7 +486,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	 verify that 999 account transactions are logged after last payment is made
-	public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException,
+	public void xtestNegative999Account() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test2.csv";
@@ -494,7 +494,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	 verify that 999 account transactions are logged after last payment is made
-	public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
+	public void xtest999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException
 	{
 		String dataFileName = "account999-test1.csv";
@@ -506,7 +506,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	
 	
 	// no 999account should be logged in this case
-	public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void xtest999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception
 	{
 		String dataFileName = "account999-test3.csv";
@@ -518,7 +518,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	payment is reversed and repay to the last payment
-	public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
+	public void xtest999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -1655,12 +1655,25 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void testAllFlatInterestTestCasesWithGrace() throws Exception 
+	public void xtestAllFlatInterestTestCasesWithGrace() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterestWithGracePeriod/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
 			if (dataFileNames[i].startsWith("test2")) {
+				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+	}
+
+	public void testAllDecliningInterestTestCasesWithGrace() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestWithGracePeriod/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (dataFileNames[i].startsWith("testFlatGracePrincipal")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
