@@ -169,7 +169,7 @@ explanation of the license and how it is applied.
 											</td>
 											<td width="31%" class="drawtablerowboldnolinebg">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.amt" />
-												<%-- FIXME: to be removed to fix issue #1557 -->
+												<%-- FIXME: to be removed to fix issue #1557 --%>
 												(<c:out value="${loanPrdOffering.minLoanAmount}" />-<c:out value="${loanPrdOffering.maxLoanAmount}" />)
 											</td>
 											<td width="35%" class="drawtablerowboldnolinebg">
