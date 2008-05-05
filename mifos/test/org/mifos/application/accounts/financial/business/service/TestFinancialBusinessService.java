@@ -84,7 +84,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		loan.setUserContext(TestUtils.makeUser());
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), "1111",
-				currentDate, new PaymentTypeEntity(Short.valueOf("1")));
+				currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 		FinancialBusinessService financialBusinessService = 
 			new FinancialBusinessService();
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
@@ -393,7 +393,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		loan.setUserContext(TestUtils.makeUser());
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
-				null, new PaymentTypeEntity(Short.valueOf("1")));
+				null, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 		FinancialBusinessService financialBusinessService = 
 			new FinancialBusinessService();
 		AccountActionDateEntity accountActionDateEntity = loan

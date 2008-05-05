@@ -1275,7 +1275,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				customerAccountBO, TestObjectFactory
 						.getMoneyForMFICurrency(300), "1111", currentDate,
-				new PaymentTypeEntity(Short.valueOf("1")));
+				new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,

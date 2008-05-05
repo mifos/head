@@ -168,7 +168,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreview()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null);
+						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");
@@ -186,7 +186,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreviewWithBlankPaymentId()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null);
+						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");		
@@ -204,7 +204,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreviewWithNullPaymentId()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null);
+						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");		
@@ -224,7 +224,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	public void testPreviewDateValidation()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null);
+						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");
@@ -242,7 +242,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreview_withoutReceipt()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
-						.getCurrency(), "500"), null, null, null);
+						.getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "");

@@ -172,7 +172,7 @@ public class CustomerAccountBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
-						.getPaymentTypeId()));
+						.getPaymentTypeId()), new Date(System.currentTimeMillis()));
 		for (AccountPaymentData accountPaymentData : paymentData
 				.getAccountPayments()) {
 			CustomerScheduleEntity accountAction = (CustomerScheduleEntity) getAccountActionDate(accountPaymentData

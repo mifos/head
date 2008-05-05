@@ -1066,7 +1066,7 @@ public class LoanBO extends AccountBO {
 		if (null == accountPaymentEntity) {
 			accountPaymentEntity = new AccountPaymentEntity(this,
 					this.loanAmount, recieptNum, transactionDate,
-					new PaymentTypeEntity(paymentTypeId));
+					new PaymentTypeEntity(paymentTypeId), new Date(System.currentTimeMillis()));
 		}
 		else {
 			accountPaymentEntity.setAmount(this.loanAmount
@@ -1137,7 +1137,7 @@ public class LoanBO extends AccountBO {
 			this.setUpdatedDate(new Date(System.currentTimeMillis()));
 			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 					this, totalAmount, receiptNumber, recieptDate,
-					new PaymentTypeEntity(Short.valueOf(paymentTypeId)));
+					new PaymentTypeEntity(Short.valueOf(paymentTypeId)), new Date(System.currentTimeMillis()));
 			addAccountPayment(accountPaymentEntity);
 
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
@@ -1234,7 +1234,7 @@ public class LoanBO extends AccountBO {
 			this.setUpdatedDate(new Date(System.currentTimeMillis()));
 			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 					this, getEarlyClosureAmount(), null, null,
-					new PaymentTypeEntity(Short.valueOf("1")));
+					new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 			this.addAccountPayment(accountPaymentEntity);
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_WRITTEN_OFF,
@@ -1549,7 +1549,7 @@ public class LoanBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
-						.getPaymentTypeId()));
+						.getPaymentTypeId()), paymentData.getTransactionDate());
 		java.sql.Date paymentDate = new java.sql.Date(paymentData
 				.getTransactionDate().getTime());
 		for (AccountPaymentData accountPaymentData : paymentData
@@ -3207,7 +3207,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				this, totalPayment, recieptNum, recieptDate,
-				new PaymentTypeEntity(paymentTypeId));
+				new PaymentTypeEntity(paymentTypeId), new Date(System.currentTimeMillis()));
 
 		LoanTrxnDetailEntity loanTrxnDetailEntity = null;
 

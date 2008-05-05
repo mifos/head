@@ -957,7 +957,7 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				totalAmount, paymentData.getRecieptNum(), paymentData
 						.getRecieptDate(), new PaymentTypeEntity(paymentData
-						.getPaymentTypeId()));
+						.getPaymentTypeId()), new Date(System.currentTimeMillis()));
 		if (this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_INACTIVE))
 			try {
@@ -1090,7 +1090,7 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				totalAmount, accountPaymentData.getRecieptNum(),
 				accountPaymentData.getRecieptDate(), new PaymentTypeEntity(
-						accountPaymentData.getPaymentTypeId()));
+						accountPaymentData.getPaymentTypeId()), new Date(System.currentTimeMillis()));
 		SavingsTrxnDetailEntity accountTrxnBO;
 		try {
 			accountTrxnBO = new SavingsTrxnDetailEntity(

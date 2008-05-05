@@ -39,6 +39,7 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +52,7 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /*
@@ -85,14 +87,14 @@ public class AccountPaymentEntity extends PersistentObject {
 	private MifosLogger logger;
 
 	protected AccountPaymentEntity() {
-		this(null, null, null, null, null);
+		this(null, null, null, null, null, new Date(System.currentTimeMillis()));
 	}
 
 	public AccountPaymentEntity(AccountBO account, Money amount,
 			String receiptNumber, Date receiptDate,
-			PaymentTypeEntity paymentType) {
+			PaymentTypeEntity paymentType, Date paymentDate) {
 		this.accountTrxns = new HashSet<AccountTrxnEntity>();
-		this.paymentDate = new Date(System.currentTimeMillis());
+		this.paymentDate = paymentDate;
 		this.account = account;
 		this.receiptNumber = receiptNumber;
 		this.paymentType = paymentType;

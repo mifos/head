@@ -211,7 +211,7 @@ public class SavingsHelper {
 			Money amount, PaymentTypeEntity paymentTypeEntity,
 			PersonnelBO createdBy) {
 		AccountPaymentEntity payment = new AccountPaymentEntity(account,
-				amount, null, null, paymentTypeEntity);
+				amount, null, null, paymentTypeEntity, new Date(System.currentTimeMillis()));
 		if (createdBy != null)
 			payment.setCreatedBy(createdBy.getPersonnelId());
 		payment.setCreatedDate(getCurrentDate());

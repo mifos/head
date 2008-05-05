@@ -3980,7 +3980,7 @@ public class TestSavingsBO extends MifosTestCase {
 						.getCurrentDate());
 		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
 				balanceAmount.add(interestAtClosure), null, null,
-				new PaymentTypeEntity(Short.valueOf("1")));
+				new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 		AccountNotesEntity notes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()),
 				"closing account", TestObjectFactory

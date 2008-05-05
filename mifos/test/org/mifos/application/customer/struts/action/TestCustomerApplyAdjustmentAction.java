@@ -207,7 +207,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				accountBO, TestObjectFactory.getMoneyForMFICurrency(100),
-				"1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")));
+				"1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
 //		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(

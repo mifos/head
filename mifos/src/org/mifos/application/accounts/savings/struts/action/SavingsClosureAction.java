@@ -168,7 +168,7 @@ public class SavingsClosureAction extends BaseAction {
 				+ interestAmount.getAmountDoubleValue());
 		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
 				savings.getSavingsBalance().add(interestAmount), null, null,
-				null);
+				null, new java.util.Date(System.currentTimeMillis()));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		((SavingsClosureActionForm) form).setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
@@ -190,18 +190,18 @@ public class SavingsClosureAction extends BaseAction {
 					.getAccount(), payment.getAmount(), actionForm
 					.getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
 					.getTime()), new PaymentTypeEntity(Short.valueOf(actionForm
-					.getPaymentTypeId())));
+					.getPaymentTypeId())), new java.util.Date(System.currentTimeMillis()));
 		else
 		{
 			if(actionForm.getPaymentTypeId() != null && !actionForm.getPaymentTypeId().equals(""))
 			{
 				if(!(actionForm.getPaymentTypeId().equals("")))
-					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())));
+					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())), new java.util.Date(System.currentTimeMillis()));
 				else
-					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity());
+					accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity(), new java.util.Date(System.currentTimeMillis()));
 			}
 			else
-				accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity());
+				accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm.getReceiptId(), null, new PaymentTypeEntity(), new java.util.Date(System.currentTimeMillis()));
 		}
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,
 				accountPaymentEntity, request);
