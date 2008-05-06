@@ -46,4 +46,8 @@ public class TestReportsAction extends MifosMockStrutsTestCase {
 				SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 		assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
 	}
+	
+	public void testSkipConvertFormObjectToBusinessObjectReturnsTrueForAnyMethod() throws Exception {
+		assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
+	}
 }

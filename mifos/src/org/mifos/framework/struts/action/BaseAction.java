@@ -218,17 +218,35 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected boolean isNewBizRequired(HttpServletRequest request)
 			throws ServiceException {
-		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null) {
-			if (getService().getBusinessObject(null) != null
-					&& !(request.getSession().getAttribute(
-							Constants.BUSINESS_KEY).getClass().getName()
-							.equalsIgnoreCase(getService().getBusinessObject(
-									null).getClass().getName()))) {
-				return true;
-			}
-			return false;
+		if (sessionHasBusinessKey(request)) {
+			return serviceReturnsBusinessObject()
+					&& isTypeOfBusinessKeyDifferentToThatFromService(request);
 		}
 		return true;
+	}
+
+	private boolean serviceReturnsBusinessObject() throws ServiceException {
+		return getService().getBusinessObject(null) != null;
+	}
+
+	private boolean isTypeOfBusinessKeyDifferentToThatFromService(
+			HttpServletRequest request) throws ServiceException {
+		return !getClassNameOfBusinessKeyAttribute(request).equalsIgnoreCase(
+				getClassNameOfBusinessObjectFromService());
+	}
+
+	private boolean sessionHasBusinessKey(HttpServletRequest request) {
+		return request.getSession().getAttribute(Constants.BUSINESS_KEY) != null;
+	}
+
+	private String getClassNameOfBusinessObjectFromService()
+			throws ServiceException {
+		return getService().getBusinessObject(null).getClass().getName();
+	}
+
+	private String getClassNameOfBusinessKeyAttribute(HttpServletRequest request) {
+		return request.getSession().getAttribute(Constants.BUSINESS_KEY)
+				.getClass().getName();
 	}
 
 	private BusinessObject getBusinessObjectFromSession(

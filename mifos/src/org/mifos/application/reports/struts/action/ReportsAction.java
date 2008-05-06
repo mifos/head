@@ -108,5 +108,10 @@ public class ReportsAction extends BaseAction {
     	logger.debug("In ReportsAction:getAdminReportPage Method: ");
     	return mapping.findForward("administerreports_path");
     }
+	
+	@Override
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		return true;
+	}
 
 }
