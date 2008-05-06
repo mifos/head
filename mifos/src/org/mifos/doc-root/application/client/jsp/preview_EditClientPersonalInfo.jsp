@@ -90,7 +90,7 @@
 							<td class="fontnormal"><mifos:mifoslabel
 								name="client.CreatePreviewPageInstruction"
 								bundle="ClientUIResources"></mifos:mifoslabel> &nbsp; 
-								<fmt:message key="EditPageCancelInstruction">
+								<fmt:message key="client.EditPageCancelInstruction">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" bundle="ClientUIResources"/></fmt:param>
 								</fmt:message></td>
 						</tr>

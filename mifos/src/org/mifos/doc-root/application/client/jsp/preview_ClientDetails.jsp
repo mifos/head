@@ -176,7 +176,7 @@ explanation of the license and how it is applied.
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td class="fontnormal"><span class="fontnormalbold"> 
-										<fmt:message key="CreatePreviewPageTitle">
+										<fmt:message key="client.CreatePreviewPageTitle">
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /></fmt:param>
 										</fmt:message></span>
 									<c:choose>
@@ -412,16 +412,18 @@ explanation of the license and how it is applied.
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
 										</span>
 										<c:if test="${CenterHierarchyExist == true}">
-										<span class="fontnormalbold"> <mifos:mifoslabel
-											name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
-											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
+										<span class="fontnormalbold"> 
+											<fmt:message key="client.Centers">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+											</fmt:message></span>
 										<span class="fontnormal"><c:out
 											value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /> <br>
 										</span>
 										</c:if>
-										<span class="fontnormalbold"><mifos:mifoslabel
-											name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
-											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
+										<span class="fontnormalbold">
+											<fmt:message key="client.Centers">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+											</fmt:message></span>
 										<span class="fontnormal"> <c:out
 											value="${sessionScope.clientCustActionForm.parentGroup.displayName}" /></span>
 										<span class="fontnormal"><br>

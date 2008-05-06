@@ -235,7 +235,7 @@ explanation of the license and how it is applied.
 												<tr>
 											<td>
 													<span class="fontnormalbold">
-														<fmt:message key="client.assigned">
+														<fmt:message key="client.Centers">
 															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
 														</fmt:message>
 													</span>
@@ -245,7 +245,7 @@ explanation of the license and how it is applied.
 										<tr>
 											<td>
 													<span class="fontnormalbold">
-														<fmt:message key="client.assigned">
+														<fmt:message key="client.Centers">
 															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 														</fmt:message>
 													</span>
@@ -256,7 +256,7 @@ explanation of the license and how it is applied.
 												<c:otherwise><tr>
 											<td>
 													<span class="fontnormalbold">
-														<fmt:message key="client.assigned">
+														<fmt:message key="client.Centers">
 															<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
 														</fmt:message>
 													</span>
