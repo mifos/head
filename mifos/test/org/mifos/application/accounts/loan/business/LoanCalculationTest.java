@@ -1597,6 +1597,7 @@ class LoanTestCaseData {
 								SystemException, ApplicationException, URISyntaxException 
 	{
 
+		System.out.println("Loading Test: " + fileName);
 		LoanTestCaseData testCaseData = loadSpreadSheetData(directoryName + fileName);
 		accountBO = setUpLoan(testCaseData.getInternalConfig(), testCaseData.getLoanParams());
 		// calculated results
@@ -1642,12 +1643,12 @@ class LoanTestCaseData {
 
 	}
 
-	public void xtestAllFlatInterestTestCases() throws Exception 
+	public void testAllFlatInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("testcases-flat-2008-04-24.set1")) {
+			if (dataFileNames[i].startsWith("testcase")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -1668,7 +1669,7 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void testAllDecliningInterestTestCasesWithGrace() throws Exception 
+	public void xtestAllDecliningInterestTestCasesWithGrace() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestWithGracePeriod/";
 		String[] dataFileNames = getCSVFiles(rootPath);
