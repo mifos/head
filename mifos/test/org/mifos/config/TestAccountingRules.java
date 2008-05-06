@@ -1,5 +1,6 @@
 package org.mifos.config;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.apache.commons.configuration.Configuration;
 import org.junit.BeforeClass;
@@ -41,6 +42,129 @@ public class TestAccountingRules  extends MifosTestCase {
 		MifosLogManager.configure(FilePaths.LOGFILE);
 	}
 	
+	@Test 
+	public void testGetCurrencyRoundingMode() {
+		RoundingMode configuredMode = AccountingRules.getCurrencyRoundingMode();
+		String roundingMode = "FLOOR";
+		RoundingMode configRoundingMode = RoundingMode.FLOOR;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, roundingMode);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(configRoundingMode, AccountingRules.getCurrencyRoundingMode());
+		// clear the RoundingRule property from the config file so should get the default value
+		configMgr.clearProperty(AccountingRules.AccountingRulesCurrencyRoundingMode);
+		RoundingMode defaultValue = AccountingRules.getCurrencyRoundingMode();
+		assertEquals(defaultValue, RoundingMode.HALF_UP);
+		// now set a wrong rounding mode in config
+		roundingMode = "UP";
+		configMgr.addProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, roundingMode);
+		try
+		{
+			AccountingRules.getCurrencyRoundingMode();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "CurrencyRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+					+ roundingMode);
+		}
+		// save it back
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, configuredMode);
+		
+	}
+	
+	@Test 
+	public void testGetInitialRoundingMode() {
+		RoundingMode configuredMode = AccountingRules.getInitialRoundingMode();
+		String roundingMode = "FLOOR";
+		RoundingMode configRoundingMode = RoundingMode.FLOOR;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, roundingMode);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(configRoundingMode, AccountingRules.getInitialRoundingMode());
+		// clear the RoundingRule property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundingMode);
+		RoundingMode defaultValue = AccountingRules.getInitialRoundingMode();
+		assertEquals(defaultValue, RoundingMode.FLOOR);
+		// now set a wrong rounding mode in config
+		roundingMode = "UP";
+		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundingMode, roundingMode);
+		try
+		{
+			AccountingRules.getInitialRoundingMode();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "InitialRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+					+ roundingMode);
+		}
+		//		 save it back
+		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, configuredMode);
+		
+	}
+	
+	@Test 
+	public void testGetFinalRoundingMode() {
+		RoundingMode configuredMode = AccountingRules.getFinalRoundingMode();
+		String roundingMode = "CEILING";
+		RoundingMode configRoundingMode = RoundingMode.CEILING;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, roundingMode);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(configRoundingMode, AccountingRules.getFinalRoundingMode());
+		// clear the RoundingRule property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesFinalRoundingMode);
+		RoundingMode defaultValue = AccountingRules.getFinalRoundingMode();
+		assertEquals(defaultValue, RoundingMode.CEILING);
+		// now set a wrong rounding mode in config
+		roundingMode = "DOWN";
+		configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundingMode, roundingMode);
+		try
+		{
+			AccountingRules.getFinalRoundingMode();
+		}
+		catch (RuntimeException e)
+		{
+			assertEquals(e.getMessage(), "FinalRoundingMode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
+					+ roundingMode);
+		}
+		//	save it back
+		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, configuredMode);
+		
+	}
+	
+	@Test 
+	public void testGetFinalRoundOffMultiple() {
+		BigDecimal configuredRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
+		String roundOffMultiple = "0.01";
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, roundOffMultiple);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getFinalRoundOffMultiple());
+		// clear the RoundingRule property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple);
+		BigDecimal defaultValue = AccountingRules.getFinalRoundOffMultiple();
+		assertEquals(defaultValue, new BigDecimal("0.01"));
+		//	save it back
+		configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, configuredRoundOffMultiple);
+		
+	}
+	
+	@Test 
+	public void testGetInitialRoundOffMultiple() {
+		BigDecimal configuredRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
+		String roundOffMultiple = "0.01";
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, roundOffMultiple);
+		// return value from accounting rules class has to be the value defined in the config file
+		assertEquals(new BigDecimal(roundOffMultiple), AccountingRules.getInitialRoundOffMultiple());
+		// clear the RoundingRule property from the config file
+		configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple);
+		BigDecimal defaultValue = AccountingRules.getInitialRoundOffMultiple();
+		assertEquals(defaultValue, new BigDecimal("0.1"));
+		//	save it back
+		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, configuredRoundOffMultiple);
+		
+	}
 	
 	@Test
 	public void testGetMifosCurrency()

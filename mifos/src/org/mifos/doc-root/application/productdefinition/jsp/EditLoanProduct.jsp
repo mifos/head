@@ -954,7 +954,7 @@
 								bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</td>
 							<td valign="top"><html-el:checkbox
-								property="intDedDisbursementFlag" value="1"
+								property="intDedDisbursementFlag" value="1" disabled="true"
 								onclick="fnIntDesbr();" /></td>
 						</tr>
 						<tr class="fontnormal">
@@ -962,7 +962,7 @@
 								name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/>
 							</td>
 							<td valign="top"><html-el:checkbox
-								property="prinDueLastInstFlag" value="1" /></td>
+								property="prinDueLastInstFlag" value="1" disabled="true" /></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel

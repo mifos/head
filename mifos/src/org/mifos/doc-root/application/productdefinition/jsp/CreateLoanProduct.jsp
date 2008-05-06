@@ -989,7 +989,7 @@
 
 
 												<html-el:checkbox property="intDedDisbursementFlag"
-													value="1" onclick="fnIntDesbr();" disabled="false" />
+													value="1" onclick="fnIntDesbr();" disabled="true" />
 											</c:if> <c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '0'}">
 
@@ -1003,7 +1003,7 @@
 												name="product.prinlastinst" bundle="ProductDefUIResources" />
 											:</td>
 											<td valign="top"><html-el:checkbox
-												property="prinDueLastInstFlag" value="1" /></td>
+												property="prinDueLastInstFlag" value="1" disabled="true" /></td>
 										</tr>
 										<tr class="fontnormal" id="gracepertype">
 											<td align="right"><mifos:mifoslabel

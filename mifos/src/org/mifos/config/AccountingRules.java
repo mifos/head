@@ -45,6 +45,16 @@ public class AccountingRules {
 	public static final String AccountingRulesInitialRoundOffMultiple = "AccountingRules.InitialRoundOffMultiple";
 	public static final String AccountingRulesFinalRoundingMode = "AccountingRules.FinalRoundingMode";
 	public static final String AccountingRulesFinalRoundOffMultiple = "AccountingRules.FinalRoundOffMultiple";
+	public static final String AccountingRulesCurrencyRoundingMode = "AccountingRules.CurrencyRoundingMode";
+	
+	// if you change any of the following values please change the test cases to match these values
+	// if any of these configured entries are not defined in the application config file they will get these values
+	private static final BigDecimal defaultInitialRoundOffMultiple = new BigDecimal("0.1");
+	private static final BigDecimal defaultFinalRoundOffMultiple = new BigDecimal("0.01");
+	private static final RoundingMode defaultInitialRoundingMode = RoundingMode.FLOOR;
+	private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
+	private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
+	
 	
 	
 	public static MifosCurrency getMifosCurrency()
@@ -248,6 +258,33 @@ public class AccountingRules {
 		configMgr.setProperty(AccountingRulesRoundingRule, mode.name());
 	}
 	
+	public static void setFinalRoundOffMultiple(BigDecimal finalRoundOffMultiple) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesFinalRoundOffMultiple, finalRoundOffMultiple.toString());
+	}
+
+	public static void setInitialRoundOffMultiple(BigDecimal initialRoundOffMultiple) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesInitialRoundOffMultiple, initialRoundOffMultiple.toString());
+	}
+	
+	public static void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesCurrencyRoundingMode, currencyRoundingMode.name());
+	}
+	
+	public static void setInitialRoundingMode(RoundingMode intialRoundingMode) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesInitialRoundingMode, intialRoundingMode.name());
+	}
+	
+	public static void setFinalRoundingMode(RoundingMode finalRoundingMode) {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		configMgr.setProperty(AccountingRulesFinalRoundingMode, finalRoundingMode.name());
+	}
+
+
+	
 	/**
 	 * Head Office can specify whether/not system will accept back-dated
 	 * transactions. This is an MFI-wide setting and will be applicable to all
@@ -268,80 +305,72 @@ public class AccountingRules {
 	}
 
 	
-	/*
-	 * April 7, 2008 Financial Calculation refactoring work in progress 
-	 */
-	
 	public static RoundingMode getInitialRoundingMode()
 	{
-		RoundingMode mode;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		String returnStr = configMgr.getString(AccountingRulesInitialRoundingMode);
-		if (returnStr.equals("FLOOR")) {
+		String modeStr = configMgr.getString(AccountingRulesInitialRoundingMode);
+		return getRoundingModeFromString(modeStr, "InitialRoundingMode", defaultInitialRoundingMode);
+	}
+	
+	private static RoundingMode getRoundingModeFromString(String modeStr, String type, RoundingMode defaultRoundingMode)
+	{
+		
+		if ((modeStr == null) || (StringUtils.isEmpty(modeStr)))
+		{
+			return defaultRoundingMode;
+		}
+		RoundingMode mode = null;
+		if (modeStr.equals("FLOOR")) {
 			mode = RoundingMode.FLOOR;
-		} else if (returnStr.equals("CEILING")) {
+		} else if (modeStr.equals("CEILING")) {
 			mode = RoundingMode.CEILING;
-		} else if (returnStr.equals("HALF_UP")) {
+		} else if (modeStr.equals("HALF_UP")) {
 			mode = RoundingMode.HALF_UP;
 		} else {
-			throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
-					+ returnStr);
+			throw new RuntimeException(type + " defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
+					+ modeStr);
 		}
 		return mode;
 	}
 	
 	public static RoundingMode getFinalRoundingMode()
 	{
-		RoundingMode mode;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		String returnStr = configMgr.getString(AccountingRulesFinalRoundingMode);
-		if (returnStr.equals("FLOOR")) {
-			mode = RoundingMode.FLOOR;
-		} else if (returnStr.equals("CEILING")) {
-			mode = RoundingMode.CEILING;
-		} else if (returnStr.equals("HALF_UP")) {
-			mode = RoundingMode.HALF_UP;
-		} else {
-			throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
-					+ returnStr);
+		String modeStr = configMgr.getString(AccountingRulesFinalRoundingMode);
+		return getRoundingModeFromString(modeStr, "FinalRoundingMode", defaultFinalRoundingMode);
+	}
+
+	
+	private static BigDecimal getRoundOffMultipleFromString(String roundOffStr, String type, BigDecimal defaultRoundOffMultiple)
+	{
+		if ((roundOffStr == null) || (StringUtils.isEmpty(roundOffStr)))
+		{
+			return defaultRoundOffMultiple;
 		}
-		return mode;
+		BigDecimal roundOffMultiple =  new BigDecimal(roundOffStr);
+		return roundOffMultiple;
 	}
 	
-	private static RoundingMode currencyRoundingMode = RoundingMode.CEILING;
-	private static BigDecimal initialRoundOffMultiple = null;
-	private static BigDecimal finalRoundOffMultiple = null;
-	
-	/*
-	 * The methods below need to be refactored to use the ConfigurationManager to store
-	 * their values
-	 */
 	public static BigDecimal getInitialRoundOffMultiple() {
-		return initialRoundOffMultiple;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String modeStr = configMgr.getString(AccountingRulesInitialRoundOffMultiple);
+		return getRoundOffMultipleFromString(modeStr, "InitialRoundOffMultiple", defaultInitialRoundOffMultiple);
 	}
-
+	
 	public static BigDecimal getFinalRoundOffMultiple() {
-		return finalRoundOffMultiple;
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String modeStr = configMgr.getString(AccountingRulesFinalRoundOffMultiple);
+		return getRoundOffMultipleFromString(modeStr, "FinalRoundOffMultiple", defaultFinalRoundOffMultiple);
 	}
 
-	public static void setFinalRoundOffMultiple(BigDecimal finalRoundOffMultiple) {
-		AccountingRules.finalRoundOffMultiple = finalRoundOffMultiple;
+	public static RoundingMode getCurrencyRoundingMode()
+	{
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		String modeStr = configMgr.getString(AccountingRulesCurrencyRoundingMode);
+		return getRoundingModeFromString(modeStr, "CurrencyRoundingMode", defaultCurrencyRoundingMode);
 	}
 
-	public static void setInitialRoundOffMultiple(BigDecimal initialRoundOffMultiple) {
-		AccountingRules.initialRoundOffMultiple = initialRoundOffMultiple;
-	}
-
-
-	public static RoundingMode getCurrencyRoundingMode() {
-		return currencyRoundingMode;
-	}
-
-
-	public static void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
-		AccountingRules.currencyRoundingMode = currencyRoundingMode;
-	}
-
+	
 
 	// refactor this later
 	/*
