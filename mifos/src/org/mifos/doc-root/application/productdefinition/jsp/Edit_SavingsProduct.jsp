@@ -357,7 +357,7 @@
 								<td width="30%" align="right">
 									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
 									<fmt:message key="product.productRate">
-									<fmt:message><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:message>
+									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
 								</td>
 								<td width="70%" valign="top">

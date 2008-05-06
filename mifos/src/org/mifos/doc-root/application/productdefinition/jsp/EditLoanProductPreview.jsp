@@ -456,8 +456,7 @@
 									<c:out value="${InterestTypes.name}" />
 								</c:if>
 							</c:forEach> </span> <br>
-							<fmt:message key="product.maxRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.maxRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
@@ -466,8 +465,7 @@
 								value="${sessionScope.loanproductactionform.maxInterestRate}" />
 							<mifos:mifoslabel name="product.perc"
 								bundle="ProductDefUIResources" /></span> <br>
-							<fmt:message key="product.minRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.minRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
@@ -476,8 +474,7 @@
 								value="${sessionScope.loanproductactionform.minInterestRate}" />
 							<mifos:mifoslabel name="product.perc"
 								bundle="ProductDefUIResources" /></span> <br>
-							<fmt:message key="product.defaultRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.defaultRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>

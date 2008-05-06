@@ -275,7 +275,7 @@
 										</c:forEach> 
 										 </span>
 									<br>
-									<fmt:message name="product.glCodeFor">
+									<fmt:message key="product.glCodeFor">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources"/></fmt:param>
 									</fmt:message>:
 									<span class="fontnormal"> 
@@ -293,7 +293,7 @@
 							<tr>
 								<td class="blueline">
 									<span class="fontnormal"> <html-el:button property="edit" styleClass="insidebuttn" onclick="fnEdit()">
-											<fmt:message name="product.editSavingsInfo">
+											<fmt:message key="product.editSavingsInfo">
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 											</fmt:message>
 										</html-el:button> <br> <br> </span>
