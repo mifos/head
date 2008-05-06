@@ -202,7 +202,7 @@
 
 										</c:if>
 									</c:forEach> </span> <br>
-									<fmt:message key="inclInLoanCycleCounter">
+									<fmt:message key="product.inclInLoanCycleCounter">
 									<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}"
 										bundle="ProductDefUIResources" /></fmt:param>

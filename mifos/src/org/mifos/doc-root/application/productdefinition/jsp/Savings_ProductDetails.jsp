@@ -239,7 +239,7 @@
 												<c:out value="${BusinessKey.freqOfPostIntcalc.meeting.meetingDetails.recurAfter}" />
 												<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 												<br>
-												<fmt:message name="product.minBalForCalc">
+												<fmt:message key="product.minBalForCalc">
 												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 												</fmt:message>:
 												<c:out value="${BusinessKey.minAmntForInt}" />

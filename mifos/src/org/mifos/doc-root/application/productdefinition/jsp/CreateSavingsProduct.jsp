@@ -141,7 +141,7 @@
 								<td class="headingorange">
 									<span class="heading"> <mifos:mifoslabel name="product.addnew" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.product"
 											bundle="ProductDefUIResources" /> - </span>
-									<fmt:message key="enterSavingsProductInfo">
+									<fmt:message key="product.enterSavingsProductInfo">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
 								</td>
@@ -335,7 +335,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top">
-									//Mandatory
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
 									<fmt:message key="product.timePerCalc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
@@ -396,7 +396,7 @@
 							</tr>
 							<tr class="fontnormal">
 								<td align="right" valign="top" style="padding-top:8px;">
-									//Mandatory
+									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
 									<fmt:message key="product.glCodeFor">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources"/></fmt:param>
 									</fmt:message>:

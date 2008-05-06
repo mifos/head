@@ -606,8 +606,7 @@
 						<tr class="fontnormal">
 							<td align="right">
 							<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-							<fmt:message key="product.maxRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.maxRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
@@ -620,8 +619,7 @@
 						<tr class="fontnormal">
 							<td align="right">
 							<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-							<fmt:message key="product.minRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.minRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
@@ -633,8 +631,7 @@
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><span class="mandatorytext">*</span> 
-							<fmt:message key="product.defaultRate"
-								bundle="ProductDefUIResources" />
+							<fmt:message key="product.defaultRate">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>

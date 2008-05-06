@@ -400,7 +400,7 @@
 							<tr class="fontnormal">
 								<td align="right" valign="top">
 									<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-									<fmt:message key="freqPostAcc">
+									<fmt:message key="product.freqPostAcc">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>:
 								</td>

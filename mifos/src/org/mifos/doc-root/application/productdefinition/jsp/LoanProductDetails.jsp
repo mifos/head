@@ -296,7 +296,10 @@ explanation of the license and how it is applied.
 													<c:otherwise>
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
-												</c:choose> <br> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.deductedatdis" bundle="ProductDefUIResources" />: <c:choose>
+												</c:choose> <br> 
+												<fmt:message key="product.deductedatdis">
+												<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+												</fmt:message>: <c:choose>
 													<c:when test="${loanPrd.intDedDisbursement}">
 														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
 													</c:when>

@@ -60,7 +60,7 @@
 					<table width="98%" border="0" cellspacing="0" cellpadding="3">
 						<tr>
 							<td class="headingorange">
-								<fmt:message key="marginMoneySuccessLoan">
+								<fmt:message key="product.marginMoneySuccessLoan">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>
 								<br>
@@ -71,7 +71,7 @@
 							<td class="fontnormalbold">
 								<mifos:mifoslabel name="product.plsnote" bundle="ProductDefUIResources" isColonRequired="yes" />
 								<span class="fontnormal"> 
-								<fmt:message key="product.produceAssignedId">
+								<fmt:message key="product.productAssignedId">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</span>
 								<c:out value="${requestScope.loanprdglobalofferingnum}" />
