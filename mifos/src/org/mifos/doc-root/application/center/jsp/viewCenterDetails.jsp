@@ -10,6 +10,11 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
+
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -484,17 +489,17 @@
 								src="pages/framework/images/trans.gif" width="10" height="2"></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}" /><mifos:mifoslabel
-								name="Center.s" bundle="CenterUIResources" isColonRequired="yes" />
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								<fmt:message key="Center.hashof">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+								</fmt:message>:
 							<c:out value="${performanceHistory.numberOfClients}" /></span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Group.hashof" bundle="GroupUIResources" /> <mifos:mifoslabel
-								name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel
-								name="Center.s" bundle="CenterUIResources" isColonRequired="yes" />
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								<fmt:message key="Center.hashof">
+								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+								</fmt:message>:
 							<c:out value="${performanceHistory.numberOfGroups}" /></span></td>
 						</tr>
 						<tr>
