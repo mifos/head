@@ -55,7 +55,7 @@ explanation of the license and how it is applied.
 	    <return-scalar column="roleName" type="string"/> 	    
 		<return-scalar column="personnelCount" type="integer"/>
 		<![CDATA[select r.role_id as roleId, role_name as roleName, count(office_personnel_role.personnel_id) as personnelCount 
-				from role r left outer join 
+				from role r inner join 
 				    (select p.personnel_id, prole.role_id 
 				     from personnel p, personnel_role prole 
 				     where p.personnel_id = prole.personnel_id

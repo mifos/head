@@ -37,7 +37,6 @@ explanation of the license and how it is applied.
 		<property name="activeLoansCount" column="ACTIVE_LOANS" access="field"/>
 		<property name="centerCount" column="CENTER_COUNT" access="field"/>
 		<property name="clientCount" column="CLIENT_COUNT" access="field"/>
-		<property name="newGroupCount" column="NEW_GROUP_COUNT" access="field"/>
 		<property name="loanAmountOutstanding" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
 			<column name="LOAN_AMOUNT_OUTSTANDING_CURRENCY_ID"/> 
 			<column name="LOAN_AMOUNT_OUTSTANDING"/> 
@@ -47,6 +46,12 @@ explanation of the license and how it is applied.
 			<column name="INTEREST_FEES_OUTSTANDING"/>
 		</property>
 		<property name="portfolioAtRisk" column="PORTFOLIO_AT_RISK" access="field"/>
+		<property name="totalClientsEnrolled" column="TOTAL_CLIENTS_ENROLLED" access="field"/>
+		<property name="clientsEnrolledThisMonth" column="CLiENTS_ENROLLED_THIS_MONTH" access="field"/>
+		<property name="loanArrearsAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="LOAN_ARREARS_AMOUNT_CURRENCY_ID"/> 
+			<column name="LOAN_ARREARS_AMOUNT"/> 
+		</property>		
 		
 		<many-to-one name="branchReport" column="BRANCH_REPORT_ID" access="field"
 			class="org.mifos.application.branchreport.BranchReportBO">
@@ -71,7 +76,7 @@ explanation of the license and how it is applied.
 	    <return-scalar column="activeBorrowersCount" type="integer"/>
 	    <return-scalar column="activeLoansCount" type="integer"/>
 	    <![CDATA[select personnel.PERSONNEL_ID as personnelId, personnel.DISPLAY_NAME as personnelName,
-	      			personnel_details.DATE_OF_JOINING_BRANCH as personnelJoiningDate, 
+	      			personnel_details.DATE_OF_JOINING_MFI as personnelJoiningDate, 
 					ifnull(staff_summary.activeBorrowersCount,0) as activeBorrowersCount,
 					ifnull(staff_summary.activeLoansCount,0) as activeLoansCount					
 					from personnel left join 
@@ -88,6 +93,7 @@ explanation of the license and how it is applied.
 				    where personnel.PERSONNEL_ID=personnel_details.PERSONNEL_ID
 				    and personnel.OFFICE_ID=:officeId
 				    and personnel.PERSONNEL_STATUS=1
+				    and personnel.LEVEL_ID = 1
 	          ]]>
 	</sql-query>
 	
@@ -106,21 +112,7 @@ explanation of the license and how it is applied.
 					group by c.LOAN_OFFICER_ID
                  ]]>
 	</sql-query>
-	<sql-query name="branchReport.extractGroupJoinedInCurrentMonth">
-		<return-scalar column="personnelId" type="short"/>
-		<return-scalar column="newGroupCount" type="integer"/>
-		<![CDATA[
-			SELECT p.PERSONNEL_ID as personnelId, COUNT(c.CUSTOMER_ID) as newGroupCount
-				FROM PERSONNEL p,CUSTOMER c
-				WHERE p.PERSONNEL_ID = c.LOAN_OFFICER_ID
-			    AND p.PERSONNEL_STATUS=1				
-				AND p.OFFICE_ID=:officeId
-				AND c.CUSTOMER_LEVEL_ID=2 
-				AND c.MFI_JOINING_DATE between DATE(CONCAT(YEAR(CURRENT_DATE),'-',MONTH(CURRENT_DATE),'-01')) and 
-					LAST_DAY(CURRENT_DATE)
-				GROUP BY p.PERSONNEL_ID
-		]]>
-	</sql-query>	
+
 	<sql-query name="branchReport.extractLoanAmountOutstanding">
 		<return-scalar column="personnelId" type="short"/>
 		<return-scalar column="loanAmountOutstanding" type="big_decimal"/>
@@ -170,4 +162,40 @@ explanation of the license and how it is applied.
 			GROUP BY p1.PERSONNEL_ID
 		]]>
 	</sql-query>
+	
+	<sql-query name="branchReport.extractTotalClientsFormedByPersonnel">
+		<return-scalar column="personnelId" type="short"/>	
+		<return-scalar column="totalClientsFormed" type="integer"/>	
+		<![CDATA[
+		    select customer_formedby_id as personnelId, count(customer_formedby_id) as totalClientsFormed
+		     from customer where customer_formedby_id in (:personnelIdList)
+		     and customer.customer_level_id = 1
+		    group by customer_formedby_id
+		]]>
+	</sql-query>
+
+	<sql-query name="branchReport.extractTotalClientsFormedByPersonnelThisMonth">
+		<return-scalar column="personnelId" type="short"/>	
+		<return-scalar column="clientsFormedThisMonth" type="integer"/>	
+		<![CDATA[
+		    select customer_formedby_id as personnelId, count(customer_formedby_id) as clientsFormedThisMonth
+		     from customer c where customer_formedby_id in (:personnelIdList)
+   		     and c.customer_level_id = 1
+		     and c.customer_activation_date between DATE(CONCAT(YEAR(CURRENT_DATE),'-',MONTH(CURRENT_DATE),'-01')) and 
+					LAST_DAY(CURRENT_DATE)
+		    group by customer_formedby_id
+		]]>
+	</sql-query>	
+
+	<sql-query name="branchReport.extractLoanArrearsAmountForPersonnel">
+		<return-scalar column="personnelId" type="short"/>	
+		<return-scalar column="loanArrearsAmount" type="big_decimal"/>	
+		<![CDATA[
+			select c.loan_officer_id as personnelId, round(sum(laa.overdue_balance),2) as loanArrearsAmount
+			from customer c, loan_arrears_aging laa
+			where laa.customer_id = c.customer_id
+			and c.loan_officer_id in (:personnelIdList)
+			group by c.loan_officer_id
+		]]>
+	</sql-query>	
 </hibernate-mapping>

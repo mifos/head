@@ -21,9 +21,16 @@ package org.mifos.application.branchreport.persistence;
 
 import static org.mifos.framework.util.helpers.MoneyFixture.createMoney;
 
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
@@ -36,15 +43,32 @@ import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import static org.easymock.classextension.EasyMock.*;
 
 public class BranchReportPersistenceTest extends BranchReportTestCase {
 
+	private static final Short LOAN_OFFICER_ID_SHORT = Short.valueOf("3");
+	private static final String TOTAL_STAFF_ROLENAME_STR = "Total Staff";
 	private static final Short BRANCH_ID = Short.valueOf("1");
 	private Session session;
 	private Transaction transaction;
@@ -150,6 +174,114 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 		assertTrue(staffSummary.isEmpty());
 	}
 
+	public void testPopulateCustomersFormedByLoanOfficerReturnsIfSummaryListIsEmpty()
+			throws Exception {
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(true);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateTotalClientsEnrolledByPersonnel(staffSummariesMock);
+		verify(staffSummariesMock);
+	}
+
+	public void testPopulateCustomersFormedByLoanOfficerReadsSummaries()
+			throws Exception {
+		HashSet<Short> personnelIds = new HashSet<Short>();
+		personnelIds.add(LOAN_OFFICER_ID_SHORT);
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(false);
+		expect(staffSummariesMock.keySet()).andReturn(personnelIds);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateTotalClientsEnrolledByPersonnel(staffSummariesMock);
+		verify(staffSummariesMock);
+	}
+
+	private Map<Short, BranchReportStaffSummaryBO> createStaffSummariesMap() {
+		Set<BranchReportStaffSummaryBO> staffSummaries = branchReportWithStaffSummary
+				.getStaffSummaries();
+		HashMap<Short, BranchReportStaffSummaryBO> map = new HashMap<Short, BranchReportStaffSummaryBO>();
+		for (BranchReportStaffSummaryBO summaryBO : staffSummaries) {
+			map.put(summaryBO.getPersonnelId(), summaryBO);
+		}
+		return map;
+	}
+
+	public void testPopulateCustomersFormedBySetsTotalClientsEnrolledBy()
+			throws Exception {
+		Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
+		branchReportPersistence
+				.populateTotalClientsEnrolledByPersonnel(staffSummaries);
+		assertNull(org.apache.commons.collections.CollectionUtils.find(
+				staffSummaries.values(), new Predicate() {
+					public boolean evaluate(Object object) {
+						return !Integer.valueOf(0).equals(
+								((BranchReportStaffSummaryBO) object)
+										.getTotalClientsEnrolled());
+					}
+				}));
+	}
+
+	public void testPopulateCustomersFormedThisMonthSetsCustomersEnrolledThisMonth()
+			throws Exception {
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(true);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateClientsEnrolledByPersonnelThisMonth(staffSummariesMock);
+		verify(staffSummariesMock);
+	}
+
+	public void testPopulateCustomersEnrolledByLoanOfficerThisMonthReadsSummaries()
+			throws Exception {
+		HashSet<Short> personnelIds = new HashSet<Short>();
+		personnelIds.add(LOAN_OFFICER_ID_SHORT);
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(false);
+		expect(staffSummariesMock.keySet()).andReturn(personnelIds);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateClientsEnrolledByPersonnelThisMonth(staffSummariesMock);
+		verify(staffSummariesMock);
+	}
+
+	public void testPopulateLoanArrearsAmountReturnsIfSummaryListisEmpty()
+			throws Exception {
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(true);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateLoanArrearsAmountForPersonnel(staffSummariesMock, DEFAULT_CURRENCY);
+		verify(staffSummariesMock);
+	}
+
+	public void testPopulateLoanArrearsAmountReadsSummaries() throws Exception {
+		HashSet<Short> personnelIds = new HashSet<Short>();
+		personnelIds.add(LOAN_OFFICER_ID_SHORT);
+		HashMap staffSummariesMock = createMock(HashMap.class);
+		expect(staffSummariesMock.isEmpty()).andReturn(false);
+		expect(staffSummariesMock.keySet()).andReturn(personnelIds);
+		replay(staffSummariesMock);
+		branchReportPersistence
+				.populateLoanArrearsAmountForPersonnel(staffSummariesMock, DEFAULT_CURRENCY);
+		verify(staffSummariesMock);
+	}
+
+	public void testPopulateLoanArrearsAmountSetsLoanArrearsAmount()
+			throws Exception {
+		Map<Short, BranchReportStaffSummaryBO> staffSummaries = createStaffSummariesMap();
+		branchReportPersistence
+				.populateLoanArrearsAmountForPersonnel(staffSummaries, DEFAULT_CURRENCY);
+		assertNull(org.apache.commons.collections.CollectionUtils.find(
+				staffSummaries.values(), new Predicate() {
+					public boolean evaluate(Object object) {
+						return !BigDecimal.ZERO.setScale(DEFAULT_CURRENCY.getDefaultDigitsAfterDecimal()).equals(
+								((BranchReportStaffSummaryBO) object)
+										.getLoanArrearsAmount());
+					}
+				}));		
+	}
+	
 	public void testRetrieveLoanArrearsAging() throws Exception {
 		BranchReportLoanArrearsAgingBO loanArrears = branchReportPersistence
 				.extractLoanArrearsAgingInfoInPeriod(
@@ -189,12 +321,33 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 
 	public void testExtractStaffingSummaryLevels() throws Exception {
 		List<BranchReportStaffingLevelSummaryBO> staffingLevels = branchReportPersistence
-				.extractBranchReportStaffingLevelSummary(Short.valueOf("3"));
-		assertEquals(3, staffingLevels.size());
+				.extractBranchReportStaffingLevelSummary(LOAN_OFFICER_ID_SHORT);
+		assertEquals(2, staffingLevels.size());
+		assertNull("Should not extract roles with zero personnel count",
+				org.apache.commons.collections.CollectionUtils.find(
+						staffingLevels, new Predicate() {
+							public boolean evaluate(Object arg0) {
+								BranchReportStaffingLevelSummaryBO summary = (BranchReportStaffingLevelSummaryBO) arg0;
+								return !TOTAL_STAFF_ROLENAME_STR.equals(summary
+										.getRolename())
+										&& Integer.valueOf(0).equals(
+												(summary).getPersonnelCount());
+							}
+						}));
 		for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevels) {
-			if ("Total Staff".equals(summaryBO.getRolename())) {
+			if (TOTAL_STAFF_ROLENAME_STR.equals(summaryBO.getRolename())) {
 				assertEquals(Integer.valueOf(2), summaryBO.getPersonnelCount());
 			}
+		}
+	}
+	
+	public void testExtractStaffSummaryGetsOnlyLoanOfficers() throws Exception {
+		List<BranchReportStaffSummaryBO> staffSummaries = branchReportPersistence
+				.extractBranchReportStaffSummary(BRANCH_ID, Integer
+						.valueOf(1), DEFAULT_CURRENCY);
+		for (BranchReportStaffSummaryBO summaryBO : staffSummaries) {
+			PersonnelLevel retrievedPersonnelLevel = new PersonnelBusinessService().getPersonnel(summaryBO.getPersonnelId()).getLevelEnum();
+			assertEquals(PersonnelLevel.LOAN_OFFICER, retrievedPersonnelLevel);
 		}
 	}
 

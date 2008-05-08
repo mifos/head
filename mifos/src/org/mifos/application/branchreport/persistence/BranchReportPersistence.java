@@ -65,6 +65,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.Closure;
+import org.hibernate.Query;
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportClientSummaryBO;
@@ -74,6 +77,7 @@ import org.mifos.application.branchreport.BranchReportLoanDetailsBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
@@ -169,22 +173,78 @@ public class BranchReportPersistence extends Persistence {
 			throws PersistenceException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(OFFICEID, branchId);
-		List queryResults = executeNamedQuery(
+		List<Object[]> queryResults = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_ACTIVE_BORROWERS_LOANS,
 				params);
 		Map<Short, BranchReportStaffSummaryBO> staffSummaries = new HashMap<Short, BranchReportStaffSummaryBO>();
-		for (Object queryResult : queryResults) {
+		for (Object[] queryResult : queryResults) {
 			BranchReportStaffSummaryBO staffSummary = createStaffSummaryFromResultset(
-					(Object[]) queryResult, currency);
+					queryResult, currency);
 			staffSummaries.put(staffSummary.getPersonnelId(), staffSummary);
 		}
 		populateCustomerCounts(staffSummaries, params);
-		populateNewGroupJoinedCount(staffSummaries, params);
+		populateTotalClientsEnrolledByPersonnel(staffSummaries);
+		populateClientsEnrolledByPersonnelThisMonth(staffSummaries);
 		populateOutstandingAmounts(staffSummaries, branchId, currency);
 		params.put(DAYS_IN_ARREARS, daysInArrears);
 		populatePortfolioAtRiskPercentage(staffSummaries, params);
+		populateLoanArrearsAmountForPersonnel(staffSummaries, currency);
 		return new ArrayList<BranchReportStaffSummaryBO>(staffSummaries
 				.values());
+	}
+
+	void populateTotalClientsEnrolledByPersonnel(
+			Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+		//		MySql can't handle empty list in "IN clause"
+		//		See http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045
+		if (staffSummaries.isEmpty())
+			return;
+		Query query = populateQueryWithPersonnelIds(
+				NamedQueryConstants.EXTRACT_BRANCH_REPORT_TOTAL_CLIENTS_ENROLLED_BY_PERSONNEL,
+				staffSummaries);
+		runStaffSummaryQueryClosure(query,
+				new TotalClientsFormedByPersonnelClosure(staffSummaries));
+	}
+
+	void populateClientsEnrolledByPersonnelThisMonth(
+			Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+		//		MySql can't handle empty list in "IN clause"
+		//		See http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045		
+		if (staffSummaries.isEmpty())
+			return;
+		Query query = populateQueryWithPersonnelIds(
+				NamedQueryConstants.EXTRACT_BRANCH_REPORT_CLIENTS_ENROLLED_BY_PERSONNEL_THIS_MONTH,
+				staffSummaries);
+		runStaffSummaryQueryClosure(query,
+				new ClientsFormedByPersonnelThisMonthClosure(staffSummaries));
+	}
+
+	void populateLoanArrearsAmountForPersonnel(
+			Map<Short, BranchReportStaffSummaryBO> staffSummaries, MifosCurrency currency) {
+		//		MySql can't handle empty list in "IN clause"
+		//		See http://opensource.atlassian.com/projects/hibernate/browse/HHH-2045		
+		if (staffSummaries.isEmpty())
+			return;
+		Query query = populateQueryWithPersonnelIds(
+				NamedQueryConstants.EXTRACT_BRANCH_REPORT_LOAN_ARREARS_AMOUNT_FOR_PERSONNEL,
+				staffSummaries);
+		runStaffSummaryQueryClosure(query, new LoanArrearsAmountForPersonnel(
+				staffSummaries, currency));
+	}	
+
+	private void runStaffSummaryQueryClosure(Query query, Closure closure) {
+		List<Object[]> resultSet = runQuery(query);
+		for (Object[] result : resultSet) {
+			closure.execute(result);
+		}
+	}
+
+	private Query populateQueryWithPersonnelIds(String queryString,
+			Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+		Query query = createdNamedQuery(queryString);
+		query.setParameterList(QueryParamConstants.PERSONNEL_ID_LIST,
+				new ArrayList<Short>(staffSummaries.keySet()));
+		return query;
 	}
 
 	public BigDecimal extractPortfolioAtRiskForOffice(OfficeBO office,
@@ -237,11 +297,13 @@ public class BranchReportPersistence extends Persistence {
 	}
 
 	public BranchReportLoanArrearsProfileBO extractLoansArrearsProfileForBranch(
-			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) throws PersistenceException {
+			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk)
+			throws PersistenceException {
 
 		List<Object[]> riskListResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK,
-				populateQueryParamsWithBranchCurrencyRiskDays(branchId, currency, daysInArrearsForRisk));
+				populateQueryParamsWithBranchCurrencyRiskDays(branchId,
+						currency, daysInArrearsForRisk));
 		LoanArrearsProfileForLoansAtRisk profileForLoansAtRisk = riskListResult
 				.isEmpty() ? new LoanArrearsProfileForLoansAtRisk(currency)
 				: new LoanArrearsProfileForLoansAtRisk(riskListResult.get(0),
@@ -282,7 +344,7 @@ public class BranchReportPersistence extends Persistence {
 		}
 	}
 
-	private void populateOutstandingAmounts(
+	void populateOutstandingAmounts(
 			Map<Short, BranchReportStaffSummaryBO> staffSummaries,
 			Short branchId, MifosCurrency currency) throws PersistenceException {
 		List<Object[]> resultSet = executeNamedQuery(
@@ -295,19 +357,6 @@ public class BranchReportPersistence extends Persistence {
 					(BigDecimal) outstandingAmounts[1]));
 			staffSummary.setInterestAndFeesAmountOutstanding(createMoney(
 					currency, (BigDecimal) outstandingAmounts[2]));
-		}
-	}
-
-	private void populateNewGroupJoinedCount(
-			Map<Short, BranchReportStaffSummaryBO> staffSummaries,
-			Map<String, Object> params) throws PersistenceException {
-		List<Object[]> resultSet = executeNamedQuery(
-				EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_NEW_GROUP_JOINED_COUNT,
-				params);
-		for (Object[] newGroupCount : resultSet) {
-			BranchReportStaffSummaryBO staffSummary = staffSummaries
-					.get(newGroupCount[0]);
-			staffSummary.setNewGroupCount((Integer) newGroupCount[1]);
 		}
 	}
 
@@ -333,8 +382,9 @@ public class BranchReportPersistence extends Persistence {
 		return new BranchReportStaffSummaryBO((Short) resultSet[0],
 				(String) resultSet[1], (Date) resultSet[2],
 				(Integer) resultSet[3], (Integer) resultSet[4],
-				NumberUtils.ZERO, NumberUtils.ZERO, NumberUtils.ZERO,
-				zero(currency), zero(currency), BigDecimal.ZERO);
+				NumberUtils.ZERO, NumberUtils.ZERO, 
+				zero(currency), zero(currency), BigDecimal.ZERO, Integer
+						.valueOf(0), Integer.valueOf(0), zero(currency));
 	}
 
 	private Map<String, Object> populateQueryParams(Short branchId, Date runDate) {
@@ -363,7 +413,7 @@ public class BranchReportPersistence extends Persistence {
 				branchId, currency);
 		params.put(QueryParamConstants.DAYS_IN_ARREARS, daysInArrearsForRisk);
 		return params;
-	}	
+	}
 
 	private static class LoanArrearsProfileForBranch {
 		private Integer loansInArrears;
@@ -404,6 +454,66 @@ public class BranchReportPersistence extends Persistence {
 					(BigDecimal) resultSet[1]);
 			overdueAmountAtRisk = createMoney(currency,
 					(BigDecimal) resultSet[2]);
+		}
+	}
+	
+	private static class TotalClientsFormedByPersonnelClosure extends
+			ResultSetClosureForPersonnel {
+
+		TotalClientsFormedByPersonnelClosure(
+				Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+			super(staffSummaries);
+		}
+
+		public void execute(Object arg) {
+			Object[] result = (Object[]) arg;
+			staffSummaries.get(result[0]).setTotalClientsEnrolled(
+					(Integer) result[1]);
+		}
+	}
+
+	private static class ClientsFormedByPersonnelThisMonthClosure extends
+			ResultSetClosureForPersonnel {
+
+		ClientsFormedByPersonnelThisMonthClosure(
+				Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+			super(staffSummaries);
+		}
+
+		public void execute(Object arg) {
+			Object[] result = (Object[]) arg;
+			staffSummaries.get(result[0]).setClientsEnrolledThisMonth(
+					(Integer) result[1]);
+		}
+	}
+
+	private static class LoanArrearsAmountForPersonnel extends
+			ResultSetClosureForPersonnel {
+
+		private final MifosCurrency currency;
+
+		LoanArrearsAmountForPersonnel(
+				Map<Short, BranchReportStaffSummaryBO> staffSummaries, MifosCurrency currency) {
+			super(staffSummaries);
+			this.currency = currency;
+		}
+
+		public void execute(Object arg) {
+			Object[] result = (Object[]) arg;
+			staffSummaries.get(result[0]).setLoanArrearsAmount(
+					createMoney(currency,
+										(BigDecimal) result[1])
+					);
+		}
+	}
+
+	private static abstract class ResultSetClosureForPersonnel implements
+			Closure {
+		protected final Map<Short, BranchReportStaffSummaryBO> staffSummaries;
+
+		ResultSetClosureForPersonnel(
+				Map<Short, BranchReportStaffSummaryBO> staffSummaries) {
+			this.staffSummaries = staffSummaries;
 		}
 	}
 }

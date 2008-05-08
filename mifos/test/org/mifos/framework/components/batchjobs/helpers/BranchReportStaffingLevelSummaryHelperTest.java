@@ -19,16 +19,15 @@
  */
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.mifos.application.branchreport.BranchReportBO;
 import org.mifos.application.branchreport.BranchReportBOFixture;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.reports.business.service.BranchReportService;
-import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -50,22 +49,16 @@ public class BranchReportStaffingLevelSummaryHelperTest extends MifosTestCase {
 			throws ServiceException {
 		Set<BranchReportStaffingLevelSummaryBO> staffingLevelSummaries = branchReport
 				.getStaffingLevelSummaries();
-		List<RoleBO> roles = new RolesPermissionsBusinessService().getRoles();
-		roles.add(new RoleBO() {
-			@Override
-			public String getName() {
-				return BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME;
-			}
-		});
-		assertEquals(roles.size(), staffingLevelSummaries.size());
-		ArrayList<String> retrievedRolenames = new ArrayList<String>();
-		for (BranchReportStaffingLevelSummaryBO summaryBO : staffingLevelSummaries) {
-			retrievedRolenames.add(summaryBO.getRolename());
-		}
-		for (RoleBO role : roles) {
-			assertTrue(role.getName() + " not found", retrievedRolenames
-					.contains(role.getName()));
-		}
-		
+		assertEquals(1, staffingLevelSummaries.size());
+		Collection retrievedRolenames = CollectionUtils.collect(
+				staffingLevelSummaries, new Transformer() {
+					public Object transform(Object input) {
+						return ((BranchReportStaffingLevelSummaryBO) input)
+								.getRolename();
+					}
+				});
+		assertEquals(1, retrievedRolenames.size());
+		assertTrue(retrievedRolenames
+				.contains(BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME));
 	}
 }

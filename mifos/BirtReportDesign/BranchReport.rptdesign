@@ -654,23 +654,33 @@ return true;]]></method>
                 </structure>
                 <structure>
                     <property name="position">7</property>
-                    <property name="name">tmg_count</property>
-                    <property name="dataType">integer</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
                     <property name="name">loans_amount_outstanding</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">fees_interest_amount_outstanding</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">par</property>
                     <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">total_clients_formed</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">clients_formed_this_month</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">loan_arrears_amount</property>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
             <list-property name="columnHints">
@@ -693,9 +703,6 @@ return true;]]></method>
                     <property name="columnName">active_loans_count</property>
                 </structure>
                 <structure>
-                    <property name="columnName">tmg_count</property>
-                </structure>
-                <structure>
                     <property name="columnName">loans_amount_outstanding</property>
                 </structure>
                 <structure>
@@ -703,6 +710,15 @@ return true;]]></method>
                 </structure>
                 <structure>
                     <property name="columnName">par</property>
+                </structure>
+                <structure>
+                    <property name="columnName">total_clients_formed</property>
+                </structure>
+                <structure>
+                    <property name="columnName">clients_formed_this_month</property>
+                </structure>
+                <structure>
+                    <property name="columnName">loan_arrears_amount</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -739,23 +755,33 @@ return true;]]></method>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">tmg_count</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
                         <property name="name">loans_amount_outstanding</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">fees_interest_amount_outstanding</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">par</property>
                         <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">total_clients_formed</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">clients_formed_this_month</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">loan_arrears_amount</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -772,13 +798,15 @@ return true;]]></method>
 	var staffSummary = staffSummaryIterator.next();    
 	row["personnel_name"] = staffSummary.getPersonnelName();
 	row["joining_date"] = staffSummary.getJoiningDateStr();
+	row["total_clients_formed"]  = staffSummary.getTotalClientsEnrolled();
+	row["clients_formed_this_month"]  = staffSummary.getClientsEnrolledThisMonth();
 	row["center_count"] = staffSummary.getCenterCount();
 	row["clients_count"] = staffSummary.getClientCount();
 	row["active_borrowers_count"] = staffSummary.getActiveBorrowersCount();
 	row["active_loans_count"] = staffSummary.getActiveLoansCount();	
-	row["tmg_count"] = staffSummary.getNewGroupCount();
 	row["loans_amount_outstanding"] = staffSummary.getLoanAmountOutstanding();
 	row["fees_interest_amount_outstanding"] = staffSummary.getInterestAndFeesAmountOutstanding();
+	row["loan_arrears_amount"] = staffSummary.getLoanArrearsAmount();
 	row["par"] = staffSummary.getPortfolioAtRisk();
 	return true;
 }catch(e){
@@ -5219,39 +5247,62 @@ return true;]]></method>
                                 <expression name="expression">dataSetRow["tmg_count"]</expression>
                                 <property name="dataType">integer</property>
                             </structure>
+                            <structure>
+                                <property name="name">total_clients_formed</property>
+                                <expression name="expression">dataSetRow["total_clients_formed"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">clients_formed_this_month</property>
+                                <expression name="expression">dataSetRow["clients_formed_this_month"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">loan_arrears_amount</property>
+                                <expression name="expression">dataSetRow["loan_arrears_amount"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
                         </list-property>
-                        <column id="260"/>
+                        <column id="260">
+                            <property name="width">1.3125in</property>
+                        </column>
                         <column id="261">
-                            <property name="width">3cm</property>
+                            <property name="width">0.6875in</property>
+                        </column>
+                        <column id="594">
+                            <property name="width">0.4375in</property>
+                        </column>
+                        <column id="599">
+                            <property name="width">0.8020833333in</property>
                         </column>
                         <column id="262">
-                            <property name="width">2.25cm</property>
+                            <property name="width">0.9583333333in</property>
                         </column>
                         <column id="263">
-                            <property name="width">2.25cm</property>
+                            <property name="width">0.8333333333in</property>
                         </column>
                         <column id="264">
-                            <property name="width">2.75cm</property>
+                            <property name="width">0.90625in</property>
                         </column>
                         <column id="265">
-                            <property name="width">2.5cm</property>
-                        </column>
-                        <column id="266">
-                            <property name="width">1.5cm</property>
+                            <property name="width">0.7291666667in</property>
                         </column>
                         <column id="267">
-                            <property name="width">3cm</property>
+                            <property name="width">1.34375in</property>
                         </column>
                         <column id="268">
-                            <property name="width">3cm</property>
+                            <property name="width">1.34375in</property>
+                        </column>
+                        <column id="609">
+                            <property name="width">1.1354166667in</property>
                         </column>
                         <column id="269">
-                            <property name="width">2.5cm</property>
+                            <property name="width">0.7395833333in</property>
                         </column>
                         <header>
                             <row id="283">
                                 <cell id="284">
-                                    <property name="colSpan">10</property>
+                                    <property name="colSpan">12</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">tableSubheader</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -5316,28 +5367,7 @@ return true;]]></method>
                                         <text-property name="text" key="branch.report.staff.summary.joining.date">Joining Date</text-property>
                                     </label>
                                 </cell>
-                                <cell id="230">
-                                    <property name="colSpan">5</property>
-                                    <property name="rowSpan">1</property>
-                                    <property name="style">fieldText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <property name="textAlign">center</property>
-                                    <label id="296">
-                                        <text-property name="text" key="branch.report.staff.summary.number">Number</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="235">
+                                <cell id="591">
                                     <property name="colSpan">2</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">fieldText</property>
@@ -5354,8 +5384,31 @@ return true;]]></method>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">center</property>
-                                    <label id="302">
-                                        <text-property name="text" key="branch.report.staff.summary.loans.outstanding">Loans Outstanding</text-property>
+                                    <label id="600">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text" key="branch.report.staff.summary.clients.formed">Clients Formed</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="230">
+                                    <property name="colSpan">7</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="296">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text" key="branch.report.staff.summary.handled">Handled</text-property>
                                     </label>
                                 </cell>
                                 <cell id="237">
@@ -5382,6 +5435,44 @@ return true;]]></method>
                                 </cell>
                             </row>
                             <row id="271">
+                                <cell id="592">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="601">
+                                        <text-property name="text">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="597">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="602">
+                                        <text-property name="text">Current Month</text-property>
+                                    </label>
+                                </cell>
                                 <cell id="535">
                                     <property name="style">fieldText</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -5398,7 +5489,7 @@ return true;]]></method>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">center</property>
                                     <label id="297">
-                                        <text-property name="text" key="branch.report.staff.summary.number.centers">Centers</text-property>
+                                        <text-property name="text" key="branch.report.staff.summary.centers">Kendras</text-property>
                                     </label>
                                 </cell>
                                 <cell id="275">
@@ -5458,25 +5549,6 @@ return true;]]></method>
                                         <text-property name="text" key="branch.report.staff.summary.number.active.loans">Active Loans</text-property>
                                     </label>
                                 </cell>
-                                <cell id="277">
-                                    <property name="style">fieldText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <property name="textAlign">center</property>
-                                    <label id="301">
-                                        <text-property name="text" key="branch.report.staff.summary.number.tmg">TMG</text-property>
-                                    </label>
-                                </cell>
                                 <cell id="278">
                                     <property name="style">fieldText</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -5493,7 +5565,7 @@ return true;]]></method>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">center</property>
                                     <label id="303">
-                                        <text-property name="text" key="branch.report.staff.summary.loans.outstanding.amount">Amount</text-property>
+                                        <text-property name="text" key="branch.report.staff.summary.loans.portfolio.amount">Portfolio Amount</text-property>
                                     </label>
                                 </cell>
                                 <cell id="279">
@@ -5512,7 +5584,26 @@ return true;]]></method>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">center</property>
                                     <label id="304">
-                                        <text-property name="text" key="branch.report.staff.summary.loans.outstanding.interest.fees">Interest &amp; Fees</text-property>
+                                        <text-property name="text" key="branch.report.staff.summary.loans.outstanding.interest">Interest Outstanding</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="607">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="610">
+                                        <text-property name="text" key="branch.report.staff.summary.arrears.amount">Arrears Amount</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -5554,6 +5645,44 @@ return true;]]></method>
                                     <property name="textAlign">center</property>
                                     <data id="307">
                                         <property name="resultSetColumn">joining_date</property>
+                                    </data>
+                                </cell>
+                                <cell id="593">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <data id="603">
+                                        <property name="resultSetColumn">total_clients_formed</property>
+                                    </data>
+                                </cell>
+                                <cell id="598">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <data id="604">
+                                        <property name="resultSetColumn">clients_formed_this_month</property>
                                     </data>
                                 </cell>
                                 <cell id="241">
@@ -5632,25 +5761,6 @@ return true;]]></method>
                                         <property name="resultSetColumn">active_loans_count</property>
                                     </data>
                                 </cell>
-                                <cell id="245">
-                                    <property name="style">valueText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <property name="textAlign">right</property>
-                                    <data id="313">
-                                        <property name="resultSetColumn">tmg_count</property>
-                                    </data>
-                                </cell>
                                 <cell id="246">
                                     <property name="style">numberFormat</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -5693,6 +5803,25 @@ return true;]]></method>
                                             <property name="category">Unformatted</property>
                                         </structure>
                                         <property name="resultSetColumn">fees_interest_amount_outstanding</property>
+                                    </data>
+                                </cell>
+                                <cell id="608">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">right</property>
+                                    <data id="611">
+                                        <property name="resultSetColumn">loan_arrears_amount</property>
                                     </data>
                                 </cell>
                                 <cell id="248">

@@ -41,16 +41,19 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 	private Date joiningDate;
 	private Integer centerCount;
 	private Integer clientCount;
-	private Integer newGroupCount;
 	private Money loanAmountOutstanding;
 	private Money interestAndFeesAmountOutstanding;
 	private BigDecimal portfolioAtRisk;
+	private Integer totalClientsEnrolled;
+	private Integer clientsEnrolledThisMonth;
+	private Money loanArrearsAmount;
 
 	public BranchReportStaffSummaryBO(Short personnelId, String personnelName,
 			Date joiningDate, Integer borrowersCount, Integer activeLoansCount,
-			Integer centerCount, Integer clientCount, Integer newGroupCount,
+			Integer centerCount, Integer clientCount, 
 			Money loanAmountOutstanding,
-			Money interestAndFeesAmountOutstanding, BigDecimal portfolioAtRisk) {
+			Money interestAndFeesAmountOutstanding, BigDecimal portfolioAtRisk,
+			Integer totalClientsEnrolled, Integer clientsEnrolledThisMonth, Money loanArrearsAmount) {
 		this.personnelId = personnelId;
 		this.joiningDate = joiningDate;
 		this.activeBorrowersCount = borrowersCount;
@@ -58,10 +61,12 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 		this.personnelName = personnelName;
 		this.centerCount = centerCount;
 		this.clientCount = clientCount;
-		this.newGroupCount = newGroupCount;
 		this.loanAmountOutstanding = loanAmountOutstanding;
 		this.interestAndFeesAmountOutstanding = interestAndFeesAmountOutstanding;
 		this.portfolioAtRisk = portfolioAtRisk;
+		this.totalClientsEnrolled = totalClientsEnrolled;
+		this.clientsEnrolledThisMonth = clientsEnrolledThisMonth;
+		this.loanArrearsAmount = loanArrearsAmount;
 	}
 
 	protected BranchReportStaffSummaryBO() {
@@ -99,20 +104,12 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 		this.clientCount = clientCount;
 	}
 
-	public void setNewGroupCount(Integer newGroupCount) {
-		this.newGroupCount = newGroupCount;
-	}
-
 	public Integer getCenterCount() {
 		return centerCount;
 	}
 
 	public Integer getClientCount() {
 		return clientCount;
-	}
-
-	public Integer getNewGroupCount() {
-		return newGroupCount;
 	}
 
 	public BigDecimal getLoanAmountOutstanding() {
@@ -140,41 +137,48 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 		return portfolioAtRisk;
 	}
 
+	public void setTotalClientsEnrolled(Integer totalClientsFormedBy) {
+		this.totalClientsEnrolled = totalClientsFormedBy;
+	}
+
+	public Integer getTotalClientsEnrolled() {
+		return totalClientsEnrolled;
+	}
+
+	public void setClientsEnrolledThisMonth(Integer clientsFormedByThisMonth) {
+		this.clientsEnrolledThisMonth = clientsFormedByThisMonth;
+	}
+	
+	public Integer getClientsEnrolledThisMonth() {
+		return clientsEnrolledThisMonth;
+	}
+	
+	public void setLoanArrearsAmount(Money loanArrearsAmount) {
+		this.loanArrearsAmount = loanArrearsAmount;
+	}	
+	
+	public BigDecimal getLoanArrearsAmount() {
+		return getMoneyAmount(loanArrearsAmount);
+	}	
+
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
-		int result = 1;
-		result = PRIME
-				* result
-				+ ((activeBorrowersCount == null) ? 0 : activeBorrowersCount
-						.hashCode());
-		result = PRIME
-				* result
-				+ ((activeLoansCount == null) ? 0 : activeLoansCount.hashCode());
-		result = PRIME * result
-				+ ((centerCount == null) ? 0 : centerCount.hashCode());
-		result = PRIME * result
-				+ ((clientCount == null) ? 0 : clientCount.hashCode());
-		result = PRIME
-				* result
-				+ ((interestAndFeesAmountOutstanding == null) ? 0
-						: interestAndFeesAmountOutstanding.hashCode());
-		result = PRIME * result
-				+ ((joiningDate == null) ? 0 : joiningDate.hashCode());
-		result = PRIME
-				* result
-				+ ((loanAmountOutstanding == null) ? 0 : loanAmountOutstanding
-						.hashCode());
-		result = PRIME * result
-				+ ((newGroupCount == null) ? 0 : newGroupCount.hashCode());
-		result = PRIME * result
-				+ ((personnelId == null) ? 0 : personnelId.hashCode());
-		result = PRIME * result
-				+ ((personnelName == null) ? 0 : personnelName.hashCode());
-		result = PRIME * result
-				+ ((portfolioAtRisk == null) ? 0 : portfolioAtRisk.hashCode());
-		result = PRIME * result
-				+ ((staffSummaryId == null) ? 0 : staffSummaryId.hashCode());
+		int result = super.hashCode();
+		result = PRIME * result + ((activeBorrowersCount == null) ? 0 : activeBorrowersCount.hashCode());
+		result = PRIME * result + ((activeLoansCount == null) ? 0 : activeLoansCount.hashCode());
+		result = PRIME * result + ((centerCount == null) ? 0 : centerCount.hashCode());
+		result = PRIME * result + ((clientCount == null) ? 0 : clientCount.hashCode());
+		result = PRIME * result + ((clientsEnrolledThisMonth == null) ? 0 : clientsEnrolledThisMonth.hashCode());
+		result = PRIME * result + ((interestAndFeesAmountOutstanding == null) ? 0 : interestAndFeesAmountOutstanding.hashCode());
+		result = PRIME * result + ((joiningDate == null) ? 0 : joiningDate.hashCode());
+		result = PRIME * result + ((loanAmountOutstanding == null) ? 0 : loanAmountOutstanding.hashCode());
+		result = PRIME * result + ((loanArrearsAmount == null) ? 0 : loanArrearsAmount.hashCode());
+		result = PRIME * result + ((personnelId == null) ? 0 : personnelId.hashCode());
+		result = PRIME * result + ((personnelName == null) ? 0 : personnelName.hashCode());
+		result = PRIME * result + ((portfolioAtRisk == null) ? 0 : portfolioAtRisk.hashCode());
+		result = PRIME * result + ((staffSummaryId == null) ? 0 : staffSummaryId.hashCode());
+		result = PRIME * result + ((totalClientsEnrolled == null) ? 0 : totalClientsEnrolled.hashCode());
 		return result;
 	}
 
@@ -182,8 +186,6 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final BranchReportStaffSummaryBO other = (BranchReportStaffSummaryBO) obj;
@@ -211,12 +213,17 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 		}
 		else if (!clientCount.equals(other.clientCount))
 			return false;
+		if (clientsEnrolledThisMonth == null) {
+			if (other.clientsEnrolledThisMonth != null)
+				return false;
+		}
+		else if (!clientsEnrolledThisMonth.equals(other.clientsEnrolledThisMonth))
+			return false;
 		if (interestAndFeesAmountOutstanding == null) {
 			if (other.interestAndFeesAmountOutstanding != null)
 				return false;
 		}
-		else if (!interestAndFeesAmountOutstanding
-				.equals(other.interestAndFeesAmountOutstanding))
+		else if (!interestAndFeesAmountOutstanding.equals(other.interestAndFeesAmountOutstanding))
 			return false;
 		if (joiningDate == null) {
 			if (other.joiningDate != null)
@@ -230,11 +237,11 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 		}
 		else if (!loanAmountOutstanding.equals(other.loanAmountOutstanding))
 			return false;
-		if (newGroupCount == null) {
-			if (other.newGroupCount != null)
+		if (loanArrearsAmount == null) {
+			if (other.loanArrearsAmount != null)
 				return false;
 		}
-		else if (!newGroupCount.equals(other.newGroupCount))
+		else if (!loanArrearsAmount.equals(other.loanArrearsAmount))
 			return false;
 		if (personnelId == null) {
 			if (other.personnelId != null)
@@ -259,6 +266,12 @@ public class BranchReportStaffSummaryBO extends BusinessObject {
 				return false;
 		}
 		else if (!staffSummaryId.equals(other.staffSummaryId))
+			return false;
+		if (totalClientsEnrolled == null) {
+			if (other.totalClientsEnrolled != null)
+				return false;
+		}
+		else if (!totalClientsEnrolled.equals(other.totalClientsEnrolled))
 			return false;
 		return true;
 	}

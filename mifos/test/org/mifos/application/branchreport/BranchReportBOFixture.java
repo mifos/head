@@ -48,7 +48,8 @@ public class BranchReportBOFixture {
 				branchId, runDate);
 		BranchReportStaffSummaryBO staffSummary = createBranchReportStaffSummaryBO(
 				PERSONNEL_ID, BRANCH_PERSONNEL_NAME, null, ZERO, ZERO, ZERO,
-				ZERO, ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+				ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+				Integer.valueOf(0), Integer.valueOf(0), BigDecimal.ZERO);
 		branchReportWithStaffSummary.addStaffSummary(staffSummary);
 		return branchReportWithStaffSummary;
 	}
@@ -66,17 +67,27 @@ public class BranchReportBOFixture {
 	public static BranchReportStaffSummaryBO createBranchReportStaffSummaryBO() {
 		return createBranchReportStaffSummaryBO(PERSONNEL_ID,
 				BRANCH_PERSONNEL_NAME, null, Integer.valueOf(2), Integer
-						.valueOf(3), ZERO, ZERO, ZERO, BigDecimal.valueOf(0),
-				BigDecimal.valueOf(0), BigDecimal.ZERO);
+						.valueOf(3), ZERO, ZERO, BigDecimal.valueOf(0),
+				BigDecimal.valueOf(0), BigDecimal.ZERO, Integer.valueOf(0),
+				Integer.valueOf(0), BigDecimal.ZERO);
 	}
+	
+	public static BranchReportStaffSummaryBO createBranchReportStaffSummaryBO(Short personnelId) {
+		return createBranchReportStaffSummaryBO(personnelId,
+				BRANCH_PERSONNEL_NAME, null, Integer.valueOf(2), Integer
+						.valueOf(3), ZERO, ZERO, BigDecimal.valueOf(0),
+				BigDecimal.valueOf(0), BigDecimal.ZERO, Integer.valueOf(0),
+				Integer.valueOf(0), BigDecimal.ZERO);
+	}	
 
-	private static BranchReportStaffSummaryBO createBranchReportStaffSummaryBO(
+	public static BranchReportStaffSummaryBO createBranchReportStaffSummaryBO(
 			Short personnelId, String personnelDisplayName, Date joiningDate,
 			Integer borrowersCount, Integer activeLoansCount,
-			Integer centerCount, Integer clientsCount, Integer newGroupCount,
+			Integer centerCount, Integer clientsCount, 
 			BigDecimal loanAmountOutstanding,
 			BigDecimal interestAndFeesAmountOutstanding,
-			BigDecimal portfolioAtRisk) {
+			BigDecimal portfolioAtRisk, Integer totalClientsFormedBy,
+			Integer clientsFormedByThisMonth, BigDecimal loanArrearsAmount) {
 		return new BranchReportStaffSummaryBO(
 				personnelId,
 				personnelDisplayName,
@@ -85,10 +96,10 @@ public class BranchReportBOFixture {
 				activeLoansCount,
 				centerCount,
 				clientsCount,
-				newGroupCount,
 				createMoney(DEFAULT_CURRENCY, loanAmountOutstanding),
 				createMoney(DEFAULT_CURRENCY, interestAndFeesAmountOutstanding),
-				portfolioAtRisk);
+				portfolioAtRisk, totalClientsFormedBy,
+				clientsFormedByThisMonth, createMoney(DEFAULT_CURRENCY, loanArrearsAmount));
 	}
 
 	public static BranchReportStaffingLevelSummaryBO createStaffingLevelBO(
