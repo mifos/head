@@ -32,13 +32,11 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -51,6 +49,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -333,6 +332,50 @@ public class LoanCalculationTest extends MifosTestCase {
 	/****************************************************************************/
 	/****************************************************************************/
 	/****************************************************************************/
+	private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName, 
+			int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment) throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException 
+	{
+
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		Results calculatedResults = new Results();
+		InternalConfiguration config = testCaseData.getInternalConfig();
+		LoanParameters loanParams = testCaseData.getLoanParams();
+		accountBO = setUpLoanFor999AccountTestLastPaymentReversal(config, loanParams, calculatedResults, paymentToReverse, payLastPayment);
+		
+		Set<AccountPaymentEntity> paymentList = ((LoanBO)accountBO).getAccountPayments();
+		int i=0;
+		for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) 
+		{
+			AccountPaymentEntity payment = paymentIterator.next();
+			Set<AccountTrxnEntity> transactionList = payment.getAccountTrxns();
+			for (AccountTrxnEntity transaction : transactionList)
+			{
+				Set<FinancialTransactionBO> list = ((LoanTrxnDetailEntity)transaction).getFinancialTransactions();
+				for (Iterator<FinancialTransactionBO> iterator = list.iterator(); iterator.hasNext();) 
+				{
+					FinancialTransactionBO financialTransaction = iterator.next();
+					if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
+							|| financialTransaction.getPostedAmount().negate().equals(testCaseData.getExpectedResult().getAccount999()))
+					{
+						i++;
+						String debitOrCredit = "Credit";
+						if (financialTransaction.getDebitCreditFlag() == 0)
+							debitOrCredit = "Debit";
+						System.out.println("Posted amount: " + financialTransaction.getPostedAmount().getAmountDoubleValue() +
+								           " Debit/Credit: " + debitOrCredit +
+								           " GLCode: " + financialTransaction.getGlcode().getGlcode() +
+								           " Transaction Id: " + financialTransaction.getTrxnId());
+					}
+	
+				}
+			}
+		}
+		
+		assertEquals(i, expected999AccountTransactions);
+
+	}
+	
 	private void runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(String fileName, 
 			int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment) throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
@@ -377,9 +420,166 @@ public class LoanCalculationTest extends MifosTestCase {
 
 	}
 	
-	private AccountBO setUpLoanFor999AccountTestLoanReversal(InternalConfiguration config, LoanParameters loanParams, 
-			Results calculatedResults, int paymentToReverse, boolean payLastPayment) throws
+	private void verifyReversedLastPaymentLoanSchedules(LoanScheduleEntity[] schedules, Results expectedResults)
+	{
+		List<PaymentDetail> list = expectedResults.getPayments();
+		assertEquals(list.size(), schedules.length);
+		for (int i=0; i < schedules.length; i++)
+		{
+			if (i == schedules.length - 1)
+			{
+				Money zeroAmount = new Money("0");
+				assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
+				assertEquals(schedules[i].getPaymentDate(), null);
+				assertEquals(schedules[i].isPaid(), false);
+			}
+			else
+			{
+				assertEquals(schedules[i].isPaid(), true);
+			}
+			verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
+		}
+		
+	}
+	
+	private void setUpLoanAndVerifyForScheduleGenerationWhenLastPaymentIsReversed(InternalConfiguration config, LoanParameters loanParams, 
+			Results expectedResults) throws
 	AccountException, PersistenceException, MeetingException
+	{
+		
+		accountBO = setUpLoanWithoutFees(config, loanParams);
+		PaymentData paymentData = null;
+        Set<AccountActionDateEntity> actionDateEntities = accountBO
+		.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+        // before any payment is made
+        printLoanScheduleEntities(paymentsArray);
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
+        
+        LoanScheduleEntity loanSchedule = null;
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+        
+		for (int i = 0; i < paymentsArray.length; i++) {
+			loanSchedule = paymentsArray[i];
+            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+			accountBO.applyPayment(paymentData, true);
+		}
+		
+		new TestObjectPersistence().persist(accountBO);
+		actionDateEntities = accountBO.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+		// after all payments are made
+		printLoanScheduleEntities(paymentsArray);
+		List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
+		Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
+		for (AccountPaymentEntity payment : accountPayments)
+			list.add(payment);
+		accountBO.setAccountPayments(list);
+		accountBO.adjustLastPayment("Adjust last payment");
+		new TestObjectPersistence().persist(accountBO);
+		accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
+		assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this is the last payment reversed so amount is 0
+		actionDateEntities = accountBO.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+		//		 after last payment is reversed
+		printLoanScheduleEntities(paymentsArray);
+		verifyReversedLastPaymentLoanSchedules(paymentsArray, expectedResults);
+		
+
+	}
+	
+	private void runOneLoanScheduleGenerationForLastPaymentReversal(String fileName)
+					throws NumberFormatException, PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException 
+	
+	{
+
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		InternalConfiguration config = testCaseData.getInternalConfig();
+		LoanParameters loanParams = testCaseData.getLoanParams();
+		setUpLoanAndVerifyForScheduleGenerationWhenLastPaymentIsReversed(config, loanParams, testCaseData.expectedResult);
+		
+	}
+	
+	private void runOneLoanScheduleGenerationForLoanReversal(String fileName) 
+		throws NumberFormatException, PropertyNotFoundException, SystemException, ApplicationException, URISyntaxException 
+	
+	{
+	
+		LoanTestCaseData testCaseData = loadSpreadSheetData(fileName);
+		InternalConfiguration config = testCaseData.getInternalConfig();
+		LoanParameters loanParams = testCaseData.getLoanParams();
+		setUpLoanAndVerifyForScheduleGenerationWhenLoanIsReversed(config, loanParams, testCaseData.expectedResult);
+	
+	}
+	
+	private void verifyScheduleAndPaymentDetail(LoanScheduleEntity schedule, PaymentDetail payment)
+	{
+		assertEquals(schedule.getPrincipal(), payment.getPrincipal());
+		assertEquals(schedule.getInterest(), payment.getInterest());
+		assertEquals(schedule.getTotalFeeDue(), payment.getFee());
+	}
+	
+	private void verifyReversedLoanSchedules(LoanScheduleEntity[] schedules, Results expectedResults)
+	{
+		List<PaymentDetail> list = expectedResults.getPayments();
+		assertEquals(list.size(), schedules.length);
+		for (int i=0; i < schedules.length; i++)
+		{
+			Money zeroAmount = new Money("0");
+			assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
+			assertEquals(schedules[i].getPaymentDate(), null);
+			assertEquals(schedules[i].isPaid(), false);
+			verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
+		}
+		
+	}
+	
+	private void setUpLoanAndVerifyForScheduleGenerationWhenLoanIsReversed(InternalConfiguration config, LoanParameters loanParams, 
+			Results expectedResults) throws
+	AccountException, PersistenceException, MeetingException
+	{
+		
+		accountBO = setUpLoanWithoutFees(config, loanParams);
+		PaymentData paymentData = null;
+        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+        // before any payment is made
+        printLoanScheduleEntities(paymentsArray);
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
+        
+        LoanScheduleEntity loanSchedule = null;
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+        
+		for (int i = 0; i < paymentsArray.length; i++) {
+			loanSchedule = paymentsArray[i];
+            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+			accountBO.applyPayment(paymentData, true);
+		}
+		
+		new TestObjectPersistence().persist(accountBO);
+		actionDateEntities = accountBO.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+		// after all payments are made
+		printLoanScheduleEntities(paymentsArray);
+		// reverse loan
+		((LoanBO)accountBO).reverseLoanDisbursal(personnelBO, "Reverse this loan for testing");
+		new TestObjectPersistence().persist(accountBO);
+		actionDateEntities = accountBO.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+		verifyReversedLoanSchedules(paymentsArray, expectedResults);
+		List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
+		// every payment is reversed so amount is 0
+		for (AccountPaymentEntity payment : accountPayments)
+			assertEquals(payment.getAmount(), new Money("0"));  
+	
+	}
+	
+	private AccountBO setUpLoanWithoutFees(InternalConfiguration config, LoanParameters loanParams) throws
+			AccountException, PersistenceException, MeetingException
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
 		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
@@ -428,11 +628,21 @@ public class LoanCalculationTest extends MifosTestCase {
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
 				new FundBO(), feeViewList, null);
+		
+		return loan;
        
+	}
+	
+	
+	private AccountBO setUpLoanFor999AccountTestLoanReversal(InternalConfiguration config, LoanParameters loanParams, 
+			Results calculatedResults, int paymentToReverse, boolean payLastPayment) throws
+	AccountException, PersistenceException, MeetingException
+	{
+		
+		AccountBO loan = setUpLoanWithoutFees(config, loanParams);
 		
 		PaymentData paymentData = null;
-        Set<AccountActionDateEntity> actionDateEntities = loan
-		.getAccountActionDates();
+        Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
 				loanParams.getNumberOfPayments());
         PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
@@ -447,18 +657,61 @@ public class LoanCalculationTest extends MifosTestCase {
 			loan.applyPayment(paymentData, true);
 			if (i==(paymentToReverse-1))
 				break;
-			
 		}
+		
 		boolean lastPayment = paymentToReverse == paymentsArray.length;
 		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
 		new TestObjectPersistence().persist(loan);
+		((LoanBO)loan).reverseLoanDisbursal(personnelBO, "Test 999 account for loan reversal");
+		new TestObjectPersistence().persist(loan);
+		
+		return loan;
+	}
+	
+	private AccountBO setUpLoanFor999AccountTestLastPaymentReversal(InternalConfiguration config, LoanParameters loanParams, 
+			Results calculatedResults, int paymentToReverse, boolean payLastPayment) throws
+	AccountException, PersistenceException, MeetingException
+	{
+		
+		AccountBO loan = setUpLoanWithoutFees(config, loanParams);
+		
+		PaymentData paymentData = null;
+        Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
+				loanParams.getNumberOfPayments());
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
+        
+        LoanScheduleEntity loanSchedule = null;
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+        
+		for (int i = 0; i < paymentsArray.length; i++) {
+			loanSchedule = paymentsArray[i];
+            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+			loan.applyPayment(paymentData, true);
+			if (i==(paymentToReverse-1))
+				break;
+		}
+		
+		boolean lastPayment = paymentToReverse == paymentsArray.length;
+		calculatedResults.setAccount999(((LoanBO)loan).calculate999Account(lastPayment));
+		new TestObjectPersistence().persist(loan);
+		actionDateEntities = loan.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
 		List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
+		assertEquals(accountPayments.size(), paymentToReverse);
 		Set<AccountPaymentEntity> list = new LinkedHashSet<AccountPaymentEntity>();
 		for (AccountPaymentEntity payment : accountPayments)
 			list.add(payment);
 		loan.setAccountPayments(list);
 		loan.adjustLastPayment("Adjust last payment");
 		new TestObjectPersistence().persist(loan);
+		accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
+		assertEquals(accountPayments.get(0).getAmount(), new Money("0")); // this is the last payment reversed so amount is 0
+		actionDateEntities = loan.getAccountActionDates();
+		paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, loanParams.getNumberOfPayments());
+		assertEquals(paymentsArray[paymentToReverse-1].getPrincipalPaid(),  new Money("0"));		
+		
 		if (payLastPayment)
 		{
 			for (int i = paymentToReverse -1; i < paymentsArray.length; i++) {
@@ -473,8 +726,23 @@ public class LoanCalculationTest extends MifosTestCase {
 		
 		return loan;
 	}
+	
+	public void xtestLoanScheduleGenerationWhenLastPaymentIsReversed() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception 
+	{
+		String dataFileName = "account999-test3.csv";
+		runOneLoanScheduleGenerationForLastPaymentReversal(rootPath + dataFileName);
+	}
+	
+	public void xtestLoanScheduleGenerationWhenLoanIsReversed() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception 
+	{
+		String dataFileName = "account999-test3.csv";
+		runOneLoanScheduleGenerationForLoanReversal(rootPath + dataFileName);
+	}
 
-	public void xtest999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	
+	public void xtest999AccountForLoanReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -482,6 +750,17 @@ public class LoanCalculationTest extends MifosTestCase {
 		int paymentToReverse = 3;
 		boolean payLastPayment = false;
 		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+				paymentToReverse, payLastPayment);	
+	}
+	
+	public void xtest999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception 
+	{
+		String dataFileName = "account999-test3.csv";
+		int expected999AccountTransactions = 4;
+		int paymentToReverse = 3;
+		boolean payLastPayment = false;
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName, expected999AccountTransactions,
 				paymentToReverse, payLastPayment);	
 	}
 	
@@ -513,7 +792,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		int expected999AccountTransactions = 0;
 		int paymentToReverse = 2;
 		boolean payLastPayment = false;
-		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName, expected999AccountTransactions,
 				paymentToReverse, payLastPayment);	
 	}
 	
@@ -525,7 +804,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		int expected999AccountTransactions = 2;
 		int paymentToReverse = 2;
 		boolean payLastPayment = true;
-		runOne999AccountTestCaseWithDataFromSpreadSheetForLoanReversal(rootPath + dataFileName, expected999AccountTransactions,
+		runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(rootPath + dataFileName, expected999AccountTransactions,
 				paymentToReverse, payLastPayment);	
 	}
 	
@@ -672,7 +951,25 @@ public class LoanCalculationTest extends MifosTestCase {
 		runOne999AccountTestCaseWithDataFromSpreadSheet(rootPath + dataFileName);	
 	}
 	
-	
+	private void printLoanScheduleEntities(LoanScheduleEntity[] loanSchedules)
+	{
+		for (int i=0; i < loanSchedules.length; i++)
+		{
+			System.out.println("Loan Schedule #: " + (i+1));
+			System.out.println("Principal:   " + loanSchedules[i].getPrincipal().getAmountDoubleValue());
+			System.out.println("Principal Paid:   " +  loanSchedules[i].getPrincipalPaid().getAmountDoubleValue());
+			System.out.println("Total Due:   " + loanSchedules[i].getTotalDue().getAmountDoubleValue());
+			if (loanSchedules[i].getPaymentDate() != null)
+			{
+				System.out.println("Payment Date:   " + loanSchedules[i].getPaymentDate().toString());
+			}
+			else
+			{
+				System.out.println("Payment Date: null");
+			}
+			System.out.println("Is paid:   " +  loanSchedules[i].isPaid());
+		}		
+	}
 	
 	
 	/* end of of 999 account testing */
