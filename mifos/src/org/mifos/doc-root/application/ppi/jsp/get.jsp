@@ -100,6 +100,17 @@ explanation of the license and how it is applied.
                 </td>
                 <td>&nbsp;</td>
             </tr>
+            <tr>
+                <td height="22" class="drawtablerow">
+                <mifos:mifoslabel name="PPI.Band.NonPoor" bundle="PPIUIResources" />
+                </td>
+                <td align="left" class="drawtablerow">
+                <c:out value="${retrievedSurvey.nonPoorMin}"/>
+                -
+                <c:out value="${retrievedSurvey.nonPoorMax}"/>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
             </table>              
             <br></td>
             <td valign="top" align="right"><br><html-el:link action="ppiAction.do?method=configure">
