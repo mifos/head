@@ -334,9 +334,11 @@ public class SurveyInstanceAction extends BaseAction {
 		 * TODO: fix this so instanceof is not required
 		 */
 		if (survey instanceof PPISurvey) {
-			instance.setSurvey(survey);
+			PPISurveyInstance ppiSurveyInstance = (PPISurveyInstance) instance;
+			ppiSurveyInstance.setSurvey(survey);
+			ppiSurveyInstance.initialize();
 			request.setAttribute("povertyBand", 
-					PovertyBand.fromInt(((PPISurveyInstance) instance).getScore(), (PPISurvey) survey));
+					PovertyBand.fromInt(ppiSurveyInstance.getScore(), (PPISurvey) survey));
 			return mapping.findForward(ActionForwards.get_success_ppi.toString());
 		}
 		return mapping.findForward(ActionForwards.get_success.toString());
