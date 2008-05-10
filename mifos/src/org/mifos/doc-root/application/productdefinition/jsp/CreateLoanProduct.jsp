@@ -73,6 +73,7 @@
 				form.action="loanproductaction.do";
 				form.submit();
 			}
+			
 			function fnIntDesbr() {
 				if(document.getElementsByName("intDedDisbursementFlag")[0].checked==true) {
 					document.getElementsByName("gracePeriodType")[0].disabled=true;
@@ -977,33 +978,37 @@
 											var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 
 										<tr class="fontnormal" id="intdeddis">
+											<!--  
 											<td align="right">
 											<fmt:message key="product.deductedatdis">
 											<fmt:param><mifos:mifoslabel
-												name="${ConfigurationConstants.SERVICE_CHARGE}"
+												name="${ConfigurationConstants.SERVICE_CHARGE}" 
 												bundle="ProductDefUIResources" /></fmt:param>
 											</fmt:message>
 											:</td>
+											-->
 											<td valign="top"><c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
 
 
-												<html-el:checkbox property="intDedDisbursementFlag"
-													value="1" onclick="fnIntDesbr();" disabled="true" />
+												<html-el:checkbox style="visibility:hidden"  property="intDedDisbursementFlag"
+													value="1" onclick="fnIntDesbr();"/>
 											</c:if> <c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '0'}">
 
 
-												<html-el:checkbox property="intDedDisbursementFlag"
-													value="1" onclick="fnIntDesbr();" disabled="true" />
+												<html-el:checkbox property="intDedDisbursementFlag" style="visibility:hidden"
+													value="1" onclick="fnIntDesbr();"  />
 											</c:if></td>
 										</tr>
 										<tr class="fontnormal">
+										    <!--  
 											<td align="right"><mifos:mifoslabel
 												name="product.prinlastinst" bundle="ProductDefUIResources" />
 											:</td>
+											-->
 											<td valign="top"><html-el:checkbox
-												property="prinDueLastInstFlag" value="1" disabled="true" /></td>
+												property="prinDueLastInstFlag" value="1" style="visibility:hidden" /></td>
 										</tr>
 										<tr class="fontnormal" id="gracepertype">
 											<td align="right"><mifos:mifoslabel

@@ -947,22 +947,27 @@
 									</table>
 									</div>
 						<tr class="fontnormal">
-							<td align="right">
+							<!-- 
+							<td align="right"> 
 								<fmt:message key="product.deductedatdis">
 								<fmt:param><mifos:mifoslabel
 								name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
 								</fmt:message>:</td>
+								-->
 							<td valign="top"><html-el:checkbox
-								property="intDedDisbursementFlag" value="1" disabled="true"
+								property="intDedDisbursementFlag" value="1" style="visibility:hidden"
 								onclick="fnIntDesbr();" /></td>
+								
 						</tr>
 						<tr class="fontnormal">
+						<!-- 
 							<td align="right"><mifos:mifoslabel
 								name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/>
 							</td>
+							-->
 							<td valign="top"><html-el:checkbox
-								property="prinDueLastInstFlag" value="1" disabled="true" /></td>
+								property="prinDueLastInstFlag" value="1" style="visibility:hidden" /></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel

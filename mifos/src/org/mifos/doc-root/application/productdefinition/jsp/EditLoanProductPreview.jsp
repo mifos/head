@@ -740,6 +740,7 @@
 								value="${sessionScope.loanproductactionform.gracePeriodDuration}" />
 							<mifos:mifoslabel name="product.installments"
 								bundle="ProductDefUIResources" /></span> <br>
+							<!--
 							<mifos:mifoslabel name="product.prinlastinst"
 								bundle="ProductDefUIResources" isColonRequired="yes"/> <span class="fontnormal">
 							<c:choose>
@@ -753,6 +754,7 @@
 										bundle="ProductDefUIResources" />
 								</c:otherwise>
 							</c:choose> </span> <br>
+						  
 							<fmt:message key="product.deductedatdis">
 								<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
 								bundle="ProductDefUIResources" /></fmt:param>
@@ -767,7 +769,9 @@
 									<mifos:mifoslabel name="product.no"
 										bundle="ProductDefUIResources" />
 								</c:otherwise>
-							</c:choose> </span></td>
+							</c:choose> </span>
+							-->
+							</td>
 						</tr>
 					</table>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">

@@ -755,6 +755,7 @@
 										<mifos:mifoslabel name="product.installments"
 											bundle="ProductDefUIResources" />
 									</c:if> </span> <br>
+									<!--  
 									<fmt:message key="product.deductedatdis">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.SERVICE_CHARGE}"
@@ -783,7 +784,9 @@
 											<mifos:mifoslabel name="product.no"
 												bundle="ProductDefUIResources" />
 										</c:otherwise>
-									</c:choose> </span></td>
+									</c:choose> </span>
+									-->
+									</td>
 								</tr>
 							</table>
 

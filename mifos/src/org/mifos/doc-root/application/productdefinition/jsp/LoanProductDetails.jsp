@@ -288,8 +288,11 @@ explanation of the license and how it is applied.
 																</c:forEach>
 																</table>
 													</c:if>
+													
 													<br> <mifos:mifoslabel name="product.gracepertype" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodType.name}" /> <br> <mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:out value="${loanPrd.gracePeriodDuration}" /> <mifos:mifoslabel
-													name="product.installments" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:choose>
+													name="product.installments" bundle="ProductDefUIResources" /><br>
+													<!--  
+													<mifos:mifoslabel name="product.prinlastinst" bundle="ProductDefUIResources" isColonRequired="yes"/> <c:choose>
 													<c:when test="${loanPrd.prinDueLastInst}">
 														<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
 													</c:when>
@@ -307,6 +310,7 @@ explanation of the license and how it is applied.
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
 												</c:choose> </span>
+												--> 
 										</td>
 									</tr>
 								</table>
