@@ -194,6 +194,7 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.TestUtils;
 
 /**
  * This class assumes that you are connected to the model database, which has
@@ -1083,6 +1084,51 @@ public class TestObjectFactory {
 		}
 	}
 
+	/****************************
+	 * Begin creating a periodic rate fee
+	 ****************************/
+	public static RateFeeBO createPeriodicRateFee(
+			String feeName, FeeCategory feeCategory, Double rate, 
+			FeeFormula feeFormula, RecurrenceType meetingFrequency, Short recurAfter) {
+		
+		try {
+			MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter,
+					new Date(), MeetingType.PERIODIC_FEE);
+			//create center with empty list of fees
+	        CenterBO center=TestObjectFactory.createCenter("Center",meeting, null);
+			return createPeriodicRateFee(
+					feeName, feeCategory, rate, feeFormula,
+					meetingFrequency, recurAfter, TestUtils.makeUserWithLocales(), meeting);
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static RateFeeBO createPeriodicRateFee(
+			String feeName, FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
+			RecurrenceType meetingFrequency, Short recurAfter, UserContext userContext,
+			MeetingBO meeting) {
+		
+		try {
+			//GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
+			GLCodeEntity glCode = new GLCodeEntity((short) 1, "31301");
+			RateFeeBO fee = new RateFeeBO(userContext, feeName,
+									new CategoryTypeEntity(feeCategory),
+									new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode,
+									rate, new FeeFormulaEntity(feeFormula),
+									false, meeting);
+			return (RateFeeBO) addObject(testObjectPersistence.createFee(fee));
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/****************************
+	 * End creating a periodic rate fee
+	 ****************************/
+	
 	/**
 	 * createOneTimeAmountFee.
 	 * 
