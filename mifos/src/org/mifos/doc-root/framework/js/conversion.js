@@ -161,7 +161,8 @@ function chekDecimal(element, e,fmt)
 	}
 	catch (e)
 	{
-	  //error may come if language not supported
+		return genericOnkeyPress(fmt,element,e,ENGLISH.CODE_0,ENGLISH.CODE_1,ENGLISH.CODE_DECIMAL);
+		//error may come if language not supported
 	}
 }
 function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
@@ -172,7 +173,8 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 
 	var  charCode= (e.intCode) ? e.intCode : ((e.keyCode) ? e.keyCode : ((e.which) ? e.which : 0));
 		var txt=element.value;
-		var index=txt.indexOf('.');
+		if(txt == null) txt = element;
+		var index=txt.toString().indexOf('.');
 		if ( -1 != index && charCode==46 ) return false;
 	//alert("charCode1="+charCode);	
 	if( charCode ==13 || charCode ==110 || charCode ==190)

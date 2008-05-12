@@ -71,7 +71,11 @@ function  FnCheckNumCharsOnPress(event,objTextField) {
 function  FnCheckNumChars(event,objTextField) {
 	var locale = document.all.h_user_locale.value;
 	var func="FnCheckNumChars_"+locale+"(event,objTextField)";
-	return eval(func);
+	try {
+		return eval(func);
+	} catch (e) {
+		return true;
+	}
 }
 function genericConvertor(textValue,convertorMethod) {
 	var  char_code;
