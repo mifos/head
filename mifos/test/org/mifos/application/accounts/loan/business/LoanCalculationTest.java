@@ -46,6 +46,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -1303,7 +1304,7 @@ class LoanTestCaseData {
 	}
 	
 	private void printResults(Results expectedResult, Results calculatedResult, String testName) {
-		System.out.println("Running test: " + testName);
+		//System.out.println("Running test: " + testName);
 		System.out.println("Results are (Expected : Calculated : Difference)");
 		printComparison("Total Interest: ",expectedResult.getTotalInterest(),
 			calculatedResult.getTotalInterest());
@@ -1311,6 +1312,8 @@ class LoanTestCaseData {
 			calculatedResult.getTotalPayments());
 		printComparison("Total Principal: ", expectedResult.getTotalPrincipal(), 
 			calculatedResult.getTotalPrincipal());
+		printComparison("Total Fees: ", expectedResult.getTotalFee(), 
+				calculatedResult.getTotalFee());
 		
 		List<PaymentDetail> expectedPayments = expectedResult.getPayments();
 		List<PaymentDetail> calculatedPayments = calculatedResult.getPayments();
@@ -1328,6 +1331,8 @@ class LoanTestCaseData {
 				calculatedPayments.get(i).getPayment());
 			printComparison("Principal: ", expectedPayments.get(i).getPrincipal(), 
 				calculatedPayments.get(i).getPrincipal());
+			printComparison("Fee:       ", expectedPayments.get(i).getFee(), 
+					calculatedPayments.get(i).getFee());
 		}		
 	}
 
@@ -1425,7 +1430,7 @@ class LoanTestCaseData {
 		
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		List<FeeView> feeViewList = createFeeViews(config, loanParams);
 
 		AccountBO accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
@@ -1436,6 +1441,37 @@ class LoanTestCaseData {
 		
 		new TestObjectPersistence().persist(accountBO);
 		return accountBO;
+	}
+	
+	private List<FeeView> createFeeViews (InternalConfiguration config, LoanParameters loanParams) {
+		
+		List<FeeView> feeViews = new ArrayList<FeeView>();
+		
+		/*Only periodic fees get merged into loan installments
+		if (!(config.getFeeFrequency() == null) && config.getFeeFrequency() == FeeFrequencyType.PERIODIC){
+				feeViews.add(createPeriodicFeeView(config, loanParams));
+			}
+		*/
+		return feeViews;
+	}
+	
+	private FeeView createPeriodicFeeView (InternalConfiguration config, LoanParameters loanParams) {
+		FeeBO fee = null;
+		if (config.getFeeType() == FeeFormula.AMOUNT){
+				fee = TestObjectFactory.createPeriodicAmountFee("testLoanFee", FeeCategory.LOAN, config.getFeeValue(), 
+						                                        loanParams.getPaymentFrequency(), Short.valueOf("1"));
+		}
+		else if (config.getFeeType() == FeeFormula.AMOUNT_AND_INTEREST) {
+			fee = TestObjectFactory.createPeriodicRateFee("testLoanFee",
+					FeeCategory.LOAN, new Double (config.getFeePercentage()), 
+					config.getFeeType(),
+					loanParams.getPaymentFrequency(), (short) 1);
+		}
+		else { //INTEREST
+			//TODO
+		}
+		FeeView feeView = new FeeView(TestUtils.makeUser(), fee);
+		return feeView;
 	}
 	
 	private Results calculatePayments(InternalConfiguration config, AccountBO accountBO, LoanParameters loanParams)
@@ -1451,19 +1487,26 @@ class LoanTestCaseData {
 		MathContext context = new MathContext(config.getInternalPrecision());
 		BigDecimal totalPrincipal = new BigDecimal(0, context);
 		BigDecimal totalInterest = new BigDecimal(0, context);
+		BigDecimal totalFees = new BigDecimal(0, context);
 		Money totalPayments = new Money("0");
 		Results calculatedResult = new Results();
 		List<PaymentDetail> payments = new ArrayList<PaymentDetail>();
 		for (LoanScheduleEntity loanEntry : paymentsArray)
 		{
 			PaymentDetail payment = new PaymentDetail();
-			Money calculatedPayment = new Money(loanEntry.getPrincipal().getAmount().add(loanEntry.getInterest().getAmount()));
-			payment.setPayment(calculatedPayment);
-			payment.setInterest(loanEntry.getInterest());
-			payment.setPrincipal(loanEntry.getPrincipal());
-			totalPrincipal = totalPrincipal.add(loanEntry.getPrincipal().getAmount());
-			totalInterest = totalInterest.add(loanEntry.getInterest().getAmount());
-			totalPayments = totalPayments.add(calculatedPayment);
+			Money calculatedPayment = new Money(loanEntry.getPrincipal().getAmount()
+													.add (loanEntry.getInterest().getAmount()
+															.add (loanEntry.getTotalFees().getAmount())));
+			payment.setPayment   (calculatedPayment);
+			payment.setInterest  (loanEntry.getInterest());
+			payment.setPrincipal (loanEntry.getPrincipal());
+			payment.setFee       (loanEntry.getTotalFees());
+			
+			totalPrincipal = totalPrincipal.add (loanEntry.getPrincipal().getAmount());
+			totalInterest  = totalInterest .add (loanEntry.getInterest().getAmount());
+			totalPayments  = totalPayments .add (calculatedPayment);
+			totalFees      = totalFees     .add (loanEntry.getTotalFees().getAmount());
+			
 			payments.add(payment);
 		}	
 		calculatedResult.setPayments(payments);
@@ -1472,16 +1515,16 @@ class LoanTestCaseData {
 		calculatedResult.setTotalPrincipal(new Money(totalPrincipal));
 		
 		/*
-		 * Set balance after each installment is paid.
-		 * For flat-interest loans, balance is total of all remaining payments.
+		 * Set balance after each installment is paid, excluding fees or penalties.
+		 * For flat-interest loans, balance is total of all remaining principal and interest.
 		 * For declining-interest loans, balance is total remaining principal.
 		 */  
 		if (loanParams.loanType.getValue()==InterestType.FLAT.getValue()) {
-			Money balance = totalPayments;
+			Money balance = new Money(totalPrincipal.add(totalInterest));
 			for( PaymentDetail paymentDetail : payments)
 			{
-				Money onePayment = paymentDetail.getPayment();
-				balance = balance.subtract(onePayment);
+				balance = balance.subtract(paymentDetail.getPrincipal())
+									.subtract(paymentDetail.getInterest());
 				paymentDetail.setBalance(balance);
 			}
 		}
@@ -1894,7 +1937,8 @@ class LoanTestCaseData {
 								SystemException, ApplicationException, URISyntaxException 
 	{
 
-		System.out.println("Loading Test: " + fileName);
+		System.out.println();
+		System.out.println("Running Test: " + fileName);
 		LoanTestCaseData testCaseData = loadSpreadSheetData(directoryName + fileName);
 		accountBO = setUpLoan(testCaseData.getInternalConfig(), testCaseData.getLoanParams());
 		// calculated results
@@ -1940,12 +1984,12 @@ class LoanTestCaseData {
 
 	}
 
-	public void testAllFlatInterestTestCases() throws Exception 
+	public void xtestAllFlatInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("testcase")) {
+			if (dataFileNames[i].startsWith("testcase-2008-05-05-flat-set1")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -1979,12 +2023,12 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void xtestAllDecliningInterestTestCases() throws Exception 
+	public void testAllDecliningInterestTestCases() throws Exception 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestWithGracePeriod/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("test")) {
+			if (dataFileNames[i].startsWith("test-nograce")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();

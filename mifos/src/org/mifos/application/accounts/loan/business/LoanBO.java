@@ -1788,7 +1788,10 @@ public class LoanBO extends AccountBO {
 
 	private Money getAccountFeeAmount(AccountFeesEntity accountFees,
 			Money loanInterest) {
+		
+		//OK. No-arg constructor uses new calc methods
 		Money accountFeeAmount = new Money();
+		
 		Double feeAmount = accountFees.getFeeAmount();
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -4299,78 +4302,235 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return period;
 	}
 
+	/***********************************
+	 * Revised fee calculations
+	 ***********************************/
 
+
+	private Money getAccountFeeAmount_v2(AccountFeesEntity accountFees,
+			Money loanInterest) {
+		Money accountFeeAmount = new Money();
+		Double feeAmount = accountFees.getFeeAmount();
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Fee amount..." + feeAmount);
+
+		if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
+			accountFeeAmount = new Money(feeAmount.toString());
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"AccountFeeAmount for amount fee.." + feeAmount);
+		}
+		else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
+			RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees
+					.getFees().getFeeId());
+			accountFeeAmount = new Money(getRateBasedOnFormula(feeAmount,
+					rateFeeBO.getFeeFormula(), loanInterest));
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"AccountFeeAmount for Formula fee.." + feeAmount);
+		}
+		return accountFeeAmount;
+	}
+
+	/**
+	* This method adjusts payments by applying rounding rules from AccountingRules. 
+	*
+	* <h2>Summary of rounding rules</h2>
+	* There are two factors that make up a rounding rule: precision and mode.
+	*
+	* <dl>
+	*   <dt> <em>Precision</em> 
+	*   <dd> specifies the degree of rounding, to the closest decimal place. Example: 1 (closest Rupee), 
+	*        0.5 (closest half-dollar, for example), 0.1, 0.01 (closest US penny) 0.001, etc. Precision
+	*        is limited by the currency being used by the application. For example, US dollars limit the precision to two
+	*        decimal places (closest penny).
+	*
+	*   <dt> <em>Mode</em> 
+	*   <dd> specfies how rounding occurs. Currently three modes are supported: HALF_UP, FLOOR, CEILING.
+	* </dl>
+	*
+	* Three installment-rounding conventions apply to loan-installment payments. Each specifies the precision and mode
+	* to be applied in certain contexts:
+	*
+	* <dl>
+	*   <dt> <em>Currency-rounding</em>
+	*  <dd> Round to the precision of the currency being used by the application.
+	*   
+	*   <dt> <em>Initial rounding</em>
+	*   <dd> Round all installment's total payment but the last.
+	*        
+	*   <dt> <em>Final rounding</em>
+	*   <dd> Round the last payment to a specified precision.
+	* </dl>
+	*
+	*
+	* <h2>Summary of rounding and adjustment logic</h2>
+	*
+	* Assume we've calculated exact values for each installment's principal, interest, 
+	*          and fees payment, and installment's total payment (their sum).
+	* <p/>
+	* The concept here is that exact values will be rounded and the amounts
+	* that the customer actually pays will drift away from what's actually due, resulting 
+	* in the components of each installment  not exactly adding up to the total payment.
+	* <p/>
+	* Generally, within each installment but the last, the principal payment is the "fall guy", making up
+	*          for any difference. For the last installment, the interest payment is the fall guy.
+	* <p/>
+	* Differences in total paid across all installments are made up in the last installment.
+	* <p/>
+	* <h4>Non-grace-period installments except the last:</h4>
+	*          <ul>
+	*              <li> Round the installment's exact total payment using initial rounding.
+	*              <li> Round the installment's exact interest and fee payments 
+	*                   using currency rounding.
+	*              <li> Adjust the installment's principal to make up the difference between the installment's
+	*                   rounded total payment and its rounded interest and fee payments.
+	*              <li> After rounding and adjusting, the installment's (rounded) total payment is exactly
+	*                   the sum of (rounded) principal, interest and fees.
+	*            </ul>
+	*            
+	* <h4>The last installment:</h4>
+	*          <ul>
+	*              <li> Correct for over- or underpayment of prior installment's payments due to rounding:
+	*                  <ul> 
+	*                      <li> Compute the loan's exact total payment as the sum of all installment's exact 
+	*                           principal, interest and fees.
+	*                      <li> Round the loan's exact total payment using final rounding. This is what the 
+	*                      customer must pay to pay off the loan.
+	*                      <li> Set the final installment's total payment to the difference between the loan's 
+	*                           rounded total payment and the sum of all prior installments' (already rounded) payments.
+	*                  </ul>
+	*              <li> Correct for over or underpayment of principal. Set the last installment's principal payment 
+	*                   to the difference between the loan amount and the sum of
+	*                   all prior installment's principal payments, 
+	*                   then round it using currency rounding rules.
+	*              <li> Correct for over- or underpayment of fees similarly.
+	*                   <ul>
+	*                       <li> Round the exact total fees using Currency rounding rules.
+	*                       <li> Set the last installment's fee payment to the difference between the rounded total fees
+	*                            and the sum of all prior installments' (already rounded) fee payments.
+	*                   </ul>
+	*              <li> Finally, adjust the last installment's interest payment as the difference between
+	*                   the last installment's total payment and the sum of the last installment's
+	*                   principal and fee payments.
+	*         </ul>
+	*         
+	* <h4>Principal-only grace-period installments</h4>
+	*
+	* The principal is always zero, and only interest and fees are paid.
+	*              Here, interest is the "fall guy", absorbing any rounding discrepancies:
+	*              <ul>
+	*                  <li> Round the installment's total payments as above.
+	*                  <li> Round the installment's fee payment as above.
+	*                  <li> Adjust the interest to force interest and fee payments to add up to the installment's
+	*                       total payment.
+	*              </ul>
+	* <h4>Principal + interest grace-period installments</h4>
+	*
+	* Calculations are the same as if there
+	*               were no grace, since the zero-payment installments are not included in the installment
+	*               list at all.	 
+	*               */
 	protected final void applyRounding_v2(Money totalInterest) {
-		
-		/********
-		 * why are we checking for zero principal? what if there are still outstanding fees? 
-		 * shouldn't it be balance equals zero?
-		 * KEITH 5/1/2008. This check prevents rounding from being applied when there is a grace period.
-		 * I've removed it to observe the behavior and to force rounding for loans with grace periods.
-		 */ 
-		
-		// if (!isPrincipalZeroInAnyInstallmemt()) {
-			LoanScheduleEntity lastInstallment = (LoanScheduleEntity) getLastInstallmentAccountAction();
-			Money principalRunningTotal = new Money("0");
-			Money totalPaymentRunningTotal = new Money("0");
-			
+				
 			List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
 			
 			// for now we are doing this based on working only on the complete list
 			// of installments
 			assert(unpaidInstallments.size() == this.getNoOfInstallments());
-					
-			for (AccountActionDateEntity accountActionDate : unpaidInstallments) {
-				LoanScheduleEntity currentInstallment = (LoanScheduleEntity) accountActionDate;
+			
+			//Need to get exact total before rounding, so that the last payment
+			//can be adjusted for rounding
+			Money roundedTotalPayment = getRoundedTotalPayment(unpaidInstallments);
+			
+			Money principalRunningTotal = new Money("0");
+			Money totalPaymentRunningTotal = new Money("0");
+			Money totalFeesPaymentRunningTotal = new Money ("0");
+			
+		    LoanScheduleEntity lastInstallment = null;
 
-				if (!currentInstallment.getInstallmentId().equals(
-						lastInstallment.getInstallmentId())) {
-					currentInstallment.setInterest(Money.round(currentInstallment.getInterest(),
-						AccountingRules.getDigitsAfterDecimalMultiple(),
-						AccountingRules.getCurrencyRoundingMode()));
-					currentInstallment.setPrincipal(Money.round(currentInstallment.getPrincipal(),
-							AccountingRules.getDigitsAfterDecimalMultiple(),
-							AccountingRules.getInitialRoundingMode()));
-					Money updatedInstallmentTotal = currentInstallment.getTotalDueWithFees();
-					Money roundedTotalAmount = Money.round(updatedInstallmentTotal,
-						AccountingRules.getInitialRoundOffMultiple(),
-						AccountingRules.getInitialRoundingMode());
-					Money principalAdjustment = updatedInstallmentTotal.subtract(roundedTotalAmount);
-					
-					// should principal be rounded here?
-					currentInstallment.setPrincipal(currentInstallment
-							.getPrincipal().subtract(principalAdjustment));
+			for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
+				LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();
+				
+				//handle all but the last installment
+				//TODO: handle grace period installments differently
+				if (it.hasNext()){
+					roundAndAdjustButLastNonGraceInstallment_v2(currentInstallment);
 					
 					principalRunningTotal = principalRunningTotal.add(currentInstallment.getPrincipal());
 					totalPaymentRunningTotal = totalPaymentRunningTotal.add(currentInstallment.getTotalDueWithFees());
 				}
+				else
+					roundAndAdjustLastInstallment_v2(currentInstallment, totalInterest, 
+							                         totalPaymentRunningTotal, principalRunningTotal,
+							                         roundedTotalPayment);
 			}
-			/*
-			 * Final updated principal amount =  Initial total principal amount - Running total of true principal
-			 * Final updated payment amount =  Initial total payment amount - Running total of true payments
-			 */
-			
-			lastInstallment.setPrincipal(Money.round(
-				getLoanAmount().subtract(principalRunningTotal),
-				AccountingRules.getDigitsAfterDecimalMultiple(),
-				AccountingRules.getFinalRoundingMode()));
-			
-			Money initialTotalPaymentAmount = getLoanAmount().add(totalInterest);
-			Money finalUpdatedPaymentAmount = Money.round(
-				initialTotalPaymentAmount.subtract(totalPaymentRunningTotal),
-				AccountingRules.getFinalRoundOffMultiple(),
-				AccountingRules.getFinalRoundingMode());
-			
-			lastInstallment.setInterest(
-				Money.round(finalUpdatedPaymentAmount.subtract(lastInstallment.getPrincipal()),
-				AccountingRules.getDigitsAfterDecimalMultiple(),
-				AccountingRules.getCurrencyRoundingMode()));
 		//}
 			int x = 0; //when debugging, stop here for inspection.
 	}
 
+	private Money currencyRound_v2 (Money m) {
+		return Money.round(m, AccountingRules.getDigitsAfterDecimalMultiple(),
+				              AccountingRules.getCurrencyRoundingMode());
+	}
 	
+	private Money initialRound_v2 (Money m) {
+		return Money.round(m, AccountingRules.getInitialRoundOffMultiple(),
+				              AccountingRules.getInitialRoundingMode());
+	}
 	
+	private Money finalRound_v2 (Money m) {
+		return Money.round(m, AccountingRules.getFinalRoundOffMultiple(),
+				              AccountingRules.getFinalRoundingMode());
+	}
+	
+	private Money getRoundedTotalPayment (List<AccountActionDateEntity> unpaidInstallments) {
+		Money sum = new Money ("0");
+		for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
+			sum = sum.add(((LoanScheduleEntity)it.next()).getTotalDueWithFees());
+		}
+		return finalRound_v2(sum);
+	}
+	/**
+	 * See Javadoc comment for method applyRounding() for business rules for rounding
+	 * and adjusting all installments but the last.
+	 * LoanScheduleEntity does not store the total payment due, directly, but it is the sum
+	 * of principal, interest, and non-miscellaneous fees.
+	 * <p>
+     * 
+     * how to set rounded fee for installment?????? This is what I want to do:
+     * currentInstallment.setFee (currencyRound_v2 (currentInstallment.getFee));
+     *
+     * Then I want to adjust principal, but need to extract the rounded fee, like this:
+     * currentInstallment.setPrincipal(installmentRoundedTotalPayment
+     *                                       .subtract (currentInstallment.getInterest()
+     *                                       .subtract (currentInstallment.getFee());
+     */
+	private void roundAndAdjustButLastNonGraceInstallment_v2 (LoanScheduleEntity installment) {
+		Money roundedTotalDue = initialRound_v2(installment.getTotalDueWithFees());
+		installment.setInterest(currencyRound_v2(installment.getInterest()));
+		//TODO: need to round total fees, but nowhere to store it in installment
+		// Is it sufficient just to currency-round each fee?
+		//TODO: need to subtract rounded fees from total payment as well.
+		installment.setPrincipal(roundedTotalDue.subtract(installment.getInterest()));
+	}
+	
+	/**
+	 * See JavaDoc comment for applyRounding_v2.
+	 * TODO: handle fees
+	 */
+	private void roundAndAdjustLastInstallment_v2 (LoanScheduleEntity lastInstallment, 
+			                                       Money totalInterest,
+			                                       Money totalPaymentRunningTotal,
+			                                       Money principalRunningTotal,
+			                                       Money roundedTotalPayment) {
+	
+		Money installmentPayment = roundedTotalPayment.subtract(totalPaymentRunningTotal);
+		lastInstallment.setPrincipal(currencyRound_v2(getLoanAmount().subtract(principalRunningTotal)));
+		
+		lastInstallment.setInterest(
+			currencyRound_v2(installmentPayment.subtract(lastInstallment.getPrincipal())));
+	
+	}
 	static boolean isDisbursementDateAfterCustomerActivationDate(
 			Date disbursementDate, CustomerBO customer) {
 		return DateUtils.dateFallsOnOrBeforeDate(customer.getCustomerActivationDate(),
