@@ -137,6 +137,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 
 	private String loanAmtCalcType;
 
+	// FIXME: this could be done more cleanly with a few ordered sets, perhaps?
+	// at any rate, something more terse and maintainable should be attempted.
  	private String  lastLoanMinLoanAmt1;
 	private String  lastLoanMinLoanAmt2;
 	private String  lastLoanMinLoanAmt3;
