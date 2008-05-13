@@ -185,10 +185,7 @@ public class GroupBO extends CustomerBO {
 		else
 			setTrained(YesNoFlag.NO.getValue());
 		setTrainedDate(trainedDate);
-		if (ClientRules.getCenterHierarchyExists())
-		{
-			updateLoanOfficer(loanOfficerId);
-		}
+		updateLoanOfficer(loanOfficerId);
 		setDisplayName(displayName);
 		super.update(userContext, externalId, address, customFields,
 				customerPositions);
