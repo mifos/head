@@ -43,16 +43,20 @@ import java.util.Set;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeLevel;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -374,5 +378,100 @@ public class FeeBOTest extends MifosTestCase {
 		return (GLCodeEntity) TestObjectFactory.getObject(GLCodeEntity.class,
 				Short.valueOf(id));
 
+	}
+	
+	public void testAmountFeeBOUpdateChangeTypeSetsNotUpdated() throws Exception {
+		AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
+		AmountFeeBO newFee = createAmountFeeToTestChangeFeeType();
+		feeToChange.calculateNewFeeChangeType(newFee.getFeeAmount(), newFee.getFeeStatus());
+		assertFeeChangeType(FeeChangeType.NOT_UPDATED, feeToChange);
+	}
+
+	public void testAmountFeeBOUpdateChangeTypeSetsAmountUpdated() throws Exception {
+		AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
+		AmountFeeBO newFee = (AmountFeeBO)createPeriodicAmountFee("fee", FeeCategory.ALLCUSTOMERS,
+				"2000", true, createMeeting());
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getFeeAmount(), newFee.getFeeStatus()));		
+		assertFeeChangeType(FeeChangeType.AMOUNT_UPDATED, feeToChange);
+	}
+	
+	public void testAmountFeeBOUpdateChangeTypeSetsStatusUpdated() throws Exception {
+		AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
+		AmountFeeBO newFee = createAmountFeeToTestChangeFeeType();
+		newFee.updateStatus(FeeStatus.INACTIVE);
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getFeeAmount(), newFee.getFeeStatus()));		
+		assertFeeChangeType(FeeChangeType.STATUS_UPDATED, feeToChange);
+	}
+	
+	public void testAmountFeeBOUpdateChangeTypeSetsAmountAndStatusUpdated() throws Exception {
+		AmountFeeBO feeToChange = createAmountFeeToTestChangeFeeType();
+		AmountFeeBO newFee = (AmountFeeBO)createPeriodicAmountFee("fee",
+				FeeCategory.ALLCUSTOMERS, "2000", true, createMeeting());
+		newFee.updateStatus(FeeStatus.INACTIVE);
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getFeeAmount(), newFee.getFeeStatus()));		
+		assertFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED, feeToChange);
+	}
+	
+	public void testRateFeeBOUpdateChangeTypeSetsNotUpdated() throws Exception {
+		RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
+		RateFeeBO newFee = createRateFeeToTestChangeFeeType();
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getRate(), newFee.getFeeStatus()));
+		assertFeeChangeType(FeeChangeType.NOT_UPDATED, feeToChange);
+	}
+
+	public void testRateFeeBOUpdateChangeTypeSetsAmountUpdated() throws Exception {
+		RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
+		RateFeeBO newFee = new RateFeeBO(TestUtils.makeUser(),
+				"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				getGLCode("7"), 1.0, new FeeFormulaEntity(
+						FeeFormula.AMOUNT), false,
+				new FeePaymentEntity(FeePayment.UPFRONT));
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getRate(), newFee.getFeeStatus()));		
+		assertFeeChangeType(FeeChangeType.AMOUNT_UPDATED, feeToChange);
+	}
+	
+	public void testRateFeeBOUpdateChangeTypeSetsStatusUpdated() throws Exception {
+		RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
+		RateFeeBO newFee = createRateFeeToTestChangeFeeType();
+		newFee.updateStatus(FeeStatus.INACTIVE);
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getRate(), newFee.getFeeStatus()));
+		assertFeeChangeType(FeeChangeType.STATUS_UPDATED, feeToChange);
+	}
+	
+	public void testRateFeeBOUpdateChangeTypeSetsAmountAndStatusUpdated() throws Exception {
+		RateFeeBO feeToChange = createRateFeeToTestChangeFeeType();
+		RateFeeBO newFee = new RateFeeBO(TestUtils.makeUser(),
+				"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				getGLCode("7"), 1.0, new FeeFormulaEntity(
+						FeeFormula.AMOUNT), false,
+				new FeePaymentEntity(FeePayment.UPFRONT));
+		newFee.updateStatus(FeeStatus.INACTIVE);
+		feeToChange.updateFeeChangeType(feeToChange.calculateNewFeeChangeType(newFee.getRate(), newFee.getFeeStatus()));		
+		assertFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED, feeToChange);
+	}
+
+	private void assertFeeChangeType(FeeChangeType feeChangeType, FeeBO feeToChange) throws PropertyNotFoundException {
+		assertEquals(feeChangeType, feeToChange.getFeeChangeType());
+	}
+	
+	private AmountFeeBO createAmountFeeToTestChangeFeeType() throws Exception, MeetingException {
+		return (AmountFeeBO)createPeriodicAmountFee("fee",
+				FeeCategory.ALLCUSTOMERS, "1000", true, createMeeting());
+	}	
+
+	private RateFeeBO createRateFeeToTestChangeFeeType() throws FeeException {
+		return new RateFeeBO(TestUtils.makeUser(),
+				"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
+				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				getGLCode("7"), 2.0, new FeeFormulaEntity(
+						FeeFormula.AMOUNT), false,
+				new FeePaymentEntity(FeePayment.UPFRONT));
+	}
+	
+	private MeetingBO createMeeting() throws MeetingException {
+		return new MeetingBO(RecurrenceType.WEEKLY, Short
+		.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
 	}
 }

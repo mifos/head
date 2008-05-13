@@ -39,6 +39,7 @@ package org.mifos.application.fees.business;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -111,4 +112,23 @@ public class AmountFeeBO extends FeeBO {
 		if (amount == null || amount.getAmountDoubleValue() <= 0.0)
 			throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);
 	}
+
+	public FeeChangeType calculateNewFeeChangeType(Money otherAmount,
+			FeeStatusEntity otherStatus) {
+		if (!feeAmount.equals(otherAmount)) {
+			if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+				return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+			}
+			else {
+				return FeeChangeType.AMOUNT_UPDATED;
+			}
+		}
+		else if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+			return FeeChangeType.STATUS_UPDATED;
+		}
+		else {
+			return FeeChangeType.NOT_UPDATED;
+		}
+	}
+
 }

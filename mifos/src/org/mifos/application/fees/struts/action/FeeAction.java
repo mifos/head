@@ -61,8 +61,10 @@ import org.mifos.application.fees.business.FeeStatusEntity;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.struts.actionforms.FeeActionForm;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -237,12 +239,22 @@ public class FeeAction extends BaseAction {
 		FeeBO fee = (FeeBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 				request);
 		fee.setUserContext(getUserContext(request));
-		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT))
-			((AmountFeeBO) fee).setFeeAmount(feeActionForm.getAmountValue());
-		else
-			((RateFeeBO) fee).setRate(feeActionForm.getRateValue());
+		FeeChangeType feeChangeType;
+		if (fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
+			AmountFeeBO amountFee = ((AmountFeeBO) fee);
+			feeChangeType = amountFee.calculateNewFeeChangeType(feeActionForm.getAmountValue(), 
+					new FeeStatusEntity(feeActionForm.getFeeStatusValue()));
+			amountFee.setFeeAmount(feeActionForm.getAmountValue());
+		}
+		else {
+			RateFeeBO rateFee = ((RateFeeBO) fee);
+			feeChangeType = rateFee.calculateNewFeeChangeType(feeActionForm.getRateValue(), 
+					new FeeStatusEntity(feeActionForm.getFeeStatusValue()));			
+			rateFee.setRate(feeActionForm.getRateValue());
+		}
 
 		fee.updateStatus(feeActionForm.getFeeStatusValue());
+		fee.updateFeeChangeType(feeChangeType);
 		fee.update();
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

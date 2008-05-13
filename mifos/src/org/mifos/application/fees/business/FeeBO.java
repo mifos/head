@@ -58,7 +58,10 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
+
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public abstract class FeeBO extends BusinessObject {
 
@@ -279,5 +282,4 @@ public abstract class FeeBO extends BusinessObject {
 			throw new FeeException(pe);
 		}
 	}
-
 }

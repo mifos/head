@@ -58,7 +58,7 @@ public class Configuration {
   
   private static Configuration config;
   
-  public static Configuration getInstance(){
+  public synchronized static Configuration getInstance(){
 	  if(config==null){
 		 config = new Configuration();
 		 config.initialize();

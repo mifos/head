@@ -26,11 +26,12 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
 		List<String> errorList = new ArrayList<String>();
-		List<FeeBO> fees;
+		List<FeeBO> fees = new ArrayList<FeeBO>();
 		try {
 			fees = new FeePersistence().getUpdatedFeesForCustomer();
 		} catch (Exception e) {
-			throw new BatchJobException(e);
+			errorList.add(e.getMessage());
+			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
 		}
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {

@@ -37,12 +37,20 @@
  */
 package org.mifos.application.fees.business;
 
+import java.math.BigDecimal;
+
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyFactory;
+
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class RateFeeBO extends FeeBO {
 
@@ -125,5 +133,22 @@ public class RateFeeBO extends FeeBO {
 	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.RATE;
 	}
-
+	
+	public FeeChangeType calculateNewFeeChangeType(Double otherRate,
+			FeeStatusEntity otherStatus) {
+		if (!rate.equals(otherRate)) {
+			if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+				return FeeChangeType.AMOUNT_AND_STATUS_UPDATED;
+			}
+			else {
+				return FeeChangeType.AMOUNT_UPDATED;
+			}
+		}
+		else if (!getFeeStatus().getId().equals(otherStatus.getId())) {
+			return FeeChangeType.STATUS_UPDATED;
+		}
+		else {
+			return FeeChangeType.NOT_UPDATED;
+		}
+	}		
 }

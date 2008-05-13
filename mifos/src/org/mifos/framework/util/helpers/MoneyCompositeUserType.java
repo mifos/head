@@ -53,6 +53,7 @@ import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.business.SystemConfiguration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 /**
  * This class denotes a composite user type that has been 
@@ -104,27 +105,31 @@ public class MoneyCompositeUserType implements CompositeUserType {
 		return 0;
 	}
 
-	public Object nullSafeGet(ResultSet resultSet,String[] names,SessionImplementor session,Object owner)
+	public Object nullSafeGet(ResultSet resultSet, String[] names,
+			SessionImplementor session, Object owner)
 			throws HibernateException, SQLException {
-			MifosCurrency currency=null;
-			if (resultSet== null) return null;
-			Short currencyId = resultSet.getShort( names[0] );
-			//If currency id retrieved ahs a value of 0 or is null then the default currency is retrieved. This
-			//has been done so that there is a compatibility with M1 code
-			if(currencyId == null || currencyId.shortValue() == 0){
-				currency = Configuration.getInstance().getSystemConfig().getCurrency();
-			}else if(currencyId.equals(Configuration.getInstance().getSystemConfig().getCurrency().getCurrencyId())) {
-				currency = Configuration.getInstance().getSystemConfig().getCurrency();
-			}
-			else{
-				Session session1 = HibernateUtil.getSessionTL();
-				currency =(MifosCurrency) session1.get(MifosCurrency.class , currencyId);
-			}
-			BigDecimal value = resultSet.getBigDecimal( names[1] );
-			
-			return value==null ? new Money(currency,BigDecimal.valueOf(0)):new Money(currency , value);
-			
-			}
+		MifosCurrency currency = null;
+		if (resultSet == null)
+			return null;
+		Short currencyId = resultSet.getShort(names[0]);
+		MifosCurrency configCurrency = Configuration.getInstance()
+				.getSystemConfig().getCurrency();
+		//If currency id retrieved has a value of 0 or is null then the default currency is retrieved. This
+		//has been done so that there is a compatibility with M1 code
+		if (currencyId == null || currencyId.shortValue() == 0
+				|| currencyId.equals(configCurrency.getCurrencyId())) {
+			currency = configCurrency;
+		}
+		else {
+			Session session1 = HibernateUtil.getSessionTL();
+			currency = (MifosCurrency) session1.get(MifosCurrency.class,
+					currencyId);
+		}
+
+		BigDecimal value = resultSet.getBigDecimal(names[1]);
+		return value == null ? new Money(currency, BigDecimal.valueOf(0))
+				: new Money(currency, value);
+	}
 
 	public void nullSafeSet(PreparedStatement statement, Object value, int index, SessionImplementor session)
 			throws HibernateException, SQLException {
