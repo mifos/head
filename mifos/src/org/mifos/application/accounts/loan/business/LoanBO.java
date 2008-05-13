@@ -1255,6 +1255,37 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
+	@Override
+	protected void reschedule() throws AccountException {
+		try {
+			Short personnelId = this.getUserContext().getId();
+			PersonnelBO personnel = new PersonnelPersistence()
+			.getPersonnel(personnelId);
+			this.setUpdatedBy(personnelId);
+			this.setUpdatedDate(new Date(System.currentTimeMillis()));
+			AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
+					this, getEarlyClosureAmount(), null, null,
+					new PaymentTypeEntity(Short.valueOf("1")),new Date(System.currentTimeMillis()));
+			this.addAccountPayment(accountPaymentEntity);
+			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
+					AccountConstants.LOAN_RESCHEDULED,
+					AccountActionTypes.LOAN_RESCHEDULED);
+			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,
+					AccountConstants.LOAN_RESCHEDULED,
+					AccountActionTypes.LOAN_RESCHEDULED);
+			addLoanActivity(buildLoanActivity(accountPaymentEntity
+					.getAccountTrxns(), personnel,
+					AccountConstants.LOAN_RESCHEDULED, DateUtils
+					.getCurrentDateWithoutTimeStamp()));
+			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
+			// Client performance entry using the same as write off.
+			updateCustomerHistoryOnWriteOff();
+		}
+		catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
+	}
+	
 	private void waiveFeeAmountDue() throws AccountException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList

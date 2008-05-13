@@ -196,6 +196,7 @@ public interface AccountConstants {
 	public String APPLIED=" applied";
 	public String AMNT_ADJUSTED="Amnt Adjusted";
 	public String AMNT_WAIVED="Amnt waived";
+	public String LOAN_RESCHEDULED = "Loan Rescheduled";
 	
 	public String SURVEY_KEY="accountSurveys";
 	public String SELECTED_ACCOUNT_STATUS="SelectedAccountStatus";

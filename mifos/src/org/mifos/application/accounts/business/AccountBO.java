@@ -461,8 +461,6 @@ public class AccountBO extends BusinessObject {
 			if (newStatusId.equals(AccountState.LOAN_CANCELLED.getValue())
 					|| newStatusId.equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET
 							.getValue())
-					|| newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED
-							.getValue())
 					|| newStatusId.equals(AccountState.LOAN_CLOSED_WRITTEN_OFF
 							.getValue())
 					|| newStatusId.equals(AccountState.SAVINGS_CANCELLED
@@ -472,6 +470,12 @@ public class AccountBO extends BusinessObject {
 					.getValue())) {
 				writeOff();
 			}
+
+			if(newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED
+							.getValue())) {
+				reschedule();
+			}
+
 			if(newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
 				updateClientPerformanceOnRescheduleLoan();
 			}
@@ -485,6 +489,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected void writeOff() throws AccountException {}
+	protected void reschedule() throws AccountException {}
 	
 	protected void updateClientPerformanceOnRescheduleLoan(){}
 	

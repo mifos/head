@@ -54,11 +54,13 @@ import org.mifos.application.accounts.financial.business.service.activity.FeeRep
 import org.mifos.application.accounts.financial.business.service.activity.LoanAdjustmentFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.LoanDisbursementFinantialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.LoanRepaymentFinancialActivity;
+import org.mifos.application.accounts.financial.business.service.activity.RescheduleFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsAdjustmentFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsDepositFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsInterestPostingFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.WriteOffFinancialActivity;
+import org.mifos.application.accounts.financial.business.service.activity.accountingentry.RescheduleAccountingEntry;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
@@ -118,6 +120,8 @@ public class FinancialBusinessService extends BusinessService {
 		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.WRITEOFF.getValue()) {
 			baseFinancialActivity = new WriteOffFinancialActivity(
 					accounttrxn);
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_RESCHEDULED.getValue()) {
+			baseFinancialActivity = new RescheduleFinancialActivity(accounttrxn);
 		}else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue()) {
 			baseFinancialActivity = new DisbursalAmountReversalFinancialActivity(
 					accounttrxn);

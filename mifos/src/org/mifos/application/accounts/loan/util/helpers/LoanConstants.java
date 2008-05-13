@@ -203,6 +203,7 @@ public interface LoanConstants {
 	public static final String MAX_RANGE_IS_NOT_MET="errors.maxrangeisnotmet";
 	public static final String METHODCALLED="methodCalled";
 	
-	
+	//Configurable mandatory fields
+	public final String PURPOSE_OF_LOAN = "PurposeOfLoan";	
 
 }

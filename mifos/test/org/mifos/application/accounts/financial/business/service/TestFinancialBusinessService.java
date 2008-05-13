@@ -435,4 +435,53 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		assertEquals("Positive finTrxn values count", finTrxnSet.size()
 				- countNegativeFinTrxn, 1);
 	}
+	public void testLoanRescheduleAccountingEntries() throws Exception {
+		loan = getLoanAccount();
+		loan.setUserContext(TestUtils.makeUser());
+		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
+				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
+				null, new PaymentTypeEntity(Short.valueOf("1")),
+				new Date(System.currentTimeMillis()));
+		FinancialBusinessService financialBusinessService = 
+			new FinancialBusinessService();
+		AccountActionDateEntity accountActionDateEntity = loan
+				.getAccountActionDate(Short.valueOf("1"));
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan
+				.getUserContext().getId());
+		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
+				accountPaymentEntity,
+				(AccountActionEntity) new MasterPersistence()
+						.getPersistentObject(AccountActionEntity.class,
+								AccountActionTypes.LOAN_RESCHEDULED.getValue()),
+				accountActionDateEntity.getInstallmentId(),
+				accountActionDateEntity.getActionDate(), personnel, new Date(
+						System.currentTimeMillis()),
+				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
+				"Loan Rescheduled", null,
+				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
+				new Money(), new Money(), new Money(), new Money(), null);
+
+		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
+		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
+		TestObjectFactory.updateObject(loan);
+		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity
+				.getFinancialTransactions();
+		assertEquals(finTrxnSet.size(), 2);
+		int countNegativeFinTrxn = 0;
+		for (FinancialTransactionBO finTrxn : finTrxnSet) {
+			if (finTrxn.getPostedAmount().getAmountDoubleValue() < 0) {
+				assertEquals("Negative finTrxn values", finTrxn
+						.getPostedAmount().negate().getAmountDoubleValue(),
+						100.0);
+				countNegativeFinTrxn++;
+			} else
+				assertEquals("Positive finTrxn values", finTrxn
+						.getPostedAmount().getAmountDoubleValue(), 100.0);
+		}
+		assertEquals("Negative finTrxn values count", countNegativeFinTrxn, 1);
+		assertEquals("Positive finTrxn values count", finTrxnSet.size()
+				- countNegativeFinTrxn, 1);
+	}
+
 }

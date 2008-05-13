@@ -61,6 +61,7 @@
                 <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
                 <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="11201"/>
                 <entry key="WRITEOFF" value="13201"/>
+                <entry key="RESCHEDULE" value="11201"/>
             </map>
         </property>
         <property name="actionToCreditAccount">
@@ -84,6 +85,7 @@
                 <entry key="MANDATORYWITHDRAWAL_ADJUSTMENT" value="24000"/>
                 <entry key="VOLUNTORYWITHDRAWAL_ADJUSTMENT" value="23000"/>
                 <entry key="WRITEOFF" value="13101"/>
+                <entry key="RESCHEDULE" value="13101"/>
             </map>
         </property>
     </bean>

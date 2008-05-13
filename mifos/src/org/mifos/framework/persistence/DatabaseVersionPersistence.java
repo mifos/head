@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.mifos.application.accounts.business.AddAccountAction;
 import org.mifos.application.accounts.business.AddAccountStateFlag;
+import org.mifos.application.accounts.business.AddFinancialAction;
+import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.holiday.persistence.Upgrade104;
@@ -35,7 +37,7 @@ import org.mifos.application.master.persistence.Upgrade183;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 194;
+	public static final int APPLICATION_VERSION = 195;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -85,6 +87,7 @@ public class DatabaseVersionPersistence {
 		register(register, new Upgrade183());
 		register185(register);
 		register187(register);
+		register195(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -303,6 +306,17 @@ public class DatabaseVersionPersistence {
 				SecurityConstants.CONFIGURATION_MANAGEMENT));
 	}
 
+	
+	/**
+	 * Add the Loan reschedule account and financial actions.
+	 */
+	private static void register195(Map<Integer, Upgrade> register) {
+		register(register, new CompositeUpgrade(new AddFinancialAction(195,
+				FinancialActionConstants.RESCHEDULE.getValue(), "FinancialAction-LoanRescheduled"),
+				new AddAccountAction(195,
+						AccountActionTypes.LOAN_RESCHEDULED.getValue(), "AccountAction-LoanRescheduled")));
+	}	
+	
 	private final Connection connection;
 	private final Map<Integer, Upgrade> registeredUpgrades;
 
