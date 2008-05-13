@@ -1984,12 +1984,12 @@ class LoanTestCaseData {
 
 	}
 
-	public void xtestAllFlatInterestTestCases() throws Exception 
+	public void testFlatInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("testcase-2008-05-05-flat-set1")) {
+			if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("flat-set")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -1997,12 +1997,12 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void xtestAllFlatInterestTestCasesWithGrace() throws Exception 
+	public void testFlatInterestGraceAndFeesTestCases() throws Exception 
 	{
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterestWithGracePeriod/";
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("test2")) {
+			if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("flat-grace-fee-set")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -2010,31 +2010,32 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void xtestAllDecliningInterestTestCasesWithGrace() throws Exception 
-	{
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestWithGracePeriod/";
-		String[] dataFileNames = getCSVFiles(rootPath);
-		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("testFlatGracePrincipal")) {
-				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
-				tearDown();
-				setUp();
-			}
-		}
-	}
-
-	public void testAllDecliningInterestTestCases() throws Exception 
+	public void testDecliningInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (dataFileNames[i].startsWith("test-nograce")) {
+			if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("declining-set")) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
 			}
 		}
 	}
+
+	public void testDecliningInterestGraceAndFeesTestCases() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("declining-grace-fee-set")) {
+				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+	}
+
 	
 	/*
 	 * This test case populates data from spreadsheet for loan params and expected results
