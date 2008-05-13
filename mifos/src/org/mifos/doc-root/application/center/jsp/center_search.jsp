@@ -46,11 +46,14 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 
+
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
 <tiles:insert definition=".withoutmenu">
  <tiles:put name="body" type="string">
+ <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
  <script type="text/javascript">
  
  function goToCancelPage()
@@ -107,9 +110,12 @@
           <td width="70%" height="24" align="left" valign="top" class="paddingleftCreates"><table width="98%" border="0" cellspacing="0" cellpadding="3">
               <tr>
                 <td class="headingorange"><span class="heading">
-                    <mifos:mifoslabel name="Center.CreateNew"  bundle="CenterUIResources"/>
-                    <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-                	<mifos:mifoslabel name="Center.dash"  bundle="CenterUIResources"/>
+                    
+                    <fmt:message key="Center.CreateGroupNew">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></fmt:param>
+				    </fmt:message>                  
+                    <mifos:mifoslabel name="Center.dash"  bundle="CenterUIResources"/>
+                    
                  	</span>
                  	<mifos:mifoslabel name="Center.SearchSelectCenterHeading"  bundle="CenterUIResources"/>
 					<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
@@ -144,8 +150,8 @@
 	                <tr class="fontnormal">
                   		<td width="30%">&nbsp; </td>
                   		<td width="70%"><br>
-	                     <html-el:submit styleClass="buttn" style="width:70px;"><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
-	      				  <html-el:button property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn" style="width:70px;"><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
+	                     <html-el:submit styleClass="buttn" ><mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel></html-el:submit>						  &nbsp;
+	      				  <html-el:button property="cancelButton" onclick="goToCancelPage();" styleClass="cancelbuttn" ><mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> </html-el:button>
                   			<br><br>
                   		</td>
                 	</tr>

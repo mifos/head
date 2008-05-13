@@ -45,10 +45,11 @@
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".detailsCustomer">
 <tiles:put name="body" type="string">
-
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript">
 
@@ -88,17 +89,25 @@
               <td class="headingorange">
                   <span class="heading"><c:out value="${BusinessKey.displayName}"/>
                   - </span>
-                  <mifos:mifoslabel name="Center.Preview" bundle="CenterUIResources"/>
-                  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-                  <mifos:mifoslabel name="Center.Information" bundle="CenterUIResources"/>
+                  
+                  <fmt:message key="Center.PreviewInformationCentre">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				   </fmt:message>                  
+                  
+                  
 
               </td>
             </tr>
             <tr>
              <td class="fontnormal"><mifos:mifoslabel name="Center.CreatePreviewPageInstruction" bundle="CenterUIResources"></mifos:mifoslabel>
-                    &nbsp; <mifos:mifoslabel name="Center.EditPageCancelInstruction1"	bundle="CenterUIResources"/>
-								<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
-								<mifos:mifoslabel name="Center.EditPageCancelInstruction2"	bundle="CenterUIResources"/>
+                    &nbsp;      
+                    
+                    <fmt:message key="Center.EditPageCancelInstruction">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				   </fmt:message>    
+                    
+                    
+                    
              </td>
 
             </tr>
@@ -250,11 +259,11 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">&nbsp;
-                  	<html-el:submit property="submitButton" style="width:70px" styleClass="buttn">
+                  	<html-el:submit property="submitButton" styleClass="buttn">
                   	<mifos:mifoslabel name="button.submit" bundle="CenterUIResources" ></mifos:mifoslabel></html-el:submit>
                   	&nbsp;
 				  	&nbsp;
-				  	<html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn" style="width:70px">
+				  	<html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn">
 				  	<mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
 
                	  </td>

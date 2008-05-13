@@ -46,10 +46,15 @@
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
+	
+	<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
+		
 		<script language="javascript" SRC="pages/framework/js/date.js"></script>
 		<script src="pages/framework/js/conversion.js"></script>
 		<script src="pages/framework/js/con_en.js"></script>
@@ -170,7 +175,13 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"><mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><c:out value=" " /> <mifos:mifoslabel name="Center.dash" bundle="CenterUIResources" />
+												<span class="heading">
+												
+												<fmt:message key="Center.CreateNewCenter">
+													<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				    							</fmt:message>
+												
+												<c:out value=" " /> <mifos:mifoslabel name="Center.dash" bundle="CenterUIResources" />
 												</span>
 												<mifos:mifoslabel name="Center.Enter" bundle="CenterUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
@@ -527,11 +538,11 @@
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn" style="width:70px;">
+												<html-el:submit styleClass="buttn" >
 													<mifos:mifoslabel name="button.preview" bundle="CenterUIResources" />
 												</html-el:submit>
 												&nbsp; &nbsp;
-												<html-el:button onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" style="width:70px">
+												<html-el:button onclick="goToCancelPage();" property="cancelButton" styleClass="cancelbuttn" >
 													<mifos:mifoslabel name="button.cancel" bundle="CenterUIResources" />
 												</html-el:button>
 											</td>

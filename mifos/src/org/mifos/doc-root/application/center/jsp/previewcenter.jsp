@@ -47,8 +47,11 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".withoutmenu">
 <tiles:put name="body" type="string">
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <script language="javascript" >
 function goToEditPage(){
@@ -372,10 +375,10 @@ function goToEditPage(){
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">&nbsp;
-                  <html-el:submit styleClass="buttn" property = "submitButton" style="width:70px"><mifos:mifoslabel name="button.submit" bundle="CenterUIResources"></mifos:mifoslabel></html-el:submit>
+                  <html-el:submit styleClass="buttn" property = "submitButton"><mifos:mifoslabel name="button.submit" bundle="CenterUIResources"></mifos:mifoslabel></html-el:submit>
                   &nbsp;
 				  &nbsp;
-				  <html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn" style="width:70px"><mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
+				  <html-el:button onclick="goToCancelPage();" property = "cancelButton" styleClass="cancelbuttn"><mifos:mifoslabel name="button.cancel" bundle="CenterUIResources"></mifos:mifoslabel></html-el:button>
 
                  </td>
                  </tr>

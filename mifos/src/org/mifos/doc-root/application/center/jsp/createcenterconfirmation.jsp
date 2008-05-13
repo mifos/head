@@ -44,11 +44,14 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!-- Inserting tile defintion for header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 
 
  <!-- Body Begins -->
@@ -58,25 +61,39 @@
               <table width="98%" border="0" cellspacing="0" cellpadding="3">
                <!-- Center confirmation message -->
               	<tr>
-                  <td class="headingorange"><mifos:mifoslabel name="Center.ConfirmationMessage" bundle="CenterUIResources"/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><br></td>
+                  <td class="headingorange">
+                  
+                  <fmt:message key="Center.ConfMessage">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				  </fmt:message>
+				  <br>
+				  </td>
+                              
+                  
               	</tr>
               	<tr>
                   <!-- Displays the center system id and name of the center -->
                   <td class="fontnormalbold"> <mifos:mifoslabel name="Center.Confirmation.Note" bundle="CenterUIResources"></mifos:mifoslabel>
                 	<span class="fontnormal"> <c:out value="${sessionScope.centerCustActionForm.displayName}"/>
                    <mifos:mifoslabel name="Center.Confirmation.NameSystemID" bundle="CenterUIResources"></mifos:mifoslabel></span> <c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/> <span class="fontnormal"><br>
-      				<mifos:mifoslabel name="Center.Confirmation.Information1" bundle="CenterUIResources"/>
-      				<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-      				<mifos:mifoslabel name="Center.Confirmation.Information2" bundle="CenterUIResources"/>
-      				<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><mifos:mifoslabel name="Center.Confirmation.Information3" bundle="CenterUIResources"/>
+      				      				      				
+      				<fmt:message key="Center.Confirmation.AllInformation">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				    </fmt:message>
+      				
+      				
+      				
       				<br>
                     <br>
                     </span>
                      <!-- Link to view the center details -->
                     <a href="centerCustAction.do?method=get&globalCustNum=<c:out value="${sessionScope.centerCustActionForm.globalCustNum}"/>&recordOfficeId=${sessionScope.centerCustActionForm.officeId}&recordLoanOfficerId=${sessionScope.centerCustActionForm.loanOfficerId}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
-                    	<mifos:mifoslabel name="Center.View" bundle="CenterUIResources"/>
-         				<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-                    	<mifos:mifoslabel name="Center.DetailsNow" bundle="CenterUIResources"/>
+                    	
+                    	<fmt:message key="Center.ViewDetailsInfo">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				        </fmt:message>
+                    	
+                    	
 
                     </a>
                     <span class="fontnormal"><br>
@@ -86,15 +103,22 @@
                     </span><mifos:mifoslabel name="Center.AccountsHeading" bundle="CenterUIResources"/><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><span class="fontnormal"><br>
 					<!-- Link to create a new savingsa account link -->
                     <html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.centerCustActionForm.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}">
-                    <mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"/>
-                    <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-                    <mifos:mifoslabel name="Center.account" bundle="CenterUIResources"/>
+                    
+                    <fmt:message key="Center.CreateNewAccount">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></fmt:param>
+				    </fmt:message>
+                    
+                    
                     </html-el:link><br>
                     <br>
                     <!-- Link to create a new center -->
                     <a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0&randomNUm=${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'randomNUm')}"/>
-                    <mifos:mifoslabel name="Center.CreateNew" bundle="CenterUIResources"></mifos:mifoslabel>
-                    <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
+                    
+                    <fmt:message key="Center.CreateLinkNewCenter">
+							<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				    </fmt:message>
+                    
+                    
                     </a>
                     </span>
                   </td>

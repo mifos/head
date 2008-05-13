@@ -1,13 +1,15 @@
-<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+6<%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
-
+<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
+		<fmt:setBundle basename="org.mifos.config.localizedResources.CenterUIResources"/>
 <script language="javascript">
   function goToCancelPage(){
 	groupTransferActionForm.submit();
@@ -44,15 +46,13 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td class="fontnormalbold"> <span class="fontnormal">
-                  <mifos:mifoslabel name="Center.clickInstruction" bundle="CenterUIResources"/> 
-                  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-                  <mifos:mifoslabel name="Center.nameChangeInstruction" bundle="CenterUIResources"/>
-                  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-                   <mifos:mifoslabel name="Center.cancelInstruction" bundle="CenterUIResources"/>
-                  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
-                  <mifos:mifoslabel name="Center.changeCenterMembershipInstruction" />
-                  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
-                  <mifos:mifoslabel name="Center.Membership" bundle="CenterUIResources"/>
+                  
+                  <fmt:message key="Center.InstructionSet">
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
+						<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></fmt:param>
+				  </fmt:message>
                  </td>
                 </tr>
               </table>
@@ -64,7 +64,7 @@
                   <td width="20%" align="right"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out value=" "/>
 							<mifos:mifoslabel name="Center.Name" bundle="CenterUIResources"></mifos:mifoslabel></td>
                   <td width="80%"><html-el:text property="searchString"/>
- 	                  <html-el:submit styleClass="buttn" style="width:70px;">
+ 	                  <html-el:submit styleClass="buttn">
 	                  	<mifos:mifoslabel name="button.Search" bundle ="CenterUIResources"></mifos:mifoslabel>
 	                  </html-el:submit>
 				  </td>
@@ -86,7 +86,7 @@
               <table width="96%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center">
-                    <html-el:button property="cancelButton" onclick="goToCancelPage();"  styleClass="cancelbuttn" style="width:70px;">
+                    <html-el:button property="cancelButton" onclick="goToCancelPage();"  styleClass="cancelbuttn">
                     <mifos:mifoslabel name="button.cancel" bundle ="CenterUIResources"></mifos:mifoslabel> 
                     </html-el:button>
 	    	        
