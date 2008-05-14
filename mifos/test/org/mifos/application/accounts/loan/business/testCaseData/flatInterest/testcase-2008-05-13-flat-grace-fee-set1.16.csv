@@ -10,7 +10,7 @@ CurrencyRounding,FLOOR,,CEILING,,GracePeriodType,Principal,None,,FeeValueMultipl
 Digits After Decimal,3,,3,,GracePeriod,3,3,,FeePrincipalMultiple,,1,,,,
 InitialRoundingMode ,FLOOR,,CEILING,,FeeFrequency,Periodic,OneTime,,FeeInterestMultiple,,0,,,,
 InitialRoundOffMultiple,1.000,,0.1,,FeeType,Principal,Principal,,ModifiedNumPayments,,52,,,,
-FinalRoundingMode,CEILING,,HALF_UP,,FeeValue,1.000,7,,TotalFeeAdjust,,TRUE,,,,
+FinalRoundingMode,CEILING,,HALF_UP,,FeeValue,1.000,7,,TotalFeeAdjust,,FALSE,,,,
 FinalRoundOffMultiple,0.100,,0.1,,FeePercentage,25.00%,0.032,,,,,,,,
 ,,,,,,,,,TestCaseNumber,,16,,,,
 ,,,,,,,,,,,,,,,

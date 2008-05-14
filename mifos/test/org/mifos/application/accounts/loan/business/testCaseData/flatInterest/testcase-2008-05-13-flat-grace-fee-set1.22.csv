@@ -1,35 +1,35 @@
 ,Enter your Data,,Example,,,Enter your Data,Example,,Calculated - do not change,,,,Indicators,,
-Principal,9999,,1200,,,,,,Installment Interest,,0.0025,,FinalBalance,,0
-Loan Type,Declining,,Flat,,,,,,DigitsRoundingFactor,,0.001,,FinalInterest,,8.834
-Annual Interest,3.00%,,12%,,,,,,BeginningBalance,,9999,,,,
-Number of Payments,6,,12,,,,,,BalanceInterestFactor,,0,,,,
-Payment Frequency,Monthly,,Monthly,,,,,,InterestGrace,,0,,,,
-Days in Year,365,,365,,,,,,PrincipalGrace,,3,,,,
-,,,,,,,,,FeeFactor,,0.0333,,,,
-CurrencyRounding,HALF_UP,,CEILING,,GracePeriodType,Principal,None,,FeeValueMultiple,,0,,,,
-Digits After Decimal,3,,3,,GracePeriod,3,3,,FeePrincipalMultiple,,0,,,,
-InitialRoundingMode ,FLOOR,,CEILING,,FeeFrequency,Periodic,OneTime,,FeeInterestMultiple,,1,,,,
-InitialRoundOffMultiple,1.000,,0.1,,FeeType,Interest,Principal,,ModifiedNumPayments,,6,,,,
-FinalRoundingMode,FLOOR,,HALF_UP,,FeeValue,1.000,7,,TotalFeeAdjust,,TRUE,,,,
-FinalRoundOffMultiple,0.100,,0.1,,FeePercentage,3.33%,0.032,,,,,,,,
-,,,,,,,,,TestCaseNumber,,9,,,,
+Principal,9999,,1200,,,,,,Installment Interest,,0.003886944,,FinalBalance,,0
+Loan Type,Flat,,Flat,,,,,,DigitsRoundingFactor,,0.001,,FinalInterest,,38.73
+Annual Interest,19.99%,,12%,,,,,,BeginningBalance,,10832,,,,
+Number of Payments,6,,12,,,,,,BalanceInterestFactor,,1,,,,
+Payment Frequency,Weekly,,Monthly,,,,,,InterestGrace,,0,,,,
+Days in Year,360,,365,,,,,,PrincipalGrace,,0,,,,
+,,,,,,,,,FeeFactor,,0.01,,,,
+CurrencyRounding,CEILING,,CEILING,,GracePeriodType,None,None,,FeeValueMultiple,,0,,,,
+Digits After Decimal,3,,3,,GracePeriod,3,3,,FeePrincipalMultiple,,1,,,,
+InitialRoundingMode ,HALF_UP,,CEILING,,FeeFrequency,Periodic,OneTime,,FeeInterestMultiple,,0,,,,
+InitialRoundOffMultiple,1.000,,0.1,,FeeType,Principal,Principal,,ModifiedNumPayments,,6,,,,
+FinalRoundingMode,HALF_UP,,HALF_UP,,FeeValue,1.000,7,,TotalFeeAdjust,,FALSE,,,,
+FinalRoundOffMultiple,0.500,,0.1,,FeePercentage,1.00%,0.032,,,,,,,,
+,,,,,,,,,TestCaseNumber,,22,,,,
 ,,,,,,,,,,,,,,,
-Exact,,,,,,,Rounded,,,,,,,,,,,,,,,,,,,10149.000000000000000000000000000000,2563.3,7585.7000000000,,,,
-Declining fixed payment,,,,,,,,,,,,,,,,,,,,,,,,,,10149.000000000000000000000000000000,2330,7819.0000000000,,,,
+Exact,,,,,,,Rounded,,,,,,,,,,,,,,,,,,,10832.000000000000000000000000000000,2563.3,8268.7000000000,,,,
+Flat,,,,,,,,,,,,,,,,,,,,,,,,,,10832.000000000000000000000000000000,2330,8502.0000000000,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,0.000000000000000000000000000000,232.30000,#NUM!,,,,
-Calculated Totals,10149.00993,9999,125.0291105,24.98081627,,,Calculated Totals,10149,9999,125.029,24.971,,,,,,,,,,,,,,,0.000000000000000000000000000000,232.30000,,,,,
-Summed Totals,10149.00993,9999,125.0291105,17.5171244,,,Summed Totals,10149.000,9999.000,125.029,24.971,,,,,,,,,,,,,,,,,,,,,
-Discrepancy,0,-3.2378E-10,3.22743E-10,0,,,,0.000,0.000,0.000,0.000,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,Account 999,,0,0,0.01,,,,,,,,,,,,,,,,,,,,,
+Calculated Totals,10832.13335,9999,233.193345,599.94,,,Calculated Totals,10832,9999,233.06,599.94,,,,,,,,,,,,,,,0.000000000000000000000000000000,232.30000,,,,,
+Summed Totals,10832.13335,9999,233.193345,599.94,,,Summed Totals,10832.000,9999.000,233.060,599.940,,,,,,,,,,,,,,,,,,,,,
+Discrepancy,0,0,0,0,,,,0.000,0.000,0.000,0.000,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,Account 999,,0,0.134,0,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-Payment #,Payment,Amount paid on principal,Interest,Fee,Balance,,Payment #,Payment,Amount paid on principal,Interest,Fee,Balance,,,,,,,,,,,,,,,,,show,not-Last ?,Last payment,last principal
-Start,3349.67887,,,,9999.000,,Start,,,,,9999.000,,,,,,,,,,,,,,,,,,,,
-1,29.161,0,24.9975,4.163469379,9999.000,,1,29.000,0.000,24.837,4.163,9999.000,,,,,,,,,,,,,,,,,TRUE,TRUE,10149.000,9999.000
-2,29.161,0,24.9975,4.163469379,9999.000,,2,29.000,0.000,24.837,4.163,9999.000,,,,,,,,,,,,,,,,,TRUE,TRUE,10120.000,9999.000
-3,29.161,0,24.9975,4.163469379,9999.000,,3,29.000,0.000,24.837,4.163,9999.000,,,,,,,,,,,,,,,,,TRUE,TRUE,10091.000,9999.000
-4,3353.842,3324.68137,24.9975,4.163469379,6674.319,,4,3353.000,3323.839,24.998,4.163,6675.161,,,,,,,,,,,,,,,,,TRUE,TRUE,10062.000,9999.000
-5,3353.842,3332.993074,16.68579657,4.163469379,3341.326,,5,3353.000,3332.151,16.686,4.163,3343.010,,,,,,,,,,,,,,,,,TRUE,TRUE,6709.000,6675.161
-6,3353.842,3341.325556,8.353313891,4.163469379,0.000,,6,3356.000,3343.010,8.834,4.156,0.000,,,,,,,,,,,,,,,,,TRUE,FALSE,3356.000,3343.010
+Payment #,Payment,Principal,Interest,Fee,Balance,,Payment #,Payment,Principal,Interest,Fee,Balance,,,,,,,,,,,,,,,,,show,not-Last ?,Last payment,last principal
+Start,0,,,,10232.193,,Start,,,,,10232.060,,,,,,,,,,,,,,,,,,,,
+1,1805.356,1666.5,38.8655575,99.99,8526.828,,1,1805.000,1666.144,38.866,99.990,8527.050,,,,,,,,,,,,,,,,,TRUE,TRUE,10832.000,9999.000
+2,1805.356,1666.5,38.8655575,99.99,6821.462,,2,1805.000,1666.144,38.866,99.990,6822.040,,,,,,,,,,,,,,,,,TRUE,TRUE,9027.000,8332.856
+3,1805.356,1666.5,38.8655575,99.99,5116.097,,3,1805.000,1666.144,38.866,99.990,5117.030,,,,,,,,,,,,,,,,,TRUE,TRUE,7222.000,6666.712
+4,1805.356,1666.5,38.8655575,99.99,3410.731,,4,1805.000,1666.144,38.866,99.990,3412.020,,,,,,,,,,,,,,,,,TRUE,TRUE,5417.000,5000.568
+5,1805.356,1666.5,38.8655575,99.99,1705.366,,5,1805.000,1666.144,38.866,99.990,1707.010,,,,,,,,,,,,,,,,,TRUE,TRUE,3612.000,3334.424
+6,1805.356,1666.5,38.8655575,99.99,0.000,,6,1807.000,1668.280,38.730,99.990,0.000,,,,,,,,,,,,,,,,,TRUE,FALSE,1807.000,1668.280
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,FALSE,TRUE,0.000,0.000
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,FALSE,TRUE,0.000,0.000
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,FALSE,TRUE,0.000,0.000
