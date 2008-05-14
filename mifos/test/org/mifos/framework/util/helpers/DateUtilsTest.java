@@ -176,4 +176,14 @@ public class DateUtilsTest extends TestCase {
 				Calendar.JANUARY, 1), DateUtils.getDate(2008, Calendar.JANUARY,
 				1)));
 	}
+	
+	public void testAdd() throws Exception {
+		Date date = DateUtils.getDate("13/05/2008");
+		assertEquals("14/05/2008", DateUtils.format(DateUtils.addDays(date, 1)));
+		assertEquals("20/05/2008", DateUtils.format(DateUtils.addWeeks(date, 1)));
+		assertEquals("13/06/2008", DateUtils.format(DateUtils.addMonths(date, 1)));
+		
+		date = DateUtils.getDate("30/01/2009");
+		assertEquals("28/02/2009", DateUtils.format(DateUtils.addMonths(date, 1)));
+	}
 }

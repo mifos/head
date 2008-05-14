@@ -2008,18 +2008,14 @@ public class LoanBO extends AccountBO {
 			MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
-		if(isRepaymentIndepOfMeetingEnabled){
+		List<InstallmentDate> installmentDates;
+		if (isRepaymentIndepOfMeetingEnabled) {
 			setLoanMeeting(newMeetingForRepaymentDay);
 		}
-		List<InstallmentDate> installmentDates;
-		if (isRepaymentIndepOfMeetingEnabled)
-		installmentDates = getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
-					getLoanMeeting(), noOfInstallments,
-					getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),isRepaymentIndepOfMeetingEnabled);
-		else
 		installmentDates = getInstallmentDates(
 				getLoanMeeting(), noOfInstallments,
-				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled));
+				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled), isRepaymentIndepOfMeetingEnabled);
+
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Obtained intallments dates");
 		Money loanInterest = getLoanInterest(installmentDates.get(
@@ -2028,15 +2024,15 @@ public class LoanBO extends AccountBO {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Emi installment  obtained ");
 		validateSize(installmentDates, EMIInstallments);
-		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
+		List<FeeInstallment> feeInstallments = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0) {
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
-			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
+			feeInstallments = mergeFeeInstallments(getFeeInstallments(installmentDates));
 		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Fee installment obtained ");
 		generateRepaymentSchedule(installmentDates, EMIInstallments,
-				feeInstallment);
+				feeInstallments);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Meeting schedule generated  ");
 		applyRounding();
@@ -2268,10 +2264,8 @@ private Money getLoanInterest(Date installmentEndDate)
 							.getPrincipal(), em.getInterest());
 			addAccountActionDate(loanScheduleEntity);
 			for (FeeInstallment feeInstallment : feeInstallmentList) {
-				if (feeInstallment.getInstallmentId().shortValue() == installmentDate
-						.getInstallmentId().shortValue()
-						&& !feeInstallment.getAccountFeesEntity().getFees()
-								.isTimeOfDisbursement()) {
+				if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
+						&& !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
 					LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(
 							loanScheduleEntity, feeInstallment
 									.getAccountFeesEntity().getFees(),
@@ -2280,11 +2274,9 @@ private Money getLoanInterest(Date installmentEndDate)
 					loanScheduleEntity
 							.addAccountFeesAction(loanFeeScheduleEntity);
 				}
-				else if (feeInstallment.getInstallmentId() == installmentDate
-						.getInstallmentId()
+				else if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
 						&& isInterestDeductedAtDisbursement()
-						&& feeInstallment.getAccountFeesEntity().getFees()
-								.isTimeOfDisbursement()) {
+						&& feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
 					LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(
 							loanScheduleEntity, feeInstallment
 									.getAccountFeesEntity().getFees(),
@@ -3109,8 +3101,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		date.setTime(disbursementDate);
 		loanMeeting.setMeetingStartDate(date);
 		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
-		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate(Short
-				.valueOf("1"));
+		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate((short)1);
 		loanScheduleEntity.setMiscFee(miscFee);
 		loanScheduleEntity.setMiscPenalty(miscPenalty);
 		Money interest = new Money();
@@ -3630,18 +3621,11 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		if(isRepaymentIndepOfMeetingEnabled){
 			setLoanMeeting(newMeetingForRepaymentDay);
 		}
-		List<InstallmentDate> installmentDates;
-		if (isRepaymentIndepOfMeetingEnabled)
-			installmentDates = getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
+		List<InstallmentDate> installmentDates = getInstallmentDates(
 									getLoanMeeting(), 
 									noOfInstallments,
 									getInstallmentSkipToStartRepayment_v2(),
 									isRepaymentIndepOfMeetingEnabled);
-		else
-			installmentDates = getInstallmentDates(
-									getLoanMeeting(), 
-									noOfInstallments,
-									getInstallmentSkipToStartRepayment_v2());
 		
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 						"Obtained intallments dates");
@@ -3664,7 +3648,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			 * (b) compute the sum of interest paid across all installments.
 			 */
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
-			feeInstallment = mergeFeeInstallments(getFeeInstallment(installmentDates));
+			feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates));
 		}
 		
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

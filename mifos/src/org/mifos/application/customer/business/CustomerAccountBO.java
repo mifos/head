@@ -775,7 +775,7 @@ public class CustomerAccountBO extends AccountBO {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
-		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallment(installmentDates));
+		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallments(installmentDates));
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(

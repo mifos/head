@@ -931,62 +931,46 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected final List<InstallmentDate> getInstallmentDates(
-			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip)
+ 			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip)
+ 			throws AccountException {
+		return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
+	}
+	
+	protected final List<InstallmentDate> getInstallmentDates(
+			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip, boolean isRepaymentIndepOfMeetingEnabled)
 			throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating intallment dates");
-		List<Date> dueDates;
-		try {
-			if (!noOfInstallments.equals(Short.valueOf("0"))) {
-				dueDates = meeting.getAllDates(noOfInstallments
-						+ installmentToSkip);
+		if (noOfInstallments > 0) {
+			try {
+				List<Date> dueDates;
+				if (isRepaymentIndepOfMeetingEnabled)
+					dueDates = meeting
+							.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments +
+									installmentToSkip);
+				else dueDates = meeting.getAllDates(noOfInstallments +
+						installmentToSkip);
+
+				return createInstallmentDates(installmentToSkip, dueDates);
 			}
-			else {
-				dueDates = null;
+			catch (MeetingException e) {
+				throw new AccountException(e);
 			}
-		} catch (MeetingException e) {
-			throw new AccountException(e);
 		}
-		int installmentId = 1;
-		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-		if (dueDates != null) {
-			for (Date date : dueDates) {
-				installmentDates.add(new InstallmentDate(new Short(Integer
-						.toString(installmentId++)), date));
-			}
-			removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
-		}
-		return installmentDates;
+		return new ArrayList<InstallmentDate>();
 	}
-	protected final List<InstallmentDate> getInstallmentDatesWithRepaymentIndepOfMeetingEnabled(
-			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip,boolean isRepaymentIndepOfMeetingEnabled)
-			throws AccountException {
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"Generating intallment dates");
-		List<Date> dueDates;
-		try {
-			if (!noOfInstallments.equals(Short.valueOf("0"))) {
-				dueDates = meeting.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments
-							+ installmentToSkip);
-			}
-			else {
-				dueDates = null;
-			}
-		} catch (MeetingException e) {
-			throw new AccountException(e);
-		}
+	
+	private List<InstallmentDate> createInstallmentDates(Short installmentToSkip, List<Date> dueDates) {
+ 		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
 		int installmentId = 1;
-		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-		if (dueDates != null) {
-			for (Date date : dueDates) {
-				installmentDates.add(new InstallmentDate(new Short(Integer
-						.toString(installmentId++)), date));
-			}
-			removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
-		}
-		return installmentDates;
-	}
-	protected final List<FeeInstallment> getFeeInstallment(
+		for (Date date : dueDates) {
+			installmentDates.add(new InstallmentDate((short)installmentId++, date));
+ 		}
+		removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
+ 		return installmentDates;
+ 	}
+	
+	protected final List<FeeInstallment> getFeeInstallments(
 			List<InstallmentDate> installmentDates) throws AccountException {
 		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
 		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {

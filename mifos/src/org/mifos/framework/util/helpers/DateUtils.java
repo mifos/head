@@ -243,7 +243,6 @@ public class DateUtils {
 		return convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
-	// Bug id 26765. Added the method convertToCurrentDateFormat
 	public static String convertToCurrentDateFormat(String pattern) {
 		char chArray[] = pattern.toCharArray();
 		StringBuilder fmt = new StringBuilder();
@@ -744,15 +743,27 @@ public class DateUtils {
 				getDateWithoutTimeStamp(futureDate.getTime())) <= 0;
 	}
 
-	public static Date add(Date date, int calendarField, int toAdd) {
-		return org.apache.commons.lang.time.DateUtils.add(date, calendarField, toAdd);
+	public static Date addDays(Date date, int daysToAdd) {
+		return org.apache.commons.lang.time.DateUtils.addDays(date, daysToAdd);
 	}
 	
 	public static Date addWeeks(Date date, int weeksToAdd) {
-		return addDays(date, weeksToAdd*7);
+		return org.apache.commons.lang.time.DateUtils.addWeeks(date, weeksToAdd);
 	}
 
-	public static Date addDays(Date date, int daysToAdd) {
-		return add(date, Calendar.DATE, daysToAdd);
+	public static Date addMonths(Date date, int monthsToAdd) {
+		return org.apache.commons.lang.time.DateUtils.addMonths(date, monthsToAdd);
+	}
+	
+	public static String format(Date date) {
+		return format(date, DEFAULT_DATE_FORMAT.toPattern());
+	}
+	
+	public static String format(Date date, String pattern) {
+		return format(date, new SimpleDateFormat(pattern));
+	}
+	
+	public static String format(Date date, DateFormat dateFormat) {
+		return dateFormat.format(date);
 	}
 }
