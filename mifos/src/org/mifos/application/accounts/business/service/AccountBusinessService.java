@@ -110,6 +110,16 @@ public class AccountBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public List<AccountStateEntity> retrieveAllActiveAccountStateList(
+			AccountTypes accountTypes) throws ServiceException {
+		try {
+			return new AccountPersistence()
+					.retrieveAllActiveAccountStateList(accountTypes.getValue());
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId,
 			Short accountTypeId) throws ServiceException {

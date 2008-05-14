@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -343,7 +344,7 @@ public class MifosSelect extends BodyTagSupport {
     }
 
 	String render(Collection inColl, Collection outColl) {
-		StringBuffer results = new StringBuffer();
+		StringBuffer html = new StringBuffer();
         Map<Object,Object> inMap;
         Map<Object,Object> outMap;
         try {
@@ -354,85 +355,73 @@ public class MifosSelect extends BodyTagSupport {
 			else {
 				outMap = null;
 			}
-		} catch (SecurityException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		}
+		} 
 		
-		Map inputCopy = new HashMap();
-		if(inMap != null)
-		{
-			inputCopy = new HashMap(inMap);
-	        if(outMap != null) {
-	        	Set input = inMap.keySet();
-	        	Set output = outMap.keySet();
-	        	for(Iterator in= input.iterator();in.hasNext();) {
-	        		Object obj1 = in.next();
-	        		for(Iterator out= output.iterator();out.hasNext();) {
-	            		Object obj2 = out.next();
-	        			if(obj1.equals(obj2)) {
-	        				inputCopy.remove(obj1);
-	        			}
-	        		}
-	        	}
-	        }
+		Map inputCopy = new TreeMap();
+		if (inMap != null) {
+			inputCopy = new TreeMap(inMap);
+			if (outMap != null) {
+				Set input = inMap.keySet();
+				Set output = outMap.keySet();
+				for (Iterator iter = input.iterator(); iter.hasNext();) {
+					Object obj1 = iter.next();
+					for (Iterator out = output.iterator(); out.hasNext();) {
+						Object obj2 = out.next();
+						if (obj1.equals(obj2)) {
+							inputCopy.remove(obj1);
+						}
+					}
+				}
+			}
 		}
         rawselect[0].setData(inputCopy);
         rawselect[1].setData(outMap);
         init();
-        addStyle(results);
-        JavaScript(results);
-        results.append("<table >");
+        addStyle(html);
+        addJavaScript(html);
+        html.append("<table >");
 
         if (null != getLabel()) {
-            results.append("<tr> <td>" + getLabel() + "</td></tr>");
+            html.append("<tr> <td>" + getLabel() + "</td></tr>");
         }
         String spacedOut = getSpacedOut();
         if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
-        	results.append("<tr> <td width=\"28%\">");
+        	html.append("<tr> <td width=\"28%\">");
         else
-        	results.append("<tr> <td>");
-        results.append(rawselect[0].toString());
+        	html.append("<tr> <td>");
+        html.append(rawselect[0].toString());
         if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
-        	results.append("</td><td width=\"31%\" align=\"center\">");
+        	html.append("</td><td width=\"31%\" align=\"center\">");
         else
-        	results.append("</td><td>");
+        	html.append("</td><td>");
         if ((spacedOut != null) && (spacedOut.equalsIgnoreCase("true")))
-        	results.append("<table " + "width=\"70%\" border=\"0\" "
+        	html.append("<table " + "width=\"70%\" border=\"0\" "
                     + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
                     + "<td align=\"center\">" + rawbutton[0].toString());
         else
-        	results.append("<table " + "width=\"50%\" border=\"0\" "
+        	html.append("<table " + "width=\"50%\" border=\"0\" "
                 + "cellspacing=\"0\" cellpadding=\"3\"> <tr>"
                 + "<td align=\"center\">" + rawbutton[0].toString());
 
-        results.append("</td></tr><tr><td height=\"26\" align=\"center\">"
+        html.append("</td></tr><tr><td height=\"26\" align=\"center\">"
                 + rawbutton[1].toString());
-        results.append("</td></tr></table></td><td>");
-        results.append(rawselect[1].toString());
-        results.append("</td></tr></table>");
-        results.append("<div id=\"tooltip\" style=\"position:absolute;visibility:hidden;border:1px solid black;font-size:12px;layer-background-color:lightyellow;background-color:lightyellow;z-index:1;padding:1px\"></div>" );
+        html.append("</td></tr></table></td><td>");
+        html.append(rawselect[1].toString());
+        html.append("</td></tr></table>");
+        html.append("<div id=\"tooltip\" style=\"position:absolute;visibility:hidden;border:1px solid black;font-size:12px;layer-background-color:lightyellow;background-color:lightyellow;z-index:1;padding:1px\"></div>" );
 
-        String html = results.toString();
-		return html;
+        return html.toString();
 	}
 
     /**
      * This function Add the javascript to the tag for moving
      * the data between the lists
      */
-    private void JavaScript(StringBuffer results) {
-        results
-                .append("<script language=\"javascript\" SRC=\"pages/framework/js/Logic.js\" >"
+    private void addJavaScript(StringBuffer results) {
+        results.append("<script language=\"javascript\" SRC=\"pages/framework/js/Logic.js\" >"
                         + "</script> <link rel=\"stylesheet\" type=\"text/css\" href=\"pages/framework/css/tooltip.css\" title=\"MyCSS\"/>");
-
     }
     /**
      * Function to add html style to mifos tag
@@ -481,30 +470,30 @@ public class MifosSelect extends BodyTagSupport {
                 + rawselect[0].getName() + ")");
     }
 
-    Map helper(Collection coll) 
-    throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
-    IllegalAccessException, InvocationTargetException {
-    	Map<Object,Object> map=new HashMap<Object,Object>();
-    	if(coll!=null&&!coll.isEmpty()) {
-    		for (Iterator it = coll.iterator(); it.hasNext();) {
-    			Object object = it.next();
-				Object string1=null;
-				Object string2=null;
+    Map helper(Collection coll) throws SecurityException,
+			NoSuchMethodException, IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		Map<Object, Object> map = new TreeMap<Object, Object>();
+		if (coll != null && !coll.isEmpty()) {
+			for (Iterator it = coll.iterator(); it.hasNext();) {
+				Object object = it.next();
+				Object string1 = null;
+				Object string2 = null;
 				String str1 = this.Property2.substring(0, 1);
 				getList = object.getClass().getMethod(
-						"get" + str1.toUpperCase() + this.Property2.substring(1),
-						(Class[]) null);
-				string2 =  getList.invoke(object, (Object[]) null);
+						"get" + str1.toUpperCase() +
+								this.Property2.substring(1), (Class[]) null);
+				string2 = getList.invoke(object, (Object[]) null);
 				String str2 = this.Property1.substring(0, 1);
 				getList = object.getClass().getMethod(
-						"get" + str2.toUpperCase() + this.Property1.substring(1),
-						(Class[]) null);
-				string1 =  getList.invoke(object, (Object[]) null);
-				map.put(string1,string2);
-    		}
-    		return map;
-    	}
-    	return null;
-    }
+						"get" + str2.toUpperCase() +
+								this.Property1.substring(1), (Class[]) null);
+				string1 = getList.invoke(object, (Object[]) null);
+				map.put(string1, string2);
+			}
+			return map;
+		}
+		return null;
+	}
 
 }

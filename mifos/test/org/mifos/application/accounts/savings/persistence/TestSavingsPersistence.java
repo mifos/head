@@ -148,6 +148,14 @@ public class TestSavingsPersistence extends MifosTestCase {
 		assertNotNull(accountStateEntityList);
 		assertEquals(6, accountStateEntityList.size());
 	}
+	
+	public void testRetrieveAllActiveAccountStateList() throws NumberFormatException,
+			PersistenceException {
+		List<AccountStateEntity> accountStateEntityList = accountPersistence
+				.retrieveAllActiveAccountStateList(Short.valueOf("2"));
+		assertNotNull(accountStateEntityList);
+		assertEquals(6, accountStateEntityList.size());
+	}
 
 	public void testGetStatusChecklist() throws Exception {
 		accountCheckList = TestObjectFactory

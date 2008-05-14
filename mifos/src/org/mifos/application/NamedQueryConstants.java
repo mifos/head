@@ -229,6 +229,7 @@ public interface NamedQueryConstants {
 	public String ACCOUNT_STATE_CHANGE_HISTORY = "accounts.getStateChangeHistory";
 	public String ACCOUNT_CHECKLIST = "account.checklist";
 	public String RETRIEVEALLACCOUNTSTATES = "accounts.retrieveAllAccountStates";
+	public String RETRIEVEALLACTIVEACCOUNTSTATES = "accounts.retrieveAllActiveAccountStates";
 	public String STATUSCHECKLIST = "account.statusChecklist";
 	public String ACCOUNT_GETALLLOANBYCUSTOMER = "accounts.GetAllLoanByCustomer";
 

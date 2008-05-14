@@ -144,6 +144,22 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("prdTypeId", prdTypeId);
 		List<AccountStateEntity> queryResult = executeNamedQuery(
 				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
+		initializeAccountStates(queryResult);
+		return queryResult;
+	}
+	
+	public List<AccountStateEntity> retrieveAllActiveAccountStateList(Short prdTypeId)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("prdTypeId", prdTypeId);
+		queryParameters.put("OPTIONAL_FLAG", Short.valueOf("1"));
+		List<AccountStateEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.RETRIEVEALLACTIVEACCOUNTSTATES, queryParameters);
+		initializeAccountStates(queryResult);
+		return queryResult;
+	}
+
+	private void initializeAccountStates(List<AccountStateEntity> queryResult) {
 		for (AccountStateEntity accountStateEntity : queryResult) {
 			for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 					.getFlagSet()) {
@@ -152,7 +168,6 @@ public class AccountPersistence extends Persistence {
 			}
 			initialize(accountStateEntity.getNames());
 		}
-		return queryResult;
 	}
 
 	public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId,

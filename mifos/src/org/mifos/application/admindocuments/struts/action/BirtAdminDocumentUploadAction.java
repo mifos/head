@@ -174,7 +174,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		if (!StringUtils.isNullOrEmpty(uploadForm.getAccountTypeId())) {
 			SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,
 					new AccountBusinessService()
-			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);		
+			.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);		
 		}
 		return mapping.findForward(ActionForwards.load_success
 				.toString());
@@ -185,7 +185,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		List<AccountStateEntity> selectList = new ArrayList<AccountStateEntity>();
 		if (uploadForm.getStatusList() != null) {
 			List<AccountStateEntity> masterList = new AccountBusinessService()
-			.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId())));
+			.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId())));
 			for (AccountStateEntity product : masterList) {
 				for (String productStatusId : uploadForm.getStatusList()) {
 					if (productStatusId != null
@@ -332,7 +332,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		}
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,selectedlist,request);
 		List<AccountStateEntity> masterList = new AccountBusinessService()
-		.retrieveAllAccountStateList(AccountTypes.getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
+		.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
 		masterList.removeAll(selectedlist);
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS,masterList,request);
 		request.setAttribute(Constants.BUSINESS_KEY, admindoclist.get(0).getAdminDocumentID());

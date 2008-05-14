@@ -25,7 +25,14 @@
 	<!--Gets all possible states-->
 	<query name="accounts.retrieveAllAccountStates">
 		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
-    	where  accountStateEntity.prdType.productTypeID = :prdTypeId]]>
+    	where accountStateEntity.prdType.productTypeID = :prdTypeId
+    	order by id]]>
+	</query>
+	<query name="accounts.retrieveAllActiveAccountStates">
+		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
+    	where accountStateEntity.prdType.productTypeID = :prdTypeId
+    	and accountStateEntity.optional=:OPTIONAL_FLAG
+    	order by id]]>
 	</query>
 
 	<query name="accounts.getStates">
