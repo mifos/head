@@ -82,6 +82,13 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 		{
 			return;
 		}
+		boolean interestWasCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() < 0;
+		// 999 account may not be logged when the last payment is made so there is no need to 
+		// log the reversed 999 account
+		if (!interestWasCharged)
+		{
+			return;
+		}
 		Money account999 = ((LoanBO)loanTrxn.getAccount()).calculate999Account(!isLastPayment);
 		Money zeroAmount = new Money("0");
 		// only log if amount > or < 0

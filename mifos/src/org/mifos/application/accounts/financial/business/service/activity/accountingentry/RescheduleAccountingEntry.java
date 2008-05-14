@@ -25,6 +25,9 @@ public class RescheduleAccountingEntry extends BaseAccountingEntry {
 				.getLoanOffering().getPrincipalGLcode();
 		addAccountEntryDetails(loanTrxn.getPrincipalAmount(),
 				finActionReschedule, glcodeCredit, FinancialConstants.CREDIT);
+		//	no 999 account entries are made for close-rescheduled loans because if some payments have already been made
+		// the 999 account amount is probably very small and is ignored in 1.1 release. In the future if we want to
+		// calculate the 999 amount in this case we need to store the raw amount for each installment.
 
 	}
 

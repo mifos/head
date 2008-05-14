@@ -70,7 +70,9 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
 		if (!loan.isLegacyLoan())
 		{
 			boolean isLastPayment = ((LoanBO)loanTrxn.getAccount()).isLastInstallment(loanTrxn.getInstallmentId());
-			if (isLastPayment)
+			// if the final payment is made early there will be no interest charged so no 999 account
+			boolean interestIsCharged = loanTrxn.getInterestAmount().getAmountDoubleValue() > 0;
+			if (isLastPayment && interestIsCharged)
 			{
 				log999Account(loanTrxn, isLastPayment, glcodeCredit);
 			}
