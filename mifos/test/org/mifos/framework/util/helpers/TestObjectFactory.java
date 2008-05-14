@@ -1111,14 +1111,22 @@ public class TestObjectFactory {
 			MeetingBO meeting) {
 		
 		try {
-			//GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
+			MeetingBO newMeeting = new MeetingBO(meetingFrequency, recurAfter,
+					new Date(), MeetingType.PERIODIC_FEE);
+//GLCodeEntity glCode = ChartOfAccountsCache.get("31301").getAssociatedGlcode();
 			GLCodeEntity glCode = new GLCodeEntity((short) 1, "31301");
 			RateFeeBO fee = new RateFeeBO(userContext, feeName,
 									new CategoryTypeEntity(feeCategory),
 									new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC), glCode,
 									rate, new FeeFormulaEntity(feeFormula),
-									false, meeting);
-			return (RateFeeBO) addObject(testObjectPersistence.createFee(fee));
+									false, newMeeting);
+			//[keith] I have no idea why the fee must save itself. Otherwise mySQL errors crop up
+			// when you try to attach the fee to a loan.
+			fee.save();
+			//addObject(fee);
+			return fee;
+			//return (RateFeeBO) addObject(testObjectPersistence.persist(fee));
+			//return (RateFeeBO) addObject(testObjectPersistence.createFee(fee));
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);

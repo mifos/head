@@ -135,4 +135,20 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return chargeWaived;
 	}
 
+	/**
+	 * Since the amount of a rate-based fee carries more
+	 * precision than the prevailing currency can handle, round the
+	 * exact amount when determining the actual fee that must be paid.
+	 */
+	public void roundFeeAmount(Money roundedAmount) {
+		setFeeAmount(roundedAmount);
+	}
+	
+	/**
+	 * Adjust for rounding fees paid in prior installments, so that
+	 * the total fees paid adds up properly
+	 */
+	public void adjustFeeAmount (Money difference) {
+		setFeeAmount (getFeeAmount().add(difference));
+	}
 }

@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import net.sourceforge.mayfly.evaluation.condition.IsNull;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -3630,8 +3632,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 						"Obtained intallments dates");
 		
-		Money loanInterest = getLoanInterest_v2(installmentDates.get(
-				installmentDates.size() - 1).getInstallmentDueDate());
+		Money loanInterest = getLoanInterest_v2();
 		List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
 		
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -3678,21 +3679,14 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			return (short) getGracePeriodDuration();
 	}
 
-	private Money getLoanInterest_v2(Date installmentEndDate)
-	throws AccountException {
-		Money interest = null;
+	private Money getLoanInterest_v2() throws AccountException {
 		
-		if (getLoanOffering().getInterestTypes().getId().equals(
-				InterestType.FLAT.getValue()))
+		Money interest = null;
+		if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue()))
 			interest = getFlatInterestAmount_v2();
-		if (getLoanOffering().getInterestTypes().getId().equals(
-				InterestType.DECLINING.getValue()) 
-				|| getLoanOffering().getInterestTypes().getId().equals(
-						InterestType.DECLINING_EPI.getValue())) {
-			if (getGraceType()==GraceType.NONE || getGraceType()==GraceType.GRACEONALLREPAYMENTS)
-				interest = getDecliningInterestAmount_v2(getNoOfInstallments());
-			else 
-				interest = getDecliningInterestAmount_v2(getNoOfInstallments()-getGracePeriodDuration());
+		if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue()) 
+				|| getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
+			interest = getDecliningInterestAmount_v2();
 		}
 		return interest;
 	}
@@ -3718,35 +3712,54 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return interest;
 	}
 
-	/*
-	 * FYI the formula for computing the total amount paid is
+	/**
+	 * Compute the total interest due on a declining-interest loan.
+	 * Interest during a principal-only grace period is calculated differently
+	 * from non-grace-periods.
+	 * <p>
+	 * The formula is as follows:
+	 * <p>
+	 * The total interest paid is
+	 *     I = Ig + In
+	 * where
+	 *     Ig = interest paid during any principal-only grace periods
+	 *     In = interest paid during regular payment periods
+	 *     In = A - P
+	 *     A = total amount paid across regular payment periods
+	 * The formula for computing A is
 	 *     A = p * n
 	 * where
 	 *     A = total amount paid
 	 *     p = payment per installment
-	 *     n = number of installments
-	 * 
+	 *     n = number of regular (non-grace) installments
 	 *     P = principal
 	 *     i = interest per period
-	 *     n = number of payments
-	 * The total interest paid is
-	 *     I = A - P
-	 * where
-	 *     P = principal
 	 */
-	private Money getDecliningInterestAmount_v2(int numInstallments)
+	private Money getDecliningInterestAmount_v2()
 			throws AccountException {
 
-		Money totalPayments = getPaymentPerPeriodForDecliningInterest_v2(numInstallments).multiply((double) numInstallments);
-		Money totalInterest = totalPayments.subtract(getLoanAmount());
-
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"DecliningInterestCalculator:getInterest interest accumulated..."
-						+ totalInterest);
-
-		return totalInterest;
+		Money interest = new Money("0");
+		if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
+			Money graceInterestPayments = getDecliningInterestAmountGrace_v2 ();
+			Money nonGraceInterestPayments = getDecliningInterestAmountNonGrace_v2 (getNoOfInstallments() - getGracePeriodDuration());
+			interest = graceInterestPayments.add(nonGraceInterestPayments);
+		}
+		else
+			interest = getDecliningInterestAmountNonGrace_v2(getNoOfInstallments());
+		return interest;
 	}
 	
+	private Money getDecliningInterestAmountGrace_v2 () {
+		return getLoanAmount()
+			       .multiply (getInterestFractionalRatePerInstallment_v2())
+			          .multiply( (double)(getGracePeriodDuration()));
+	}
+	
+	private Money getDecliningInterestAmountNonGrace_v2 (int numNonGraceInstallments) {
+		Money totalPayments = getPaymentPerPeriodForDecliningInterest_v2(numNonGraceInstallments)
+		                         .multiply((double) numNonGraceInstallments);
+		return totalPayments.subtract(getLoanAmount());
+	}
 	/*
 	 * double --> BigDecimal
 	 */
@@ -4060,7 +4073,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	 *         EMI = P * i / [1- (1+i)^-n]
 	 *      where
 	 *         p = principal (amount of loan)
-     *         i = rate of interest per installment period
+     *         i = rate of interest per installment period as a decimal (not percent)
      *         n = no. of installments
      *         
      * Translated into program variables and method calls:
@@ -4146,80 +4159,6 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			}
 
 			return emiInstallments;
-		
-		/*
-		if (getGraceType() == GraceType.PRINCIPALONLYGRACE) {
-			double principalBalance = getLoanAmount().getAmountDoubleValue();
-			double interestPerInstallment = Math
-					.abs(principalBalance
-							* ((getInterestRate().doubleValue() / 100) / getDecliningInterestAnnualPeriods()));
-			Money interestPerInstallmentM = new Money(Double
-					.toString(interestPerInstallment));
-			EMIInstallment installment = null;
-			for (int i = 0; i < getGracePeriodDuration(); i++) {
-				installment = new EMIInstallment();
-				installment.setPrincipal(new Money());
-				installment.setInterest(interestPerInstallmentM);
-				emiInstallments.add(installment);
-			}
-			double principalPaidCurrentPeriod = 0;
-			for (int i = getGracePeriodDuration(); i < getNoOfInstallments(); i++) {
-
-				installment = new EMIInstallment();
-				//soham
-				if (getLoanOffering().getInterestTypes().getId().equals(
-						InterestType.DECLINING.getValue())) {
-					principalPaidCurrentPeriod = Math.abs(loanInterest
-							.getAmountDoubleValue()
-							- interestPerInstallment);
-				}	
-				else if (getLoanOffering().getInterestTypes().getId().equals( 
-						InterestType.DECLINING_EPI.getValue()))	{
-					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
-														/ (getNoOfInstallments()- getGracePeriodDuration());
-					
-				}
-				if (principalBalance > 0) {
-					interestPerInstallment = Math
-							.abs(principalBalance
-									* ((getInterestRate().doubleValue() / 100) / getDecliningInterestAnnualPeriods()));
-				}
-				installment.setPrincipal(new Money(Double
-						.toString(principalPaidCurrentPeriod)));
-				Money interstPerInstallmentM = new Money(Double
-						.toString(interestPerInstallment));
-				installment.setInterest(interstPerInstallmentM);
-
-				//TODO: 28-Jan-08 Why is this repeated? Removing this fails the test 
-				//testCreateLoanAccountWithDecliningInterestGracePrincipalOnly.
-				//Thus currently left it as is with changes for declining_epi
-				
-				if (getLoanOffering().getInterestTypes().getId().equals(
-						InterestType.DECLINING.getValue())) {
-					principalPaidCurrentPeriod = Math.abs(loanInterest
-							.getAmountDoubleValue()
-							- interestPerInstallment);
-				}	
-				else if (getLoanOffering().getInterestTypes().getId().equals( 
-						InterestType.DECLINING_EPI.getValue()))	{
-					principalPaidCurrentPeriod = getLoanAmount().getAmountDoubleValue()
-														/ (getNoOfInstallments()- getGracePeriodDuration());
-					
-				}
-				// principalPaidCurrentPeriod = Math.abs(loanInterest
-				//		.getAmountDoubleValue()
-				//		- interestPerInstallment);
-				installment.setPrincipal(new Money(Double
-						.toString(principalPaidCurrentPeriod)));
-				principalBalance = principalBalance
-						- principalPaidCurrentPeriod;
-				emiInstallments.add(installment);
-			}
-
-			return emiInstallments;
-		}
-		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
-		*/
 	}
 	
 	/**
@@ -4392,11 +4331,25 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	* <p/>
 	* Differences in total paid across all installments are made up in the last installment.
 	* <p/>
+	* <h4>Rounding and adjusting total payments</h4>
+	*     First compute the rounded and adjusted totals for the loan. These are used to adjust
+	*     the final installment's payments.
+	*     <ul>
+	*         <li> Round the loan's exact total payments (sum of exact principal, exact interest, 
+	*              exact fees) using final rounding.
+	*         <li> No need to round the principal, since it is entered using precision of the
+	*              prevailing currency.
+	*         <li> Round total fees using currency rounding
+	*         <li> Adjust the total interest so that rounded fees, principal, and adjusted interest sum 
+	*              to the rounded total payments.
+	*              </ul>
+	*     </ul>
 	* <h4>Non-grace-period installments except the last:</h4>
 	*          <ul>
 	*              <li> Round the installment's exact total payment using initial rounding.
 	*              <li> Round the installment's exact interest and fee payments 
 	*                   using currency rounding.
+	*              <li> Round each of the installment's account fees using currency rounding.
 	*              <li> Adjust the installment's principal to make up the difference between the installment's
 	*                   rounded total payment and its rounded interest and fee payments.
 	*              <li> After rounding and adjusting, the installment's (rounded) total payment is exactly
@@ -4418,11 +4371,12 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	*                   to the difference between the loan amount and the sum of
 	*                   all prior installment's principal payments, 
 	*                   then round it using currency rounding rules.
-	*              <li> Correct for over- or underpayment of fees similarly.
+	*              <li> Correct for over- or underpayment of fees:
 	*                   <ul>
 	*                       <li> Round the exact total fees using Currency rounding rules.
-	*                       <li> Set the last installment's fee payment to the difference between the rounded total fees
-	*                            and the sum of all prior installments' (already rounded) fee payments.
+	*                       <li> Set one of last installment's fee payments to the difference between the 
+	*                            rounded total fees and the sum of all prior installments' (already rounded) 
+	*                            fee payments.
 	*                   </ul>
 	*              <li> Finally, adjust the last installment's interest payment as the difference between
 	*                   the last installment's total payment and the sum of the last installment's
@@ -4436,53 +4390,45 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	*              <ul>
 	*                  <li> Round the installment's total payments as above.
 	*                  <li> Round the installment's fee payment as above.
-	*                  <li> Adjust the interest to force interest and fee payments to add up to the installment's
-	*                       total payment.
+	*                  <li> Adjust the interest to force interest and fee payments to add up to the 
+	*                       installment's total payment.
 	*              </ul>
 	* <h4>Principal + interest grace-period installments</h4>
 	*
-	* Calculations are the same as if there
-	*               were no grace, since the zero-payment installments are not included in the installment
-	*               list at all.	 
+	* Calculations are the same as if there were no grace, since the zero-payment installments 
+	* are not included in the installment list at all.	 
 	*               */
 	protected final void applyRounding_v2(Money totalInterest) {
 				
-			List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
+		List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
 			
-			// for now we are doing this based on working only on the complete list
-			// of installments
-			assert(unpaidInstallments.size() == this.getNoOfInstallments());
+		// for now we are doing this based on working only on the complete list
+		// of installments
+		assert(unpaidInstallments.size() == this.getNoOfInstallments());
 			
-			//Need to get exact total before rounding, so that the last payment
-			//can be adjusted for rounding
-			Money roundedTotalPayment = getRoundedTotalPayment(unpaidInstallments);
-			
-			Money principalRunningTotal = new Money("0");
-			Money totalPaymentRunningTotal = new Money("0");
-			Money totalFeesPaymentRunningTotal = new Money ("0");
-			
-		    LoanScheduleEntity lastInstallment = null;
-
-			for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
-				LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();
-				
-				//handle all but the last installment
-				//TODO: handle grace period installments differently
-				if (it.hasNext()){
-					roundAndAdjustButLastNonGraceInstallment_v2(currentInstallment);
-					
-					principalRunningTotal = principalRunningTotal.add(currentInstallment.getPrincipal());
-					totalPaymentRunningTotal = totalPaymentRunningTotal.add(currentInstallment.getTotalDueWithFees());
-				}
+		RepaymentTotals totals = calculateInitialTotals_v2(unpaidInstallments, totalInterest);
+		int installmentNum = 0;
+		for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
+			LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();		
+			installmentNum++;
+			if (it.hasNext()) { //handle all but the last installment
+				if (isGraceInstallment_v2 (installmentNum))
+					roundAndAdjustGraceInstallment_v2 (currentInstallment);
 				else
-					roundAndAdjustLastInstallment_v2(currentInstallment, totalInterest, 
-							                         totalPaymentRunningTotal, principalRunningTotal,
-							                         roundedTotalPayment);
+					roundAndAdjustButLastNonGraceInstallment_v2(currentInstallment);					
+				updateRunningTotals_v2 (totals, currentInstallment);
 			}
-		//}
-			int x = 0; //when debugging, stop here for inspection.
+			else
+				roundAndAdjustLastInstallment_v2(currentInstallment, totals);
+		} //for		
 	}
 
+	private void updateRunningTotals_v2 (RepaymentTotals totals, LoanScheduleEntity currentInstallment) {
+		totals.runningPrincipal = totals.runningPrincipal.add(currentInstallment.getPrincipal());
+		totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalDueWithFees());
+		totals.runningFees = totals.runningFees.add(currentInstallment.getTotalFeeDue());
+	}
+	
 	private Money currencyRound_v2 (Money m) {
 		return Money.round(m, AccountingRules.getDigitsAfterDecimalMultiple(),
 				              AccountingRules.getCurrencyRoundingMode());
@@ -4498,12 +4444,21 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				              AccountingRules.getFinalRoundingMode());
 	}
 	
-	private Money getRoundedTotalPayment (List<AccountActionDateEntity> unpaidInstallments) {
+	private Money getExactTotalPaymentDue_v2 (List<AccountActionDateEntity> unpaidInstallments) {
 		Money sum = new Money ("0");
 		for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
 			sum = sum.add(((LoanScheduleEntity)it.next()).getTotalDueWithFees());
 		}
-		return finalRound_v2(sum);
+		return sum;
+	}
+	
+	/**
+	 * A grace-period installment can appear in the loan schedule only if the loan
+	 * is setup with principal-only grace.
+	 */
+	private boolean isGraceInstallment_v2 (int installmentNum) {
+		return (getGraceType().equals(GraceType.PRINCIPALONLYGRACE) 
+				&& installmentNum <= getGracePeriodDuration());
 	}
 	/**
 	 * See Javadoc comment for method applyRounding() for business rules for rounding
@@ -4521,12 +4476,12 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
      *                                       .subtract (currentInstallment.getFee());
      */
 	private void roundAndAdjustButLastNonGraceInstallment_v2 (LoanScheduleEntity installment) {
+		roundInstallmentAccountFees_v2(installment);
 		Money roundedTotalDue = initialRound_v2(installment.getTotalDueWithFees());
 		installment.setInterest(currencyRound_v2(installment.getInterest()));
-		//TODO: need to round total fees, but nowhere to store it in installment
-		// Is it sufficient just to currency-round each fee?
-		//TODO: need to subtract rounded fees from total payment as well.
-		installment.setPrincipal(roundedTotalDue.subtract(installment.getInterest()));
+		installment.setPrincipal(roundedTotalDue
+				                   .subtract(installment.getInterest())
+				                       .subtract(installment.getTotalFeeDue()));
 	}
 	
 	/**
@@ -4534,17 +4489,96 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	 * TODO: handle fees
 	 */
 	private void roundAndAdjustLastInstallment_v2 (LoanScheduleEntity lastInstallment, 
-			                                       Money totalInterest,
-			                                       Money totalPaymentRunningTotal,
-			                                       Money principalRunningTotal,
-			                                       Money roundedTotalPayment) {
+			                                       RepaymentTotals totals) {
 	
-		Money installmentPayment = roundedTotalPayment.subtract(totalPaymentRunningTotal);
-		lastInstallment.setPrincipal(currencyRound_v2(getLoanAmount().subtract(principalRunningTotal)));
-		
+		roundInstallmentAccountFees_v2(lastInstallment);
+		Money installmentPayment = totals.roundedPayments.subtract(totals.runningPayments);
+		lastInstallment.setPrincipal(currencyRound_v2(getLoanAmount()
+				                        .subtract(totals.runningPrincipal)));
+		adjustLastInstallmentFees_v2 (lastInstallment, totals);
 		lastInstallment.setInterest(
-			currencyRound_v2(installmentPayment.subtract(lastInstallment.getPrincipal())));
+			currencyRound_v2(installmentPayment
+					            .subtract(lastInstallment.getPrincipal())
+					                .subtract (lastInstallment.getTotalFeeDue())));
+	}
 	
+	/**
+	 * adjust the first fee in the installment's set of fees
+	 */
+	private void adjustLastInstallmentFees_v2 (LoanScheduleEntity lastInstallment, RepaymentTotals totals) {
+		Set<AccountFeesActionDetailEntity> feeDetails = lastInstallment.getAccountFeesActionDetails();
+		if ( !(feeDetails == null) && ! feeDetails.isEmpty()) {
+			for ( Iterator it = feeDetails.iterator(); it.hasNext();) {
+				AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) it.next();
+				e.adjustFeeAmount(totals.roundedFees
+						             .subtract(totals.runningFees)
+						                 .subtract(e.getFeeAmount()));
+				//just adjust the first fee
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * See JavaDoc comment for applyRounding_v2().
+	 * TODO: handle fees
+	 */
+	private void roundAndAdjustGraceInstallment_v2 (LoanScheduleEntity installment) {
+		roundInstallmentAccountFees_v2(installment);
+		Money roundedTotalDue = initialRound_v2(installment.getTotalDueWithFees());
+		installment.setInterest(roundedTotalDue
+				                   .subtract(installment.getPrincipal())
+				                       .subtract((installment.getTotalFeeDue())));
+	}
+	
+	private RepaymentTotals calculateInitialTotals_v2 (List<AccountActionDateEntity> installments,
+			                                       Money totalInterest) {
+		
+		RepaymentTotals totals = new RepaymentTotals();
+		
+		totals.roundedPayments = finalRound_v2(getExactTotalPaymentDue_v2(installments));
+		//roundInstallmentAccountFees(installments);
+		totals.roundedFees = currencyRound_v2 (getExactTotalFeesDue_v2(installments));
+		totals.roundedInterest = totals.roundedPayments
+		                                  .subtract(totals.roundedFees)
+		                                      .subtract(this.getLoanAmount());
+	
+		return totals;
+	}
+	
+	 private void roundInstallmentAccountFees_v2 (LoanScheduleEntity installment) {
+		
+			for (Iterator feeActionIt = installment.getAccountFeesActionDetails().iterator(); feeActionIt.hasNext();) {
+				AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) feeActionIt.next();
+				e.roundFeeAmount(currencyRound_v2(e.getFeeAmount()));
+			}
+			
+	}
+	
+	private Money getExactTotalFeesDue_v2(List <AccountActionDateEntity> installments) {
+		
+		Money totalFees = new Money("0");
+		for (Iterator it = installments.iterator(); it.hasNext();) {
+			LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();	
+			totalFees = totalFees.add(currentInstallment.getTotalFeeDue());
+		}
+		return totalFees;
+	}
+	
+	/**
+	 * A struct to hold totals that can be passed around during rounding computations.
+	 * Don't bother defining setters and getters, use public instance variables directly.
+	 */
+	private class RepaymentTotals {
+		//rounded or adjusted totals prior to rounding installments
+		Money roundedPayments;
+		Money roundedInterest;
+		Money roundedFees;
+		
+		//running totals as installments are rounded
+		Money runningPayments = new Money ("0");
+		Money runningFees = new Money ("0");
+		Money runningPrincipal = new Money ("0");
 	}
 	static boolean isDisbursementDateAfterCustomerActivationDate(
 			Date disbursementDate, CustomerBO customer) {
