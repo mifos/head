@@ -177,6 +177,8 @@ public class AccountingRules {
 				mode = MifosCurrency.FLOOR_MODE;
 			else if (returnStr.equals("CEILING"))
 				mode = MifosCurrency.CEILING_MODE;
+			else if (returnStr.equals("HALF_UP"))
+				mode = MifosCurrency.HALF_UP_MODE;
 			else
 				throw new RuntimeException("The rounding mode defined in the config file is not CEILING nor FLOOR. It is " 
 						+ returnStr);
@@ -198,6 +200,8 @@ public class AccountingRules {
 				mode = RoundingMode.FLOOR;
 			else if (returnStr.equals("CEILING"))
 				mode = RoundingMode.CEILING;
+			else if (returnStr.equals("HALF_UP"))
+				mode = RoundingMode.HALF_UP;
 			else
 				throw new RuntimeException("The rounding mode defined in the config file is not CEILING nor FLOOR. It is " 
 						+ returnStr);

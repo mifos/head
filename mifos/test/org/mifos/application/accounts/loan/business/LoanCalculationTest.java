@@ -368,30 +368,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		}
 	}
 	
-	private void createFees(InternalConfiguration config, List<FeeView> feeViewList, LoanParameters loanParam, MeetingBO meeting)		 
-	{
-		if (config.getFeeFrequency() == null)
-		{
-			 return;
-		}
-		/*FeeBO fee = null;
-		if (config.getFeeFrequency().equals(FeeFrequencyType.ONETIME))	
-		{
-			 fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.LOAN,  config.feeValue,
-					 FeePayment.TIME_OF_DISBURSMENT);
-		}
-		else
- 		{
- 			fee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, config.feeValue, 
- 					RecurrenceType.MONTHLY, (short) 1);
- 			FeeView createPeriodicFeeView (InternalConfiguration config, LoanParameters loanParams)
- 		}*/	
-		RateFeeBO fee = createPeriodicRateFee(config, loanParam, meeting);
-		FeeView feeView = new FeeView(TestUtils.makeUser(), fee); 
- 		feeViewList.add(feeView);
-	}
- 		
-
+	
 	private void runOne999AccountTestCaseWithDataFromSpreadSheetForLastPaymentReversal(String fileName, 
 			int expected999AccountTransactions, int paymentToReverse, boolean payLastPayment) throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
@@ -404,7 +381,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		accountBO = setUpLoanFor999AccountTestLastPaymentReversal(config, loanParams, calculatedResults, paymentToReverse, payLastPayment);
 		
 		Set<AccountPaymentEntity> paymentList = ((LoanBO)accountBO).getAccountPayments();
-		int i=0;
+		int transactionCount = 0;
 		for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) 
 		{
 			AccountPaymentEntity payment = paymentIterator.next();
@@ -418,7 +395,7 @@ public class LoanCalculationTest extends MifosTestCase {
 					if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
 							|| financialTransaction.getPostedAmount().negate().equals(testCaseData.getExpectedResult().getAccount999()))
 					{
-						i++;
+						transactionCount++;
 						String debitOrCredit = "Credit";
 						if (financialTransaction.getDebitCreditFlag() == 0)
 							debitOrCredit = "Debit";
@@ -432,7 +409,7 @@ public class LoanCalculationTest extends MifosTestCase {
 			}
 		}
 		
-		assertEquals(i, expected999AccountTransactions);
+		assertEquals(transactionCount, expected999AccountTransactions);
 
 	}
 	
@@ -448,7 +425,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		accountBO = setUpLoanFor999AccountTestLoanReversal(config, loanParams, calculatedResults, paymentToReverse, payLastPayment);
 		
 		Set<AccountPaymentEntity> paymentList = ((LoanBO)accountBO).getAccountPayments();
-		int i=0;
+		int transactionCount=0;
 		for (Iterator<AccountPaymentEntity> paymentIterator = paymentList.iterator(); paymentIterator.hasNext();) 
 		{
 			AccountPaymentEntity payment = paymentIterator.next();
@@ -462,7 +439,7 @@ public class LoanCalculationTest extends MifosTestCase {
 					if (financialTransaction.getPostedAmount().equals(testCaseData.getExpectedResult().getAccount999())
 							|| financialTransaction.getPostedAmount().negate().equals(testCaseData.getExpectedResult().getAccount999()))
 					{
-						i++;
+						transactionCount++;
 						String debitOrCredit = "Credit";
 						if (financialTransaction.getDebitCreditFlag() == 0)
 							debitOrCredit = "Debit";
@@ -476,7 +453,7 @@ public class LoanCalculationTest extends MifosTestCase {
 			}
 		}
 		
-		assertEquals(i, expected999AccountTransactions);
+		assertEquals(transactionCount, expected999AccountTransactions);
 
 	}
 	
@@ -507,7 +484,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	AccountException, PersistenceException, MeetingException
 	{
 		
-		accountBO = setUpLoanWithoutFees(config, loanParams);
+		accountBO = setUpLoanFor999Account(config, loanParams);
 		PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO
 		.getAccountActionDates();
@@ -522,7 +499,7 @@ public class LoanCalculationTest extends MifosTestCase {
         
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			accountBO.applyPayment(paymentData, true);
 		}
@@ -601,7 +578,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	AccountException, PersistenceException, MeetingException
 	{
 		
-		accountBO = setUpLoanWithoutFees(config, loanParams);
+		accountBO = setUpLoanFor999Account(config, loanParams);
 		PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
@@ -615,7 +592,7 @@ public class LoanCalculationTest extends MifosTestCase {
         
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			accountBO.applyPayment(paymentData, true);
 		}
@@ -638,7 +615,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	
 	}
 	
-	private AccountBO setUpLoanWithoutFees(InternalConfiguration config, LoanParameters loanParams) throws
+	private AccountBO setUpLoanFor999Account(InternalConfiguration config, LoanParameters loanParams) throws
 			AccountException, PersistenceException, MeetingException
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
@@ -681,8 +658,8 @@ public class LoanCalculationTest extends MifosTestCase {
 				"1", "1");
 		
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-		createFees(config, feeViewList, loanParams, meeting);
+		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+
 		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
@@ -699,7 +676,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	AccountException, PersistenceException, MeetingException
 	{
 		
-		AccountBO loan = setUpLoanWithoutFees(config, loanParams);
+		AccountBO loan = setUpLoanFor999Account(config, loanParams);
 		
 		PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -712,7 +689,7 @@ public class LoanCalculationTest extends MifosTestCase {
         
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			loan.applyPayment(paymentData, true);
 			if (i==(paymentToReverse-1))
@@ -733,7 +710,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	AccountException, PersistenceException, MeetingException
 	{
 		
-		AccountBO loan = setUpLoanWithoutFees(config, loanParams);
+		AccountBO loan = setUpLoanFor999Account(config, loanParams);
 		
 		PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
@@ -746,7 +723,7 @@ public class LoanCalculationTest extends MifosTestCase {
         
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			loan.applyPayment(paymentData, true);
 			if (i==(paymentToReverse-1))
@@ -776,7 +753,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		{
 			for (int i = paymentToReverse -1; i < paymentsArray.length; i++) {
 				loanSchedule = paymentsArray[i];
-	            Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
+				Money amountPaid = loanSchedule.getTotalDueWithFees();
 				paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 				loan.applyPayment(paymentData, true);
 				new TestObjectPersistence().persist(loan);
@@ -794,7 +771,7 @@ public class LoanCalculationTest extends MifosTestCase {
 			Results expectedResults) throws AccountException, PersistenceException, MeetingException
 	{
 		
-		accountBO = setUpLoanWithoutFees(config, loanParams);
+		accountBO = setUpLoanFor999Account(config, loanParams);
 		PaymentData paymentData = null;
         Set<AccountActionDateEntity> actionDateEntities = accountBO
 		.getAccountActionDates();
@@ -860,23 +837,52 @@ public class LoanCalculationTest extends MifosTestCase {
 		LoanParameters loanParams = testCaseData.getLoanParams();
 		setUpLoanAndVerify999AccountWhenLoanIsRepaid(config, loanParams, testCaseData.expectedResult);
 	}
+	
+	public void test999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (dataFileNames[i].startsWith("testcase-2008-05-13-declining-grace-fee-set1"))  {
+				runOne999AccountTestCaseLoanWithFees(rootPath + dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+	}
+	
+	public void test999AccountLoansWithFees2() throws NumberFormatException, PropertyNotFoundException,
+	SystemException, ApplicationException, URISyntaxException, Exception
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (dataFileNames[i].startsWith("testcase") && dataFileNames[i].contains("flat-grace-fee-set")) {
+				runOne999AccountTestCaseLoanWithFees(rootPath + dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+		
+	}
 
 //	 verify that 999 account transactions are logged after last payment is made
-	public void xtestPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
+	public void testPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-withfees.csv";
 		runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);	
 	}
 	
-	public void xtest999AccountWhenLoanIsRepaid() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountWhenLoanIsRepaid() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
 		run999AccountWhenLoanIsRepaid(rootPath + dataFileName);
 	}
 	
-	public void xtest999AccountForLoanReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForLoanReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -887,7 +893,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				paymentToReverse, payLastPayment);	
 	}
 	
-	public void xtest999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForLastPaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -898,14 +904,14 @@ public class LoanCalculationTest extends MifosTestCase {
 				paymentToReverse, payLastPayment);	
 	}
 	
-	public void xtestLoanScheduleGenerationWhenLastPaymentIsReversed() throws NumberFormatException, PropertyNotFoundException,
+	public void testLoanScheduleGenerationWhenLastPaymentIsReversed() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
 		runOneLoanScheduleGenerationForLastPaymentReversal(rootPath + dataFileName);
 	}
 	
-	public void xtestLoanScheduleGenerationWhenLoanIsReversed() throws NumberFormatException, PropertyNotFoundException,
+	public void testLoanScheduleGenerationWhenLoanIsReversed() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -913,7 +919,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	 verify that 999 account transactions are logged after last payment is made
-	public void xtestNegative999Account() throws NumberFormatException, PropertyNotFoundException,
+	public void testNegative999Account() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test2.csv";
@@ -921,7 +927,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	 verify that 999 account transactions are logged after last payment is made
-	public void xtest999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountTest1() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException
 	{
 		String dataFileName = "account999-test1.csv";
@@ -933,7 +939,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	
 	
 	// no 999account should be logged in this case
-	public void xtest999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForMiddlePaymentReversal() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception
 	{
 		String dataFileName = "account999-test3.csv";
@@ -945,7 +951,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	}
 	
 	//	payment is reversed and repay to the last payment
-	public void xtest999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
+	public void test999AccountForMiddlePaymentReversalAndPayToLastPayment() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -999,8 +1005,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				"1", "1");
 		
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-		createFees(config, feeViewList, loanParams, meeting);
+		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
 		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
@@ -1020,7 +1025,6 @@ public class LoanCalculationTest extends MifosTestCase {
         Short paymentTypeId = PaymentTypes.CASH.getValue();
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            //Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest()).add(loanSchedule.getTotalDueWithFees());
 			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			loan.applyPayment(paymentData, true);
@@ -1049,8 +1053,15 @@ public class LoanCalculationTest extends MifosTestCase {
 		 * should be "EVERY_X" for weekly or monthly loan interest posting.
 		 */
 		// EVERY_WEEK, EVERY_DAY and EVERY_MONTH are defined as 1
-		MeetingBO meeting = new MeetingBO(loanParams.getPaymentFrequency(),
-				TestObjectFactory.EVERY_MONTH, new Date(), MeetingType.PERIODIC_FEE);
+		MeetingBO meeting = null;
+		if (loanParams.getPaymentFrequency() == RecurrenceType.MONTHLY) {
+			meeting = new MeetingBO((short) Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
+				TestObjectFactory.EVERY_MONTH, new Date(), CUSTOMER_MEETING, "meeting place");
+		} else {
+			meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(loanParams.getPaymentFrequency(), EVERY_MONTH,
+						CUSTOMER_MEETING));
+		}
 	
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
@@ -1067,8 +1078,8 @@ public class LoanCalculationTest extends MifosTestCase {
 				"1", "1");
 		
 		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-		createFees(config, feeViewList, loanParams, meeting);
+		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
+
 
 		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
@@ -1083,12 +1094,10 @@ public class LoanCalculationTest extends MifosTestCase {
         LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, 
 				loanParams.getNumberOfPayments());
         PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(userContext.getId());
-        
         LoanScheduleEntity loanSchedule = null;
         Short paymentTypeId = PaymentTypes.CASH.getValue();
 		for (int i = 0; i < paymentsArray.length; i++) {
 			loanSchedule = paymentsArray[i];
-            //Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest()).add(loanSchedule.getTotalDueWithFees());
 			Money amountPaid = loanSchedule.getTotalDueWithFees();
 			paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
 			loan.applyPayment(paymentData, true);
@@ -1193,6 +1202,11 @@ public class LoanCalculationTest extends MifosTestCase {
 					assertEquals(financialTransaction.getGlcode().getGlcode(), "31401");
 					Money postedAmount = financialTransaction.getPostedAmount();
 					Money expected999Account = testCaseData.getExpectedResult().getAccount999();
+					if (!postedAmount.equals(expected999Account))
+					{
+						System.out.println("File name: " + fileName + " posted amount: " + postedAmount.getAmountDoubleValue() +
+							" expected amount: " + expected999Account.getAmountDoubleValue());
+					}
 					assertEquals(postedAmount, expected999Account);
 					if (expected999Account.getAmountDoubleValue() > 0)
 					{
@@ -1214,7 +1228,7 @@ public class LoanCalculationTest extends MifosTestCase {
 	
 	
 	//	 verify that 999 account transactions are logged after last payment is made
-	public void xtestPositive999AccountTest2() throws NumberFormatException, PropertyNotFoundException,
+	public void testPositive999AccountTest2() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-test3.csv";
@@ -2266,7 +2280,7 @@ class LoanTestCaseData {
 			runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 
 	}
-
+ 
 	public void testAllFlatInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
@@ -2292,7 +2306,7 @@ class LoanTestCaseData {
 			}
 		}
 	}
-
+    
 	public void testDecliningInterestTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";

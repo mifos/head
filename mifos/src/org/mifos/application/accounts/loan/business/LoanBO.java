@@ -51,8 +51,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import net.sourceforge.mayfly.evaluation.condition.IsNull;
-
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -2914,10 +2912,11 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 		fees = fees.add(getDisbursementFeeAmount());
 		Money rawAmount = new Money();
+		fees = Money.roundToCurrencyPrecision(fees);
+		interest = Money.roundToCurrencyPrecision(interest);
 		rawAmount = rawAmount.add(interest).add(fees);
 		if (loanSummary == null)
 		{
-			rawAmount = Money.roundToCurrencyPrecision(rawAmount);
 			// save it to LoanBO first and when loan summary is created it will be retrieved and save to loan summary
 			setRawAmountTotal(rawAmount);
 		}

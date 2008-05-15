@@ -55,6 +55,7 @@ public final class MifosCurrency extends PersistentObject {
 	
 	public static final short CEILING_MODE = 1;
 	public static final short FLOOR_MODE = 2;
+	public static final short HALF_UP_MODE = 3;
 	
 	/** The composite primary key value. */
 	private Short currencyId;
@@ -147,6 +148,9 @@ public final class MifosCurrency extends PersistentObject {
 		}
 		else if (roundingMode == FLOOR_MODE) {
 			return RoundingMode.FLOOR;
+		}
+		else if (roundingMode == HALF_UP_MODE) {
+			return RoundingMode.HALF_UP;
 		}
 		else {
 			throw new IllegalStateException(
