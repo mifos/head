@@ -326,6 +326,10 @@ public class TestCustomerBO extends MifosTestCase {
 				accountBO.getAccountId());
 	}
 
+	/*
+	 * Removing this test for now since this test case is
+	 * the only place the method getDelinquentPortfolioAmount() is called
+	 * 
 	public void testGetDelinquentPortfolioAmount() {
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting);
@@ -348,7 +352,8 @@ public class TestCustomerBO extends MifosTestCase {
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
-
+	*/
+	
 	public void testGetOutstandingLoanAmount() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);

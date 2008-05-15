@@ -631,7 +631,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loan2345", "313f", ApplicableTo.GROUPS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, true, true, meeting);
+				InterestType.FLAT, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
 				startDate, loanOffering1);

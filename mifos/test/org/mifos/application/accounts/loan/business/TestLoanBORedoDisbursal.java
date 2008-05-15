@@ -117,7 +117,7 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
 				.getSessionTL().get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
 
         boolean interestDeductedAtDisbursement = false;
-        boolean principalDueInLastInstallment = true;
+        boolean principalDueInLastInstallment = false;
         Money loanAmount = new Money("300");
         Double interestRate = new Double(1.2);
         Short installments = new Short((short) 6);
@@ -149,7 +149,7 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numberOfInstallments);
         LoanBO loan = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group,
 				AccountState.LOAN_APPROVED, new Money(currency, "300.0"),
-                numberOfInstallments, meetingDates.get(0), true, 0.0, (short) 0,
+                numberOfInstallments, meetingDates.get(0), false, 0.0, (short) 0,
                 new FundBO(), new ArrayList<FeeView>(), null,false,null);
         loan.save();
 
@@ -246,7 +246,7 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
             }
             while (trxns.hasNext());
             assertEquals(AccountActionTypes.DISBURSAL, trxn.getAccountAction());
-            assertEquals(new Money("300").getAmount(), trxn.getAmount().getAmount());
+            assertEquals(new Money("300.0").getAmount(), trxn.getAmount().getAmount());
             assertEquals(twoWeeksAgoInMil, trxn.getActionDate().getTime());
 
             Date oneWeekAgo = createPreviousDate(7);

@@ -667,6 +667,10 @@ public abstract class CustomerBO extends BusinessObject {
 		return countOfActiveLoans;
 	}
 
+	/*
+	 * This method is unused and is a candidate for removal.
+	 */
+	@Deprecated
 	public Money getDelinquentPortfolioAmount() {
 		Money amountOverDue = new Money();
 		Money totalOutStandingAmount = new Money();

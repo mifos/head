@@ -167,8 +167,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				ApplicableTo.GROUPS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, true, false,
-				frequency);
+				InterestType.FLAT, frequency);
 	}
 
 	private BulkEntryBO createBulkEntry() throws Exception {

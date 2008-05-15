@@ -1467,6 +1467,6 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, 3, InterestType.FLAT, true, false, frequency, "1", "1");
+				1.2, 3, InterestType.FLAT, frequency, "1", "1");
 	}
 }

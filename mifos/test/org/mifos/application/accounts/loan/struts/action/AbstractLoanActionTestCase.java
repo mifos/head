@@ -90,7 +90,7 @@ public abstract class AbstractLoanActionTestCase extends
 		Date currentDate = new Date(System.currentTimeMillis());
 		return TestObjectFactory.createLoanOffering(name, shortName,
 				applicableTo, currentDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
-				3, InterestType.FLAT, true, true, meeting);
+				3, InterestType.FLAT, meeting);
 	}
 
 	@Override

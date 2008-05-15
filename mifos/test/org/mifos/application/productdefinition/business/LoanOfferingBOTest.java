@@ -146,7 +146,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 						prdApplicableMaster, startDate, endDate,
 						"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 						interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
-						false, false, null, fees, (short) 2,
+						false, true, null, fees, (short) 2,
 						RecurrenceType.MONTHLY, populateLoanPrdActionForm("1",
 								"1", new Double("3000"), new Double("1000"),
 								new Double("1000"), "12", "1", "2"));
@@ -227,7 +227,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 						prdApplicableMaster, startDate, endDate,
 						"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 						interestTypes, (short) 0, 12.0, 2.0, 12.0, false, true,
-						false, null, fees, (short) 2, RecurrenceType.MONTHLY,
+						true, null, fees, (short) 2, RecurrenceType.MONTHLY,
 						populateLoanPrdActionForm("1", "1", new Double("3000"),
 								new Double("1000"), new Double("1000"), "12",
 								"1", "2"));
@@ -243,7 +243,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(), auditLogList.get(0)
 				.getEntityType());
-		assertEquals(12, auditLogList.get(0).getAuditLogRecords().size());
+		assertEquals(14, auditLogList.get(0).getAuditLogRecords().size());
 		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
 				.getAuditLogRecords()) {
 			if (auditLogRecord.getFieldName().equalsIgnoreCase(
@@ -1365,7 +1365,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, 3, InterestType.FLAT, true, false, frequency);
+				1.2, 3, InterestType.FLAT, frequency);
 	}
 
 	private void createIntitalObjects() {

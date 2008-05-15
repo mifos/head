@@ -149,6 +149,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(CollectionSheetReportTestSuite.suite());		
 		suite.addTest(BranchReportTestSuite.suite());		
 		suite.addTest(BranchCashConfirmationReportTestSuite.suite());		
+
 		return suite;
 	}
 }

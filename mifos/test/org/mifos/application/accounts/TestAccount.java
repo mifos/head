@@ -63,7 +63,7 @@ public class TestAccount extends MifosTestCase {
         	new Date(System.currentTimeMillis()),
         	PrdStatus.LOAN_ACTIVE,
         	300.0,1.2,(short)3,
-        	InterestType.FLAT, true, true, meeting);
+        	InterestType.FLAT, meeting);
         return TestObjectFactory.createLoanAccount(
         	"42423142341",group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
         	new Date(System.currentTimeMillis()),loanOffering);

@@ -68,7 +68,7 @@ public class TestAccountingRules  extends MifosTestCase {
 					+ roundingMode);
 		}
 		// save it back
-		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, configuredMode);
+		configMgr.setProperty(AccountingRules.AccountingRulesCurrencyRoundingMode, configuredMode.toString());
 		
 	}
 	
@@ -98,7 +98,7 @@ public class TestAccountingRules  extends MifosTestCase {
 					+ roundingMode);
 		}
 		//		 save it back
-		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, configuredMode);
+		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundingMode, configuredMode.toString());
 		
 	}
 	
@@ -128,7 +128,7 @@ public class TestAccountingRules  extends MifosTestCase {
 					+ roundingMode);
 		}
 		//	save it back
-		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, configuredMode);
+		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundingMode, configuredMode.toString());
 		
 	}
 	
@@ -145,7 +145,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		BigDecimal defaultValue = AccountingRules.getFinalRoundOffMultiple();
 		assertEquals(defaultValue, new BigDecimal("0.01"));
 		//	save it back
-		configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, configuredRoundOffMultiple);
+		configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, configuredRoundOffMultiple.toString());
 		
 	}
 	
@@ -162,7 +162,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		BigDecimal defaultValue = AccountingRules.getInitialRoundOffMultiple();
 		assertEquals(defaultValue, new BigDecimal("0.1"));
 		//	save it back
-		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, configuredRoundOffMultiple);
+		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, configuredRoundOffMultiple.toString());
 		
 	}
 	

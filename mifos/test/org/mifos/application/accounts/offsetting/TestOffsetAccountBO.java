@@ -77,9 +77,8 @@ public class TestOffsetAccountBO extends MifosTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
         	"OffsetLoan1", ApplicableTo.GROUPS,
         	new Date(System.currentTimeMillis()),
-        	PrdStatus.LOAN_ACTIVE,
-        	300.0,1.2,(short)3,
-        	InterestType.FLAT, true, true, meeting);
+        	PrdStatus.LOAN_ACTIVE,	300.0,1.2,(short)3,
+        	InterestType.FLAT, meeting);
         
         return TestObjectFactory.createLoanAccount(
         	"42423142342",group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,

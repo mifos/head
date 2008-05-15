@@ -248,8 +248,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loanvcfg", "bhgf", ApplicableTo.GROUPS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
@@ -261,8 +260,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan123", shortName, ApplicableTo.GROUPS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", customer, state, startDate, loanOffering,
 				1);
@@ -275,8 +273,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				"Loancfgb", "dhsq", ApplicableTo.GROUPS, 
 				startDate, PrdStatus.LOAN_ACTIVE, 
 				300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);
@@ -289,8 +286,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				"Loanabcd", "abcd", ApplicableTo.CLIENTS, 
 				startDate, PrdStatus.LOAN_ACTIVE, 
 				300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT,meeting);
 		return TestObjectFactory.createLoanAccount("42423142323", group,
 				AccountState.LOAN_ACTIVE_IN_BAD_STANDING, 
 				startDate, loanOffering);
@@ -301,8 +297,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				"Loanabf", "abf", ApplicableTo.CLIENTS, 
 				startDate, PrdStatus.LOAN_ACTIVE, 
 				300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT, meeting);
 		return TestObjectFactory.createLoanAccount("42423142342", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				startDate, loanOffering);

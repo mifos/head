@@ -379,8 +379,7 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				ApplicableTo.GROUPS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, true, false,
-				frequency);
+				InterestType.FLAT, frequency);
 	}
 
 	private void createSavingsOffering() throws Exception {

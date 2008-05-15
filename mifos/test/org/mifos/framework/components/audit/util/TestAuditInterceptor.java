@@ -57,7 +57,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 		accountBO.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(accountBO);
 		LoanBO loanBO = ((LoanBO) accountBO);
-		((LoanBO) accountBO).updateLoan(false, loanBO.getLoanAmount(), loanBO
+		((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
 				(short)2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, 
 				"Added note", null,

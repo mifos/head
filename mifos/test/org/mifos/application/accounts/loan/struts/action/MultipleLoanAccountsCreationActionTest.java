@@ -527,8 +527,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		return TestObjectFactory.createLoanOffering(name, shortName, 
 				applicableTo, currentDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true, 
-				meeting);
+				InterestType.FLAT, meeting);
 	}
 
 	private void createInitialCustomers() {

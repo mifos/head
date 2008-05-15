@@ -199,7 +199,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 				"LOAN", ApplicableTo.GROUPS,
 				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
-				InterestType.FLAT, true, false, frequency);
+				InterestType.FLAT, frequency);
 		LoanOfferingBOTest.setStatus(product,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOAN_INACTIVE));
 		TestObjectFactory.updateObject(product);

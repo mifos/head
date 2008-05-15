@@ -575,6 +575,18 @@ public class TestObjectFactory {
 	}
 
 	public static LoanOfferingBO createLoanOffering(String name,
+			ApplicableTo applicableTo, Date startDate,
+			PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate,
+			int defInstallments, InterestType interestType,
+			MeetingBO meeting) {
+		return createLoanOffering(name, name.substring(0, 1), applicableTo,
+				startDate, offeringStatus, defLnAmnt, defIntRate,
+				defInstallments, interestType, false, false,
+				meeting);
+	}
+
+	
+	public static LoanOfferingBO createLoanOffering(String name,
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate,
 			int defInstallments, InterestType interestType,
@@ -588,12 +600,22 @@ public class TestObjectFactory {
 	public static LoanOfferingBO createLoanOffering(String name,
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate,
-			int defInstallments, InterestType interestType,
-			boolean intDedAtDisb, boolean princDueLastInst, MeetingBO meeting,
-			String loanAmtCalcType, String calcInstallmentType) {
+			int defInstallments, InterestType interestType, MeetingBO meeting) {
 		return createLoanOffering(name, shortName, applicableTo, startDate,
 				offeringStatus, defLnAmnt, defIntRate, (short) defInstallments,
-				interestType, intDedAtDisb, princDueLastInst, meeting,
+				interestType, false, false, meeting,
+				GraceType.GRACEONALLREPAYMENTS, "1", "1");
+	}
+
+	
+	public static LoanOfferingBO createLoanOffering(String name,
+			String shortName, ApplicableTo applicableTo, Date startDate,
+			PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate,
+			int defInstallments, InterestType interestType,
+			MeetingBO meeting, String loanAmtCalcType, String calcInstallmentType) {
+		return createLoanOffering(name, shortName, applicableTo, startDate,
+				offeringStatus, defLnAmnt, defIntRate, (short) defInstallments,
+				interestType, false, false, meeting,
 				GraceType.GRACEONALLREPAYMENTS, loanAmtCalcType,
 				calcInstallmentType);
 	}
@@ -608,7 +630,7 @@ public class TestObjectFactory {
 			String shortName, Date currentTime, MeetingBO meeting) {
 		return TestObjectFactory.createLoanOffering(name, shortName,
 				ApplicableTo.GROUPS, currentTime, PrdStatus.LOAN_ACTIVE, 300.0,
-				1.2, 3, InterestType.FLAT, true, true, meeting, "1", "1");
+				1.2, 3, InterestType.FLAT, meeting, "1", "1");
 	}
 
 	/**

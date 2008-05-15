@@ -109,8 +109,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering("Loan123", "LOAP",
 				ApplicableTo.CLIENTS, startDate, 
 				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
-				InterestType.FLAT, true, true,
-				meeting);
+				InterestType.FLAT, meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
