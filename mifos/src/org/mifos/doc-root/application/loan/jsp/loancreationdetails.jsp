@@ -361,9 +361,7 @@ explanation of the license and how it is applied.
 									</td>
 								</tr>
 								<tr class="fontnormal">
-
-									<c:if test="${loanIndividualMonitoringIsEnabled != '1'}">
-										<c:if test="${loanaccountownerisagroup != 'yes'}">
+									<c:if test="${loanaccountownerisagroup != 'yes'}">
 											<td align="right" class="fontnormal" width="30%"><mifos:mifoslabel
 												name="loan.amount" mandatory="yes" />:</td>
 											<td valign="top"><mifos:mifosdecimalinput
@@ -372,7 +370,6 @@ explanation of the license and how it is applied.
 												value="${LoanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 												value="${LoanOffering.maxLoanAmount}" /> )</td>
 									</c:if>
-							</c:if>
 								</tr>
 								<tr class="fontnormal">
 									<td width="30%" align="right" class="fontnormal"><span
