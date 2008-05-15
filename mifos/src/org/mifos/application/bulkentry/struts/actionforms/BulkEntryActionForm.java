@@ -41,6 +41,7 @@ package org.mifos.application.bulkentry.struts.actionforms;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -315,13 +316,15 @@ public class BulkEntryActionForm extends BaseActionForm {
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors errors = new ActionErrors();
+		UserContext userContext = getUserContext(request);
+		Locale locale = userContext.getPreferredLocale();
 		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
 				BulkEntryConstants.PREVIEWMETHOD)) {
 			try {
 				BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils
 						.getAttribute(BulkEntryConstants.BULKENTRY, request);
 				return validatePopulatedData(bulkEntry.getBulkEntryParent(),
-						errors);
+						errors, locale);
 			} catch (PageExpiredException e) {
 				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
 						new ActionMessage(
@@ -355,14 +358,15 @@ public class BulkEntryActionForm extends BaseActionForm {
 	}
 
 	private ActionErrors validatePopulatedData(BulkEntryView parent,
-			ActionErrors errors) {
+			ActionErrors errors, Locale locale) {
         logger.debug("validatePopulatedData");
 		List<BulkEntryView> children = parent.getBulkEntryChildren();
-		ResourceBundle resources = getResourceBundle(FilePaths.BULKENTRY_RESOURCE);
+
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
 		String acCollections = resources.getString(BulkEntryConstants.AC_COLLECTION);
 		if (null != children) {
 			for (BulkEntryView bulkEntryView : children) {
-				validatePopulatedData(bulkEntryView, errors);
+				validatePopulatedData(bulkEntryView, errors, locale);
 			}
 		}
 		for (LoanAccountsProductView accountView : parent
@@ -490,9 +494,9 @@ public class BulkEntryActionForm extends BaseActionForm {
 		return errors;
 	}
 	
-	private ActionErrors receiptDateValidate(ActionErrors errors) {
+	private ActionErrors receiptDateValidate(ActionErrors errors, Locale locale) {
 		if (!StringUtils.isNullOrEmpty(getReceiptDate()) && !DateUtils.isValidDate(getReceiptDate())) {
-			ResourceBundle resources = getResourceBundle(FilePaths.BULKENTRY_RESOURCE);
+			ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
 			String rcptdate = resources.getString(BulkEntryConstants.RECEIPTDATE);
 			errors.add(BulkEntryConstants.INVALID_RECEIPT_DATE,
 					new ActionMessage(BulkEntryConstants.INVALID_RECEIPT_DATE, rcptdate));
@@ -502,12 +506,12 @@ public class BulkEntryActionForm extends BaseActionForm {
 
 	private ActionErrors mandatoryCheck(Date meetingDate, UserContext userContext,
 			short isCenterHeirarchyExists) {
-		
-		ResourceBundle resources = getResourceBundle(FilePaths.BULKENTRY_RESOURCE);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
 		String loanOfficer = resources.getString(BulkEntryConstants.LOANOFFICERS);
 		String modeOfPayment = resources.getString(BulkEntryConstants.MODE_OF_PAYMENT);
 		String dateOfTransaction = resources.getString(BulkEntryConstants.DATEOFTRXN);
-		ActionErrors errors = receiptDateValidate(new ActionErrors());
+		ActionErrors errors = receiptDateValidate(new ActionErrors(), locale);
 		java.sql.Date currentDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		java.sql.Date trxnDate = null;
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER

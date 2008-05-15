@@ -111,13 +111,14 @@ public class BulkEntryTag extends BodyTagSupport {
 			List<CustomValueListElement> custAttTypes, String method,
 			StringBuilder builder) throws ApplicationException,
 			SystemException, JspException {
-		BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
-		builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts,
-				savingsProducts));
-		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
-		Double[] totals = null;
 		UserContext userContext = ((UserContext) pageContext.getSession()
 				.getAttribute(Constants.USERCONTEXT));
+		BulkEntryDisplayHelper bulkEntryDisplayHelper = new BulkEntryDisplayHelper();
+		builder.append(bulkEntryDisplayHelper.buildTableHeadings(loanProducts,
+				savingsProducts, userContext.getPreferredLocale()));
+		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
+		Double[] totals = null;
+		
 		boolean centerHierachyExists = ClientRules.getCenterHierarchyExists();
 		if (centerHierachyExists) {
 			totals = bulkEntryDisplayHelper.buildForCenter(bulkEntryParentView,

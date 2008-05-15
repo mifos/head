@@ -273,7 +273,7 @@ explanation of the license and how it is applied.
 										<mifos:mifoslabel name="Office.preview"/>
 									</html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
-										value="Cancel" styleClass="cancelbuttn">
+										 styleClass="cancelbuttn">
 										<mifos:mifoslabel name="Office.cancel"/>
 									</html-el:button></td>
 								</tr>

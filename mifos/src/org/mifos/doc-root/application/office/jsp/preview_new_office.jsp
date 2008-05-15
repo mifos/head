@@ -218,7 +218,7 @@ function goToCancelPage(){
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center">&nbsp; <html-el:submit styleClass="buttn"
-										onclick="goToCreatePage()"></html-el:submit> &nbsp; <html-el:button
+										onclick="goToCreatePage()"><mifos:mifoslabel name="Office.submit" /></html-el:submit> &nbsp; <html-el:button
 										onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="Office.cancel" />

@@ -23,6 +23,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -411,9 +412,5 @@ public abstract class BaseAction extends DispatchAction {
 		return mapping.findForward(ActionForwards.welcome.toString());
 	}
 	
-	protected ResourceBundle getResourceBundle(String resourceFileName)
-	{
-		ResourceBundle resources = ResourceBundle.getBundle(resourceFileName);
-		return resources;
-	}
+	
 }

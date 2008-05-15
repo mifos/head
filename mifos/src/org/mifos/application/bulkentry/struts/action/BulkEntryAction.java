@@ -424,8 +424,9 @@ public class BulkEntryAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("create ");
-		ResourceBundle resources = getResourceBundle(FilePaths.BULKENTRY_RESOURCE);
-		String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, getUserContext(request));
+		UserContext userContext = getUserContext(request);
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
+		String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, userContext);
 		String attendance = resources.getString(BulkEntryConstants.ATTENDANCE);
 		String savingsWithdrawal = resources.getString(BulkEntryConstants.SAVING_WITHDRAWAL);
 		String savingsDeposit = resources.getString(BulkEntryConstants.SAVING_DEPOSITE);

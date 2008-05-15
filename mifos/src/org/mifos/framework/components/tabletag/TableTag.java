@@ -51,6 +51,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.TableTagException;
@@ -249,8 +250,9 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	XmlBuilder noResults(String officeName, String officeId, String searchString) {
+		Locale locale = Localization.getInstance().getMainLocale();
 		ResourceBundle resources = ResourceBundle.getBundle
-					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE);
+					(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
 		XmlBuilder html = new XmlBuilder();
 		html.startTag("table", "width", "96%", "border", "0", "cellpadding",
 				"0", "cellspacing", "0");
@@ -387,9 +389,9 @@ public class TableTag extends BodyTagSupport {
 	/**
 	 * Function to get single xml file.
 	 */
-	String getSingleFile() throws JspException {
+	String getSingleFile(Locale locale) throws JspException {
 		ResourceBundle resource = ResourceBundle
-				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
+				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
 		String xmlPath = resource.getString(name + "_xml");
 		if (xmlPath != null) {
 			return xmlPath;
@@ -480,7 +482,7 @@ public class TableTag extends BodyTagSupport {
 	private void getSingleData(List list, Locale locale, Integer currentValue)
 			throws TableTagParseException, TableTagException, JspException,
 			IOException, PageExpiredException {
-		String xmlFilePath = getSingleFile();
+		String xmlFilePath = getSingleFile(locale);
 		Table table = helperCache(xmlFilePath, name);
 		ResourceBundle resource = ResourceBundle
 				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
@@ -505,8 +507,8 @@ public class TableTag extends BodyTagSupport {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
 		createStartTable(result, true, false);
-		ResourceBundle resource = ResourceBundle
-				.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
+		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
+				
 		out.write(result.toString());
 		int number = ((currentValue - 1) * pageSize);
 		for (Object object : list) {
@@ -525,7 +527,7 @@ public class TableTag extends BodyTagSupport {
 		String currentFlowkey = (String) ((HttpServletRequest) pageContext
 				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
 		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
-				currentFlowkey));
+				currentFlowkey, locale));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}
@@ -533,7 +535,7 @@ public class TableTag extends BodyTagSupport {
 	private Table helperMultipleData(Object object, Locale locale)
 			throws TableTagTypeParserException, TableTagParseException,
 			TableTagException, JspException {
-		Files file = TypeParser.getInstance().parser(getSingleFile());
+		Files file = TypeParser.getInstance().parser(getSingleFile(locale));
 		FileName[] fileName = file.getFileName();
 		String str = (String) TableTagUtils.getInstance().helper(pageContext,
 				"type", "method", object, locale);
@@ -616,7 +618,7 @@ public class TableTag extends BodyTagSupport {
 		String currentFlowkey = (String) ((HttpServletRequest) pageContext
 				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
 		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
-				currentFlowkey));
+				currentFlowkey, locale));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}

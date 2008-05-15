@@ -34,7 +34,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		Money totalInterest = new Money();
 		Money totalFees = new Money();
 		LoanBO loanBO = null;
-
+		
 		try {
 			String currentFlowKey = (String) pageContext.getRequest()
 			.getAttribute(Constants.CURRENTFLOWKEY);

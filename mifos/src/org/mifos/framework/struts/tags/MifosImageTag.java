@@ -40,11 +40,17 @@ package org.mifos.framework.struts.tags;
 
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.mifos.config.Localization;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Constants;
 
 
 /**
@@ -110,8 +116,9 @@ public class MifosImageTag extends TagSupport
 		public int doStartTag() throws JspException 
 		{
 	    	JspWriter out = pageContext.getOut();
-	    			
-	    	ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName());
+	    	UserContext userContext = (UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
+	    	Locale locale = userContext.getPreferredLocale();
+	    	ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName(), locale);
 			path = resource.getString(getId());
 				try {
 					out.println(render());
@@ -126,7 +133,8 @@ public class MifosImageTag extends TagSupport
 		}
 	    
 	    public String render(){
-			ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName());
+	    	Locale locale = Localization.getInstance().getMainLocale();
+			ResourceBundle resource = ResourceBundle.getBundle("org.mifos.application."+getModuleName()+".util.resources."+getPropertiesFileName(), locale);
 			path = resource.getString(getId());
 			XmlBuilder html = new XmlBuilder();
 			html.startTag("html");

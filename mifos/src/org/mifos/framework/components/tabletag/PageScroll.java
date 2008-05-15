@@ -37,9 +37,11 @@
  */
 package org.mifos.framework.components.tabletag;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**
@@ -59,9 +61,9 @@ public class PageScroll {
 	 * @return string	next page.
 	 */
 	protected static String getPages(int current,
-			int pageSize, int size, String action, String currentFlowKey) {
+			int pageSize, int size, String action, String currentFlowKey, Locale locale) {
 		StringBuilder result = new StringBuilder();
-		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);
+		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
 		//to check the onClick status of the prev and next whether that is disable or not
 		boolean prev = (current > 1) ? true : false;
 		boolean next = ((current * pageSize) >= size) ? false : true;

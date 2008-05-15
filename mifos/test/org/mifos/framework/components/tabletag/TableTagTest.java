@@ -4,6 +4,7 @@ import static junitx.framework.StringAssert.assertContains;
 import static junitx.framework.StringAssert.assertNotContains;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
+import java.util.Locale;
 import java.util.MissingResourceException;
 
 import javax.servlet.jsp.JspException;
@@ -12,9 +13,12 @@ import junit.framework.TestCase;
 
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.SearchObject;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TableTagTest extends TestCase {
 
@@ -73,7 +77,8 @@ public class TableTagTest extends TestCase {
 	}
 	public void testGetSingleFileFailure()throws Exception{
 		try {
-			new TableTag("single").getSingleFile();
+			Locale locale = Localization.getInstance().getMainLocale();
+			new TableTag("single").getSingleFile(locale);
 			fail();
 		} catch (MissingResourceException e) {
 			assertTrue(true);
@@ -82,9 +87,10 @@ public class TableTagTest extends TestCase {
 		}
 	}
 	public void testGetSingleFile()throws Exception{
+		Locale locale = Localization.getInstance().getMainLocale();
 		TableTag tableTag = 	new TableTag("single");
 		tableTag.setName("viewUsers");
-		assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml",tableTag.getSingleFile());
+		assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml",tableTag.getSingleFile(locale));
 	}
 
 	public void testParser()throws Exception{
@@ -106,15 +112,16 @@ public class TableTagTest extends TestCase {
 	}
 
 	public void testGetImage()throws Exception{
+		Locale locale = Localization.getInstance().getMainLocale();
 		CustomerSearch customerSearch = new CustomerSearch();
 		assertEquals("<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
-				Text.getImage(customerSearch,"1"));
+				Text.getImage(customerSearch,"1", locale));
 		customerSearch.setCustomerType(Short.valueOf("4"));
 		assertEquals("<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Pending Approval</span>",
-		Text.getImage(customerSearch,"2"));
+		Text.getImage(customerSearch,"2" ,locale));
 		customerSearch.setCustomerType(Short.valueOf("6"));
 		assertEquals("<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
-		Text.getImage(customerSearch,"13"));
+		Text.getImage(customerSearch,"13", locale));
 	}
 
 	public void testTableTagParser()throws Exception{
@@ -189,10 +196,11 @@ public class TableTagTest extends TestCase {
 	}
 
 	public void testPageScroll(){
+		Locale locale = Localization.getInstance().getMainLocale();
 		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234"));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234"));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234"));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234", locale));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234", locale));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234", locale));
 	}
 	public void testLink(){
 		assertEquals("",Link.createLink(new String []{""},null,null,null,null,null,null));
@@ -211,7 +219,8 @@ public class TableTagTest extends TestCase {
 	}
 	public void testTableTagException()throws Exception{
 		try {
-			Text.getImage(this, "name");
+			Locale locale = Localization.getInstance().getMainLocale();
+			Text.getImage(this, "name", locale);
 			fail();
 		} catch (TableTagException tte) {
 			assertEquals("exception.framework.TableTagException", tte.getKey());

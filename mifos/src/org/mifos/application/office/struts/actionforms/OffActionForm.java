@@ -193,7 +193,8 @@ public class OffActionForm extends BaseActionForm {
 			} catch (MissingResourceException e) {
 
 				resourceBundle = ResourceBundle
-						.getBundle(FilePaths.OFFICERESOURCEPATH);
+						.getBundle(FilePaths.OFFICERESOURCEPATH, userContext
+								.getPreferredLocale());
 
 			}
 		return resourceBundle.getString(key);

@@ -2,6 +2,7 @@ package org.mifos.application.checklist.struts.actionforms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -159,14 +161,16 @@ public class ChkListActionForm extends BaseActionForm {
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
-		ResourceBundle resources = getResourceBundle(FilePaths.CHECKLIST_RESOURCE);
+		UserContext userContext = getUserContext(request);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CHECKLIST_RESOURCE, locale);
 		String checklistStatus = resources.getString(CheckListConstants.CHECKLIST_STATUS_RESOURCE);
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
 		if (method.equals(Methods.preview.toString()))
-			errors = validateFields();
+			errors = validateFields(locale);
 		if (method.equals(Methods.managePreview.toString())) {
-			errors = validateFields();
+			errors = validateFields(locale);
 			if (StringUtils.isNullOrEmpty(getChecklistStatus()))
 				addError(errors, "checklistStatus",
 						CheckListConstants.MANDATORY,
@@ -177,9 +181,9 @@ public class ChkListActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	private ActionErrors validateFields() {
+	private ActionErrors validateFields(Locale locale) {
 		
-		ResourceBundle resources = getResourceBundle(FilePaths.CHECKLIST_RESOURCE);
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CHECKLIST_RESOURCE, locale);
 		String checklistName = resources.getString(CheckListConstants.CHECKLIST_NAME_RESOURCE);
 		String itemsStr = resources.getString(CheckListConstants.CHECKLIST_ITEMS_RESOURCE);
 		String type = resources.getString(CheckListConstants.CHECKLIST_TYPE_RESOURCE);

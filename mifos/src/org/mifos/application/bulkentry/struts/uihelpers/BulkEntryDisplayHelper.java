@@ -39,6 +39,7 @@
 package org.mifos.application.bulkentry.struts.uihelpers;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.jsp.JspException;
@@ -57,6 +58,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.config.ClientRules;
+import org.mifos.config.Localization;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -68,16 +70,16 @@ public class BulkEntryDisplayHelper {
 	private int columnIndex;
 
 	public StringBuilder buildTableHeadings(List<PrdOfferingBO> loanProducts,
-			List<PrdOfferingBO> savingsProducts) {
+			List<PrdOfferingBO> savingsProducts, Locale locale) {
 		StringBuilder builder = buildStartTable(loanProducts.size()
-				+ savingsProducts.size());
-		buildProductsHeading(loanProducts, savingsProducts, builder);
+				+ savingsProducts.size(), locale);
+		buildProductsHeading(loanProducts, savingsProducts, builder, locale);
 		return builder;
 	}
 
-	private StringBuilder buildStartTable(int totalProductSize) {
+	private StringBuilder buildStartTable(int totalProductSize, Locale locale) {
 		ResourceBundle resources = ResourceBundle.getBundle
-		(FilePaths.BULKENTRY_RESOURCE);
+		(FilePaths.BULKENTRY_RESOURCE, locale);
 		String dueCollections = resources.getString(BulkEntryConstants.DUE_COLLECTION);
 		String issueWithdrawal = resources.getString(BulkEntryConstants.ISSUE_WITHDRAWAL);
 		StringBuilder builder = new StringBuilder();
@@ -104,9 +106,10 @@ public class BulkEntryDisplayHelper {
 	}
 
 	private void buildProductsHeading(List<PrdOfferingBO> loanProducts,
-			List<PrdOfferingBO> savingsProducts, StringBuilder builder) {
+			List<PrdOfferingBO> savingsProducts, StringBuilder builder, Locale locale) {
+		
 		ResourceBundle resources = ResourceBundle.getBundle
-		(FilePaths.BULKENTRY_RESOURCE);
+		(FilePaths.BULKENTRY_RESOURCE, locale);
 		String clientName = resources.getString(BulkEntryConstants.CLIENT_NAME);
 		String acCollection = resources.getString(BulkEntryConstants.AC_COLLECTION);
 		String attn = resources.getString(BulkEntryConstants.ATTN);
@@ -163,8 +166,8 @@ public class BulkEntryDisplayHelper {
 		Double[] centerTotals = new Double[(totalProductsSize + 1)];
 		Double[] groupTotals = new Double[(totalProductsSize + 1)];
 		MifosCurrency currency = parent.getCurrency();
-		ResourceBundle resources = ResourceBundle.getBundle
-		(FilePaths.BULKENTRY_RESOURCE);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, locale);
 		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String groupAccountStr = account.format(account, group);
@@ -205,7 +208,7 @@ public class BulkEntryDisplayHelper {
 		MifosCurrency currency = parent.getCurrency();
 		List<BulkEntryView> children = parent.getBulkEntryChildren();
 		ResourceBundle resources = ResourceBundle.getBundle
-		(FilePaths.BULKENTRY_RESOURCE);
+		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
 		String account = resources.getString(BulkEntryConstants.ACCOUNT_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String center = getLabel(ConfigurationConstants.CENTER, userContext);
@@ -758,7 +761,7 @@ public class BulkEntryDisplayHelper {
 		Short customerLevel = bulkEntryView.getCustomerDetail()
 				.getCustomerLevelId();
 		ResourceBundle resources = ResourceBundle.getBundle
-		(FilePaths.BULKENTRY_RESOURCE);
+		(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
 		String totalStr = resources.getString(BulkEntryConstants.TOTAL_GROUP_CENTER);
 		String group = getLabel(ConfigurationConstants.GROUP, userContext);
 		String center = getLabel(ConfigurationConstants.CENTER, userContext);
@@ -959,7 +962,7 @@ public class BulkEntryDisplayHelper {
 	private StringBuilder buildTotalstable(Money dueColl, Money loanDisb,
 			Money otherColl, Money withDrawals, Money totColl, Money totIssue,
 			Money netCash, String method, UserContext userContext) {
-		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE);
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
 		String totalCollections = resources.getString(BulkEntryConstants.TOTAL_COLLECTION);
 		String totalIssuesWithdrawals = resources.getString(BulkEntryConstants.TOTAL_ISSUE_WITHDRAWAL);
 		String dueCollections2 = resources.getString(BulkEntryConstants.DUE_COLLECTION2);

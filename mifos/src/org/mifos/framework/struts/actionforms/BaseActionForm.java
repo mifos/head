@@ -31,6 +31,7 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.ConversionResult;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.FilePaths;
 
 public class BaseActionForm extends ValidatorActionForm {
@@ -184,9 +185,4 @@ public class BaseActionForm extends ValidatorActionForm {
 		return customFields.get(i);
 	}
 	
-	protected ResourceBundle getResourceBundle(String resourceFileName)
-	{
-		ResourceBundle resources = ResourceBundle.getBundle(resourceFileName);
-		return resources;
-	}
 }

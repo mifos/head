@@ -133,7 +133,8 @@ public class HolidayActionForm extends BaseActionForm {
 			catch (MissingResourceException e) {
 
 				resourceBundle = ResourceBundle
-						.getBundle(FilePaths.HOLIDAYSOURCEPATH);
+						.getBundle(FilePaths.HOLIDAYSOURCEPATH, userContext
+								.getPreferredLocale());
 
 			}
 		return resourceBundle.getString(key);

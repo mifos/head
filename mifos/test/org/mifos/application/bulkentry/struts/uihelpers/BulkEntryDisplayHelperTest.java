@@ -43,6 +43,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
@@ -95,9 +96,9 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
 		loanProducts.add(loanOffering);
 		savingsProducts.add(savingsOffering);
-
+		UserContext userContext = TestObjectFactory.getContext();
 		String result = new BulkEntryDisplayHelper().buildTableHeadings(
-				loanProducts, savingsProducts).toString();
+				loanProducts, savingsProducts, userContext.getPreferredLocale()).toString();
 		StringAssert.assertContains("LOAN", result);
 		StringAssert.assertContains("SAVP", result);
 

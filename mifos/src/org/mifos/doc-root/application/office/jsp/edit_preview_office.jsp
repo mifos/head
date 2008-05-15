@@ -194,10 +194,10 @@ function goToCancelPage(id){
 						<tr>
 							<td align="center">&nbsp; <!-- Next are submit and cancel button -->
 
-							<html-el:submit styleClass="buttn"></html-el:submit>
+							<html-el:submit styleClass="buttn"><mifos:mifoslabel name="Office.submit" /></html-el:submit>
 							&nbsp; <html-el:button
 								onclick="goToCancelPage(${BusinessKey.officeId});"
-								property="cancelButton" value="Cancel" styleClass="cancelbuttn">
+								property="cancelButton"  styleClass="cancelbuttn">
 								<mifos:mifoslabel name="Office.cancel" />
 							</html-el:button></td>
 						</tr>

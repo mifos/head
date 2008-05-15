@@ -139,7 +139,7 @@
 									&nbsp;
 									<html-el:submit property="submitBtn" styleClass="buttn"></html-el:submit>
 									&nbsp;
-									<html-el:button onclick="cancel()" property="cancelButton" value="Cancel" styleClass="cancelbuttn">
+									<html-el:button onclick="cancel()" property="cancelButton"  styleClass="cancelbuttn">
 										<mifos:mifoslabel name="Office.button.cancel" />
 									</html-el:button>
 								</td>

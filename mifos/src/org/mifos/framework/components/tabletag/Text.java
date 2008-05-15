@@ -45,6 +45,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.jsp.PageContext;
 
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.util.helpers.FilePaths;
 
@@ -66,7 +67,7 @@ public class Text {
 		if (null != image && image.equals("true")) {
 			String name = displayname.getDisplayName(pageContext ,
 					displayname.getFragment(),obj,image,locale);
-			return getImage(obj ,name);
+			return getImage(obj ,name, locale);
 		}
 
 		// Used to get the string array of display name 
@@ -84,7 +85,7 @@ public class Text {
 	}
 	
 	//to get Image
-	 static String getImage(Object obj, String name) throws TableTagException{
+	 static String getImage(Object obj, String name, Locale locale) throws TableTagException{
 		StringBuilder stringbuilder = new StringBuilder();
 		Method method = null;
 		Object customerType = null;
@@ -103,7 +104,7 @@ public class Text {
 			throw new TableTagException(ite);
 		}
 		
-		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE);		
+		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);		
 		if(customerType != null && (customerType.toString().equals("4") || customerType.toString().equals("5")))
 		{
 			textValue = resource.getString("loanaccount_stateid_" + name);

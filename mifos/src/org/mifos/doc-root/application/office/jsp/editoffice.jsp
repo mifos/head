@@ -319,7 +319,7 @@ explanation of the license and how it is applied.
 						<mifos:mifoslabel name="office.button.preview"
 							bundle="OfficeResources"></mifos:mifoslabel>
 					</html-el:submit> &nbsp; <html-el:button
-						onclick="goToCancelPage();" property="cancelButton" value="Cancel"
+						onclick="goToCancelPage();" property="cancelButton" 
 						styleClass="cancelbuttn">
 						<mifos:mifoslabel name="office.button.cancel"
 							bundle="OfficeResources"></mifos:mifoslabel>
