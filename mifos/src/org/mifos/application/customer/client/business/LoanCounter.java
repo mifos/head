@@ -1,16 +1,25 @@
 package org.mifos.application.customer.client.business;
 
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.helpers.Transformer;
 
 public class LoanCounter extends PersistentObject {
+	public static Transformer<LoanCounter, Short> TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE = new Transformer<LoanCounter, Short>() {
+		public Short transform(LoanCounter input) {
+			return input.getLoanCycleCounter();
+		}
+	};
 
 	private final Integer loanCounterId;
 
 	private final ClientPerformanceHistoryEntity clientPerfHistory;
 
-	private Integer loanCycleCounter = 0;
+	private Short loanCycleCounter = SHORT_ZERO;
 
 	private final LoanOfferingBO loanOffering;
 
@@ -26,10 +35,7 @@ public class LoanCounter extends PersistentObject {
 		this.loanCounterId = null;
 		this.clientPerfHistory = clientPerfHistory;
 		this.loanOffering = loanOffering;
-		if (counterFlag.equals(YesNoFlag.YES))
-			this.loanCycleCounter++;
-		else
-			this.loanCycleCounter--;
+		updateLoanCounter(counterFlag);
 	}
 
 	public ClientPerformanceHistoryEntity getClientPerfHistory() {
@@ -44,18 +50,21 @@ public class LoanCounter extends PersistentObject {
 		return loanCounterId;
 	}
 
-	public Integer getLoanCycleCounter() {
+	public Short getLoanCycleCounter() {
 		return loanCycleCounter;
 	}
 
-	void setLoanCycleCounter(Integer loanCycleCounter) {
+	void setLoanCycleCounter(Short loanCycleCounter) {
 		this.loanCycleCounter = loanCycleCounter;
 	}
 
 	void updateLoanCounter(YesNoFlag counterFlag) {
-		if (counterFlag.equals(YesNoFlag.YES))
+		if (counterFlag.yes())
 			this.loanCycleCounter++;
-		else
-			this.loanCycleCounter--;
+		else this.loanCycleCounter--;
+	}
+
+	public boolean isOfSameProduct(PrdOfferingBO prdOffering) {
+		return loanOffering.isOfSameOffering(prdOffering);
 	}
 }

@@ -198,8 +198,11 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
 		CustomerBO customer = new CustomerBusinessService()
 				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
+		
+		// FIX ME remove next two lines, doesn't make sense to me
 		customer.getOffice().getOfficeId();
 		customer.getPersonnel().getPersonnelId();
+		
 		loanActionForm.setCenterSearchId(customer.getSearchId());
 		List<LoanOfferingBO> loanOfferings = new LoanPrdBusinessService()
 				.getApplicablePrdOfferings(new CustomerLevelEntity(
@@ -292,8 +295,8 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 						client, AccountState
 								.fromShort(getShortValue(loanActionForm
 										.getStateSelected())),
-						getMoney(clientDetail.getLoanAmount()), loanOffering
-								.getDefNoInstallments(), center
+										//TODO issue 1550 hardcoding installment as 3 for time being
+						getMoney(clientDetail.getLoanAmount()), Short.valueOf("3"), center
 								.getCustomerAccount().getNextMeetingDate(),
 						loanOffering.isIntDedDisbursement(), loanOffering
 								.getDefInterestRate(), loanOffering
@@ -378,9 +381,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 				clientDetail
 						.setClientId(getStringValue(client.getCustomerId()));
 				clientDetail.setClientName(client.getDisplayName());
-				// FIXME: use a "smart" default
-				clientDetail.setLoanAmount(loanOffering.getDefaultLoanAmount()
-						.toString());
+				clientDetail
+						.setLoanAmountOption(loanOffering
+								.eligibleLoanAmount(
+										client.getMaxLoanAmount(loanOffering),
+										client
+												.getMaxLoanCycleForProduct(loanOffering)));
 				// TODO: set loan amount min for this client for this loan
 				// TODO: set loan amount max for this client for this loan
 				// TODO: set #installments for this client for this loan

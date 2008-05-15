@@ -70,6 +70,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -79,6 +80,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyFactory;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -726,7 +728,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				interestTypes, new Money("1000"), new Money("3000"), new Money(
 						"2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
 				(short) 17, false, false, false, null, fees, frequency,
-				principalglCodeEntity, intglCodeEntity);
+				principalglCodeEntity, intglCodeEntity, 
+				ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.toString(),
+				ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.toString());
 		product.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -746,15 +750,17 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
 		assertEquals(InterestType.FLAT.getValue(), product.getInterestTypes()
 				.getId());
-		assertEquals(new Money("1000"), product.getMinLoanAmount());
-		assertEquals(new Money("3000"), product.getMaxLoanAmount());
-		assertEquals(new Money("2000"), product.getDefaultLoanAmount());
+		LoanAmountOption eligibleLoanAmount = product.eligibleLoanAmount(null, null);
+		assertEquals(new Money("1000").getAmountDoubleValue(), eligibleLoanAmount.getMinLoanAmount());
+		assertEquals(new Money("3000").getAmountDoubleValue(), eligibleLoanAmount.getMaxLoanAmount());
+		assertEquals(new Money("2000").getAmountDoubleValue(), eligibleLoanAmount.getDefaultLoanAmount());
 		assertEquals(2.0, product.getMinInterestRate());
 		assertEquals(12.0, product.getMaxInterestRate());
 		assertEquals(3.0, product.getDefInterestRate());
-		assertEquals(Short.valueOf("11"), product.getMinNoInstallments());
-		assertEquals(Short.valueOf("20"), product.getMaxNoInstallments());
-		assertEquals(Short.valueOf("17"), product.getDefNoInstallments());
+		LoanOfferingInstallmentRange eligibleNoOfInstall = product.eligibleNoOfInstall(null, null);
+		assertEquals(Short.valueOf("11"), eligibleNoOfInstall.getMinNoOfInstall());
+		assertEquals(Short.valueOf("20"), eligibleNoOfInstall.getMaxNoOfInstall());
+		assertEquals(Short.valueOf("17"), eligibleNoOfInstall.getDefaultNoOfInstall());
 		assertFalse(product.isIncludeInLoanCounter());
 		assertFalse(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());
@@ -1238,15 +1244,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(GraceType.NONE, product.getGraceType());
 		assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
 		assertEquals(InterestType.FLAT, product.getInterestType());
-		assertEquals(new Money("1000"), product.getMinLoanAmount());
-		assertEquals(new Money("3000"), product.getMaxLoanAmount());
-		assertEquals(new Money("1000"), product.getDefaultLoanAmount());
 		assertEquals(2.0, product.getMinInterestRate());
 		assertEquals(12.0, product.getMaxInterestRate());
 		assertEquals(12.0, product.getDefInterestRate());
-		assertEquals(Short.valueOf("1"), product.getMinNoInstallments());
-		assertEquals(Short.valueOf("12"), product.getMaxNoInstallments());
-		assertEquals(Short.valueOf("2"), product.getDefNoInstallments());
 		assertFalse(product.isIncludeInLoanCounter());
 		assertTrue(product.isIntDedDisbursement());
 		assertFalse(product.isPrinDueLastInst());

@@ -74,7 +74,6 @@ public class TestLoanActivityTag extends MifosTestCase {
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);

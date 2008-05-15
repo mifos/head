@@ -945,7 +945,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType, LoanOfferingBO loanOfferingBO) {
-		loanOfferingBO.updateLoanOfferingSameForAllLoan(loanOfferingBO);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOfferingBO,
 				disbursalType);

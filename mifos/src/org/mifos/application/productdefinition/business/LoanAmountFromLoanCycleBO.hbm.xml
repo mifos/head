@@ -13,10 +13,10 @@
 			column="LOAN_AMOUNT_FROM_LOAN_CYCLE_ID" access="field">
 			<generator class="native" />
 		</id>
-		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" />
-		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" />
-		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" />
-		<property name="rangeIndex" column="RANGE_INDEX" />
+		<property name="minLoanAmount" column="MIN_LOAN_AMOUNT" access="field"/>
+		<property name="maxLoanAmount" column="MAX_LOAN_AMNT" access="field"/>
+		<property name="defaultLoanAmount" column="DEFAULT_LOAN_AMOUNT" access="field"/>
+		<property name="rangeIndex" column="RANGE_INDEX" access="field"/>
 		<many-to-one name="loanOffering" column="PRD_OFFERING_ID"
 			class="org.mifos.application.productdefinition.business.LoanOfferingBO"
 			cascade="none" insert="true" update="true" unique="true"

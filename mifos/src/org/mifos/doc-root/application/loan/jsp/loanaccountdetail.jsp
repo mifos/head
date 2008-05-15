@@ -365,12 +365,21 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							</c:choose> <br>
 							<mifos:mifoslabel name="loan.grace_period_type" />:&nbsp; <c:out
 								value="${BusinessKey.gracePeriodType.name}" /><br>
+							<%--
 							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
 								value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
 								value="${BusinessKey.loanOffering.minNoInstallments}" />
 							-&nbsp;<c:out
-								value="${BusinessKey.loanOffering.maxNoInstallments}" />)<br>
+								value="${BusinessKey.loanOffering.maxNoInstallments}" />)
+							--%>
+							<mifos:mifoslabel name="loan.no_of_inst" />:&nbsp;<c:out
+								value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel
+								name="loan.allowed_no_of_inst" />&nbsp;<c:out
+								value="${BusinessKey.maxMinNoOfInstall.minNoOfInstall}" />
+							-&nbsp;<c:out
+								value="${BusinessKey.maxMinNoOfInstall.maxNoOfInstall}" />)
+							<br>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<c:out
 								value="${BusinessKey.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel
 								name="loan.inst" /><br>

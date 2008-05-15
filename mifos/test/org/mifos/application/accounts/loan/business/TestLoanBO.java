@@ -78,6 +78,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
@@ -104,6 +105,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
+
+	private static final double DEFAULT_LOAN_AMOUNT = 300.0;
 
 	LoanOfferingBO loanOffering = null;
 
@@ -194,7 +197,6 @@ public class TestLoanBO extends MifosTestCase {
 	public void testWaiveMiscFeeAfterPayment() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViews = new ArrayList<FeeView>();
 		boolean isInterestDedAtDisb = false;
 		Short noOfinstallments = (short) 6;
@@ -488,19 +490,15 @@ public class TestLoanBO extends MifosTestCase {
 				1.2, 1, InterestType.FLAT, true, true, meeting);
 		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
 		MifosCurrency currency = TestObjectFactory.getCurrency();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		try {
+			LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_PARTIAL_APPLICATION, new Money(currency,
 							"300.0"), Short.valueOf("1"), meetingDates.get(0),
 					true, 10.0, (short) 0, new FundBO(),
-					new ArrayList<FeeView>(), null, Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<FeeView>(), null, DEFAULT_LOAN_AMOUNT, 
+							DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange.getMaxNoOfInstall(), 
+							eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 
 			fail();
 		}
@@ -519,25 +517,27 @@ public class TestLoanBO extends MifosTestCase {
 	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
-			LoanOfferingBO loanOfering) {
+			LoanOfferingBO loanOffering) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
 		MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer
 				.getCustomerMeeting().getMeeting());
 		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
-		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
+//		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
 		LoanBO loan;
 		MifosCurrency currency = TestObjectFactory.getCurrency();
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		try {
-			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOfering,
+			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 					customer, state, new Money(currency, "300.0"), Short
 							.valueOf("6"), meetingDates.get(0), true, 0.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(), null,
-					Double.parseDouble(loanOfering.getMaxLoanAmount()
-							.toString()), Double.parseDouble(loanOfering
-							.getMinLoanAmount().toString()), loanOfering
-							.getMaxNoInstallments(), loanOfering
-							.getMinNoInstallments(), false, null);
+					DEFAULT_LOAN_AMOUNT,
+					DEFAULT_LOAN_AMOUNT,
+					eligibleInstallmentRange.getMaxNoOfInstall(),
+					eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 		}
 		catch (ApplicationException e) {
 			throw new RuntimeException(e);
@@ -640,7 +640,7 @@ public class TestLoanBO extends MifosTestCase {
 	 */
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
-			LoanOfferingBO loanOfering, int disbursalType,
+			LoanOfferingBO loanOffering, int disbursalType,
 			Short noOfInstallments) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
@@ -650,16 +650,18 @@ public class TestLoanBO extends MifosTestCase {
 
 		LoanBO loan;
 		MifosCurrency currency = TestObjectFactory.getCurrency();
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		try {
-			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOfering,
+			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 					customer, state, new Money(currency, "300.0"),
 					noOfInstallments, meetingDates.get(0), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(), null,
-					Double.parseDouble(loanOfering.getMaxLoanAmount()
-							.toString()), Double.parseDouble(loanOfering
-							.getMinLoanAmount().toString()), loanOfering
-							.getMaxNoInstallments(), loanOfering
-							.getMinNoInstallments(), false, null);
+					DEFAULT_LOAN_AMOUNT,
+					DEFAULT_LOAN_AMOUNT,
+					eligibleInstallmentRange.getMaxNoOfInstall(),
+					eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 		}
 		catch (ApplicationException e) {
 			throw new RuntimeException(e);
@@ -1208,15 +1210,17 @@ public class TestLoanBO extends MifosTestCase {
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		feeViewList.add(new FeeView(userContext, upfrontFee));
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+		
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
 				(short) 0, new FundBO(), feeViewList, getCustomFields(),
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT,
+				eligibleInstallmentRange.getMaxNoOfInstall(),
+				eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 		assertEquals(1, accountBO.getAccountCustomFields().size());
@@ -1317,7 +1321,7 @@ public class TestLoanBO extends MifosTestCase {
 	private LoanOfferingBO createOfferingNoPrincipalInLastInstallment(
 			Date startDate, MeetingBO meeting) {
 		return TestObjectFactory.createLoanOffering("Loan",
-				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, 300.0,
+				ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE, DEFAULT_LOAN_AMOUNT,
 				1.2, 3, InterestType.FLAT, true, false, meeting);
 	}
 
@@ -1343,15 +1347,17 @@ public class TestLoanBO extends MifosTestCase {
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
 		feeViewList.add(new FeeView(userContext, upfrontFee));
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
 				(short) 0, new FundBO(), feeViewList, null,
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT,
+				eligibleInstallmentRange.getMaxNoOfInstall(),
+				eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -1855,7 +1861,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Date(System
 						.currentTimeMillis()), loanOffering);
@@ -2836,20 +2841,19 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false,
 				PrdStatus.LOAN_INACTIVE);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		try {
+			LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
+
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), 
+							DEFAULT_LOAN_AMOUNT, 
+							DEFAULT_LOAN_AMOUNT, 
+							eligibleInstallmentRange.getMaxNoOfInstall(), 
+							eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 			fail("The Loan object is created for inactive loan offering");
 		}
 		catch (AccountException ae) {
@@ -2864,20 +2868,19 @@ public class TestLoanBO extends MifosTestCase {
 			AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		try {
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+					DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertFalse("The Loan object is created for null customer", true);
 		}
 		catch (AccountException ae) {
@@ -2896,7 +2899,6 @@ public class TestLoanBO extends MifosTestCase {
 				.getCustomerId());
 
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		try {
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
@@ -2923,19 +2925,18 @@ public class TestLoanBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		try {
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, null,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"), startDate, false, 10.0, (short) 0,
 					new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, 
+							eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertFalse(
 					"The Loan object is created even if meetings do not match",
 					true);
@@ -2957,16 +2958,18 @@ public class TestLoanBO extends MifosTestCase {
 						CUSTOMER_MEETING));
 		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 				AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), startDate, false, 10.0, (short) 0,
 				new FundBO(), new ArrayList<FeeView>(),
-				new ArrayList<CustomFieldView>(),
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, 
+						eligibleInstallmentRange
+						.getMaxNoOfInstall(), eligibleInstallmentRange
+						.getMinNoOfInstall(), false, null);
 		assertTrue(
 				"The Loan object is created if meeting recurrence of loan offering is in multiples of customer",
 				true);
@@ -2977,19 +2980,18 @@ public class TestLoanBO extends MifosTestCase {
 			AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = 
+			loanOffering.getEligibleInstallmentSameForAllLoan();
+
 		try {
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_APPROVED, null, Short.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+					DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertFalse("The Loan object is created for null customer", true);
 		}
 		catch (AccountException ae) {
@@ -3002,19 +3004,17 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, SystemException, ApplicationException {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = 
+			loanOffering.getEligibleInstallmentSameForAllLoan();
+
 		try {
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_APPROVED, null, Short.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 5, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertFalse(
 					"The Loan object is created for grace period greather than max installments",
 					true);
@@ -3031,16 +3031,17 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO product = createLoanOffering(false);
-		product.updateLoanOfferingSameForAllLoan(product);
+//		product.updateLoanOfferingSameForAllLoan(product);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = 
+			product.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), product, group,
 				AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
 				false, 10.0, (short) 1, new FundBO(), new ArrayList<FeeView>(),
-				new ArrayList<CustomFieldView>(), Double.parseDouble(product
-						.getMaxLoanAmount().toString()), Double
-						.parseDouble(product.getMinLoanAmount().toString()),
-				product.getMaxNoInstallments(), product.getMinNoInstallments(),
-				false, null);
+				new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+						.getMaxNoOfInstall(), eligibleInstallmentRange
+						.getMinNoOfInstall(), false, null);
 		assertEquals(product.getGraceType(), loan.getGraceType());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
 		assertNotSame(new java.sql.Date(DateUtils
@@ -3054,16 +3055,17 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
 				true, 10.0, (short) 5, new FundBO(), new ArrayList<FeeView>(),
-				new ArrayList<CustomFieldView>(),
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+						.getMaxNoOfInstall(), eligibleInstallmentRange
+						.getMinNoOfInstall(), false, null);
 		assertEquals(
 				"For interest ded at disb, grace period type should be none",
 				GraceType.NONE, loan.getGraceType());
@@ -3080,19 +3082,17 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		Date disbursementDate = new Date(System.currentTimeMillis());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = 
+			loanOffering.getEligibleInstallmentSameForAllLoan();
 		try {
+
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"), disbursementDate, false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertTrue(
 					"The Loan object is created for valid disbursement date",
 					true);
@@ -3137,19 +3137,18 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		Date disbursementDate = offSetCurrentDate(15);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = 
+			loanOffering.getEligibleInstallmentSameForAllLoan();
+
 		try {
+
 			LoanBO.createLoan(TestUtils.makeUser(), loanOffering, group,
 					AccountState.LOAN_APPROVED, new Money("300.0"), Short
 							.valueOf("6"), disbursementDate, false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>(), Double
-							.parseDouble(loanOffering.getMaxLoanAmount()
-									.toString()), Double
-							.parseDouble(loanOffering.getMinLoanAmount()
-									.toString()), loanOffering
-							.getMaxNoInstallments(), loanOffering
-							.getMinNoInstallments(), false, null);
+					new ArrayList<CustomFieldView>(), DEFAULT_LOAN_AMOUNT, DEFAULT_LOAN_AMOUNT, eligibleInstallmentRange
+							.getMaxNoOfInstall(), eligibleInstallmentRange
+							.getMinNoOfInstall(), false, null);
 			assertFalse(
 					"The Loan object is created for invalid disbursement date",
 					true);
@@ -3167,15 +3166,17 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		List<FeeView> feeViews = getFeeViews();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
 				true, 10.0, (short) 0, new FundBO(), feeViews, null,
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT,
+				eligibleInstallmentRange.getMaxNoOfInstall(), 
+				eligibleInstallmentRange.getMinNoOfInstall(), 
+				false, null);
 
 		assertEquals(2, loan.getAccountFees().size());
 		for (AccountFeesEntity accountFees : loan.getAccountFees()) {
@@ -3213,15 +3214,16 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		List<FeeView> feeViews = getFeeViews();
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
 				true, 10.0, (short) 0, new FundBO(), feeViews, null,
-				Double.parseDouble(loanOffering.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT,
+				eligibleInstallmentRange.getMaxNoOfInstall(), eligibleInstallmentRange.getMinNoOfInstall(), 
+				false, null);
 
 		assertNotNull(loan.getLoanSummary());
 		assertNotNull(loan.getPerformanceHistory());
@@ -3245,7 +3247,6 @@ public class TestLoanBO extends MifosTestCase {
 		List<FeeView> feeViews = getFeeViews();
 		boolean isInterestDedAtDisb = false;
 		Short noOfinstallments = (short) 6;
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
 				isInterestDedAtDisb, feeViews, noOfinstallments);
 
@@ -3282,7 +3283,6 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViews = getFeeViews();
 		boolean isInterestDedAtDisb = true;
 		Short noOfinstallments = (short) 6;
@@ -3323,7 +3323,6 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(true);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViews = getFeeViews();
 		boolean isInterestDedAtDisb = false;
 		Short noOfinstallments = (short) 6;
@@ -3365,7 +3364,6 @@ public class TestLoanBO extends MifosTestCase {
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(true);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViews = getFeeViews();
 		boolean isInterestDedAtDisb = true;
 		Short noOfinstallments = (short) 6;
@@ -3407,7 +3405,6 @@ public class TestLoanBO extends MifosTestCase {
 			AccountException, Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		boolean isInterestDedAtDisb = false;
 		Short noOfinstallments = (short) 6;
 
@@ -3433,7 +3430,6 @@ public class TestLoanBO extends MifosTestCase {
 	public void testAmountNotRoundedWhileCreate() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		boolean isInterestDedAtDisb = false;
 		Short noOfinstallments = (short) 6;
 
@@ -3720,7 +3716,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		UserContext userContext = TestUtils.makeUser();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3809,7 +3804,6 @@ public class TestLoanBO extends MifosTestCase {
 				"Loan", ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		UserContext userContext = TestUtils.makeUser();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3896,7 +3890,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		UserContext userContext = TestUtils.makeUser();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3989,7 +3982,6 @@ public class TestLoanBO extends MifosTestCase {
 				"Loan", ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		UserContext userContext = TestUtils.makeUser();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -4079,7 +4071,6 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, (short) 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting(),
 				GraceType.PRINCIPALONLYGRACE, "1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		UserContext userContext = TestUtils.makeUser();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -4185,7 +4176,6 @@ public class TestLoanBO extends MifosTestCase {
 				"Loan", ApplicableTo.GROUPS, loanStart, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		Calendar disbursementDate = new GregorianCalendar();
 		disbursementDate.setTimeInMillis(sampleTime);
 		int year = disbursementDate.get(Calendar.YEAR);
@@ -4303,7 +4293,6 @@ public class TestLoanBO extends MifosTestCase {
 				"Loan", ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		Calendar disbursementDate = new GregorianCalendar();
 		int year = disbursementDate.get(Calendar.YEAR);
 		int month = disbursementDate.get(Calendar.MONTH);
@@ -4360,7 +4349,6 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_PENDING_APPROVAL, startDate, loanOffering);
 		try {
@@ -4670,7 +4658,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
 				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -4752,7 +4739,6 @@ public class TestLoanBO extends MifosTestCase {
 				"Loan", ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -5144,7 +5130,6 @@ public class TestLoanBO extends MifosTestCase {
 	public void testSaveLoanForInvalidConnection() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViews = getFeeViews();
 
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5214,7 +5199,6 @@ public class TestLoanBO extends MifosTestCase {
 				InterestType.DECLINING, false, false, center
 						.getCustomerMeeting().getMeeting(), GraceType.NONE,
 				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5273,7 +5257,6 @@ public class TestLoanBO extends MifosTestCase {
 						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
 				1.2, (short) 3, InterestType.DECLINING, false, false, center
 						.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5331,7 +5314,6 @@ public class TestLoanBO extends MifosTestCase {
 				1.2, (short) 3, InterestType.DECLINING, false, false, center
 						.getCustomerMeeting().getMeeting(),
 				GraceType.PRINCIPALONLYGRACE, "1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5391,7 +5373,6 @@ public class TestLoanBO extends MifosTestCase {
 				InterestType.DECLINING, false, true, center
 						.getCustomerMeeting().getMeeting(), GraceType.NONE,
 				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5450,7 +5431,6 @@ public class TestLoanBO extends MifosTestCase {
 				InterestType.DECLINING_EPI, false, false, center
 						.getCustomerMeeting().getMeeting(), GraceType.NONE,
 				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5510,7 +5490,6 @@ public class TestLoanBO extends MifosTestCase {
 						.currentTimeMillis()), PrdStatus.LOAN_ACTIVE, 300.0,
 				1.2, (short) 3, InterestType.DECLINING_EPI, false, false,
 				center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5568,7 +5547,6 @@ public class TestLoanBO extends MifosTestCase {
 				1.2, (short) 3, InterestType.DECLINING_EPI, false, false,
 				center.getCustomerMeeting().getMeeting(),
 				GraceType.PRINCIPALONLYGRACE, "1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5628,7 +5606,6 @@ public class TestLoanBO extends MifosTestCase {
 				InterestType.DECLINING_EPI, false, true, center
 						.getCustomerMeeting().getMeeting(), GraceType.NONE,
 				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -5682,15 +5659,17 @@ public class TestLoanBO extends MifosTestCase {
 			Short noOfinstallments, Double interestRate)
 			throws NumberFormatException, AccountException, SystemException,
 			ApplicationException {
+		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
+				.getEligibleInstallmentSameForAllLoan();
+
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"),
 				noOfinstallments, new Date(System.currentTimeMillis()),
 				isInterestDedAtDisb, interestRate, (short) 0, new FundBO(),
-				feeViews, null, Double.parseDouble(loanOffering
-						.getMaxLoanAmount().toString()),
-				Double.parseDouble(loanOffering.getMinLoanAmount().toString()),
-				loanOffering.getMaxNoInstallments(), loanOffering
-						.getMinNoInstallments(), false, null);
+				feeViews, null, DEFAULT_LOAN_AMOUNT,
+				DEFAULT_LOAN_AMOUNT,
+				eligibleInstallmentRange.getMaxNoOfInstall(),
+				eligibleInstallmentRange.getMinNoOfInstall(), false, null);
 		loan.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -5751,7 +5730,6 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
@@ -5877,7 +5855,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		// ((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, state, startDate, loanOffering,
@@ -5898,7 +5875,6 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", ApplicableTo.CLIENTS, startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, InterestType.FLAT, true, true, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
@@ -5979,7 +5955,6 @@ public class TestLoanBO extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);

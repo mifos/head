@@ -44,6 +44,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -54,12 +55,16 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.productdefinition.business.LoanAmountOption;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -89,9 +94,12 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 
 	private String stateSelected;
 
+	private CustomerBusinessService customerBusinessService;
+
 	public MultipleLoanAccountsCreationActionForm() {
 		clients = new ArrayList<String>();
 		clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
+		customerBusinessService = new CustomerBusinessService();
 	}
 
 	public List<MultipleLoanCreationViewHelper> getClientDetails() {
@@ -252,6 +260,10 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
 					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 		}
+		catch (ServiceException e) {
+			errors.add(ExceptionConstants.SERVICEEXCEPTION,
+					new ActionMessage(ExceptionConstants.SERVICEEXCEPTION));
+		}
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);
 		}
@@ -260,37 +272,29 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 	}
 
 	private void checkValidationForCreate(ActionErrors errors,
-			HttpServletRequest request) throws PageExpiredException {
+			HttpServletRequest request) throws PageExpiredException,
+			ServiceException {
 		logger.debug("inside checkValidationForCreate method");
-		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
-				.getAttribute(LoanConstants.LOANOFFERING, request);
 		List<MultipleLoanCreationViewHelper> applicableClientDetails = getApplicableClientDetails();
-		if (applicableClientDetails != null
-				&& applicableClientDetails.size() > 0) {
-			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-				String loanAmount = clientDetail.getLoanAmount();
-				if (StringUtils.isNullOrEmpty(loanAmount)
-						|| getDoubleValue(loanAmount).doubleValue() > loanOffering
-								.getMaxLoanAmount().getAmountDoubleValue()
-						|| getDoubleValue(loanAmount).doubleValue() < loanOffering
-								.getMinLoanAmount().getAmountDoubleValue()) {
-					Locale locale = getUserContext(request).getPreferredLocale();
-					ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, 
-							locale);
-					String loanAmountFor = resources.getString("loan.loanAmountFor");
-					addError(errors, LoanConstants.LOANAMOUNT,
-							LoanExceptionConstants.INVALIDMINMAX,
-							loanAmountFor
-									+ clientDetail.getClientName(),
-							loanOffering.getMinLoanAmount().toString(),
-							loanOffering.getMaxLoanAmount().toString());
-				}
-			}
-		} else {
+		if (CollectionUtils.isEmpty(applicableClientDetails)) {
 			addError(errors, LoanConstants.APPL_RECORDS,
 					LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
-							ConfigurationConstants.CLIENT, getUserContext(
-									request)));
+							ConfigurationConstants.CLIENT,
+							getUserContext(request)));
+			return;
+		}
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(
+				FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
+		for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+			if (clientDetail.isLoanAmountInRange())
+				continue;
+			addError(errors, LoanConstants.LOANAMOUNT,
+					LoanExceptionConstants.INVALIDMINMAX, resources
+							.getString("loan.loanAmountFor")
+							+ clientDetail.getClientName(), clientDetail
+							.getMinLoanAmount().toString(), clientDetail
+							.getMaxLoanAmount().toString());
 		}
 		logger.debug("outside checkValidationForCreate method");
 	}

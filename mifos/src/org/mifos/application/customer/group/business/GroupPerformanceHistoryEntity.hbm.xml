@@ -32,6 +32,10 @@
 	        <column name="PORTFOLIO_AT_RISK_CURRENCY_ID" /> 
 			<column name="PORTFOLIO_AT_RISK" />
 		</property>        
+		<set name="loanCounters" cascade="all" table="GROUP_LOAN_COUNTER" lazy="false" access="field" inverse="true">
+			<key column="GROUP_PERF_ID" />
+			<one-to-many class="org.mifos.application.customer.group.business.GroupLoanCounter" />
+		</set>
         <many-to-one name="group" column="CUSTOMER_ID"
 			class="org.mifos.application.customer.group.business.GroupBO" unique="true"/>
     </class>    

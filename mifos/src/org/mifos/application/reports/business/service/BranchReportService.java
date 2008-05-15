@@ -71,7 +71,7 @@ public class BranchReportService implements IBranchReportService {
 			throws ServiceException {
 		Short officeId = convertIntegerToShort(branchId);
 		PersonnelBO branchManager = CollectionUtils
-				.getFirstElement(personnelBusinessService
+				.first(personnelBusinessService
 						.getActiveBranchManagersUnderOffice(officeId));
 		try {
 			return new BranchReportHeaderDTO(officeBusinessService
@@ -221,7 +221,7 @@ public class BranchReportService implements IBranchReportService {
 	public BranchReportBO getBranchReport(Short branchId, Date runDate)
 			throws ServiceException {
 		try {
-			return CollectionUtils.getFirstElement(branchReportPersistence
+			return CollectionUtils.first(branchReportPersistence
 					.getBranchReport(branchId, runDate));
 		}
 		catch (PersistenceException e) {

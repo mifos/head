@@ -379,7 +379,6 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		return TestObjectFactory.createLoanAccount("42423142341", client, 
 			AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 			startDate, loanOffering);

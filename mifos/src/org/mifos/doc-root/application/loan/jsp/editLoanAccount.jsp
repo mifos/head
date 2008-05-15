@@ -237,9 +237,9 @@
 							<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
 								value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
 								name="loan.allowed_amount" />&nbsp; <c:out
-								value="${BusinessKey.loanOffering.minLoanAmount}" />
+								value="${sessionScope.loanAccountActionForm.minLoanAmount}" />
 							&nbsp; - &nbsp; <c:out
-								value="${BusinessKey.loanOffering.maxLoanAmount}" />)
+								value="${sessionScope.loanAccountActionForm.maxLoanAmount}" />)
 							</td>
 
 						</tr>
@@ -269,9 +269,9 @@
 								name="loanAccountActionForm" property="noOfInstallments"
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
 							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <c:out
-								value="${BusinessKey.loanOffering.minNoInstallments}" />&nbsp;
+								value="${sessionScope.loanAccountActionForm.minNoInstallments}" />&nbsp;
 							- &nbsp; <c:out
-								value="${BusinessKey.loanOffering.maxNoInstallments}" />)
+								value="${sessionScope.loanAccountActionForm.maxNoInstallments}" />)
 							</td>
 						</tr>
 

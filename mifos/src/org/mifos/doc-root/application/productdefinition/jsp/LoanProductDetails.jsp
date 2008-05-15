@@ -109,13 +109,14 @@ explanation of the license and how it is applied.
 													<c:otherwise>
 														<mifos:mifoslabel name="product.no" bundle="ProductDefUIResources" />
 													</c:otherwise>
-												</c:choose> <br> <!--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
+												</c:choose> <br> 
+												<%--<mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxLoanAmount}" /> <br> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.minLoanAmount}" /> <br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:if test="${loanPrd.defaultLoanAmount.amountDoubleValue > 0.0 || loanPrd.minLoanAmount.amountDoubleValue == 0.0}">
 													<c:out value="${loanPrd.defaultLoanAmount}" />
 												</c:if> 
-												-->
+												--%>
 												<%-- FIXME: use a constant here instead of literal 1 --%>
 												<c:if test="${loanAmountType==1}">
 												<mifos:mifoslabel name="product.calcloanamount" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallloans" bundle="ProductDefUIResources" />
@@ -224,9 +225,10 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" />
 												</c:if> <c:if test="${loanPrd.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 2}">
 													<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
-												</c:if> <br> <!--<mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxNoInstallments}" /><br> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />: <c:out
+												</c:if> <br> 
+												<%--<mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxNoInstallments}" /><br> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />: <c:out
 													value="${loanPrd.minNoInstallments}" /><br> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.defNoInstallments}" />
-													-->
+												--%>
 													<c:if test="${installType=='1'}">
 													<mifos:mifoslabel name="product.calcInstallment" bundle="ProductDefUIResources" isColonRequired="yes"/> <mifos:mifoslabel name="product.sameforallinstallment" bundle="ProductDefUIResources"/>
 														<br>

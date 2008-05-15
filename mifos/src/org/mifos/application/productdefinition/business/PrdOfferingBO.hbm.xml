@@ -67,32 +67,9 @@
 			name="org.mifos.application.productdefinition.business.LoanOfferingBO"
 			table="LOAN_OFFERING">
 			<key column="PRD_OFFERING_ID" />
-
-			<property name="minLoanAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="MIN_LOAN_AMOUNT_CURRENCY_ID" />
-				<column name="MIN_LOAN_AMOUNT" />
-			</property>
-			<property name="maxLoanAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="MAX_LOAN_AMNT_CURRENCY_ID" />
-				<column name="MAX_LOAN_AMNT" />
-			</property>
-			<property name="defaultLoanAmount"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-				<column name="DEFAULT_LOAN_AMOUNT_CURRENCY_ID" />
-				<column name="DEFAULT_LOAN_AMOUNT" />
-			</property>
-
 			<property name="maxInterestRate" column="MAX_INTEREST_RATE" />
 			<property name="minInterestRate" column="MIN_INTEREST_RATE" />
 			<property name="defInterestRate" column="DEF_INTEREST_RATE" />
-			<property name="maxNoInstallments"
-				column="MAX_NO_INSTALLMENTS" />
-			<property name="minNoInstallments"
-				column="MIN_NO_INSTALLMENTS" />
-			<property name="defNoInstallments"
-				column="DEF_NO_INSTALLMENTS" />
 			<property name="gracePeriodDuration"
 				column="GRACE_PERIOD_DURATION" />
 			<property name="intDedDisbursement"

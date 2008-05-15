@@ -43,6 +43,8 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -1344,27 +1346,26 @@ public class AccountBO extends BusinessObject {
 	}
 	
 	protected void updateCustomFields(List<CustomFieldView> customFields) {
-		if (customFields != null) {
-			for (CustomFieldView fieldView : customFields) {
-				if (fieldView.getFieldType().equals(
-						CustomFieldType.DATE.getValue())
-						&& StringUtils.isNullAndEmptySafe(fieldView
-								.getFieldValue()))
-					fieldView.convertDateToUniformPattern(getUserContext()
-							.getPreferredLocale());
-				if(getAccountCustomFields().size()>0){
-					for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields())
-						if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
-							fieldEntity.setFieldValue(fieldView.getFieldValue());
+		if (customFields == null)
+			return;
+		for (CustomFieldView fieldView : customFields) {
+			if (fieldView.getFieldType()
+					.equals(CustomFieldType.DATE.getValue())
+					&& StringUtils
+							.isNullAndEmptySafe(fieldView.getFieldValue()))
+				fieldView.convertDateToUniformPattern(getUserContext()
+						.getPreferredLocale());
+			if (getAccountCustomFields().size() > 0) {
+				for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields())
+					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+						fieldEntity.setFieldValue(fieldView.getFieldValue());
+			}
+			else {
+				for (CustomFieldView view : customFields) {
+					this.getAccountCustomFields().add(
+							new AccountCustomFieldEntity(this, view
+									.getFieldId(), view.getFieldValue()));
 				}
-				else{
-					for (CustomFieldView view : customFields) {
-						this.getAccountCustomFields().add(
-								new AccountCustomFieldEntity(this, view.getFieldId(),
-										view.getFieldValue()));
-					}
-				}
-				
 			}
 		}
 	}
@@ -1376,5 +1377,12 @@ public class AccountBO extends BusinessObject {
 	public void setOffsettingAllowable(Integer offsettingAllowable) {
 		this.offsettingAllowable = offsettingAllowable;
 	}
+	
+	public boolean isInState(AccountState state) {
+		return accountState.isInState(state);
+	}
 
+	public boolean isLoanAccount() {
+		return AccountTypes.LOAN_ACCOUNT == getType();
+	}
 }

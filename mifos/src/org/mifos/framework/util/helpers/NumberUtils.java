@@ -2,6 +2,7 @@ package org.mifos.framework.util.helpers;
 
 import java.math.BigDecimal;
 
+
 public class NumberUtils {
 	public static final int ZERO = Integer.valueOf(0);
 	
@@ -33,4 +34,11 @@ public class NumberUtils {
 			return BigDecimal.ZERO;
 		return BigDecimal.valueOf(part.floatValue() / fullValue * 100f);
 	}
+
+	public static boolean isBetween(Comparable start, Comparable end, Comparable value) {
+		return start.compareTo(value) <= 0 && end.compareTo(value) >= 0;
+	}
+	
+	public static final Double DOUBLE_ZERO = Double.valueOf(0d);
+	public static final Short SHORT_ZERO = Short.valueOf("0");
 }

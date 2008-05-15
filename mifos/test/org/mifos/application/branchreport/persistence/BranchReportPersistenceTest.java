@@ -147,7 +147,7 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 		session.save(branchReportWithLoanArrears);
 		retrieveAndAssertLoanArrearsReportForBranchAndDate(1, PredicateUtils
 				.equalPredicate(CollectionUtils
-						.getFirstElement(branchReportWithLoanArrears
+						.first(branchReportWithLoanArrears
 								.getLoanArrearsAging())));
 	}
 
@@ -161,7 +161,7 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 		session.save(branchReportWithStaffSummary);
 		retrieveAndAssertBranchReportStaffSummaryForBranchAndDate(1,
 				PredicateUtils.equalPredicate(CollectionUtils
-						.getFirstElement(branchReportWithStaffSummary
+						.first(branchReportWithStaffSummary
 								.getStaffSummaries())));
 	}
 
@@ -387,7 +387,7 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 			List retrievedReports, Predicate mustBeTrue) {
 		assertEquals(resultCount, retrievedReports.size());
 		assertTrue(mustBeTrue.evaluate(CollectionUtils
-				.getFirstElement(retrievedReports)));
+				.first(retrievedReports)));
 	}
 
 	@Override

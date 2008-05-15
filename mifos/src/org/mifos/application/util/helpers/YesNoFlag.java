@@ -46,5 +46,12 @@ public enum YesNoFlag implements LocalizedTextLookup {
 	public String getPropertiesKey() {
 		return "YesNoFlag." + toString();
 	}
+
+	public boolean yes() {
+		return equals(YesNoFlag.YES);
+	}
 	
+	public boolean no() {
+		return !yes();
+	}
 }

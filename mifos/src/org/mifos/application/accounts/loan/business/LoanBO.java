@@ -423,35 +423,37 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields, Boolean isRedone,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay)
-			throws AccountException {
+			List<CustomFieldView> customFields, Boolean isRedone,
+			boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 
-        setCreateDetails();
+		setCreateDetails();
 		this.redone = isRedone;
-        this.loanOffering = loanOffering;
+		this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
 		this.loanBalance = loanAmount;
 		this.noOfInstallments = noOfinstallments;
 		this.interestType = loanOffering.getInterestTypes();
 		this.interestRate = interestRate;
-		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);	 	
+		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
 				gracePeriodDuration, noOfinstallments);
-	    	
+
 		this.gracePeriodPenalty = Short.valueOf("0");
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting(), loanOffering.getLoanOfferingMeeting()
 				.getMeeting(), disbursementDate);
-	    buildAccountFee(feeViews);	    	
+		buildAccountFee(feeViews);
 		this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-	    generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
-	    this.loanSummary = buildLoanSummary();
-	    
-	    this.maxMinLoanAmount = null;
+		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,
+				newMeetingForRepaymentDay);
+		this.loanSummary = buildLoanSummary();
+
+		this.maxMinLoanAmount = null;
 		this.maxMinNoOfInstall = null;
 		addcustomFields(customFields);
 	}
@@ -461,38 +463,41 @@ public class LoanBO extends AccountBO {
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
-			List<CustomFieldView> customFields, Boolean isRedone,AccountTypes accountType,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
-    	
+			List<CustomFieldView> customFields, Boolean isRedone,
+			AccountTypes accountType, boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
+
 		super(userContext, customer, accountType, accountState);
-		
-        setCreateDetails();
-		
-        this.redone = isRedone;
-        this.loanOffering = loanOffering;
+
+		setCreateDetails();
+
+		this.redone = isRedone;
+		this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
 		this.loanBalance = loanAmount;
 		this.noOfInstallments = noOfinstallments;
 		this.interestType = loanOffering.getInterestTypes();
 		this.interestRate = interestRate;
-		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);	 	
+		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
 				gracePeriodDuration, noOfinstallments);
-	    	
+
 		this.gracePeriodPenalty = Short.valueOf("0");
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting(), loanOffering.getLoanOfferingMeeting()
 				.getMeeting(), disbursementDate);
-	    buildAccountFee(feeViews);
-	    this.disbursementDate = disbursementDate;
+		buildAccountFee(feeViews);
+		this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-	    generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
-	    this.loanSummary = buildLoanSummary();
+		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,
+				newMeetingForRepaymentDay);
+		this.loanSummary = buildLoanSummary();
 		this.maxMinLoanAmount = null;
 		this.maxMinNoOfInstall = null;
 		addcustomFields(customFields);
-	    
+
 	}
 
 
@@ -503,7 +508,8 @@ public class LoanBO extends AccountBO {
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields, Boolean isRedone,
 			Double maxLoanAmount, Double minLoanAmount, Short maxNoOfInstall,
-			Short minNoOfInstall,boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
+			Short minNoOfInstall, boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 		setCreateDetails();
 		this.redone = isRedone;
@@ -525,7 +531,8 @@ public class LoanBO extends AccountBO {
 		this.disbursementDate = disbursementDate;
 		this.performanceHistory = new LoanPerformanceHistoryEntity(this);
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
-		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
+		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,
+				newMeetingForRepaymentDay);
 		this.loanSummary = buildLoanSummary();
 		this.maxMinLoanAmount = new MaxMinLoanAmount(maxLoanAmount,
 				minLoanAmount, this);
@@ -2990,8 +2997,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	}
 
 	private void updateCustomerHistoryOnDisbursement(Money disburseAmount) {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
@@ -3000,13 +3006,13 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			clientPerfHistory.updateLoanCounter(getLoanOffering(),
 					YesNoFlag.YES);
 		}
-		else if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.GROUP.getValue()))
+		else if (getCustomer().isGroup()
 				&& getCustomer().getPerformanceHistory() != null) {
 			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
 			groupPerformanceHistoryEntity
 					.setLastGroupLoanAmount(disburseAmount);
+			groupPerformanceHistoryEntity.updateLoanCounter(getLoanOffering(), YesNoFlag.YES);
 		}
 	}
 
@@ -3044,6 +3050,13 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
 					.getNoOfActiveLoans() - 1);
 		}
+		else if (getCustomer().isGroup()
+				&& getCustomer().getPerformanceHistory() != null) {
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
+					.getPerformanceHistory();
+			groupPerformanceHistoryEntity
+					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
+		}
 	}
 
 	private void updateCustomerHistoryOnReverseLoan() {
@@ -3072,19 +3085,27 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 					.getPerformanceHistory();
 			groupPerformanceHistoryEntity
 					.setLastGroupLoanAmount(lastLoanAmount);
+			groupPerformanceHistoryEntity.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
 		}
 	}
 
 	@Override
 	protected void updateClientPerformanceOnRescheduleLoan() {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
 			clientPerfHistory
 					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
 		}
+		else if (getCustomer().isGroup()
+				&& getCustomer().getPerformanceHistory() != null) {
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
+					.getPerformanceHistory();
+			groupPerformanceHistoryEntity
+					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
+		}
+
 	}
 
 	private void regeneratePaymentSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
@@ -3607,7 +3628,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	}
 
 	public boolean isOfProductOffering(LoanOfferingBO loanOfferingBO) {
-		return this.loanOffering.equals(loanOfferingBO);
+		return this.loanOffering.isOfSameOffering(loanOfferingBO);
 	}
 
 /***********************************

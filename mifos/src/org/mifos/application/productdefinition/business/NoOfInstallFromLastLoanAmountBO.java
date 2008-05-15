@@ -1,47 +1,45 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.framework.business.PersistentObject;
+import static org.mifos.framework.util.helpers.NumberUtils.isBetween;
 
+public class NoOfInstallFromLastLoanAmountBO extends LoanOfferingInstallmentRange {
 
-public class NoOfInstallFromLastLoanAmountBO extends PersistentObject {
-
-	private Short minNoOfInstall;
-	private Short maxNoOfInstall;
-	private Short defaultNoOfInstall;
+	@SuppressWarnings("unused")
+	private final Short noOfInstallFromLastLoanID;
 	private Double startRange;
 	private Double endRange;
-	private final LoanOfferingBO loanOffering;
-	private final Short noOfInstallFromLastLoanID;
 
 	public NoOfInstallFromLastLoanAmountBO(Short minNoOfInstall,
 			Short maxNoOfInstall, Short defaultNoOfInstall, Double startRange,
 			Double endRange, LoanOfferingBO loanOffering) {
-		this.minNoOfInstall = minNoOfInstall;
-		this.maxNoOfInstall = maxNoOfInstall;
-		this.defaultNoOfInstall = defaultNoOfInstall;
+		super(minNoOfInstall, maxNoOfInstall, defaultNoOfInstall, loanOffering);
 		this.startRange = startRange;
 		this.endRange = endRange;
-		this.loanOffering = loanOffering;
 		this.noOfInstallFromLastLoanID = null;
 	}
 
 	public NoOfInstallFromLastLoanAmountBO() {
-		this.minNoOfInstall = null;
-		this.maxNoOfInstall = null;
-		this.defaultNoOfInstall = null;
-		this.startRange = null;
-		this.endRange = null;
-		this.loanOffering = null;
-		this.noOfInstallFromLastLoanID = null;
-	}
-
-	public Short getDefaultNoOfInstall() {
-		return defaultNoOfInstall;
-	}
-
-	public void setDefaultNoOfInstall(Short defaultNoOfInstall) {
-		this.defaultNoOfInstall = defaultNoOfInstall;
+		this(null, null, null, null, null, null);
 	}
 
 	public Double getEndRange() {
@@ -52,27 +50,15 @@ public class NoOfInstallFromLastLoanAmountBO extends PersistentObject {
 		this.endRange = endRange;
 	}
 
-	public Short getMaxNoOfInstall() {
-		return maxNoOfInstall;
-	}
-
-	public void setMaxNoOfInstall(Short maxNoOfInstall) {
-		this.maxNoOfInstall = maxNoOfInstall;
-	}
-
-	public Short getMinNoOfInstall() {
-		return minNoOfInstall;
-	}
-
-	public void setMinNoOfInstall(Short minNoOfInstall) {
-		this.minNoOfInstall = minNoOfInstall;
-	}
-
 	public Double getStartRange() {
 		return startRange;
 	}
 
 	public void setStartRange(Double startRange) {
 		this.startRange = startRange;
+	}
+
+	boolean loanAmountInRange(Double value) {
+		return isBetween(startRange, endRange, value);
 	}
 }

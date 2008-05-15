@@ -149,10 +149,6 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.savingsOfferingMeetings = savingsOfferingMeetings;
 	}
 	
-	public static SavingsOfferingBO createInstanceForTest(Short prdOfferingId){
-		return new SavingsOfferingBO(prdOfferingId, null, null, new HashSet<PrdOfferingMeetingEntity>());
-	}
-
 	private Set<PrdOfferingMeetingEntity> getSavingsOfferingMeetings() {
 		return savingsOfferingMeetings;
 	}
@@ -342,4 +338,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		prdLogger.debug("Validating the fields in savings Offering done");
 	}
 
+	public static SavingsOfferingBO createInstanceForTest(Short prdOfferingId){
+		return new SavingsOfferingBO(prdOfferingId, null, null, new HashSet<PrdOfferingMeetingEntity>());
+	}
 }

@@ -99,7 +99,7 @@
 			discriminator-value="GROUP">
 			<one-to-one name="groupPerformanceHistory"
 				class="org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity" 
-				cascade="all" property-ref="group" />
+				cascade="all" property-ref="group" access="field"/>
 		</subclass>
 		<subclass name="org.mifos.application.customer.client.business.ClientBO" discriminator-value="CLIENT">
 			<property name="governmentId" column="GOVERNMENT_ID" type="string" />

@@ -42,6 +42,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Comparator;
 
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -58,7 +59,17 @@ import org.mifos.config.AccountingRules;
  * 
  */
 public final class Money implements Serializable {
-
+	// adding a comparator, if currency are different throws a RuntimeException saying cannot compare
+	// otherwise delegates to BigDecimal.compareTo for comparision 
+	public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
+		public int compare(Money m1, Money m2) {
+			if (m1.isCurrencyDifferent(m2))
+				throw new RuntimeException(
+						"Cannot compare money in differenct currencies");
+			return m1.amount.compareTo(m2.amount);
+		}
+	};
+	
 	/*
 	 * March 21, 2008 refactoring in progress.
 	 * usingNewMoney is an application-wide setting to switch between

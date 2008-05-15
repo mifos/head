@@ -485,11 +485,15 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		if (getClass() != obj.getClass())
 			return false;
 		final PrdOfferingBO other = (PrdOfferingBO) obj;
+		return isOfSameOffering(other);
+	}
+
+	public boolean isOfSameOffering(final PrdOfferingBO other) {
 		if (prdOfferingId == null) {
 			if (other.prdOfferingId != null)
 				return false;
 		}
-		else if (!prdOfferingId.equals(other.prdOfferingId))
+		else if (!prdOfferingId.equals(other.getPrdOfferingId()))
 			return false;
 		return true;
 	}

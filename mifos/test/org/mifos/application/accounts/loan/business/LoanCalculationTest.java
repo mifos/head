@@ -222,72 +222,7 @@ public class LoanCalculationTest extends MifosTestCase {
 			Date disbursementDate) {
 		((LoanBO) account).setDisbursementDate(disbursementDate);
 	}
-	
-	
 
-	/**
-	 * Like
-	 * {@link #createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int, Short)}
-	 * but differs in various ways.
-	 * 
-	 * @param globalNum
-	 *            Currently ignored (TODO: remove it or honor it)
-	 */
-	public static LoanBO createLoanAccount(String globalNum,
-			CustomerBO customer, AccountState state, Date startDate,
-			LoanOfferingBO loanOfering) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer
-				.getCustomerMeeting().getMeeting());
-		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
-		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
-		LoanBO loan;
-		MifosCurrency currency = TestObjectFactory.getCurrency();
-		try {
-			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOfering,
-					customer, state, new Money(currency, "300.0"), Short
-							.valueOf("6"), meetingDates.get(0), true, 0.0,
-					(short) 0, new FundBO(), new ArrayList<FeeView>(), null,
-					Double.parseDouble(loanOfering.getMaxLoanAmount()
-							.toString()), Double.parseDouble(loanOfering
-							.getMinLoanAmount().toString()), loanOfering
-							.getMaxNoInstallments(), loanOfering
-							.getMinNoInstallments(),false,null);
-		}
-		catch (ApplicationException e) {
-			throw new RuntimeException(e);
-		}
-		FeeBO maintanenceFee = TestObjectFactory.createPeriodicAmountFee(
-				"Mainatnence Fee", FeeCategory.LOAN, "100",
-				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,
-				maintanenceFee, ((AmountFeeBO) maintanenceFee).getFeeAmount()
-						.getAmountDoubleValue());
-		TestAccountFeesEntity.addAccountFees(accountPeriodicFee, loan);
-		loan.setLoanMeeting(meeting);
-		short i = 0;
-		for (Date date : meetingDates) {
-			LoanScheduleEntity actionDate = (LoanScheduleEntity) loan
-					.getAccountActionDate(++i);
-			actionDate.setPrincipal(new Money(currency, "100.0"));
-			actionDate.setInterest(new Money(currency, "12.0"));
-			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			actionDate.setPaymentStatus(PaymentStatus.UNPAID);
-			TestAccountActionDateEntity.addAccountActionDate(actionDate, loan);
-
-			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-					actionDate, maintanenceFee, accountPeriodicFee, new Money(
-							currency, "100.0"));
-			setFeeAmountPaid(accountFeesaction, new Money(currency, "0.0"));
-			actionDate.addAccountFeesAction(accountFeesaction);
-		}
-		loan.setCreatedBy(Short.valueOf("1"));
-		loan.setCreatedDate(new Date(System.currentTimeMillis()));
-
-		setLoanSummary(loan, currency);
-		return loan;
-	}
 	public static LoanBO createIndividualLoanAccount(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
 			LoanOfferingBO loanOfering) {
@@ -657,7 +592,6 @@ public class LoanCalculationTest extends MifosTestCase {
 				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
 				"1", "1");
 		
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
 		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -1004,7 +938,6 @@ public class LoanCalculationTest extends MifosTestCase {
 				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
 				"1", "1");
 		
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
 		AccountBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
@@ -1077,7 +1010,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
 				"1", "1");
 		
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
 
@@ -1720,8 +1653,6 @@ class LoanTestCaseData {
 				loanParams.getLoanType(), false, false, center
 				.getCustomerMeeting().getMeeting(), config.getGracePeriodType(),
 				"1", "1");
-		
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		
 		List<FeeView> feeViewList = createFeeViews(config, loanParams, meeting);
 
@@ -2502,7 +2433,6 @@ class LoanTestCaseData {
 				interestType, false, false, center
 				.getCustomerMeeting().getMeeting(), GraceType.NONE,
 				"1", "1");
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,

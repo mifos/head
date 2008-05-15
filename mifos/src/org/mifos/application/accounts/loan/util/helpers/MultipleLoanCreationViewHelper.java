@@ -19,6 +19,11 @@
  */
 package org.mifos.application.accounts.loan.util.helpers;
 
+import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
+import static org.mifos.framework.util.helpers.NumberUtils.*;
+import org.mifos.application.productdefinition.business.LoanAmountOption;
+import org.mifos.framework.util.helpers.StringUtils;
+
 public class MultipleLoanCreationViewHelper {
 
 	private String clientId;
@@ -28,6 +33,8 @@ public class MultipleLoanCreationViewHelper {
 	private String loanAmount;
 
 	private String businessActivity;
+
+	private LoanAmountOption loanAmountOption;
 
 	public String getBusinessActivity() {
 		return businessActivity;
@@ -61,4 +68,27 @@ public class MultipleLoanCreationViewHelper {
 		this.clientName = clientName;
 	}
 
+	public void setLoanAmountOption(LoanAmountOption loanAmountOption) {
+		this.loanAmountOption = loanAmountOption;
+	}
+
+	public LoanAmountOption getLoanAmountOption() {
+		return loanAmountOption;
+	}
+
+	public boolean isLoanAmountInRange() {
+		return !StringUtils.isNullOrEmpty(this.loanAmount)
+				&& loanAmountOption.isInRange(
+						getDoubleValue(this.loanAmount));
+	}
+
+	public Double getMinLoanAmount() {
+		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
+				.getMinLoanAmount();
+	}
+
+	public Double getMaxLoanAmount() {
+		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
+				.getMaxLoanAmount();
+	}
 }

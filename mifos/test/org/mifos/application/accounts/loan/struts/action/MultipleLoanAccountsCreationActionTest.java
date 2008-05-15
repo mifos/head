@@ -19,7 +19,9 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -322,7 +324,6 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -356,7 +357,10 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+		LoanAmountSameForAllLoanBO eligibleLoanAmountRange = loanOffering
+				.getEligibleLoanAmountSameForAllLoan();
+
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -372,8 +376,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/multipleloansaction.do");
-		addRequestParameter("clientDetails[0].loanAmount", loanOffering
-				.getDefaultLoanAmount().toString());
+		addRequestParameter("clientDetails[0].loanAmount", eligibleLoanAmountRange.getDefaultLoanAmount().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("stateSelected", "1");
@@ -392,7 +395,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -409,7 +412,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		actionPerform();
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("clientDetails[0].loanAmount", loanOffering
-				.getDefaultLoanAmount().toString());
+				.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("stateSelected", "1");
@@ -426,10 +429,11 @@ public class MultipleLoanAccountsCreationActionTest extends
 		assertEquals(1, accountNumbers.size());
 		LoanBO loan = new LoanBusinessService().findBySystemId(accountNumbers
 				.get(0));
-		assertEquals(loanOffering.getDefaultLoanAmount().toString(), loan
+		assertEquals(loanOffering
+				.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
 				.getLoanAmount().toString());
 		assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
-		assertEquals(loanOffering.getDefNoInstallments(), loan
+		assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
 				.getNoOfInstallments());
 		assertEquals(Short.valueOf("0"), loan.getGracePeriodDuration());
 		assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
@@ -445,7 +449,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
-		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
+//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -461,6 +465,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		addRequestParameter("clients[0]", client.getCustomerId().toString());
+		addRequestParameter("clientDetails[0].loanAmount", "300");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		setRequestPathInfo("/multipleloansaction.do");

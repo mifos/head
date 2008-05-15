@@ -1,13 +1,25 @@
 package org.mifos.application.customer.group.business;
+import static org.mifos.application.customer.group.business.GroupLoanCounter.TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.select;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.Predicate;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -26,17 +38,16 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private Money portfolioAtRisk;
 
 	private GroupBO group;
-
+	
+	/**
+	 * stores the loan cycle information based
+	 * on products 
+	 */
+	private Set<GroupLoanCounter> loanCounters;
+	
 	public GroupPerformanceHistoryEntity(GroupBO group) {
-		super();
-		this.id = null;
+		this(0, new Money(), new Money(), new Money(), new Money(), new Money());
 		this.group = group;
-		this.portfolioAtRisk = new Money();
-		this.totalOutstandingPortfolio = new Money();
-		this.totalSavings = new Money();
-		this.avgLoanForMember = new Money();
-		this.lastGroupLoanAmount = new Money();
-		this.clientCount = 0;
 	}
 
 	public GroupPerformanceHistoryEntity(Integer clientCount,
@@ -49,9 +60,12 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.avgLoanForMember = avgLoanForMember;
 		this.lastGroupLoanAmount = lastGroupLoanAmount;
 		this.clientCount = clientCount;
+		this.loanCounters = new HashSet<GroupLoanCounter>();
+		this.id = null;
 	}
 
 	protected GroupPerformanceHistoryEntity() {
+		this(0, null, null, null, null, null);
 	}
 
 	public Integer getId() {
@@ -180,5 +194,54 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	
 	private List<CustomerBO> getChildren() throws CustomerException {
 		return group.getChildren(CustomerLevel.CLIENT,ChildrenStateType.ACTIVE_AND_ONHOLD);
+	}
+
+	public void updateLoanCounter(final LoanOfferingBO loanOffering,
+			YesNoFlag yesNoFlag) {
+		GroupLoanCounter loanCounter = null;
+		try {
+			loanCounter = findLoanCounterForProduct(loanOffering);
+		}
+		catch (Exception e) {
+		}
+		if (loanCounter == null) {
+			loanCounter = new GroupLoanCounter(this, loanOffering, yesNoFlag);
+			loanCounters.add(loanCounter);
+		}
+		else {
+			loanCounter.updateLoanCounter(yesNoFlag);
+		}
+	}
+
+	GroupLoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
+		return find(loanCounters, new Predicate<GroupLoanCounter>() {
+			public boolean evaluate(GroupLoanCounter loanCounter)
+					throws Exception {
+				return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
+			}
+		});
+	}
+
+	public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {
+		{
+			Set<GroupLoanCounter> clientLoanCounters = getLoanCounters();
+			try {
+				Collection<Short> loanCyclesForProduct = select(
+						clientLoanCounters, new Predicate<GroupLoanCounter>() {
+							public boolean evaluate(GroupLoanCounter counter) throws Exception {
+								return counter.isOfSameProduct(prdOffering);
+							}
+						}, TRANSFORM_GROUP_LOAN_COUNTER_TO_LOAN_CYCLE);
+				return loanCyclesForProduct.isEmpty() ? SHORT_ZERO
+						: Collections.max(loanCyclesForProduct);
+			}
+			catch (Exception e) {
+				return SHORT_ZERO;
+			}
+		}
+	}
+
+	public Set<GroupLoanCounter> getLoanCounters() {
+		return loanCounters;
 	}
 }

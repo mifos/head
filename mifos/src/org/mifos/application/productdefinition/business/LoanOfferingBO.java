@@ -19,11 +19,12 @@
  */
 package org.mifos.application.productdefinition.business;
 
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.first;
+import static org.mifos.framework.util.CollectionUtils.last;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -51,6 +52,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.Predicate;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments,
@@ -69,23 +71,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private Short gracePeriodDuration;
 
-	private Money maxLoanAmount;
-
-	private Money minLoanAmount;
-
-	private Money defaultLoanAmount;
-
 	private Double maxInterestRate;
 
 	private Double minInterestRate;
 
 	private Double defInterestRate;
-
-	private Short maxNoInstallments;
-
-	private Short minNoInstallments;
-
-	private Short defNoInstallments;
 
 	private Short intDedDisbursement;
 
@@ -105,11 +95,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private final Set<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycle;
 
+	private final Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan;
+
 	private final Set<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoan;
 
 	private final Set<NoOfInstallFromLoanCycleBO> noOfInstallFromLoanCycle;
-
-	private final Set<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoan;
 
 	private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
@@ -140,7 +130,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			GLCodeEntity interestGLcode) throws ProductDefinitionException {
 		this(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
 				prdApplicableMaster, startDate, null, null, null, null,
-				interestTypes, minLoanAmount, maxLoanAmount, null,
+				interestTypes, minLoanAmount, maxLoanAmount, minLoanAmount,
 				maxInterestRate, minInterestRate, defInterestRate,
 				maxNoInstallments, minNoInstallments, defNoInstallments,
 				loanCounter, intDedDisbursement, prinDueLastInst, null, null,
@@ -161,55 +151,16 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
 			MeetingBO meeting, GLCodeEntity principalGLcode,
 			GLCodeEntity interestGLcode) throws ProductDefinitionException {
-		super(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
-				prdApplicableMaster, startDate, endDate, description);
-		prdLogger.debug("building Loan offering");
-		validate(gracePeriodType, gracePeriodDuration, interestTypes,
+		this(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
+				prdApplicableMaster, startDate, endDate, description,
+				gracePeriodType, gracePeriodDuration, interestTypes,
 				minLoanAmount, maxLoanAmount, defaultLoanAmount,
 				maxInterestRate, minInterestRate, defInterestRate,
 				maxNoInstallments, minNoInstallments, defNoInstallments,
 				loanCounter, intDedDisbursement, prinDueLastInst, funds, fees,
-				meeting, principalGLcode, interestGLcode);
-		setCreateDetails();
-		setLoanCounter(loanCounter);
-		setIntDedDisbursement(intDedDisbursement);
-		setPrinDueLastInst(prinDueLastInst);
-		setGracePeriodTypeAndDuration(intDedDisbursement, gracePeriodType,
-				gracePeriodDuration);
-		this.interestTypes = interestTypes;
-		this.minLoanAmount = minLoanAmount;
-		this.maxLoanAmount = maxLoanAmount;
-		this.defaultLoanAmount = defaultLoanAmount;
-		this.maxInterestRate = maxInterestRate;
-		this.minInterestRate = minInterestRate;
-		this.defInterestRate = defInterestRate;
-		this.maxNoInstallments = maxNoInstallments;
-		this.minNoInstallments = minNoInstallments;
-		this.defNoInstallments = defNoInstallments;
-		this.principalGLcode = principalGLcode;
-		this.interestGLcode = interestGLcode;
-		this.loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
-		this.loanAmountFromLastLoan = new HashSet<LoanAmountFromLastLoanAmountBO>();
-		this.loanAmountFromLoanCycle = new HashSet<LoanAmountFromLoanCycleBO>();
-		this.noOfInstallFromLastLoan = new HashSet<NoOfInstallFromLastLoanAmountBO>();
-		this.noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
-		this.loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
-		this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
-		if (funds != null && funds.size() > 0) {
-			for (FundBO fund : funds) {
-				addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
-			}
-		}
-		this.loanOfferingMeeting = new PrdOfferingMeetingEntity(meeting, this,
-				MeetingType.LOAN_INSTALLMENT);
-		this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
-		if (fees != null && fees.size() > 0) {
-			for (FeeBO fee : fees) {
-				if (isFrequencyMatchingOfferingFrequency(fee, meeting))
-					addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee));
-			}
-		}
-		prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
+				meeting, principalGLcode, interestGLcode,
+				ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.toString(),
+				ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.toString());
 	}
 
 	public LoanOfferingBO(UserContext userContext, String prdOfferingName,
@@ -339,10 +290,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			}
 		}
 		prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
-
-
 	}
 
+	// TODO Remove these constructors, do not go through the guard clause of other contructors
 	protected LoanOfferingBO() {
 		this(null, null, null, null, null, null, new HashSet<LoanOfferingFundEntity>(), 
 				new HashSet<LoanOfferingFeesEntity>(), new HashSet<LoanAmountFromLastLoanAmountBO>(), 
@@ -400,18 +350,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return gracePeriodDuration;
 	}
 
-	public Money getMaxLoanAmount() {
-		return maxLoanAmount;
-	}
-
-	public void setMinLoanAmount(Money minLoanAmount) {
-		this.minLoanAmount = minLoanAmount;
-	}
-
-	public Money getDefaultLoanAmount() {
-		return defaultLoanAmount;
-	}
-
 	public Double getMaxInterestRate() {
 		return maxInterestRate;
 	}
@@ -422,18 +360,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	public Double getDefInterestRate() {
 		return defInterestRate;
-	}
-
-	public Short getMaxNoInstallments() {
-		return maxNoInstallments;
-	}
-
-	public Short getMinNoInstallments() {
-		return minNoInstallments;
-	}
-
-	public Short getDefNoInstallments() {
-		return defNoInstallments;
 	}
 
 	public boolean isIntDedDisbursement() {
@@ -480,18 +406,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.gracePeriodDuration = gracePeriodDuration;
 	}
 
-	public void setMaxLoanAmount(Money maxLoanAmount) {
-		this.maxLoanAmount = maxLoanAmount;
-	}
-
-	public Money getMinLoanAmount() {
-		return minLoanAmount;
-	}
-
-	public void setDefaultLoanAmount(Money defaultLoanAmount) {
-		this.defaultLoanAmount = defaultLoanAmount;
-	}
-
 	void setMaxInterestRate(Double maxInterestRate) {
 		this.maxInterestRate = maxInterestRate;
 	}
@@ -502,18 +416,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	void setDefInterestRate(Double defInterestRate) {
 		this.defInterestRate = defInterestRate;
-	}
-
-	public void setMaxNoInstallments(Short maxNoInstallments) {
-		this.maxNoInstallments = maxNoInstallments;
-	}
-
-	public void setMinNoInstallments(Short minNoInstallments) {
-		this.minNoInstallments = minNoInstallments;
-	}
-
-	public void setDefNoInstallments(Short defNoInstallments) {
-		this.defNoInstallments = defNoInstallments;
 	}
 
 	void setIntDedDisbursement(boolean intDedDisbursementFlag) {
@@ -588,6 +490,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		}
 	}
 
+	// FIXME this update is only used by tests, is not the right logic
 	public void update(Short userId, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
@@ -616,15 +519,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		setGracePeriodTypeAndDuration(intDedDisbursement, gracePeriodType,
 				gracePeriodDuration);
 		this.interestTypes = interestTypes;
-		this.maxLoanAmount = maxLoanAmount;
-		this.minLoanAmount = minLoanAmount;
-		this.defaultLoanAmount = defaultLoanAmount;
 		this.maxInterestRate = maxInterestRate;
 		this.minInterestRate = minInterestRate;
 		this.defInterestRate = defInterestRate;
-		this.maxNoInstallments = maxNoInstallments;
-		this.minNoInstallments = minNoInstallments;
-		this.defNoInstallments = defNoInstallments;
 		setLoanCounter(loanCounter);
 		setIntDedDisbursement(intDedDisbursement);
 		setPrinDueLastInst(prinDueLastInst);
@@ -935,135 +832,154 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 * This method will return the max min def loan amount in array list for customer
 	 * based on last loan amount 
 	 */
-	public ArrayList eligibleLoanAmount(String calaculateValue,
-			LoanOfferingBO loanOfferingBO) {
-		ArrayList list = new ArrayList();
-		if ((isLoanAmountTypeSameForAllLoan())
-				&& calaculateValue == null) {
-			Iterator<LoanAmountSameForAllLoanBO> loanAmountSameForAllLoanItr = loanOfferingBO
-					.getLoanAmountSameForAllLoan().iterator();
-			while (loanAmountSameForAllLoanItr.hasNext()) {
-				LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = loanAmountSameForAllLoanItr
-						.next();
-				list.add(loanAmountSameForAllLoanBO.getMaxLoanAmount());
-				list.add(loanAmountSameForAllLoanBO.getMinLoanAmount());
-				list.add(loanAmountSameForAllLoanBO.getDefaultLoanAmount());
-			}
-		}
-		if (isLoanAmountTypeAsOfLastLoanAmount()) {
-			Iterator<LoanAmountFromLastLoanAmountBO> loanAmountFromLastLoanAmountBOItr = loanOfferingBO
-					.getLoanAmountFromLastLoan().iterator();
-			while (loanAmountFromLastLoanAmountBOItr.hasNext()) {
-				for (int i = 0; i < loanOfferingBO.getLoanAmountFromLastLoan()
-						.size(); i++) {
-					LoanAmountFromLastLoanAmountBO loanAmountFromLastLoanAmountBO = loanAmountFromLastLoanAmountBOItr
-							.next();
-					if (((loanAmountFromLastLoanAmountBO.getStartRange() <= Double
-							.parseDouble(calaculateValue)) && (loanAmountFromLastLoanAmountBO
-							.getEndRange() >= Double
-							.parseDouble(calaculateValue)))
-							|| ((i == loanOfferingBO.loanAmountFromLastLoan
-									.size() - 1) && list.isEmpty())) {
-						list.add(loanAmountFromLastLoanAmountBO
-								.getMaxLoanAmount());
-						list.add(loanAmountFromLastLoanAmountBO
-								.getMinLoanAmount());
-						list.add(loanAmountFromLastLoanAmountBO
-								.getDefaultLoanAmount());
-					}
-				}
-			}
-		}
-		if (isLoanAmountTypeFromLoanCycle()) {
-			Iterator<LoanAmountFromLoanCycleBO> loanAmountFromLoanCycleBOItr = loanOfferingBO
-					.getLoanAmountFromLoanCycle().iterator();
-			while (loanAmountFromLoanCycleBOItr.hasNext()) {
-				for (int i = 0; i < loanOfferingBO.loanAmountFromLoanCycle
-						.size(); i++) {
-					LoanAmountFromLoanCycleBO loanAmountFromLoanCycleBO = loanAmountFromLoanCycleBOItr
-							.next();
-					if ((loanAmountFromLoanCycleBO.getRangeIndex() == Short
-							.parseShort(calaculateValue))
-							|| ((i == loanOfferingBO.loanAmountFromLoanCycle
-									.size() - 1) && list.isEmpty())) {
-						list.add(loanAmountFromLoanCycleBO.getMaxLoanAmount());
-						list.add(loanAmountFromLoanCycleBO.getMinLoanAmount());
-						list.add(loanAmountFromLoanCycleBO
-								.getDefaultLoanAmount());
-					}
-				}
-			}
-		}
-		return list;
+	public LoanAmountOption eligibleLoanAmount(final Money maxLoanAmount, final Short customerLastLoanCycleCount) {
+		// if loan amount type is same for all loan, send one of the LoanAmountOption from list
+		if (isLoanAmountTypeSameForAllLoan()) 
+			return getEligibleLoanAmountSameForAllLoan();
+		if (isLoanAmountTypeAsOfLastLoanAmount())
+			return getEligibleLoanAmountAsOfLastLoanAmount(maxLoanAmount);
+		if (isLoanAmountTypeFromLoanCycle())
+			return getEligibleLoanAmountFromLoanCycle(customerLastLoanCycleCount);
+		return null;
 	}
 
-	/**
-	 * This method will return max min def installment in array list 
-	 * based on customer last loan amount
-	 */
-	public ArrayList eligibleNoOfInstall(String calaculateValue,
-			LoanOfferingBO loanOfferingBO) {
-		ArrayList list = new ArrayList();
-		if (isNoOfInstallTypeSameForAllLoan() && calaculateValue == null) {
-			Iterator<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoanItr = loanOfferingBO
-					.getNoOfInstallSameForAllLoan().iterator();
-			while (noOfInstallSameForAllLoanItr.hasNext()) {
-				NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = noOfInstallSameForAllLoanItr
-						.next();
-				list.add(noOfInstallSameForAllLoanBO.getMaxNoOfInstall());
-				list.add(noOfInstallSameForAllLoanBO.getMinNoOfInstall());
-				list.add(noOfInstallSameForAllLoanBO.getDefaultNoOfInstall());
+	// Extracted method for finding eligible Loan Amount Range, should only be used when sure that 
+	// current loan offering is of type from loan cycle
+	// returns null otherwise
+	public LoanAmountOption getEligibleLoanAmountFromLoanCycle(
+			final Short customerLastLoanCycleCount) {
+		{
+			if (!isLoanAmountTypeFromLoanCycle())
+				return null;
+			LoanAmountFromLoanCycleBO requiredLoanAmountFromCycle = null;
+			try {
+				requiredLoanAmountFromCycle = find(
+						getLoanAmountFromLoanCycle(),
+						new Predicate<LoanAmountFromLoanCycleBO>() {
+							public boolean evaluate(
+									LoanAmountFromLoanCycleBO loanAmountFromLoanCycle)
+									throws Exception {
+								return loanAmountFromLoanCycle
+										.sameRangeIndex(customerLastLoanCycleCount);
+							}
+						});
 			}
-		}
-		if (isNoOfInstallTypeFromLastLoan()) {
-			Iterator<NoOfInstallFromLastLoanAmountBO> noOfInstallFromLastLoanAmountBOItr = loanOfferingBO
-					.getNoOfInstallFromLastLoan().iterator();
-			while (noOfInstallFromLastLoanAmountBOItr.hasNext()) {
-				for (int i = 0; i < loanOfferingBO.noOfInstallFromLastLoan
-						.size(); i++) {
-					NoOfInstallFromLastLoanAmountBO noOfInstallFromLastLoanAmountBO = noOfInstallFromLastLoanAmountBOItr
-							.next();
-					if (((noOfInstallFromLastLoanAmountBO.getStartRange() <= Double
-							.parseDouble(calaculateValue)) && (noOfInstallFromLastLoanAmountBO
-							.getEndRange() >= Double
-							.parseDouble(calaculateValue)))
-							|| ((i == loanOfferingBO.noOfInstallFromLastLoan
-									.size() - 1) && list.isEmpty())) {
-						list.add(noOfInstallFromLastLoanAmountBO
-								.getMaxNoOfInstall());
-						list.add(noOfInstallFromLastLoanAmountBO
-								.getMinNoOfInstall());
-						list.add(noOfInstallFromLastLoanAmountBO
-								.getDefaultNoOfInstall());
-					}
-				}
+			catch (Exception e) {
 			}
+			return requiredLoanAmountFromCycle == null ? last(getLoanAmountFromLoanCycle())
+					: requiredLoanAmountFromCycle;
 		}
-		if (isNoOfInstallTypeFromLoanCycle()) {
-			Iterator<NoOfInstallFromLoanCycleBO> noOfInstallFromFromLoanCycleBOItr = loanOfferingBO
-					.getNoOfInstallFromLoanCycle().iterator();
-			while (noOfInstallFromFromLoanCycleBOItr.hasNext()) {
-				for (int i = 0; i < loanOfferingBO.noOfInstallFromLoanCycle
-						.size(); i++) {
-					NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycleBO = noOfInstallFromFromLoanCycleBOItr
-							.next();
-					if ((noOfInstallFromLoanCycleBO.getRangeIndex() == Short
-							.parseShort(calaculateValue))
-							|| ((i == loanOfferingBO.noOfInstallFromLoanCycle
-									.size() - 1) && list.isEmpty())) {
-						list
-								.add(noOfInstallFromLoanCycleBO
-										.getMaxNoOfInstall());
-						list
-								.add(noOfInstallFromLoanCycleBO
-										.getMinNoOfInstall());
-						list.add(noOfInstallFromLoanCycleBO
-								.getDefaultNoOfInstall());
-					}
-				}
+	}
+
+	// Extracted method for finding eligible Loan Amount Range, should only be used when sure that 
+	// current loan offering is of type from last loan amount
+	// returns null otherwise
+	public LoanAmountOption getEligibleLoanAmountAsOfLastLoanAmount(
+			final Money maxLoanAmount) {
+		{
+			if (!isLoanAmountTypeAsOfLastLoanAmount()) 
+				return null;
+			LoanAmountFromLastLoanAmountBO requiredLoanAmountRangeFromLastLoanAmount = null;
+			try {
+				requiredLoanAmountRangeFromLastLoanAmount = find(
+						getLoanAmountFromLastLoan(),
+						new Predicate<LoanAmountFromLastLoanAmountBO>() {
+							public boolean evaluate(
+									LoanAmountFromLastLoanAmountBO lastLoanAmount)
+									throws Exception {
+								return lastLoanAmount
+									.isLoanAmountBetweenRange(maxLoanAmount.getAmountDoubleValue());
+							}
+						});
 			}
+			catch (Exception e) {
+			}
+			return requiredLoanAmountRangeFromLastLoanAmount == null ? last(getLoanAmountFromLastLoan())
+					: requiredLoanAmountRangeFromLastLoanAmount;
 		}
-		return list;
+	}
+
+	// Extracted method for finding eligible Loan Amount Range, should only be used when sure that 
+	// current loan offering is of type same for all loan
+	// returns null otherwise
+	public LoanAmountSameForAllLoanBO getEligibleLoanAmountSameForAllLoan() {
+		if (isLoanAmountTypeSameForAllLoan())
+			return first(getLoanAmountSameForAllLoan());
+		return null;
+	}
+
+	public LoanOfferingInstallmentRange eligibleNoOfInstall(final Money lastLoanAmount,
+			final Short customerLastLoanCycleCount) {
+		if (isNoOfInstallTypeSameForAllLoan())
+			return getEligibleInstallmentSameForAllLoan();
+		if (isNoOfInstallTypeFromLastLoan())
+			return getEligibleInstallmentFromLastLoanAmount(lastLoanAmount);
+		if (isNoOfInstallTypeFromLoanCycle())
+			return getEligibleInstallmentFromLoanCycle(customerLastLoanCycleCount);
+		return null;
+	}
+
+	// Extracted method for finding eligible installment number, should only be used when sure that 
+	// current loan offering is of type same for all loan
+	// returns null otherwise
+	public LoanOfferingInstallmentRange getEligibleInstallmentFromLoanCycle(
+			final Short customerLastLoanCycleCount) {
+		{
+			if (!isNoOfInstallTypeFromLoanCycle())
+				return null;
+			LoanOfferingInstallmentRange requiredInstallmentRange = null;
+			try {
+				requiredInstallmentRange = find(getNoOfInstallFromLoanCycle(),
+						new Predicate<NoOfInstallFromLoanCycleBO>() {
+							public boolean evaluate(
+									NoOfInstallFromLoanCycleBO noOfInstallFromLoanCycle)
+									throws Exception {
+								return noOfInstallFromLoanCycle
+										.isSameRange(customerLastLoanCycleCount);
+							}
+						});
+			}
+			catch (Exception e) {
+			}
+			return requiredInstallmentRange == null ? last(getNoOfInstallFromLoanCycle())
+					: requiredInstallmentRange;
+		}
+	}
+
+	// Extracted method for finding eligible installment number, should only be used when sure that 
+	// current loan offering is of type same for all loan
+	// returns null otherwise
+	public LoanOfferingInstallmentRange getEligibleInstallmentFromLastLoanAmount(
+			final Money lastLoanAmount) {
+		{
+			if (!isNoOfInstallTypeFromLastLoan())
+				return null;
+			LoanOfferingInstallmentRange requiredInstallmentRange = null;
+			try {
+				requiredInstallmentRange = find(getNoOfInstallFromLastLoan(),
+						new Predicate<NoOfInstallFromLastLoanAmountBO>() {
+							public boolean evaluate(
+									NoOfInstallFromLastLoanAmountBO noOfInstallmentFromLastLoanAmount)
+									throws Exception {
+								return noOfInstallmentFromLastLoanAmount
+										.loanAmountInRange(lastLoanAmount.getAmountDoubleValue());
+							}
+						});
+			}
+			catch (Exception e) {
+			}
+			return requiredInstallmentRange == null ? last(getNoOfInstallFromLastLoan())
+					: requiredInstallmentRange;
+		}
+	}
+
+	// Extracted method for finding eligible installment number, should only be used when sure that 
+	// current loan offering is of type same for all loan
+	// returns null otherwise
+	public LoanOfferingInstallmentRange getEligibleInstallmentSameForAllLoan() {
+		if (isNoOfInstallTypeSameForAllLoan())
+			return first(getNoOfInstallSameForAllLoan());
+		return null;
 	}
 
 	/**
@@ -1074,7 +990,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 */
 	private void populateLoanAmountAndInstall(
 			LoanPrdActionForm loanPrdActionForm) {
-		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN)) {
+		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountSameForAllLoan.clear();
@@ -1261,7 +1177,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 * Reveals method used to determine loan amount. For instance: same for all
 	 * loans, based on last loan, or based on loan cycle.
 	 */
-	public int checkLoanAmountType() {
+	public Short checkLoanAmountType() {
 		if (!getLoanAmountSameForAllLoan().isEmpty()) {
 			return ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
 		}
@@ -1279,7 +1195,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 * instance: same for all loans, based on last loan, or based on loan
 	 * cycle.
 	 */
-	public int checkNoOfInstallType() {
+	public Short checkNoOfInstallType() {
 		if (!getNoOfInstallSameForAllLoan().isEmpty()) {
 			return ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
 		}
@@ -1322,55 +1238,37 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return noOfInstallSameForAllLoan;
 	}
 
-	/**
-	 * this method is used in test cases
-	 */
-	public void updateLoanOfferingSameForAllLoan(LoanOfferingBO loanOffering) {
-		Iterator<LoanAmountSameForAllLoanBO> itr = loanOffering
-				.getLoanAmountSameForAllLoan().iterator();
-		if (itr.hasNext()) {
-			LoanAmountSameForAllLoanBO loanAmountSameForAllLoanBO = itr.next();
-			Iterator<NoOfInstallSameForAllLoanBO> itrNoOfInstallSameForAllLoan = loanOffering
-					.getNoOfInstallSameForAllLoan().iterator();
-			NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoanBO = itrNoOfInstallSameForAllLoan
-					.next();
-			loanOffering.setMaxLoanAmount(new Money(loanAmountSameForAllLoanBO
-					.getMaxLoanAmount().toString()));
-			loanOffering.setMinLoanAmount(new Money(loanAmountSameForAllLoanBO
-					.getMinLoanAmount().toString()));
-			loanOffering.setDefaultLoanAmount(new Money(loanAmountSameForAllLoanBO
-					.getDefaultLoanAmount().toString()));
-			loanOffering.setMinNoInstallments(noOfInstallSameForAllLoanBO
-					.getMinNoOfInstall());
-			loanOffering.setMaxNoInstallments(noOfInstallSameForAllLoanBO
-					.getMaxNoOfInstall());
-			loanOffering.setDefNoInstallments(noOfInstallSameForAllLoanBO
-					.getDefaultNoOfInstall());
-		}
-	}
-
 	public boolean isLoanAmountTypeAsOfLastLoanAmount() {
-		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+		return ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN.equals(checkLoanAmountType());
 	}
 
 	public boolean isLoanAmountTypeSameForAllLoan() {
-		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+		return ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.equals(checkLoanAmountType());
 	}
 
 	public boolean isLoanAmountTypeFromLoanCycle() {
-		return checkLoanAmountType() == ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+		return ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE.equals(checkLoanAmountType());
 	}
 
 	public boolean isNoOfInstallTypeFromLastLoan() {
-		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+		return ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN.equals(checkNoOfInstallType());
 	}
 
 	public boolean isNoOfInstallTypeSameForAllLoan() {
-		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+		return ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.equals(checkNoOfInstallType());
 	}
 
 	public boolean isNoOfInstallTypeFromLoanCycle() {
-		return checkNoOfInstallType() == ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
+		return ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE.equals(checkNoOfInstallType());
+	}
+
+	public boolean isLoanAmountOfTypeUnknown() {
+		return ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN.equals(checkLoanAmountType());	
+		
+	}
+
+	public boolean isNoOfInstallTypeUnknown() {
+		return ProductDefinitionConstants.NOOFINSTALL_UNKNOWN.equals(checkNoOfInstallType());
 	}
 
 	// FIXME: move this into test code.
@@ -1400,4 +1298,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		loanOffering.setStartDate(startDate);
 		return loanOffering;
 	}
+
+	public void setLoanAmountSameForAllLoan(
+			LoanAmountSameForAllLoanBO loanAmountSameForAllLoan) {
+		getLoanAmountSameForAllLoan().clear(); 
+		getLoanAmountSameForAllLoan().add(loanAmountSameForAllLoan);
+	}
+
+	public void setNoOfInstallSameForAllLoan(
+			NoOfInstallSameForAllLoanBO noOfInstallSameForAllLoan) {
+		getNoOfInstallSameForAllLoan().clear();
+		getNoOfInstallSameForAllLoan().add(noOfInstallSameForAllLoan);
+	}
+
 }

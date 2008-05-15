@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.loan.struts.actionforms;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -12,6 +13,8 @@ import org.apache.struts.action.ActionMessage;
 import org.junit.Test;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
+import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MoneyFactory;
@@ -20,7 +23,10 @@ public class LoanAccountActionFormTest extends MifosTestCase {
 
 	private LoanAccountActionForm form;
 	private PaymentDataTemplate paymentMock;
-
+	private ActionErrors actionErrors;
+	private static final String INTEREST_ERROR_KEY = "interest.invalid";
+	private static final String AMOUNT_ERROR_KEY = "amount.invalid";
+	
 	@Test
 	public void testShouldAddErrorIfTransactionDateForAPaymentIsInFuture() {
 		expect(paymentMock.getTransactionDate()).andReturn(
@@ -74,6 +80,7 @@ public class LoanAccountActionFormTest extends MifosTestCase {
 		form = new LoanAccountActionForm();
 		paymentMock = createMock(PaymentDataTemplate.class);
 		expect(paymentMock.getTotalAmount()).andReturn(MoneyFactory.ZERO);
+		actionErrors = new ActionErrors();
 	}
 
 	private void validateForNoErrorsOnDate(Date transactionDate) {
@@ -102,5 +109,69 @@ public class LoanAccountActionFormTest extends MifosTestCase {
 		form.validateTransactionDate(errors, paymentMock, disbursementDate);
 		verify(paymentMock);
 		assertErrorKey(errors, LoanExceptionConstants.INVALIDTRANSACTIONDATE);
+	}
+	
+	public void testShouldAddErrorIfInstallmentNotBetweenSpecifiedInstallments()
+			throws Exception {
+		assertForInterestError("4");
+	}
+
+	public void testShouldAddErrorIfInputValueIsNull() throws Exception {
+		assertForInterestError(null);
+	}
+
+	public void testShouldAddErrorIfInputValueIsBlank() throws Exception {
+		assertForInterestError(EMPTY);
+	}
+
+	private void assertForInterestError(String inputValue) {
+		new LoanAccountActionForm().checkForMinMax(actionErrors, inputValue,
+				new NoOfInstallSameForAllLoanBO((short) 1, (short) 3,
+						(short) 2, null), INTEREST_ERROR_KEY);
+		assertEquals(1, actionErrors.size());
+		ActionMessage message = (ActionMessage) actionErrors.get(
+				INTEREST_ERROR_KEY).next();
+		assertNotNull(message);
+		assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
+	}
+
+	public void testShouldNotErrorIfInstallmentBetweenSpecifiedValues()
+			throws Exception {
+		new LoanAccountActionForm().checkForMinMax(actionErrors, "2",
+				new NoOfInstallSameForAllLoanBO((short) 1, (short) 3,
+						(short) 2, null), INTEREST_ERROR_KEY);
+		assertEquals(0, actionErrors.size());
+	}
+
+	public void testShouldAddErrorIfAmountNotBetweenSpecifiedLoanAmountRanges()
+			throws Exception {
+		assertForAmountError("4");
+	}
+
+	public void testShouldAddErrorIfInputAmountIsNull() throws Exception {
+		assertForAmountError(null);
+	}
+
+	public void testShouldAddErrorIfInputAmountIsBlank() throws Exception {
+		assertForAmountError(EMPTY);
+	}
+
+	private void assertForAmountError(String inputValue) {
+		new LoanAccountActionForm().checkForMinMax(actionErrors, inputValue,
+				new LoanAmountSameForAllLoanBO((double) 1, (double) 3,
+						(double) 2, null), AMOUNT_ERROR_KEY);
+		assertEquals(1, actionErrors.size());
+		ActionMessage message = (ActionMessage) actionErrors.get(
+				AMOUNT_ERROR_KEY).next();
+		assertNotNull(message);
+		assertEquals(LoanExceptionConstants.INVALIDMINMAX, message.getKey());
+	}
+
+	public void testShouldNotErrorIfAmountBetweenSpecifiedValues()
+			throws Exception {
+		new LoanAccountActionForm().checkForMinMax(actionErrors, "2",
+				new LoanAmountSameForAllLoanBO((double) 1, (double) 3,
+						(double) 2, null), AMOUNT_ERROR_KEY);
+		assertEquals(0, actionErrors.size());
 	}
 }

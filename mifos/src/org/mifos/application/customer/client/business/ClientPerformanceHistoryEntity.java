@@ -1,5 +1,11 @@
 package org.mifos.application.customer.client.business;
+import static org.mifos.application.customer.client.business.LoanCounter.TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.select;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,8 +14,10 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.Predicate;
 
 public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -43,7 +51,6 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 
 	protected ClientPerformanceHistoryEntity() {
-		super();
 		this.id = null;
 		this.client = null;
 		this.loanCounters = new HashSet<LoanCounter>();
@@ -113,23 +120,30 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return client;
 	}
 
-	public void updateLoanCounter(LoanOfferingBO loanOfferingBO,
+	public void updateLoanCounter(final LoanOfferingBO loanOffering,
 			YesNoFlag counterFlag) {
-		boolean isCounterUpdated = false;
 		if (loanCounters == null)
 			loanCounters = new HashSet<LoanCounter>();
-		for (LoanCounter loanCount : loanCounters) {
-			if (loanCount.getLoanOffering().getPrdOfferingId().equals(
-					loanOfferingBO.getPrdOfferingId())) {
-				loanCount.updateLoanCounter(counterFlag);
-				isCounterUpdated = true;
-			}
+		LoanCounter loanCounter = null;
+		try {
+			loanCounter = findLoanCounterForProduct(loanOffering);
 		}
-		if (!isCounterUpdated) {
-			LoanCounter loanCounter = new LoanCounter(this, loanOfferingBO,
-					counterFlag);
+		catch (Exception e) {
+		}
+		if (loanCounter == null) {
+			loanCounter = new LoanCounter(this, loanOffering, counterFlag);
 			addLoanCounter(loanCounter);
+		} else {
+			loanCounter.updateLoanCounter(counterFlag);
 		}
+	}
+
+	public LoanCounter findLoanCounterForProduct(final LoanOfferingBO loanOffering) throws Exception {
+		return find(loanCounters, new Predicate<LoanCounter>(){
+			public boolean evaluate(LoanCounter loanCounter) throws Exception {
+				return loanOffering.isOfSameOffering(loanCounter.getLoanOffering());
+			}
+		});
 	}
 
 	public Integer getLoanCycleNumber() {
@@ -164,5 +178,25 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 					.getAmountDoubleValue()
 					/ totalOutStandingAmount.getAmountDoubleValue()));
 		return new Money();
+	}
+
+	public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {
+		{
+			Set<LoanCounter> clientLoanCounters = getLoanCounters();
+			try {
+				Collection<Short> loanCyclesForProduct = select(
+						clientLoanCounters, new Predicate<LoanCounter>() {
+							public boolean evaluate(LoanCounter counter)
+									throws Exception {
+								return counter.isOfSameProduct(prdOffering);
+							}
+						}, TRANSFORM_LOAN_COUNTER_TO_LOAN_CYCLE);
+				return loanCyclesForProduct.isEmpty() ? SHORT_ZERO
+						: Collections.max(loanCyclesForProduct);
+			}
+			catch (Exception e) {
+				return SHORT_ZERO;
+			}
+		}
 	}
 }

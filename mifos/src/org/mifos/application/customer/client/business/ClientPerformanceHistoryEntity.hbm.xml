@@ -3,7 +3,6 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
-
 <hibernate-mapping>
 
     <class name="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" table="CLIENT_PERF_HISTORY">
@@ -27,7 +26,7 @@
 		</property>     
         <many-to-one name="client" column="CUSTOMER_ID"
 			class="org.mifos.application.customer.client.business.ClientBO" unique="true" access="field"/>
-		<set name="loanCounters" cascade="all" table="LOAN_COUNTER" lazy="true" access="field" inverse="true">
+		<set name="loanCounters" cascade="all" table="LOAN_COUNTER" lazy="false" access="field" inverse="true">
 			<key column="CLIENT_PERF_ID" />
 			<one-to-many class="org.mifos.application.customer.client.business.LoanCounter" />
 		</set>

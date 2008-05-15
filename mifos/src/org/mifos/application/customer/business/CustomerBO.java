@@ -38,6 +38,8 @@
 
 package org.mifos.application.customer.business;
 
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,8 +56,10 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -73,6 +77,8 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
@@ -85,6 +91,8 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 /**
@@ -1344,6 +1352,50 @@ public abstract class CustomerBO extends BusinessObject {
                 customerId + ", " +
                 displayName + "}";
     }
+
+	public boolean isGroup() {
+		return getCustomerLevel().isGroup();
+	}
+
+	public boolean isClient() {
+		return getCustomerLevel().isClient();
+	}
+	
+	/**
+	 * Returns the amount which this customer 
+	 * 
+	 **/
+	public Money getMaxLoanAmount(LoanOfferingBO loanOffering) {
+		ArrayList<Money> loanAmounts = new ArrayList<Money>();
+		Set<AccountBO> accounts = getAccounts();
+		for (AccountBO accountBO : accounts) {
+			// If account not in loan obligations met, continue to next loan account
+			if (!accountBO.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET))
+				continue;
+
+			if (accountBO.isLoanAccount()
+					&& ((LoanBO) accountBO).isOfProductOffering(loanOffering))
+				loanAmounts.add(((LoanBO) accountBO).getLoanAmount());
+		}
+		if (loanAmounts.isEmpty()) {
+			loanAmounts.add(MoneyFactory.ZERO);
+		}
+		return Collections.max(loanAmounts, Money.DEFAULT_COMPARATOR);
+	}
+
+	public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering)
+			{
+		// implement strategy and delegate logic to PerformanceHistory instead of being here
+		// only checking for clients
+		if (getPerformanceHistory() instanceof ClientPerformanceHistoryEntity)
+			return ((ClientPerformanceHistoryEntity) getPerformanceHistory())
+					.getMaxLoanCycleForProduct(prdOffering);
+		else if (getPerformanceHistory() instanceof GroupPerformanceHistoryEntity) {
+			return ((GroupPerformanceHistoryEntity)getPerformanceHistory()).getMaxLoanCycleForProduct(prdOffering);
+		}
+		return SHORT_ZERO;
+	}
+
 
 	/**
 	 * <code>searchId</code> should indicate the order in which clients became

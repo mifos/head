@@ -1817,7 +1817,7 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
-		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
+//		loanOfering.updateLoanOfferingSameForAllLoan(loanOfering);
 		LoanBO loan = TestLoanBO.createLoanAccountWithDisbursement(globalNum,
 				customer, state, startDate, loanOfering, disbursalType, Short
 						.valueOf("6"));

@@ -69,6 +69,9 @@ import org.mifos.framework.util.helpers.PreviousRequestValues;
 
 public class MifosRequestProcessor extends TilesRequestProcessor {
 
+	public MifosRequestProcessor() {
+	}
+
 	private ActivityContext setActivityContextFromRequest(
 			HttpServletRequest request, Short activityId) {
 		HttpSession session = request.getSession();

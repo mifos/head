@@ -24,6 +24,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FormUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -107,7 +108,7 @@ public class BaseActionForm extends ValidatorActionForm {
 	}
 
 	protected Double getDoubleValue(String str) {
-		return StringUtils.isNullAndEmptySafe(str) ? LocalizationConverter.getInstance().getDoubleValueForCurrentLocale(str) : null;
+		return FormUtils.getDoubleValue(str);
 	}
 
 	protected boolean getBooleanValue(String value) {

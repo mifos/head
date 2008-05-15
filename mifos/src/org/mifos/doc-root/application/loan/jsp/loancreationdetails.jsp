@@ -367,8 +367,8 @@ explanation of the license and how it is applied.
 											<td valign="top"><mifos:mifosdecimalinput
 												property="loanAmount" readonly="false" /> <mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
-												value="${LoanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-												value="${LoanOffering.maxLoanAmount}" /> )</td>
+												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
 									</c:if>
 								</tr>
 								<tr class="fontnormal">
@@ -395,8 +395,8 @@ explanation of the license and how it is applied.
 									<td valign="top"><mifos:mifosnumbertext
 										property="noOfInstallments" /> <mifos:mifoslabel
 										name="loan.allowed_no_of_inst" /> &nbsp; <c:out
-										value="${LoanOffering.minNoInstallments}" /> &nbsp; - &nbsp;
-									<c:out value="${LoanOffering.maxNoInstallments}" /> )</td>
+										value="${loanAccountActionForm.minNoInstallments}" /> &nbsp; - &nbsp;
+									<c:out value="${loanAccountActionForm.maxNoInstallments}" /> )</td>
 								</tr>
 								<tr class="fontnormal">
 

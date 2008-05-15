@@ -37,7 +37,6 @@
  */
 package org.mifos.application.productdefinition.struts.action;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -104,6 +103,11 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class LoanPrdAction extends BaseAction {
 	private MifosLogger prdDefLogger = MifosLogManager
 			.getLogger(LoggerConstants.PRDDEFINITIONLOGGER);
+	private LoanPrdBusinessService loanPrdBusinessService;
+
+	public LoanPrdAction() {
+		loanPrdBusinessService = new LoanPrdBusinessService();
+	}
 
 	@Override
 	protected BusinessService getService() {
@@ -391,9 +395,7 @@ public class LoanPrdAction extends BaseAction {
 		LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
 		prdDefLogger.debug("start get method of Loan Product Action"
 				+ loanPrdActionForm.getPrdOfferingId());
-		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.LoanProduct)).getLoanOffering(
+		LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(
 				loanPrdActionForm.getPrdOfferingIdValue(), getUserContext(
 						request).getLocaleId());
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANAMOUNTTYPE,

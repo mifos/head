@@ -141,7 +141,7 @@ public class BranchCashConfirmationReportService implements
 			String runDate) {
 		try {
 			return CollectionUtils
-					.getFirstElement(branchCashConfirmationReportPersistence
+					.first(branchCashConfirmationReportPersistence
 							.getBranchCashConfirmationReportsForDateAndBranch(
 									Short.valueOf(branchId),
 									parseReportDate(runDate))) != null;

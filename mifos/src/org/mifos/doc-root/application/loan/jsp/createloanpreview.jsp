@@ -269,8 +269,8 @@
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${LoanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-														value="${LoanOffering.maxLoanAmount}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+														value="${loanAccountActionForm.maxLoanAmount}" />) </span>
 											</td>
 										</tr>
 										<tr>
@@ -284,8 +284,8 @@
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.no_of_inst" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${LoanOffering.minNoInstallments}" />&nbsp;
-													- &nbsp; <c:out value="${LoanOffering.maxNoInstallments}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minNoInstallments}" />&nbsp;
+													- &nbsp; <c:out value="${loanAccountActionForm.maxNoInstallments}" />) </span>
 											</td>
 										</tr>
 										<tr>

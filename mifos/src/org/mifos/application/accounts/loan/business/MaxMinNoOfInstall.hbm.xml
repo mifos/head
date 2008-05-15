@@ -15,7 +15,7 @@
 			</generator>
 		</id>
 		<property name="minNoOfInstall" column="MIN_NO_INSTALL" />
-		<property name="maxNoOfInstallt" column="MAX_NO_INSTALL" />
+		<property name="maxNoOfInstall" column="MAX_NO_INSTALL" />
 		<one-to-one name="loan"
 			class="org.mifos.application.accounts.loan.business.LoanBO"
 			access="field" />
