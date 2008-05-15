@@ -87,7 +87,7 @@
  	                
                   </td>
                   <td width="83%">&nbsp;
-                  	<html-el:submit styleClass="buttn" style="width:60px;">
+                  	<html-el:submit styleClass="buttn">
                   		<mifos:mifoslabel name="button.search" bundle ="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:submit>
                   </td>

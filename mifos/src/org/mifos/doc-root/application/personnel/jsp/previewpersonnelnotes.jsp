@@ -118,8 +118,7 @@
 						</tr>
 						<tr>
 							<td align="left" valign="top"><html-el:button property="btn"
-								style="width:65px;" styleClass="insidebuttn"
-								onclick="goToEditPage()">
+								styleClass="insidebuttn" onclick="goToEditPage()">
 								<mifos:mifoslabel name="Personnel.EditLabel"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</html-el:button></td>
@@ -133,12 +132,11 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn"
-								style="width:70px;">
+							<td align="center"><html-el:submit styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</html-el:submit> &nbsp;&nbsp; <html-el:button
-								property="cancelBtn" styleClass="cancelbuttn" style="width:70px"
+								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>

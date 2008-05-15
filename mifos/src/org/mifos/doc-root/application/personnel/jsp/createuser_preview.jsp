@@ -402,7 +402,7 @@
 									</c:forEach> <br>
 									</c:if>
 									<html-el:button property="btn" styleClass="insidebuttn"
-										style="width:130px;" onclick="goToEditPage()">
+										onclick="goToEditPage()">
 										<mifos:mifoslabel name="button.EditUserInformation"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 									</html-el:button></td>
@@ -418,12 +418,11 @@
 								</tr>
 								<tr>
 									<td align="center">&nbsp; <html-el:submit property="submitBtn"
-										styleClass="buttn" style="width:70px;">
+										styleClass="buttn">
 										<mifos:mifoslabel name="button.submit"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
-										styleClass="cancelbuttn" style="width:70px"
-										onclick="goToCancelPage()">
+										styleClass="cancelbuttn" onclick="goToCancelPage()">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 									</html-el:button></td>

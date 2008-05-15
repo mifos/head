@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +16,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.util.resources.OfficeConstants;
@@ -26,11 +28,13 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -473,23 +477,28 @@ public class PersonActionForm extends BaseActionForm {
 		personnelRoles = null;
 	}
 
-	private ActionErrors checkForPassword(ActionErrors errors) {
+	private ActionErrors checkForPassword(ActionErrors errors, HttpServletRequest request) {
 
 		// if password and confirm passowrd entries are made of only spaces,
 		// throw an exception
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PERSONNELUIRESOURCESPATH, locale);
+		String password = resources.getString("Personnel.passwordLowerCase");
 		if (userPassword != null && passwordRepeat != null
 				&& userPassword.length() == passwordRepeat.length()
 				&& userPassword.length() != 0 && userPassword.trim().equals("")) {
 			errors.add(PersonnelConstants.PASSWORD_MASK, new ActionMessage(
 					PersonnelConstants.PASSWORD_MASK,
-					PersonnelConstants.PASSWORD));
+					password));
 		}
 		if (StringUtils.isNullAndEmptySafe(userPassword)
 				&& StringUtils.isNullAndEmptySafe(passwordRepeat)
 				&& !(userPassword.trim().equals(passwordRepeat.trim()))) {
 			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
 					PersonnelConstants.VALID_PASSWORD,
-					PersonnelConstants.PASSWORD));
+					password));
 		}
 		if ((StringUtils.isNullAndEmptySafe(passwordRepeat)
 				&& !StringUtils.isNullAndEmptySafe(userPassword))
@@ -497,14 +506,14 @@ public class PersonActionForm extends BaseActionForm {
 				&& StringUtils.isNullAndEmptySafe(userPassword)))) {
 			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
 					PersonnelConstants.VALID_PASSWORD,
-					PersonnelConstants.PASSWORD));
+					password));
 		}
 		if (input.equals(PersonnelConstants.CREATE_USER)
 				&& (StringUtils.isNullOrEmpty(userPassword) || StringUtils
 						.isNullOrEmpty(passwordRepeat)))
 			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
 					PersonnelConstants.VALID_PASSWORD,
-					PersonnelConstants.PASSWORD));
+					password));
 		if (input.equals(PersonnelConstants.CREATE_USER)&& (StringUtils.isNullAndEmptySafe(userPassword))){
 			if( userPassword.length()<6)
 				errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
@@ -530,7 +539,7 @@ public class PersonActionForm extends BaseActionForm {
 			validateGender(errors);
 			validateUserHirerchy(errors);
 			validateloginName(errors);
-			checkForPassword(errors);
+			checkForPassword(errors, request);
 			validateCustomFields(request, errors);
 			validateConfigurableMandatoryFields(request, errors,EntityType.PERSONNEL);
 
@@ -617,29 +626,39 @@ public class PersonActionForm extends BaseActionForm {
 		validateDateOfBirth(errors);
 		validateDateofJoiningMFI(errors);
 		validateGender(errors);
-		validateStatus(errors);
-		validateOffice(errors);
+		validateStatus(errors, request);
+		validateOffice(errors, request);
 		validateUserHirerchy(errors);
 		validateloginName(errors);
-		checkForPassword(errors);
+		checkForPassword(errors, request);
 		validateCustomFields(request, errors);
 		validateConfigurableMandatoryFields(request, errors,EntityType.PERSONNEL);
 	}
 
-	private void validateStatus(ActionErrors errors) {
+	private void validateStatus(ActionErrors errors, HttpServletRequest request) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PERSONNELUIRESOURCESPATH, locale);
+		String status = resources.getString("Personnel.Status");
 		if (StringUtils.isNullOrEmpty(status)) {
 			errors.add(PersonnelConstants.STATUS, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					PersonnelConstants.STATUS));
+					status));
 		}
 
 	}
 
-	private void validateOffice(ActionErrors errors) {
+	private void validateOffice(ActionErrors errors, HttpServletRequest request) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PERSONNELUIRESOURCESPATH, locale);
+		String office = resources.getString("Personnel.OfficeLabel");
 		if (StringUtils.isNullOrEmpty(officeId)) {
 			errors.add(PersonnelConstants.OFFICE, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					PersonnelConstants.OFFICE));
+					office));
 		}
 	}
 

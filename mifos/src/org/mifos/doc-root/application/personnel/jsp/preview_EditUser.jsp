@@ -320,7 +320,7 @@
 	</c:if>
 	<span class="fontnormal">
       <br>
-	   <html-el:button property="btn" styleClass="insidebuttn" style="width:130px;" onclick="goToEditPage()">
+	   <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
 		 <mifos:mifoslabel name="button.EditUserInformation"  bundle="PersonnelUIResources"></mifos:mifoslabel>
        </html-el:button>
 
@@ -336,11 +336,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">	
-	                <html-el:submit property="submitBtn" styleClass="buttn" style="width:70px;">
+	                <html-el:submit property="submitBtn" styleClass="buttn">
 	                  	<mifos:mifoslabel name="button.submit" bundle="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:submit>
 &nbsp;
-                  	<html-el:button property="cancelBtn"  styleClass="cancelbuttn" style="width:70px" onclick="goToCancelPage()">
+                  	<html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:button>  
         	</td>

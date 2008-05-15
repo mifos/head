@@ -114,8 +114,7 @@
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
-								onclick="returnToDetails()"
-								styleClass="buttn" style="width:165px;">
+								onclick="returnToDetails()" styleClass="buttn">
 								<mifos:mifoslabel name="Personnel.returnToDetails"
 									bundle="PersonnelUIResources" />
 							</html-el:button></td>

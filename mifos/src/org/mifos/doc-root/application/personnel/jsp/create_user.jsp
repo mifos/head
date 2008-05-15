@@ -394,12 +394,11 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit styleClass="buttn"
-										style="width:70px;"
 										onclick="transferData(this.form.personnelRoles)">
 										<mifos:mifoslabel name="button.preview"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
-										styleClass="cancelbuttn" style="width:70px"
+										styleClass="cancelbuttn"
 										onclick="goToCancelPage()">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>

@@ -104,7 +104,7 @@
               <tr>
                 <td align="center">
                
-                <html-el:button property="btn"  styleClass="buttn" style="width:140px" onclick="goToCancelPage()">
+                <html-el:button property="btn"  styleClass="buttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="Personnel.BackToDetailsPage" bundle="PersonnelUIResources"></mifos:mifoslabel>
                 </html-el:button>
 
