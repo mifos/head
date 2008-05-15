@@ -640,11 +640,11 @@ public class PersonActionForm extends BaseActionForm {
 		Locale locale = userContext.getPreferredLocale();
 		ResourceBundle resources = ResourceBundle.getBundle
 					(FilePaths.PERSONNELUIRESOURCESPATH, locale);
-		String status = resources.getString("Personnel.Status");
+		String statusString = resources.getString("Personnel.status");
 		if (StringUtils.isNullOrEmpty(status)) {
 			errors.add(PersonnelConstants.STATUS, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY,
-					status));
+					statusString));
 		}
 
 	}
