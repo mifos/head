@@ -561,7 +561,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
 		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
-		AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
+		// AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -907,7 +907,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
 		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
-		AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
+		// AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
@@ -979,7 +979,7 @@ public class LoanCalculationTest extends MifosTestCase {
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
 		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
-		AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
+		// AccountingRules.setRoundingRule(config.getCurrencyRoundingMode());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 

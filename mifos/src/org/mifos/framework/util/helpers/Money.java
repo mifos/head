@@ -92,9 +92,6 @@ public final class Money implements Serializable {
 	private static RoundingMode internalRoundingMode = RoundingMode.HALF_UP;
 	private static MathContext internalPrecisionAndRounding = 
 		new MathContext(internalPrecision, internalRoundingMode);
-	private static MathContext currencyPrecisionAndRounding = 
-		new MathContext(AccountingRules.getDigitsAfterDecimal(), 
-				AccountingRules.getRoundingRule(RoundingMode.HALF_UP));
 	
 	private static MifosCurrency defaultCurrency = null;
 	
@@ -495,7 +492,7 @@ public final class Money implements Serializable {
 			// insure that we are using the correct internal precision
 			BigDecimal roundingAmount = roundOffMultiple.round(internalPrecisionAndRounding);
 			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount,internalPrecisionAndRounding);
-            RoundingMode roundingMode =  AccountingRules.getRoundingRule(RoundingMode.HALF_UP);
+			RoundingMode roundingMode =  AccountingRules.getCurrencyRoundingMode();
 			nearestFactor = nearestFactor.setScale(0, roundingMode);
 
 			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);

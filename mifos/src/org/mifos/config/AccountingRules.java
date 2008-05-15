@@ -70,7 +70,6 @@ public class AccountingRules {
 				roundingMode, amountToBeRoundedTo, currency.getDefaultCurrency(), digitsAfterDecimal, currencyCode);
 	
 	}
-
 	
 	public static String getCurrencyCode()
 	{
@@ -180,7 +179,7 @@ public class AccountingRules {
 			else if (returnStr.equals("HALF_UP"))
 				mode = MifosCurrency.HALF_UP_MODE;
 			else
-				throw new RuntimeException("The rounding mode defined in the config file is not CEILING nor FLOOR. It is " 
+				throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
 						+ returnStr);
 		}
 		else
@@ -203,7 +202,7 @@ public class AccountingRules {
 			else if (returnStr.equals("HALF_UP"))
 				mode = RoundingMode.HALF_UP;
 			else
-				throw new RuntimeException("The rounding mode defined in the config file is not CEILING nor FLOOR. It is " 
+				throw new RuntimeException("The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is " 
 						+ returnStr);
 		}
 		else

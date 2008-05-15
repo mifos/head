@@ -362,7 +362,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		}
 		catch (RuntimeException e)
 		{
-			assertEquals(e.getMessage(), "The rounding mode defined in the config file is not CEILING nor FLOOR. It is "
+			assertEquals(e.getMessage(), "The rounding mode defined in the config file is not CEILING, FLOOR, HALF_UP. It is "
 					+ roundingMode);
 		}
 		configMgr.clearProperty(AccountingRules.AccountingRulesRoundingRule);
