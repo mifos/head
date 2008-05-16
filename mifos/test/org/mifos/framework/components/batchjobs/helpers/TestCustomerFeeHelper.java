@@ -165,11 +165,9 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-			if (customerScheduleEntity.getInstallmentId().equals(
-					Short.valueOf("2"))) {
+			if (customerScheduleEntity.getInstallmentId() == 2) {
 				lastAppliedFeeDate = customerScheduleEntity.getActionDate();
-				assertEquals(1, customerScheduleEntity
-						.getAccountFeesActionDetails().size());
+				assertEquals(2, customerScheduleEntity.getAccountFeesActionDetails().size());
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
 						.getAccountFeesActionDetails()) {
 					if (accountFeesActionDetailEntity.getFee().getFeeName()

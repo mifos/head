@@ -138,10 +138,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		setNewWorkingDays(sundayIncludedWorkingDays);
 		Date testDate = getDate("19/08/2007");
 				
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
+		Date adjustedCalendar = HolidayUtils.adjustDate(testDate, meeting);
 		
-		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-						DateUtils.getDateWithoutTimeStamp(getDate("19/08/2007").getTime()).getTime());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar), 
+						DateUtils.getDateWithoutTimeStamp(getDate("19/08/2007")));
 
 	}
 	
@@ -170,10 +170,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		// assert that the holiday is created
 		assertEquals("Same Day Holiday", holidayEntity.getHolidayName());		
 		
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
+		Date adjustedCalendar = HolidayUtils.adjustDate(testDate, meeting);
 		
-		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-				DateUtils.getDateWithoutTimeStamp(testDate.getTime()).getTime());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar), 
+				DateUtils.getDateWithoutTimeStamp(testDate));
 
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
@@ -205,11 +205,11 @@ public class TestHolidayUtils extends MifosTestCase {
 		// assert that the holiday is created
 		assertEquals("Next Meeting Or Repayment Holiday", holidayEntity.getHolidayName());		
 		
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
+		Date adjustedCalendar = HolidayUtils.adjustDate(testDate, meeting);
 		
 		
-		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-				DateUtils.getDateWithoutTimeStamp(getDate("30/08/2007").getTime()).getTime()); // was 25/08/2006
+		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar), 
+				DateUtils.getDateWithoutTimeStamp(getDate("30/08/2007"))); // was 25/08/2006
 
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
@@ -231,10 +231,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		// assert that the holiday is created
 		assertEquals("Next Working Day Holiday", holidayEntity.getHolidayName());		
 		
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
+		Date adjustedCalendar = HolidayUtils.adjustDate(testDate, meeting);
 
-		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-				DateUtils.getDateWithoutTimeStamp(getDate("23/08/2007").getTime()).getTime());
+		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar), 
+				DateUtils.getDateWithoutTimeStamp(getDate("23/08/2007")));
 
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
@@ -261,11 +261,10 @@ public class TestHolidayUtils extends MifosTestCase {
     		}
     		/////////////////////////////////////////////////////////
     		
-    		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(inputDate.getTime()), 
-    															meeting);
+    		Date adjustedCalendar = HolidayUtils.adjustDate(inputDate, meeting);
 
-    		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-    				DateUtils.getDateWithoutTimeStamp(outputDate.getTime()).getTime());
+    		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar), 
+    				DateUtils.getDateWithoutTimeStamp(outputDate));
     		
     		// Clean up the Holiday that was created
     		for(int j=0; j<holidays.length; j++)
@@ -384,8 +383,7 @@ public class TestHolidayUtils extends MifosTestCase {
 	
 		for(int i=0; i< savingSchedule.length; i++){
 			//System.out.println("[SAVING] ActionDate = " + savingSchedule[i].getActionDate().toLocaleString());
-			assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i]
-			                                      .getActionDate().getTime()));			
+			assertEquals(startDate.getTime(), savingSchedule[i].getActionDate());			
 			startDate.add(Calendar.DAY_OF_MONTH, 7);
 		}
 		/////////////////////////////////////////////////////////////

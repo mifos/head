@@ -482,9 +482,7 @@ public class BulkEntryActionForm extends BaseActionForm {
 			customerAccountAmountEntered = getDoubleValue(customerAccountView
 					.getCustomerAccountAmountEntered());
 		if (!customerAccountView.isValidCustomerAccountAmountEntered()
-				|| ((!customerAccountAmountEntered.equals(customerAccountView
-						.getTotalAmountDue().getAmountDoubleValue())) && (!customerAccountAmountEntered
-						.equals(0.0)))) {
+				|| (customerAccountAmountEntered != customerAccountView.getTotalAmountDue().getAmountDoubleValue() && customerAccountAmountEntered != 0.0)) {
 			errors.add(BulkEntryConstants.BULKENTRYINVALIDAMOUNT,
 					new ActionMessage(
 							BulkEntryConstants.BULKENTRYINVALIDAMOUNT,

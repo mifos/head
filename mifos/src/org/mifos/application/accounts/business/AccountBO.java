@@ -25,6 +25,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.*;
 import org.mifos.application.customer.business.CustomerAccountBO;
@@ -40,6 +41,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -994,28 +996,22 @@ public class AccountBO extends BusinessObject {
 
 	protected final List<Date> getFeeDates(MeetingBO feeMeetingFrequency,
 			List<InstallmentDate> installmentDates) throws AccountException {
-		MeetingBO repaymentFrequency = getCustomer().getCustomerMeeting()
-				.getMeeting();
-		Short recurAfter = repaymentFrequency.getMeetingDetails()
-				.getRecurAfter();
-		Calendar meetingStartDate = repaymentFrequency.getMeetingStartDate();
-		repaymentFrequency.getMeetingDetails().setRecurAfter(
-				feeMeetingFrequency.getMeetingDetails().getRecurAfter());
-		Calendar feeStartDate = new GregorianCalendar();
-		feeStartDate.setTime((installmentDates.get(0)).getInstallmentDueDate());
-		repaymentFrequency.setMeetingStartDate(feeStartDate);
-		Date repaymentEndDate = (installmentDates
-				.get(installmentDates.size() - 1)).getInstallmentDueDate();
-
-		List<Date> feeDueDates = null;
 		try {
-			feeDueDates = repaymentFrequency.getAllDates(repaymentEndDate);
-		} catch (MeetingException e) {
+			// for a loan the first fee date should be after disbursal
+			// for other account types it should be at the next meeting
+			Date startDate = this instanceof LoanBO ? 
+					((LoanBO) this).getDisbursementDate() :
+					this.getNextMeetingDate();
+			Date repaymentEndDate = installmentDates.get(
+					installmentDates.size() - 1).getInstallmentDueDate();
+			if (feeMeetingFrequency.getMeetingTypeEnum() == MeetingType.PERIODIC_FEE)
+				return feeMeetingFrequency.getFeeDates(startDate, repaymentEndDate);
+			// What to do if fees are not periodic - this should not really happen
+			return new ArrayList<Date>();
+		}
+		catch (MeetingException e) {
 			throw new AccountException(e);
 		}
-		repaymentFrequency.setMeetingStartDate(meetingStartDate);
-		repaymentFrequency.getMeetingDetails().setRecurAfter(recurAfter);
-		return feeDueDates;
 	}
 
 	protected final FeeInstallment buildFeeInstallment(Short installmentId,

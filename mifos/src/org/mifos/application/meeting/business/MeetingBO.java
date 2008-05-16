@@ -310,11 +310,7 @@ public class MeetingBO extends BusinessObject {
 	public Date getNextScheduleDateAfterRecurrence(Date meetingDate)
 			throws MeetingException {
 		Date currentScheduleDate = getNextScheduleDateAfterRecurrenceWithoutAdjustment(meetingDate);
-		//return HolidayUtils.adjustDate(HolidayUtils.getCalendar(currentScheduleDate), this).getTime();
-		return HolidayUtils.adjustDate(
-				DateUtils.getCalendarDate(currentScheduleDate.getTime()), this)
-				.getTime();
-		//return currentScheduleDate;
+		return HolidayUtils.adjustDate(currentScheduleDate, this);
 	}
 
 	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date afterDate)throws MeetingException{
@@ -343,40 +339,41 @@ public class MeetingBO extends BusinessObject {
 		return prevScheduleDate;
 	}
 	
-	
-	public List<Date> getAllDates(Date endDate)throws MeetingException{
+	public List<Date> getAllDates(Date startDate, Date endDate) throws MeetingException {
 		validateEndDate(endDate);
-		List meetingDates= new ArrayList();
-		for (Date meetingDate = getFirstDate(getStartDate()); meetingDate
-				.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate))
+		List<Date> meetingDates = new ArrayList<Date>();
+		for (Date meetingDate = startDate; 
+				meetingDate.compareTo(endDate) <= 0; 
+				meetingDate = getNextDate(meetingDate)) {
 			meetingDates.add(meetingDate);
+		}
 		return meetingDates;
 	}
 	
-	public List<Date> getAllDates(int occurrences)throws MeetingException{
+	public List<Date> getAllDates(Date endDate) throws MeetingException {
+		return getAllDates(getFirstDate(getStartDate()), endDate);
+	}
+	
+	public List<Date> getAllDates(int occurrences) throws MeetingException{
 		validateOccurences(occurrences);
-		List meetingDates=new ArrayList();
+		List<Date> meetingDates = new ArrayList<Date>();
 		Date meetingDate = getFirstDate(getStartDate());
 		
-		for(int dateCount=0;dateCount<occurrences ;dateCount++){
-			//meetingDates.add(meetingDate);
-			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+		for(int dateCount=0; dateCount<occurrences; dateCount++) {
+			meetingDates.add(HolidayUtils.adjustDate(meetingDate, this));
 			meetingDate = getNextDate(meetingDate);
 		}
 		return meetingDates;
 	}
 
-	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(
-			int occurrences) throws MeetingException {
+	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(int occurrences) 
+		throws MeetingException {
 		validateOccurences(occurrences);
-		List meetingDates = new ArrayList();
+		List<Date> meetingDates = new ArrayList<Date>();
 		Date meetingDate = getFirstDateWithRepaymentIndepOfMeetingEnabled(getStartDate());
 
 		for (int dateCount = 0; dateCount < occurrences; dateCount++) {
-			//meetingDates.add(meetingDate);
-			meetingDates.add(HolidayUtils.adjustDate(
-					DateUtils.getCalendarDate(meetingDate.getTime()), this)
-					.getTime());
+			meetingDates.add(HolidayUtils.adjustDate(meetingDate, this));
 			meetingDate = getNextDateWithRepaymentIndepOfMeetingEnabled(meetingDate);
 		}
 		return meetingDates;
@@ -437,30 +434,24 @@ public class MeetingBO extends BusinessObject {
 	}
 	
 	private Date getNextDateForDay(Date startDate){
-		gc.setTime(startDate);
-		gc.add(Calendar.DAY_OF_WEEK, getMeetingDetails().getRecurAfter());
-		return gc.getTime();		
+		return DateUtils.addDays(startDate, getMeetingDetails().getRecurAfter());
 	}
 	
-	Date getFirstDateForWeek(Date startDate) {
-		gc.setTime(startDate);
-
+	private Date getFirstDateForWeek(Date startDate) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
 		// Jump to next week if the required weekday has passed for current week
-		if (gc.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay()
-				.getValue()) {
-			gc.add(Calendar.WEEK_OF_MONTH, 1);
+		if (cal.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay().getValue()) {
+			cal.add(Calendar.WEEK_OF_MONTH, 1);
 		}
 		
 		// Set the day of week as the require weekday
-		gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay()
-				.getValue());
-		return gc.getTime();
+		cal.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
+		return cal.getTime();
 	}
 	
 	private Date getNextDateForWeek(Date startDate){
-		gc.setTime(startDate);
-		gc.add(Calendar.WEEK_OF_MONTH,getMeetingDetails().getRecurAfter());
-		return gc.getTime();
+		return DateUtils.addWeeks(startDate, getMeetingDetails().getRecurAfter());
 	}
 	
 	/**
@@ -468,62 +459,68 @@ public class MeetingBO extends BusinessObject {
 	 * If date has passed, pass in the date of next month, 
 	 * adjust to day number if day number exceed total number of days in month 
 	 */
-	private Date getFirstDateForMonth(Date startDate){
-		Date scheduleDate=null;
-		gc.setTime(startDate);
-
-		if (isMonthlyOnDate()){
-			int dt = gc.get(GregorianCalendar.DATE);
-			//if date passed in, is after the date on which schedule has to lie, move to next month 
-			if(dt> getMeetingDetails().getDayNumber())
-				gc.add(GregorianCalendar.MONTH,1);
-			//set the date on which schedule has to lie
-			int M1 = gc.get(GregorianCalendar.MONTH);
-			gc.set(GregorianCalendar.DATE,getMeetingDetails().getDayNumber());
-			int M2 = gc.get(GregorianCalendar.MONTH);
-			int daynum=getMeetingDetails().getDayNumber();
-			while(M1!=M2){
-				gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
-				gc.set(GregorianCalendar.DATE,daynum-1);
-				M2 = gc.get(GregorianCalendar.MONTH);
-				daynum--;
+	private Date getFirstDateForMonth(Date startDate) {
+		if (isMonthlyOnDate()) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			int dayOfMonth = cal.get(Calendar.DATE);
+			// if date passed in, is after the date on which schedule has to
+			// lie, move to next month
+			int meetingDayOfMonth = getMeetingDetails().getDayNumber();
+			if (dayOfMonth > meetingDayOfMonth)
+				cal.add(Calendar.MONTH, 1);
+			// set the date on which schedule has to lie
+			int month1 = cal.get(Calendar.MONTH);
+			cal.set(Calendar.DATE, meetingDayOfMonth);
+			int month2 = cal.get(Calendar.MONTH);
+			while (month1 != month2) {
+				cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+				cal.set(Calendar.DATE, meetingDayOfMonth - 1);
+				month2 = cal.get(Calendar.MONTH);
+				meetingDayOfMonth--;
 			}
-			scheduleDate=gc.getTime();
-			
-		}else{
-			//if current weekday is after the weekday on which schedule has to lie, move to next week
-			if (gc.get(Calendar.DAY_OF_WEEK)>getMeetingDetails().getWeekDay().getValue())
-				gc.add(Calendar.WEEK_OF_MONTH,1);
-			//set the weekday on which schedule has to lie
-			gc.set(Calendar.DAY_OF_WEEK,getMeetingDetails().getWeekDay().getValue());
-			//if week rank is First, Second, Third or Fourth, Set the respective week.
-			//if current week rank is after the weekrank on which schedule has to lie, move to next month
-			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST)){
-				if(gc.get(Calendar.DAY_OF_WEEK_IN_MONTH)>getMeetingDetails().getWeekRank().getValue()){
-					gc.add(GregorianCalendar.MONTH,1);
-					gc.set(GregorianCalendar.DATE,1);
+			return cal.getTime();
+		}
+		else {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(startDate);
+			// if current weekday is after the weekday on which schedule has to
+			// lie, move to next week
+			if (cal.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay().getValue())
+				cal.add(Calendar.WEEK_OF_MONTH, 1);
+			// set the weekday on which schedule has to lie
+			cal.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay().getValue());
+			// if week rank is First, Second, Third or Fourth, Set the respective week.
+			// if current week rank is after the weekrank on which schedule has
+			// to lie, move to next month
+			if (!getMeetingDetails().getWeekRank().equals(RankType.LAST)) {
+				if (cal.get(Calendar.DAY_OF_WEEK_IN_MONTH) > getMeetingDetails()
+						.getWeekRank().getValue()) {
+					cal.add(Calendar.MONTH, 1);
+					cal.set(Calendar.DATE, 1);
 				}
-				//set the weekrank on which schedule has to lie
-				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
-				scheduleDate=gc.getTime();
+				// set the weekrank on which schedule has to lie
+				cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, getMeetingDetails().getWeekRank().getValue());
+				return cal.getTime();
 			}
-			else {//scheduleData.getWeekRank()=Last
-				int M1 = gc.get(GregorianCalendar.MONTH);
-				//assumption: there are 5 weekdays in the month
-				gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,5);
-				int M2 = gc.get(GregorianCalendar.MONTH);
-				//if assumption fails, it means there exists 4 weekdays in a month, return last weekday date
-				//if M1==M2, means there exists 5 weekdays otherwise 4 weekdays in a month
-				if (M1!=M2){
-					gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
-					gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,4);
+			else {// scheduleData.getWeekRank()=Last
+				int M1 = cal.get(Calendar.MONTH);
+				// assumption: there are 5 weekdays in the month
+				cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 5);
+				int M2 = cal.get(Calendar.MONTH);
+				// if assumption fails, it means there exists 4 weekdays in a
+				// month, return last weekday date
+				// if M1==M2, means there exists 5 weekdays otherwise 4 weekdays
+				// in a month
+				if (M1 != M2) {
+					cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
+					cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 4);
 				}
-				scheduleDate=gc.getTime();
+				return cal.getTime();
 			}
 		}
-		return scheduleDate;
 	}
-	
+
 	/**
 	 * for monthly is on date add the number of months after which meeting is to recur, 
 	 * and then adjust the date for day on which meeting is to occur
@@ -668,5 +665,28 @@ public class MeetingBO extends BusinessObject {
 
 	public void setWeekNumber(Short weekNumber) {
 		this.weekNumber = weekNumber;
+	}
+
+	public List<Date> getFeeDates(Date endDate) throws MeetingException {
+		return getFeeDates(getStartDate(), endDate);
+	}
+	
+	public List<Date> getFeeDates(Date startDate, Date endDate) throws MeetingException {
+		List<Date> feeDates = new ArrayList<Date>();
+		if (isWeekly()) {
+			Date date = getFirstDateForWeek(startDate);
+			while(date.compareTo(endDate) <= 0) {
+				feeDates.add(HolidayUtils.adjustDate(date, this));
+				date = getNextDateForWeek(date);
+			}
+		} 
+		if (isMonthly() || isMonthlyOnDate()) {
+			Date date = getFirstDateForMonth(startDate);
+			while(date.compareTo(endDate) <= 0) {
+				feeDates.add(HolidayUtils.adjustDate(date, this));
+				date = getNextDateForMonth(date);
+			}
+		}
+		return feeDates;
 	}
 }
