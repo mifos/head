@@ -141,15 +141,14 @@
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td align="center"><html-el:submit property="ss" 
-									styleClass="buttn" style="width:70px;"
-									>
+									styleClass="buttn">
 
 									<mifos:mifoslabel name="roleandpermission.button.submit"
 										bundle="RolesAndPermissionResources" />
 
 								</html-el:submit> &nbsp; <html-el:button
 									onclick=" goToCancelPage()"  property="SS"
-									styleClass="cancelbuttn" style="width:70px;">
+									styleClass="cancelbuttn">
 
 									<mifos:mifoslabel name="roleandpermission.button.cancel"
 										bundle="RolesAndPermissionResources" />

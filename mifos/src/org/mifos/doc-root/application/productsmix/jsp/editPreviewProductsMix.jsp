@@ -172,11 +172,11 @@
 							<tr>
 								<td align="center">
 									&nbsp;
-									<html-el:submit styleClass="buttn" style="width:70px" property="submitBut">
+									<html-el:submit styleClass="buttn" property="submitBut">
 										<mifos:mifoslabel name="product.butsubmit" bundle="ProductDefUIResources" />
 									</html-el:submit>
 									&nbsp;
-									<html-el:button property="cancel" styleClass="cancelbuttn" style="width:70px" onclick="javascript:fnCancel(this.form)">
+									<html-el:button property="cancel" styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="product.cancel" bundle="ProductDefUIResources" />
 									</html-el:button>
 								</td>

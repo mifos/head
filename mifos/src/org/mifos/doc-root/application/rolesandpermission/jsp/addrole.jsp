@@ -107,14 +107,13 @@ explanation of the license and how it is applied.
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit  property="SS"
-										styleClass="buttn" style="width:70px;" 
-										 ><mifos:mifoslabel name="roleandpermission.button.submit" bundle="RolesAndPermissionResources" />
+										styleClass="buttn"> 
+										<mifos:mifoslabel name="roleandpermission.button.submit" bundle="RolesAndPermissionResources" />
 										</html-el:submit>
 										
 										 &nbsp; <html-el:button
-										onclick="goToCancelPage()"
-										value="Cancel" property="SS"
-										styleClass="cancelbuttn" style="width:70px;" >
+										onclick="goToCancelPage()" property="SS"
+										styleClass="cancelbuttn">
 										
 										<mifos:mifoslabel name="roleandpermission.button.cancel" bundle="RolesAndPermissionResources" />
 										</html-el:button>

@@ -40,15 +40,21 @@ package org.mifos.application.productsmix.struts.actionforms;
 
 
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.StringUtils;
 
 
@@ -114,29 +120,39 @@ public class ProductMixActionForm extends BaseActionForm {
 		request.setAttribute(GroupConstants.METHODCALLED, method);
 		if (method != null && method.equals(Methods.preview.toString())) {
 			errors.add(super.validate(mapping, request));
-			validateProductType(errors);
-			validateProductInstance(errors);
+			validateProductType(errors, request);
+			validateProductInstance(errors, request);
 
 		}
 		return errors;
 	}
 
-	private void validateProductType(ActionErrors errors) {
+	private void validateProductType(ActionErrors errors, HttpServletRequest request) {
 		if (StringUtils.isNullOrEmpty(getProductType())){
 			addError(errors, "productType",
 					ProductDefinitionConstants.ERROR_MANDATORY,
-					ProductDefinitionConstants.PRODUCT_TYPE);
+					getLocaleString("product.productType", request));
 			
 		}
 	}
 
-	private void validateProductInstance(ActionErrors errors) {
+	private void validateProductInstance(ActionErrors errors, HttpServletRequest request) {
 		if (StringUtils.isNullOrEmpty(getProductInstance())){
 			addError(errors, "productInstance",
 					ProductDefinitionConstants.ERROR_MANDATORY,
-					ProductDefinitionConstants.PRODUCT_INSTANCE_NAME);
+					getLocaleString("product.prodinstname", request));
 			
 		}
+	}
+	
+	private String getLocaleString(String st, HttpServletRequest request) {
+		UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
+		Locale locale = userContext.getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle
+					(FilePaths.PRODUCT_DEFINITION_UI_RESOURCE_PROPERTYFILE, locale);
+		return resources.getString(st);
+
+		
 	}
 	public void doCleanUp() {
 		

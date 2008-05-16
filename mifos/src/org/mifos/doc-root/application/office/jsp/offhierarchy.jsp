@@ -137,10 +137,12 @@
 							<tr>
 								<td align="center">
 									&nbsp;
-									<html-el:submit property="submitBtn" styleClass="buttn"></html-el:submit>
+									<html-el:submit property="submitBtn" styleClass="buttn">
+									<mifos:mifoslabel name="Office.submit"/>
+									</html-el:submit>
 									&nbsp;
 									<html-el:button onclick="cancel()" property="cancelButton"  styleClass="cancelbuttn">
-										<mifos:mifoslabel name="Office.button.cancel" />
+										<mifos:mifoslabel name="Office.cancel" />
 									</html-el:button>
 								</td>
 							</tr>
