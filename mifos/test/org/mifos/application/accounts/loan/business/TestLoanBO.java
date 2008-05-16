@@ -652,6 +652,10 @@ public class TestLoanBO extends MifosTestCase {
 	 * {@link #createLoanAccount(String, CustomerBO, AccountState, Date, LoanOfferingBO)}
 	 * but differs in various ways.
 	 * 
+	 * Note: the manipulation done in this method looks very suspicious 
+	 * and possibly wrong.  Tests that use this method should be considered
+	 * as suspect.
+	 * 
 	 * @param globalNum
 	 *            Currently ignored (TODO: remove it or honor it)
 	 */
@@ -2076,7 +2080,12 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	/*
-	 * TODO: fn_calc_test_fix
+	 * TODO: it seems unclear what this test is testing and whether 
+	 * or not the loan is being set up correctly.  Originally it 
+	 * was created with the InterestDueAtDisbursement flag on, but
+	 * now with that flag turned off, the result returned is 102.5
+	 * According to the setup method, the disbursal type parameter
+	 * which was originally "2" should probably be "1" now.
 	 *
 
 	public void testGetAmountTobePaidAtdisburtail() throws Exception {
@@ -3677,13 +3686,13 @@ public class TestLoanBO extends MifosTestCase {
 						.getTime()));
 	}
 
-	/*
-	 * TODO: fn_calc_test_fix
-	 *
-	
 	public void testUpdateLoanSuccessWithRegeneratingNewRepaymentSchedule()
 			throws Exception {
+		// newDate is the new disbursement date
 		Date newDate = incrementCurrentDate(14);
+		// first installment date is the first installment which is one
+		// week after the disbursement date since this is a weekly loan
+		Date firstInstallmentDate = incrementCurrentDate(21);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
@@ -3706,9 +3715,9 @@ public class TestLoanBO extends MifosTestCase {
 				.getTime());
 		assertEquals(
 				"New repayment schedule generated, so first installment date should be same as newDate",
-				newDate, newActionDate);
+				firstInstallmentDate, newActionDate);
 	}
-*/
+
 	
 	public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule()
 			throws ApplicationException, SystemException {
@@ -3920,7 +3929,8 @@ public class TestLoanBO extends MifosTestCase {
 */
 	
 	/*
-	 * TODO: fn_calc_test_fix
+	 * TODO: turn back on when IntersetDeductedAtDisbursement and
+	 *  PrincipalDueInLastPayment are re-enabled
 	 *
 	
 	public void testCreateLoanAccountWithIDADAndPDILI() throws Exception {
@@ -4445,28 +4455,39 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
-	/*
-	 * TODO: fn_calc_test_fix
-	 *
-	
-	public void testUpdateLoanWithInterestDeducted() {
+	public void testUpdateLoanWithInterestDeductedInterestDeductedAtDisbursement() {
+		final short NUMBER_OF_INSTALLMENTS = 1;
 		accountBO = getLoanAccount();
 		try {
 			LoanBO loanBO = ((LoanBO) accountBO);
-			((LoanBO) accountBO).updateLoan(loanBO
-					.isInterestDeductedAtDisbursement(),
-					loanBO.getLoanAmount(), loanBO.getInterestRate(), Short
-							.valueOf("1"), loanBO.getDisbursementDate(), loanBO
-							.getGracePeriodDuration(), loanBO
-							.getBusinessActivityId(), "Loan account updated",
-					null, null);
-			assertFalse(true);
+			((LoanBO) accountBO).updateLoan(true,
+				loanBO.getLoanAmount(), loanBO.getInterestRate(), 
+				NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), 
+				loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), 
+				"Loan account updated",	null, null);
+			fail("Invalid no of installment");
 		}
 		catch (AccountException ae) {
 			assertTrue("Invalid no of installment", true);
 		}
 	}
-*/
+
+	public void testUpdateLoanWithInterestDeductedNoInterestDeductedAtDisbursement() {
+		final short NUMBER_OF_INSTALLMENTS = 1;
+		accountBO = getLoanAccount();
+		try {
+			LoanBO loanBO = ((LoanBO) accountBO);
+			((LoanBO) accountBO).updateLoan(false,
+				loanBO.getLoanAmount(), loanBO.getInterestRate(), 
+				NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), 
+				loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), 
+				"Loan account updated",	null, null);
+		}
+		catch (AccountException ae) {
+			fail("Invalid no of installment");
+		}
+	}
+
 	
 	public void testApplyTimeOfFirstRepaymentFee() throws Exception {
 		accountBO = getLoanAccount();
