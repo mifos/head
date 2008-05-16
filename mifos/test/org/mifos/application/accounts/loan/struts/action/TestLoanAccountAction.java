@@ -133,15 +133,17 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		verifyForward(ActionForwards.create_failure.toString());
 	}
 
-	/*
-	 * TODO: fn_calc_test_fix
-	 *
 
 	public void testUpdateSuccessWithRegeneratingNewRepaymentSchedule()
 			throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		String newDate = offSetCurrentDate(14, userContext.getPreferredLocale());
+		// This is a loan with weekly meetings every week.  No interest is paid 
+		// at disbursement, so the first payment will be one week after the
+		// disbursement date of the loan (14 days + 7 days = 21 days)
+		String firstInstallmentDateWithNoInterestPaidAtDisbursementDate = 
+			offSetCurrentDate(21, userContext.getPreferredLocale());
 		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
 		((LoanBO) accountBO).setBusinessActivityId(1);
 		accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null,
@@ -184,13 +186,14 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
 		assertFalse(loan.isInterestDeductedAtDisbursement());
 		assertEquals(0, loan.getGracePeriodDuration().intValue());
-		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
+		assertEquals(firstInstallmentDateWithNoInterestPaidAtDisbursementDate, 
+				DateUtils.getUserLocaleDate(TestObjectFactory
 				.getContext().getPreferredLocale(), DateUtils
 				.toDatabaseFormat(loan.getAccountActionDate(Short.valueOf("1"))
 						.getActionDate())));
 
 	}
-*/
+
 	
 	public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges()
 			throws Exception {
