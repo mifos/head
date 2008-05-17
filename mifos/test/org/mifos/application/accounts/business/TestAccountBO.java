@@ -108,9 +108,6 @@ public class TestAccountBO extends TestAccount {
 		HibernateUtil.commitTransaction();
 	}
 
-	/*
-	 * TODO: fn_calc_test_fix
-	 *
 	public void testSuccessGetLastPmntAmntToBeAdjusted() throws Exception {
 	
 		LoanBO loan = accountBO;
@@ -130,11 +127,16 @@ public class TestAccountBO extends TestAccount {
 
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
+		// the loan has to be reloaded from db so that the payment list will be in desc order and the
+		// last payment will be the first in the payment list
+		loan = (LoanBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				loan.getAccountId());		
+		
 		assertEquals(88.0, loan.getLastPmntAmntToBeAdjusted());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 	}
-	*/
+	
 	
 	public void testSuccessAdjustLastPayment() throws Exception {
 		LoanBO loan = accountBO;
