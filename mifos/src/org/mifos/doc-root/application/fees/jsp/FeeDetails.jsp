@@ -47,7 +47,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
-<fmt:setBundle basename="org.mifos.config.localizedResources.FeesUIResources?"/>
+<fmt:setBundle basename="org.mifos.config.localizedResources.FeesUIResources"/>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
