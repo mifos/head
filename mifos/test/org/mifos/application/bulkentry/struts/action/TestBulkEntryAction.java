@@ -661,45 +661,47 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
-		BulkEntryView bulkEntryViewCenter = new BulkEntryView(getCustomerView(center));
+		BulkEntryView bulkEntryParent = new BulkEntryView(
+				getCusomerView(center));
 		SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
 		centerSavingsAccountView.setDepositAmountEntered("100");
 		centerSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntryViewCenter.addSavingsAccountDetail(centerSavingsAccountView);
-		bulkEntryViewCenter
+		bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
+		bulkEntryParent
 				.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		BulkEntryView bulkEntryViewGroup = new BulkEntryView(getCustomerView(group));
+		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
 		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
 		SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
 		groupSavingsAccountView.setDepositAmountEntered("100");
 		groupSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntryViewGroup.addLoanAccountDetails(groupLoanAccountView);
-		bulkEntryViewGroup.addSavingsAccountDetail(groupSavingsAccountView);
-		bulkEntryViewGroup.setCustomerAccountDetails(getCustomerAccountView(group));
+		bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
+		bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
+		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 
-		BulkEntryView bulkEntryViewClient = new BulkEntryView(getCustomerView(client));
+		BulkEntryView bulkEntrySubChild = new BulkEntryView(
+				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
 		SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
 		clientSavingsAccountView.setDepositAmountEntered("100");
 		clientSavingsAccountView.setWithDrawalAmountEntered("10");
-		bulkEntryViewClient.addLoanAccountDetails(clientLoanAccountView);
-		bulkEntryViewClient.setAttendence(new Short("2"));
-		bulkEntryViewClient.addSavingsAccountDetail(clientSavingsAccountView);
-		bulkEntryViewClient
+		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
+		bulkEntrySubChild.setAttendence(new Short("2"));
+		bulkEntrySubChild.addSavingsAccountDetail(clientSavingsAccountView);
+		bulkEntrySubChild
 				.setCustomerAccountDetails(getCustomerAccountView(client));
 
-		bulkEntryViewGroup.addChildNode(bulkEntryViewClient);
-		bulkEntryViewCenter.addChildNode(bulkEntryViewGroup);
+		bulkEntryChild.addChildNode(bulkEntrySubChild);
+		bulkEntryParent.addChildNode(bulkEntryChild);
 
 		LoanAccountsProductView childView = 
-			bulkEntryViewGroup.getLoanAccountDetails().get(0);
+			bulkEntryChild.getLoanAccountDetails().get(0);
 		childView.setPrdOfferingId(
 				groupLoanAccountView.getPrdOfferingId());
 		childView.setEnteredAmount("100.0");
 		LoanAccountsProductView subchildView = 
-			bulkEntryViewClient.getLoanAccountDetails().get(0);
+			bulkEntrySubChild.getLoanAccountDetails().get(0);
 		subchildView
 				.setDisBursementAmountEntered(
 						clientAccount.getLoanAmount().toString());
@@ -715,7 +717,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntry.setLoanProducts(loanProducts);
 		bulkEntry.setSavingsProducts(savingsProducts);
 		bulkEntry.setTotalCustomers(3);
-		bulkEntry.setBulkEntryParent(bulkEntryViewCenter);
+		bulkEntry.setBulkEntryParent(bulkEntryParent);
 		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
 		bulkEntry.setReceiptId("324343242");
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
@@ -776,18 +778,18 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
 		BulkEntryView bulkEntryParent = new BulkEntryView(
-				getCustomerView(center));
+				getCusomerView(center));
 		bulkEntryParent
 				.addSavingsAccountDetail(getSavingsAccountView(centerSavingsAccount));
 		bulkEntryParent
 				.setCustomerAccountDetails(getCustomerAccountView(center));
 
-		BulkEntryView bulkEntryChild = new BulkEntryView(getCustomerView(group));
+		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
 		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
 		bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
 		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
 		BulkEntryView bulkEntrySubChild = new BulkEntryView(
-				getCustomerView(client));
+				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
 		bulkEntrySubChild
@@ -844,7 +846,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return accountView;
 	}
 
-	private CustomerView getCustomerView(CustomerBO customer) {
+	private CustomerView getCusomerView(CustomerBO customer) {
 		CustomerView customerView = new CustomerView();
 		customerView.setCustomerId(customer.getCustomerId());
 		customerView.setCustomerLevelId(customer.getCustomerLevel().getId());
@@ -877,14 +879,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				customer.getCustomerAccount().getAccountId());
 
 		List<AccountActionDateEntity> accountAction = new ArrayList<AccountActionDateEntity>();
-		// adding the first two action dates; on the first date there is no fee, on the second there is
-		// a fee of 100
-		AccountActionDateEntity accountActionDate1 = customer.getCustomerAccount().getAccountActionDate(
-				Short.valueOf("1"));
-		AccountActionDateEntity accountActionDate2 = customer.getCustomerAccount().getAccountActionDate(
-				Short.valueOf("2"));
-		accountAction.add(accountActionDate1);
-		accountAction.add(accountActionDate2);
+		accountAction.add(customer.getCustomerAccount().getAccountActionDate(
+				Short.valueOf("1")));
 		customerAccountView.setAccountActionDates(TestObjectFactory
 				.getBulkEntryAccountActionViews(accountAction));
 		customerAccountView.setCustomerAccountAmountEntered("100.0");

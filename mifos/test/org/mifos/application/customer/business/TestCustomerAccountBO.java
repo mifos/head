@@ -292,7 +292,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 		}
 
-		assertEquals(countFinTrxns, 4);
+		assertEquals(countFinTrxns, 6);
 
 		CustomerTrxnDetailEntity custTrxn = null;
 		for (AccountTrxnEntity accTrxn : customerAccountBO.getLastPmnt()
@@ -859,7 +859,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-			if (customerScheduleEntity.getInstallmentId() == 2) {
+			if (customerScheduleEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
 				assertEquals(2, customerScheduleEntity
 						.getAccountFeesActionDetails().size());
 				amount = amount.add(new Money("200"));
@@ -977,8 +978,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
-			if (customerScheduleEntity.getInstallmentId() == 1) {
-				assertEquals(1, customerScheduleEntity
+			if (customerScheduleEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(2, customerScheduleEntity
 						.getAccountFeesActionDetails().size());
 				lastAppliedDate = customerScheduleEntity.getActionDate();
 			}
@@ -1007,7 +1009,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
-		assertEquals(0.00, center.getCustomerAccount().getNextDueAmount()
+		assertEquals(100.00, center.getCustomerAccount().getNextDueAmount()
 				.getAmountDoubleValue());
 	}
 
@@ -1028,32 +1030,45 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
-			if (accountActionDateEntity.getInstallmentId() == 1) {
-				assertEquals(DateUtils.getDateWithoutTimeStamp(startDate),
-						DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
-										.getActionDate()));
-				assertEquals(1,
-						((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails().size());
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(startDate.getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
+				assertEquals(2,
+						((CustomerScheduleEntity) accountActionDateEntity)
+								.getAccountFeesActionDetails().size());
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((CustomerScheduleEntity) accountActionDateEntity)
 						.getAccountFeesActionDetails()) {
 
-					if (accountFeesActionDetailEntity.getFee().getFeeName().equals("Periodic Fee"))
-						assertEquals(new Money("100.0"), accountFeesActionDetailEntity.getFeeAmount());
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
 					else {
-						assertEquals("Upfront Fee",accountFeesActionDetailEntity.getFee().getFeeName());
-						assertEquals(new Money("30.0"), accountFeesActionDetailEntity.getFeeAmount());
+						assertEquals("Upfront Fee",
+								accountFeesActionDetailEntity.getFee()
+										.getFeeName());
+						assertEquals(new Money("30.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
 					}
 				}
-			} else if (accountActionDateEntity.getInstallmentId() == 2) {
-				List<AccountFeesActionDetailEntity> list = new ArrayList<AccountFeesActionDetailEntity>();
-				list.addAll(((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails());
-				assertEquals(1, list.size());
-				assertEquals("Periodic Fee", list.get(0).getFee().getFeeName());
-				assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(7)),
-						DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
-										.getActionDate()));
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))) {
+				assertEquals(0,
+						((CustomerScheduleEntity) accountActionDateEntity)
+								.getAccountFeesActionDetails().size());
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								7).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
 			}
-			assertFalse(((CustomerScheduleEntity) accountActionDateEntity).isPaid());
+			assertFalse(((CustomerScheduleEntity) accountActionDateEntity)
+							.isPaid());
 		}
 	}
 
@@ -1075,31 +1090,45 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
-			if (accountActionDateEntity.getInstallmentId() == 1) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
 				assertEquals(
 						DateUtils.getDateWithoutTimeStamp(startDate.getTime()),
 						DateUtils
 								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
 										.getActionDate().getTime()));
-				assertEquals(1,
+				assertEquals(2,
 						((CustomerScheduleEntity) accountActionDateEntity)
 								.getAccountFeesActionDetails().size());
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((CustomerScheduleEntity) accountActionDateEntity)
 						.getAccountFeesActionDetails()) {
-					assertEquals("Upfront Fee", accountFeesActionDetailEntity.getFee().getFeeName());
-					assertEquals(new Money("30.0"), accountFeesActionDetailEntity.getFeeAmount());
+
+					if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equals("Periodic Fee"))
+						assertEquals(new Money("100.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					else {
+						assertEquals("Upfront Fee",
+								accountFeesActionDetailEntity.getFee()
+										.getFeeName());
+						assertEquals(new Money("30.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					}
 				}
-			} else if (accountActionDateEntity.getInstallmentId() == 2) {
-				List<AccountFeesActionDetailEntity> list = new ArrayList<AccountFeesActionDetailEntity>();
-				list.addAll(((CustomerScheduleEntity) accountActionDateEntity).getAccountFeesActionDetails());
-				assertEquals(1, list.size());
-				assertEquals("Periodic Fee", list.get(0).getFee().getFeeName());
-				assertEquals(new Money("100.0"), list.get(0).getFeeAmount());
-				assertEquals(DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(14)),
-						DateUtils.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
-										.getActionDate()));
+			} else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2"))) {
+				assertEquals(0,
+						((CustomerScheduleEntity) accountActionDateEntity)
+								.getAccountFeesActionDetails().size());
+				assertEquals(
+						DateUtils.getDateWithoutTimeStamp(incrementCurrentDate(
+								14).getTime()),
+						DateUtils
+								.getDateWithoutTimeStamp(((CustomerScheduleEntity) accountActionDateEntity)
+										.getActionDate().getTime()));
 			}
-			assertFalse(((CustomerScheduleEntity) accountActionDateEntity).isPaid());
+			assertFalse(
+				((CustomerScheduleEntity) accountActionDateEntity).isPaid());
 		}
 	}
 

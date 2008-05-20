@@ -2256,48 +2256,45 @@ private Money getLoanInterest(Date installmentEndDate)
 		return AccountConstants.DAYS_IN_MONTH;
 	}
 
-	private void generateRepaymentSchedule(List<InstallmentDate> installmentDates, List<EMIInstallment> EMIInstallments,
+	private void generateRepaymentSchedule(
+			List<InstallmentDate> installmentDates,
+			List<EMIInstallment> EMIInstallments,
 			List<FeeInstallment> feeInstallmentList) throws AccountException {
-		for (int i = 0; i < installmentDates.size(); i++) {
+		int count = installmentDates.size();
+		for (int i = 0; i < count; i++) {
 			InstallmentDate installmentDate = installmentDates.get(i);
-			LoanScheduleEntity loanSchedule = createLoanSchedule(installmentDate, EMIInstallments.get(i));
-			addAccountActionDate(loanSchedule);
-			addFeesToLoanSchedule(feeInstallmentList, installmentDate, loanSchedule);
+			EMIInstallment em = EMIInstallments.get(i);
+			LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(
+					this, getCustomer(), installmentDate.getInstallmentId(),
+					new java.sql.Date(installmentDate.getInstallmentDueDate()
+							.getTime()), PaymentStatus.UNPAID, em
+							.getPrincipal(), em.getInterest());
+			addAccountActionDate(loanScheduleEntity);
+			for (FeeInstallment feeInstallment : feeInstallmentList) {
+				if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
+						&& !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+					LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(
+							loanScheduleEntity, feeInstallment
+									.getAccountFeesEntity().getFees(),
+							feeInstallment.getAccountFeesEntity(),
+							feeInstallment.getAccountFee());
+					loanScheduleEntity
+							.addAccountFeesAction(loanFeeScheduleEntity);
+				}
+				else if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
+						&& isInterestDeductedAtDisbursement()
+						&& feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
+					LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(
+							loanScheduleEntity, feeInstallment
+									.getAccountFeesEntity().getFees(),
+							feeInstallment.getAccountFeesEntity(),
+							feeInstallment.getAccountFee());
+					loanScheduleEntity
+							.addAccountFeesAction(loanFeeScheduleEntity);
+				}
+			}
 		}
 		buildRawAmountTotal();
-	}
-
-	private LoanScheduleEntity createLoanSchedule(InstallmentDate installmentDate, EMIInstallment em) {
-		return new LoanScheduleEntity(
-				this, getCustomer(), installmentDate.getInstallmentId(),
-				new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()), 
-				PaymentStatus.UNPAID, em.getPrincipal(), em.getInterest());
-	}
-
-	private void addFeesToLoanSchedule(List<FeeInstallment> feeInstallmentList, InstallmentDate installmentDate,
-			LoanScheduleEntity loanSchedule) {
-		for (FeeInstallment feeInstallment : feeInstallmentList) {
-			if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
-					&& !feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-				loanSchedule.addAccountFeesAction(createLoanFeeSchedule(loanSchedule, feeInstallment));
-			}
-			else if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
-					&& isInterestDeductedAtDisbursement()
-					&& feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-				loanSchedule.addAccountFeesAction(createLoanFeeSchedule(loanSchedule, feeInstallment));
-			}
-			else if (feeInstallment.getInstallmentId() == installmentDate.getInstallmentId()
-					&& feeInstallment.getAccountFeesEntity().getFees().isTimeOfDisbursement()) {
-				loanSchedule.addAccountFeesAction(createLoanFeeSchedule(loanSchedule, feeInstallment));
-			}
-		}
-	}
-
-	private LoanFeeScheduleEntity createLoanFeeSchedule(LoanScheduleEntity loanScheduleEntity,
-			FeeInstallment feeInstallment) {
-		return new LoanFeeScheduleEntity(
-				loanScheduleEntity, feeInstallment.getAccountFeesEntity().getFees(),
-				feeInstallment.getAccountFeesEntity(), feeInstallment.getAccountFee());
 	}
 
 	private void validateSize(List installmentDates, List EMIInstallments)

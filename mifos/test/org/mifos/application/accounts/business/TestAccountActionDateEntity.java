@@ -57,7 +57,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 			assertEquals(new Money(), accountFeesActionDetailEntity
 					.getFeeAmount());
 		}
-		assertEquals(new Money("20.0"), chargeWaived);
+		assertEquals(new Money("120.0"), chargeWaived);
 		HibernateUtil.closeSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());

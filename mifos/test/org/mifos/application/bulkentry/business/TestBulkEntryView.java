@@ -251,7 +251,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		assertEquals("The size of the due insallments is ", customerAccountView
 				.getAccountActionDates().size(), 1);
 		assertEquals("The amount due is ", customerAccountView
-				.getTotalAmountDue().getAmountDoubleValue(), 0.0);
+				.getTotalAmountDue().getAmountDoubleValue(), 100.0);
 	}
 
     public void testPopulateAttendance() 

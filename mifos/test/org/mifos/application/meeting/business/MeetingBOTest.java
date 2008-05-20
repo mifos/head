@@ -193,6 +193,7 @@ public class MeetingBOTest extends MifosTestCase{
 				+ "22/12/2005,29/12/2005,05/01/2006,12/01/2006,19/01/2006,26/01/2006,02/02/2006,09/02/2006,"
 				+ "16/02/2006,23/02/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(), list.size());
 		matchDateLists(expectedList, list);
 	}
 	
@@ -205,6 +206,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("18/11/2005,09/12/2005,30/12/2005,20/01/2006,10/02/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);		
 	}
 	
@@ -217,6 +219,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("15/11/2005,27/12/2005,07/02/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);		
 	}
 	
@@ -230,6 +233,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("12/12/2005,09/01/2006,13/02/2006,13/03/2006,10/04/2006,08/05/2006,12/06/2006,10/07/2006,14/08/2006,11/09/2006,09/10/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -243,6 +247,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("25/11/2005,27/01/2006,31/03/2006,26/05/2006,28/07/2006,29/09/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -257,6 +262,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("05/12/2005,05/03/2006,05/06/2006,05/09/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -271,6 +277,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("30/11/2005,30/12/2005,30/01/2006,28/02/2006,30/03/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -285,6 +292,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("30/11/2005,31/12/2005,31/01/2006,28/02/2006,31/03/2006,30/04/2006");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -299,6 +307,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("28/11/2003,28/12/2003,28/01/2004,28/02/2004,28/03/2004");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
@@ -313,6 +322,7 @@ public class MeetingBOTest extends MifosTestCase{
 		list = meeting.getAllDates(endDate);
 		expectedList = createExpectedList("29/11/2003,29/12/2003,29/01/2004,29/02/2004,29/03/2004");
 		assertNotNull(list);
+		assertEquals(expectedList.size(),list.size());
 		matchDateLists(expectedList,list);	
 	}
 	
