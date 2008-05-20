@@ -188,7 +188,7 @@
 						<tr align="center">
 							<td height="3" align="left"><html-el:button property="editButton"
 								styleClass="insidebuttn"
-								onclick="javascript:fun_edit(this.form)" style="width:115px;">
+								onclick="javascript:fun_edit(this.form)">
 								<mifos:mifoslabel name="loan.editTrxn" />
 							</html-el:button></td>
 						</tr>
