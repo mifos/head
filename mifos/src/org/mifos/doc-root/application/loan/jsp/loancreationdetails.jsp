@@ -343,10 +343,10 @@ explanation of the license and how it is applied.
 												property="loanAmount" value="0.0" readonly="true" />
 											<mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
-												value="${LoanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-												value="${LoanOffering.maxLoanAmount}" /> )</td>	
+												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>	
 										</tr>
-									</table>s
+									</table>
 									
 
 								</c:if>
