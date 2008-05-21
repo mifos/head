@@ -54,8 +54,14 @@ public class AccountingRules {
 	private static final RoundingMode defaultInitialRoundingMode = RoundingMode.FLOOR;
 	private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
 	private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
-	
-	
+
+	/*
+	private static final BigDecimal defaultInitialRoundOffMultiple = new BigDecimal("1");
+	private static final BigDecimal defaultFinalRoundOffMultiple = new BigDecimal("1");
+	private static final RoundingMode defaultInitialRoundingMode = RoundingMode.CEILING;
+	private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
+	private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.CEILING;
+	*/
 	
 	public static MifosCurrency getMifosCurrency()
 	{

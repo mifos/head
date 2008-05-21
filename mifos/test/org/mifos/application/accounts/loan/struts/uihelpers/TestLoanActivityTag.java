@@ -50,7 +50,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 			AccountState.LOAN_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
-		assertContains("100.0",new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)).toString());
+		assertContains("100",new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)).toString());
 		
 		
 	}
@@ -60,7 +60,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 			AccountState.LOAN_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
-		assertContains("100.0",new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)).toString());
+		assertContains("100",new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)).toString());
 		
 		
 	}

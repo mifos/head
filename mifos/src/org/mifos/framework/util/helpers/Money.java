@@ -78,7 +78,7 @@ public final class Money implements Serializable {
 	 * is complete and tested, but allows the two to coexist for the time
 	 * being.
 	 */
-	private static boolean usingNewMoney = false;
+	private static boolean usingNewMoney = true;
 
 	public static boolean isUsingNewMoney() {
 		return usingNewMoney;

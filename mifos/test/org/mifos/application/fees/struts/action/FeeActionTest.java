@@ -508,7 +508,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulManage_AmountFee() throws Exception {
 		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
-				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
+				FeeCategory.ALLCUSTOMERS, "100.0", FeePayment.UPFRONT);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, fee, request);
 		setRequestPathInfo("/feeaction.do");

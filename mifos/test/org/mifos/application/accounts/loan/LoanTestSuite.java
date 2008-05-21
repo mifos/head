@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBOForReversal;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
@@ -28,6 +29,7 @@ public class LoanTestSuite extends TestSuite {
 
 	public static Test suite() {
 		TestSuite testSuite = new LoanTestSuite();
+		testSuite.addTestSuite(LoanCalculationTest.class);
 		testSuite.addTestSuite(TestLoanPersistence.class);
 		testSuite.addTestSuite(TestLoanBO.class);
 		testSuite.addTestSuite(TestRepayLoanAction.class);

@@ -185,8 +185,8 @@ public class LoanCalculationTest extends MifosTestCase {
 
 		HibernateUtil.closeSession();
 		super.tearDown();
-		Money.setUsingNewMoney(false);
-		LoanBO.setUsingNewLoanSchedulingMethod(false);
+		//Money.setUsingNewMoney(false);
+		//LoanBO.setUsingNewLoanSchedulingMethod(false);
 		AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
 		AccountingRules.setFinalRoundOffMultiple(savedFinalRoundOffMultiple);
 		AccountingRules.setCurrencyRoundingMode(savedCurrencyRoundingMode);

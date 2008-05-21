@@ -1783,7 +1783,21 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	protected final void applyRounding() {
+	/*
+	 * TODO: integrate new rounding for apply payment and remove fees
+	 */
+	protected final void applyRounding() throws AccountException {
+/*
+		if (isUsingNewLoanSchedulingMethod()) {
+			applyRounding_v2();
+		} else {
+			applyRounding_v1();
+		}
+		*/
+		applyRounding_v1();
+	}
+	
+	protected final void applyRounding_v1() {
 		if (!isPrincipalZeroInAnyInstallmemt()) {
 			LoanScheduleEntity lastAccountActionDate = (LoanScheduleEntity) getLastInstallmentAccountAction();
 			Money diffAmount = new Money();
@@ -1985,7 +1999,7 @@ public class LoanBO extends AccountBO {
 	 * This switching code will go away 
 	 * once the new method is complete and tested. 
 	 */
-	private static boolean usingNewLoanSchedulingMethod = false;
+	private static boolean usingNewLoanSchedulingMethod = true;
 	
 	public static boolean isUsingNewLoanSchedulingMethod() {
 		return usingNewLoanSchedulingMethod;
@@ -3646,7 +3660,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		List<InstallmentDate> installmentDates = getInstallmentDates(
 									getLoanMeeting(), 
 									noOfInstallments,
-									getInstallmentSkipToStartRepayment_v2(),
+									getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
 									isRepaymentIndepOfMeetingEnabled);
 		
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -3681,7 +3695,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 						"Meeting schedule generated  ");
 		
-		applyRounding_v2(loanInterest);
+		applyRounding_v2();
 		
 		
 	}
@@ -4418,7 +4432,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	* Calculations are the same as if there were no grace, since the zero-payment installments 
 	* are not included in the installment list at all.	 
 	*               */
-	protected final void applyRounding_v2(Money totalInterest) {
+	protected final void applyRounding_v2() {
 				
 		List<AccountActionDateEntity> unpaidInstallments = getListOfUnpaidFutureInstallments();
 			
@@ -4426,7 +4440,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		// of installments
 		assert(unpaidInstallments.size() == this.getNoOfInstallments());
 			
-		RepaymentTotals totals = calculateInitialTotals_v2(unpaidInstallments, totalInterest);
+		RepaymentTotals totals = calculateInitialTotals_v2(unpaidInstallments);
 		int installmentNum = 0;
 		for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
 			LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();		
@@ -4551,8 +4565,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				                       .subtract((installment.getTotalFeeDue())));
 	}
 	
-	private RepaymentTotals calculateInitialTotals_v2 (List<AccountActionDateEntity> installments,
-			                                       Money totalInterest) {
+	private RepaymentTotals calculateInitialTotals_v2 (List<AccountActionDateEntity> installments) {
 		
 		RepaymentTotals totals = new RepaymentTotals();
 		
@@ -4659,7 +4672,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		Money paidInterestAndFees = loanSummary.getFeesPaid().add(loanSummary.getInterestPaid());
 		if (lastPayment)
 		{	
-			assert(origInterestAndFees == paidInterestAndFees);
+			assert(origInterestAndFees.equals(paidInterestAndFees));
 		}
 		Money rawAmountTotal = loanSummary.getRawAmountTotal();
 		account999 = origInterestAndFees.subtract(rawAmountTotal);
