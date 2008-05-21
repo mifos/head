@@ -711,9 +711,11 @@
 							</span></td>
 						</tr>
 						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel isColonRequired="yes"
-								name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
+							<td class="paddingL10"><span class="fontnormal8pt"> 
+								<fmt:message key="client.loanCycleCounter">
+									<fmt:param><mifos:mifoslabel
+										name="${ConfigurationConstants.LOAN}" /></fmt:param>
+								</fmt:message>:
 							</span></td>
 						</tr>
 						<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanCycleCounter')}"

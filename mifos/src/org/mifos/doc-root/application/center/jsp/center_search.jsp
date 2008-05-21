@@ -1,7 +1,7 @@
 <!--
 /**
 
-* centerSearch.jsp    version: 1.0
+* center_search.jsp    version: 1.0
 
 
 
@@ -139,7 +139,10 @@
 					<table width="90%" border="0" cellspacing="0" cellpadding="3">
 					 
 					 <tr class="fontnormal">
-                 	    <td align="right"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out	value=" " /><mifos:mifoslabel name="Center.Name"  bundle="CenterUIResources"></mifos:mifoslabel></td>
+                 	    <td align="right">
+                 	    	<fmt:message key="Center.centerName">
+                 	    		<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/></fmt:param>
+                 	    	</fmt:message>:</td>
 		                <td>
 		                  <html-el:text property="searchString" maxlength = "200"/>
 		                </td>
