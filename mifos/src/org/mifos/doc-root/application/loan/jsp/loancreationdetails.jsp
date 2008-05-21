@@ -319,7 +319,7 @@ explanation of the license and how it is applied.
 													value="${client.governmentId}" /> <br>
 												</td>
 												<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
-													property="clientDetails[${indice}].loanAmount" value="0.0"
+													property="clientDetails[${indice}].loanAmount"
 													onchange="CalculateTotalLoanAmount(${clientListSize});" /></td>
 												<td width="35%" valign="top" class="drawtablerow"><mifos:select
 													property="clientDetails[${indice}].businessActivity"
@@ -344,7 +344,8 @@ explanation of the license and how it is applied.
 											<mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
 												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>	
+												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
+											<script>CalculateTotalLoanAmount(${clientListSize});</script>	
 										</tr>
 									</table>
 									

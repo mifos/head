@@ -37,12 +37,13 @@ function fun_submit(form)
 }
 function CalculateTotalLoanAmount(length)
 {
-	document.forms["loanAccountActionForm"].elements["loanAmount"].value="0.0";
+	document.forms["loanAccountActionForm"].elements["loanAmount"].value="0.0";	
 	for(var i=0,l=length; i<l; i++)
-	{
-		if (document.forms["loanAccountActionForm"].elements["clients["+i+"]"].checked==true)
+	{		
+		var curAmountValue = parseInt(document.forms["loanAccountActionForm"].elements["clientDetails["+i+"].loanAmount"].value);
+		if ((document.forms["loanAccountActionForm"].elements["clients["+i+"]"].checked==true) && (!isNaN(curAmountValue)))
 		{
-			document.forms["loanAccountActionForm"].elements["loanAmount"].value=parseInt(document.forms["loanAccountActionForm"].elements["clientDetails["+i+"].loanAmount"].value)+parseInt(document.forms["loanAccountActionForm"].elements["loanAmount"].value);
+			document.forms["loanAccountActionForm"].elements["loanAmount"].value=curAmountValue+parseInt(document.forms["loanAccountActionForm"].elements["loanAmount"].value);
 		}
 	}
 }
