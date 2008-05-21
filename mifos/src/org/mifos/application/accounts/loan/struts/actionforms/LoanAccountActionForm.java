@@ -523,6 +523,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 				}
 			}
 		}
+		else if (method.equals(Methods.load.toString())) {
+			clients = new ArrayList<String>();
+		}
 		else if (method.equals(Methods.managePreview.toString())) {
 			intDedDisbursement = "0";
 		}
