@@ -659,12 +659,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.getValue();
 		if (null != repaymentIndepOfMeetingIsEnabled
 				&& 1 == repaymentIndepOfMeetingIsEnabled.intValue()) {
-			checkIntervalBetweenTwoDates(getTheFirstRepaymentDay(installments,
-					loanActionForm, loanActionForm
-							.getDisbursementDateValue(getUserContext(request)
-									.getPreferredLocale()), loanActionForm
-							.getRecurMonth(), loanActionForm.getMonthWeek(),
-					loanActionForm.getMonthRank(), request), loanActionForm
+			checkIntervalBetweenTwoDates(getTheFirstRepaymentDay(installments), loanActionForm
 					.getDisbursementDateValue(getUserContext(request)
 							.getPreferredLocale()));
 		}
@@ -675,23 +670,21 @@ public class LoanAccountAction extends AccountAppAction {
 			Date firstRepaymentDate, Date disbursementDate) throws PersistenceException, AccountException {
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		Integer minDaysInterval = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY)
+				.getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY)
 				.getValue();
 		Integer maxDaysInterval = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY)
+				.getConfigurationKeyValueInteger(MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY)
 				.getValue();
 		if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils
-				.getDateWithoutTimeStamp(firstRepaymentDate.getTime()),
-				DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime())) <= minDaysInterval) {
+				.getDateWithoutTimeStamp(firstRepaymentDate),
+				DateUtils.getDateWithoutTimeStamp(disbursementDate)) < minDaysInterval) {
 			throw new AccountException(MIN_RANGE_IS_NOT_MET,
 					new String[] { minDaysInterval.toString() });
 
 		}
 		else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils
-				.getDateWithoutTimeStamp(firstRepaymentDate.getTime()),
-				DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime())) >= maxDaysInterval) {
+				.getDateWithoutTimeStamp(firstRepaymentDate),
+				DateUtils.getDateWithoutTimeStamp(disbursementDate)) > maxDaysInterval) {
 			throw new AccountException(MAX_RANGE_IS_NOT_MET,
 					new String[] { maxDaysInterval.toString() });
 
@@ -700,14 +693,13 @@ public class LoanAccountAction extends AccountAppAction {
 		return true;
 	}
 
-	private Date getTheFirstRepaymentDay(List<RepaymentScheduleInstallment> installments,LoanAccountActionForm form,java.sql.Date disbursementDateValue,
-			String recurMonth, String monthWeek, String monthRank,
-			HttpServletRequest request) {		
-    for (Iterator<RepaymentScheduleInstallment> iter = installments.iterator(); iter.hasNext();) {
+	private Date getTheFirstRepaymentDay(List<RepaymentScheduleInstallment> installments) {
+		for (Iterator<RepaymentScheduleInstallment> iter = installments
+				.iterator(); iter.hasNext();) {
 			return iter.next().getDueDate();
 		}
 		return null;
-	
+
 	}
 
 	private CustomerBO getCustomer(HttpServletRequest request)
@@ -733,22 +725,22 @@ public class LoanAccountAction extends AccountAppAction {
 		String perspective = request.getParameter(PERSPECTIVE);
 		CustomerBO customer = getCustomer(request);
 		LoanBO loan;
-        ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        boolean isRepaymentIndepOfMeetingEnabled=false;
-        MeetingBO newMeetingForRepaymentDay=null;
-        Integer repIndepOfMeetingEnabled=configurationPersistence.getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
-        if (null != repIndepOfMeetingEnabled
-				&& 0 != repIndepOfMeetingEnabled.intValue()){
-        	isRepaymentIndepOfMeetingEnabled=true;	
-        RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
-        	if(recurrenceType==RecurrenceType.WEEKLY)
-        		newMeetingForRepaymentDay = new MeetingBO(recurrenceType.getValue(),Short.valueOf(loanActionForm.getMonthWeek()),Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request)
-    					.getPreferredLocale()),
-    		MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
-        		else if(recurrenceType==RecurrenceType.MONTHLY)
-        			newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanActionForm.getMonthWeek()),Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request)
-        					.getPreferredLocale()),
-        		MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),Short.valueOf(loanActionForm.getMonthRank()));
+		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		MeetingBO newMeetingForRepaymentDay = null;
+        Integer repIndepOfMeetingEnabled = configurationPersistence.getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
+        boolean isRepaymentIndepOfMeetingEnabled = !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
+        
+        if (isRepaymentIndepOfMeetingEnabled){
+        	RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+        	if(recurrenceType == RecurrenceType.WEEKLY)
+        		newMeetingForRepaymentDay = new MeetingBO(recurrenceType.getValue(), Short.valueOf(loanActionForm.getMonthWeek()), 
+        				Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()), 
+        				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
+        	else if(recurrenceType == RecurrenceType.MONTHLY)
+        		newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanActionForm.getMonthWeek()), Short.valueOf(loanActionForm.getRecurMonth()), 
+        				loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()), 
+        				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+        				Short.valueOf(loanActionForm.getMonthRank()));
         }
         
 

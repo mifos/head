@@ -152,7 +152,7 @@ public class SavingsHelper {
 			else if(meeting.getMeetingTypeEnum() == 
 				MeetingType.SAVINGS_INTEREST_POSTING) {
 //				meeting.setStartDate(getFiscalEndDate());
-				meeting.setStartDate(DateUtils.getDatePlusXDays(getFiscalStartDate(), -1));
+				meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1));
 				meeting.getMeetingDetails().getMeetingRecurrence()
 					.setDayNumber(SavingsConstants.POSTING_DAY);
 			}

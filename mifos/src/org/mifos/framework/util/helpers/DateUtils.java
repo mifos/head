@@ -644,29 +644,11 @@ public class DateUtils {
 	public static long getNumberOfDaysBetweenTwoDates(Date date1, Date date2) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
-
-		cal1.setTime(date1);
-		cal2.setTime(date2);
-		cal1.set(Calendar.HOUR_OF_DAY, 0);
-		cal1.set(Calendar.MINUTE, 0);
-		cal1.set(Calendar.SECOND, 0);
-		cal1.set(Calendar.MILLISECOND, 0);
-		cal2.set(Calendar.HOUR_OF_DAY, 0);
-		cal2.set(Calendar.MINUTE, 0);
-		cal2.set(Calendar.SECOND, 0);
-		cal2.set(Calendar.MILLISECOND, 0);
+		cal1.setTime(getDateWithoutTimeStamp(date1));
+		cal2.setTime(getDateWithoutTimeStamp(date2));
 
 		return ((cal1.getTime().getTime() - cal2.getTime().getTime()) / (24 * 60 * 60 * 1000));
 
-	}
-
-	public static Date getDatePlusXDays(Date date, int dayNombre) {
-		Date dateplus;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, dayNombre);
-		dateplus = cal.getTime();
-		return dateplus;
 	}
 
 	public static java.sql.Date getSqlDate(int year, int month, int date) {
@@ -705,14 +687,12 @@ public class DateUtils {
 	}
 
 	public static DateFormat getLocalizedDateFormat() {
-		DateFormat dateFormat;
 		try {
-			dateFormat = LocalizationConverter.getInstance().getDateFormat();
+			return LocalizationConverter.getInstance().getDateFormat();
 		}
 		catch (RuntimeException e) {
-			dateFormat = DateUtils.DEFAULT_DATE_FORMAT;
+			return DateUtils.DEFAULT_DATE_FORMAT;
 		}
-		return dateFormat;
 	}
 
 	public static Date convertSqlToDate(java.sql.Date meetingDate) {
@@ -720,8 +700,7 @@ public class DateUtils {
 	}
 
 	public static Date getDateFromToday(int days) {
-		return getDatePlusXDays(getCurrentDateWithoutTimeStamp(),
-						days);
+		return addDays(getCurrentDateWithoutTimeStamp(), days);
 	}
 
 	/**

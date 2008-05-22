@@ -41,9 +41,8 @@ public class DateUtilsTest extends TestCase {
 	public void testGetDatePlusXDays() throws Exception {
 		SimpleDateFormat userFormat = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date date1 = userFormat.parse("2007-01-01");
-		assertEquals(userFormat.parse("2007-01-06"), DateUtils
-				.getDatePlusXDays(date1, 5));
-		assertEquals(date1, DateUtils.getDatePlusXDays(date1, 0));
+		assertEquals(userFormat.parse("2007-01-06"), DateUtils.addDays(date1, 5));
+		assertEquals(date1, DateUtils.addDays(date1, 0));
 	}
 
 	public void testParseBrowserDateFields() throws Exception {

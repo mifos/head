@@ -642,9 +642,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	public boolean isInterestDeductedAtDisbursement() {
-		return (intrestAtDisbursement != null && intrestAtDisbursement
-				.shortValue() == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT
-				.shortValue()) ? true : false;
+		return intrestAtDisbursement == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT;
 	}
 
 	void setInterestDeductedAtDisbursement(boolean interestDedAtDisb) {
@@ -1950,16 +1948,16 @@ public class LoanBO extends AccountBO {
 	}
 
 	private Short getInstallmentSkipToStartRepayment(boolean isRepaymentIndepOfMeetingEnabled) {
-		boolean isInterestDeductedatDisbursement=false;
-		if (isRepaymentIndepOfMeetingEnabled) 
-		isInterestDeductedatDisbursement=!isInterestDeductedAtDisbursement();
-		else
-			isInterestDeductedatDisbursement=isInterestDeductedAtDisbursement();
+		boolean isInterestDeductedatDisbursement = false;
+		if (isRepaymentIndepOfMeetingEnabled)
+			isInterestDeductedatDisbursement = !isInterestDeductedAtDisbursement();
+		else 
+			isInterestDeductedatDisbursement = isInterestDeductedAtDisbursement();
 		if (isInterestDeductedatDisbursement)
 			return (short) 0;
 		else {
-			if (getGraceType() == GraceType.PRINCIPALONLYGRACE
-					|| getGraceType() == GraceType.NONE) {
+			if (getGraceType() == GraceType.PRINCIPALONLYGRACE ||
+					getGraceType() == GraceType.NONE) {
 				return (short) 1;
 			}
 		}
@@ -3649,55 +3647,54 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
  * Financial Calculation Refactoring
  ***********************************/
 	
-	private void generateMeetingSchedule_v2(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
-		
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-						"Generating meeting schedule... ");
-		
-		if(isRepaymentIndepOfMeetingEnabled){
+	private void generateMeetingSchedule_v2(
+			boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Generating meeting schedule... ");
+
+		if (isRepaymentIndepOfMeetingEnabled) {
 			setLoanMeeting(newMeetingForRepaymentDay);
 		}
 		List<InstallmentDate> installmentDates = getInstallmentDates(
-									getLoanMeeting(), 
-									noOfInstallments,
-									getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
-									isRepaymentIndepOfMeetingEnabled);
-		
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-						"Obtained intallments dates");
-		
+				getLoanMeeting(),
+				noOfInstallments,
+				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
+				isRepaymentIndepOfMeetingEnabled);
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Obtained intallments dates");
+
 		Money loanInterest = getLoanInterest_v2();
 		List<EMIInstallment> EMIInstallments = generateEMI_v2(loanInterest);
-		
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-						"Emi installment  obtained ");
-		
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Emi installment  obtained ");
+
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0) {
 			/*
-			 * KEITH TODO: The loan interest is not correct for declining balance modes, and appears
-			 * to be causing unit test to fail for this mode.
-			 * For declining-balance loans, to calculate the loan interest you must either
-			 * (a) apply a complicated formula
-			 * (b) compute the sum of interest paid across all installments.
+			 * KEITH TODO: The loan interest is not correct for declining
+			 * balance modes, and appears to be causing unit test to fail for
+			 * this mode. For declining-balance loans, to calculate the loan
+			 * interest you must either (a) apply a complicated formula (b)
+			 * compute the sum of interest paid across all installments.
 			 */
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
 			feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates));
 		}
-		
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-						"Fee installment obtained ");
-		
-		generateRepaymentSchedule(installmentDates, EMIInstallments,
-				feeInstallment);
-		
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-						"Meeting schedule generated  ");
-		
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Fee installment obtained ");
+
+		generateRepaymentSchedule(installmentDates, EMIInstallments, feeInstallment);
+
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+				"Meeting schedule generated  ");
+
 		applyRounding_v2();
-		
-		
 	}
 
 	/**
