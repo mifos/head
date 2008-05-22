@@ -170,7 +170,7 @@ public class EditStatusActionForm extends BaseActionForm {
 		if(request.getParameter("selectedItems")==null){
 			selectedItems=null;
 		}
-		if(StringUtils.isNullSafe(chklistSize)) {
+		if(chklistSize != null) {
 			if (isCheckListNotComplete(chklistSize))
 				addError(errors, LoanConstants.INCOMPLETE_CHECKLIST,LoanConstants.INCOMPLETE_CHECKLIST);
 		}
@@ -185,7 +185,7 @@ public class EditStatusActionForm extends BaseActionForm {
 		String notesString = resources.getString("Account.Notes");
 		String status = resources.getString("accounts.status");
 		String flag = resources.getString("accounts.flag");
-		if (!StringUtils.isNullSafe(newStatusId))
+		if (newStatusId == null)
 			addError(errors, LoanConstants.MANDATORY,LoanConstants.MANDATORY, status);
 		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
 			addError(errors, LoanConstants.MANDATORY_SELECT,LoanConstants.MANDATORY_SELECT,

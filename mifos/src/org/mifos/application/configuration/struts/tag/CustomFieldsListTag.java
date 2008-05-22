@@ -91,41 +91,52 @@ public class CustomFieldsListTag extends BodyTagSupport { //SimpleTagSupport {
 
 	public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
 		Locale locale = userContext.getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle
-			(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, locale);
+		ResourceBundle resources = ResourceBundle.getBundle(
+				FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, locale);
 		String editString = resources.getString("configuration.edit");
 		XmlBuilder html = new XmlBuilder();
-		String url = (actionName + "?method=" + methodName
-						+ "&customFieldIdStr=" + customField.getFieldId()
-						+ "&currentFlowKey=" + flowKey);
+		String url = (actionName + "?method=" + methodName +
+				"&customFieldIdStr=" + customField.getFieldId() +
+				"&currentFlowKey=" + flowKey);
 
-		html.startTag("tr"); html.newline();		
-			html.startTag("td", "width", "11%", "class", "drawtablerow"); 
-				html.text(Integer.toString(index));
-			html.endTag("td"); html.newline();
-			html.startTag("td", "width", "22%", "class", "drawtablerow");
-				html.text(customField.getLookUpEntity().getLabel());
-			html.endTag("td"); html.newline();
-			html.startTag("td", "width", "21%", "class", "drawtablerow");
-				html.text(MessageLookup.getInstance().lookup(
-					CustomFieldType.fromInt(customField.getFieldType()), userContext));
-			html.endTag("td"); html.newline();
-			html.startTag("td", "width", "21%", "class", "drawtablerow");
-				if (customField.getDefaultValue() == null) {
-					html.nonBreakingSpace();
-				} else {
-					html.text(getDefaultValue(customField, userContext));
-				}
-			html.endTag("td"); html.newline();
-			html.startTag("td", "width", "17%", "class", "drawtablerow");
-				html.text(customField.getMandatoryStringValue(userContext.getPreferredLocale()));
-			html.endTag("td"); html.newline();
-			html.startTag("td", "width", "8%", "align", "right", "class", "drawtablerow");
-				html.startTag("a", "href", url);
-				html.text(editString); 
-				html.endTag("a");
-			html.endTag("td"); html.newline();
-		html.endTag("tr"); html.newline();
+		html.startTag("tr");
+		html.newline();
+		html.startTag("td", "width", "11%", "class", "drawtablerow");
+		html.text(Integer.toString(index));
+		html.endTag("td");
+		html.newline();
+		html.startTag("td", "width", "22%", "class", "drawtablerow");
+		String label = customField.getLookUpEntity().getLabel();
+		html.text(label);
+		html.endTag("td");
+		html.newline();
+		html.startTag("td", "width", "21%", "class", "drawtablerow");
+		html.text(MessageLookup.getInstance().lookup(
+				CustomFieldType.fromInt(customField.getFieldType()),
+				userContext));
+		html.endTag("td");
+		html.newline();
+		html.startTag("td", "width", "21%", "class", "drawtablerow");
+		if (customField.getDefaultValue() == null) {
+			html.nonBreakingSpace();
+		}
+		else {
+			html.text(getDefaultValue(customField, userContext));
+		}
+		html.endTag("td");
+		html.newline();
+		html.startTag("td", "width", "17%", "class", "drawtablerow");
+		html.text(customField.getMandatoryStringValue(locale));
+		html.endTag("td");
+		html.newline();
+		html.startTag("td", "width", "8%", "align", "right", "class", "drawtablerow");
+		html.startTag("a", "href", url);
+		html.text(editString);
+		html.endTag("a");
+		html.endTag("td");
+		html.newline();
+		html.endTag("tr");
+		html.newline();
 
 		return html;
 	}

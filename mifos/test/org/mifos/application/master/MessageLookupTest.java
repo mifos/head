@@ -3,28 +3,19 @@ package org.mifos.application.master;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
-import java.util.Set;
 
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.master.business.LookUpLabelEntity;
-import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.ConfigLocale;
 import org.mifos.config.Localization;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.DatabaseSetup;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
 public class MessageLookupTest {
@@ -32,19 +23,11 @@ public class MessageLookupTest {
 	
 	@BeforeClass
 	public static void init() throws Exception {
-		/*
-		MifosLogManager.configure(FilePaths.LOGFILE);
-		DatabaseSetup.initializeHibernate();
-		TestUtils.initializeSpring();
-		MifosConfiguration.getInstance().init();
-		*/
-		
 		try {
 			Class.forName(TestCaseInitializer.class.getName());
 		} catch (ClassNotFoundException e) {
 			throw new Error("Failed to start up", e);
 		}
-		
 		messageLookup = MessageLookup.getInstance();
 	}
 
@@ -109,6 +92,15 @@ public class MessageLookupTest {
 			// specific label again
 			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);
 			assertEquals("Grupo",messageLookup.lookupLabel(ConfigurationConstants.GROUP, new Locale("es")));
+			
+			assertEquals("Replacement Status", messageLookup.lookup("ReplacementStatus", new Locale("us")));
+			
+			assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter", new Locale("us")));
+			assertEquals("Number of Clients per Center", messageLookup.lookup("NoOfClientsPerCenter.Label", new Locale("us")));
+			assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup", new Locale("us")));
+			assertEquals("Number of Clients per Group", messageLookup.lookup("NoOfClientsPerGroup.Label", new Locale("us")));
+			assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO", new Locale("us")));
+			assertEquals("Distance from HO to BO for office", messageLookup.lookup("DistanceFromHoToBO.Label", new Locale("us")));
 			
 		} finally {
 			messageLookup.setCustomLabel(ConfigurationConstants.GROUP, "", userContext);

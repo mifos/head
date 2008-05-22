@@ -80,20 +80,15 @@ public class StringUtils {
 	/** TODO: delegate to !{@link #isNullOrEmpty(String)} and then
 	    inline. */
 	public static boolean isNullAndEmptySafe(String stringToBeChecked) {
-		return isNullSafe(stringToBeChecked) && !isEmpty(stringToBeChecked);
+		return (stringToBeChecked != null) && !isEmpty(stringToBeChecked);
 	}
 
 	public static boolean isNullOrEmpty(String stringToBeChecked) {
-		return !isNullSafe(stringToBeChecked) || isEmpty(stringToBeChecked);
-	}
-
-	// TODO: inline
-	public static boolean isNullSafe(String stringToBeChecked) {
-		return stringToBeChecked != null;
+		return isEmpty(stringToBeChecked);
 	}
 
 	public static boolean isEmpty(String stringToBeChecked) {
-		return "".equals(stringToBeChecked.trim());
+		return org.apache.commons.lang.StringUtils.isBlank(stringToBeChecked);
 	}
 
 	public static String getMessageWithSubstitution(String bundleName,

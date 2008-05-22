@@ -96,15 +96,9 @@ public class MessageLookup implements MessageSourceAware {
 	public String lookup(String lookupKey, Locale locale) {
 		try {
 			String textMessage = MifosConfiguration.getInstance().getLabel(lookupKey, locale);
-			
 			// if we don't find a message above, then it means that it has not been customized and
 			// we should return the default message from the properties file
-			if (textMessage == null || textMessage.length() == 0) {
-				textMessage = messageSource.getMessage(lookupKey, null, lookupKey, locale);
-				//textMessage = messageSource.getMessage(lookupKey, null, null, locale);
-			}
-			
-			return textMessage;
+			return StringUtils.isEmpty(textMessage) ? messageSource.getMessage(lookupKey, null, lookupKey, locale) : textMessage;
 		}
 		catch (ConfigurationException e) {
 			throw new RuntimeException(e);
@@ -131,15 +125,9 @@ public class MessageLookup implements MessageSourceAware {
 	protected String lookupLabel(String labelKey, Locale locale) {
 		try {
 			String labelText = MifosConfiguration.getInstance().getLabel(labelKey, locale);
-			
 			// if we don't find a label here, then it means that it has not been customized and
 			// we should return the default label from the properties file
-			if (labelText == null || labelText.length() == 0) {
-				labelText = lookup(labelKey + ".Label", locale);
-			}
-			
-			return labelText;
-			
+			return StringUtils.isEmpty(labelText) ? lookup(labelKey + ".Label", locale) : labelText;
 		}
 		catch (ConfigurationException e) {
 			throw new RuntimeException(e);

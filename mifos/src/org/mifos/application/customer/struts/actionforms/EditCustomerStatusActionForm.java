@@ -244,7 +244,7 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
 		Locale locale = userContext.getPreferredLocale();
 		ResourceBundle resources = ResourceBundle.getBundle
 				(FilePaths.CUSTOMER_UI_RESOURCE_PROPERTYFILE, locale);
-		if (!StringUtils.isNullSafe(newStatusId))
+		if (newStatusId == null)
 			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.status")));
 		else if (isNewStatusHasFlag() && !StringUtils.isNullAndEmptySafe(flagId))
 			errors.add(CustomerConstants.MANDATORY_SELECT, new ActionMessage(CustomerConstants.MANDATORY_SELECT, resources.getString("Customer.flag")));

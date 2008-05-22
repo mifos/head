@@ -134,19 +134,10 @@ public class MifosConfiguration {
 		return labelCache.get(new LabelKey( key,localeId));
 	}
 
-	public String getLabel(String key, Locale locale)throws ConfigurationException {
-//		if(locale==null || key==null)
-//			throw new ConfigurationException(ConfigurationConstants.KEY_NO_MESSAGE_FOR_THIS_KEY);
-		
-		if (key == null) {
-			return null;
-		}
-		
+	public String getLabel(String key, Locale locale) throws ConfigurationException {
 		// we only use localeId 1 to store labels since it is an override for
 		// all locales
-		String labelText =getLabelValue(key, (short)1);
-		
-		return labelText;
+		return (key == null) ? null : getLabelValue(key, (short)1);
 	}
 
 	
