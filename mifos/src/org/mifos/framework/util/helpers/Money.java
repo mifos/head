@@ -42,6 +42,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Comparator;
 
 import org.mifos.application.master.business.MifosCurrency;
@@ -539,7 +541,14 @@ public final class Money implements Serializable {
 	@Override
 	public String toString() {
 		if (amount != null && currency != null)
-			return amount.toString();
+		{
+			double doubleValue = amount.doubleValue();
+			String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
+			String formatStr = String.format(format, 0.0);
+			DecimalFormat formatter = new DecimalFormat(formatStr);
+			return  formatter.format(doubleValue);
+			
+		}
 		return "0";
 	}
 
