@@ -1,5 +1,7 @@
 package org.mifos.application.holiday.business;
 
+import static org.mifos.framework.util.helpers.DateUtils.getDateWithoutTimeStamp;
+
 import java.util.Date;
 
 import org.mifos.application.holiday.persistence.HolidayPersistence;
@@ -205,6 +207,13 @@ public class HolidayBO extends BusinessObject {
 				DateUtils.getDateWithoutTimeStamp(thruDate.getTime())) > 0) {
 			throw new ApplicationException(HolidayConstants.INVALIDTHRUDATE);
 		}
+	}
+
+	public boolean encloses(Date date) {
+		return date.compareTo(getDateWithoutTimeStamp(
+				getHolidayFromDate().getTime())) >= 0
+				&& date.compareTo(getDateWithoutTimeStamp(
+						getHolidayThruDate().getTime())) <= 0;
 	}
 
 }

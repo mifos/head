@@ -91,11 +91,7 @@ public class FiscalCalendarRules {
 	public static boolean isWorkingDay(Calendar day) {
 		if (configWorkingDays == null)
 			throw new RuntimeException("The working days are not defined in the config file.");
-		int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
-		Short dayOfWeekShort = new Short((short)dayOfWeek);
-		WeekDay weekDay = WeekDay.getWeekDay(dayOfWeekShort);
-		return isWorkingDay(weekDay);
-		
+		return isWorkingDay(WeekDay.getWeekDay(day.get(Calendar.DAY_OF_WEEK)));
 	}
 	
 	public static boolean isWorkingDay(Short dayOfWeek) {

@@ -4,8 +4,10 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -532,6 +534,25 @@ public class TestHolidayUtils extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter(
 				"Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+	}
+	
+	public void testInHolidayThrowsNPEIfThruDateIsNull() throws Exception {
+		Short branchId = Short.valueOf("3");
+		Date holidayFromDate = DateUtils.getDate(2008, Calendar.MAY, 22);
+		RepaymentRuleEntity repaymentRuleEntity = new RepaymentRuleEntity(
+				RepaymentRuleTypes.NEXT_WORKING_DAY.getValue(),
+				"next working day");
+		List<HolidayBO> holidays = new ArrayList<HolidayBO>();
+		holidays.add(new HolidayBO(new HolidayPK(branchId, holidayFromDate),
+				null, "TestHoliday", repaymentRuleEntity));
+		try {
+			HolidayUtils.inHoliday(DateUtils.getCalendar(DateUtils.getDate(
+					2008, Calendar.MAY, 23)), holidays);
+			fail("Should throw null pointer exception");
+		}
+		catch (NullPointerException e) {
+		}
+
 	}
 	
 }
