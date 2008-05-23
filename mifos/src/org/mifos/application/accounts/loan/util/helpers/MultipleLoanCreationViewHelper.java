@@ -115,7 +115,7 @@ public class MultipleLoanCreationViewHelper {
 	}
 
 	public boolean isApplicable() {
-		return StringUtils.isNullAndEmptySafe(selected);
+		return Boolean.valueOf(selected);
 	}
 
 	public String getSelected() {
@@ -128,5 +128,9 @@ public class MultipleLoanCreationViewHelper {
 
 	public ClientBO getClient() {
 		return client;
+	}
+
+	public void resetSelected() {
+		this.selected = Boolean.FALSE.toString();
 	}
 }

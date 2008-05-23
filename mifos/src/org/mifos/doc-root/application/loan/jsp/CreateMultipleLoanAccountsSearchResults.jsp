@@ -180,11 +180,10 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="loan.business_work_act" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
 											</td>
 										</tr>
-										<c:out value="${sessionScope.multipleloansactionform.stateSelected}"/>
 										<c:forEach var="clientDetail" varStatus="loopStatus" items="${sessionScope.multipleloansactionform.clientDetails}" >
 										<tr>
 											<td valign="top" class="drawtablerow">
-												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="${clientDetail.client.customerId}" onclick="selectAllCheck(this)" />
+												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="true" onclick="selectAllCheck(this)"/>
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 

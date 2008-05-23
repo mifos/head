@@ -413,7 +413,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("stateSelected", "1");
-		addRequestParameter("clientDetails[0].selected", client.getCustomerId().toString());
+		addRequestParameter("clientDetails[0].selected", "true");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
@@ -460,7 +460,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("centerSearchId", center.getSearchId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		addRequestParameter("clientDetails[0].selected", client.getCustomerId().toString());
+		addRequestParameter("clientDetails[0].selected", "true");
 		addRequestParameter("clientDetails[0].loanAmount", "300");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));

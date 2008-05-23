@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
@@ -289,4 +290,13 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 		}
 	}
 
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		super.reset(mapping, request);
+		CollectionUtils.forAllDo(clientDetails, new Closure() {
+			public void execute(Object arg0) {
+				((MultipleLoanCreationViewHelper)arg0).resetSelected();
+			}
+		});
+	}
 }
