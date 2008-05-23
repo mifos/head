@@ -66,7 +66,9 @@ public class ResourceLoader {
 		}
 
 		if(null!= url){
-			uri =url.toURI();
+			// Encoding spaces in URL in order to fix issue 1759 (https://mifos.dev.java.net/issues/show_bug.cgi?id=1759)
+			String encodedURL = url.toString().replaceAll(" ", "%20");
+			uri = new URI(encodedURL);			
 		}
 
 		return uri;

@@ -23,19 +23,19 @@
  *
  */
 package org.mifos.framework.components.logger;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
+import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.mifos.config.Localization;
 
 /**	
  *  A class with static methods to obtain instances of the logger. It also keeps a HashMap of the actual logger instances per module
@@ -175,11 +175,10 @@ public class MifosLogManager {
 	 */
 	public static void readConfiguration(String fileName)
 	throws MalformedURLException, URISyntaxException {
-		URL url = ResourceLoader.getURI(fileName).toURL();
-		//url = MifosLogManager.class.getClassLoader().getResource(fileName);
+		File configFile = new File(ResourceLoader.getURI(fileName));
 
 		MifosDOMConfigurator.configureAndWatch(
-			url.getPath(), LoggerConstants.DELAY);
+			configFile.getAbsolutePath() , LoggerConstants.DELAY);
 	}
 
 	public static Locale getMFILocale(){
