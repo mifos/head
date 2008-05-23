@@ -19,6 +19,16 @@
  */
 package org.mifos.application.productdefinition.business;
 
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+import static org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
 import static org.mifos.framework.util.CollectionUtils.find;
 import static org.mifos.framework.util.CollectionUtils.first;
 import static org.mifos.framework.util.CollectionUtils.last;
@@ -44,7 +54,6 @@ import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionF
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -159,8 +168,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				maxNoInstallments, minNoInstallments, defNoInstallments,
 				loanCounter, intDedDisbursement, prinDueLastInst, funds, fees,
 				meeting, principalGLcode, interestGLcode,
-				ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.toString(),
-				ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.toString());
+				LOANAMOUNTSAMEFORALLLOAN.toString(),
+				NOOFINSTALLSAMEFORALLLOAN.toString());
 	}
 
 	public LoanOfferingBO(UserContext userContext, String prdOfferingName,
@@ -206,13 +215,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.noOfInstallFromLoanCycle = new HashSet<NoOfInstallFromLoanCycleBO>();
 		this.loanAmountSameForAllLoan = new HashSet<LoanAmountSameForAllLoanBO>();
 		this.noOfInstallSameForAllLoan = new HashSet<NoOfInstallSameForAllLoanBO>();
-		if (new Short(loanAmtCalcType).equals(ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)) {
+		if (new Short(loanAmtCalcType).equals(LOANAMOUNTSAMEFORALLLOAN)) {
 			loanAmountSameForAllLoan.add(new LoanAmountSameForAllLoanBO(Double
 					.parseDouble(minLoanAmount.toString()), Double
 					.parseDouble(maxLoanAmount.toString()), Double
 					.parseDouble(defaultLoanAmount.toString()), this));
 		}
-		if (new Short(calcInstallmentType).equals(ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN)) {
+		if (new Short(calcInstallmentType).equals(NOOFINSTALLSAMEFORALLLOAN)) {
 			noOfInstallSameForAllLoan.add(new NoOfInstallSameForAllLoanBO(
 					(Short.parseShort(minNoInstallments.toString())), Short
 							.parseShort(maxNoInstallments.toString()), Short
@@ -688,7 +697,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				||(interestTypes.getId().equals(InterestType.DECLINING_EPI.getValue())))
 				&& intDedDisbursement) {
 			throw new ProductDefinitionException(
-					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
+					DECLINEINTERESTDISBURSEMENTDEDUCTION);
 		}
 
 	}
@@ -722,7 +731,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				||(interestTypes.getId().equals(InterestType.DECLINING_EPI.getValue())))
 				&& intDedDisbursement) {
 			throw new ProductDefinitionException(
-					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
+					DECLINEINTERESTDISBURSEMENTDEDUCTION);
 		}
 
 	}
@@ -762,7 +771,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 								.getRecurrenceId()))
 			return true;
 		else throw new ProductDefinitionException(
-				ProductDefinitionConstants.ERRORFEEFREQUENCY);
+				ERRORFEEFREQUENCY);
 
 	}
 
@@ -990,7 +999,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 */
 	private void populateLoanAmountAndInstall(
 			LoanPrdActionForm loanPrdActionForm) {
-		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN) {
+		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTFROMLASTLOAN) {
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountSameForAllLoan.clear();
@@ -1032,7 +1041,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					loanPrdActionForm.getStartRangeLoanAmt6().doubleValue(),
 					loanPrdActionForm.getEndRangeLoanAmt6().doubleValue(), this));
 		}
-		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN)) {
+		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTFROMLASTLOAN)) {
 			this.noOfInstallFromLastLoan.clear();
 			this.noOfInstallFromLoanCycle.clear();
 			this.noOfInstallSameForAllLoan.clear();
@@ -1074,7 +1083,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					loanPrdActionForm.getEndInstallmentRange6().doubleValue(), this));
 
 		}
-		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE)) {
+		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (LOANAMOUNTFROMLOANCYCLE)) {
 			this.loanAmountFromLoanCycle.clear();
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountSameForAllLoan.clear();
@@ -1112,7 +1121,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 							"5"), this));
 
 		}
-		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE)) {
+		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTFROMLOANCYCLE)) {
 			this.noOfInstallFromLoanCycle.clear();
 			this.noOfInstallFromLastLoan.clear();
 			this.noOfInstallSameForAllLoan.clear();
@@ -1149,7 +1158,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					Short.valueOf(loanPrdActionForm.getDefCycleInstallment6()),
 					new Short("5"), this));
 		}
-		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)) {
+		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (LOANAMOUNTSAMEFORALLLOAN)) {
 			this.loanAmountSameForAllLoan.clear();
 			this.loanAmountFromLastLoan.clear();
 			this.loanAmountFromLoanCycle.clear();
@@ -1158,7 +1167,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 							.getMaxLoanAmountValue(), loanPrdActionForm
 							.getDefaultLoanAmountValue(), this));
 		}
-		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN)) {
+		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTSAMEFORALLLOAN)) {
 			this.noOfInstallSameForAllLoan.clear();
 			this.noOfInstallFromLastLoan.clear();
 			this.noOfInstallFromLoanCycle.clear();
@@ -1179,15 +1188,15 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 */
 	public Short checkLoanAmountType() {
 		if (!getLoanAmountSameForAllLoan().isEmpty()) {
-			return ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+			return LOANAMOUNTSAMEFORALLLOAN;
 		}
 		else if (!getLoanAmountFromLastLoan().isEmpty()) {
-			return ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+			return LOANAMOUNTFROMLASTLOAN;
 		}
 		else if (!getLoanAmountFromLoanCycle().isEmpty()) {
-			return ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+			return LOANAMOUNTFROMLOANCYCLE;
 		}
-		return ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
+		return LOANAMOUNTTYPE_UNKNOWN;
 	}
 
 	/**
@@ -1197,15 +1206,15 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	 */
 	public Short checkNoOfInstallType() {
 		if (!getNoOfInstallSameForAllLoan().isEmpty()) {
-			return ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+			return NOOFINSTALLSAMEFORALLLOAN;
 		}
 		else if (!getNoOfInstallFromLastLoan().isEmpty()) {
-			return ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+			return NOOFINSTALLFROMLASTLOAN;
 		}
 		else if (!getNoOfInstallFromLoanCycle().isEmpty()) {
-			return ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
+			return NOOFINSTALLFROMLOANCYCLLE;
 		}
-		return ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
+		return NOOFINSTALL_UNKNOWN;
 	}
 
 	@Override
@@ -1239,36 +1248,36 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	}
 
 	public boolean isLoanAmountTypeAsOfLastLoanAmount() {
-		return ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN.equals(checkLoanAmountType());
+		return LOANAMOUNTFROMLASTLOAN.equals(checkLoanAmountType());
 	}
 
 	public boolean isLoanAmountTypeSameForAllLoan() {
-		return ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.equals(checkLoanAmountType());
+		return LOANAMOUNTSAMEFORALLLOAN.equals(checkLoanAmountType());
 	}
 
 	public boolean isLoanAmountTypeFromLoanCycle() {
-		return ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE.equals(checkLoanAmountType());
+		return LOANAMOUNTFROMLOANCYCLE.equals(checkLoanAmountType());
 	}
 
 	public boolean isNoOfInstallTypeFromLastLoan() {
-		return ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN.equals(checkNoOfInstallType());
+		return NOOFINSTALLFROMLASTLOAN.equals(checkNoOfInstallType());
 	}
 
 	public boolean isNoOfInstallTypeSameForAllLoan() {
-		return ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.equals(checkNoOfInstallType());
+		return NOOFINSTALLSAMEFORALLLOAN.equals(checkNoOfInstallType());
 	}
 
 	public boolean isNoOfInstallTypeFromLoanCycle() {
-		return ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE.equals(checkNoOfInstallType());
+		return NOOFINSTALLFROMLOANCYCLLE.equals(checkNoOfInstallType());
 	}
 
 	public boolean isLoanAmountOfTypeUnknown() {
-		return ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN.equals(checkLoanAmountType());	
+		return LOANAMOUNTTYPE_UNKNOWN.equals(checkLoanAmountType());	
 		
 	}
 
 	public boolean isNoOfInstallTypeUnknown() {
-		return ProductDefinitionConstants.NOOFINSTALL_UNKNOWN.equals(checkNoOfInstallType());
+		return NOOFINSTALL_UNKNOWN.equals(checkNoOfInstallType());
 	}
 
 	// FIXME: move this into test code.

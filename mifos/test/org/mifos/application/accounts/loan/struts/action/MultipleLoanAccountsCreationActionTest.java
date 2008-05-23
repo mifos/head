@@ -1,5 +1,11 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,14 +20,10 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -36,8 +38,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class MultipleLoanAccountsCreationActionTest extends
 		MifosMockStrutsTestCase {
@@ -340,8 +340,6 @@ public class MultipleLoanAccountsCreationActionTest extends
 		performNoErrors();
 		verifyForward(ActionForwards.get_success.toString());
 
-		assertEquals(1, ((List) SessionUtils.getAttribute(
-				LoanConstants.MULTIPLE_LOANS_CLIENTS_LIST, request)).size());
 		// this retrieve the loan purposes so this is 129 if empty lookup name are removed
 		assertEquals(131, ((List) SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIES, request)).size());
@@ -395,7 +393,6 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
 				ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
-//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -416,7 +413,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("stateSelected", "1");
-		addRequestParameter("clients[0]", client.getCustomerId().toString());
+		addRequestParameter("clientDetails[0].selected", client.getCustomerId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
@@ -449,7 +446,6 @@ public class MultipleLoanAccountsCreationActionTest extends
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
 				ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
-//		loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -464,7 +460,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("centerSearchId", center.getSearchId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		addRequestParameter("clients[0]", client.getCustomerId().toString());
+		addRequestParameter("clientDetails[0].selected", client.getCustomerId().toString());
 		addRequestParameter("clientDetails[0].loanAmount", "300");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));

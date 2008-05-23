@@ -1,5 +1,4 @@
 package org.mifos.application.accounts.loan.business;
-
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
@@ -7,6 +6,8 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.DateUtils.currentDate;
 import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
 import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
+import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
@@ -2882,7 +2883,7 @@ public class TestLoanBO extends MifosTestCase {
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>());
+					new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 			assertFalse("The Loan object is created for null loan offering",
 					true);
 		}
@@ -2961,7 +2962,7 @@ public class TestLoanBO extends MifosTestCase {
 							.valueOf("6"),
 					new Date(System.currentTimeMillis()), false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),
-					new ArrayList<CustomFieldView>());
+					new ArrayList<CustomFieldView>(), DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 			assertFalse("The Loan object is created for inactive customer",
 					true);
 		}
@@ -4096,7 +4097,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
-				(short) 0, new FundBO(), feeViewList, null);
+				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 
 		HashMap fees0 = new HashMap();
@@ -4186,7 +4187,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, 1.2, (short) 1,
-				new FundBO(), feeViewList, null);
+				new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 
 		HashMap fees0 = new HashMap();
@@ -4311,7 +4312,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), disbursementDate
 						.getTime(), false, 1.2, (short) 0, new FundBO(),
-				feeViewList, null);
+				feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 
 		HashMap fees1 = new HashMap();
@@ -4425,7 +4426,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), disbursementDate
 						.getTime(), false, 1.2, (short) 0, new FundBO(),
-				feeViewList, null);
+				feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 
 		disbursementDate = new GregorianCalendar();
@@ -4788,7 +4789,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
-				(short) 0, new FundBO(), feeViewList, null);
+				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 		HibernateUtil.closeSession();
@@ -4869,7 +4870,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, 1.2,
-				(short) 0, new FundBO(), feeViewList, null);
+				(short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 		HibernateUtil.closeSession();
@@ -5255,7 +5256,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_APPROVED, new Money("300.0"), Short
 						.valueOf("6"), new Date(System.currentTimeMillis()),
-				false, 10.0, (short) 0, new FundBO(), feeViews, null);
+				false, 10.0, (short) 0, new FundBO(), feeViews, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			loan.save();
@@ -5325,7 +5326,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), startDate, false, // 6
 				// installments
-				12.0, (short) 0, new FundBO(), feeViewList, null);
+				12.0, (short) 0, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 
@@ -5383,7 +5384,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
-				12.0, graceDuration, new FundBO(), feeViewList, null);
+				12.0, graceDuration, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 		HashMap fees0 = new HashMap();
@@ -5447,7 +5448,7 @@ public class TestLoanBO extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, // 6 installments
-				12.0, graceDuration, new FundBO(), feeViewList, null);
+				12.0, graceDuration, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
 

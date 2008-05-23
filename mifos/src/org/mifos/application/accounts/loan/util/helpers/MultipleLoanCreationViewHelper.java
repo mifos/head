@@ -21,20 +21,38 @@ package org.mifos.application.accounts.loan.util.helpers;
 
 import static org.mifos.framework.util.helpers.FormUtils.getDoubleValue;
 import static org.mifos.framework.util.helpers.NumberUtils.*;
+
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.productdefinition.business.LoanAmountOption;
+import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class MultipleLoanCreationViewHelper {
-
-	private String clientId;
-
-	private String clientName;
 
 	private String loanAmount;
 
 	private String businessActivity;
 
 	private LoanAmountOption loanAmountOption;
+	
+	private LoanOfferingInstallmentRange installmentOption;
+
+	private ClientBO client;
+
+	private String selected;
+
+	public MultipleLoanCreationViewHelper(ClientBO client,
+			LoanAmountOption loanAmountOption, LoanOfferingInstallmentRange installmentOption) {
+		super();
+		this.client = client;
+		this.loanAmountOption = loanAmountOption;
+		this.installmentOption = installmentOption;
+		this.loanAmount = getDefaultLoanAmount().toString();
+	}
+
+	public MultipleLoanCreationViewHelper() {
+		this(null, null, null);
+	}
 
 	public String getBusinessActivity() {
 		return businessActivity;
@@ -44,12 +62,8 @@ public class MultipleLoanCreationViewHelper {
 		this.businessActivity = businessActivity;
 	}
 
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+	public Integer getClientId() {
+		return client.getCustomerId();
 	}
 
 	public String getLoanAmount() {
@@ -61,19 +75,7 @@ public class MultipleLoanCreationViewHelper {
 	}
 
 	public String getClientName() {
-		return clientName;
-	}
-
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-	}
-
-	public void setLoanAmountOption(LoanAmountOption loanAmountOption) {
-		this.loanAmountOption = loanAmountOption;
-	}
-
-	public LoanAmountOption getLoanAmountOption() {
-		return loanAmountOption;
+		return client.getDisplayName();
 	}
 
 	public boolean isLoanAmountInRange() {
@@ -90,5 +92,41 @@ public class MultipleLoanCreationViewHelper {
 	public Double getMaxLoanAmount() {
 		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
 				.getMaxLoanAmount();
+	}
+	
+	public Double getDefaultLoanAmount() {
+		return loanAmountOption == null ? DOUBLE_ZERO : loanAmountOption
+				.getDefaultLoanAmount();
+	}
+
+	public Short getDefaultNoOfInstall() {
+		return installmentOption == null ? SHORT_ZERO : installmentOption
+				.getDefaultNoOfInstall();
+	}
+
+	public Short getMaxNoOfInstall() {
+		return installmentOption == null ? SHORT_ZERO : installmentOption
+				.getMaxNoOfInstall();
+	}
+
+	public Short getMinNoOfInstall() {
+		return installmentOption == null ? SHORT_ZERO : installmentOption
+				.getMinNoOfInstall();
+	}
+
+	public boolean isApplicable() {
+		return StringUtils.isNullAndEmptySafe(selected);
+	}
+
+	public String getSelected() {
+		return selected;
+	}
+
+	public void setSelected(String selected) {
+		this.selected = selected;
+	}
+
+	public ClientBO getClient() {
+		return client;
 	}
 }

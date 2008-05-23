@@ -18,15 +18,35 @@
  * explanation of the license and how it is applied.
  */
 package org.mifos.application.accounts.business;
+import static org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.*;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
+import org.mifos.application.accounts.util.helpers.FeeInstallment;
+import org.mifos.application.accounts.util.helpers.InstallmentDate;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -43,8 +63,6 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -55,17 +73,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
-import java.util.List;
 
 
 
 public class AccountBO extends BusinessObject {
-
-	@Override
-	public String toString() {
-        return "{" +
-                globalAccountNum + "}";
-    }
 
     private final Integer accountId;
 
@@ -1383,6 +1394,15 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public boolean isLoanAccount() {
-		return AccountTypes.LOAN_ACCOUNT == getType();
+		return isOfType(LOAN_ACCOUNT);
 	}
+
+	public boolean isOfType(AccountTypes accountType) {
+		return accountType.equals(getType());
+	}
+
+	@Override
+	public String toString() {
+		return "{" + globalAccountNum + "}";
+	}	
 }

@@ -78,6 +78,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 
 
 
@@ -598,7 +600,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
-				new FundBO(), feeViewList, null);
+				new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		
 		return loan;
        
@@ -944,7 +946,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
-				new FundBO(), feeViewList, null);
+				new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
        
 		
 		PaymentData paymentData = null;
@@ -1018,7 +1020,7 @@ public class LoanCalculationTest extends MifosTestCase {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
-				new FundBO(), feeViewList, null);
+				new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
        
 		
 		PaymentData paymentData = null;
@@ -1660,7 +1662,7 @@ class LoanTestCaseData {
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
 				new Money(loanParams.getPrincipal()), loanParams.getNumberOfPayments(), startDate, false, 
 				Double.parseDouble(loanParams.getAnnualInterest()), config.getGracePeriod(), 
-				new FundBO(), feeViewList, null);
+				new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		
 		
 		new TestObjectPersistence().persist(accountBO);
@@ -2438,7 +2440,7 @@ class LoanTestCaseData {
 		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
 				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
 				loanAmount), numberOfInstallments, startDate, false, 
-				interestRate, gracePeriodDuration, new FundBO(), feeViewList, null);
+				interestRate, gracePeriodDuration, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
 		
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(numberOfInstallments, accountBO.getAccountActionDates().size());

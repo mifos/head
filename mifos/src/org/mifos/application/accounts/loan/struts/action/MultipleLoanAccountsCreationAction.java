@@ -37,7 +37,7 @@
  */
 
 package org.mifos.application.accounts.loan.struts.action;
-
+import static org.mifos.framework.util.CollectionUtils.collect;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,6 +73,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.ClientRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -90,13 +92,18 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.config.ClientRules;
-import org.mifos.config.ProcessFlowRules;
-
+import org.mifos.framework.util.helpers.Transformer;
 public class MultipleLoanAccountsCreationAction extends BaseAction {
-
+	
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private LoanPrdBusinessService loanPrdBusinessService;
+	private ClientBusinessService clientBusinessService;
+
+	public MultipleLoanAccountsCreationAction() {
+		loanPrdBusinessService = new LoanPrdBusinessService();
+		clientBusinessService = new ClientBusinessService();
+	}
 
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
@@ -199,12 +206,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		CustomerBO customer = new CustomerBusinessService()
 				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
 		
-		// FIX ME remove next two lines, doesn't make sense to me
+		// FIXME remove next two lines, doesn't make sense to me
 		customer.getOffice().getOfficeId();
 		customer.getPersonnel().getPersonnelId();
 		
 		loanActionForm.setCenterSearchId(customer.getSearchId());
-		List<LoanOfferingBO> loanOfferings = new LoanPrdBusinessService()
+		List<LoanOfferingBO> loanOfferings = loanPrdBusinessService
 				.getApplicablePrdOfferings(new CustomerLevelEntity(
 						CustomerLevel.CLIENT));
 		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
@@ -220,19 +227,16 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 			throws Exception {
 		logger.debug("Inside get method");
 		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-		List<ClientBO> clients = new ClientBusinessService()
+		List<ClientBO> clients = clientBusinessService
 				.getActiveClientsUnderParent(
 						loanActionForm.getCenterSearchId(),
 						getShortValue(loanActionForm.getBranchOfficeId()));
-		if (clients == null || clients.size() == 0) {
+		if (clients == null || clients.isEmpty()) 
 			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
-		}
-		LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(
+		LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(
 				getShortValue(loanActionForm.getPrdOfferingId()),
 				getUserContext(request).getLocaleId());
-		setClientDetails(loanActionForm, loanOffering, clients);
-		SessionUtils.setCollectionAttribute(
-				LoanConstants.MULTIPLE_LOANS_CLIENTS_LIST, clients, request);
+		loanActionForm.setClientDetails(buildClientViewHelper(loanOffering, clients));
 		SessionUtils
 				.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
 						new MasterDataService()
@@ -290,17 +294,20 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 				&& applicableClientDetails.size() > 0) {
 			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
 				CustomerBO client = new CustomerBusinessService()
-						.getCustomer(getIntegerValue(clientDetail.getClientId()));
-				LoanBO loan = LoanBO.createLoan(getUserContext(request), loanOffering,
-						client, AccountState
+						.getCustomer(clientDetail.getClientId());
+				LoanBO loan = LoanBO.createLoan(getUserContext(request),
+						loanOffering, client, AccountState
 								.fromShort(getShortValue(loanActionForm
 										.getStateSelected())),
-										//TODO issue 1550 hardcoding installment as 3 for time being
-						getMoney(clientDetail.getLoanAmount()), Short.valueOf("3"), center
+						getMoney(clientDetail.getLoanAmount()), clientDetail
+								.getDefaultNoOfInstall(), center
 								.getCustomerAccount().getNextMeetingDate(),
 						loanOffering.isIntDedDisbursement(), loanOffering
 								.getDefInterestRate(), loanOffering
-								.getGracePeriodDuration(), null, null, null);
+								.getGracePeriodDuration(), null, null, null,clientDetail.getMaxLoanAmount(), clientDetail
+								.getMinLoanAmount(), clientDetail
+								.getMaxNoOfInstall(), clientDetail
+								.getMinNoOfInstall());
 				loan.setBusinessActivityId(getIntegerValue(clientDetail
 						.getBusinessActivity()));
 				loan.save();
@@ -370,31 +377,28 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 		return valueToBeChecked % valueToBeCheckedWith == 0;
 	}
 
-	private void setClientDetails(
-			MultipleLoanAccountsCreationActionForm loanActionForm,
-			LoanOfferingBO loanOffering, List<ClientBO> clients) {
-		logger.debug("inside setClientDetails method");
-		List<MultipleLoanCreationViewHelper> clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
-		if (clients != null && clients.size() > 0) {
-			for (ClientBO client : clients) {
-				MultipleLoanCreationViewHelper clientDetail = new MultipleLoanCreationViewHelper();
-				clientDetail
-						.setClientId(getStringValue(client.getCustomerId()));
-				clientDetail.setClientName(client.getDisplayName());
-				clientDetail
-						.setLoanAmountOption(loanOffering
-								.eligibleLoanAmount(
-										client.getMaxLoanAmount(loanOffering),
-										client
-												.getMaxLoanCycleForProduct(loanOffering)));
-				// TODO: set loan amount min for this client for this loan
-				// TODO: set loan amount max for this client for this loan
-				// TODO: set #installments for this client for this loan
-				clientDetails.add(clientDetail);
-			}
-		}
-		loanActionForm.setClientDetails(clientDetails);
-		logger.debug("outside setClientDetails method");
+	private List<MultipleLoanCreationViewHelper> buildClientViewHelper(
+			final LoanOfferingBO loanOffering, List<ClientBO> clients) {
+		return (List<MultipleLoanCreationViewHelper>) collect(clients,
+				new Transformer<ClientBO, MultipleLoanCreationViewHelper>() {
+					public MultipleLoanCreationViewHelper transform(
+							ClientBO client) {
+						return new MultipleLoanCreationViewHelper(
+								client,
+								loanOffering
+										.eligibleLoanAmount(
+												client
+														.getMaxLoanAmount(loanOffering),
+												client
+														.getMaxLoanCycleForProduct(loanOffering)),
+								loanOffering
+										.eligibleNoOfInstall(
+												client
+														.getMaxLoanAmount(loanOffering),
+												client
+														.getMaxLoanCycleForProduct(loanOffering)));
+					}
+				});
 	}
 
 	protected void checkPermissionForCreate(Short newState,

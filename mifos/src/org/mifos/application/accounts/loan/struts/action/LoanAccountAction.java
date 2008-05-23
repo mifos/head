@@ -745,25 +745,11 @@ public class LoanAccountAction extends AccountAppAction {
         
 
   		if (perspective != null && perspective.equalsIgnoreCase("redoloan")) {
-			loan = LoanBO.redoLoan(getUserContext(request), loanOffering,
-					customer, AccountState.LOAN_PARTIAL_APPLICATION,
-					loanActionForm.loanAmountValue(), loanActionForm
-							.getNoOfInstallmentsValue(), loanActionForm
-							.getDisbursementDateValue(getUserContext(request)
-									.getPreferredLocale()), loanActionForm
-							.isInterestDedAtDisbValue(), loanActionForm
-							.getInterestDoubleValue(), loanActionForm
-							.getGracePeriodDurationValue(), getFund(request,
-							loanActionForm.getLoanOfferingFundValue()),
-					loanActionForm.getFeesToApply(), loanActionForm
-							.getCustomFields(),isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
-		}
-		else {
-				loan = LoanBO.createLoan(getUserContext(request), loanOffering,
-					customer, AccountState.LOAN_PARTIAL_APPLICATION,
-					loanActionForm.loanAmountValue(), loanActionForm
-									.getNoOfInstallmentsValue(),
-							loanActionForm
+			loan = LoanBO
+					.redoLoan(getUserContext(request), loanOffering, customer,
+							AccountState.LOAN_PARTIAL_APPLICATION,
+							loanActionForm.loanAmountValue(), loanActionForm
+									.getNoOfInstallmentsValue(), loanActionForm
 									.getDisbursementDateValue(getUserContext(
 											request).getPreferredLocale()),
 							loanActionForm.isInterestDedAtDisbValue(),
@@ -771,13 +757,36 @@ public class LoanAccountAction extends AccountAppAction {
 							loanActionForm.getGracePeriodDurationValue(),
 							getFund(request, loanActionForm
 									.getLoanOfferingFundValue()),
-							loanActionForm.getFeesToApply(),
-							loanActionForm.getCustomFields(), 
-							loanActionForm.getMinLoanAmountValue(),
-							loanActionForm.getMaxLoanAmountValue(),
+							loanActionForm.getFeesToApply(), loanActionForm
+									.getCustomFields(), loanActionForm
+									.getMaxLoanAmountValue(), loanActionForm
+									.getMinLoanAmountValue(), loanActionForm
+									.getMaxNoInstallmentsValue(),
 							loanActionForm.getMinNoInstallmentsValue(),
-							loanActionForm.getMaxNoInstallmentsValue(),
-					isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
+							isRepaymentIndepOfMeetingEnabled,
+							newMeetingForRepaymentDay);
+		}
+		else {
+				loan = LoanBO
+					.createLoan(getUserContext(request), loanOffering,
+							customer, AccountState.LOAN_PARTIAL_APPLICATION,
+							loanActionForm.loanAmountValue(), loanActionForm
+									.getNoOfInstallmentsValue(), loanActionForm
+									.getDisbursementDateValue(getUserContext(
+											request).getPreferredLocale()),
+							loanActionForm.isInterestDedAtDisbValue(),
+							loanActionForm.getInterestDoubleValue(),
+							loanActionForm.getGracePeriodDurationValue(),
+							getFund(request, loanActionForm
+									.getLoanOfferingFundValue()),
+							loanActionForm.getFeesToApply(), loanActionForm
+									.getCustomFields(), loanActionForm
+									.getMaxLoanAmountValue(), loanActionForm
+									.getMinLoanAmountValue(), loanActionForm
+									.getMaxNoInstallmentsValue(),
+							loanActionForm.getMinNoInstallmentsValue(),
+							isRepaymentIndepOfMeetingEnabled,
+							newMeetingForRepaymentDay);
 		}
 		loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
 		loan.setCollateralNote(loanActionForm.getCollateralNote());

@@ -37,10 +37,12 @@
  */
 
 package org.mifos.application.accounts.loan.struts.actionforms;
+import static org.mifos.framework.util.CollectionUtils.select;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,13 +54,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
-import org.mifos.application.productdefinition.business.LoanAmountOption;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -70,9 +66,9 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import java.util.ResourceBundle;
 
 public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 	private MifosLogger logger = MifosLogManager
@@ -88,18 +84,12 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 
 	private String prdOfferingId;
 
-	private List<String> clients;
-
 	private List<MultipleLoanCreationViewHelper> clientDetails;
 
 	private String stateSelected;
 
-	private CustomerBusinessService customerBusinessService;
-
 	public MultipleLoanAccountsCreationActionForm() {
-		clients = new ArrayList<String>();
 		clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
-		customerBusinessService = new CustomerBusinessService();
 	}
 
 	public List<MultipleLoanCreationViewHelper> getClientDetails() {
@@ -111,60 +101,20 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 		this.clientDetails = clientDetails;
 	}
 
-	public MultipleLoanCreationViewHelper getClientDetails(int i) {
-		while (i >= clientDetails.size())
-			clientDetails.add(new MultipleLoanCreationViewHelper());
-		return clientDetails.get(i);
-	}
-
-	public void setClientDetails(int i,
-			MultipleLoanCreationViewHelper clientDetail) {
-		while (this.clientDetails.size() <= i)
-			this.clientDetails.add(new MultipleLoanCreationViewHelper());
-		this.clientDetails.set(i, clientDetail);
-	}
-
 	public List<MultipleLoanCreationViewHelper> getApplicableClientDetails() {
-		List<MultipleLoanCreationViewHelper> applicableClientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
-		List<String> applicableClients = getApplicableClients();
-		if (applicableClients != null && applicableClients.size() > 0) {
-			for (String clientId : applicableClients) {
-				for (MultipleLoanCreationViewHelper clientDetail : clientDetails) {
-					if (clientDetail.getClientId().equals(clientId)) {
-						applicableClientDetails.add(clientDetail);
-					}
-				}
-			}
+		try {
+			return (List<MultipleLoanCreationViewHelper>) select(clientDetails,
+							new Predicate<MultipleLoanCreationViewHelper>() {
+								public boolean evaluate(
+										MultipleLoanCreationViewHelper clientDetail)
+										throws Exception {
+									return clientDetail.isApplicable();
+								}
+							});
 		}
-		return applicableClientDetails;
-	}
-
-	public List<String> getClients() {
-		return clients;
-	}
-
-	public void setClients(List<String> accountRecords) {
-		this.clients = accountRecords;
-	}
-
-	public String getClients(int i) {
-		while (i >= clients.size())
-			clients.add("");
-		return clients.get(i).toString();
-	}
-
-	public void setClients(int i, String string) {
-		while (this.clients.size() <= i)
-			this.clients.add(new String());
-		this.clients.set(i, string);
-	}
-
-	private List<String> getApplicableClients() {
-		List<String> applicableClients = new ArrayList<String>();
-		for (String clientId : getClients())
-			if (StringUtils.isNullAndEmptySafe(clientId))
-				applicableClients.add(clientId);
-		return applicableClients;
+		catch (Exception e) {
+			return new ArrayList<MultipleLoanCreationViewHelper>();
+		}
 	}
 
 	public String getBranchOfficeId() {
@@ -213,13 +163,6 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 
 	public void setStateSelected(String stateSelected) {
 		this.stateSelected = stateSelected;
-	}
-
-	@Override
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		super.reset(mapping, request);
-		clients.clear();
-		clients = new ArrayList<String>();
 	}
 
 	@Override

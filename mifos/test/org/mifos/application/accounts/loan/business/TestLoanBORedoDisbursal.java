@@ -18,7 +18,8 @@
  * explanation of the license and how it is applied.
  */
 package org.mifos.application.accounts.loan.business;
-
+import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -147,12 +148,13 @@ public class TestLoanBORedoDisbursal extends MifosTestCase {
         MifosCurrency currency = TestObjectFactory.getCurrency();
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, numberOfInstallments);
-        LoanBO loan = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group,
-				AccountState.LOAN_APPROVED, new Money(currency, "300.0"),
-                numberOfInstallments, meetingDates.get(0), false, 0.0, (short) 0,
-                new FundBO(), new ArrayList<FeeView>(), null,false,null);
+        LoanBO loan = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering,
+				group, AccountState.LOAN_APPROVED,
+				new Money(currency, "300.0"), numberOfInstallments,
+				meetingDates.get(0), false, 0.0, (short) 0, new FundBO(),
+				new ArrayList<FeeView>(), null, DOUBLE_ZERO, DOUBLE_ZERO,
+				SHORT_ZERO, SHORT_ZERO, false, null);
         loan.save();
-
         return loan;
     }
 

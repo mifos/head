@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -164,7 +163,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		Money amountOverDue = new Money();
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : client.getAccounts()) {
-			if (accountBO.getType() == AccountTypes.LOAN_ACCOUNT
+			if (accountBO.isLoanAccount()
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());

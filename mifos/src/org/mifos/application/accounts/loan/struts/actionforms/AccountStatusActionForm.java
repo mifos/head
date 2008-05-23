@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.FilePaths;
@@ -156,7 +157,7 @@ public class AccountStatusActionForm extends BaseActionForm {
 			String notes = resources.getString("loan.notes");
 			String note = resources.getString("loan.note");
 			if (getApplicableAccountRecords().size() == 0)
-				addError(errors, "records", "errors.alleastonerecord",
+				addError(errors, "records", LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD,
 						account);
 			if (StringUtils.isNullOrEmpty(getComments()))
 				addError(errors, "comments", "errors.mandatory", notes);

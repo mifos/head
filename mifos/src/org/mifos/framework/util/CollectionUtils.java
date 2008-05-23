@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.LoanCounter;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.Transformer;
@@ -30,7 +32,7 @@ public class CollectionUtils {
 		return null != find(collections, predicate);
 	}
 
-	public static <T> List<T> asList(T ... elements) {
+	public static <T> List<T> asList(T... elements) {
 		List<T> list = new ArrayList<T>();
 		for (T element : elements) {
 			list.add(element);
@@ -44,8 +46,9 @@ public class CollectionUtils {
 		return collectionSheetsForMeetingDate;
 	}
 
-	public static<T> T first(Collection<T> collection) {
-		if(collection==null || collection.isEmpty()) return null;
+	public static <T> T first(Collection<T> collection) {
+		if (collection == null || collection.isEmpty())
+			return null;
 		return collection.iterator().next();
 	}
 
@@ -59,7 +62,7 @@ public class CollectionUtils {
 		}
 		return elem;
 	}
-	
+
 	public static <T> T last(List<T> list) {
 		if (list == null || list.isEmpty())
 			return null;
@@ -70,6 +73,21 @@ public class CollectionUtils {
 			Predicate<T> predicate) throws Exception {
 		Collection<T> outputCollection = new ArrayList<T>();
 		select(collection, predicate, outputCollection);
+		return outputCollection;
+	}
+
+	public static <T, O> Collection<O> select(Collection<T> collection,
+			Predicate<T> predicate, Transformer<T, O> transformer)
+			throws Exception {
+		Collection<T> selectedCollection = select(collection, predicate);
+		return collect(selectedCollection, transformer);
+	}
+
+	public static <T, O> Collection<O> collect(Collection<T> collection, Transformer<T, O> transformer) {
+		Collection<O> outputCollection = new ArrayList<O>();
+		for (T item : collection) {
+			outputCollection.add(transformer.transform(item));
+		}
 		return outputCollection;
 	}
 
@@ -84,15 +102,4 @@ public class CollectionUtils {
 			}
 		}
 	}
-
-	public static <T, O> Collection<O> select(Collection<T> collection,
-			Predicate<T> predicate, Transformer<T, O> transformer) throws Exception {
-		Collection<T> selectedCollection = select(collection, predicate);
-		Collection<O> outputCollection = new ArrayList<O>();
-		for (T item : selectedCollection) {
-			outputCollection.add(transformer.transform(item));
-		}
-		return outputCollection;
-	}
 }
-

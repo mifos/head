@@ -167,39 +167,48 @@ explanation of the license and how it is applied.
 											<td width="29%" class="drawtablerowboldnolinebg">
 												<mifos:mifoslabel name="loan.acc_owner" />
 											</td>
-											<td width="31%" class="drawtablerowboldnolinebg">
+											<td width="15%" class="drawtablerowboldnolinebg">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.amt" />
-												<%-- FIXME: to be removed to fix issue #1557 --%>
-												<%-- (<c:out value="${loanPrdOffering.minLoanAmount}" />-<c:out value="${loanPrdOffering.maxLoanAmount}" />) --%>
+											</td>
+											<td width="15%" class="drawtablerowboldnolinebg">
+												<mifos:mifoslabel name="loan.allowed_amount1" /> 
+											</td>
+											<td width="15%" class="drawtablerowboldnolinebg">
+												<mifos:mifoslabel name="loan.no_of_inst" /> 
 											</td>
 											<td width="35%" class="drawtablerowboldnolinebg">
 												<mifos:mifoslabel name="loan.business_work_act" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
 											</td>
 										</tr>
-										<c:forEach var="client" varStatus="loopStatus1" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'multipleloansclientslist')}" >
-											<bean:define id="ctr1" toScope="request" >
-												<c:out value="${loopStatus1.index}" />
-											</bean:define>
+										<c:out value="${sessionScope.multipleloansactionform.stateSelected}"/>
+										<c:forEach var="clientDetail" varStatus="loopStatus" items="${sessionScope.multipleloansactionform.clientDetails}" >
 										<tr>
 											<td valign="top" class="drawtablerow">
-												<html-el:checkbox property="clients[${ctr1}]" value="${client.customerId}" onclick="selectAllCheck(this)" />
+												<html-el:checkbox property="clientDetails[${loopStatus.index}].selected" value="${clientDetail.client.customerId}" onclick="selectAllCheck(this)" />
 											</td>
 											<td width="29%" valign="top" class="drawtablerow">
 												<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" isColonRequired="Yes"/></span> 
-												<c:out value="${client.displayName}"/>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${client.globalCustNum}"/>
+												<c:out value="${clientDetail.client.displayName}"/>: <mifos:mifoslabel name="${ConfigurationConstants.ID}" /> <c:out value="${clientDetail.client.globalCustNum}"/>
 												<br>
 												<span class="fontnormalbold"><mifos:mifoslabel name="bulkEntry.loanofficer" isColonRequired="Yes" /></span> 
-												<c:out value="${client.personnel.displayName}"/>
+												<c:out value="${clientDetail.client.personnel.displayName}"/>
 												<br>
-												<c:out value="${client.office.officeName}"/> / <c:out value="${client.parentCustomer.parentCustomer.displayName}"/> / <c:out value="${client.parentCustomer.displayName}"/>
+												<c:out value="${clientDetail.client.office.officeName}"/> / <c:out value="${clientDetail.client.parentCustomer.parentCustomer.displayName}"/> / <c:out value="${clientDetail.client.parentCustomer.displayName}"/>
 											</td>
-											<td width="31%" valign="top" class="drawtablerow">
-												<mifos:mifosdecimalinput property="clientDetails[${ctr1}].loanAmount"/>
+											<td width="15%" valign="top" class="drawtablerow">
+												<mifos:mifosdecimalinput property="clientDetails[${loopStatus.index}].loanAmount"/>
 											</td>
-											<td width="35%" valign="top" class="drawtablerow">
-												<mifos:select property="clientDetails[${ctr1}].businessActivity" style="width:136px;">
+											<td width="15%" valign="top" class="drawtablerow">
+												<c:out value="${clientDetail.minLoanAmount}" /> &nbsp; - &nbsp; 
+												<c:out value="${clientDetail.maxLoanAmount}" />
+											</td>
+											<td width="15%" valign="top" class="drawtablerow">
+												<c:out value="${clientDetail.defaultNoOfInstall}" /> 
+											</td>
+											<td width="20%" valign="top" class="drawtablerow">
+												<mifos:select property="clientDetails[${loopStatus.index}].businessActivity" style="width:136px;">
 													<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
-															<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+														<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
 													</c:forEach>
 												</mifos:select>
 											</td>

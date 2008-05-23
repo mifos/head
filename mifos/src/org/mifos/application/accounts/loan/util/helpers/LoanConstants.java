@@ -179,7 +179,6 @@ public interface LoanConstants {
 	public String IS_CENTER_HEIRARCHY_EXISTS = "isCenterHeirarchyExists";
 	public String MULTIPLE_LOANS_CENTERS_LIST="multipleloanscenterslist";
 	public String LOANOFFICERS="Loan officer";
-	public String MULTIPLE_LOANS_CLIENTS_LIST="multipleloansclientslist";
 	public String LOAN_AMOUNT_FOR="Loan Amount for ";
 	public String APPL_RECORDS="applicableRecords";
 	
