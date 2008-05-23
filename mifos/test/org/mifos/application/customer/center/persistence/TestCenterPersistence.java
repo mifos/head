@@ -1,5 +1,6 @@
 package org.mifos.application.customer.center.persistence;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.mifos.application.customer.business.CustomerBO;
@@ -91,7 +92,7 @@ public class TestCenterPersistence extends MifosTestCase{
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		meeting.setMeetingStartDate(new GregorianCalendar());
+		meeting.setMeetingStartDate(new Date());
 		return meeting;
 	}
 	public void testSearch() throws Exception{

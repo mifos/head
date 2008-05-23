@@ -115,7 +115,7 @@ public class SavingsTestHelper {
 
 	public CenterBO createCenter() {
 		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING);
-		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.setMeetingStartDate(new Date());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				new Short("1"));
 		TestObjectFactory.createMeeting(meeting);
@@ -230,7 +230,7 @@ public class SavingsTestHelper {
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());
 		cal.setTime(df.parse("01/01/2006"));
-		meeting.setMeetingStartDate(cal);
+		meeting.setMeetingStartDate(cal.getTime());
 		return meeting;
 	}
 

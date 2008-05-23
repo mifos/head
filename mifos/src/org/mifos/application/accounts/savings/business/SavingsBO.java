@@ -2089,11 +2089,9 @@ public class SavingsBO extends AccountBO {
 			MeetingBO depositSchedule = customerBO.getCustomerMeeting()
 					.getMeeting();
 			Date oldMeetingDate = depositSchedule.getStartDate();
-			Calendar calendar = Calendar.getInstance();
 			Short lastInstallmentId = getLastInstallmentId();
 			AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
-			calendar.setTimeInMillis(lastInstallment.getActionDate().getTime());
-			depositSchedule.setMeetingStartDate(calendar);
+			depositSchedule.setMeetingStartDate(lastInstallment.getActionDate());
 			if (customerBO.getCustomerLevel().getId().equals(
 					CustomerLevel.CLIENT.getValue())
 					|| (customerBO.getCustomerLevel().getId().equals(

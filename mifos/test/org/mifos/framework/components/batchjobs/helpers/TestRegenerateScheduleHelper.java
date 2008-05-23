@@ -215,9 +215,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				DateUtils.getCalendarDate(accountActionDateEntity
-						.getActionDate().getTime()));
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity.getActionDate());
 
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
@@ -231,9 +229,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		List<java.util.Date> meetingDates = null;
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				DateUtils.getCalendarDate(accountActionDateEntity
-						.getActionDate().getTime()));
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
+						.getActionDate());
 		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
 				(short) 10);
 		Calendar calendar = new GregorianCalendar();
@@ -315,9 +312,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				DateUtils.getCalendarDate(accountActionDateEntity
-						.getActionDate().getTime()));
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
+						.getActionDate());
 
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.updateObject(accountBO);
@@ -332,9 +328,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		List<java.util.Date> meetingDates = null;
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				DateUtils.getCalendarDate(accountActionDateEntity
-						.getActionDate().getTime()));
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
+						.getActionDate());
 		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
 				(short) 10);
 		Calendar calendar = new GregorianCalendar();
@@ -406,13 +401,12 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),
 				YesNoFlag.YES.getValue());
 
-		Calendar meetingStartDate = center.getCustomerMeeting().getMeeting()
+		java.util.Date meetingStartDate = center.getCustomerMeeting().getMeeting()
 				.getMeetingStartDate();
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
-		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
-				DateUtils.getCalendarDate(accountActionDateEntity
-						.getActionDate().getTime()));
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
+						.getActionDate());
 
 		List<java.util.Date> meetingDates = center.getCustomerMeeting()
 				.getMeeting().getAllDates(DateUtils.getLastDayOfNextYear());
@@ -526,7 +520,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	private SavingsBO getSavingAccount() throws Exception {
 		MeetingBO meeting = TestObjectFactory
 			.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
-		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.setMeetingStartDate(new java.util.Date());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				new Short("1"));
 		TestObjectFactory.createMeeting(meeting);

@@ -416,10 +416,8 @@ public class AccountBO extends BusinessObject {
 						.getInstallmentId().intValue());
 			}
 			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-			Calendar meetingStartDate = meeting.getMeetingStartDate();
-			meeting.setMeetingStartDate(DateUtils
-					.getCalendarDate(accountActionDateEntity.getActionDate()
-							.getTime()));
+			Date meetingStartDate = meeting.getMeetingStartDate();
+			meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 			regenerateFutureInstallments(installmentId);
 			meeting.setMeetingStartDate(meetingStartDate);
 			try {
@@ -1005,28 +1003,21 @@ public class AccountBO extends BusinessObject {
 
 	protected final List<Date> getFeeDates(MeetingBO feeMeetingFrequency,
 			List<InstallmentDate> installmentDates) throws AccountException {
-		MeetingBO repaymentFrequency = getCustomer().getCustomerMeeting()
-				.getMeeting();
-		Short recurAfter = repaymentFrequency.getMeetingDetails()
-				.getRecurAfter();
-		Calendar meetingStartDate = repaymentFrequency.getMeetingStartDate();
-		repaymentFrequency.getMeetingDetails().setRecurAfter(
-				feeMeetingFrequency.getMeetingDetails().getRecurAfter());
-		Calendar feeStartDate = new GregorianCalendar();
-		feeStartDate.setTime((installmentDates.get(0)).getInstallmentDueDate());
-		repaymentFrequency.setMeetingStartDate(feeStartDate);
-		Date repaymentEndDate = (installmentDates
-				.get(installmentDates.size() - 1)).getInstallmentDueDate();
+		MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
+		Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
+		Date meetingStartDate = customerMeeting.getMeetingStartDate();
+		customerMeeting.getMeetingDetails().setRecurAfter(feeMeetingFrequency.getMeetingDetails().getRecurAfter());
+		customerMeeting.setMeetingStartDate(installmentDates.get(0).getInstallmentDueDate());
+		Date repaymentEndDate = installmentDates.get(installmentDates.size() - 1).getInstallmentDueDate();
 
-		List<Date> feeDueDates = null;
 		try {
-			feeDueDates = repaymentFrequency.getAllDates(repaymentEndDate);
+			return customerMeeting.getAllDates(repaymentEndDate);
 		} catch (MeetingException e) {
 			throw new AccountException(e);
+		} finally {
+			customerMeeting.setMeetingStartDate(meetingStartDate);
+			customerMeeting.getMeetingDetails().setRecurAfter(recurAfter);
 		}
-		repaymentFrequency.setMeetingStartDate(meetingStartDate);
-		repaymentFrequency.getMeetingDetails().setRecurAfter(recurAfter);
-		return feeDueDates;
 	}
 
 	protected final FeeInstallment buildFeeInstallment(Short installmentId,

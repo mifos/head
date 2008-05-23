@@ -127,12 +127,11 @@ public class CustomerAccountBO extends AccountBO {
 			throws AccountException {
 		if (customer.getCustomerMeeting() != null
 				&& customer.isActiveViaLevel()) {
-			Calendar meetingStartDate = customer.getCustomerMeeting()
+			Date meetingStartDate = customer.getCustomerMeeting()
 					.getMeeting().getMeetingStartDate();
 			if (customer.getParentCustomer() != null) {
-				Calendar nextMeetingDate = new GregorianCalendar();
-				nextMeetingDate.setTime(customer.getParentCustomer()
-						.getCustomerAccount().getNextMeetingDate());
+				Date nextMeetingDate = customer.getParentCustomer()
+						.getCustomerAccount().getNextMeetingDate();
 				customer.getCustomerMeeting().getMeeting().setMeetingStartDate(
 						nextMeetingDate);
 			}
@@ -447,9 +446,8 @@ public class CustomerAccountBO extends AccountBO {
 		Short lastInstallmentId = getLastInstallmentId();
 		AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-		Calendar meetingStartDate = meeting.getMeetingStartDate();
-		meeting.setMeetingStartDate(DateUtils.getCalendar(lastInstallment
-				.getActionDate()));
+		Date meetingStartDate = meeting.getMeetingStartDate();
+		meeting.setMeetingStartDate(lastInstallment.getActionDate());
 
 		List<Date> installmentDates = null;
 		try {

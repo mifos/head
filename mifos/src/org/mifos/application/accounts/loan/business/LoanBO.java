@@ -3086,9 +3086,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			throw new AccountException(e);
 		}
 		this.resetAccountActionDates();
-		Calendar date = new GregorianCalendar();
-		date.setTime(disbursementDate);
-		loanMeeting.setMeetingStartDate(date);
+		loanMeeting.setMeetingStartDate(disbursementDate);
 		generateMeetingSchedule(isRepaymentIndepOfMeetingEnabled,newMeetingForRepaymentDay);
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) getAccountActionDate((short)1);
 		loanScheduleEntity.setMiscFee(miscFee);

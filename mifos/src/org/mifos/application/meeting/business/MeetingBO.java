@@ -190,17 +190,12 @@ public class MeetingBO extends BusinessObject {
 		this.meetingPlace = meetingPlace;
 	}
 
-	//	TODO: change return type to date
-	public Calendar getMeetingStartDate() {
-		Calendar cal = new GregorianCalendar();
-		if(meetingStartDate!=null)
-			cal.setTime(meetingStartDate);
-		return cal;
+	public Date getMeetingStartDate() {
+		return meetingStartDate;
 	}
 
-	//TODO: change parameter to date
-	public void setMeetingStartDate(Calendar meetingStartDate) {
-		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(meetingStartDate.getTimeInMillis());
+	public void setMeetingStartDate(Date meetingStartDate) {
+		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(meetingStartDate);
 	}
 
 	public void setStartDate(Date startDate) {

@@ -68,7 +68,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		meeting = center.getCustomerMeeting().getMeeting();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
-		meeting.setMeetingStartDate(calendar);
+		meeting.setMeetingStartDate(calendar.getTime());
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
 				new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String
 						.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));
@@ -132,7 +132,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		meeting = center.getCustomerMeeting().getMeeting();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(offSetDate(new Date(System.currentTimeMillis()), 1));
-		meeting.setMeetingStartDate(calendar);
+		meeting.setMeetingStartDate(calendar.getTime());
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
 				new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(String
 						.valueOf(calendar.get(Calendar.DAY_OF_WEEK))))));

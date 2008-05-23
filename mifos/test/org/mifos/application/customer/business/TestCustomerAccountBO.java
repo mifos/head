@@ -588,9 +588,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = null;
 
 		meetingDates = meeting.getAllDates((short) 10);
@@ -711,8 +709,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						(short) lastInstallmentId);
 		center.getCustomerAccount().generateNextSetOfMeetingDates();
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-		meetingBO.setMeetingStartDate(TestObjectFactory
-				.getCalendar(accountActionDateEntity.getActionDate()));
+		meetingBO.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils
 				.getLastDayOfYearAfterNextYear().getTime());
 		meetingDates.remove(0);

@@ -1000,12 +1000,12 @@ public class TestObjectFactory {
 					meetingToReturn = new MeetingBO(customerMeeting
 							.getMeetingDetails().getMeetingRecurrence()
 							.getDayNumber(), recurAfter, customerMeeting
-							.getMeetingStartDate().getTime(), meetingType,
+							.getMeetingStartDate(), meetingType,
 							"meetingPlace");
 				else meetingToReturn = new MeetingBO(customerMeeting
 						.getMeetingDetails().getWeekDay(), customerMeeting
 						.getMeetingDetails().getWeekRank(), recurAfter,
-						customerMeeting.getMeetingStartDate().getTime(),
+						customerMeeting.getMeetingStartDate(),
 						meetingType, "meetingPlace");
 			}
 			else if (recurrenceType.equals(RecurrenceType.WEEKLY))
@@ -1013,11 +1013,10 @@ public class TestObjectFactory {
 						.getWeekDay(customerMeeting.getMeetingDetails()
 								.getMeetingRecurrence().getWeekDayValue()
 								.getValue()), recurAfter, customerMeeting
-						.getMeetingStartDate().getTime(), meetingType,
+						.getMeetingStartDate(), meetingType,
 						"meetingPlace");
 			else meetingToReturn = new MeetingBO(recurrenceType, recurAfter,
-					customerMeeting.getMeetingStartDate().getTime(),
-					meetingType);
+					customerMeeting.getMeetingStartDate(), meetingType);
 
 			meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
 		}

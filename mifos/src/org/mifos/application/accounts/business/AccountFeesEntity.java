@@ -191,11 +191,9 @@ public class AccountFeesEntity extends PersistentObject {
 		if (getLastAppliedDate() != null) {
 			MeetingBO meetingBO = getAccount().getCustomer()
 					.getCustomerMeeting().getMeeting();
-			Calendar meetingStartDate = new GregorianCalendar();
-			meetingStartDate.setTime(getLastAppliedDate());
-			Calendar customerMeetingStartDate = meetingBO.getMeetingStartDate();
+			Date customerMeetingStartDate = meetingBO.getMeetingStartDate();
 			Short recurAfter = meetingBO.getMeetingDetails().getRecurAfter();
-			meetingBO.setMeetingStartDate(meetingStartDate);
+			meetingBO.setMeetingStartDate(getLastAppliedDate());
 			meetingBO.getMeetingDetails().setRecurAfter(
 					getFees().getFeeFrequency().getFeeMeetingFrequency()
 							.getMeetingDetails().getRecurAfter());

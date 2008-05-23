@@ -3846,9 +3846,7 @@ public class TestSavingsBO extends MifosTestCase {
 		MeetingBO meeting = savings.getCustomer().getCustomerMeeting()
 				.getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 
 		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils
 				.getLastDayOfNextYear());
@@ -3902,9 +3900,7 @@ public class TestSavingsBO extends MifosTestCase {
 		MeetingBO meeting = savings.getCustomer().getCustomerMeeting()
 				.getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils
 				.getLastDayOfNextYear());
 		meetingDates.remove(0);
@@ -4195,8 +4191,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsBO.class, savingsBO.getAccountId());
 
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-		meetingBO.setMeetingStartDate(TestObjectFactory
-				.getCalendar(lastYearLastInstallment.getActionDate()));
+		meetingBO.setMeetingStartDate(lastYearLastInstallment.getActionDate());
 		List<Date> meetingDates = meetingBO.getAllDates((short) 10);
 		meetingDates.remove(0);
 		Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(

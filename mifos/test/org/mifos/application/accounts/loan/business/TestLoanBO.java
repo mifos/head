@@ -2386,9 +2386,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getMeeting();
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
 				WeekDay.THURSDAY);
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		Calendar calendar = new GregorianCalendar();
@@ -2461,9 +2459,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getMeetingRecurrence();
 		recurrence.setWeekDay(recurrence.getWeekDayValue().next());
 
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
 						.getInstallmentId().intValue() + 1));
@@ -2509,9 +2505,7 @@ public class TestLoanBO extends MifosTestCase {
 		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
 				.getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		meeting.setMeetingStartDate(DateUtils
-				.getCalendarDate(accountActionDateEntity.getActionDate()
-						.getTime()));
+		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
 		((LoanBO) accountBO)
@@ -4260,7 +4254,7 @@ public class TestLoanBO extends MifosTestCase {
 				EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
 		Calendar meetingStart = Calendar.getInstance();
 		meetingStart.setTimeInMillis(sampleTime);
-		meeting.setMeetingStartDate(meetingStart);
+		meeting.setMeetingStartDate(meetingStart.getTime());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				dayOfMonth);
 		TestObjectFactory.createMeeting(meeting);
@@ -4385,7 +4379,7 @@ public class TestLoanBO extends MifosTestCase {
 				EVERY_MONTH, CUSTOMER_MEETING, MONDAY);
 
 		TestObjectFactory.createMeeting(meeting);
-		meeting.setMeetingStartDate(Calendar.getInstance());
+		meeting.setMeetingStartDate(new Date());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				dayOfMonth);
 		center = TestObjectFactory.createCenter("Center", meeting);
