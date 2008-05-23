@@ -4073,10 +4073,16 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	 * NOTE: These calculations do not take into account EPI or grace period adjustments.
 	 */
 	private Money getPaymentPerPeriodForDecliningInterest_v2(int numInstallments) {
-		double factor = getInterestFractionalRatePerInstallment_v2() 
+		double factor = 0.0;
+		if (interestRate == 0.0) {
+			Money paymentPerPeriod = getLoanAmount().divide(new BigDecimal(numInstallments, Money.getInternalPrecisionAndRounding()));
+			return paymentPerPeriod;
+		} else {
+			factor = getInterestFractionalRatePerInstallment_v2() 
 		                    / (1.0 - Math.pow(1.0 + getInterestFractionalRatePerInstallment_v2(), -numInstallments));
-		Money paymentPerPeriod = getLoanAmount().multiply(new BigDecimal(factor,Money.getInternalPrecisionAndRounding()));
-		return paymentPerPeriod;
+			Money paymentPerPeriod = getLoanAmount().multiply(new BigDecimal(factor,Money.getInternalPrecisionAndRounding()));
+			return paymentPerPeriod;
+		}
 	}
 
 	private double getInterestFractionalRatePerInstallment_v2() {
