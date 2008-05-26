@@ -37,6 +37,11 @@
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/build"/>
 	<property name="dist.dir" value="${basedir}/dist"/>
+	
+	<!-- properties used by izpack mifos installer-->
+	<property name="IzPack_dir" value="${basedir}/installer/izpack"/>
+    <property name="IzPack_lib_dir" value="${basedir}/installer/izpack/lib"/>
+
 
 	<!--Helper path for building, copying resources etc-->
 	<property name="doc.dir" value="${dist.dir}/docs"/>
@@ -602,5 +607,18 @@
 			</fileset>
 		</zip>
 	</target>-->
+	
+       
+    <target name="clean-installer" description="Cleans the old nstallers jars">
+		<delete>
+			<fileset dir="${dist.dir}" includes="**/*.jar"/>
+		</delete>
+    </target>
+
+    <target name="build-installer" description="Mifos Application Installer V1.1" depends="clean-installer, svn-revision">
+        <taskdef name="IzPack" classpath="${IzPack_lib_dir}/compiler.jar" classname="com.izforge.izpack.ant.IzPackTask" /> 
+        <IzPack input="installer/install.xml" output="${basedir}/dist/mifos-installer-v${svn.version}.jar" installerType="standard" basedir="." IzPackDir="${IzPack_dir}"/>
+        <IzPack input="installer/install-TomcatBundle.xml" output="${basedir}/dist/mifos-installer-v${svn.version}-tomcat.6.0.16.jar" installerType="standard" basedir="." IzPackDir="${IzPack_dir}"/>
+    </target>
 
 </project>
