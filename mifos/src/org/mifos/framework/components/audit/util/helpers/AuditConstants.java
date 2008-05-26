@@ -79,7 +79,7 @@ public interface AuditConstants {
   public String PERSONNELLEVELPATH= "org.mifos.application.personnel.business.PersonnelLevelEntity";
   public String PRDSTATUSPATH= "org.mifos.application.productdefinition.business.PrdStatusEntity";
   public static final String HIDDEN_PASSWORD = "********";
-  public static final String Audit_PASSWORD = "Password";
+  public static final String Audit_PASSWORD = "encriptedPassword";
   
  
 }
