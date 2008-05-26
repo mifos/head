@@ -1,0 +1,159 @@
+<installation version="1.0">
+
+    <!-- The info section -->
+
+    <info>
+    
+        <appname>Mifos</appname>
+        <appversion>1.1</appversion>    
+        <authors>
+            <author email="pullu@ie.ibm.com" name="Nagesh Pulluru(Developer)"/>
+            <author email="kutaphal@ie.ibm.com" name="Ravi Kutaphale(Senior Developer)"/>
+            <author email="mparlione@ie.ibm.com" name="Massimiliano Parlione(Team Lead/IT Architect)"/>
+         </authors>
+        <uninstaller write="no"/>
+        <url>http://www.mifos.org/</url>
+        <javaversion>1.5</javaversion>
+        <summarylogfilepath>$INSTALL_PATH/installinfo/Summary.htm</summarylogfilepath>
+    </info>
+
+    <!-- Flexible and in the screen proportions -->
+    <guiprefs height="600" resizable="yes" width="800">
+        <laf name="looks">
+            <os family="windows"/>
+        </laf>
+        
+        <laf name="kunststoff">
+            <os family="unix"/>
+        </laf>
+        
+        <!-- GUI addaption for more informations see "Modifying the GUI" in the documentation -->
+    	<modifier key="layoutAnchor" value="CENTER"/>
+    	<modifier key="headingPanelCounter" value="progressbar"/>
+	<modifier key="headingPanelCounterPos" value="inNavigationPanel"/>
+	<modifier key="allYGap" value="3"/>
+	<modifier key="paragraphYGap" value="10"/>
+	<modifier key="filler1YGap" value="5"/>
+	<modifier key="filler3XGap" value="10"/>
+    </guiprefs>
+    
+    <variables>
+        <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+    </variables>
+   
+    <!-- Langpacks -->
+    <locale>
+        <langpack iso3="eng"/>
+        <langpack iso3="fra"/>
+    </locale>
+
+    <!-- The resources needed by the various panels  -->
+    <resources>
+        <!-- Resources for Windows Installer  -->
+        <res src="./README" id="HTMLInfoPanel.info"/>
+        <res src="./LICENSE" id="LicencePanel.licence"/>
+        <res src="installer/resources/mifos-logo.png" id="installer.langsel.img"/>
+        <res src="installer/specs/antActionsSpec.xml" id="AntActionsSpec.xml"/>
+        <res src="installer/specs/userInputSpec.xml" id="userInputSpec.xml"/>
+        <res src="installer/lang-packs/userInputLang.xml_eng" id="userInputLang.xml_eng"/>
+        <res src="installer/lang-packs/userInputLang.xml_fra" id="userInputLang.xml_fra"/>
+        <res src="installer/izpack/img/border1.png" id="Installer.image.0"/>
+        <res src="installer/izpack/img/border2.png" id="Installer.image.1"/>
+        <res src="installer/izpack/img/border3.png" id="Installer.image.2"/>
+        <res src="installer/izpack/img/border5.png" id="Installer.image.3"/>
+        <res src="installer/izpack/img/border7.png" id="Installer.image.4"/>
+        <res src="installer/izpack/img/border7.png" id="Installer.image.5"/>
+        <res src="installer/izpack/img/border6.png" id="Installer.image.6"/>
+        <res src="installer/izpack/img/border8.png" id="Installer.image.7"/>
+        
+        <!-- Resources for Unix/Linux Installer  -->
+        <res src="./README" id="InfoPanel.info" os="unix"/>
+        <res src="./LICENSE" id="LicencePanel.licence" os="unix"/>
+        <res src="installer/resources/mifos-logo.png" id="installer.langsel.img" os="unix"/>
+        <res src="installer/specs/antActionsSpec.xml" id="AntActionsSpec.xml" os="unix"/>
+        <res src="installer/specs/userInputSpec.xml" id="userInputSpec.xml" os="unix"/>        
+        <res src="installer/lang-packs/userInputLang.xml_eng" id="userInputLang.xml_eng"/>
+        <res src="installer/lang-packs/userInputLang.xml_fra" id="userInputLang.xml_fra"/>
+        <res src="installer/izpack/img/border1.png" id="Installer.image.0" os="unix"/>
+        <res src="installer/izpack/img/border2.png" id="Installer.image.1" os="unix"/>
+        <res src="installer/izpack/img/border3.png" id="Installer.image.2" os="unix"/>
+        <res src="installer/izpack/img/border5.png" id="Installer.image.3" os="unix"/>
+        <res src="installer/izpack/img/border7.png" id="Installer.image.4" os="unix"/>
+        <res src="installer/izpack/img/border7.png" id="Installer.image.5" os="unix"/>
+        <res src="installer/izpack/img/border6.png" id="Installer.image.6" os="unix"/>
+        <res src="installer/izpack/img/border8.png" id="Installer.image.7" os="unix"/>
+    </resources>
+    
+    <!-- The panels in a classic order  -->
+    <panels>
+        <panel classname="CheckedHelloPanel" id="hellopanel"/>
+        <panel classname="HTMLInfoPanel" id="infopanel" os="windows"/>
+        <panel classname="InfoPanel" id="infopanel" os="unix"/>
+        <panel classname="LicencePanel" id="licensepanel"/>
+        <panel classname="ImgPacksPanel" id="packspanel"/>
+        <panel classname="UserInputPanel" id="0"/>
+        <panel classname="DatabaseUserInputPanel" id="3" condition="installDatabase"/>
+        <panel classname="InstallPanel" id="installpanel"/>
+        <panel classname="SimpleFinishPanel" id="finishpanel"/>
+    </panels>
+
+    <!-- The listeners section for CustomActions  -->
+    <listeners>
+        <listener installer="SummaryLoggerInstallerListener"/>
+        <listener installer="AntActionInstallerListener" uninstaller="AntActionUninstallerListener" />
+    </listeners>
+
+    <jar src="installer/lib/ant.jar" stage="both" />
+    <jar src="installer/lib/ant-launcher.jar" stage="both" />
+    <jar src="lib/mysql-connector-java-5.1.5-bin.jar" stage="both"/>
+
+    <!-- The packs section -->
+        <packs>
+                <pack name="Mifos Application" id="mifos" required="no">
+                        <description>Copies Mifos war and Restart Tomcat</description>
+                        <file src="dist/mifos.war" targetdir="$catalina.home/webapps"/>
+
+                        <description>Copies the tomcat admin file</description>
+                        <file src="installer/antcalls/tomcat-admin.xml" targetdir="admin" />
+                </pack>
+
+                <pack name="Mifos Database" id="db-installer" required="no" preselected="no">
+                        <description>Database Builder Files</description>
+                        <fileset dir="installer/antcalls" targetdir="build">
+                                <include name="build-database.xml"/>
+                        </fileset>
+                        
+                        <fileset dir="sql" targetdir="sql">
+                                <include name="latest-data.sql"/>
+                                <include name="latest-schema.sql"/>
+                        </fileset>
+                        <fileset dir="installer/lib" targetdir="lib">
+                                <include name="*.jar"/>
+                        </fileset>
+                        
+                        <fileset dir="lib" targetdir="lib">
+                                <include name="mysql-connector-java-5.1.5-bin.jar"/>
+                        </fileset>
+                        
+                        <fileset dir="installer/resources" targetdir="resources">
+                                <include name="hibernate.properties"/>
+                        </fileset>                        
+               </pack> 
+        </packs>
+        
+        <conditions>
+                        <condition id="installDatabase" type="packselection">
+                                <packid>db-installer</packid>
+                        </condition>
+        </conditions>
+        
+    <!-- The native libraries to add -->
+    <native type="izpack" name="ShellLink.dll">
+        <os family="unix"/>
+    </native>
+    
+    <native type="3rdparty" name="COIOSHelper.dll" stage="both">
+        <os family="windows"/>
+    </native>
+
+</installation>

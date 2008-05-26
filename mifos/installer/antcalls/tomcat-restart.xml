@@ -1,0 +1,19 @@
+<project name="tomcat-restart" default="tomcat-start" basedir="." >
+        <target name="tomcat-stop">
+                <echo message="Stop Tomcat" />   
+                <java dir="${catalina.home}/bin" jar="${catalina.home}/bin/bootstrap.jar" fork="true" spawn="true">
+                        <arg value="stop"/>   
+                </java>
+        </target>   
+    
+        <target name="tomcat-start">
+                <echo message="Start Tomcat" />  
+                <java dir="${catalina.home}/bin" jar="${catalina.home}/bin/bootstrap.jar" fork="true" spawn="true">
+                        <arg value="start" />   
+                </java>
+        </target>
+ 
+        <target name="delete-tomcat-restart">
+                <delete dir="tomcatrestart"/>
+        </target>
+</project>

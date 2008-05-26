@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"  ?>
+<antactions>
+   <!-- Pack for the Mifos Database  -->
+   <pack name="Mifos Database">
+         <antcall buildfile="build/build-database.xml" order="afterpacks">
+                 <target name="build_db"/>
+                 <property name="db.host" value="$db.host"/>
+                 <property name="db.port" value="$db.port"/>
+                 <property name="db.user" value="$db.user"/>
+                 <property name="db.password" value="$db.password"/>
+                 <property name="db.schema" value="$db.schema"/>
+                 
+         </antcall>
+
+         <antcall buildfile="build/build-database.xml" order="afterpacks">
+                 <target name="update_hibernate_props"/>
+                 <property name="db.host" value="$db.host"/>
+                 <property name="db.port" value="$db.port"/>
+                 <property name="db.user" value="$db.user"/>
+                 <property name="db.password" value="$db.password"/>
+                 <property name="db.schema" value="$db.schema"/>
+                 <property name="catalina.home" value="$catalina.home"/>
+         </antcall>
+         
+         <antcall buildfile="build/build-database.xml" order="afterpacks">
+                 <target name="del"/>
+         </antcall>
+   </pack>
+
+   <!-- Pack to restart tomcat if Tomcat is allready installed on the Target Computer  -->
+   <pack name="Mifos Application">
+        <antcall buildfile="admin/tomcat-admin.xml" order="afterpacks">
+                <target name="stop-tomcat"/>      
+                <property name="catalina.home" value="$catalina.home" />
+        </antcall>   
+        
+        <antcall buildfile="admin/tomcat-admin.xml" order="afterpacks">
+                <target name="start-tomcat"/>
+                <property name="catalina.home" value="$catalina.home" />
+        </antcall>
+        
+        <antcall buildfile="admin/tomcat-admin.xml" order="afterpacks">
+                <target name="delete-admin"/>
+        </antcall>
+   </pack>    
+</antactions>

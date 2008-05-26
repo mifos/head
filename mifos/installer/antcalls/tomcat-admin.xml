@@ -1,0 +1,19 @@
+<project name="tomcat-admin" default="start-tomcat" basedir="." >
+        <target name="stop-tomcat">
+                <echo message="Stop Tomcat" />   
+                <java dir="${catalina.home}/bin" jar="${catalina.home}/bin/bootstrap.jar" fork="true" spawn="true">
+                        <arg value="stop"/>   
+                </java>
+        </target>   
+    
+        <target name="start-tomcat">
+                <echo message="Start Tomcat" />  
+                <java dir="${catalina.home}/bin" jar="${catalina.home}/bin/bootstrap.jar" fork="true" spawn="true">
+                        <arg value="start" />   
+                </java>
+        </target> 
+        
+       <target name="delete-admin">
+                <delete dir="admin"/>
+       </target>
+</project>

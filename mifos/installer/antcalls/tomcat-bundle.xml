@@ -1,0 +1,14 @@
+<project name="tomcat-bundle" default="copy-tomcat" basedir="." >
+        <target name="copy-tomcat"> 
+                <echo message="Copying Tomcat"/>
+                <unzip dest="${catalina.home}">
+                        <fileset dir="${catalina.home}" id="tomcatbase">
+                                <include name="*.zip"/>
+                        </fileset>
+                </unzip>
+        </target>
+
+        <target name="delete-bundle">
+                <delete dir="bundle"/>
+        </target>
+</project>

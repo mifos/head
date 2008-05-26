@@ -1,0 +1,25 @@
+<langpack>
+  <str id="db.details.msg" txt="Please enter the database connection properties."/>
+  <str id="db.server" txt="Database Server:"/>
+  <str id="db.server.msg" txt="Please enter value for Databse Server"/>
+  <str id="db.port" txt="Port:"/>
+  <str id="db.port.msg" txt="Please enter a valid value for Port"/>
+  <str id="db.schema" txt="Database Name:"/>
+  <str id="db.schema.msg" txt="Please enter database name."/>
+  <str id="db.user" txt="User:"/>
+  <str id="db.user.msg" txt="Please enter value for User"/>
+  <str id="db.password" txt="Password:"/>
+  <str id="db.password.msg" txt="Please enter value for Password"/>
+  <str id="schema.exist.msg" txt="Note: If the database name above exists, it will be dropped and recreated with latest Mifos database."/>
+  <str id="tomcat.select.dir" txt="Please select the tomcat installation directory: "/>  
+  <str id="tomcat.dirctory" txt="Please select directory to install Tomcat: "/>
+  <str id="tomcat.note" txt="NOTE: Validate Button is only used to detect Tomcat, once the Tomcat Installation Directory is given."/>
+  <str id="UserInputPanel.invalid.db.connection.caption" txt="Invalid details"/>
+  <str id="UserInputPanel.invalid.db.connection.message" txt="Invalid database connection details. Please enter valid connection details."/>
+  <str id="UserInputPanel.class.not.found.caption" txt="Fatal Error."/>
+  <str id="UserInputPanel.class.not.found.message" txt="Please contact the administrator."/>
+  <str id="UserInputPanel.search.autodetect.failed.message"    txt="Invalid Tomcat Directory. Please enter valid Tomcat Directory."/>
+  <str id="UserInputPanel.search.autodetect.failed.caption"    txt="Invalid Selection"/>
+  <str id="UserInputPanel.search.wrongselection.caption"   txt="Invalid Selection"/>
+  <str id="UserInputPanel.search.wrongselection.message" txt="Invalid Tomcat Directory. Please enter valid Tomcat Directory."/>
+</langpack>
