@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,8 +72,10 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.AmountRange;
 import org.mifos.application.productdefinition.business.InstallmentRange;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -951,6 +954,68 @@ public class LoanAccountActionForm extends BaseActionForm {
 			ActionErrors errors) {
 		try {
 			CustomerBO customer = getCustomer(request);
+
+			Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+			.getSession().getServletContext().getAttribute(
+					Constants.FIELD_CONFIGURATION);
+			List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.LOAN.getValue());
+
+			boolean purposeOfLoanIsMandatory = isPurposeOfLoanMandatory(mandatoryfieldList);
+			
+			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
+					.getAttribute(
+							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							request);
+			//Check the group level purpose of loan for each client in the group.
+			if(customer.getCustomerLevel().isGroup() && purposeOfLoanIsMandatory) {
+			    // this value is red from config_key_value_integer table should be set to 1 to enable the validation.
+				if (null != loanIndividualMonitoringIsEnabled
+						&& 0 != loanIndividualMonitoringIsEnabled.intValue()) {
+
+
+					List<String> ids_clients_selected = getClients();
+					List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+
+					for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
+					
+						if (ids_clients_selected.contains(tempAccount.getClientId())) {
+								if (StringUtils.isNullOrEmpty(tempAccount.getBusinessActivity())) {
+									errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
+										new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
+								break;
+								}
+						}
+					}
+
+
+			} else {
+
+				if (StringUtils.isNullOrEmpty(this.getBusinessActivityId())) {
+					errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
+							new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
+				}
+			}
+			// Check the client level purpose of loan.
+			} else if(customer.getCustomerLevel().isClient() && purposeOfLoanIsMandatory) {
+				if (StringUtils.isNullOrEmpty(this.getBusinessActivityId())) {
+					errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
+							new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
+				}
+			}
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		} catch (ServiceException e) {
+			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
+					new ActionMessage(
+							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
+		}
+	}
+	
+	private void xvalidatePurposeOfLoanFields(HttpServletRequest request,
+			ActionErrors errors) {
+		try {
+			CustomerBO customer = getCustomer(request);
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
 							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
@@ -990,6 +1055,19 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 	}
 
+	private boolean isPurposeOfLoanMandatory(List<FieldConfigurationEntity> mandatoryfieldList) {
+		boolean isMandatory = false;
+
+		for(FieldConfigurationEntity entity : mandatoryfieldList) {
+
+			if(entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
+				isMandatory = true;
+				break;
+			}
+		}
+		return isMandatory;
+	}
+	
 	private void validateRedoLoanPayments(HttpServletRequest request,
 			ActionErrors errors) {
 		try {

@@ -253,6 +253,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				.getCurrentDate(((UserContext) request.getSession()
 						.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("businessActivityId", "1");		
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -743,6 +744,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				.getCurrentDate(((UserContext) request.getSession()
 						.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("businessActivityId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -1397,6 +1399,8 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				.getCurrentDate(((UserContext) request.getSession()
 						.getAttribute("UserContext")).getPreferredLocale()));
 		schedulePreviewPageParams.put("gracePeriodDuration", "1");
+		schedulePreviewPageParams.put("businessActivityId", "1");		
+		
 	}
 	
 	private void initPrdOfferingPageParams(LoanOfferingBO loanOffering) {
