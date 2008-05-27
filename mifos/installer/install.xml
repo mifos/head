@@ -114,6 +114,12 @@
                         <file src="dist/mifos.war" targetdir="$catalina.home/webapps"/>
 
                         <description>Copies the tomcat admin file</description>
+                        <!--
+                        FIXME: this is just a temporary location, yes? It
+                        should really be somewhere temporary. For example:
+                        "${java.io.tmpdir}/${ant.project.name}/install_tmp"
+                        See issue 1943.
+                        -->
                         <file src="installer/antcalls/tomcat-admin.xml" targetdir="admin" />
                 </pack>
 
