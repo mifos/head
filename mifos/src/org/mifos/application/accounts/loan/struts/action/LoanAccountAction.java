@@ -466,10 +466,6 @@ public class LoanAccountAction extends AccountAppAction {
 				.getConfigurationKeyValueInteger(
 						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED)
 				.getValue();
-		Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-				.getValue();
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 			SessionUtils.setAttribute(
@@ -505,13 +501,10 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 
 
-		if (null != repaymentIndepOfMeetingIsEnabled
-				&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
-			SessionUtils
-					.setAttribute(
+		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+			SessionUtils.setAttribute(
 							REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-							repaymentIndepOfMeetingIsEnabled.intValue(),
-							request);
+							1, request);
 			SessionUtils.setAttribute(LOANACCOUNTOWNERISACLIENT,
 					"yes", request);
 			loadDataForRepaymentDate(request);
@@ -652,13 +645,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.isLoanPendingApprovalStateEnabled();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
 				isPendingApprovalDefined, request);
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-				.getValue();
-		if (null != repaymentIndepOfMeetingIsEnabled
-				&& 1 == repaymentIndepOfMeetingIsEnabled.intValue()) {
+		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
 			checkIntervalBetweenTwoDates(getTheFirstRepaymentDay(installments), loanActionForm
 					.getDisbursementDateValue(getUserContext(request)
 							.getPreferredLocale()));
@@ -725,10 +712,8 @@ public class LoanAccountAction extends AccountAppAction {
 		String perspective = request.getParameter(PERSPECTIVE);
 		CustomerBO customer = getCustomer(request);
 		LoanBO loan;
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		MeetingBO newMeetingForRepaymentDay = null;
-        Integer repIndepOfMeetingEnabled = configurationPersistence.getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
-        boolean isRepaymentIndepOfMeetingEnabled = !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
+		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
         
         if (isRepaymentIndepOfMeetingEnabled){
         	RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
@@ -962,11 +947,6 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-				.getValue();
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		String perspective = loanActionForm.getPerspective();
 		if (perspective != null) {
@@ -980,8 +960,7 @@ public class LoanAccountAction extends AccountAppAction {
 				&& perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
 			loan = redoLoan(loanActionForm, request);
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-			if (null != repaymentIndepOfMeetingIsEnabled
-					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
+			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
 
 				if (recurrenceId == RecurrenceType.MONTHLY.getValue())
 					loan
@@ -1007,8 +986,7 @@ public class LoanAccountAction extends AccountAppAction {
 							.getPersonnelId());
 			loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,
 					request);
-			if (null != repaymentIndepOfMeetingIsEnabled
-					&& repaymentIndepOfMeetingIsEnabled.intValue() != 0) {
+			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
 
 				if (recurrenceId == RecurrenceType.MONTHLY.getValue())
 					loan
@@ -1031,8 +1009,7 @@ public class LoanAccountAction extends AccountAppAction {
 		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
 				.getConfigurationKeyValueInteger(
 						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
-		boolean isRepaymentIndepOfMeetingEnabled = (null != repaymentIndepOfMeetingIsEnabled
-				&& 0 != repaymentIndepOfMeetingIsEnabled.intValue());
+		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0
 				&& customer.getCustomerLevel().isGroup()) {

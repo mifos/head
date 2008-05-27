@@ -150,10 +150,8 @@ public class LoanPrdAction extends BaseAction {
 		request.getSession().setAttribute(
 				ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
 		loadMasterData(request);
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        Integer repaymentIndepOfMeetingIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-   			 repaymentIndepOfMeetingIsEnabled.intValue(),request);
+        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
 		loadSelectedFeesAndFunds(new ArrayList<FeeView>(),
 				new ArrayList<FundBO>(), request);
 		prdDefLogger.debug("Load method of loan Product Action called");

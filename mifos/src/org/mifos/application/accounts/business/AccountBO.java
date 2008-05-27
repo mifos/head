@@ -36,6 +36,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -65,6 +66,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -752,38 +754,34 @@ public class AccountBO extends BusinessObject {
 		return dueInstallments;
 	}
 
-    public boolean isLastCustomerMeetingDate(Date trxnDate) {
-        Date meetingDate = null;
+    public boolean isTrxnDateBeforePreviousMeetingDateAllowed(Date trxnDate) {
         try {
-            meetingDate = new CustomerPersistence()
-                    .getLastMeetingDateForCustomer(getCustomer()
-                            .getCustomerId());
+            Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(
+            		getCustomer().getCustomerId());
+            
+            if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+            	// payment date for loans must be >= disbursement date
+            	if (this instanceof LoanBO)
+            		return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(((LoanBO)this).getDisbursementDate())) >= 0;
+            	// must be >= creation date for other accounts
+            	return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
+            } else {
+	            if (meetingDate != null)
+	            	return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+	            return false;
+            }
         } catch (PersistenceException e) {
-            // This should only occur if Customer is null
-            // which shouldn't happen.
-            // Or we had some configuration/binding error.
-            // so we'll throw a runtime exception here.
+            // This should only occur if Customer is null which shouldn't happen.
+            // Or we had some configuration/binding error, so we'll throw a runtime exception here.
             throw new IllegalStateException(e);
-        }
-
-        Date lastMeetingDate = null;
-        if (meetingDate != null) {
-            lastMeetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate
-                    .getTime());
-            return trxnDate.compareTo(lastMeetingDate) >= 0 ? true : false;
-        }
-        else {
-            return false;
         }
     }
 
     public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
         if (AccountingRules.isBackDatedTxnAllowed()) {
-			return isLastCustomerMeetingDate(trxnDate);
+			return isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate);
 		}
-        else {
-            return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
-        }
+        return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
     }
 
 	public List<AccountNotesEntity> getRecentAccountNotes() {

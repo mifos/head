@@ -73,6 +73,7 @@ import org.mifos.application.productdefinition.business.InstallmentRange;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -872,15 +873,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private void validateRepaymentDayRequired(HttpServletRequest request,
 			ActionErrors errors) {
 		try {
-
-			Integer repaymentSchudlesIndepOfMetingIsEnabled = (Integer) SessionUtils
-					.getAttribute(
-							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-							request);
 			//   Integer  recurrenceId=(Integer) request.getAttribute("recurrenceId");
 			int recurrenceId = 1;
-			if (null != repaymentSchudlesIndepOfMetingIsEnabled
-					&& 0 != repaymentSchudlesIndepOfMetingIsEnabled.intValue()) {
+			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
 				if (recurrenceId == 2) {
 					if (StringUtils.isNullOrEmpty(this.getMonthRank())
 							|| StringUtils.isNullOrEmpty(this.getMonthWeek())
@@ -903,9 +898,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 			}
 
 		}
-		catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		catch (PersistenceException e) {
+			throw new IllegalStateException(e);
 		}
 
 	}

@@ -60,10 +60,8 @@ public class LoanDisbursmentAction extends BaseAction {
 			throws Exception {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        Integer repaymentIndepOfMeetingIsEnabled=configurationPersistence.getConfigurationKeyValueInteger(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-   			 repaymentIndepOfMeetingIsEnabled.intValue(),request);
+        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
 		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
 		loanDisbursmentActionForm.clear();
 		Date currentDate = new Date(System.currentTimeMillis());
@@ -151,16 +149,7 @@ public class LoanDisbursmentAction extends BaseAction {
 				.getPreferredLocale());
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
 				.getId());
-		 ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		Integer repaymentIndepOfMeetingIsEnabled = configurationPersistence
-					.getConfigurationKeyValueInteger(
-							LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED)
-					.getValue();
-		boolean isRepaymentIndepOfMeetingEnabled=false;
-        if (null != repaymentIndepOfMeetingIsEnabled
-				&& 0 != repaymentIndepOfMeetingIsEnabled.intValue())
-        	isRepaymentIndepOfMeetingEnabled=true;	
-        if (!isRepaymentIndepOfMeetingEnabled)
+		if (!ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled())
         {
         	if (!loan.isTrxnDateValid(trxnDate))
         		throw new AccountException("errors.invalidTxndate");
