@@ -1,0 +1,561 @@
+
+TEST CASES
+case	Principal	Loan Type	Annual Interest	Number of Payments	Payment Frequency	Days in Year	InitialRoundOffMultiple	FinalRoundOffMultiple	Digits After Decimal	InitialRoundingMode 	FinalRoundingMode	CurrencyRounding	GracePeriodType	GracePeriod	FeeFrequency	FeeType	FeeValue	FeePercentage	pairings
+1	10	Declining	5%	20	Weekly	365	1	0.001	3	CEILING	CEILING	CEILING	None	3	None	Value	0	10%	153
+2	10	Declining	5%	20	Weekly	365	1	0.01	3	FLOOR	FLOOR	FLOOR	All	3	Periodic	Principal	1	10%	108
+3	10	Declining	5%	20	Weekly	365	1	0.1	3	HALF_UP	HALF_UP	HALF_UP	Principal	3	None	Interest	1	10%	88
+4	10	Declining	5%	20	Weekly	365	1	0.5	3	HALF_UP	CEILING	CEILING	All	3	Periodic	Principal+Interest	0	10%	44
+5	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.01	~3	FLOOR	HALF_UP	HALF_UP	None	~3	Periodic	Value	0	~10%	20
+6	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.001	~3	CEILING	FLOOR	FLOOR	Principal	~3	None	Principal	0	~10%	18
+7	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.5	~3	CEILING	FLOOR	CEILING	None	~3	Periodic	Interest	1	~10%	16
+8	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.1	~3	FLOOR	CEILING	FLOOR	All	~3	None	Principal+Interest	1	~10%	14
+9	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.1	~3	HALF_UP	FLOOR	CEILING	Principal	~3	Periodic	Value	0	~10%	11
+10	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.001	~3	CEILING	HALF_UP	HALF_UP	All	~3	Periodic	Interest	1	~10%	12
+11	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.5	~3	HALF_UP	HALF_UP	FLOOR	None	~3	None	Principal	~0	~10%	11
+12	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.01	~3	FLOOR	CEILING	CEILING	Principal	~3	None	Principal+Interest	~1	~10%	9
+13	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.5	~3	FLOOR	CEILING	HALF_UP	Principal	~3	~None	Interest	0	~10%	7
+14	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.001	~3	HALF_UP	FLOOR	HALF_UP	None	~3	~Periodic	Principal+Interest	~1	~10%	6
+15	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.1	~3	CEILING	~HALF_UP	FLOOR	All	~3	~None	Value	1	~10%	4
+16	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.1	~3	~FLOOR	CEILING	CEILING	None	~3	~Periodic	Principal	~1	~10%	4
+17	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.01	~3	HALF_UP	~CEILING	FLOOR	~Principal	~3	~Periodic	Interest	~0	~10%	3
+18	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.01	~3	CEILING	HALF_UP	CEILING	~All	~3	~None	Principal+Interest	~0	~10%	4
+19	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.5	~3	~FLOOR	~FLOOR	~HALF_UP	~All	~3	~None	Value	~1	~10%	1
+20	~10	~Declining	~5%	~20	~Weekly	~365	~1	0.001	~3	FLOOR	~HALF_UP	HALF_UP	~Principal	~3	~Periodic	Principal	~0	~10%	2
+
+PAIRING DETAILS
+var1	var2	value1	value2	appearances	cases
+FeeType	FinalRoundOffMultiple	Value	0.001	1	1
+FeeType	FinalRoundOffMultiple	Value	0.01	1	5
+FeeType	FinalRoundOffMultiple	Value	0.1	2	9, 15
+FeeType	FinalRoundOffMultiple	Value	0.5	1	19
+FeeType	FinalRoundOffMultiple	Principal	0.001	2	6, 20
+FeeType	FinalRoundOffMultiple	Principal	0.01	1	2
+FeeType	FinalRoundOffMultiple	Principal	0.1	1	16
+FeeType	FinalRoundOffMultiple	Principal	0.5	1	11
+FeeType	FinalRoundOffMultiple	Interest	0.001	1	10
+FeeType	FinalRoundOffMultiple	Interest	0.01	1	17
+FeeType	FinalRoundOffMultiple	Interest	0.1	1	3
+FeeType	FinalRoundOffMultiple	Interest	0.5	2	7, 13
+FeeType	FinalRoundOffMultiple	Principal+Interest	0.001	1	14
+FeeType	FinalRoundOffMultiple	Principal+Interest	0.01	2	12, 18
+FeeType	FinalRoundOffMultiple	Principal+Interest	0.1	1	8
+FeeType	FinalRoundOffMultiple	Principal+Interest	0.5	1	4
+FeeType	CurrencyRounding	Value	CEILING	2	1, 9
+FeeType	CurrencyRounding	Value	FLOOR	1	15
+FeeType	CurrencyRounding	Value	HALF_UP	2	5, 19
+FeeType	CurrencyRounding	Principal	CEILING	1	16
+FeeType	CurrencyRounding	Principal	FLOOR	3	2, 6, 11
+FeeType	CurrencyRounding	Principal	HALF_UP	1	20
+FeeType	CurrencyRounding	Interest	CEILING	1	7
+FeeType	CurrencyRounding	Interest	FLOOR	1	17
+FeeType	CurrencyRounding	Interest	HALF_UP	3	3, 10, 13
+FeeType	CurrencyRounding	Principal+Interest	CEILING	3	4, 12, 18
+FeeType	CurrencyRounding	Principal+Interest	FLOOR	1	8
+FeeType	CurrencyRounding	Principal+Interest	HALF_UP	1	14
+FeeType	GracePeriodType	Value	None	2	1, 5
+FeeType	GracePeriodType	Value	All	2	15, 19
+FeeType	GracePeriodType	Value	Principal	1	9
+FeeType	GracePeriodType	Principal	None	2	11, 16
+FeeType	GracePeriodType	Principal	All	1	2
+FeeType	GracePeriodType	Principal	Principal	2	6, 20
+FeeType	GracePeriodType	Interest	None	1	7
+FeeType	GracePeriodType	Interest	All	1	10
+FeeType	GracePeriodType	Interest	Principal	3	3, 13, 17
+FeeType	GracePeriodType	Principal+Interest	None	1	14
+FeeType	GracePeriodType	Principal+Interest	All	3	4, 8, 18
+FeeType	GracePeriodType	Principal+Interest	Principal	1	12
+FeeType	InitialRoundingMode 	Value	CEILING	2	1, 15
+FeeType	InitialRoundingMode 	Value	FLOOR	2	5, 19
+FeeType	InitialRoundingMode 	Value	HALF_UP	1	9
+FeeType	InitialRoundingMode 	Principal	CEILING	1	6
+FeeType	InitialRoundingMode 	Principal	FLOOR	3	2, 16, 20
+FeeType	InitialRoundingMode 	Principal	HALF_UP	1	11
+FeeType	InitialRoundingMode 	Interest	CEILING	2	7, 10
+FeeType	InitialRoundingMode 	Interest	FLOOR	1	13
+FeeType	InitialRoundingMode 	Interest	HALF_UP	2	3, 17
+FeeType	InitialRoundingMode 	Principal+Interest	CEILING	1	18
+FeeType	InitialRoundingMode 	Principal+Interest	FLOOR	2	8, 12
+FeeType	InitialRoundingMode 	Principal+Interest	HALF_UP	2	4, 14
+FeeType	FinalRoundingMode	Value	CEILING	1	1
+FeeType	FinalRoundingMode	Value	FLOOR	2	9, 19
+FeeType	FinalRoundingMode	Value	HALF_UP	2	5, 15
+FeeType	FinalRoundingMode	Principal	CEILING	1	16
+FeeType	FinalRoundingMode	Principal	FLOOR	2	2, 6
+FeeType	FinalRoundingMode	Principal	HALF_UP	2	11, 20
+FeeType	FinalRoundingMode	Interest	CEILING	2	13, 17
+FeeType	FinalRoundingMode	Interest	FLOOR	1	7
+FeeType	FinalRoundingMode	Interest	HALF_UP	2	3, 10
+FeeType	FinalRoundingMode	Principal+Interest	CEILING	3	4, 8, 12
+FeeType	FinalRoundingMode	Principal+Interest	FLOOR	1	14
+FeeType	FinalRoundingMode	Principal+Interest	HALF_UP	1	18
+FeeType	FeeFrequency	Value	None	3	1, 15, 19
+FeeType	FeeFrequency	Value	Periodic	2	5, 9
+FeeType	FeeFrequency	Principal	None	2	6, 11
+FeeType	FeeFrequency	Principal	Periodic	3	2, 16, 20
+FeeType	FeeFrequency	Interest	None	2	3, 13
+FeeType	FeeFrequency	Interest	Periodic	3	7, 10, 17
+FeeType	FeeFrequency	Principal+Interest	None	3	8, 12, 18
+FeeType	FeeFrequency	Principal+Interest	Periodic	2	4, 14
+FeeType	FeeValue	Value	0	3	1, 5, 9
+FeeType	FeeValue	Value	1	2	15, 19
+FeeType	FeeValue	Principal	0	3	6, 11, 20
+FeeType	FeeValue	Principal	1	2	2, 16
+FeeType	FeeValue	Interest	0	2	13, 17
+FeeType	FeeValue	Interest	1	3	3, 7, 10
+FeeType	FeeValue	Principal+Interest	0	2	4, 18
+FeeType	FeeValue	Principal+Interest	1	3	8, 12, 14
+FeeType	Annual Interest	Value	5%	5	1, 5, 9, 15, 19
+FeeType	Annual Interest	Principal	5%	5	2, 6, 11, 16, 20
+FeeType	Annual Interest	Interest	5%	5	3, 7, 10, 13, 17
+FeeType	Annual Interest	Principal+Interest	5%	5	4, 8, 12, 14, 18
+FeeType	Number of Payments	Value	20	5	1, 5, 9, 15, 19
+FeeType	Number of Payments	Principal	20	5	2, 6, 11, 16, 20
+FeeType	Number of Payments	Interest	20	5	3, 7, 10, 13, 17
+FeeType	Number of Payments	Principal+Interest	20	5	4, 8, 12, 14, 18
+FeeType	Payment Frequency	Value	Weekly	5	1, 5, 9, 15, 19
+FeeType	Payment Frequency	Principal	Weekly	5	2, 6, 11, 16, 20
+FeeType	Payment Frequency	Interest	Weekly	5	3, 7, 10, 13, 17
+FeeType	Payment Frequency	Principal+Interest	Weekly	5	4, 8, 12, 14, 18
+FeeType	Days in Year	Value	365	5	1, 5, 9, 15, 19
+FeeType	Days in Year	Principal	365	5	2, 6, 11, 16, 20
+FeeType	Days in Year	Interest	365	5	3, 7, 10, 13, 17
+FeeType	Days in Year	Principal+Interest	365	5	4, 8, 12, 14, 18
+FeeType	Digits After Decimal	Value	3	5	1, 5, 9, 15, 19
+FeeType	Digits After Decimal	Principal	3	5	2, 6, 11, 16, 20
+FeeType	Digits After Decimal	Interest	3	5	3, 7, 10, 13, 17
+FeeType	Digits After Decimal	Principal+Interest	3	5	4, 8, 12, 14, 18
+FeeType	GracePeriod	Value	3	5	1, 5, 9, 15, 19
+FeeType	GracePeriod	Principal	3	5	2, 6, 11, 16, 20
+FeeType	GracePeriod	Interest	3	5	3, 7, 10, 13, 17
+FeeType	GracePeriod	Principal+Interest	3	5	4, 8, 12, 14, 18
+FeeType	Principal	Value	10	5	1, 5, 9, 15, 19
+FeeType	Principal	Principal	10	5	2, 6, 11, 16, 20
+FeeType	Principal	Interest	10	5	3, 7, 10, 13, 17
+FeeType	Principal	Principal+Interest	10	5	4, 8, 12, 14, 18
+FeeType	InitialRoundOffMultiple	Value	1	5	1, 5, 9, 15, 19
+FeeType	InitialRoundOffMultiple	Principal	1	5	2, 6, 11, 16, 20
+FeeType	InitialRoundOffMultiple	Interest	1	5	3, 7, 10, 13, 17
+FeeType	InitialRoundOffMultiple	Principal+Interest	1	5	4, 8, 12, 14, 18
+FeeType	Loan Type	Value	Declining	5	1, 5, 9, 15, 19
+FeeType	Loan Type	Principal	Declining	5	2, 6, 11, 16, 20
+FeeType	Loan Type	Interest	Declining	5	3, 7, 10, 13, 17
+FeeType	Loan Type	Principal+Interest	Declining	5	4, 8, 12, 14, 18
+FeeType	FeePercentage	Value	10%	5	1, 5, 9, 15, 19
+FeeType	FeePercentage	Principal	10%	5	2, 6, 11, 16, 20
+FeeType	FeePercentage	Interest	10%	5	3, 7, 10, 13, 17
+FeeType	FeePercentage	Principal+Interest	10%	5	4, 8, 12, 14, 18
+FinalRoundOffMultiple	CurrencyRounding	0.001	CEILING	1	1
+FinalRoundOffMultiple	CurrencyRounding	0.001	FLOOR	1	6
+FinalRoundOffMultiple	CurrencyRounding	0.001	HALF_UP	3	10, 14, 20
+FinalRoundOffMultiple	CurrencyRounding	0.01	CEILING	2	12, 18
+FinalRoundOffMultiple	CurrencyRounding	0.01	FLOOR	2	2, 17
+FinalRoundOffMultiple	CurrencyRounding	0.01	HALF_UP	1	5
+FinalRoundOffMultiple	CurrencyRounding	0.1	CEILING	2	9, 16
+FinalRoundOffMultiple	CurrencyRounding	0.1	FLOOR	2	8, 15
+FinalRoundOffMultiple	CurrencyRounding	0.1	HALF_UP	1	3
+FinalRoundOffMultiple	CurrencyRounding	0.5	CEILING	2	4, 7
+FinalRoundOffMultiple	CurrencyRounding	0.5	FLOOR	1	11
+FinalRoundOffMultiple	CurrencyRounding	0.5	HALF_UP	2	13, 19
+FinalRoundOffMultiple	GracePeriodType	0.001	None	2	1, 14
+FinalRoundOffMultiple	GracePeriodType	0.001	All	1	10
+FinalRoundOffMultiple	GracePeriodType	0.001	Principal	2	6, 20
+FinalRoundOffMultiple	GracePeriodType	0.01	None	1	5
+FinalRoundOffMultiple	GracePeriodType	0.01	All	2	2, 18
+FinalRoundOffMultiple	GracePeriodType	0.01	Principal	2	12, 17
+FinalRoundOffMultiple	GracePeriodType	0.1	None	1	16
+FinalRoundOffMultiple	GracePeriodType	0.1	All	2	8, 15
+FinalRoundOffMultiple	GracePeriodType	0.1	Principal	2	3, 9
+FinalRoundOffMultiple	GracePeriodType	0.5	None	2	7, 11
+FinalRoundOffMultiple	GracePeriodType	0.5	All	2	4, 19
+FinalRoundOffMultiple	GracePeriodType	0.5	Principal	1	13
+FinalRoundOffMultiple	InitialRoundingMode 	0.001	CEILING	3	1, 6, 10
+FinalRoundOffMultiple	InitialRoundingMode 	0.001	FLOOR	1	20
+FinalRoundOffMultiple	InitialRoundingMode 	0.001	HALF_UP	1	14
+FinalRoundOffMultiple	InitialRoundingMode 	0.01	CEILING	1	18
+FinalRoundOffMultiple	InitialRoundingMode 	0.01	FLOOR	3	2, 5, 12
+FinalRoundOffMultiple	InitialRoundingMode 	0.01	HALF_UP	1	17
+FinalRoundOffMultiple	InitialRoundingMode 	0.1	CEILING	1	15
+FinalRoundOffMultiple	InitialRoundingMode 	0.1	FLOOR	2	8, 16
+FinalRoundOffMultiple	InitialRoundingMode 	0.1	HALF_UP	2	3, 9
+FinalRoundOffMultiple	InitialRoundingMode 	0.5	CEILING	1	7
+FinalRoundOffMultiple	InitialRoundingMode 	0.5	FLOOR	2	13, 19
+FinalRoundOffMultiple	InitialRoundingMode 	0.5	HALF_UP	2	4, 11
+FinalRoundOffMultiple	FinalRoundingMode	0.001	CEILING	1	1
+FinalRoundOffMultiple	FinalRoundingMode	0.001	FLOOR	2	6, 14
+FinalRoundOffMultiple	FinalRoundingMode	0.001	HALF_UP	2	10, 20
+FinalRoundOffMultiple	FinalRoundingMode	0.01	CEILING	2	12, 17
+FinalRoundOffMultiple	FinalRoundingMode	0.01	FLOOR	1	2
+FinalRoundOffMultiple	FinalRoundingMode	0.01	HALF_UP	2	5, 18
+FinalRoundOffMultiple	FinalRoundingMode	0.1	CEILING	2	8, 16
+FinalRoundOffMultiple	FinalRoundingMode	0.1	FLOOR	1	9
+FinalRoundOffMultiple	FinalRoundingMode	0.1	HALF_UP	2	3, 15
+FinalRoundOffMultiple	FinalRoundingMode	0.5	CEILING	2	4, 13
+FinalRoundOffMultiple	FinalRoundingMode	0.5	FLOOR	2	7, 19
+FinalRoundOffMultiple	FinalRoundingMode	0.5	HALF_UP	1	11
+FinalRoundOffMultiple	FeeFrequency	0.001	None	2	1, 6
+FinalRoundOffMultiple	FeeFrequency	0.001	Periodic	3	10, 14, 20
+FinalRoundOffMultiple	FeeFrequency	0.01	None	2	12, 18
+FinalRoundOffMultiple	FeeFrequency	0.01	Periodic	3	2, 5, 17
+FinalRoundOffMultiple	FeeFrequency	0.1	None	3	3, 8, 15
+FinalRoundOffMultiple	FeeFrequency	0.1	Periodic	2	9, 16
+FinalRoundOffMultiple	FeeFrequency	0.5	None	3	11, 13, 19
+FinalRoundOffMultiple	FeeFrequency	0.5	Periodic	2	4, 7
+FinalRoundOffMultiple	FeeValue	0.001	0	3	1, 6, 20
+FinalRoundOffMultiple	FeeValue	0.001	1	2	10, 14
+FinalRoundOffMultiple	FeeValue	0.01	0	3	5, 17, 18
+FinalRoundOffMultiple	FeeValue	0.01	1	2	2, 12
+FinalRoundOffMultiple	FeeValue	0.1	0	1	9
+FinalRoundOffMultiple	FeeValue	0.1	1	4	3, 8, 15, 16
+FinalRoundOffMultiple	FeeValue	0.5	0	3	4, 11, 13
+FinalRoundOffMultiple	FeeValue	0.5	1	2	7, 19
+FinalRoundOffMultiple	Annual Interest	0.001	5%	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Annual Interest	0.01	5%	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Annual Interest	0.1	5%	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Annual Interest	0.5	5%	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Number of Payments	0.001	20	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Number of Payments	0.01	20	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Number of Payments	0.1	20	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Number of Payments	0.5	20	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Payment Frequency	0.001	Weekly	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Payment Frequency	0.01	Weekly	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Payment Frequency	0.1	Weekly	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Payment Frequency	0.5	Weekly	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Days in Year	0.001	365	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Days in Year	0.01	365	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Days in Year	0.1	365	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Days in Year	0.5	365	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Digits After Decimal	0.001	3	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Digits After Decimal	0.01	3	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Digits After Decimal	0.1	3	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Digits After Decimal	0.5	3	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	GracePeriod	0.001	3	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	GracePeriod	0.01	3	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	GracePeriod	0.1	3	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	GracePeriod	0.5	3	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Principal	0.001	10	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Principal	0.01	10	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Principal	0.1	10	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Principal	0.5	10	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	InitialRoundOffMultiple	0.001	1	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	InitialRoundOffMultiple	0.01	1	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	InitialRoundOffMultiple	0.1	1	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	InitialRoundOffMultiple	0.5	1	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	Loan Type	0.001	Declining	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	Loan Type	0.01	Declining	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	Loan Type	0.1	Declining	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	Loan Type	0.5	Declining	5	4, 7, 11, 13, 19
+FinalRoundOffMultiple	FeePercentage	0.001	10%	5	1, 6, 10, 14, 20
+FinalRoundOffMultiple	FeePercentage	0.01	10%	5	2, 5, 12, 17, 18
+FinalRoundOffMultiple	FeePercentage	0.1	10%	5	3, 8, 9, 15, 16
+FinalRoundOffMultiple	FeePercentage	0.5	10%	5	4, 7, 11, 13, 19
+CurrencyRounding	GracePeriodType	CEILING	None	3	1, 7, 16
+CurrencyRounding	GracePeriodType	CEILING	All	2	4, 18
+CurrencyRounding	GracePeriodType	CEILING	Principal	2	9, 12
+CurrencyRounding	GracePeriodType	FLOOR	None	1	11
+CurrencyRounding	GracePeriodType	FLOOR	All	3	2, 8, 15
+CurrencyRounding	GracePeriodType	FLOOR	Principal	2	6, 17
+CurrencyRounding	GracePeriodType	HALF_UP	None	2	5, 14
+CurrencyRounding	GracePeriodType	HALF_UP	All	2	10, 19
+CurrencyRounding	GracePeriodType	HALF_UP	Principal	3	3, 13, 20
+CurrencyRounding	InitialRoundingMode 	CEILING	CEILING	3	1, 7, 18
+CurrencyRounding	InitialRoundingMode 	CEILING	FLOOR	2	12, 16
+CurrencyRounding	InitialRoundingMode 	CEILING	HALF_UP	2	4, 9
+CurrencyRounding	InitialRoundingMode 	FLOOR	CEILING	2	6, 15
+CurrencyRounding	InitialRoundingMode 	FLOOR	FLOOR	2	2, 8
+CurrencyRounding	InitialRoundingMode 	FLOOR	HALF_UP	2	11, 17
+CurrencyRounding	InitialRoundingMode 	HALF_UP	CEILING	1	10
+CurrencyRounding	InitialRoundingMode 	HALF_UP	FLOOR	4	5, 13, 19, 20
+CurrencyRounding	InitialRoundingMode 	HALF_UP	HALF_UP	2	3, 14
+CurrencyRounding	FinalRoundingMode	CEILING	CEILING	4	1, 4, 12, 16
+CurrencyRounding	FinalRoundingMode	CEILING	FLOOR	2	7, 9
+CurrencyRounding	FinalRoundingMode	CEILING	HALF_UP	1	18
+CurrencyRounding	FinalRoundingMode	FLOOR	CEILING	2	8, 17
+CurrencyRounding	FinalRoundingMode	FLOOR	FLOOR	2	2, 6
+CurrencyRounding	FinalRoundingMode	FLOOR	HALF_UP	2	11, 15
+CurrencyRounding	FinalRoundingMode	HALF_UP	CEILING	1	13
+CurrencyRounding	FinalRoundingMode	HALF_UP	FLOOR	2	14, 19
+CurrencyRounding	FinalRoundingMode	HALF_UP	HALF_UP	4	3, 5, 10, 20
+CurrencyRounding	FeeFrequency	CEILING	None	3	1, 12, 18
+CurrencyRounding	FeeFrequency	CEILING	Periodic	4	4, 7, 9, 16
+CurrencyRounding	FeeFrequency	FLOOR	None	4	6, 8, 11, 15
+CurrencyRounding	FeeFrequency	FLOOR	Periodic	2	2, 17
+CurrencyRounding	FeeFrequency	HALF_UP	None	3	3, 13, 19
+CurrencyRounding	FeeFrequency	HALF_UP	Periodic	4	5, 10, 14, 20
+CurrencyRounding	FeeValue	CEILING	0	4	1, 4, 9, 18
+CurrencyRounding	FeeValue	CEILING	1	3	7, 12, 16
+CurrencyRounding	FeeValue	FLOOR	0	3	6, 11, 17
+CurrencyRounding	FeeValue	FLOOR	1	3	2, 8, 15
+CurrencyRounding	FeeValue	HALF_UP	0	3	5, 13, 20
+CurrencyRounding	FeeValue	HALF_UP	1	4	3, 10, 14, 19
+CurrencyRounding	Annual Interest	CEILING	5%	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Annual Interest	FLOOR	5%	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Annual Interest	HALF_UP	5%	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Number of Payments	CEILING	20	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Number of Payments	FLOOR	20	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Number of Payments	HALF_UP	20	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Payment Frequency	CEILING	Weekly	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Payment Frequency	FLOOR	Weekly	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Payment Frequency	HALF_UP	Weekly	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Days in Year	CEILING	365	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Days in Year	FLOOR	365	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Days in Year	HALF_UP	365	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Digits After Decimal	CEILING	3	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Digits After Decimal	FLOOR	3	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Digits After Decimal	HALF_UP	3	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	GracePeriod	CEILING	3	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	GracePeriod	FLOOR	3	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	GracePeriod	HALF_UP	3	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Principal	CEILING	10	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Principal	FLOOR	10	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Principal	HALF_UP	10	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	InitialRoundOffMultiple	CEILING	1	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	InitialRoundOffMultiple	FLOOR	1	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	InitialRoundOffMultiple	HALF_UP	1	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	Loan Type	CEILING	Declining	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	Loan Type	FLOOR	Declining	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	Loan Type	HALF_UP	Declining	7	3, 5, 10, 13, 14, 19, 20
+CurrencyRounding	FeePercentage	CEILING	10%	7	1, 4, 7, 9, 12, 16, 18
+CurrencyRounding	FeePercentage	FLOOR	10%	6	2, 6, 8, 11, 15, 17
+CurrencyRounding	FeePercentage	HALF_UP	10%	7	3, 5, 10, 13, 14, 19, 20
+GracePeriodType	InitialRoundingMode 	None	CEILING	2	1, 7
+GracePeriodType	InitialRoundingMode 	None	FLOOR	2	5, 16
+GracePeriodType	InitialRoundingMode 	None	HALF_UP	2	11, 14
+GracePeriodType	InitialRoundingMode 	All	CEILING	3	10, 15, 18
+GracePeriodType	InitialRoundingMode 	All	FLOOR	3	2, 8, 19
+GracePeriodType	InitialRoundingMode 	All	HALF_UP	1	4
+GracePeriodType	InitialRoundingMode 	Principal	CEILING	1	6
+GracePeriodType	InitialRoundingMode 	Principal	FLOOR	3	12, 13, 20
+GracePeriodType	InitialRoundingMode 	Principal	HALF_UP	3	3, 9, 17
+GracePeriodType	FinalRoundingMode	None	CEILING	2	1, 16
+GracePeriodType	FinalRoundingMode	None	FLOOR	2	7, 14
+GracePeriodType	FinalRoundingMode	None	HALF_UP	2	5, 11
+GracePeriodType	FinalRoundingMode	All	CEILING	2	4, 8
+GracePeriodType	FinalRoundingMode	All	FLOOR	2	2, 19
+GracePeriodType	FinalRoundingMode	All	HALF_UP	3	10, 15, 18
+GracePeriodType	FinalRoundingMode	Principal	CEILING	3	12, 13, 17
+GracePeriodType	FinalRoundingMode	Principal	FLOOR	2	6, 9
+GracePeriodType	FinalRoundingMode	Principal	HALF_UP	2	3, 20
+GracePeriodType	FeeFrequency	None	None	2	1, 11
+GracePeriodType	FeeFrequency	None	Periodic	4	5, 7, 14, 16
+GracePeriodType	FeeFrequency	All	None	4	8, 15, 18, 19
+GracePeriodType	FeeFrequency	All	Periodic	3	2, 4, 10
+GracePeriodType	FeeFrequency	Principal	None	4	3, 6, 12, 13
+GracePeriodType	FeeFrequency	Principal	Periodic	3	9, 17, 20
+GracePeriodType	FeeValue	None	0	3	1, 5, 11
+GracePeriodType	FeeValue	None	1	3	7, 14, 16
+GracePeriodType	FeeValue	All	0	2	4, 18
+GracePeriodType	FeeValue	All	1	5	2, 8, 10, 15, 19
+GracePeriodType	FeeValue	Principal	0	5	6, 9, 13, 17, 20
+GracePeriodType	FeeValue	Principal	1	2	3, 12
+GracePeriodType	Annual Interest	None	5%	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Annual Interest	All	5%	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Annual Interest	Principal	5%	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Number of Payments	None	20	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Number of Payments	All	20	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Number of Payments	Principal	20	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Payment Frequency	None	Weekly	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Payment Frequency	All	Weekly	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Payment Frequency	Principal	Weekly	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Days in Year	None	365	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Days in Year	All	365	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Days in Year	Principal	365	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Digits After Decimal	None	3	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Digits After Decimal	All	3	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Digits After Decimal	Principal	3	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	GracePeriod	None	3	6	1, 5, 7, 11, 14, 16
+GracePeriodType	GracePeriod	All	3	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	GracePeriod	Principal	3	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Principal	None	10	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Principal	All	10	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Principal	Principal	10	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	InitialRoundOffMultiple	None	1	6	1, 5, 7, 11, 14, 16
+GracePeriodType	InitialRoundOffMultiple	All	1	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	InitialRoundOffMultiple	Principal	1	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	Loan Type	None	Declining	6	1, 5, 7, 11, 14, 16
+GracePeriodType	Loan Type	All	Declining	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	Loan Type	Principal	Declining	7	3, 6, 9, 12, 13, 17, 20
+GracePeriodType	FeePercentage	None	10%	6	1, 5, 7, 11, 14, 16
+GracePeriodType	FeePercentage	All	10%	7	2, 4, 8, 10, 15, 18, 19
+GracePeriodType	FeePercentage	Principal	10%	7	3, 6, 9, 12, 13, 17, 20
+InitialRoundingMode 	FinalRoundingMode	CEILING	CEILING	1	1
+InitialRoundingMode 	FinalRoundingMode	CEILING	FLOOR	2	6, 7
+InitialRoundingMode 	FinalRoundingMode	CEILING	HALF_UP	3	10, 15, 18
+InitialRoundingMode 	FinalRoundingMode	FLOOR	CEILING	4	8, 12, 13, 16
+InitialRoundingMode 	FinalRoundingMode	FLOOR	FLOOR	2	2, 19
+InitialRoundingMode 	FinalRoundingMode	FLOOR	HALF_UP	2	5, 20
+InitialRoundingMode 	FinalRoundingMode	HALF_UP	CEILING	2	4, 17
+InitialRoundingMode 	FinalRoundingMode	HALF_UP	FLOOR	2	9, 14
+InitialRoundingMode 	FinalRoundingMode	HALF_UP	HALF_UP	2	3, 11
+InitialRoundingMode 	FeeFrequency	CEILING	None	4	1, 6, 15, 18
+InitialRoundingMode 	FeeFrequency	CEILING	Periodic	2	7, 10
+InitialRoundingMode 	FeeFrequency	FLOOR	None	4	8, 12, 13, 19
+InitialRoundingMode 	FeeFrequency	FLOOR	Periodic	4	2, 5, 16, 20
+InitialRoundingMode 	FeeFrequency	HALF_UP	None	2	3, 11
+InitialRoundingMode 	FeeFrequency	HALF_UP	Periodic	4	4, 9, 14, 17
+InitialRoundingMode 	FeeValue	CEILING	0	3	1, 6, 18
+InitialRoundingMode 	FeeValue	CEILING	1	3	7, 10, 15
+InitialRoundingMode 	FeeValue	FLOOR	0	3	5, 13, 20
+InitialRoundingMode 	FeeValue	FLOOR	1	5	2, 8, 12, 16, 19
+InitialRoundingMode 	FeeValue	HALF_UP	0	4	4, 9, 11, 17
+InitialRoundingMode 	FeeValue	HALF_UP	1	2	3, 14
+InitialRoundingMode 	Annual Interest	CEILING	5%	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Annual Interest	FLOOR	5%	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Annual Interest	HALF_UP	5%	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Number of Payments	CEILING	20	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Number of Payments	FLOOR	20	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Number of Payments	HALF_UP	20	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Payment Frequency	CEILING	Weekly	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Payment Frequency	FLOOR	Weekly	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Payment Frequency	HALF_UP	Weekly	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Days in Year	CEILING	365	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Days in Year	FLOOR	365	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Days in Year	HALF_UP	365	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Digits After Decimal	CEILING	3	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Digits After Decimal	FLOOR	3	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Digits After Decimal	HALF_UP	3	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	GracePeriod	CEILING	3	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	GracePeriod	FLOOR	3	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	GracePeriod	HALF_UP	3	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Principal	CEILING	10	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Principal	FLOOR	10	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Principal	HALF_UP	10	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	InitialRoundOffMultiple	CEILING	1	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	InitialRoundOffMultiple	FLOOR	1	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	InitialRoundOffMultiple	HALF_UP	1	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	Loan Type	CEILING	Declining	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	Loan Type	FLOOR	Declining	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	Loan Type	HALF_UP	Declining	6	3, 4, 9, 11, 14, 17
+InitialRoundingMode 	FeePercentage	CEILING	10%	6	1, 6, 7, 10, 15, 18
+InitialRoundingMode 	FeePercentage	FLOOR	10%	8	2, 5, 8, 12, 13, 16, 19, 20
+InitialRoundingMode 	FeePercentage	HALF_UP	10%	6	3, 4, 9, 11, 14, 17
+FinalRoundingMode	FeeFrequency	CEILING	None	4	1, 8, 12, 13
+FinalRoundingMode	FeeFrequency	CEILING	Periodic	3	4, 16, 17
+FinalRoundingMode	FeeFrequency	FLOOR	None	2	6, 19
+FinalRoundingMode	FeeFrequency	FLOOR	Periodic	4	2, 7, 9, 14
+FinalRoundingMode	FeeFrequency	HALF_UP	None	4	3, 11, 15, 18
+FinalRoundingMode	FeeFrequency	HALF_UP	Periodic	3	5, 10, 20
+FinalRoundingMode	FeeValue	CEILING	0	4	1, 4, 13, 17
+FinalRoundingMode	FeeValue	CEILING	1	3	8, 12, 16
+FinalRoundingMode	FeeValue	FLOOR	0	2	6, 9
+FinalRoundingMode	FeeValue	FLOOR	1	4	2, 7, 14, 19
+FinalRoundingMode	FeeValue	HALF_UP	0	4	5, 11, 18, 20
+FinalRoundingMode	FeeValue	HALF_UP	1	3	3, 10, 15
+FinalRoundingMode	Annual Interest	CEILING	5%	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Annual Interest	FLOOR	5%	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Annual Interest	HALF_UP	5%	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Number of Payments	CEILING	20	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Number of Payments	FLOOR	20	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Number of Payments	HALF_UP	20	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Payment Frequency	CEILING	Weekly	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Payment Frequency	FLOOR	Weekly	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Payment Frequency	HALF_UP	Weekly	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Days in Year	CEILING	365	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Days in Year	FLOOR	365	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Days in Year	HALF_UP	365	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Digits After Decimal	CEILING	3	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Digits After Decimal	FLOOR	3	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Digits After Decimal	HALF_UP	3	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	GracePeriod	CEILING	3	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	GracePeriod	FLOOR	3	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	GracePeriod	HALF_UP	3	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Principal	CEILING	10	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Principal	FLOOR	10	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Principal	HALF_UP	10	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	InitialRoundOffMultiple	CEILING	1	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	InitialRoundOffMultiple	FLOOR	1	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	InitialRoundOffMultiple	HALF_UP	1	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	Loan Type	CEILING	Declining	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	Loan Type	FLOOR	Declining	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	Loan Type	HALF_UP	Declining	7	3, 5, 10, 11, 15, 18, 20
+FinalRoundingMode	FeePercentage	CEILING	10%	7	1, 4, 8, 12, 13, 16, 17
+FinalRoundingMode	FeePercentage	FLOOR	10%	6	2, 6, 7, 9, 14, 19
+FinalRoundingMode	FeePercentage	HALF_UP	10%	7	3, 5, 10, 11, 15, 18, 20
+FeeFrequency	FeeValue	None	0	5	1, 6, 11, 13, 18
+FeeFrequency	FeeValue	None	1	5	3, 8, 12, 15, 19
+FeeFrequency	FeeValue	Periodic	0	5	4, 5, 9, 17, 20
+FeeFrequency	FeeValue	Periodic	1	5	2, 7, 10, 14, 16
+FeeFrequency	Annual Interest	None	5%	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Annual Interest	Periodic	5%	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Number of Payments	None	20	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Number of Payments	Periodic	20	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Payment Frequency	None	Weekly	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Payment Frequency	Periodic	Weekly	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Days in Year	None	365	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Days in Year	Periodic	365	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Digits After Decimal	None	3	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Digits After Decimal	Periodic	3	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	GracePeriod	None	3	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	GracePeriod	Periodic	3	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Principal	None	10	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Principal	Periodic	10	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	InitialRoundOffMultiple	None	1	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	InitialRoundOffMultiple	Periodic	1	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	Loan Type	None	Declining	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	Loan Type	Periodic	Declining	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeFrequency	FeePercentage	None	10%	10	1, 3, 6, 8, 11, 12, 13, 15, 18, 19
+FeeFrequency	FeePercentage	Periodic	10%	10	2, 4, 5, 7, 9, 10, 14, 16, 17, 20
+FeeValue	Annual Interest	0	5%	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Annual Interest	1	5%	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Number of Payments	0	20	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Number of Payments	1	20	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Payment Frequency	0	Weekly	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Payment Frequency	1	Weekly	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Days in Year	0	365	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Days in Year	1	365	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Digits After Decimal	0	3	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Digits After Decimal	1	3	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	GracePeriod	0	3	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	GracePeriod	1	3	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Principal	0	10	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Principal	1	10	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	InitialRoundOffMultiple	0	1	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	InitialRoundOffMultiple	1	1	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	Loan Type	0	Declining	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	Loan Type	1	Declining	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+FeeValue	FeePercentage	0	10%	10	1, 4, 5, 6, 9, 11, 13, 17, 18, 20
+FeeValue	FeePercentage	1	10%	10	2, 3, 7, 8, 10, 12, 14, 15, 16, 19
+Annual Interest	Number of Payments	5%	20	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	Payment Frequency	5%	Weekly	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	Days in Year	5%	365	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	Digits After Decimal	5%	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	GracePeriod	5%	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	Principal	5%	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	InitialRoundOffMultiple	5%	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	Loan Type	5%	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Annual Interest	FeePercentage	5%	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	Payment Frequency	20	Weekly	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	Days in Year	20	365	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	Digits After Decimal	20	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	GracePeriod	20	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	Principal	20	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	InitialRoundOffMultiple	20	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	Loan Type	20	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Number of Payments	FeePercentage	20	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	Days in Year	Weekly	365	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	Digits After Decimal	Weekly	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	GracePeriod	Weekly	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	Principal	Weekly	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	InitialRoundOffMultiple	Weekly	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	Loan Type	Weekly	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Payment Frequency	FeePercentage	Weekly	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	Digits After Decimal	365	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	GracePeriod	365	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	Principal	365	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	InitialRoundOffMultiple	365	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	Loan Type	365	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Days in Year	FeePercentage	365	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Digits After Decimal	GracePeriod	3	3	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Digits After Decimal	Principal	3	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Digits After Decimal	InitialRoundOffMultiple	3	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Digits After Decimal	Loan Type	3	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Digits After Decimal	FeePercentage	3	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+GracePeriod	Principal	3	10	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+GracePeriod	InitialRoundOffMultiple	3	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+GracePeriod	Loan Type	3	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+GracePeriod	FeePercentage	3	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Principal	InitialRoundOffMultiple	10	1	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Principal	Loan Type	10	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Principal	FeePercentage	10	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+InitialRoundOffMultiple	Loan Type	1	Declining	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+InitialRoundOffMultiple	FeePercentage	1	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+Loan Type	FeePercentage	Declining	10%	20	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20

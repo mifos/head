@@ -192,14 +192,14 @@ public class TestAccountService extends MifosTestCase {
 		assertEquals(4, applicableChargeList.size());
 		for (ApplicableCharge applicableCharge : applicableChargeList) {
 			if (applicableCharge.getFeeName().equalsIgnoreCase("Upfront Fee")) {
-				assertEquals(new Money("20.0").toString(), applicableCharge
-						.getAmountOrRate());
+				assertEquals(new Money("20.0"), new Money(applicableCharge
+						.getAmountOrRate()));
 				assertNotNull(applicableCharge.getFormula());
 				assertNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
-				assertEquals(new Money("200.0").toString(), applicableCharge
-						.getAmountOrRate());
+				assertEquals(new Money("200.0"), new Money(applicableCharge
+						.getAmountOrRate()));
 				assertNull(applicableCharge.getFormula());
 				assertNotNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(
@@ -239,8 +239,8 @@ public class TestAccountService extends MifosTestCase {
 				assertNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
-				assertEquals(new Money("200.0").toString(), applicableCharge
-						.getAmountOrRate());
+				assertEquals(new Money("200.0"), new Money(applicableCharge
+						.getAmountOrRate()));
 				assertNull(applicableCharge.getFormula());
 				assertNotNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(
@@ -276,8 +276,8 @@ public class TestAccountService extends MifosTestCase {
 				assertNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
-				assertEquals(new Money("200.0").toString(), applicableCharge
-						.getAmountOrRate());
+				assertEquals(new Money("200.0"), new Money(applicableCharge
+						.getAmountOrRate()));
 				assertNull(applicableCharge.getFormula());
 				assertNotNull(applicableCharge.getPeriodicity());
 			} else if (applicableCharge.getFeeName().equalsIgnoreCase(

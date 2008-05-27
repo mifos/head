@@ -1,5 +1,0 @@
-Principal	Loan Type	Annual Interest	Number of Payments	Payment Frequency	Days in Year	InitialRoundOffMultiple	FinalRoundOffMultiple	Digits After Decimal	InitialRoundingMode 	FinalRoundingMode	CurrencyRounding	GracePeriodType	GracePeriod	FeeFrequency	FeeType	FeeValue	FeePercentage
-1000.5	Declining	3%	3	Weekly	360	1	0.001	3	CEILING	CEILING	CEILING	None	0	None	Value	0	0%
-9999		19.99%	26	Monthly	365		0.01		FLOOR	FLOOR	FLOOR						
-		100%	52				0.1		HALF_UP	HALF_UP	HALF_UP						
-							0.5										

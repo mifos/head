@@ -29,6 +29,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -2260,7 +2261,11 @@ class LoanTestCaseData {
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (fileNameContains(dataFileNames[i], flatGraceFeeTestCases)) {
+			if (
+				fileNameContains(dataFileNames[i], flatGraceFeeTestCases)
+				|| 
+				fileNameContains(dataFileNames[i], flatNegativeLastPaymentTestCases)
+					) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -2274,7 +2279,11 @@ class LoanTestCaseData {
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
 		String[] dataFileNames = getCSVFiles(rootPath);
 		for (int i=0; i < dataFileNames.length; i++) {
-			if (fileNameContains(dataFileNames[i], decliningGraceFeeTestCases)) {
+			if (
+					fileNameContains(dataFileNames[i], decliningGraceFeeTestCases)
+					|| 
+					fileNameContains(dataFileNames[i], decliningNegativeLastPaymentTestCases)
+					) {
 				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
 				tearDown();
 				setUp();
@@ -2347,6 +2356,18 @@ class LoanTestCaseData {
 			"testcase-2008-05-12-flat-grace-set1.12",
 			"testcase-2008-05-12-flat-grace-set1.13",
 			"testcase-2008-05-12-flat-grace-set1.14"	
+	};
+	
+	private String[] flatNegativeLastPaymentTestCases = {
+		"testcase-2008-05-27-flat-negative-payment-set1.01.csv",
+		"testcase-2008-05-27-flat-negative-payment-set1.02.csv",
+		"testcase-2008-05-27-flat-negative-payment-set1.03.csv"
+	};
+	
+	private String[] decliningNegativeLastPaymentTestCases = {
+		"testcase-2008-05-27-declining-negative-payment-set1.01.csv",
+		"testcase-2008-05-27-declining-negative-payment-set1.02.csv",
+		"testcase-2008-05-27-declining-negative-payment-set1.03.csv"
 	};
 	
 	private String[] flatGraceFeeTestCases = {
