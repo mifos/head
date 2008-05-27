@@ -49,6 +49,7 @@ import org.mifos.framework.exceptions.ValueObjectConversionException;
 /**
  * Helper class which has methods to operate upon valueobjects.
  */
+// TODO: fix spelling of this class
 public class ConvertionUtil {
 
 	public static void populateBusinessObject(ActionForm actionForm,
@@ -76,7 +77,7 @@ public class ConvertionUtil {
 				// MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion
 				// valueObject to action form using bean utils", false, null);
 			} else {
-				throw new ValueObjectConversionException("");
+				throw new IllegalArgumentException("business object was null");
 			}
 		} catch (InvocationTargetException e) {
 			throw new ValueObjectConversionException(e);
