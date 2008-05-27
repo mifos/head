@@ -148,15 +148,15 @@ public class OfficeListTag extends BodyTagSupport {
 		String area = "";
 		for (OfficeView level : levels) {
 			if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()))
-				termForBranch = MifosTagUtils.xmlEscape(level.getLevelName());
+				termForBranch = level.getLevelName();
 			else if (level.getLevelId().equals(OfficeLevel.AREAOFFICE.getValue()))
-				area = MifosTagUtils.xmlEscape(level.getLevelName());
+				area = level.getLevelName();
 			else if (level.getLevelId().equals(OfficeLevel.REGIONALOFFICE
 					.getValue()))
-				regional = MifosTagUtils.xmlEscape(level.getLevelName());
+				regional = level.getLevelName();
 			else if (level.getLevelId().equals(OfficeLevel.SUBREGIONALOFFICE
 					.getValue()))
-				subregional = MifosTagUtils.xmlEscape(level.getLevelName());
+				subregional = level.getLevelName();
 		}
 
 		XmlBuilder result = new XmlBuilder();
