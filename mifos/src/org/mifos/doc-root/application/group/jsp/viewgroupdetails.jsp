@@ -112,10 +112,9 @@
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
 								<span class="fontnormal"> <a
 									href="clientCustAction.do?method=load&groupFlag=1&parentGroupId=${BusinessKey.customerId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
-				
-								<fmt:message key="Group.Add" >
-				  				<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
-				  				</fmt:message>
+								    <fmt:message key="Group.Add" >
+				  				    <fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></fmt:param>
+				  				    </fmt:message>
 								</a>
 								</span>
 							</c:if> <br>
