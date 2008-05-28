@@ -673,7 +673,7 @@ public class PersonActionForm extends BaseActionForm {
 
 			// ignore it
 		}
-		if (customFieldDefs != null)
+		//if (customFieldDefs != null)
 			for (CustomFieldView customField : customFields) {
 				boolean isErrorFound = false;
 				for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
@@ -687,6 +687,7 @@ public class PersonActionForm extends BaseActionForm {
 											CustomerConstants.CUSTOM_FIELD,
 											new ActionMessage(
 													OfficeConstants.ENTERADDTIONALINFO));
+							errors.add(PersonnelConstants.ERROR_CUSTOMfIELD,new ActionMessage(PersonnelConstants.ERROR_CUSTOMfIELD));
 							isErrorFound = true;
 							break;
 						}
