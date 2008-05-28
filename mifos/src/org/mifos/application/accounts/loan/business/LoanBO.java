@@ -110,6 +110,7 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -119,13 +120,16 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1091,7 +1095,7 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		try {
 			MasterPersistence masterPersistence = new MasterPersistence();
-			PersonnelBO personnel = new PersonnelPersistence()
+			PersonnelBO currentUser = new PersonnelPersistence()
 					.getPersonnel(personnelId);
 			this.setUpdatedBy(personnelId);
 			this.setUpdatedDate(new Date(System.currentTimeMillis()));
@@ -1102,17 +1106,17 @@ public class LoanBO extends AccountBO {
 
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.PAYMENT_RCVD,
-					AccountActionTypes.LOAN_REPAYMENT);
+					AccountActionTypes.LOAN_REPAYMENT, currentUser);
 			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,
 					AccountConstants.PAYMENT_RCVD,
-					AccountActionTypes.LOAN_REPAYMENT);
+					AccountActionTypes.LOAN_REPAYMENT, currentUser);
 
 			if (getPerformanceHistory() != null) {
 				getPerformanceHistory().setNoOfPayments(
 						getPerformanceHistory().getNoOfPayments() + 1);
 			}
 			LoanActivityEntity loanActivity = buildLoanActivity(
-					accountPaymentEntity.getAccountTrxns(), personnel,
+					accountPaymentEntity.getAccountTrxns(), currentUser,
 					AccountConstants.LOAN_REPAYMENT, DateUtils
 							.getCurrentDateWithoutTimeStamp());
 			addLoanActivity(loanActivity);
@@ -1187,7 +1191,7 @@ public class LoanBO extends AccountBO {
 	protected void writeOff() throws AccountException {
 		try {
 			Short personnelId = this.getUserContext().getId();
-			PersonnelBO personnel = new PersonnelPersistence()
+			PersonnelBO currentUser = new PersonnelPersistence()
 					.getPersonnel(personnelId);
 
 			this.setUpdatedBy(personnelId);
@@ -1198,12 +1202,12 @@ public class LoanBO extends AccountBO {
 			this.addAccountPayment(accountPaymentEntity);
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_WRITTEN_OFF,
-					AccountActionTypes.WRITEOFF);
+					AccountActionTypes.WRITEOFF, currentUser);
 			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_WRITTEN_OFF,
-					AccountActionTypes.WRITEOFF);
+					AccountActionTypes.WRITEOFF, currentUser);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnel,
+					.getAccountTrxns(), currentUser,
 					AccountConstants.LOAN_WRITTEN_OFF, DateUtils
 							.getCurrentDateWithoutTimeStamp()));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -1219,7 +1223,7 @@ public class LoanBO extends AccountBO {
 	protected void reschedule() throws AccountException {
 		try {
 			Short personnelId = this.getUserContext().getId();
-			PersonnelBO personnel = new PersonnelPersistence()
+			PersonnelBO currentUser = new PersonnelPersistence()
 			.getPersonnel(personnelId);
 			this.setUpdatedBy(personnelId);
 			this.setUpdatedDate(new Date(System.currentTimeMillis()));
@@ -1229,12 +1233,12 @@ public class LoanBO extends AccountBO {
 			this.addAccountPayment(accountPaymentEntity);
 			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_RESCHEDULED,
-					AccountActionTypes.LOAN_RESCHEDULED);
+					AccountActionTypes.LOAN_RESCHEDULED, currentUser);
 			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,
 					AccountConstants.LOAN_RESCHEDULED,
-					AccountActionTypes.LOAN_RESCHEDULED);
+					AccountActionTypes.LOAN_RESCHEDULED, currentUser);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnel,
+					.getAccountTrxns(), currentUser,
 					AccountConstants.LOAN_RESCHEDULED, DateUtils
 					.getCurrentDateWithoutTimeStamp()));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
@@ -3397,7 +3401,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	
 	private void makeEarlyRepaymentForDueInstallments(
 			AccountPaymentEntity accountPaymentEntity, String comments,
-			AccountActionTypes accountActionTypes) throws AccountException {
+			AccountActionTypes accountActionTypes, PersonnelBO currentUser) throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		List<AccountActionDateEntity> dueInstallmentsList = getApplicableIdsForDueInstallments();
 		for (AccountActionDateEntity accountActionDateEntity : dueInstallmentsList) {
@@ -3416,7 +3420,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 								.getPersistentObject(AccountActionEntity.class,
 										accountActionTypes.getValue()),
 						loanSchedule.getInstallmentId(), loanSchedule
-								.getActionDate(), personnel, new Date(System
+								.getActionDate(), currentUser, new Date(System
 								.currentTimeMillis()), totalAmt, comments,
 						null, principal, interest, loanSchedule.getPenalty()
 								.subtract(loanSchedule.getPenaltyPaid()),
@@ -3451,7 +3455,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 	private void makeEarlyRepaymentForFutureInstallments(
 			AccountPaymentEntity accountPaymentEntity, String comments,
-			AccountActionTypes accountActionTypes) throws AccountException {
+			AccountActionTypes accountActionTypes, PersonnelBO currentUser) throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		List<AccountActionDateEntity> futureInstallmentsList = getApplicableIdsForFutureInstallments();
 		for (AccountActionDateEntity accountActionDateEntity : futureInstallmentsList) {
@@ -3469,7 +3473,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 								.getPersistentObject(AccountActionEntity.class,
 										accountActionTypes.getValue()),
 						loanSchedule.getInstallmentId(), loanSchedule
-								.getActionDate(), personnel, new Date(System
+								.getActionDate(), currentUser, new Date(System
 								.currentTimeMillis()), principal, comments,
 						null, principal, new Money(), new Money(), new Money(),
 						new Money(), null);
@@ -4643,6 +4647,5 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		this.rawAmountTotal =  rawAmountTotal;
 	}
 
-	
 	
 }
