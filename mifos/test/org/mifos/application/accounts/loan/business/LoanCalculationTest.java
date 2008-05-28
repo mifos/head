@@ -786,8 +786,8 @@ public class LoanCalculationTest  {
 		setUpLoanAndVerify999AccountWhenLoanIsRepaid(config, loanParams, testCaseData.expectedResult);
 	}
 	
-	//TODO: Test fails. Fix or remove
-	public void xtest999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException,
+	@Test
+	public void test999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterest/";
@@ -801,8 +801,8 @@ public class LoanCalculationTest  {
 		}
 	}
 	
-	//TODO: Test fails. Fix or remove
-	public void xtest999AccountLoansWithFees2() throws NumberFormatException, PropertyNotFoundException,
+	@Test
+	public void test999AccountLoansWithFees2() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatInterest/";
@@ -817,9 +817,9 @@ public class LoanCalculationTest  {
 		
 	}
 
-//	 verify that 999 account transactions are logged after last payment is made
-	//TODO: Test fails. Fix or remove
-	public void xtestPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
+	//	 verify that 999 account transactions are logged after last payment is made
+	@Test
+	public void testPositive999AccountTest2LoanWithFees() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException 
 	{
 		String dataFileName = "account999-withfees.csv";
@@ -2291,7 +2291,8 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void xtestAllDecliningInterestEdgeTestCases() throws Exception 
+	@Ignore
+	public void testAllDecliningInterestEdgeTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningInterestedge/";
 		String[] dataFileNames = getCSVFiles(rootPath);
@@ -2305,7 +2306,8 @@ class LoanTestCaseData {
 		}
 	}
 
-	public void xtestAllFlatInterestEdgeTestCases() throws Exception 
+	@Ignore
+	public void testAllFlatInterestEdgeTestCases() throws Exception 
 	{
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/flatinterestedge/";
 		String[] dataFileNames = getCSVFiles(rootPath);
@@ -2471,8 +2473,8 @@ class LoanTestCaseData {
 	/*
 	 * This test case populates data from spreadsheet for loan params and expected results
 	 */
-	//Test Fails: Fix or remove
-	public void xtestOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
+	@Test
+	public void testOneExampleOfTestCaseFromSpreadSheet() throws NumberFormatException, PropertyNotFoundException,
 								SystemException, ApplicationException 
 	{
 		
@@ -2550,130 +2552,6 @@ class LoanTestCaseData {
 		
 	}
 
-
-	
-	/*
-	 * This test case is meant to reproduce issue 1648 using the new data classes
-	 */
-	//TODO: Test fails. Fix or remove
-	public void xtestIssue1648New() throws NumberFormatException, PropertyNotFoundException,
-								SystemException, ApplicationException 
-	{
-		// set up config
-		InternalConfiguration config = new InternalConfiguration();
-		config.setDaysInYear(365);
-		config.setFinalRoundingMode(RoundingMode.HALF_UP);
-		config.setFinalRoundOffMultiple("0.001");
-		config.setInitialRoundingMode(RoundingMode.HALF_UP);
-		config.setInitialRoundOffMultiple("0.001");
-		config.setCurrencyRoundingMode(RoundingMode.HALF_UP);
-		config.setInternalPrecision(10);
-		
-		// set up loan params
-		LoanParameters loanParams = new LoanParameters();
-		loanParams.setLoanType(InterestType.DECLINING);
-		loanParams.setNumberOfPayments((short)50);
-		loanParams.setPaymentFrequency(RecurrenceType.WEEKLY);
-		loanParams.setAnnualInterest("19.0");
-		loanParams.setPrincipal("10000");
-		
-		// set up expected results
-		Results expectedResult = new Results();
-		expectedResult.setTotalInterest(new Money("956.8"));
-		expectedResult.setTotalPayments(new Money("10000.4"));  // this test doesn't compare this, I made this up
-		expectedResult.setTotalPrincipal(new Money("10000"));  // this loan amount
-		List<PaymentDetail> list = new ArrayList<PaymentDetail>();  // we don't have this info from this test
-		expectedResult.setPayments(list);
-		
-		accountBO = setUpLoan(config, loanParams);
-		
-		// calculated results
-		Results calculatedResult = calculatePayments(config, accountBO, loanParams);  
-		compareResults(expectedResult, calculatedResult, "testIssue1648New");
-		
-		
-	}
-	
-	/****************************************************************************************/
-	/****************************************************************************************/
-	/****************************************************************************************/
-	
-	/*
-	 * This test case is meant to reproduce issue 1648 
-	 */
-	//TODO: Test fails. Fix or remove
-	public void xtestIssue1648()
-	throws NumberFormatException, PropertyNotFoundException,
-	SystemException, ApplicationException {
-		
-		int digitsRightOfDecimal = 10;
-		
-		/**
-		 * What should expectedTotalInterest be?  From the spreadsheet test 
-		 * case we have 956.76.  But we are using 1 digit to the right of the 
-		 * decimal place, so depending on the rounding mode, it should be
-		 * 956.7 or 956.8.
-		 */
-		String expectedTotalInterest = "956.8";
-		
-		short numberOfInstallments = 50;
-		double interestRate = 19.0;
-		InterestType interestType = InterestType.DECLINING;
-		String loanAmount = "10000";
-		short gracePeriodDuration = 0;
-		Date startDate = new Date(System.currentTimeMillis());
-
-		/*
-		 * When constructing a "meeting" here, it looks like the frequency 
-		 * should be "EVERY_X" for weekly or monthly loan interest posting.
-		 */
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", ApplicableTo.GROUPS, startDate,
-				PrdStatus.LOAN_ACTIVE, 10000.0, interestRate, numberOfInstallments,
-				interestType, false, false, center
-				.getCustomerMeeting().getMeeting(), GraceType.NONE,
-				"1", "1");
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-				loanAmount), numberOfInstallments, startDate, false, 
-				interestRate, gracePeriodDuration, new FundBO(), feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO);
-		
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(numberOfInstallments, accountBO.getAccountActionDates().size());
-
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-		.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities, numberOfInstallments);
-
-		int paymentCount = 1;
-
-		MathContext context = new MathContext(digitsRightOfDecimal);
-		BigDecimal totalPrincipal = new BigDecimal(0, context);
-		BigDecimal totalInterest = new BigDecimal(0, context);
-		
-		for (LoanScheduleEntity loanEntry : paymentsArray) {
-			System.out.println(paymentCount + " -- P: " + loanEntry.getPrincipal() + "  I: " + loanEntry.getInterest());
-			totalPrincipal = totalPrincipal.add(loanEntry.getPrincipal().getAmount());
-			totalInterest = totalInterest.add(loanEntry.getInterest().getAmount());
-			++paymentCount;
-		}
-		System.out.println("TotalPrincipal: " + totalPrincipal + "   TotalInterest: " + totalInterest);
-		
-		assertEquals(new BigDecimal(loanAmount), totalPrincipal);
-		assertEquals(new BigDecimal(expectedTotalInterest), totalInterest);
-		
-	}
-	
-	
-	
 	
 	class PaymentDetail{
 		Money payment = null;
