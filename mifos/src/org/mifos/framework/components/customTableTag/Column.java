@@ -91,7 +91,7 @@ public class Column {
 		else
 			tableInfo.append("<b>"
 					+ getLabelText(pageContext, getLabel(), bundle) + "</b>");
-		tableInfo.append("</td>");
+		tableInfo.append("</td>");		
 	}
 
 	public void generateTableColumn(StringBuilder tableInfo, Object obj,
@@ -99,10 +99,10 @@ public class Column {
 			throws TableTagParseException {
 		tableInfo.append("<td class=\"" + getColumnDetails().getRowStyle()
 				+ "\"  ");
-
+				
 		tableInfo.append(" align=\"" + getColumnDetails().getAlign() + "\" ");
 		tableInfo.append("> ");
-
+		
 		if (getValueType().equalsIgnoreCase(TableTagConstants.METHOD)) {
 			if (getColumnType().equalsIgnoreCase(TableTagConstants.TEXT)) {
 				getTableColumn(tableInfo, obj, locale, prefferedLocale,
@@ -117,7 +117,7 @@ public class Column {
 				// ColumnType should be link
 				throw new TableTagParseException(getColumnType());
 			}
-
+			
 			getLinkWithoutName(tableInfo, obj);
 			tableInfo.append("");
 		}
@@ -193,22 +193,23 @@ public class Column {
 		String labelText = null;
 		if (labelText == null)try {
 			labelText = labelTagUtils.getLabel(pageContext, bundle,
-					userContext.getPreferredLocale(), key, null);
+					userContext.getPreferredLocale(), key, null);			
 		} catch (Exception e) {
 		}
         if (labelText == null)
-        	labelText = MessageLookup.getInstance().lookupLabel(key, userContext);
+        	labelText = MessageLookup.getInstance().lookup(key);           
 		if (labelText == null)try {
 			char[] charArray = bundle.toCharArray();
 			charArray[0] = Character.toUpperCase(charArray[0]);
 			bundle = new String(charArray);
 			labelText = labelTagUtils.getLabel(pageContext, bundle,
 					userContext.getPreferredLocale(), key, null);
-
+						
 		} catch (Exception e) {
 			labelText = key;
-
+					
 		}
-		return labelText;
+		return labelText;		
 	}
+		
 }
