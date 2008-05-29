@@ -156,11 +156,11 @@ explanation of the license and how it is applied.
                     	<mifos:mifoslabel name="PPI.Band.VeryPoor" bundle="PPIUIResources" />
                     	</td>
                         <td width="17%" align="center" class="drawtablerow">
-                        <html-el:text property="value(veryPoorMin)" size="4"/>
+                        <html-el:text property="value(veryPoorMin)" size="4" disabled="true"/>
                         </td>
                         <td align="center" class="drawtablerow">-</td>
                         <td width="19%" align="center" class="drawtablerow">
-                        <html-el:text property="value(veryPoorMax)" size="4"/>
+                        <html-el:text property="value(veryPoorMax)" size="4" disabled="true"/>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -169,11 +169,11 @@ explanation of the license and how it is applied.
                     	<mifos:mifoslabel name="PPI.Band.Poor" bundle="PPIUIResources" />
                     	</td>
                         <td width="17%" align="center" class="drawtablerow">
-                        <html-el:text property="value(poorMin)" size="4"/>
+                        <html-el:text property="value(poorMin)" size="4" disabled="true"/>
                         </td>
                         <td align="center" class="drawtablerow">-</td>
                         <td width="19%" align="center" class="drawtablerow">
-                        <html-el:text property="value(poorMax)" size="4"/>
+                        <html-el:text property="value(poorMax)" size="4" disabled="true"/>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -182,11 +182,11 @@ explanation of the license and how it is applied.
                     	<mifos:mifoslabel name="PPI.Band.AtRisk" bundle="PPIUIResources" />
                     	</td>
                         <td width="17%" align="center" class="drawtablerow">
-                        <html-el:text property="value(atRiskMin)" size="4"/>
+                        <html-el:text property="value(atRiskMin)" size="4" disabled="true"/>
                         </td>
                         <td align="center" class="drawtablerow">-</td>
                         <td width="19%" align="center" class="drawtablerow">
-                        <html-el:text property="value(atRiskMax)" size="4"/>
+                        <html-el:text property="value(atRiskMax)" size="4" disabled="true"/>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -195,11 +195,11 @@ explanation of the license and how it is applied.
                     	<mifos:mifoslabel name="PPI.Band.NonPoor" bundle="PPIUIResources" />
                     	</td>
                         <td width="17%" align="center" class="drawtablerow">
-                        <html-el:text property="value(nonPoorMin)" size="4"/>
+                        <html-el:text property="value(nonPoorMin)" size="4" disabled="true"/>
                         </td>
                         <td align="center" class="drawtablerow">-</td>
                         <td width="19%" align="center" class="drawtablerow">
-                        <html-el:text property="value(nonPoorMax)" size="4"/>
+                        <html-el:text property="value(nonPoorMax)" size="4" disabled="true"/>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -208,7 +208,7 @@ explanation of the license and how it is applied.
 		<table width="93%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
                 <td align="center">
-                <html-el:submit property="button" styleClass="buttn">
+                <html-el:submit property="button" styleClass="buttn" disabled="true">
                 <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
                 </html-el:submit>&nbsp; 
                 <html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">

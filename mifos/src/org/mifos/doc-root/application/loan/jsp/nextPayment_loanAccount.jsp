@@ -108,7 +108,7 @@
 						<tr>
 							<td class="drawtablerow"><mifos:mifoslabel name="loan.fees"	bundle="loanUIResources" /></td>
 							<td align="right" class="drawtablerow">
-							<c:out value='${viewUpcomingInstallmentDetail.fees.amount}'/></td>
+							<c:out value='${viewUpcomingInstallmentDetail.fees}'/></td>
 							<td align="right" class="drawtablerow">	&nbsp;
 							<c:if test='${viewUpcomingInstallmentDetail.fees.amountDoubleValue != 0.0 }'>						 
 							<html-el:link href="loanAccountAction.do?method=waiveChargeDue&prdOfferingName=${param.prdOfferingName}&accountId=${param.accountId}&WaiveType=fees&type=LoanAccount&input=LoanAccount&globalAccountNum=${param.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
