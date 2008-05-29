@@ -89,4 +89,13 @@ public class OfficeBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+
+	public List<OfficeBO> getAllofficesForCustomFIeld()
+			throws ServiceException {		
+		try {
+			return officePersistence.getAllofficesForCustomFIeld();
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
 }

@@ -38,7 +38,10 @@
 
 package org.mifos.application.customer.business;
 
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.persistence.Persistence;
 
 /**
  * This class encpsulate the custom field for the customer
@@ -85,5 +88,10 @@ public class CustomerCustomFieldEntity extends PersistentObject {
 
 	public void setFieldValue(String fieldValue) {
 		this.fieldValue = fieldValue;
+	}
+
+	public void save(CustomerCustomFieldEntity customerCustomFieldEntity) throws ApplicationException
+	{
+		new CustomerPersistence().createOrUpdate(customerCustomFieldEntity);
 	}
 }

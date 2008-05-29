@@ -1003,6 +1003,17 @@ public class CustomerPersistence extends Persistence {
 				queryParameters);
 	}
 
+ 	public List<CustomerBO> getCustomersByLevelId(Short customerLevelId)
+ 			throws PersistenceException {
+ 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+ 		queryParameters.put("customerLevelId", customerLevelId);
+ 
+ 		List<CustomerBO> queryResult = executeNamedQuery(
+ 				NamedQueryConstants.GET_CUSTOMERS_BY_LEVELID, queryParameters);
+ 		return queryResult;
+ 
+ 	}
+
 	public Integer getActiveClientCountForOffice(OfficeBO office)
 			throws PersistenceException {
 		HashMap<String, Object> params = new HashMap<String, Object>();

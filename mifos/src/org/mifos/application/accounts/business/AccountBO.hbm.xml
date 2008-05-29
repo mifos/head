@@ -502,4 +502,12 @@
 		]]>
 	</query>
 
+	<query name="accounts.getAllSavingsAccounts">
+		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsBO]]>
+	</query>
+	
+	<query name="accounts.getAllLoanAccounts">
+		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO]]>
+	</query>
+	
 </hibernate-mapping>

@@ -224,6 +224,19 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		}
 	}
 
+	public void testGetAllSavingsAccount() throws Exception {
+		createInitialObjects();
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1",
+				"kh6y", currentDate);
+		savings = createSavingsAccount("FFFF", savingsOffering,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+
+		List<SavingsBO> savingsAccounts = service.getAllSavingsAccount();
+		assertNotNull(savingsAccounts);
+		assertEquals(1, savingsAccounts.size());
+	}
+
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());

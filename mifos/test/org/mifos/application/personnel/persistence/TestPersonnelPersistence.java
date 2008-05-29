@@ -279,6 +279,13 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		//asserting only on not null as suppored locales can be added by user 
 		assertNotNull(persistence.getSupportedLocales());
 	}
+
+	public void testGetAllPersonnel() throws Exception {		
+		List<PersonnelBO> personnel = persistence.getAllPersonnel();		
+		assertNotNull(personnel);
+		assertEquals(3, personnel.size());
+	}
+
 	private void createInitialObjects(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());

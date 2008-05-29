@@ -223,4 +223,10 @@ public class TestOfficePersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(branchOffice);
 	}
 	
+	public void testGetAllofficesForCustomFIeld() throws Exception {
+		List<OfficeBO> officeList = getOfficePersistence().getAllofficesForCustomFIeld();
+		assertNotNull(officeList);
+		assertEquals(3, officeList.size());
+	}
+	
 }

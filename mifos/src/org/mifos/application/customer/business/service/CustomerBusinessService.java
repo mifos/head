@@ -41,9 +41,11 @@ import static org.mifos.framework.util.helpers.NumberUtils.getPercentage;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateMachines;
@@ -57,6 +59,7 @@ import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -759,6 +762,15 @@ public class CustomerBusinessService extends BusinessService {
 		}
 		catch (PersistenceException e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	public List<CustomerBO> getCustomersByLevelId(Short customerLevelId)
+			throws ServiceException {		
+		try {
+			return new CustomerPersistence().getCustomersByLevelId(customerLevelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
 		}
 	}
 }

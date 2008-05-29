@@ -162,4 +162,8 @@
 		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel 
 							where personnel.office.officeId =:officeId and personnel.status.id =:personnelStatusId]]>
 	</query>
+
+	<query name="personnel.getAllPersonnel">    		
+		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO personnel]]>
+	</query>
 </hibernate-mapping>

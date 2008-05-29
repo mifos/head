@@ -239,6 +239,12 @@
 		<![CDATA[from org.mifos.application.customer.center.business.CenterBO as center where center.globalCustNum = :globalCustNum ]]>
 	</query>
 
+	<query name="Customer.getCustomersByLevelId">
+		<![CDATA[from  org.mifos.application.customer.business.CustomerBO customer 
+	        	   				where customer.customerLevel.id=:customerLevelId
+	        	   	]]>
+	</query>
+
 	<query name="Customer.getCenterCount">
 	    <![CDATA[select count(*) from org.mifos.application.customer.center.business.CenterBO as center where center.displayName=:DISPLAY_NAME]]>
     </query>

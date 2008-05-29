@@ -23,6 +23,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -316,5 +317,15 @@ public class LoanPersistence extends Persistence {
 		}
 		queryString.append(" and loan.office.officeId = " + branchId);
 		return queryString;
+	}
+
+	public List<LoanBO> getAllLoanAccounts()
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
+
+		List<LoanBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_LOAN_ACCOUNTS, queryParameters);
+		return queryResult;
+
 	}
 }

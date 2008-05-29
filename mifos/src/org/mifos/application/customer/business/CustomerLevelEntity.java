@@ -51,6 +51,7 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
  * which can be implemented differently for 
  * {@link ClientBO}, {@link CenterBO}, and {@link GroupBO}).
  */
+// FIXME: this should just be an enum, not a persisted class
 public class CustomerLevelEntity extends MasterDataEntity {
 
 	// Set/gotten via .hbm.xml file

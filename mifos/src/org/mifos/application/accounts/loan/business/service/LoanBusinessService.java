@@ -143,6 +143,15 @@ public class LoanBusinessService extends BusinessService {
 		}
 	}
 	
+	public List<LoanBO> getAllLoanAccounts()
+			throws ServiceException {		
+		try {
+			return new LoanPersistence().getAllLoanAccounts();
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
 	public void initialize(Object object) {
 		new LoanPersistence().initialize(object);
 	}

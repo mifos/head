@@ -1,6 +1,8 @@
 package org.mifos.application.personnel.business;
 
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class PersonnelCustomFieldEntity extends PersistentObject {
 	
@@ -42,4 +44,8 @@ public class PersonnelCustomFieldEntity extends PersistentObject {
 		this.fieldValue = fieldValue;
 	}
 
+	public void save(PersonnelCustomFieldEntity personnelCustomFieldEntity) throws ApplicationException
+	{
+		new PersonnelPersistence().createOrUpdate(personnelCustomFieldEntity);
+	}
 }

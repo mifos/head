@@ -86,6 +86,15 @@ public class SavingsBusinessService extends BusinessService {
 		}
 	}
 	
+	public List<SavingsBO> getAllSavingsAccount()
+			throws ServiceException {		
+		try {
+			return savingsPersistence.getAllSavingsAccount();
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
 	public void initialize(Object object) {
 		savingsPersistence.initialize(object);
 	}

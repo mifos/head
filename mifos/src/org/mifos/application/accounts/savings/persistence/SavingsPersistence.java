@@ -204,4 +204,14 @@ public class SavingsPersistence extends Persistence {
 		Object[] obj1 = (Object[]) obj.get(0);
 		return (AccountBO) obj1[0];
 	}
+
+	public List<SavingsBO> getAllSavingsAccount()
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
+
+		List<SavingsBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_SAVINGS_ACCOUNTS, queryParameters);
+		return queryResult;
+
+	}
 }

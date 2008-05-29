@@ -543,8 +543,7 @@
 							</c:if> <span class="fontnormal"><br>
 							<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<c:forEach var="cf" items="${BusinessKey.customFields}">
-									<c:if
-										test="${cfdef.fieldId==cf.fieldId and !empty cf.fieldValue}">
+									<c:if test="${cfdef.fieldId==cf.fieldId}">
 										<c:choose>
 											<c:when test="${cfdef.fieldType == 3}">
 												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
@@ -840,4 +839,5 @@
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
+
 

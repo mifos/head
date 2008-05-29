@@ -188,6 +188,14 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		//asserting only on not null as suppored locales can be added by user 
 		assertNotNull(personnelBusinessService.getSupportedLocales());
 	}
+
+	public void testGetAllPersonnel() throws Exception {
+		List<PersonnelBO> personnel = personnelBusinessService
+				.getAllPersonnel();
+		assertNotNull(personnel);
+		assertEquals(3, personnel.size());
+	}
+
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();

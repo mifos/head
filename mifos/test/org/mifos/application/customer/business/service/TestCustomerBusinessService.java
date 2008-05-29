@@ -960,6 +960,23 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	}
 
+	public void testGetCustomersByLevelId() throws Exception {
+		createInitialCustomers();
+
+			List<CustomerBO> client = service.getCustomersByLevelId(Short.parseShort("1"));
+			assertNotNull(client);
+			assertEquals(1, client.size());
+			
+			List<CustomerBO> group = service.getCustomersByLevelId(Short.parseShort("2"));
+			assertNotNull(group);
+			assertEquals(1, group.size());
+			
+			List<CustomerBO> center = service.getCustomersByLevelId(Short.parseShort("3"));
+			assertNotNull(center);
+			assertEquals(1, client.size());
+
+	}
+
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());

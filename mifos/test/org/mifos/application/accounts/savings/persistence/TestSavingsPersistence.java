@@ -432,6 +432,18 @@ public class TestSavingsPersistence extends MifosTestCase {
 				.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
 	}
 
+	public void testGetAllSavingsAccount() throws Exception {
+		createInitialObjects();
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate);
+		savings = createSavingsAccount("kkk", savingsOffering);
+		
+		List<SavingsBO> savingsAccounts = savingsPersistence.getAllSavingsAccount();
+		assertNotNull(savingsAccounts);
+		assertEquals(1, savingsAccounts.size());
+		
+	}
+
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());

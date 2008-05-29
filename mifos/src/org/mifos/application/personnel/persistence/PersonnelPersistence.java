@@ -322,6 +322,16 @@ public class PersonnelPersistence extends Persistence {
         personnelBO.save();
         return personnelBO;
     }
+    
+	public List<PersonnelBO> getAllPersonnel()
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
+
+		List<PersonnelBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_PERSONNEL, queryParameters);
+		return queryResult;
+
+	}
 
     private RolesPermissionsPersistence getRolesPermissionsPersistence() {
         return rolesPermissionsPersistence;

@@ -180,4 +180,11 @@ public class TestOfficeBusinessService extends MifosTestCase {
 		}
 
 	}
+
+	public void testGetAllofficesForCustomFIeld() throws Exception {
+		List<OfficeBO> officeList = officeBusinessService
+				.getAllofficesForCustomFIeld();
+		assertNotNull(officeList);
+		assertEquals(3, officeList.size());
+	}
 }

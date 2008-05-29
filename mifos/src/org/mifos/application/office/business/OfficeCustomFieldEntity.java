@@ -1,6 +1,8 @@
 package org.mifos.application.office.business;
 
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class OfficeCustomFieldEntity extends PersistentObject {
 
@@ -49,4 +51,8 @@ public class OfficeCustomFieldEntity extends PersistentObject {
 		return officecustomFieldId;
 	}
 
+	public void save(OfficeCustomFieldEntity officeCustomFieldEntity) throws ApplicationException
+	{
+		new OfficePersistence().createOrUpdate(officeCustomFieldEntity);
+	}
 }

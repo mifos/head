@@ -38,7 +38,9 @@
 
 package org.mifos.application.accounts.business;
 
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class AccountCustomFieldEntity extends PersistentObject {
 
@@ -97,4 +99,8 @@ public class AccountCustomFieldEntity extends PersistentObject {
 		this.fieldValue = fieldValue;
 	}
 
+	public void save(AccountCustomFieldEntity accountCustomFieldEntity) throws ApplicationException
+	{
+		new SavingsPersistence().createOrUpdate(accountCustomFieldEntity);
+	}
 }

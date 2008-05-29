@@ -1,41 +1,30 @@
-/**
-
- * CustomFieldsAction.java
-
- 
-
- * Copyright (c) 2005-2007 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2007 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 package org.mifos.application.configuration.struts.action;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,44 +33,52 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
 import org.mifos.application.configuration.struts.actionform.CustomFieldsActionForm;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.configuration.util.helpers.CustomFieldsBackfiller;
+import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldCategory;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeCustomFieldEntity;
+import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.CustomFieldCategory;
-import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.util.helpers.SessionUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import org.mifos.application.configuration.util.helpers.CustomFieldsListBoxData;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import org.mifos.application.configuration.business.MifosConfiguration;
-
-
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomFieldsAction extends BaseAction {
 
@@ -106,7 +103,6 @@ public class CustomFieldsAction extends BaseAction {
 		security.allow("cancelEdit", SecurityConstants.VIEW);		
 		return security;
 	}
-
 
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
@@ -292,20 +288,16 @@ public class CustomFieldsAction extends BaseAction {
 	 * For now the level id of the custom field is derived from the category. It may be changed
 	 * when business knows what exactly the level id is
 	 */
-	private Short getLevelId(String categoryType)
-	{
-		Short entityValue = Short.parseShort(categoryType);
-		EntityType entityType = EntityType.fromInt(entityValue);
-		
-		if (entityType.equals(EntityType.CENTER))
+	private Short getLevelId(EntityType categoryType)
+	{		
+		if (categoryType.equals(EntityType.CENTER))
 			return CustomerLevel.CENTER.getValue();
-		else if (entityType.equals(EntityType.GROUP))
+		else if (categoryType.equals(EntityType.GROUP))
 			return CustomerLevel.GROUP.getValue();
-		else if (entityType.equals(EntityType.CLIENT))
+		else if (categoryType.equals(EntityType.CLIENT))
 			return CustomerLevel.CLIENT.getValue();
 		else
 			return null;
-		
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -321,18 +313,24 @@ public class CustomFieldsAction extends BaseAction {
 			defaultValue = changeDefaultValueDateToDBFormat(defaultValue, getUserLocale(request));
 		
 		String label = actionForm.getLabelName();
-		Short levelId = getLevelId(categoryType);
-		YesNoFlag flag = null;
+		Short levelId = getLevelId(categoryTypeEntity);
+		YesNoFlag mandatory = null;
 		if (actionForm.isMandatoryField())
-			flag = YesNoFlag.YES;
+			mandatory = YesNoFlag.YES;
 		else
-			flag = YesNoFlag.NO;
+			mandatory = YesNoFlag.NO;
 		Short localeId = getUserContext(request).getLocaleId();
 		CustomFieldDefinitionEntity customField = new CustomFieldDefinitionEntity(label, levelId,fieldType, categoryTypeEntity,
-				defaultValue, flag );
+				defaultValue, mandatory );
 		ApplicationConfigurationPersistence persistence = new ApplicationConfigurationPersistence();
 		persistence.addCustomField(customField);
 		MifosConfiguration.getInstance().updateLabelKey(customField.getLookUpEntity().getEntityType(), label, localeId);
+		
+		// client, loan, group, etc. records extant before this custom field was
+		// created still need to be associated with the custom field
+		CustomFieldsBackfiller cfb = new CustomFieldsBackfiller();
+		cfb.addCustomFieldsForExistingRecords(categoryTypeEntity, levelId, customField);
+		
 		logger.debug("Inside create method");
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
@@ -382,8 +380,7 @@ public class CustomFieldsAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Configuration);
+		return new ConfigurationBusinessService();
 	}
 	
 	private String getEntityTypeName(Short entityTypeId, UserContext userContext)

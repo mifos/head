@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.configuration.persistence.ApplicationConfigurationPersistence;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -123,6 +125,15 @@ public class PersonnelBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+
+ 	public List<PersonnelBO> getAllPersonnel()
+ 			throws ServiceException {		
+ 		try {
+ 			return new PersonnelPersistence().getAllPersonnel();
+ 		} catch (PersistenceException pe) {
+ 			throw new ServiceException(pe);
+ 		}
+ 	}
 
 	public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId)
 			throws ServiceException {

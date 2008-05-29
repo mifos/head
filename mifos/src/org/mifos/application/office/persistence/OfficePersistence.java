@@ -302,4 +302,13 @@ public class OfficePersistence extends Persistence {
 		return executeNamedQuery(
 			NamedQueryConstants.GET_ACTIVE_BRANCHES, queryParameters);
 	}
+
+	public List<OfficeBO> getAllofficesForCustomFIeld()
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();		
+
+		List<OfficeBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_ALL_OFFICES_FOR_CUSTOM_FIELD, queryParameters);
+		return queryResult;
+	}
 }

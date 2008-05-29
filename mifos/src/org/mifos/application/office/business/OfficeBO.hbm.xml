@@ -115,5 +115,9 @@
 	        	   			where office.searchId like :officeSearchId and
 	        	   			office.level.id=:officeLevelId and office.status.id=:ACTIVE order by office.officeName ]]>
         </query> 
+
+    <query name="office.getAllOfficesForCustomField">    		
+            <![CDATA[from org.mifos.application.office.business.OfficeBO]]>
+    </query>
       
 </hibernate-mapping>

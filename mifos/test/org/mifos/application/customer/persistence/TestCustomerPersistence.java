@@ -1170,6 +1170,23 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, customerSearch.getLoanGlobalAccountNum().size());
 	}
 
+	public void testGetCustomersByLevelId() throws Exception {
+		createCustomers(CustomerStatus.CENTER_ACTIVE,
+				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();		
+		List<CustomerBO> client = new CustomerPersistence().getCustomersByLevelId(Short.parseShort("1"));
+		assertNotNull(client);
+		assertEquals(1, client.size());
+		
+		List<CustomerBO> group = new CustomerPersistence().getCustomersByLevelId(Short.parseShort("2"));
+		assertNotNull(group);
+		assertEquals(1, group.size());
+		
+		List<CustomerBO> center = new CustomerPersistence().getCustomersByLevelId(Short.parseShort("3"));
+		assertNotNull(center);
+		assertEquals(1, center.size());
+	}
+
 	private void getCustomer() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 

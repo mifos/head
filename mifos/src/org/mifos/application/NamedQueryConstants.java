@@ -724,6 +724,15 @@ public interface NamedQueryConstants {
 	public String GET_ALL_ACTIVE_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllActiveAdministrativeDocument";
 	public String GET_MIX_BY_ADMINISTRATIVE_DOCUMENT = "admindocument.getMixByAdministrativeDocument";
 	public String GET_ALL_MIXED_ADMINISTRATIVE_DOCUMENT = "admindocument.getAllMixedAdministrativeDocument";
+
+ 	// new queries for issue 1601 to allow backfilling of custom fields
+ 	// on existing database objects like customers, personnel, loans, etc.
+ 	public String GET_CUSTOMERS_BY_LEVELID="Customer.getCustomersByLevelId";
+ 	public String GET_ALL_OFFICES_FOR_CUSTOM_FIELD="office.getAllOfficesForCustomField";
+ 	public String GET_ALL_PERSONNEL="personnel.getAllPersonnel";
+ 	public String GET_ALL_SAVINGS_ACCOUNTS="accounts.getAllSavingsAccounts";
+ 	public String GET_ALL_LOAN_ACCOUNTS="accounts.getAllLoanAccounts";
+
 	public String GET_BRANCH_REPORT_FOR_DATE_AND_BRANCH = "branchReport.getBranchReportForDateAndBranch";
 	public String GET_BRANCH_REPORT_FOR_DATE = "branchReport.getBranchReportForDate";
 	public String GET_BRANCH_REPORT_CLIENT_SUMMARY_FOR_DATE_AND_BRANCH = "branchReport.getBranchReportClientSummaryForDateAndBranch";

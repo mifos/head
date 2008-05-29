@@ -176,6 +176,14 @@ public class TestLoanBusinessService extends MifosTestCase {
 		}
 	}
 
+	public void testGetAllLoanAccounts() throws Exception {
+		accountBO = getLoanAccount();
+		loanBusinessService = new LoanBusinessService();
+		List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
+		assertNotNull(loanAccounts);
+		assertEquals(1,loanAccounts.size());
+	}
+
 	private AccountBO getLoanAccount() {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
