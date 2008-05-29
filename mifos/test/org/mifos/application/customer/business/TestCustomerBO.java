@@ -20,7 +20,10 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -30,17 +33,23 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
+import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.personnel.business.CustomerFixture;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBOFixture;
+import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -53,6 +62,11 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
 
 public class TestCustomerBO extends MifosTestCase {
 	private AccountBO accountBO;
@@ -141,15 +155,63 @@ public class TestCustomerBO extends MifosTestCase {
 	
 	
 	
-	public void testHasAnActiveLoanCounts() throws Exception {
+	public void testHasActiveLoanAccounts() throws Exception {
 		createInitialObjects();
 		client.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(client);
-		boolean res=client.hasAnActiveLoanCounts();
+		boolean res=client.hasActiveLoanAccounts();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		assertEquals(res,false );
 		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	public void testHasActiveLoanAccountsForProductReturnsTrueIfCustomerHasSuchAccounts() throws Exception {
+		client = createClientToTestActiveLoanProducts();
+		LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
+		LoanBO accountMock = createMock(LoanBO.class);
+		client.addAccount(accountMock);
+		expect(accountMock.isActiveLoanAccount()).andReturn(true);
+		expect(accountMock.getLoanOffering()).andReturn(loanProduct1);
+		replay(accountMock);
+		assertTrue(client.hasActiveLoanAccountsForProduct(loanProduct1));
+		verify(accountMock);
+	}
+	
+	public void testHasActiveLoanAccountsForProductReturnsFalseIfCustomerHasNoSuchAccountsForThatProduct() throws Exception {
+		client = createClientToTestActiveLoanProducts();
+		LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
+		LoanOfferingBO loanProduct2= LoanOfferingBOFixture.createLoanOfferingBO("test loan product2", "TLP2");
+		LoanBO accountMock = createMock(LoanBO.class);
+		client.addAccount(accountMock);
+		expect(accountMock.isActiveLoanAccount()).andReturn(true);
+		expect(accountMock.getLoanOffering()).andReturn(loanProduct2);
+		replay(accountMock);
+		assertFalse(client.hasActiveLoanAccountsForProduct(loanProduct1));
+		verify(accountMock);
+	}	
+	
+	public void testHasActiveLoanAccountsForProductDoesNotFetchLoanOfferingIfNoActiveLoanAccounts() throws Exception {
+		client = createClientToTestActiveLoanProducts();
+		LoanOfferingBO loanProduct1 = LoanOfferingBOFixture.createLoanOfferingBO("test loan product", "TLP");
+		LoanBO accountMock = createMock(LoanBO.class);
+		client.addAccount(accountMock);
+		expect(accountMock.isActiveLoanAccount()).andReturn(false);
+		replay(accountMock);
+		assertFalse(client.hasActiveLoanAccountsForProduct(loanProduct1));
+		verify(accountMock);
+	}
+
+	private ClientBO createClientToTestActiveLoanProducts() throws CustomerException {
+		return new ClientBO(TestUtils.makeUserWithLocales(),
+				"customerName", CustomerStatus.CLIENT_ACTIVE, null, null, null, null, new ArrayList<FeeView>(), null,
+				PersonnelConstants.SYSTEM_USER, Short.valueOf("3"),
+				null, null, null, null,
+				null, YesNoFlag.YES.getValue(), TestObjectFactory.clientNameView(
+						NameType.CLIENT, "customerName"),
+						TestObjectFactory.clientNameView(
+								NameType.SPOUSE, "customerName"), new ClientDetailView(1, 1, 1, 1, 1,
+						1, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("41")), null);
 	}
 
 	public void testCheckIfClientIsATitleHolder() throws Exception {

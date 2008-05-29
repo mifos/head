@@ -19,6 +19,7 @@
  */
 package org.mifos.application.accounts.business;
 import static org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.application.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1385,6 +1386,10 @@ public class AccountBO extends BusinessObject {
 	public boolean isLoanAccount() {
 		return isOfType(LOAN_ACCOUNT);
 	}
+	
+	public boolean isSavingsAccount() {
+		return isOfType(SAVINGS_ACCOUNT);
+	}
 
 	public boolean isOfType(AccountTypes accountType) {
 		return accountType.equals(getType());
@@ -1393,5 +1398,9 @@ public class AccountBO extends BusinessObject {
 	@Override
 	public String toString() {
 		return "{" + globalAccountNum + "}";
+	}
+
+	public boolean isActiveLoanAccount() {
+		return AccountState.fromShort(accountState.getId()).isActiveLoanAccountState();
 	}	
 }

@@ -494,7 +494,7 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	private static ClientNameDetailView clientNameView(NameType nameType, String customerName) {
+	public static ClientNameDetailView clientNameView(NameType nameType, String customerName) {
 		return new ClientNameDetailView(
 				nameType, SAMPLE_SALUTATION, customerName,
 				"middle", customerName, "secondLast");

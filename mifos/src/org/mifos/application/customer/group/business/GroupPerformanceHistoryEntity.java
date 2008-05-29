@@ -224,10 +224,10 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	public Short getMaxLoanCycleForProduct(final PrdOfferingBO prdOffering) {
 		{
-			Set<GroupLoanCounter> clientLoanCounters = getLoanCounters();
+			Set<GroupLoanCounter> loanCounters = getLoanCounters();
 			try {
 				Collection<Short> loanCyclesForProduct = select(
-						clientLoanCounters, new Predicate<GroupLoanCounter>() {
+						loanCounters, new Predicate<GroupLoanCounter>() {
 							public boolean evaluate(GroupLoanCounter counter) throws Exception {
 								return counter.isOfSameProduct(prdOffering);
 							}

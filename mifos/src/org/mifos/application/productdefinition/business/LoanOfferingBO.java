@@ -1000,9 +1000,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 	private void populateLoanAmountAndInstall(
 			LoanPrdActionForm loanPrdActionForm) {
 		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == LOANAMOUNTFROMLASTLOAN) {
-			this.loanAmountFromLastLoan.clear();
-			this.loanAmountFromLoanCycle.clear();
-			this.loanAmountSameForAllLoan.clear();
+			clearLoanAmountData();
 			// FIXME: does form logic belong in this class?
 			addLoanAmountFromLastLoanAmount(new LoanAmountFromLastLoanAmountBO(
 					loanPrdActionForm.getLastLoanMinLoanAmt1Value(),
@@ -1042,9 +1040,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					loanPrdActionForm.getEndRangeLoanAmt6().doubleValue(), this));
 		}
 		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTFROMLASTLOAN)) {
-			this.noOfInstallFromLastLoan.clear();
-			this.noOfInstallFromLoanCycle.clear();
-			this.noOfInstallSameForAllLoan.clear();
+			clearNoOfInstallmentsData();
 			addNoOfInstallFromLastLoanAmount(new NoOfInstallFromLastLoanAmountBO(
 					Short.valueOf(loanPrdActionForm.getMinLoanInstallment1()),
 					Short.valueOf(loanPrdActionForm.getMaxLoanInstallment1()),
@@ -1084,9 +1080,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 		}
 		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (LOANAMOUNTFROMLOANCYCLE)) {
-			this.loanAmountFromLoanCycle.clear();
-			this.loanAmountFromLastLoan.clear();
-			this.loanAmountSameForAllLoan.clear();
+			clearLoanAmountData();
 			// FIXME: what are these hardcoded values like new Short("0")? can
 			// we use an enum instead?
 			addLoanAmountFromLoanCycle(new LoanAmountFromLoanCycleBO(
@@ -1122,9 +1116,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 		}
 		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTFROMLOANCYCLE)) {
-			this.noOfInstallFromLoanCycle.clear();
-			this.noOfInstallFromLastLoan.clear();
-			this.noOfInstallSameForAllLoan.clear();
+			clearNoOfInstallmentsData();
 			// FIXME: what are these hardcoded values like new Short("0")? can
 			// we use an enum instead?
 			addNoOfInstallFromLoanCycle(new NoOfInstallFromLoanCycleBO(Short
@@ -1159,18 +1151,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 					new Short("5"), this));
 		}
 		if (Short.parseShort(loanPrdActionForm.getLoanAmtCalcType()) == (LOANAMOUNTSAMEFORALLLOAN)) {
-			this.loanAmountSameForAllLoan.clear();
-			this.loanAmountFromLastLoan.clear();
-			this.loanAmountFromLoanCycle.clear();
+			clearLoanAmountData();
 			loanAmountSameForAllLoan.add(new LoanAmountSameForAllLoanBO(
 					loanPrdActionForm.getMinLoanAmountValue(), loanPrdActionForm
 							.getMaxLoanAmountValue(), loanPrdActionForm
 							.getDefaultLoanAmountValue(), this));
 		}
 		if (Short.parseShort(loanPrdActionForm.getCalcInstallmentType()) == (LOANAMOUNTSAMEFORALLLOAN)) {
-			this.noOfInstallSameForAllLoan.clear();
-			this.noOfInstallFromLastLoan.clear();
-			this.noOfInstallFromLoanCycle.clear();
+			clearNoOfInstallmentsData();
 			noOfInstallSameForAllLoan
 					.add(new NoOfInstallSameForAllLoanBO((Short
 							.parseShort(loanPrdActionForm
@@ -1180,6 +1168,18 @@ public class LoanOfferingBO extends PrdOfferingBO {
 							.parseShort(loanPrdActionForm
 									.getDefNoInstallments()), this));
 		}
+	}
+
+	private void clearLoanAmountData() {
+		this.loanAmountFromLastLoan.clear();
+		this.loanAmountFromLoanCycle.clear();
+		this.loanAmountSameForAllLoan.clear();
+	}
+
+	private void clearNoOfInstallmentsData() {
+		this.noOfInstallSameForAllLoan.clear();
+		this.noOfInstallFromLastLoan.clear();
+		this.noOfInstallFromLoanCycle.clear();
 	}
 
 	/**

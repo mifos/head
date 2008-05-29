@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -897,8 +898,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<LoanBO> getOpenLoanAccounts() {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.LOAN_ACCOUNT)
-					&& account.isOpen())
+			if (account.isLoanAccount() && account.isOpen())
 				loanAccounts.add((LoanBO) account);
 		}
 		return loanAccounts;
@@ -907,7 +907,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<LoanBO> getOpenIndividualLoanAccounts() {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT)
+			if (account.isOfType(AccountTypes.INDIVIDUAL_LOAN_ACCOUNT)
 					&& account.isOpen())
 				loanAccounts.add((LoanBO) account);
 		}
@@ -917,8 +917,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<SavingsBO> getOpenSavingAccounts() {
 		List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.SAVINGS_ACCOUNT)
-					&& account.isOpen())
+			if (account.isSavingsAccount() && account.isOpen())
 				savingAccounts.add((SavingsBO) account);
 		}
 		return savingAccounts;
@@ -926,8 +925,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public boolean isAnyLoanAccountOpen() {
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.LOAN_ACCOUNT)
-					&& account.isOpen())
+			if (account.isLoanAccount() && account.isOpen())
 				return true;
 		}
 		return false;
@@ -935,8 +933,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public boolean isAnySavingsAccountOpen() {
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.SAVINGS_ACCOUNT)
-					&& account.isOpen())
+			if (account.isSavingsAccount()	&& account.isOpen())
 				return true;
 		}
 		return false;
@@ -1276,17 +1273,25 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
 	}
 
-	public boolean hasAnActiveLoanCounts() {
-		boolean res=false;
+	public boolean hasActiveLoanAccounts() {
 		for(AccountBO account: getAccounts()){
-			if(account.getAccountState().getId().shortValue()==AccountStates.LOANACC_ACTIVEINGOODSTANDING
-					|| account.getAccountState().getId().shortValue()==AccountStates.LOANACC_BADSTANDING){
+			if(account.isActiveLoanAccount())
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hasActiveLoanAccountsForProduct(LoanOfferingBO loanOffering) {
+		for (AccountBO account : getAccounts()) {
+			if (account.isActiveLoanAccount()
+					&& ((LoanBO) account).getLoanOffering().isOfSameOffering(
+							loanOffering)) {
 				return true;
 			}
 		}
-			return res;
+		return false;
+	}	
 
-	}
 	private void generateSearchId() throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {

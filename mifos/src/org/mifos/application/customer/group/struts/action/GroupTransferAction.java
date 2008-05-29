@@ -275,9 +275,9 @@ public class GroupTransferAction extends BaseAction {
 
 	private void checkBeforeRemoving(CustomerBO customerBO,GroupTransferActionForm actionForm,HttpServletRequest request) throws CustomerException{
 
-		if(customerBO.hasAnActiveLoanCounts()) throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		if(customerBO.hasActiveLoanAccounts()) throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 		else 
-		if(customerBO.getParentCustomer()!=null && customerBO.getParentCustomer().hasAnActiveLoanCounts()) throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		if(customerBO.getParentCustomer()!=null && customerBO.getParentCustomer().hasActiveLoanAccounts()) throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
 
 	}	
 	public CustomerBO getCustomer(Integer customerId) throws ServiceException {

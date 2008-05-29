@@ -89,6 +89,10 @@ public enum AccountState implements LocalizedTextLookup {
 		return null;
 	}
 	
+	public boolean isActiveLoanAccountState() {
+		return equals(LOAN_ACTIVE_IN_GOOD_STANDING) || equals(LOAN_ACTIVE_IN_BAD_STANDING);
+	}
+	
 	public String getPropertiesKey() {
 		return messageKey;
 	}	

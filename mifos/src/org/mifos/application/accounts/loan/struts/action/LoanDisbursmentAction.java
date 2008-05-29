@@ -169,8 +169,10 @@ public class LoanDisbursmentAction extends BaseAction {
 				}
         }
 		}
-        	
-        	
+	  	
+		if(loan.getCustomer().hasActiveLoanAccountsForProduct(loan.getLoanOffering())) {
+			throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
+		}
 		if (actionForm.getPaymentModeOfPayment() != null
 				&& actionForm.getPaymentModeOfPayment().equals(""))
 			loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short

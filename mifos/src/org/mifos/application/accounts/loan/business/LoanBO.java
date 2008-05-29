@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -51,6 +52,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -685,13 +687,14 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public boolean isOpen() {
-		return !(getAccountState().getId().equals(
-				AccountState.LOAN_CANCELLED.getValue())
-				|| getAccountState().getId().equals(
-						AccountState.LOAN_CLOSED_RESCHEDULED.getValue())
-				|| getAccountState().getId().equals(
-						AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()) || getAccountState()
-				.getId().equals(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue()));
+		AccountState loanAccountState = AccountState
+				.fromShort(getAccountState().getId());
+		List<AccountState> notOpenAccountStates = Arrays.asList(
+				AccountState.LOAN_CANCELLED,
+				AccountState.LOAN_CLOSED_RESCHEDULED,
+				AccountState.LOAN_CLOSED_OBLIGATIONS_MET,
+				AccountState.LOAN_CLOSED_WRITTEN_OFF);
+		return !notOpenAccountStates.contains(loanAccountState);
 	}
 
 	@Override

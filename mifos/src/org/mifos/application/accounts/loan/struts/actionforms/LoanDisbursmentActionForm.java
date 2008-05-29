@@ -3,6 +3,9 @@
  */
 package org.mifos.application.accounts.loan.struts.actionforms;
 
+import static org.mifos.framework.util.helpers.StringUtils.isNullOrEmpty;
+
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +17,8 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
 
 public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 
@@ -24,26 +27,39 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 	private String paymentModeOfPayment;
 
 	@Override
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		ResourceBundle resources = ResourceBundle.getBundle (FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, getUserLocale(request));
-		
-		String methodCalled= request.getParameter(MethodNameConstants.METHOD);
-		ActionErrors errors =new ActionErrors();
-		ActionErrors errors1 =super.validate(mapping, request);
-		if(errors1!=null)errors.add(errors1);
-		
-		if(methodCalled!=null&& methodCalled.equals("preview")){
-			
-			if ( this.getAmount()!=null&&this.getAmount().getAmountDoubleValue()>0.0)
-			if( this.paymentModeOfPayment==null||this.paymentModeOfPayment.equals("")){
-				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("loan.paymentid")));
-			}
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		ActionErrors errors1 = super.validate(mapping, request);
+		if (errors1 != null)
+			errors.add(errors1);
+
+		String method = request.getParameter(MethodNameConstants.METHOD);
+		if (isPreviewMethod(method) && isAmountGreaterThanZero(getAmount())
+				&& isNullOrEmpty(paymentModeOfPayment)) {
+			String errorMessage = getResourceBundle(getUserLocale(request)).getString("loan.paymentid");
+			errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
+					AccountConstants.ERROR_MANDATORY, errorMessage));
 		}
-		if (null != errors && !errors.isEmpty()) {
+
+		if (!errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
-			request.setAttribute("methodCalled", methodCalled);
+			request.setAttribute("methodCalled", method);
 		}
 		return errors;
+	}
+
+	private ResourceBundle getResourceBundle(Locale userLocale) {
+		return ResourceBundle.getBundle(
+				FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, userLocale);
+	}
+
+	private boolean isAmountGreaterThanZero(Money amount) {
+		return amount != null && amount.getAmountDoubleValue() > 0.0;
+	}
+
+	private boolean isPreviewMethod(String methodName) {
+		return methodName != null && methodName.equals(MethodNameConstants.PREVIEW);
 	}
 
 	public String getPaymentModeOfPayment() {
