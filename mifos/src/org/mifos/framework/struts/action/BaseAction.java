@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 package org.mifos.framework.struts.action;
 
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,15 +41,12 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.config.Localization;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.batchjobs.MifosTask;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -42,7 +57,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ConvertionUtil;
@@ -292,10 +306,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected List<MasterDataEntity> getMasterEntities(Class clazz,
 			Short localeId) throws ServiceException, PersistenceException {
-		MasterDataService masterDataService = (MasterDataService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.MasterDataService);
-		return masterDataService.retrieveMasterEntities(clazz, localeId);
+		return new MasterDataService().retrieveMasterEntities(clazz, localeId);
 	}
 
 	protected MasterDataEntity getMasterEntities(Short entityId,Class clazz,
@@ -381,7 +392,7 @@ public abstract class BaseAction extends DispatchAction {
 			throws Exception {
 		Short entityType = EntityType.getEntityValue(request.getParameter(AuditConstants.ENTITY_TYPE).toUpperCase());
 		Integer entityId = Integer.valueOf(request.getParameter(AuditConstants.ENTITY_ID));
-		AuditBusinessService auditBusinessService = (AuditBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.AuditLog);
+		AuditBusinessService auditBusinessService = new AuditBusinessService();
 		request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS,auditBusinessService.getAuditLogRecords(entityType,entityId));
 		return mapping.findForward(AuditConstants.VIEW+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
 	}
