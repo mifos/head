@@ -231,14 +231,18 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 		ResourceBundle resources = ResourceBundle.getBundle(
 				FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE, locale);
 		for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
-			if (clientDetail.isLoanAmountInRange())
-				continue;
-			addError(errors, LoanConstants.LOANAMOUNT,
+			if (!clientDetail.isLoanAmountInRange()) {
+				addError(errors, LoanConstants.LOANAMOUNT,
 					LoanExceptionConstants.INVALIDMINMAX, resources
 							.getString("loan.loanAmountFor")
 							+ clientDetail.getClientName(), clientDetail
 							.getMinLoanAmount().toString(), clientDetail
 							.getMaxLoanAmount().toString());
+			}
+			if (StringUtils.isEmpty(clientDetail.getBusinessActivity())) {
+				addError(errors, LoanConstants.PURPOSE_OF_LOAN,
+						LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD);
+			}
 		}
 		logger.debug("outside checkValidationForCreate method");
 	}

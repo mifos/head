@@ -418,6 +418,10 @@ public class MultipleLoanAccountsCreationActionTest extends
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
 		addRequestParameter("stateSelected", "1");
+		actionPerform();
+		verifyActionErrors(new String[] {LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD});
+		
+		addRequestParameter("clientDetails[0].businessActivity", "0001");
 		performNoErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
@@ -462,6 +466,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		actionPerform();
 		addRequestParameter("clientDetails[0].selected", "true");
 		addRequestParameter("clientDetails[0].loanAmount", "300");
+		addRequestParameter("clientDetails[0].businessActivity", "0001");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		setRequestPathInfo("/multipleloansaction.do");
