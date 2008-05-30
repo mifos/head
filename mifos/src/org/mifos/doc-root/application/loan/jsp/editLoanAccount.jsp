@@ -1,40 +1,23 @@
-<!--
+<%-- 
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
 
- * editLoanAccount.jsp  version: xxx
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+    http://www.apache.org/licenses/LICENSE-2.0
 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
 
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
-
-
- * Apache License
- * Copyright (c) 2005-2006 Grameen Foundation USA
- *
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the
-
- * License.
- *
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
-
- * and how it is applied.
-
- *
-
- -->
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- editLoanAccount.jsp -->
 
 <%@taglib uri="/tags/struts-html" prefix="html"%>
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
@@ -281,6 +264,7 @@
 							</td>
 							<td valign="top"><date:datetag property="disbursementDate" /></td>
 						</tr>
+						<!--  Disable interest deducted at disbursement
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal">
 								<fmt:message key="loan.interestDisbursement">
@@ -290,6 +274,7 @@
 							<html-el:hidden property="intDedDisbursement" value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
 							<input type="checkbox" name="intDedDisb" onclick="setGracePeriod()" /></td>
 						</tr>
+						-->							
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>

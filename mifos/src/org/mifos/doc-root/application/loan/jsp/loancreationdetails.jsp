@@ -440,6 +440,7 @@ explanation of the license and how it is applied.
 									</tr>
 
 									<!-- TODO: Change the property of checkbox -->
+									<!-- Disable interest deducted at disbursement
 									<tr class="fontnormal">
 										<td align="right" class="fontnormal">
 											<fmt:message key="loan.interestDisbursement">
@@ -450,12 +451,14 @@ explanation of the license and how it is applied.
 											property="intDedDisbursement" value="1"
 											onclick="intDedAtDisb()" disabled="true" /></td>
 									</tr>
+									-->
 								</c:if>
 
+								<!-- Disable interest deducted at disbursement
 								<c:if
 									test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '1'}">
 
-									<!-- TODO: Change the property of checkbox -->
+									<!-- TODO: Change the property of checkbox 
 									<tr class="fontnormal">
 										<td align="right" class="fontnormal">
 											<fmt:message key="loan.interestDisbursement">
@@ -467,6 +470,7 @@ explanation of the license and how it is applied.
 											onclick="intDedAtDisb()" disabled="false" /></td>
 									</tr>
 								</c:if>
+								-->
 
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal"><span
