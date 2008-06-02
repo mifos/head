@@ -1,3 +1,5 @@
+<!-- customerchangeStatus.jsp -->
+
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
@@ -126,7 +128,7 @@
 												value="${status.flagSet}" /> <mifos:select
 												name="editCustomerStatusActionForm" property="flagId" size="1" disabled="true">
 												<html-el:options collection="flags" property="id"
-													labelProperty="flagDescription" />
+													labelProperty="lookUpValue.messageText" />
 											</mifos:select></td>
 										</tr>
 									</c:if>
