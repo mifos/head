@@ -682,11 +682,6 @@ public class PersonActionForm extends BaseActionForm {
 							&& customFieldDef.isMandatory())
 						if (StringUtils.isNullOrEmpty(customField
 								.getFieldValue())) {
-							errors
-									.add(
-											CustomerConstants.CUSTOM_FIELD,
-											new ActionMessage(
-													OfficeConstants.ENTERADDTIONALINFO));
 							errors.add(PersonnelConstants.ERROR_CUSTOMfIELD,new ActionMessage(PersonnelConstants.ERROR_CUSTOMfIELD));
 							isErrorFound = true;
 							break;
