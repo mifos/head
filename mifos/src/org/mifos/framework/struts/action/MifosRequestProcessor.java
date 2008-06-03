@@ -260,6 +260,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		}
 
 		catch (Exception e) {
+			// FIXME: this needs to be logged.
 			e.printStackTrace();
 			forward = (processException(request, response, e, form, mapping));
 			// set the last forward in the activity context
@@ -273,6 +274,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				session.removeAttribute(SecurityConstants.SECURITY_PARAM);
 			}
 			catch (Exception e) {
+				// FIXME: yikes, what is being swallowed here?
 			}
 		}
 
