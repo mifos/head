@@ -429,7 +429,7 @@
 	<target name="dist-war-rev" 
 			depends="svn-revision,clean,compile,copy_files,compile_test,copy_test_files,run_test,bkp-war,war,deploy" 
 			description="Same as the'dist' target, but appends the revision number from SVN to the war file name">
-		<move file="${dist.dir}/${webapplication.name}.war"
+		<copy file="${dist.dir}/${webapplication.name}.war"
 			  tofile="${dist.dir}/${webapplication.name}-${svn.version}.war" />
 	</target>
 
