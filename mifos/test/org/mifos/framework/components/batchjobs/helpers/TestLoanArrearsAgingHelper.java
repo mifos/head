@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 package org.mifos.framework.components.batchjobs.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
@@ -14,9 +33,12 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -64,7 +86,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 			TestObjectFactory.cleanUp(group);
 			TestObjectFactory.cleanUp(center);
 		} catch (Exception e) {
-			// TODO Whoops, cleanup didnt work, reset db
+			// Whoops, cleanup didnt work, reset db
 			TestDatabase.resetMySQLDatabase();
 		}
 		loanArrearsAgingHelper = null;
@@ -167,6 +189,92 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		assertEquals(group.getDisplayName(), loanArrearsAgingEntity.getCustomerName());
 	}
 	
+	
+		public void testClearArrears() throws Exception {
+				loanAccount1 = getLoanAccount(group, meeting,
+						AccountState.LOAN_ACTIVE_IN_BAD_STANDING, "off1");
+				loanAccount2 = getLoanAccount(group, meeting,
+						AccountState.LOAN_ACTIVE_IN_BAD_STANDING,"off2");
+				loanAccount3 = getLoanAccount(group, meeting,
+						AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER,"off3");
+				loanAccount4 = getLoanAccount(group, meeting,
+						AccountState.LOAN_PENDING_APPROVAL,"off4");
+		
+				assertNull(loanAccount1.getLoanArrearsAgingEntity());
+				assertNull(loanAccount2.getLoanArrearsAgingEntity());
+				assertNull(loanAccount3.getLoanArrearsAgingEntity());
+				assertNull(loanAccount4.getLoanArrearsAgingEntity());
+		
+				setDisbursementDateAsOldDate(loanAccount1, 22, Short.valueOf("3"));
+				loanAccount1.update();
+				HibernateUtil.commitTransaction();
+		
+				setDisbursementDateAsOldDate(loanAccount2, 22, Short.valueOf("3"));
+				loanAccount2.update();
+				HibernateUtil.commitTransaction();
+				
+				loanArrearsAgingHelper.execute(System.currentTimeMillis());
+				
+				loanAccount1 = new LoanPersistence().getAccount(loanAccount1
+						.getAccountId());
+				loanAccount2 = new LoanPersistence().getAccount(loanAccount2
+						.getAccountId());
+				
+				assertNotNull(loanAccount1.getLoanArrearsAgingEntity());
+				assertNotNull(loanAccount2.getLoanArrearsAgingEntity());
+		
+				LoanArrearsAgingEntity entityAccount1 = loanAccount1
+						.getLoanArrearsAgingEntity();
+				LoanArrearsAgingEntity entityAccount2 = loanAccount2
+						.getLoanArrearsAgingEntity();
+				
+				assertEquals(new Money("300"), entityAccount1.getOverduePrincipal());
+				assertEquals(new Money("36"), entityAccount1.getOverdueInterest());
+				assertEquals(new Money("336"), entityAccount1.getOverdueBalance());
+		
+				assertEquals(Short.valueOf("22"), entityAccount1.getDaysInArrears());
+				
+				assertEquals(new Money("300"), entityAccount2.getOverduePrincipal());
+				assertEquals(new Money("36"), entityAccount2.getOverdueInterest());
+				assertEquals(new Money("336"), entityAccount2.getOverdueBalance());
+				
+				assertEquals(Short.valueOf("22"), entityAccount2.getDaysInArrears());
+				
+				// apply a payment to loanAccount2 which should cover the overdue 
+				// balance and move it out of arrears
+				
+				final String RECEIPT_NUMBER = "001"; 
+				loanAccount1.makeEarlyRepayment(new Money("636"), RECEIPT_NUMBER, 
+					new Date(System.currentTimeMillis()), PaymentTypes.CASH.getValue().toString(),
+					PersonnelConstants.SYSTEM_USER);
+		
+				PaymentData paymentData2 = PaymentData.createPaymentData(new Money("636"),
+						TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER),
+						PaymentTypes.CASH.getValue(), new Date(System.currentTimeMillis()));
+				
+				loanAccount2.applyPaymentWithPersist(paymentData2);
+				
+				HibernateUtil.commitTransaction();
+				
+				loanArrearsAgingHelper.execute(System.currentTimeMillis());
+				
+				loanAccount1 = new LoanPersistence().getAccount(loanAccount1
+						.getAccountId());
+				loanAccount2 = new LoanPersistence().getAccount(loanAccount2
+						.getAccountId());
+				
+				assertTrue(loanAccount1.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
+				assertNull(loanAccount1.getLoanArrearsAgingEntity());
+		
+				assertTrue(loanAccount2.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+				assertNull(loanAccount2.getLoanArrearsAgingEntity());
+				
+				group=TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+				center = group.getParentCustomer();
+			}
+		
+
+		
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			AccountState accountState, String offName) throws AccountException {
 		Date startDate = new Date(System.currentTimeMillis());

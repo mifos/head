@@ -1,41 +1,22 @@
-/**
-
- * LoanBO.java    version: 1.0
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied.  
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
-
 package org.mifos.application.accounts.loan.business;
 
 import java.math.BigDecimal;
@@ -86,7 +67,9 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -120,8 +103,10 @@ import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
+import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -1138,7 +1123,8 @@ public class LoanBO extends AccountBO {
 
 			// Client performance entry
 			updateCustomerHistoryOnRepayment(totalAmount);
-
+			this.delete(loanArrearsAgingEntity);
+			loanArrearsAgingEntity = null;
 			new LoanPersistence().createOrUpdate(this);
 		}
 		catch (PersistenceException e) {
@@ -1567,6 +1553,8 @@ public class LoanBO extends AccountBO {
 				// Client performance entry
 				updateCustomerHistoryOnLastInstlPayment(paymentData
 						.getTotalAmount());
+				this.delete(loanArrearsAgingEntity);
+				loanArrearsAgingEntity = null;
 			}
 			if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
 					&& (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT) || loanPaymentTypes
@@ -1575,6 +1563,13 @@ public class LoanBO extends AccountBO {
 						paymentData.getPersonnel());
 				// Client performance entry
 				updateCustomerHistoryOnPayment();
+				this.delete(loanArrearsAgingEntity);
+				loanArrearsAgingEntity = null;
+			}
+			
+			if(getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
+					&& (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT))) {
+				handleArrearsAging();
 			}
 			LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
 			accountAction.setPaymentDetails(loanPaymentData, paymentDate);
@@ -1612,6 +1607,18 @@ public class LoanBO extends AccountBO {
 				paymentData.getTransactionDate()));
 		return accountPayment;
 	}
+	
+	private void delete(PersistentObject objectoDelete) throws AccountException {
+		
+		if (objectoDelete != null) {
+			try {
+				new LoanPersistence().delete(objectoDelete);
+			}
+			catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+		}
+	}
 
 	@Override
 	protected Money getDueAmount(AccountActionDateEntity installment) {
@@ -1648,6 +1655,7 @@ public class LoanBO extends AccountBO {
 								.getMiscFeeAmount());
 						if (accntActionDate.isPaid())
 							updatePerformanceHistoryOnAdjustment();
+
 						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 						accntActionDate.setPaymentDate(null);
 						if (null != accntActionDate
