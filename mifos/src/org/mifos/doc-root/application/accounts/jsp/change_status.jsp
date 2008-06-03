@@ -138,7 +138,7 @@ explanation of the license and how it is applied.
 												value="${status.flagSet}" /> <mifos:select
 												name="editStatusActionForm" property="flagId" size="1" disabled="true">
 												<html-el:options collection="flags" property="id"
-													labelProperty="flagDescription" />
+													labelProperty="lookUpValue.messageText" />
 											</mifos:select></td>
 										</tr>
 									</c:if>
