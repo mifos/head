@@ -166,13 +166,13 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
 		SessionUtils.removeAttribute(
-				ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
+				ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, request);
 		SessionUtils.removeAttribute(
-				ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS, request);
+				ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
 		SessionUtils.removeAttribute(
 				ProductDefinitionConstants.STATUS_LIST, request);
 		if (!StringUtils.isNullOrEmpty(uploadForm.getAccountTypeId())) {
-			SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,
+			SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS,
 					new AccountBusinessService()
 			.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(uploadForm.getAccountTypeId()))), request);		
 		}
@@ -198,9 +198,8 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 					}
 				}
 			}
-			masterList.removeAll(selectList);
 			SessionUtils.setCollectionAttribute("SelectedStatus",
-					masterList, request);
+					selectList, request);
 			
 
 		}
@@ -336,7 +335,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 		for(AdminDocAccStateMixBO admindoc : admindoclist){
 			selectedlist.add(admindoc.getAccountStateID());
 		}
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,selectedlist,request);
+		
 		List<AccountStateEntity> masterList = null;
 		if(birtReportsUploadActionForm.getAccountTypeId()!=null){
 			masterList= new AccountBusinessService()
@@ -344,8 +343,8 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 			masterList.removeAll(selectedlist);
 		}
 		
-		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS,masterList,request);
-
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS,masterList,request);
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,selectedlist,request);
 		
 		
 		request.setAttribute(Constants.BUSINESS_KEY, businessKey);

@@ -111,6 +111,7 @@ public interface ProductDefinitionConstants {
 	public String PRODUCTINSTANCELIST="ProductInstanceList";
 	public String ALLOWEDPRODUCTLIST="AllowedProductList";
 	public String SELECTEDACCOUNTSTATUS="SelectedAccountStatus";
+	public String AVAILABLEACCOUNTSTATUS="AvailableAccountStatus";
 	public String NOTSELECTEDACCOUNTSTATUS="NotSelectedAccountStatus";
 	public String STATUS_LIST="statusList";
 		

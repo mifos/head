@@ -191,9 +191,9 @@
 												</tr>
 											</table>
 	
+											<c:set var="AvailableAccountStatus" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AvailableAccountStatus')}" />
 											<c:set var="SelectedAccountStatus" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedAccountStatus')}" />
-											<c:set var="NotSelectedAccountStatus" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'NotSelectedAccountStatus')}" />
-											<mifos:MifosSelect  property="statusList" input="SelectedAccountStatus" output="NotSelectedAccountStatus" property1="id" property2="description" multiple="true">
+											<mifos:MifosSelect  property="statusList" input="AvailableAccountStatus" output="SelectedAccountStatus" property1="id" property2="description" multiple="true">
 											</mifos:MifosSelect>
 										</td>
 									</tr>
