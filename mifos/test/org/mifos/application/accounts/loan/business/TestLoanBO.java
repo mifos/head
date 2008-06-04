@@ -498,7 +498,8 @@ public class TestLoanBO extends MifosTestCase {
 						.getTotalDueWithFees());
 			else if (loanScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("2")))
-gfkeith						.getTotalDueWithFees());
+				assertEquals(new Money("133.0"), loanScheduleEntity
+						.getTotalDueWithFees());
 			else if (loanScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("6")))
 				assertEquals(new Money("111.3"), loanScheduleEntity
