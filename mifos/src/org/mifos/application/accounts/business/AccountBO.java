@@ -612,9 +612,6 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	/*
-	 * Return those unpaid AccountActionDateEntities after the next installment.
-	 */
 	public List<AccountActionDateEntity> getApplicableIdsForFutureInstallments() {
 		List<AccountActionDateEntity> futureActionDateList = new ArrayList<AccountActionDateEntity>();
 		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
@@ -699,9 +696,6 @@ public class AccountBO extends BusinessObject {
 		return installmentsInArrears;
 	}
 	
-	/**
-	 * Return the earliest-dated AccountActionDateEntity on or after today.
-	 */
 	public AccountActionDateEntity getDetailsOfNextInstallment() {
 		AccountActionDateEntity nextAccountAction = null;
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -1220,9 +1214,6 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 	}
 
-	/**
-	 * Return list of unpaid AccountActionDateEntities occurring on or after today
-	 */
 	protected List<Short> getApplicableInstallmentIdsForRemoveFees() {
 		List<Short> installmentIdList = new ArrayList<Short>();
 		for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {

@@ -1366,81 +1366,6 @@ public class TestLoanBO extends MifosTestCase {
 				1.2, 3, InterestType.FLAT, meeting);
 	}
 
-	public void testApplyRoundingAfterAddMiscFee() throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK,
-						CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group",
-				CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
-				startDate, center.getCustomerMeeting().getMeeting());
-		UserContext userContext = TestUtils.makeUser();
-		userContext.setLocaleId(null);
-		List<FeeView> feeViewList = new ArrayList<FeeView>();
-		/*
-		 FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
-				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
-				Short.valueOf("1"));
-		feeViewList.add(new FeeView(userContext, periodicFee));
-		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
-				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
-				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(userContext, upfrontFee));
-		*/
-		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
-				.getEligibleInstallmentSameForAllLoan();
-
-		accountBO = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-				group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(
-						"300.0"), Short.valueOf("6"), startDate, false, 0.0,
-				(short) 0, new FundBO(), feeViewList, null,
-				DEFAULT_LOAN_AMOUNT,
-				DEFAULT_LOAN_AMOUNT,
-				eligibleInstallmentRange.getMaxNoOfInstall(),
-				eligibleInstallmentRange.getMinNoOfInstall(), false, null);
-		new TestObjectPersistence().persist(accountBO);
-		assertEquals(6, accountBO.getAccountActionDates().size());
-
-		/*
-		 HibernateUtil.closeSession();
-
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		accountBO.applyPaymentWithPersist(TestObjectFactory
-				.getLoanAccountPaymentData(null, new Money("180.1"), accountBO
-						.getCustomer(), accountBO.getPersonnel(), "432423",
-						(short) 1, startDate, startDate));
-
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		assertEquals(new Money(), ((LoanBO) accountBO).getTotalPaymentDue());
-		*/
-		LoanBO loanBO = (LoanBO) accountBO;
-		assertEquals(new Money("300.0"), loanBO.getLoanAmount());
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-			if (loanScheduleEntity.getInstallmentId()
-					.equals(Short.valueOf("1"))){
-				assertEquals(new Money("50.0"), loanScheduleEntity.getPrincipal());
-			}	
-		}
-		accountBO.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), new Double("10.0"));
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
-			if (loanScheduleEntity.getInstallmentId()
-					.equals(Short.valueOf("1"))){
-				assertEquals(new Money("50.0"), loanScheduleEntity.getPrincipal());
-			}	
-		}
-
-
-	}
 	public void testMakeEarlyRepaymentOnPartiallyPaidPricipal()
 			throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
@@ -3546,33 +3471,6 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 */
-	public void xtestLoanScheduleRoundingWithMiscFee() throws Exception {
-		createInitialCustomers();
-		LoanOfferingBO loanOffering = createLoanOffering(false);
-		boolean isInterestDedAtDisb = false;
-		Short noOfinstallments = (short) 2;
-		LoanBO loan = createAndRetrieveLoanAccount(loanOffering, false, null, noOfinstallments, 0.0, new Money("300.0"));
-		for (AccountActionDateEntity accountActionDate : loan.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-			if (loanScheduleEntity.getInstallmentId() == 1) {
-				assertEquals(new Money("150.0"), loanScheduleEntity
-						.getTotalDueWithFees());
-			}
-			else
-				assertEquals(new Money("150.0"), loanScheduleEntity.getTotalDueWithFees());
-		}
-		loan.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), (double) 10.0);
-		for (AccountActionDateEntity accountActionDate : loan.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-			if (loanScheduleEntity.getInstallmentId() == 1) {
-				assertEquals(new Money("160.0"), loanScheduleEntity.getTotalDueWithFees());
-				assertEquals(new Money("150.0"), loanScheduleEntity.getPrincipal());
-			}
-			else
-				assertEquals(new Money("150.0"), loanScheduleEntity.getTotalDueWithFees());
-		}
-	}
-	
 	public void testAmountRoundedWhileCreate() throws NumberFormatException,
 			AccountException, Exception {
 		createInitialCustomers();
@@ -3606,7 +3504,7 @@ public class TestLoanBO extends MifosTestCase {
 		Short noOfinstallments = (short) 6;
 
 		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
-				isInterestDedAtDisb, null, noOfinstallments, 0.0, new Money("300.0"));
+				isInterestDedAtDisb, null, noOfinstallments, 0.0);
 
 		// Change this to more clearly separate what we are testing for from the
 		// machinery needed to get that data?
@@ -3636,15 +3534,13 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountId());
 		UserContext uc = TestUtils.makeUser();
 		accountBO.setUserContext(uc);
-		accountBO.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), new Double("33"));
+		accountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
 			if (loanScheduleEntity.getInstallmentId()
-					.equals(Short.valueOf("1"))){
+					.equals(Short.valueOf("1")))
 				assertEquals(new Money("33.0"), loanScheduleEntity.getMiscFee());
-				assertEquals(new Money("50.0"), loanScheduleEntity.getPrincipal());
-			}
 		}
 		assertEquals(intialTotalFeeAmount.add(new Money("33.0")),
 				((LoanBO) accountBO).getLoanSummary().getOriginalFees());
@@ -6004,7 +5900,7 @@ public class TestLoanBO extends MifosTestCase {
 
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
-			Short noOfinstallments, Double interestRate, Money loanAmount)
+			Short noOfinstallments, Double interestRate)
 			throws NumberFormatException, AccountException, SystemException,
 			ApplicationException {
 		LoanOfferingInstallmentRange eligibleInstallmentRange = loanOffering
@@ -6032,7 +5928,7 @@ public class TestLoanBO extends MifosTestCase {
 			Short noOfinstallments) throws NumberFormatException,
 			AccountException, SystemException, ApplicationException {
 		return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb,
-				feeViews, noOfinstallments, 10.0, new Money("300.0"));
+				feeViews, noOfinstallments, 10.0);
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {

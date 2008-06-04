@@ -103,7 +103,7 @@ import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
-//import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
@@ -682,9 +682,6 @@ public class LoanBO extends AccountBO {
 		return !notOpenAccountStates.contains(loanAccountState);
 	}
 
-	/**
-	 * Update LoanSummaryEntity by subtracting amount of removed fees.
-	 */
 	@Override
 	protected void updateTotalFeeAmount(Money totalFeeAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
@@ -853,10 +850,6 @@ public class LoanBO extends AccountBO {
 		return amount;
 	}
 
-	/**
-	 * Remove the fee from all unpaid current or future installments,
-	 * and update the loan accordingly.
-	 */
 	@Override
 	public final void removeFees(Short feeId, Short personnelId)
 			throws AccountException {
@@ -884,10 +877,6 @@ public class LoanBO extends AccountBO {
 
 	}
 
-	/**
-	 * Remove unpaid or partially paid fee from each installment whose id is in installmentIdList,
-	 * and return the total of all unpaid fees that were removed. 
-	 */
 	@Override
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
@@ -1773,7 +1762,7 @@ public class LoanBO extends AccountBO {
 			applyRounding_v1();
 		}
 		*/
-		applyRounding_v2();
+		applyRounding_v1();
 	}
 	
 	protected final void applyRounding_v1() {

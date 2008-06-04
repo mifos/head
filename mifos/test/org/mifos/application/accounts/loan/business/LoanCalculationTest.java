@@ -154,8 +154,7 @@ public class LoanCalculationTest  {
 	
 	
 	private UserContext userContext;
-	private boolean allConsoleOutputEnabled = false;
-	private boolean isFileNameConsoleOutputEnabled = false;
+	private boolean consoleOutputEnabled = false;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -345,7 +344,7 @@ public class LoanCalculationTest  {
 						String debitOrCredit = "Credit";
 						if (financialTransaction.getDebitCreditFlag() == 0)
 							debitOrCredit = "Debit";
-						if (isAllConsoleOutputEnabled()) {
+						if (isConsoleOutputEnabled()) {
 							System.out.println("Posted amount: " + financialTransaction.getPostedAmount().getAmountDoubleValue() +
 									" Debit/Credit: " + debitOrCredit +
 									" GLCode: " + financialTransaction.getGlcode().getGlcode() +
@@ -391,7 +390,7 @@ public class LoanCalculationTest  {
 						String debitOrCredit = "Credit";
 						if (financialTransaction.getDebitCreditFlag() == 0)
 							debitOrCredit = "Debit";
-						if (isAllConsoleOutputEnabled()) {
+						if (isConsoleOutputEnabled()) {
 							System.out.println("Posted amount: " + financialTransaction.getPostedAmount().getAmountDoubleValue() +
 									" Debit/Credit: " + debitOrCredit +
 									" GLCode: " + financialTransaction.getGlcode().getGlcode() +
@@ -1070,7 +1069,7 @@ public class LoanCalculationTest  {
 	
 	private void compare999Account(Money expected999Account , Money calculated999Account, String testName)
 	{
-		if (isAllConsoleOutputEnabled()) {
+		if (isConsoleOutputEnabled()) {
 			System.out.println("Running test: " + testName);
 			System.out.println("Results   (Expected : Calculated : Difference)");
 			printComparison("999 Account:   ", expected999Account, 
@@ -1200,7 +1199,7 @@ public class LoanCalculationTest  {
 	
 	private void printLoanScheduleEntities(LoanScheduleEntity[] loanSchedules)
 	{
-		if (!isAllConsoleOutputEnabled()) return;
+		if (!isConsoleOutputEnabled()) return;
 		
 		for (int i=0; i < loanSchedules.length; i++)
 		{
@@ -1223,12 +1222,8 @@ public class LoanCalculationTest  {
 	}
 	
 	
-	private boolean isAllConsoleOutputEnabled() {
-		return allConsoleOutputEnabled;
-	}
-	
-	private boolean isFileNameConsoleOutputEnabled() {
-		return isFileNameConsoleOutputEnabled;
+	private boolean isConsoleOutputEnabled() {
+		return consoleOutputEnabled;
 	}
 
 
@@ -1571,7 +1566,7 @@ class LoanTestCaseData {
 	}
 	
 	private void printResults(Results expectedResult, Results calculatedResult, String testName) {
-		if (!isAllConsoleOutputEnabled()) return;
+		if (!isConsoleOutputEnabled()) return;
 		
 		//System.out.println("Running test: " + testName);
 		System.out.println("Results are (Expected : Calculated : Difference)");
@@ -1636,7 +1631,7 @@ class LoanTestCaseData {
 	}
 	
 	private void printComparison(String label, Money expected, Money calculated) {
-		if (!isAllConsoleOutputEnabled()) return;
+		if (!isConsoleOutputEnabled()) return;
 		
 		System.out.println(label + expected + 
 				" : " + calculated + " : " + expected.subtract(calculated));
@@ -2210,7 +2205,7 @@ class LoanTestCaseData {
 								SystemException, ApplicationException, URISyntaxException 
 	{
 
-		if (isAllConsoleOutputEnabled() || isFileNameConsoleOutputEnabled()) {
+		if (isConsoleOutputEnabled()) {
 			System.out.println("Running Test: " + fileName);
 		}
 		LoanTestCaseData testCaseData = loadSpreadSheetData(directoryName + fileName);
