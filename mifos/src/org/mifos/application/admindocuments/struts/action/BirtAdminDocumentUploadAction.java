@@ -315,13 +315,19 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+	
+		AdminDocumentBO businessKey=null;
+		
 		BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
 		List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
 				.valueOf(request.getParameter("admindocId")));
-		SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(),request);
+		if((admindoclist!=null)&&(!admindoclist.isEmpty())){
+			SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(),request);
 
-		birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID().getAdminDocumentName());
-		birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().toString());
+			birtReportsUploadActionForm.setAdminiDocumentTitle(admindoclist.get(0).getAdminDocumentID().getAdminDocumentName());
+			birtReportsUploadActionForm.setAccountTypeId(admindoclist.get(0).getAccountStateID().getPrdType().getProductTypeID().toString());
+			businessKey = admindoclist.get(0).getAdminDocumentID();
+		}
 		
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRODUCTTYPELIST,
@@ -331,11 +337,18 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 			selectedlist.add(admindoc.getAccountStateID());
 		}
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS,selectedlist,request);
-		List<AccountStateEntity> masterList = new AccountBusinessService()
-		.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
-		masterList.removeAll(selectedlist);
+		List<AccountStateEntity> masterList = null;
+		if(birtReportsUploadActionForm.getAccountTypeId()!=null){
+			masterList= new AccountBusinessService()
+			.retrieveAllActiveAccountStateList(AccountTypes.getAccountType(Short.valueOf(birtReportsUploadActionForm.getAccountTypeId())));
+			masterList.removeAll(selectedlist);
+		}
+		
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.NOTSELECTEDACCOUNTSTATUS,masterList,request);
-		request.setAttribute(Constants.BUSINESS_KEY, admindoclist.get(0).getAdminDocumentID());
+
+		
+		
+		request.setAttribute(Constants.BUSINESS_KEY, businessKey);
 	
 		return mapping.findForward(ActionForwards.edit_success.toString());
 	}
