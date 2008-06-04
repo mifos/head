@@ -304,8 +304,7 @@ public class SurveyInstanceAction extends BaseAction {
 		}
 		
 		SurveyType surveyType = instance.getSurvey().getAppliesToAsEnum();
-		List<SurveyResponse> responses = persistence.retrieveResponsesByInstance(instance);
-		instance.setSurveyResponses(new TreeSet<SurveyResponse>(responses));
+		Set<SurveyResponse> responses = instance.getSurveyResponses();
 		BusinessObject businessObject;
 		String businessObjectName;
 		String globalNum;
