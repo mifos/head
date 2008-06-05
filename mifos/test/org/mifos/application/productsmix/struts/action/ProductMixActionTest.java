@@ -215,7 +215,7 @@ public class ProductMixActionTest extends MifosMockStrutsTestCase {
 		
 		assertNotNull(productTypeList);
 		
-		assertTrue(""+productTypeList.size(),2==productTypeList.size());
+		assertTrue(""+productTypeList.size(),1==productTypeList.size());
 		productMixActionForm = (ProductMixActionForm) request
 		.getSession().getAttribute("productMixActionForm");
 

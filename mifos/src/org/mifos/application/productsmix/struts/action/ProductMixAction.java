@@ -389,10 +389,18 @@ public class ProductMixAction extends BaseAction {
 
 	private List<ProductTypeEntity> getProductTypes(UserContext userContext)
 			throws Exception {
+	
 		List<ProductTypeEntity> productTypeList = getPrdMixBusinessService()
-				.getProductTypes();
-		for (ProductTypeEntity productTypeEntity : productTypeList)
-			productTypeEntity.setUserContext(userContext);
+			.getProductTypes();
+		ProductTypeEntity savingsProductEntity = null;
+		for (ProductTypeEntity productTypeEntity : productTypeList) {
+		productTypeEntity.setUserContext(userContext);
+			
+			if (productTypeEntity.getProductTypeID().equals(ProductType.SAVINGS.getValue())) {
+				savingsProductEntity = productTypeEntity;
+			}
+		}
+		productTypeList.remove(savingsProductEntity);
 		return productTypeList;
 	}
 
