@@ -638,11 +638,11 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 	}
 
-	private BigDecimal removeSign(Money amount) {
+	private String removeSign(Money amount) {
 		if (amount.getAmountDoubleValue() < 0)
-			return amount.negate().getAmount();
+			return amount.negate().toString();
 		else
-			return amount.getAmount(); 
+			return amount.toString(); 
 	}
 
 	protected void checkPermissionForCreate(Short newState,
