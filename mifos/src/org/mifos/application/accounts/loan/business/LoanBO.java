@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -95,7 +93,6 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -107,16 +104,13 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1499,10 +1493,10 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	protected void updatePerformanceHistoryOnAdjustment() {
+	protected void updatePerformanceHistoryOnAdjustment(int numberOfTransactions) {
 		if (getPerformanceHistory() != null) {
 			getPerformanceHistory().setNoOfPayments(
-					getPerformanceHistory().getNoOfPayments() - 1);
+					getPerformanceHistory().getNoOfPayments() - numberOfTransactions);
 		}
 	}
 
@@ -1624,12 +1618,33 @@ public class LoanBO extends AccountBO {
 	protected Money getDueAmount(AccountActionDateEntity installment) {
 		return ((LoanScheduleEntity) installment).getTotalDueWithFees();
 	}
+	
+	private boolean isInstallmentPaid(Short installmentId, List<AccountActionDateEntity> allInstallments)
+	{
+		for (AccountActionDateEntity accountActionDate : allInstallments)
+			if (accountActionDate.getInstallmentId().equals(installmentId))
+				return accountActionDate.isPaid();
+		return false;
+	}
 
 	@Override
 	protected void updateInstallmentAfterAdjustment(
 			List<AccountTrxnEntity> reversedTrxns) throws AccountException {
+		int numberOfFullPayments = 0;
+		List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
+		
 		if (null != reversedTrxns && reversedTrxns.size() > 0) {
+			Short currentInstallmentId = null;
+			Short prevInstallmentId = null;
 			for (AccountTrxnEntity accntTrxn : reversedTrxns) {
+				currentInstallmentId = accntTrxn.getInstallmentId();
+				if (!currentInstallmentId.equals(prevInstallmentId))
+				{
+					if (isInstallmentPaid(currentInstallmentId,  allInstallments))
+						numberOfFullPayments++;
+					prevInstallmentId = currentInstallmentId;
+				}
+					
 				if (!accntTrxn.getAccountActionEntity().getId().equals(
 						AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL
 								.getValue())) {
@@ -1653,8 +1668,7 @@ public class LoanBO extends AccountBO {
 								.getPenaltyAmount(), loanTrxn
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
-						if (accntActionDate.isPaid())
-							updatePerformanceHistoryOnAdjustment();
+
 
 						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 						accntActionDate.setPaymentDate(null);
@@ -1681,6 +1695,10 @@ public class LoanBO extends AccountBO {
 					}
 				}
 			}
+			boolean accountReOpened = false;
+			AccountStateEntity currentAccountState = this.getAccountState();
+			AccountStateEntity newAccountState = currentAccountState;
+			
 			if (getAccountStatusChangeHistory() != null
 					&& getAccountStatusChangeHistory().size() > 0
 					&& !getAccountState().getId().equals(
@@ -1693,7 +1711,25 @@ public class LoanBO extends AccountBO {
 						.equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
 					setAccountState(new AccountStateEntity(
 							AccountState.LOAN_ACTIVE_IN_BAD_STANDING));
+				} else if(currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+					
+					setAccountState(accountStatusChangeHistoryEntity.getOldStatus());
+					newAccountState = accountStatusChangeHistoryEntity.getOldStatus();
 				}
+			}
+			accountReOpened = isAccountReOpened(currentAccountState, newAccountState);
+			
+			if(accountReOpened && this.getCustomer().isClient()) {
+				final ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity)this.getCustomer().getPerformanceHistory(); 
+				clientHistory.setNoOfActiveLoans(clientHistory.getNoOfActiveLoans() + 1);	
+			}
+			
+			//Reverse just one payment when reopening an account
+			//Else reverse payments equal to number of transactions reversed.
+			if(accountReOpened) {
+				updatePerformanceHistoryOnAdjustment(1);
+			} else if(reversedTrxns != null && reversedTrxns.size() > 0) {
+				updatePerformanceHistoryOnAdjustment(numberOfFullPayments);
 			}
 			PersonnelBO personnel;
 			try {
@@ -1708,6 +1744,21 @@ public class LoanBO extends AccountBO {
 				throw new AccountException(e);
 			}
 		}
+	}
+	
+	/**
+	 * This method checks if the loan account has been reopened because of payment adjustments made.
+	 */
+	private boolean isAccountReOpened(AccountStateEntity currentAccountState, AccountStateEntity newAccountState) {
+		boolean reOpened = false;
+		
+		if(currentAccountState.isInState(AccountState.LOAN_CLOSED_OBLIGATIONS_MET) ||
+				currentAccountState.isInState(AccountState.LOAN_CLOSED_WRITTEN_OFF) && 
+				(newAccountState.isInState(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) || 
+						newAccountState.isInState(AccountState.LOAN_ACTIVE_IN_BAD_STANDING))) {
+			reOpened = true;
+		}
+		return reOpened;
 	}
 
 	@Override

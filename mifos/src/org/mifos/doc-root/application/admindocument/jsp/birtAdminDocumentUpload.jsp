@@ -193,7 +193,7 @@
 	
 											<c:set var="AvailableAccountStatus" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'AvailableAccountStatus')}" />
 											<c:set var="SelectedAccountStatus" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedAccountStatus')}" />
-											<mifos:MifosSelect  property="statusList" input="AvailableAccountStatus" output="SelectedAccountStatus" property1="id" property2="description" multiple="true">
+											<mifos:MifosSelect  property="statusList" input="AvailableAccountStatus" output="SelectedAccountStatus" property1="id" property2="name" multiple="true">
 											</mifos:MifosSelect>
 										</td>
 									</tr>

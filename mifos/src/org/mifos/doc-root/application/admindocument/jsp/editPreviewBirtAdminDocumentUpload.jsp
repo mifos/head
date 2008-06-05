@@ -149,7 +149,7 @@
 									<c:forEach
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedStatus')}"
 										var="selectedStatus">
-										<c:out value="${selectedStatus.description}" />,
+										<c:out value="${selectedStatus.name}" />,
 										
 									</c:forEach>
 									</td>
