@@ -49,6 +49,7 @@ import java.util.Comparator;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.config.AccountingRules;
+import java.util.Locale;
 
 /**
  * This class represents Money objects in the system, it should be used for all
@@ -544,9 +545,18 @@ public final class Money implements Serializable {
 		{
 			double doubleValue = amount.doubleValue();
 			String format = "%." + AccountingRules.getDigitsAfterDecimal().toString() + "f";
-			String formatStr = String.format(format, 0.0);
-			DecimalFormat formatter = new DecimalFormat(formatStr);
-			return  formatter.format(doubleValue);
+			String formatStr = String.format(Locale.ENGLISH, format, 0.0);
+			NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
+			DecimalFormat decimalFormat = null;
+			if (numberFormat instanceof DecimalFormat)
+			{
+				decimalFormat = ((DecimalFormat) numberFormat);
+				decimalFormat.applyPattern(formatStr);
+				return decimalFormat.format(doubleValue);
+			}
+			else
+				return numberFormat.format(doubleValue);
+
 			
 		}
 		return "0";
