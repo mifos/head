@@ -1409,6 +1409,8 @@ public class LoanAccountAction extends AccountAppAction {
 		loanAccountActionForm
 				.setNoOfInstallments(getStringValue(eligibleNoOfInstall
 						.getDefaultNoOfInstall()));
+		loanAccountActionForm.setBusinessActivityId(null);
+		loanAccountActionForm.setCollateralTypeId(null);
 	}
 	private List<FundBO> getFunds(LoanOfferingBO loanOffering) {
 		List<FundBO> funds = new ArrayList<FundBO>();
