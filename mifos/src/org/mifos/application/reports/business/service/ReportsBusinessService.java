@@ -256,6 +256,8 @@ public class ReportsBusinessService extends BusinessService {
 				}
 				finally{
 					try{
+						// FIXME: why is this commented out? Looks like a
+						// potential connection leak.
 						/*if(conn!=null)
 							conn.close();*/
 					}catch(Exception e)
