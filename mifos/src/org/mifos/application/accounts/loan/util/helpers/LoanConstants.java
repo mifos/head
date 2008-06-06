@@ -194,6 +194,10 @@ public interface LoanConstants {
 	public static final String LOANOFFICERID="loanOfficerId";
 	public static final String LOANPRODUCTID="loanProductId";
 	static final String LOAN_INDIVIDUAL_MONITORING_IS_ENABLED="loanIndividualMonitoringIsEnabled";
+	/**
+	 * Toggles whether or not the <strong><em>disbursement</em></strong> day
+	 * for a loan can be different from the meeting day.
+	 */
 	static final String REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED="repaymentSchedulesIndependentOfMeetingIsEnabled";
 	static final String MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY="minDaysBetweenDisbursalAndFirstRepaymentDay";
 	static final String MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY="maxDaysBetweenDisbursalAndFirstRepaymentDay";
