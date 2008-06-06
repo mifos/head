@@ -676,6 +676,9 @@ public class LoanBO extends AccountBO {
 		return !notOpenAccountStates.contains(loanAccountState);
 	}
 
+	/**
+	 * Update LoanSummaryEntity by subtracting amount of removed fees.
+	 */
 	@Override
 	protected void updateTotalFeeAmount(Money totalFeeAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
@@ -844,6 +847,10 @@ public class LoanBO extends AccountBO {
 		return amount;
 	}
 
+	/**
+	 * Remove the fee from all unpaid current or future installments,
+	 * and update the loan accordingly.
+	 */
 	@Override
 	public final void removeFees(Short feeId, Short personnelId)
 			throws AccountException {
@@ -871,6 +878,10 @@ public class LoanBO extends AccountBO {
 
 	}
 
+	/**
+	 * Remove unpaid or partially paid fee from each installment whose id is in installmentIdList,
+	 * and return the total of all unpaid fees that were removed. 
+	 */
 	@Override
 	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
@@ -1813,7 +1824,7 @@ public class LoanBO extends AccountBO {
 			applyRounding_v1();
 		}
 		*/
-		applyRounding_v1();
+		applyRounding_v2();
 	}
 	
 	protected final void applyRounding_v1() {
@@ -4480,9 +4491,13 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	}
 
 	private void updateRunningTotals_v2 (RepaymentTotals totals, LoanScheduleEntity currentInstallment) {
+		
+		totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalPaymentDue());
+		
 		totals.runningPrincipal = totals.runningPrincipal.add(currentInstallment.getPrincipal());
-		totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalDueWithFees());
-		totals.runningFees = totals.runningFees.add(currentInstallment.getTotalFeeDue());
+		totals.runningAccountFees = totals.runningAccountFees.add(currentInstallment.getTotalFeeDue());
+		totals.runningMiscFees = totals.runningMiscFees.add(currentInstallment.getMiscFeeDue());
+		totals.runningPenalties = totals.runningPenalties.add(currentInstallment.getPenaltyDue());
 	}
 	
 	private Money currencyRound_v2 (Money m) {
@@ -4503,7 +4518,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	private Money getExactTotalPaymentDue_v2 (List<AccountActionDateEntity> unpaidInstallments) {
 		Money sum = new Money ("0");
 		for (Iterator it = unpaidInstallments.iterator(); it.hasNext();) {
-			sum = sum.add(((LoanScheduleEntity)it.next()).getTotalDueWithFees());
+			sum = sum.add(((LoanScheduleEntity)it.next()).getTotalPaymentDue());
 		}
 		return sum;
 	}
@@ -4532,12 +4547,15 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
      *                                       .subtract (currentInstallment.getFee());
      */
 	private void roundAndAdjustButLastNonGraceInstallment_v2 (LoanScheduleEntity installment) {
-		roundInstallmentAccountFees_v2(installment);
-		Money roundedTotalDue = initialRound_v2(installment.getTotalDueWithFees());
+		Money roundedTotalInstallmentPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
+		roundInstallmentAccountFeesDue_v2(installment);
+		
 		installment.setInterest(currencyRound_v2(installment.getInterest()));
-		installment.setPrincipal(roundedTotalDue
-				                   .subtract(installment.getInterest())
-				                       .subtract(installment.getTotalFeeDue()));
+		//TODO: above comment applies to principal
+		installment.setPrincipal(roundedTotalInstallmentPaymentDue
+									.subtract(installment.getInterestDue())
+									.subtract(installment.getTotalFeeDueWithMiscFeeDue())
+									.subtract(installment.getPenaltyDue()));
 	}
 	
 	/**
@@ -4547,15 +4565,15 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	private void roundAndAdjustLastInstallment_v2 (LoanScheduleEntity lastInstallment, 
 			                                       RepaymentTotals totals) {
 	
-		roundInstallmentAccountFees_v2(lastInstallment);
-		Money installmentPayment = finalRound_v2(totals.roundedPayments.subtract(totals.runningPayments));
-		lastInstallment.setPrincipal(currencyRound_v2(getLoanAmount()
-				                        .subtract(totals.runningPrincipal)));
+		roundInstallmentAccountFeesDue_v2(lastInstallment);
+		Money installmentPayment = finalRound_v2(totals.roundedPaymentsDue.subtract(totals.runningPayments));
+		lastInstallment.setPrincipal(currencyRound_v2(totals.getRoundedPrincipalDue()
+				                        				.subtract(totals.runningPrincipal)));
 		adjustLastInstallmentFees_v2 (lastInstallment, totals);
-		lastInstallment.setInterest(
-			currencyRound_v2(installmentPayment
-					            .subtract(lastInstallment.getPrincipal())
-					                .subtract (lastInstallment.getTotalFeeDue())));
+		lastInstallment.setInterest(currencyRound_v2(installmentPayment
+					            						.subtract(lastInstallment.getPrincipalDue())
+					            						.subtract (lastInstallment.getTotalFeeDueWithMiscFeeDue())
+					            						.subtract (lastInstallment.getPenaltyDue())));
 	}
 	
 	/**
@@ -4566,9 +4584,9 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		if ( !(feeDetails == null) && ! feeDetails.isEmpty()) {
 			for ( Iterator it = feeDetails.iterator(); it.hasNext();) {
 				AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) it.next();
-				e.adjustFeeAmount(totals.roundedFees
-						             .subtract(totals.runningFees)
-						                 .subtract(e.getFeeAmount()));
+				e.adjustFeeAmount(totals.roundedAccountFeesDue
+									.subtract(totals.runningAccountFees)
+									.subtract(e.getFeeAmount()));
 				//just adjust the first fee
 				return;
 			}
@@ -4576,36 +4594,68 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	}
 	
 	/**
-	 * See JavaDoc comment for applyRounding_v2().
-	 * TODO: handle fees
+	 * For principal-only grace installments, adjust the interest to account
+	 * for rounding discrepancies.
 	 */
 	private void roundAndAdjustGraceInstallment_v2 (LoanScheduleEntity installment) {
-		roundInstallmentAccountFees_v2(installment);
-		Money roundedTotalDue = initialRound_v2(installment.getTotalDueWithFees());
-		installment.setInterest(roundedTotalDue
-				                   .subtract(installment.getPrincipal())
-				                       .subtract((installment.getTotalFeeDue())));
+		Money roundedInstallmentTotalPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
+		roundInstallmentAccountFeesDue_v2(installment);
+		installment.setInterest(roundedInstallmentTotalPaymentDue
+				                	.subtract(installment.getTotalFeeDueWithMiscFeeDue())
+				                	.subtract(installment.getPenaltyDue()));
 	}
 	
 	private RepaymentTotals calculateInitialTotals_v2 (List<AccountActionDateEntity> installments) {
 		
 		RepaymentTotals totals = new RepaymentTotals();
 		
-		totals.roundedPayments = finalRound_v2(getExactTotalPaymentDue_v2(installments));
-		//roundInstallmentAccountFees(installments);
-		totals.roundedFees = currencyRound_v2 (getExactTotalFeesDue_v2(installments));
-		totals.roundedInterest = totals.roundedPayments
-		                                  .subtract(totals.roundedFees)
-		                                      .subtract(this.getLoanAmount());
-	
+		Money exactTotalInterestDue = new Money ("0");
+		Money exactTotalAccountFeesDue = new Money ("0");
+		Money exactTotalMiscFeesDue = new Money ("0");
+		Money exactTotalPenaltiesDue = new Money ("0");
+		Money exactTotalMiscPenaltiesDue = new Money ("0");
+		//TODO: This calculation is not correct when previous payments have been made.
+		//Correct it when recoding to handle adding/removing fees/charges mid-stream.
+		//Money exactTotalPrincipalDue = new Money ("0");
+		Money exactTotalPrincipalDue = getLoanAmount();
+
+		for (Iterator it = installments.iterator(); it.hasNext();) {
+			LoanScheduleEntity currentInstallment = (LoanScheduleEntity) it.next();	
+			exactTotalInterestDue = exactTotalInterestDue.add(currentInstallment.getInterestDue());
+			exactTotalAccountFeesDue = exactTotalAccountFeesDue.add(currentInstallment.getTotalFeeDue());
+			exactTotalMiscFeesDue = exactTotalMiscFeesDue.add(currentInstallment.getMiscFeeDue());
+			exactTotalPenaltiesDue = exactTotalPenaltiesDue.add(currentInstallment.getPenaltyDue());
+			//exactTotalPrincipalDue = exactTotalPrincipalDue.add(currentInstallment.getPrincipalDue());
+		}
+		Money exactTotalPaymentsDue = exactTotalInterestDue
+									.add(exactTotalAccountFeesDue)
+									.add(exactTotalMiscFeesDue)
+									.add(exactTotalPenaltiesDue)
+									.add(exactTotalMiscPenaltiesDue)
+									.add(exactTotalPrincipalDue);
+		totals.setRoundedPaymentsDue(finalRound_v2(exactTotalPaymentsDue));
+		
+		totals.setRoundedAccountFeesDue(currencyRound_v2(exactTotalAccountFeesDue));
+		totals.setRoundedMiscFeesDue(currencyRound_v2(exactTotalMiscFeesDue));
+		totals.setRoundedPenaltiesDue(currencyRound_v2(exactTotalPenaltiesDue));
+		totals.setRoundedMiscPenaltiesDue(currencyRound_v2(exactTotalMiscPenaltiesDue));
+		totals.setRoundedPrincipalDue(currencyRound_v2(exactTotalPrincipalDue));
+
+		//Adjust interest to account for rounding discrepancies
+		totals.setRoundedInterestDue(totals.getRoundedPaymentsDue()
+										.subtract(totals.getRoundedAccountFeesDue())
+										.subtract(totals.getRoundedMiscFeesDue())
+										.subtract(totals.getRoundedPenaltiesDue())
+										.subtract(totals.getRoundedMiscPenaltiesDue())
+										.subtract(totals.getRunningPrincipal()));
 		return totals;
 	}
 	
-	 private void roundInstallmentAccountFees_v2 (LoanScheduleEntity installment) {
+	 private void roundInstallmentAccountFeesDue_v2 (LoanScheduleEntity installment) {
 		
 			for (Iterator feeActionIt = installment.getAccountFeesActionDetails().iterator(); feeActionIt.hasNext();) {
 				AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) feeActionIt.next();
-				e.roundFeeAmount(currencyRound_v2(e.getFeeAmount()));
+				e.roundFeeAmount(currencyRound_v2(e.getFeeDue()));
 			}
 			
 	}
@@ -4622,19 +4672,104 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	
 	/**
 	 * A struct to hold totals that can be passed around during rounding computations.
-	 * Don't bother defining setters and getters, use public instance variables directly.
 	 */
 	private class RepaymentTotals {
 		//rounded or adjusted totals prior to rounding installments
-		Money roundedPayments;
-		Money roundedInterest;
-		Money roundedFees;
+		Money roundedPaymentsDue;
+		Money roundedInterestDue;
+		Money roundedAccountFeesDue;
+		Money roundedMiscFeesDue;
+		Money roundedPenaltiesDue;
+		Money roundedMiscPenaltiesDue;
+		Money roundedPrincipalDue;
 		
 		//running totals as installments are rounded
 		Money runningPayments = new Money ("0");
-		Money runningFees = new Money ("0");
+		Money runningAccountFees = new Money ("0");
 		Money runningPrincipal = new Money ("0");
+		Money runningMiscFees = new Money ("0");
+		Money runningPenalties = new Money ("0");
+		Money runningMiscPenalties = new Money ("0");
+		Money getRoundedPaymentsDue() {
+			return roundedPaymentsDue;
+		}
+		void setRoundedPaymentsDue(Money roundedPaymentsDue) {
+			this.roundedPaymentsDue = roundedPaymentsDue;
+		}
+		Money getRoundedInterestDue() {
+			return roundedInterestDue;
+		}
+		void setRoundedInterestDue(Money roundedInterestDue) {
+			this.roundedInterestDue = roundedInterestDue;
+		}
+		Money getRoundedAccountFeesDue() {
+			return roundedAccountFeesDue;
+		}
+		void setRoundedAccountFeesDue(Money roundedAccountFeesDue) {
+			this.roundedAccountFeesDue = roundedAccountFeesDue;
+		}
+		Money getRoundedMiscFeesDue() {
+			return roundedMiscFeesDue;
+		}
+		void setRoundedMiscFeesDue(Money roundedMiscFeesDue) {
+			this.roundedMiscFeesDue = roundedMiscFeesDue;
+		}
+		Money getRoundedPenaltiesDue() {
+			return roundedPenaltiesDue;
+		}
+		void setRoundedPenaltiesDue(Money roundedPenaltiesDue) {
+			this.roundedPenaltiesDue = roundedPenaltiesDue;
+		}
+		Money getRoundedMiscPenaltiesDue() {
+			return roundedMiscPenaltiesDue;
+		}
+		void setRoundedMiscPenaltiesDue(Money roundedMiscPenaltiesDue) {
+			this.roundedMiscPenaltiesDue = roundedMiscPenaltiesDue;
+		}
+		Money getRunningPayments() {
+			return runningPayments;
+		}
+		void setRunningPayments(Money runningPayments) {
+			this.runningPayments = runningPayments;
+		}
+		Money getRunningAccountFees() {
+			return runningAccountFees;
+		}
+		void setRunningAccountFees(Money runningAccountFees) {
+			this.runningAccountFees = runningAccountFees;
+		}
+		Money getRunningPrincipal() {
+			return runningPrincipal;
+		}
+		void setRunningPrincipal(Money runningPrincipal) {
+			this.runningPrincipal = runningPrincipal;
+		}
+		Money getRunningMiscFees() {
+			return runningMiscFees;
+		}
+		void setRunningMiscFees(Money runningMiscFees) {
+			this.runningMiscFees = runningMiscFees;
+		}
+		Money getRunningPenalties() {
+			return runningPenalties;
+		}
+		void setRunningPenalties(Money runningPenalties) {
+			this.runningPenalties = runningPenalties;
+		}
+		Money getRunningMiscPenalties() {
+			return runningMiscPenalties;
+		}
+		void setRunningMiscPenalties(Money runningMiscPenalties) {
+			this.runningMiscPenalties = runningMiscPenalties;
+		}
+		Money getRoundedPrincipalDue() {
+			return roundedPrincipalDue;
+		}
+		void setRoundedPrincipalDue(Money roundedPrincipalDue) {
+			this.roundedPrincipalDue = roundedPrincipalDue;
+		}
 	}
+	
 	static boolean isDisbursementDateAfterCustomerActivationDate(
 			Date disbursementDate, CustomerBO customer) {
 		return DateUtils.dateFallsOnOrBeforeDate(customer.getCustomerActivationDate(),

@@ -608,7 +608,9 @@ public class TestSavingsBO extends MifosTestCase {
 		// using min balance for interest calculation
 		// from 15/01/2006 to 10/03/2006 = 85 no of days
 		// interest Rate 24% per anum
-		// interest = minBal 1400 * 242/(365*100)*85 = 78.2
+		// interest = minBal 1400 * 24%/(365*100)*85 = 78.2465753425
+		// using default currency rounding (CEILING) and DIGITS_AFTER_DECIMAL (1)
+		// rounded to 78.3
 
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -657,11 +659,17 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 
-		double intAmount = savings.calculateInterestForClosure(
-				helper.getDate("10/04/2006")).getAmountDoubleValue();
-		// * TODO: financial_calculation_rounding
+		// remove workarounds like this when rounding rules are working
+		// double intAmount = savings.calculateInterestForClosure(
+		//		helper.getDate("10/04/2006")).getAmountDoubleValue();
 		//assertEquals(Double.valueOf("78.2"), getRoundedDouble(intAmount));
-		assertEquals(Double.valueOf("78.3"), getRoundedDouble(intAmount));
+		
+		Money roundedInterestForClosure = 
+			Money.round(savings.calculateInterestForClosure(helper.getDate("10/04/2006")), 
+						AccountingRules.getDigitsAfterDecimalMultiple(),
+						AccountingRules.getCurrencyRoundingMode());
+		assertEquals(new Money("78.3"), 
+					roundedInterestForClosure);
 	}
 
 	public void testIsMandatory() throws Exception {

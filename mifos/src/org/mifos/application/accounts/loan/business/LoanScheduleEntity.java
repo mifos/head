@@ -369,6 +369,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	public Money getTotalFeeDueWithMiscFeeDue() {
 		return getMiscFeeDue().add(getTotalFeeDue());
 	}
+	
+	public Money getTotalPaymentDue() {
+		return getTotalDue().add(getTotalFeeDue());
+	}
 
 	Money removeFees(Short feeId) {
 		Money feeAmount = null;
