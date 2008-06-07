@@ -1,0 +1,15 @@
+
+Setup requirements to execute Mifos Selenium bvt tests:
+1. Firefox 1.5.0 or 2.0.0
+2. Selenium IDE: http://selenium-ide.openqa.org/
+3. Deployed instance of mifos.  All tests use "mifos" user account.
+4. Base database created by calling ant build_db.
+
+
+Each selenium test assumes the user is logged onto system.  
+
+The test "_FirstLogin.html" will perform a simple login, so when all tests are run as a test suite that test will execute first.
+
+Steps to run a set of Selenium IDE tests as a single test suite can be found on at mifos.org:
+http://www.mifos.org/developers/wiki/NotesForUsingSeleniumIDE
+
