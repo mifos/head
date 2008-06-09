@@ -529,11 +529,9 @@ public class SavingsBO extends AccountBO {
 			} else {
 				trxn = (new SavingsPersistence()).retrieveLastTransaction(
 						getAccountId(), fromDate);
-				if (trxn == null) {
+				if (trxn == null || (trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING))) {
 					trxn = (new SavingsPersistence())
 							.retrieveFirstTransaction(getAccountId());
-					if (trxn != null)
-						fromDate = trxn.getActionDate();
 				}
 			}
 		} catch (PersistenceException pe) {
@@ -541,10 +539,11 @@ public class SavingsBO extends AccountBO {
 		}
 		Money principal = null;
 		Money interestAmount = new Money();
+		
 		if (trxn != null) {
-			trxn = (trxn.getAccountPayment().getAmount().getAmountDoubleValue() > 0) ? getLastTrxnForPayment(trxn
-					.getAccountPayment())
-					: getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
+				trxn = (trxn.getAccountPayment().getAmount().getAmountDoubleValue() > 0)
+						? getLastTrxnForPayment(trxn.getAccountPayment())
+						: getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
 			if (getInterestCalcType().getId().equals(
 					InterestCalcType.MINIMUM_BALANCE.getValue()))
 				principal = getMinimumBalance(fromDate, toDate, trxn,
@@ -702,6 +701,12 @@ public class SavingsBO extends AccountBO {
 			minBal = adjustedTrxn.getBalance();
 
 		for (int i = 0; i < accountTrxnList.size(); i++) {
+			if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) < 0) {
+					fromDate = accountTrxnList.get(i).getActionDate();
+					continue;
+				}
+			}			
 			if ((accountTrxnList.get(i).getActionDate()).compareTo(fromDate) >= 0
 					&& DateUtils.getDateWithoutTimeStamp(
 							accountTrxnList.get(i).getActionDate().getTime())
