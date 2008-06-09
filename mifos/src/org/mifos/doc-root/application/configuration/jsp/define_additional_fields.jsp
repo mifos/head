@@ -156,7 +156,10 @@
 										<c:forEach
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'allDataTypes')}"
 											var="oneDataType">
+											<%-- XXX: Fix for issue #1962, don't display Date data type --%>
+											<c:if test="${oneDataType.id != '3'}">
 											<html-el:option value="${oneDataType.id}">${oneDataType.name}</html-el:option>
+											</c:if>
 										</c:forEach>
 									</mifos:select></td>
 								</tr>
