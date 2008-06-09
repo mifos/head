@@ -1,44 +1,23 @@
-<!-- 
+<%--
+Copyright (c) 2005-2008 Grameen Foundation USA
+All rights reserved.
 
-/**
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
- * updatemeeting.jsp    version: 1.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
 
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
- * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
- */
-
--->
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+--%>
+<!-- updatemeeting.jsp -->
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
@@ -122,9 +101,16 @@ function goToCancelPage(){
 					<td align="left" valign="top" class="paddingL15T15"><span
 						class="heading">
 						<c:out value="${BusinessKey.displayName}" /> - </span>
-						<span class="headingorange">
-							<mifos:mifoslabel name="meeting.labelmeetingschedule&groupMembership" bundle="MeetingResources" />
-						</span>
+						<c:if test="${BusinessKey.customerLevel.client}">
+							<span class="headingorange">
+								<mifos:mifoslabel name="meeting.labelmeetingschedule&groupMembership" bundle="MeetingResources" />
+							</span>
+						</c:if>
+						<c:if test="${BusinessKey.customerLevel.center || BusinessKey.customerLevel.group}">
+							<span class="headingorange">
+								<mifos:mifoslabel name="meeting.labelMeetingSchedule" bundle="MeetingResources" />
+							</span>
+						</c:if>
 					</td>
 				</tr>
 			</table>
@@ -247,23 +233,19 @@ function goToCancelPage(){
 							<td><html-el:text property="meetingPlace" maxlength="200"/></td>
 						</tr>
 					<!-- Start Add group membership -->	
-						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="Group.groupMembership" /></td>
-							<td><mifos:mifoslabel
-								name="Group.none" /></td>
-						</tr>
-												
-							<!-- table width="96%" border="0" cellpadding="3" cellspacing="0"-->
-								<tr>
+						<c:if test="${BusinessKey.customerLevel.client}">
+							<tr class="fontnormal">
+								<td align="right"><mifos:mifoslabel name="Group.groupMembership" /></td>
+								<td><mifos:mifoslabel name="Group.none" /></td>
+							</tr>
+							<tr>
 								<td align="right"></td>
-									<td align="left" class="fontnormalbold"><span class="fontnormal">
-									<a
-										href="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-									<mifos:mifoslabel name="client.AddGroupMemberShip"									
-										bundle="ClientUIResources" /> </a> </span></td>
-								</tr>
-					        <!--/table-->
+								<td align="left" class="fontnormalbold"><span class="fontnormal">
+									<a href="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										<mifos:mifoslabel name="client.AddGroupMemberShip" bundle="ClientUIResources" /> </a> </span>
+								</td>
+							</tr>
+						</c:if>
 				    <!-- End Add group membership -->		
 					</table>
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
