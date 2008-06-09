@@ -133,7 +133,10 @@ public interface MeetingConstants {
 	
 	public final String WEEK_SCHEDULE="meeting.weekSchedule";
 	public final String MONTH_DAY_SCHEDULE="meeting.daySchedule";
-	public final String MONTH_SCHEDULE="meeting.monthSchedule";
+	public final String MONTH_SCHEDULE="meeting.monthSchedule";	
+	public final String WEEK_SCHEDULE_CHANGE="meeting.weekSchedule.change";
+	public final String MONTH_DAY_SCHEDULE_CHANGE="meeting.daySchedule.change";
+	public final String MONTH_SCHEDULE_CHANGE="meeting.monthSchedule.change";	
 	public final String WEEK_SCHEDULE_SHORT="meeting.weekScheduleShort";
 	public final String MONTH_SCHEDULE_SHORT="meeting.monthScheduleShort";
 	public final String WEEK_FREQUENCY="meeting.weekFrequency";

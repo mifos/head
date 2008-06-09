@@ -123,10 +123,10 @@ function goToCancelPage(){
 				</tr>
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15"><span
-						class="fontnormal"> 
-						<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
+						class="fontnormalRedBold"> 
+						<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/></span>
 						<br>
-						<mifos:mifoslabel
+						<span class="fontnormal"><mifos:mifoslabel
 						name="meeting.labelCreateInstruction" mandatory="yes"
 						bundle="MeetingResources">
 					</mifos:mifoslabel> </span><br>

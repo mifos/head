@@ -396,9 +396,10 @@
 										</c:otherwise></c:choose><br>
 									<span class="fontnormalRed"> <mifos:mifoslabel
 										name="client.MeetingsHeading" bundle="ClientUIResources" isColonRequired="yes"/>&nbsp;
-									<c:out
-										value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" />
-									<br>
+									<c:out value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" /></span>									
+									<c:set var="updatedMeetingScheduleMessage" value="${customerfn:getUpdatedMeetingSchedule(BusinessKey.customerMeeting,UserContext)}" />
+									<c:if test="${!empty(updatedMeetingScheduleMessage)}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
+									<span class="fontnormal"><br></span>
 									</span> <span class="fontnormal"> <c:if
 										test="${BusinessKey.customerMeeting.meeting.meetingPlace!=null && !empty BusinessKey.customerMeeting.meeting.meetingPlace}">
 										<c:out

@@ -41,6 +41,7 @@ package org.mifos.application.customer.struts.uihelpers;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
@@ -108,6 +109,18 @@ public class CustomerUIHelperFn {
 	}
 	
 	public static String getMeetingSchedule(Object meeting,	Object userContext) {
-			return  meeting!=null ? new MeetingHelper().getMessage((MeetingBO)meeting, (UserContext)userContext):null;
-	}	
+		if (meeting instanceof MeetingBO) {
+			return  meeting!=null ? new MeetingHelper().getMessage((MeetingBO) meeting, (UserContext)userContext):null;
+		} else {
+			return null;
+		}
+	}
+	
+	public static String getUpdatedMeetingSchedule(Object meeting,	Object userContext) {
+		if (meeting instanceof CustomerMeetingEntity) {
+			return  meeting!=null ? new MeetingHelper().getUpdatedMeetingScheduleMessage((CustomerMeetingEntity) meeting, (UserContext)userContext):null;
+		} else {
+			return null;
+		}
+	}
 }
