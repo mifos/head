@@ -70,8 +70,8 @@ public interface FilePaths {
 	 */
 	public static final String SPRING_CONFIG_CORE =
 		"org/mifos/config/resources/applicationContext.xml";
-	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/collectionsheetreportproduct.properties";
-	public static final String BRANCH_REPORT_CONFIG = "/org/mifos/application/reports/resources/branchreport.properties";
+	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/CollectionSheetReport.properties";
+	public static final String BRANCH_REPORT_CONFIG = "/org/mifos/application/reports/resources/ProgressReport.properties";
 	public static final String BRANCH_CASH_CONFIRMATION_REPORT_CONFIG = "/org/mifos/application/reports/resources/branchcashconfirmationreport.properties";
 	public static final String REPORT_PARAMETER_VALIDATOR_CONFIG = "/org/mifos/config/reportParameterValidators.xml";
 	/**

@@ -41,7 +41,7 @@
 		<constructor-arg ref="savingsPrdBusinessService" />
 		<constructor-arg>
 			<value>
-				classpath:org/mifos/application/reports/resources/collectionsheetreportproduct.properties
+				classpath:org/mifos/application/reports/resources/CollectionSheetReport.properties
 			</value>
 		</constructor-arg>
 	</bean>
@@ -103,7 +103,7 @@
 		class="org.mifos.application.reports.business.service.BranchReportConfigService">
 		<constructor-arg>
 			<value>
-				classpath:org/mifos/application/reports/resources/branchreport.properties
+				classpath:org/mifos/application/reports/resources/progressreport.properties
 			</value>
 		</constructor-arg>
 	</bean>
