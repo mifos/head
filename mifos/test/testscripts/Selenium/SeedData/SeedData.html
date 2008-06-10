@@ -458,6 +458,51 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Administrative tasks</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define Lookup Options</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Define Lookup Options</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btnAddSalutation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Add / Edit Lookup Option</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lookupValue</td>
+	<td>Mr${randomNum}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Define Lookup Options</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Clients &amp; Accounts</td>
 	<td></td>
 </tr>
@@ -703,7 +748,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.editCustomerStatusActionForm.newStatusId[1]</td>
+	<td>//input[@name='newStatusId' and @value='9']</td>
 	<td></td>
 </tr>
 <tr>
@@ -764,7 +809,7 @@
 <tr>
 	<td>select</td>
 	<td>clientName.salutation</td>
-	<td>label=Mr</td>
+	<td>label=Mr${randomNum}</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -878,7 +923,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.editCustomerStatusActionForm.newStatusId[1]</td>
+	<td>//input[@name='newStatusId' and @value='3']</td>
 	<td></td>
 </tr>
 <tr>
@@ -1013,7 +1058,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.editStatusActionForm.newStatusId[1]</td>
+	<td>//input[@name='newStatusId' and @value='3']</td>
 	<td></td>
 </tr>
 <tr>
