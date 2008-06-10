@@ -159,7 +159,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					activityKey = path + "-" + request.getParameter("viewPath");
 					activityId = activityMapper.getActivityId(activityKey);
 				}
-				// Check for fingrained permissions
+				// Check for fine-grained permissions
 				if (null == activityId) {
 					activityKey = key
 							+ "-"

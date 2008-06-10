@@ -406,6 +406,7 @@ public interface SecurityConstants {
 
 	public final short REPORTS_MANAGEMENT = 141;
 
+	// FIXME: both use the same ID? Is this a mistake?
 	public final short ADMINISTER_REPORTPARAMS = 142;
     public final short ADMINISTER_REPORTDS = 142;
     

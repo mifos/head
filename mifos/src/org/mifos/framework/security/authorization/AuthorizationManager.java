@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -62,15 +63,13 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
 /**
- * AuthrizationManager Acts as authorization Service it is singleton class and
- * it's object got created during the initilization phase .This object keep a
- * Hashmap of activities to roles and keep this hashmap synchrozinised with the
- * database
+ * A singleton authorization service. Tracks a map of activities to roles
+ * synchronized with the <code>activity</code> table in the database.
  */
 
 public class AuthorizationManager {
 
-	private HashMap<Short, Set> activityToRolesCacheMap = null;
+	private Map<Short, Set> activityToRolesCacheMap = null;
 	private static AuthorizationManager manager = new AuthorizationManager();
 	private AuthorizationManager() {
 		activityToRolesCacheMap = new HashMap<Short, Set>();

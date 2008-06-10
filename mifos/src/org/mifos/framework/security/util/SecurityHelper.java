@@ -83,6 +83,7 @@ public class SecurityHelper {
 		Session session = sessionHolder.getSession();
 		Transaction transaction = null;
 		try {
+			// FIXME: what's with the transaction here? I don't see any CRUD.
 			transaction = session.beginTransaction();
 			Query query = session
 					.getNamedQuery(NamedQueryConstants.GETACTIVITYROLES);
