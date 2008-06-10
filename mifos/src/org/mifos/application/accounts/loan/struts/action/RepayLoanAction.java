@@ -73,8 +73,7 @@ public class RepayLoanAction extends BaseAction {
 		LoanBO loanBO = ((LoanBusinessService) getService())
 				.findBySystemId(globalAccountNum);
 		SessionUtils
-				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, Money
-						.round(loanBO.getTotalEarlyRepayAmount()), request
+				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, loanBO.getTotalEarlyRepayAmount(), request
 						);
 		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
