@@ -103,7 +103,7 @@
 		class="org.mifos.application.reports.business.service.BranchReportConfigService">
 		<constructor-arg>
 			<value>
-				classpath:org/mifos/application/reports/resources/progressreport.properties
+				classpath:org/mifos/application/reports/resources/ProgressReport.properties
 			</value>
 		</constructor-arg>
 	</bean>
