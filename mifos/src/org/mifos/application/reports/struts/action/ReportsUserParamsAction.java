@@ -117,7 +117,7 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("loadAdminReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("loadAdminReport", SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
 		
 		return security;
 	}
