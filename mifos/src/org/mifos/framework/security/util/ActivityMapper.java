@@ -896,7 +896,9 @@ public class ActivityMapper {
  
 	private void parseActionSecurity(ActionSecurity security) {
 		for (String method : security.methods()) {
+			// example fullKey: "/reportsUserParamsAction-loadAdminReport"
 			String fullKey = "/" + security.getActionName() + "-" + method;
+			// value maps to a primary key in the activity table?
 			activityMap.put(fullKey, security.get(method));
 		}
 		allSecurity.add(security);

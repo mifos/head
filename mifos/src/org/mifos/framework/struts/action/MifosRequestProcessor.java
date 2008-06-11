@@ -179,6 +179,10 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		return returnValue;
 	}
 
+	/*
+	 * Seems bolted-on. Is there a more elegant way to control per-report
+	 * permissions?
+	 */
 	private boolean isReportRequest(HttpServletRequest request) {
 		String reportId = request.getParameter("reportId");
 		String method = request.getParameter("method");

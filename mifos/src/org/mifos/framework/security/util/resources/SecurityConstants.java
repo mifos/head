@@ -458,6 +458,19 @@ public interface SecurityConstants {
 	
 	public final short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
 	
+	/**
+	 * This permission is used for multiple operations:
+	 * <ul>
+	 * <li> listing all available admin documents. From the UI: "Admin->View
+	 * admin documents"
+	 * <li> running/executing an admin document when it shows up during a
+	 * particular loan or savings account state
+	 * </ul>
+	 * 
+	 * This was done to fix the issue quickly and since the operations seem to
+	 * have reasonable overlap.
+	 * 
+	 */
 	public final short CAN_VIEW_ADMIN_DOCUMENTS = 226;
 	
 	// FIXME: remove this; CONFIGURATION_MANAGEMENT should be parent for
