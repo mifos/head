@@ -111,7 +111,7 @@
 		class="org.mifos.application.reports.business.service.BranchCashConfirmationConfigService">
 		<constructor-arg>
 			<value>
-				classpath:org/mifos/application/reports/resources/branchcashconfirmationreport.properties
+				classpath:org/mifos/application/reports/resources/BranchCashConfirmationReport.properties
 			</value>
 		</constructor-arg>
 	</bean>
