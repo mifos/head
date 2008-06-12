@@ -55,6 +55,7 @@
 	<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
 		
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BackDatedTransactionsAllowed')}" var="allowBackDatedTransactions" />
 	<body onload="disableFields()">
 		<script>
 			function fun_return(form){
@@ -64,16 +65,15 @@
 			}
 			
 			function disableFields(){
-			if (${repaymentSchedulesIndependentOfMeetingIsEnabled}==1)
-			{
-	 		document.getElementsByName("transactionDateDD")[0].disabled=true;
-	 		document.getElementsByName("transactionDateMM")[0].disabled=true;
-	 		document.getElementsByName("transactionDateYY")[0].disabled=true; 			 		
+        			if (${allowBackDatedTransactions} == false) {
+                	 		document.getElementsByName("transactionDateDD")[0].disabled=true;
+                	 		document.getElementsByName("transactionDateMM")[0].disabled=true;
+                	 		document.getElementsByName("transactionDateYY")[0].disabled=true;
+        	 		}
 	 		}
-	 		} 		
-				
 
-					
+
+
 	</script>
 
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>

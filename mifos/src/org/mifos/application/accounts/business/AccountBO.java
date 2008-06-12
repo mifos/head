@@ -22,11 +22,9 @@ import static org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCO
 import static org.mifos.application.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -768,8 +766,29 @@ public class AccountBO extends BusinessObject {
             
             if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
             	// payment date for loans must be >= disbursement date
-            	if (this instanceof LoanBO)
-            		return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(((LoanBO)this).getDisbursementDate())) >= 0;
+            	if (this instanceof LoanBO) {
+            		Date apporvalDate = this.getAccountApprovalDate();
+            		//This is call for disbursment.
+            		if(this.getState().equals(AccountState.LOAN_APPROVED)) {
+            			return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
+            		} else {
+            		//This is payment action.
+            		if(meetingDate== null) {
+            			//if meetings are not present..
+            			return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
+            		} else {
+            			final Date meetingDateWithoutTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate);
+            			// if the last meeting date was prior to approval date, then the transactions should be after the approval date.
+            			if(apporvalDate.compareTo(meetingDateWithoutTimeStamp) > 0) {
+            				return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
+            			} else {
+            				//if the last meeting is after the appoval date then the transaction should be after the meeting.
+            				return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
+            				}
+            			}
+            		}
+            		
+            	}
             	// must be >= creation date for other accounts
             	return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;
             } else {
@@ -1379,6 +1398,20 @@ public class AccountBO extends BusinessObject {
 			}
 		}
 	}
+	
+	public Date getAccountApprovalDate() {
+		Date approvalDate = null;
+		Set<AccountStatusChangeHistoryEntity> statusChangeHistory = this.getAccountStatusChangeHistory();
+		
+		for(AccountStatusChangeHistoryEntity status : statusChangeHistory) {
+		
+			if(status.getNewStatus().isInState(AccountState.LOAN_APPROVED)) {
+				approvalDate = status.getCreatedDate();
+				break;
+			}
+		}
+		return approvalDate;
+    }
 
 	public Integer getOffsettingAllowable() {
 		return offsettingAllowable;
