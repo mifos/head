@@ -285,6 +285,9 @@ public class TestObjectFactory {
 		return getPersonnel(HibernateUtil.getSessionTL(), personnelId);
 	}
 
+	/*
+	 * Create a center which includes a weekly maintenance fee of 100
+	 */
 	public static CenterBO createCenter(String customerName, MeetingBO meeting) {
 		return createCenter(customerName, meeting, getFees());
 	}

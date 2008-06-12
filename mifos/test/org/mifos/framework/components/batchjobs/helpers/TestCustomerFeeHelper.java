@@ -168,12 +168,16 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 			if (customerScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("2"))) {
 				lastAppliedFeeDate = customerScheduleEntity.getActionDate();
-				assertEquals(1, customerScheduleEntity
+				assertEquals(2, customerScheduleEntity
 						.getAccountFeesActionDetails().size());
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : customerScheduleEntity
 						.getAccountFeesActionDetails()) {
 					if (accountFeesActionDetailEntity.getFee().getFeeName()
 							.equalsIgnoreCase("Training_Fee")) {
+						assertEquals(new Money("200.0"),
+								accountFeesActionDetailEntity.getFeeAmount());
+					} else if (accountFeesActionDetailEntity.getFee().getFeeName()
+							.equalsIgnoreCase("Maintenance Fee")) {
 						assertEquals(new Money("200.0"),
 								accountFeesActionDetailEntity.getFeeAmount());
 					}

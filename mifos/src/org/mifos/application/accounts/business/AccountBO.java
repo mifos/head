@@ -970,9 +970,19 @@ public class AccountBO extends BusinessObject {
  			throws AccountException {
 		return getInstallmentDates(meeting, noOfInstallments, installmentToSkip, false);
 	}
+
+	protected final List<InstallmentDate> getInstallmentDates(
+			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip, 
+			boolean isRepaymentIndepOfMeetingEnabled)
+			throws AccountException {
+		
+		return getInstallmentDates(meeting, noOfInstallments, installmentToSkip,
+				isRepaymentIndepOfMeetingEnabled, true);
+	}
 	
 	protected final List<InstallmentDate> getInstallmentDates(
-			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip, boolean isRepaymentIndepOfMeetingEnabled)
+			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip, 
+			boolean isRepaymentIndepOfMeetingEnabled, boolean adjustForHolidays)
 			throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating intallment dates");
@@ -982,9 +992,9 @@ public class AccountBO extends BusinessObject {
 				if (isRepaymentIndepOfMeetingEnabled)
 					dueDates = meeting
 							.getAllDatesWithRepaymentIndepOfMeetingEnabled(noOfInstallments +
-									installmentToSkip);
+									installmentToSkip, adjustForHolidays);
 				else dueDates = meeting.getAllDates(noOfInstallments +
-						installmentToSkip);
+						installmentToSkip, adjustForHolidays);
 
 				return createInstallmentDates(installmentToSkip, dueDates);
 			}
@@ -1005,6 +1015,7 @@ public class AccountBO extends BusinessObject {
  		return installmentDates;
  	}
 	
+	@Deprecated
 	protected final List<FeeInstallment> getFeeInstallments(
 			List<InstallmentDate> installmentDates) throws AccountException {
 		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
@@ -1025,6 +1036,32 @@ public class AccountBO extends BusinessObject {
 		return feeInstallmentList;
 	}
 
+	/**
+	 * 
+	 * @param installmentDates dates adjusted for holidays
+	 * @param nonAdjustedInstallmentDates dates not adjusted for holidays
+	 */
+	protected final List<FeeInstallment> getFeeInstallments(
+			List<InstallmentDate> installmentDates, 
+			List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
+		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
+		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
+			if (accountFeesEntity.isActive()) {
+				Short accountFeeType = accountFeesEntity.getFees()
+						.getFeeFrequency().getFeeFrequencyType().getId();
+				if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
+					feeInstallmentList.add(handleOneTime(accountFeesEntity,
+							installmentDates));
+				} else if (accountFeeType.equals(FeeFrequencyType.PERIODIC
+						.getValue())) {
+					feeInstallmentList.addAll(handlePeriodic(accountFeesEntity,
+							installmentDates, nonAdjustedInstallmentDates));
+				}
+			}
+		}
+		return feeInstallmentList;
+	}
+	
 	protected final List<Date> getFeeDates(MeetingBO feeMeetingFrequency,
 			List<InstallmentDate> installmentDates) throws AccountException {
 		MeetingBO customerMeeting = getCustomer().getCustomerMeeting().getMeeting();
@@ -1211,6 +1248,13 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
+	protected List<FeeInstallment> handlePeriodic(
+			AccountFeesEntity accountFees,
+			List<InstallmentDate> installmentDates,
+			List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
+		return null;
+	}	
+	
 	protected AccountPaymentEntity makePayment(PaymentData accountPaymentData)
 			throws AccountException {
 		return null;

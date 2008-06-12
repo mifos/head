@@ -80,6 +80,7 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -1895,7 +1896,7 @@ public class LoanBO extends AccountBO {
 		return accountFeeAmount;
 	}
 
-	@Override
+	@Override @Deprecated
 	protected final List<FeeInstallment> handlePeriodic(
 			AccountFeesEntity accountFees,
 			List<InstallmentDate> installmentDates) throws AccountException {
@@ -1917,6 +1918,31 @@ public class LoanBO extends AccountBO {
 		return feeInstallmentList;
 	}
 
+	@Override
+	protected final List<FeeInstallment> handlePeriodic(
+			AccountFeesEntity accountFees,
+			List<InstallmentDate> installmentDates,
+			List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
+		Money accountFeeAmount = accountFees.getAccountFeeAmount();
+		MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency()
+				.getFeeMeetingFrequency();
+		List<Date> feeDates = getFeeDates(feeMeetingFrequency, nonAdjustedInstallmentDates);
+		ListIterator<Date> feeDatesIterator = feeDates.listIterator();
+		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
+		while (feeDatesIterator.hasNext()) {
+			Date feeDate = feeDatesIterator.next();
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"Handling periodic fee.." + feeDate);
+
+			Short installmentId = getMatchingInstallmentId(installmentDates,
+					feeDate);
+			feeInstallmentList.add(buildFeeInstallment(installmentId,
+					accountFeeAmount, accountFees));
+
+		}
+		return feeInstallmentList;
+	}
+	
 	private LoanActivityEntity buildLoanActivity(
 			Collection<AccountTrxnEntity> accountTrxnDetails,
 			PersonnelBO personnel, String comments, Date trxnDate) {
@@ -3693,6 +3719,13 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
 				isRepaymentIndepOfMeetingEnabled);
 
+		// installment dates that have not been adjusted for holidays
+		List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(
+				getLoanMeeting(),
+				noOfInstallments,
+				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
+				isRepaymentIndepOfMeetingEnabled, false);
+		
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Obtained intallments dates");
 
@@ -3713,7 +3746,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			 * compute the sum of interest paid across all installments.
 			 */
 			populateAccountFeeAmount(getAccountFees(), loanInterest);
-			feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates));
+			feeInstallment = mergeFeeInstallments(getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
 		}
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

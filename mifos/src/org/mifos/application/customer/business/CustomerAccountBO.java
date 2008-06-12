@@ -765,15 +765,48 @@ public class CustomerAccountBO extends AccountBO {
 		return feeInstallmentList;
 	}
 
+
+	@Override
+	protected final List<FeeInstallment> handlePeriodic(
+			AccountFeesEntity accountFees,
+			List<InstallmentDate> installmentDates,
+			List<InstallmentDate> nonAdjustedInstallmentDates) throws AccountException {
+		Money accountFeeAmount = accountFees.getAccountFeeAmount();
+		MeetingBO feeMeetingFrequency = accountFees.getFees().getFeeFrequency()
+				.getFeeMeetingFrequency();
+		List<Date> feeDates = getFeeDates(feeMeetingFrequency, nonAdjustedInstallmentDates);
+		ListIterator<Date> feeDatesIterator = feeDates.listIterator();
+		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
+		while (feeDatesIterator.hasNext()) {
+			Date feeDate = feeDatesIterator.next();
+			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+					"Handling periodic fee.." + feeDate);
+
+			Short installmentId = getMatchingInstallmentId(installmentDates,
+					feeDate);
+			feeInstallmentList.add(buildFeeInstallment(installmentId,
+					accountFeeAmount, accountFees));
+
+		}
+		return feeInstallmentList;
+	}
+	
+	
 	private void generateMeetingSchedule() throws AccountException {
+		// generate dates that adjust for holidays
 		List<InstallmentDate> installmentDates = getInstallmentDates(
 				getCustomer().getCustomerMeeting().getMeeting(), (short) 10,
 				(short) 0);
+		// generate dates without adjusting for holidays
+		List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(
+				getCustomer().getCustomerMeeting().getMeeting(), (short) 10,
+				(short) 0, false, true);
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
-		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(getFeeInstallments(installmentDates));
+		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(
+				getFeeInstallments(installmentDates, nonAdjustedInstallmentDates));
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(

@@ -343,19 +343,29 @@ public class MeetingBO extends BusinessObject {
 		validateEndDate(endDate);
 		List meetingDates= new ArrayList();
 		for (Date meetingDate = getFirstDate(getStartDate()); meetingDate
-				.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate))
-			meetingDates.add(meetingDate);
+				.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate)) {
+			//meetingDates.add(meetingDate);
+			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+		}
 		return meetingDates;
 	}
+
+	public List<Date> getAllDates(int occurrences)
+		throws MeetingException{
+		return getAllDates(occurrences, true);
+	}
 	
-	public List<Date> getAllDates(int occurrences)throws MeetingException{
+	public List<Date> getAllDates(int occurrences, boolean adjustForHolidays)throws MeetingException{
 		validateOccurences(occurrences);
 		List meetingDates=new ArrayList();
 		Date meetingDate = getFirstDate(getStartDate());
 		
 		for(int dateCount=0;dateCount<occurrences ;dateCount++){
-			//meetingDates.add(meetingDate);
-			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+			if (adjustForHolidays) {
+				meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
+			} else {
+				meetingDates.add(meetingDate);				
+			}
 			meetingDate = getNextDate(meetingDate);
 		}
 		return meetingDates;
@@ -363,15 +373,23 @@ public class MeetingBO extends BusinessObject {
 
 	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(
 			int occurrences) throws MeetingException {
+		return getAllDatesWithRepaymentIndepOfMeetingEnabled(occurrences, true);
+	}
+
+	public List<Date> getAllDatesWithRepaymentIndepOfMeetingEnabled(
+			int occurrences, boolean adjustForHolidays) throws MeetingException {
 		validateOccurences(occurrences);
 		List meetingDates = new ArrayList();
 		Date meetingDate = getFirstDateWithRepaymentIndepOfMeetingEnabled(getStartDate());
 
 		for (int dateCount = 0; dateCount < occurrences; dateCount++) {
-			//meetingDates.add(meetingDate);
-			meetingDates.add(HolidayUtils.adjustDate(
-					DateUtils.getCalendarDate(meetingDate.getTime()), this)
-					.getTime());
+			if (adjustForHolidays) {
+				meetingDates.add(HolidayUtils.adjustDate(
+						DateUtils.getCalendarDate(meetingDate.getTime()), this)
+						.getTime());				
+			} else {
+				meetingDates.add(meetingDate);				
+			}
 			meetingDate = getNextDateWithRepaymentIndepOfMeetingEnabled(meetingDate);
 		}
 		return meetingDates;

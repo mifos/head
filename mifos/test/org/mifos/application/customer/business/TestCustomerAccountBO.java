@@ -347,7 +347,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		UserContext uc = TestUtils.makeUser();
 		customerAccount = center.getCustomerAccount();
 		customerAccount.setUserContext(uc);
-		customerAccount.applyCharge(Short.valueOf("-1"), new Double("33"));
+		customerAccount.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), new Double("33"));
 		for (AccountActionDateEntity accountActionDateEntity : customerAccount
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
@@ -364,8 +364,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		for (AccountActionDateEntity accountAction : customerAccount
 				.getAccountActionDates()) {
 			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-			assertEquals(new Money(), accountActionDateEntity
+			if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
+				assertEquals(new Money(), accountActionDateEntity
 					.getTotalFeeDueWithMiscFee());
+			}
 		}
 	}
 
@@ -1054,7 +1056,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				}
 			} else if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("2"))) {
-				assertEquals(0,
+				assertEquals(1,
 						((CustomerScheduleEntity) accountActionDateEntity)
 								.getAccountFeesActionDetails().size());
 				assertEquals(
@@ -1114,7 +1116,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				}
 			} else if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("2"))) {
-				assertEquals(0,
+				assertEquals(1,
 						((CustomerScheduleEntity) accountActionDateEntity)
 								.getAccountFeesActionDetails().size());
 				assertEquals(
@@ -1218,6 +1220,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 
+	/*
+	 * Create a center with a default weekly maintenance fee of 100.
+	 */
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
