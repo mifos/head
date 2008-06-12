@@ -1,0 +1,5 @@
+"currentFlowKey=1212683457672&transactionDateDD=02&transactionDateMM=06&transactionDateYY=2008&"
+"transactionDate=02%2F06%2F2008&transactionDateFormat=D%2FM%2FY&datePattern=dd%2FMM%2Fyy&receip"
+"tId=&receiptDateDD=&receiptDateMM=&receiptDateYY=&receiptDate=&receiptDateFormat=D%2FM%2FY&dat"
+"ePattern=dd%2FMM%2Fyy&paymentTypeId=1&prdOfferingName=Weekly+Declining+Balance+for+Clients&glo"
+"balAccountNum=000100000116787&accountId=116787&method="

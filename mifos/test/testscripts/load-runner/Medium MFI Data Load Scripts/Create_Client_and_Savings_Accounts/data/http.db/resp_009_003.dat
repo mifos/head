@@ -1,0 +1,561 @@
+411
+<!-- /**
+
+* viewClientDetails.jsp    version: 1.0
+
+
+
+* Copyright (c) 2005-2006 Grameen Foundation USA
+
+* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+* All rights reserved.
+
+
+
+* Apache License
+* Copyright (c) 2005-2006 Grameen Foundation USA
+*
+
+* Licensed under the Apache License, Version 2.0 (the "License"); you may
+* not use this file except in compliance with the License. You may obtain
+* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+*
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and limitations under the
+
+* License.
+*
+* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+* and how it is applied.
+
+*
+
+*/
+ -->
+
+
+
+
+
+
+
+
+
+
+<!-- Tils definition for the header and menu -->
+
+	
+
+f0
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+63e
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=4154805795653501367">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+		
+124
+
+
+<td width="174" height="500" align="left" valign="top" class="bgorangeleft">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+          <td class="leftpanehead" colspan="2">
+          Clients & Accounts Tasks
+          </td>
+        </tr>
+       
+       
+a4e
+ 
+
+  <form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do?method=loadAllBranches">
+        <tr>
+          <td class="leftpanelinks"><table width="90%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="paddingbottom03"><span class="fontnormal8ptbold">Search
+                  by name, system ID or account number </span> </td>
+            </tr>
+          </table>
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="100%" colspan="2">
+                <input type="text" name="searchString" maxlength="200" size="20" value="">
+				
+				
+				
+				<input type="hidden" name="officeId" value="0"> 
+				
+					
+                </td>
+              </tr>
+            </table>
+            <table width="136" border="0" cellspacing="0" cellpadding="3">
+              <tr>
+                <td align="right">
+                 <input type="submit" name="searchButton" value="Search" style="width:60px;" class="buttn">
+                </td>
+              </tr>
+            </table> 
+            </td>
+            </tr>
+            </form>
+       
+        <tr> 
+		<td class="leftpanelinks" colspan="2"><span class="fontnormalbold" >Manage Collection Sheets</span><br><a href="bulkentryaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Enter Collection Sheet Data</a><br><br><span class="fontnormalbold" >Create new Clients</span><br><a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0">Create new Center</a><br><a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=0&recordLoanOfficerId=0&input=createGroup">Create new Group</a><br><a href="groupCustAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=createClient">Create new Client</a><br><br><span class="fontnormalbold" >Create new Accounts</span><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=savings">Create Savings Account</a><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=loan">Create Loan Account</a><br><br><span class="fontnormalbold" >Manage account status</span><br><a href="ChangeAccountStatus.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Change account status</a><br><a href="multipleloansaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Create multiple Loan accounts</a><br><br></td>
+        </tr>
+</table>
+</td>      
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+2000
+
+		<script language="javascript">
+  function photopopup(custId , custName, currentFlow){
+	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
+
+  }
+
+</script>
+
+		<form name="clientCustActionForm" method="post" action="/mifos/clientCustAction.do">
+		
+		
+		
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a href="custSearchAction.do?method=getOfficeHomePage&officeId=2&officeName=BRANCH_OFFICE_1&randomNum=4154805795653501367">BRANCH_OFFICE_1</a> / <b>Client NO_03</b> </span>
+				</tr>
+			</table>
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="70%" align="left" valign="top" class="paddingL15T15">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td class="headingorange">Client NO_03</td>
+							<td rowspan="2" align="right" valign="top" class="headingorange">
+							<span class="fontnormal"> <!-- Edit center status link --> 
+								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=5&input=client&currentFlowKey=1199703705375">
+									Edit
+									Client
+									status
+								</a>
+							 <br>
+							</span></td>
+						</tr>
+						<tr>
+							<td colspan="2"><font class="fontnormalRedBold"> </font></td>
+						</tr>
+						<tr>
+							<td class="fontnormalbold"><span class="fontnormal">
+							<html><body><img src="pages/framework/images/status_yellow.gif" /></body></html>
+ Application Pending Approval  </span><br>
+							<!-- System Id of the center --> <span class="fontnormal">System ID:</span>
+							<span class="fontnormal">0002-000000005</span><br>
+							<!-- Loan Officer of the client --> <span class="fontnormal"> Loan officer:
+							mifos_officer 1</span><br>
+						</tr>
+						<tr id="Client.BusinessActivities">
+							<td class="fontnormalbold"><span class="fontnormal"> Activities:
+								</span> <br>
+						</tr>
+						<tr>
+							<td class="fontnormalbold"><span class="fontnormal"> 
+							
+							 	
+							 
+							
+							 </span><br>
+							</td>
+						</tr>
+					</table>
+
+					<!--- Accounts Information Begins -->
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="36%" class="headingorange">Account information</td>
+						</tr>
+						<!-- bug id 28004. Added if condition to show link to open accounts if only client is active-->
+						
+					</table>
+					 
+					<table width="96%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="65%" height="69" align="left" valign="top"
+								class="tableContentLightBlue"><span class="fontnormalbold">Client charges</span>
+							<table width="95%" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="53%"><span class="fontnormal"> <a
+												href="customerAccountAction.do?method=load&globalCustNum=0002-000000005">
+											View details </a> </span></td>
+										</tr>
+									</table>
+									<span class="fontnormal">Amount Due: 0.0
+									</span></td>
+								</tr>
+
+								<tr>
+									<td><img src="pages/framework/images/trans.gif" width="5"
+										height="5"></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="69%" align="right" class="fontnormal">
+							<span class="fontnormal">
+								
+                  			</span>
+                  			</td>
+						</tr>
+					</table>
+
+					<!-- Account Info ends --> <!--- MFI Information Starts -->
+					<table width="50%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="10"
+								height="10"></td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="63%" height="23" class="headingorange">MFI information</td>
+							<td width="37%" align="right" class="fontnormal"><a href="/mifos/clientCustAction.do?method=editMfiInfo&currentFlowKey=1199703705375&randomNUm=4154805795653501367">Edit MFI information</a></td>
+						</tr>
+						<tr id="Client.ExternalId">
+							<td height="23" colspan="2" class="fontnormalbold"><span
+								class="fontnormal"> External Id: <br>
+							</span>
+						</tr>
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold"><span
+								class="fontnormal"> Client start date:
+							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
+							
+							<br>
+							</span> <span class="fontnormal">Recruited By:</span>
+							<span class="fontnormal">mifos_officer 1
+							</span><br>
+
+							<br>
+							</td>
+						</tr>
+						<tr id="Client.TrainedDate">
+							<td height="23" colspan="2" class="fontnormalbold">Training Status
+							<br>
+							<!-- If the training status is set then the date is displayed -->
+							<span class="fontnormal"> Trained On: <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
+							
+							</span> <span class="fontnormal"><br>
+							<br>
+							</span> <!-- Group Membership details --></td>
+						</tr>
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="61%" class="fontnormalbold">
+									
+										
+										
+											Branch Office
+										 Membership & Meeting Details<br>
+									<span class="fontnormalRed"> Meeting:&nbsp;
+									
+									<br>
+									</span> <span class="fontnormal">  
+										
+										BRANCH_OFFICE_1<br></span></td>
+									<td width="39%" align="right" valign="top"><!-- Editing group or branch membership based on whether client belongs to group or not -->
+									
+										
+										
+											
+												<a href="/mifos/clientTransferAction.do?method=loadBranches&currentFlowKey=1199703705375&randomNUm=4154805795653501367">Edit
+													Branch Office
+													membership</a>
+											
+											<br>
+											<a href="/mifos/meetingAction.do?method=edit&currentFlowKey=1199703705375&randomNUm=4154805795653501367&customerLevel=1">Edit meeting schedule
+												/
+												Add Group</a>
+											<br>
+										
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="50%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="10"
+								height="10"></td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td width="50%" height="23" class="headingorange">Personal information</td>
+							<td width="50%" align="right" class="fontnormal"><a href="/mifos/clientCustAction.do?method=editPersonalInfo&currentFlowKey=1199703705375&randomNUm=4154805795653501367">Edit personal information</a></td>
+						</tr>
+						<tr>
+							<td class="fontnormal"><span class="fontnormal"> Date Of Birth:
+							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
+							22/10/1974;
+							33 years old<br></td>
+						</tr>
+						<tr id="Client.GovernmentId">
+							<td class="fontnormal">Government ID: <br>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="fontnormal">
+							
+							Father
+							Name:
+							father No_03
+								<br>
+							</td>
+						</tr>
+						<tr id="Client.Ethinicity">
+							<td class="fontnormal">
+							Ethnicity:
+							
+							<br>
+							</td>
+						</tr>
+						<tr id="Client.EducationLevel">
+							<td class="fontnorma
+1186
+l">
+							Education Level:
+							
+							<br>
+							</td>
+						</tr>
+						<tr id="Client.PovertyStatus">
+							<td class="fontnormal">
+							Poverty Status:
+							
+									
+										Very poor
+									
+							
+									
+							
+									
+							
+							<br>
+							</td>
+						</tr>
+						<tr id="Client.Citizenship">
+							<td class="fontnormal">
+							Citizenship:
+							
+							<br>
+							</td>
+						</tr>
+						<tr id="Client.Handicapped">
+							<td class="fontnormal"></td>
+						</tr>
+						
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold"><br>
+							
+								<span class="fontnormalbold"> Additional information </span>
+							<span class="fontnormal"> <br>
+							
+								
+									
+										
+											
+											
+												Replacement Status:
+									         		<span class="fontnormal"> </span>
+											
+										
+										<br>
+									
+								
+							 <br>
+							</span>
+							
+							<span class="fontnormal">							
+							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
+
+							<a href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=0002-000000005&currentFlowKey=1199703705375&randomNUm=4154805795653501367">View Summarized Historical Data
+							</a> <br>
+							<a href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=5&currentFlowKey=1199703705375">View change log</a> <br>
+							</span> </td>
+						</tr>
+					</table>
+					</td>
+					<!-- Performance History -->
+					<td width="30%" align="left" valign="top" class="paddingleft1">
+					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="bluetableborder">
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold"> Performance History </span></td>
+						</tr>
+
+						<tr>
+							<td class="paddingL10"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt">LoanCycle #: 0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Amount of last Loan:
+							0.0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"># of active Loan:
+							0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt">Delinquent Portfolio:
+							0.0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Total Savings:
+							0.0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Meetings Attended: 0
+							</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Meetings Missed: 0
+							</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Loan Cycle per Product:
+							</span></td>
+						</tr>
+						
+					</table>
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+          
+					<table width="100%" border="0" cellpadding="2" cellspacing="0" class="bluetableborder">
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold"> Recent Notes
+							</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td class="paddingL10">
+                
+                  
+                  
+                    <span class="fontnormal"> No notes available. 
+                    </span>
+                  
+							  
+              </td>
+						</tr>
+						<tr>
+							<td align="right" class="paddingleft05">
+                <span class="fontnormal8pt"> 
+                   
+                  <a href="customerNotesAction.do?method=load&customerId=5&randomNUm=4154805795653501367&currentFlowKey=1199703705375">
+							      Add a note 
+                  </a> 
+                </span>
+              </td>
+						</tr>
+					</table>
+
+					</td>
+				</tr>
+			</table>
+			<br>
+			<input type="hidden" name="globalAccountNum" value="000100000000005">
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
+0
+

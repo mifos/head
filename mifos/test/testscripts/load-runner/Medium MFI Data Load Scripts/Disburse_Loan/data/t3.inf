@@ -1,0 +1,8 @@
+[t3]
+FileName1=t3.htm
+URL1=http://9.161.154.14/mifos/custSearchAction.do
+Total=1
+RequestHeaderFile=t3_RequestHeader.txt
+RequestBodyFile=t3_RequestBody.txt
+ResponseHeaderFile=t3_ResponseHeader.txt
+ContentType=text/html

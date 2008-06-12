@@ -1,0 +1,433 @@
+3e4
+<!--
+
+/**
+
+ * admin.jsp    version: 1.0
+
+
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
+
+-->
+
+
+
+
+
+
+
+	
+
+f0
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+5fa
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=-1366335978957920863">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch">Clients &amp; Accounts </a></td>
+          <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+          <td class="taborange"><a href="AdminAction.do?method=load&randomNUm=-1366335978957920863" class="tabfontwhite">Admin</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+		
+11f
+
+<td width="174" height="500" align="left" valign="top" class="bgorangeleft">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+          <td class="leftpanehead" colspan="2">
+          Administrative tasks
+          </td>
+        </tr>
+       
+        
+60b
+
+
+
+  <form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do?method=loadAllBranches">
+        <tr>
+          <td class="leftpanelinks">
+	<table width="90%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="paddingbottom03"><span class="fontnormal8ptbold">
+              Search by
+              client
+              name, system ID or account number
+</span> </td>
+            </tr>
+          </table>
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="100%" colspan="2">
+                
+                <input type="text" name="searchString" maxlength="200" size="20" value="">
+				
+				
+				
+				<input type="hidden" name="searchNode(search_officeId)" value="0"> 
+				
+									
+				<input type="hidden" name="officeName" value="">													
+													
+				</td>
+              </tr>
+            </table>
+            <table width="143" border="0" cellspacing="0" cellpadding="10">
+              <tr>
+                <td align="right">                
+                
+                
+                <input type="submit" name="searchButton" value="Search" style="width:60px;" class="buttn">
+                
+                </td>
+              </tr>
+            </table>            
+            </td>
+        </tr>
+</form>
+       
+      </table>
+      
+</td>      
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+2000
+
+		<form name="adminActionForm" method="post" action="/mifos/AdminAction.do?method=load">
+			<td align="left" valign="top" bgcolor="#FFFFFF"
+				style="padding-left:8px; padding-top:10px;">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+
+				<tr>
+					<td colspan="2" align="left" valign="top"><span
+						class="headingorange">Administrative tasks</span><br>
+					<span class="fontnormal">Welcome to mifos administrative area. Click on a link below to begin.</span></td>
+				</tr>
+				<tr width="100%">
+					<td align="left" valign="top" colspan="2"><font class="fontnormalRedBold"> </font></td>
+				</tr>
+
+				<tr>
+					<td width="48%" height="240" align="left" valign="top"
+						class="paddingleft"><span class="headingorange">Manage organization
+						</span><br>
+					<span class="fontnormalbold"> <span class="fontnormalbold">System users
+					</span><br>
+					</span>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><a
+								href="PersonAction.do?method=loadSearch&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">
+								View system users</a> | <a
+								href="PersonAction.do?method=chooseOffice&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">
+								Define new system user</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/rolesPermission.do?method=viewRoles&name=aa&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Manage roles and permissions</a></td>
+						</tr>
+					</table>
+					<br>
+					<span class="fontnormalbold"> Offices</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><a href="/mifos/offAction.do?method=getAllOffices&randomNUm=-1366335978957920863">View offices</a>
+							| <a href="/mifos/offAction.do?method=load&randomNUm=-1366335978957920863">Define a new office</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/offhierarchyaction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View office hierarchy</a></td>
+						</tr>
+					</table>
+					<br>
+					<span class="fontnormalbold">Organization Preferences </span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><a
+								href="feeaction.do?method=viewAll&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">
+								View fees</a> | <a href="/mifos/feeaction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define new fees</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/fundAction.do?method=viewAllFunds&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View funds</a>
+							| <a href="/mifos/fundAction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define new fund</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/chkListAction.do?method=loadAllChecklist&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View checklists</a>
+							| <a href="/mifos/chkListAction.do?method=load&randomNUm=-1366335978957920863">Define new checklist</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/holidayAction.do?method=get">View holidays</a>
+							| <a href="/mifos/holidayAction.do?method=load&randomNUm=-1366335978957920863">Define new holidays</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td>
+							 <a href="/mifos/acceptedPaymentTypeAction.do?method=load&randomNUm=-1366335978957920863">Define accepted payment types</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="/mifos/ppiAction.do?method=get">View PPI settings</a>
+							| <a href="/mifos/ppiAction.do?method=configure">Configure PPI Settings</a></td>
+						</tr>
+
+					</table>
+					 <br>
+					<span class="fontnormalbold">Data display and rules</span><br>
+						<table width="90%" border="0" cellspacing="0" cellpadding="0">
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><a href="/mifos/labelconfigurationaction.do?method=load&randomNUm=-1366335978957920863">Define Labels</a></td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><a href="/mifos/lookupOptionsAction.do?method=load&randomNUm=-1366335978957920863">Define Lookup Options</a></td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><a href="/mifos/hiddenmandatoryconfigurationaction.do?method=load&randomNUm=-1366335978957920863">Define mandatory/hidden fields</a></td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+								<td width="97%"><a href="/mifos/customFieldsAction.do?method=load&randomNUm=-1366335978957920863">View Additional Fields</a></a> | <a href="/mifos/customFieldsAction.do?method=loadDefineCustomFields&randomNUm=-1366335978957920863">Define additional fields</a></td>
+							</tr>
+						</table>
+
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+
+
+					</table>
+					</td>
+					<td width="52%" align="left" valign="top" class="paddingleft"><span
+						class="headingorange">Manage products</span><br>
+					<span class="fontnormalbold">Product rules & attributes</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><a href="productCategoryAction.do?method=getAllCategories&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View product categories</a> | <a href="productCategoryAction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define new category</a></td>
+						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><a href="prdconfaction.do?method=load&randomNUm=-1366335978957920863">View lateness/dormancy definition</a></td>
+						</tr>
+					</table>
+					<br>
+					<!-- Manage products mix  -->
+					<span class="fontnormalbold">
+					Manage
+					product
+					mix
+					</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td width="97%"><a href="productMixAction.do?method=vi
+13fa
+ewAllProductMix&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View
+								products
+								mix</a> | <a href="productMixAction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define
+								products
+								mix</a></td>
+						</tr>
+					</table>
+					<br>
+					
+					<!--  -->
+					<span class="fontnormalbold">
+					Manage
+
+					Loan
+					products
+					</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
+							<td width="97%"><a href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View
+								Loan
+								products</a> | <a href="loanproductaction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define new
+								Loan
+								product</a></td>
+						</tr>
+					</table>
+					<br>
+					<span class="fontnormalbold">
+					Manage
+					Savings
+					products
+
+					</span><br>
+					<table width="90%" border="0" cellspacing="0" cellpadding="0">
+						<tr class="fontnormal">
+							<td width="3%"><img
+								src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<!-- Bug id 28065  Added a  parameter input in the link of admin page.-->
+							<td width="97%"><a href="savingsproductaction.do?method=search&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">View
+								Savings
+								products</a> | <a href="savingsproductaction.do?method=load&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Define new
+								Savings
+								product</a></td>
+						</tr>
+					</table>
+					<br>
+					<span class="headingorange">Manage accounts</span><br>
+                <span class="fontnormalbold">Manage Loan accounts</span><br>
+                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="reverseloandisbaction.do?method=search&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Reverse Loan disbursal</a></td>
+
+                  </tr>
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><a href="loanAccountAction.do?method=redoLoanBegin&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1366335978957920863">Redo Loan disbursal</a></td>
+
+                  </tr>
+                </table>
+                
+                <br />
+				   <span class="headingorange">Manage reports</span><br />
+                   <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                   <tr class="fontnormal">
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   <td width="97%"><a
+								href="birtReportsUploadAction.do?method=getViewReportPage">View reports templates
+								</a> | <a href="birtReportsUploadAction.do?method=getBirtReportsUploadPage&viewPath=administerreports_path">Upload report template</a></td>
+                  </tr>
+                   <tr class="fontnormal">
+                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                   <td width="97%"><a
+								href="reportsCategoryAction.do?method=viewReportsCategory">View reports category
+								</a> | <a href="reportsCategoryAction.do?method=loadDefineNewCategoryPage">Define new report category</a></td>
+                  </tr>
+                </table>
+                <br>
+
+		<span class="headingorange">Manage surveys</span><br />
+                  <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a href="surveysAction.do?method=mainpage">View surveys</a> | <a href="surveysAction.do?method=create_entry">Define new survey</a></td>
+                    </tr>
+                    <tr class="fontnormal">
+                      <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                      <td width="97%"><a href="questionsAction.do?method=viewQuestions">View question bank </a> | <a href="questionsAction.do?method=defineQuestions">Define questions</a></td>
+                  </tr>
+
+                </table>
+			</td>
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
+0
+

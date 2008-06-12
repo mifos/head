@@ -1,0 +1,12 @@
+[t57]
+FileName1=t57.htm
+URL1=http://9.161.154.46:8080/mifos/editCustomerStatusAction.do?method=updateStatus
+Total=1
+RequestHeaderFile=t57_RequestHeader.txt
+RequestBodyFile=t57_RequestBody.txt
+ResponseHeaderFile=t57_ResponseHeader.txt
+ContentType=text/html
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=0

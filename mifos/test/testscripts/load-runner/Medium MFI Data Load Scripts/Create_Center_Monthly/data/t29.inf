@@ -1,0 +1,8 @@
+[t29]
+FileName1=t29.htm
+URL1=http://9.161.154.14/mifos/loginAction.do;jsessionid=930374E90EA66737E49E4DD6E971FB7A?method=load
+Total=1
+RequestHeaderFile=t29_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t29_ResponseHeader.txt
+ContentType=text/html

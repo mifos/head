@@ -1,0 +1,212 @@
+Failed to get information of process Id: 0
+Failed to get information of process Id: 4
+PROCESS 0x1a8       smss.exe
+Failed to get information of process Id: 472
+PROCESS 0x1f0       winlogon.exe
+PROCESS 0x21c       services.exe
+PROCESS 0x228       lsass.exe
+PROCESS 0x2c8       srvany.exe
+PROCESS 0x2f4       sctthresholdmonitor.exe
+PROCESS 0x2fc       svchost.exe
+Failed to get information of process Id: 820
+PROCESS 0x378       svchost.exe
+Failed to get information of process Id: 948
+Failed to get information of process Id: 1056
+PROCESS 0x458       ccsetmgr.exe
+PROCESS 0x55c       ccevtmgr.exe
+PROCESS 0x5d4       ccproxy.exe
+PROCESS 0x5fc       issvc.exe
+PROCESS 0x628       sndsrvc.exe
+PROCESS 0x6b0       spbbcsvc.exe
+PROCESS 0x73c       spoolsv.exe
+PROCESS 0x7a0       trcboot.exe
+PROCESS 0x7b8       pcs_agnt.exe
+PROCESS 0x7ec       httpd.exe
+PROCESS 0x8c        db2jds.exe
+PROCESS 0xcc        httpd.exe
+PROCESS 0x948       db2sec.exe
+PROCESS 0x954       defwatch.exe
+PROCESS 0x970       c4ebreg.exe
+PROCESS 0x9a0       issimsvc.exe
+PROCESS 0x9b8       ntmulti.exe
+PROCESS 0x9dc       mysqld-nt.exe
+PROCESS 0xa20       nvsvc32.exe
+PROCESS 0xa58       savroam.exe
+PROCESS 0xab8       stschedex.exe
+PROCESS 0xaf8       stagent.exe
+PROCESS 0xb18       rtvscan.exe
+PROCESS 0xb44       symsport.exe
+Failed to get information of process Id: 2968
+PROCESS 0xbd4       uphclean.exe
+PROCESS 0xc04       winvnc.exe
+PROCESS 0xc18       winvnc4.exe
+PROCESS 0xc50       ldlcserv.exe
+Failed to get information of process Id: 3352
+PROCESS 0x9ec       explorer.exe
+PROCESS 0xac        isamtray.exe
+PROCESS 0xa4c       tpam.exe
+PROCESS 0xa94       ccapp.exe
+PROCESS 0xa84       vptray.exe
+PROCESS 0xad0       startupmonitor.exe
+PROCESS 0xb10       ctfmon.exe
+PROCESS 0xc9c       magentproc.exe
+PROCESS 0x558       apachemonitor.exe
+PROCESS 0x2e0       tsvncache.exe
+PROCESS 0x1204      firefox.exe
+PROCESS 0x1350      cmd.exe
+PROCESS 0xa88       mysqladministrator.exe
+PROCESS 0xba0       mysqlquerybrowser.exe
+PROCESS 0xf20       mmdrv.exe
+PROCESS 0x1178      mmdrv.exe
+Failed to get information of process Id: 4724
+PROCESS 0x1700      mmdrv.exe
+PROCESS 0x1968      java.exe
+PROCESS 0x109c      vugen.exe
+PROCESS 0x1790      iexplore.exe
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\Program Files\Internet Explorer\iexplore.exe
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ntdll.dll
+		5.1.2600.3119 (xpsp_sp2_gdr.070416-1301)C:\WINDOWS\system32\kernel32.dll
+		7.0.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msvcrt.dll
+		5.1.2600.3099 (xpsp_sp2_gdr.070308-0222)C:\WINDOWS\system32\USER32.dll
+		5.1.2600.3159 (xpsp_sp2_gdr.070619-1300)C:\WINDOWS\system32\GDI32.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\SHLWAPI.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ADVAPI32.dll
+		5.1.2600.3173 (xpsp_sp2_gdr.070709-0051)C:\WINDOWS\system32\RPCRT4.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\Secur32.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\SHDOCVW.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\CRYPT32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSASN1.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\CRYPTUI.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WINTRUST.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\IMAGEHLP.dll
+		5.1.2600.3139                 C:\WINDOWS\system32\OLEAUT32.dll
+		5.1.2600.2726 (xpsp_sp2_gdr.050725-1528)C:\WINDOWS\system32\ole32.dll
+		5.1.2600.2976 (xpsp_sp2_gdr.060817-0106)C:\WINDOWS\system32\NETAPI32.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\WININET.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WLDAP32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\VERSION.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\IMM32.DLL
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\LPK.DLL
+		1.0420.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\USP10.dll
+		6.0 (xpsp.060825-0040)        C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\bbhook.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\api_trapper.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\mosifs32.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\thrdutil.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\mmalloc_logic.dll
+		6.00.2900.3241 (xpsp_sp2_qfe.071025-1245)C:\WINDOWS\system32\SHELL32.dll
+		5.82 (xpsp.060825-0040)       C:\WINDOWS\system32\comctl32.dll
+		9.0.0.622                     C:\Program Files\Mercury\LoadRunner\bin\api_sock_proxy.dll
+		9.0.0.622                     C:\Program Files\Mercury\LoadRunner\bin\MicSocket.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WSOCK32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WS2_32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WS2HELP.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\LIBEAY32_MIC.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\SSLEAY32_MIC.dll
+		500.0.0.5033                  C:\Program Files\Mercury\LoadRunner\bin\LRUN50.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\trans.dll
+		500.0.0.5018                  C:\Program Files\Mercury\LoadRunner\bin\MLIB_DS.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\msg_handler.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\config.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\lr_exp.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\trans_server.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\timediff_ext.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\xdr.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\comm_util.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\libxdrutil.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\wrapzlib.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\libdatatypes.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\data_types_ifs.dll
+		500.0.0.5141                  C:\Program Files\Mercury\LoadRunner\bin\jrequestor_srv.dll
+		500.0.0.5123                  C:\Program Files\Mercury\LoadRunner\bin\dc_requests.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\merc_uuid.dll
+		500.0.0.5017                  C:\Program Files\Mercury\LoadRunner\bin\runlogic.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\run_time_context.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\rtc_protocol.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\parameng.dll
+		500.0.0.5136                  C:\Program Files\Mercury\LoadRunner\bin\faserver.dll
+		500.0.0.5123                  C:\Program Files\Mercury\LoadRunner\bin\wrapicu.dll
+		2, 0, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icuuc20.dll
+		2, 0, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icudt20.dll
+		9.0.0.95                      C:\Program Files\Mercury\LoadRunner\bin\VnpLog.dll
+		9.0.0.95                      C:\Program Files\Mercury\LoadRunner\bin\VnpUtils.dll
+		9.0.0.622                     C:\Program Files\Mercury\LoadRunner\bin\api_http_filter.dll
+		6.02.3104.0                   C:\WINDOWS\system32\MSVCP60.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\api_trapper1.dll
+		9.0.0.814                     C:\Program Files\Mercury\LoadRunner\bin\WebMultiInProcNotify.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSCTF.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\BROWSEUI.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msctfime.ime
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\browselc.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\appHelp.dll
+		9.0.0.1362                    C:\PROGRA~1\Mercury\LOADRU~1\bin\type_info_pool.dll
+		3.05.2284                     C:\WINDOWS\system32\ATL.DLL
+		5.1.2600.3019 (xpsp_sp2_gdr.061019-0414)C:\WINDOWS\system32\SXS.DLL
+		2001.12.4414.308              C:\WINDOWS\system32\CLBCATQ.DLL
+		2001.12.4414.258              C:\WINDOWS\system32\COMRes.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\UxTheme.dll
+		1, 4, 5, 10425                C:\Program Files\TortoiseSVN\bin\tortoisesvn.dll
+		0.9.12                        C:\Program Files\TortoiseSVN\bin\libapr_tsvn.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSWSOCK.dll
+		8.00.50727.762                C:\WINDOWS\WinSxS\x86_Microsoft.VC80.CRT_1fc8b3b9a1e18e3b_8.0.50727.762_x-ww_6b128700\MSVCR80.dll
+		0.9.12                        C:\Program Files\TortoiseSVN\bin\libaprutil_tsvn.dll
+		0.9.7                         C:\Program Files\TortoiseSVN\bin\libapriconv_tsvn.dll
+		0.14.5                        C:\Program Files\TortoiseSVN\bin\intl3_svn.dll
+		8.00.50727.762                C:\WINDOWS\WinSxS\x86_Microsoft.VC80.CRT_1fc8b3b9a1e18e3b_8.0.50727.762_x-ww_6b128700\MSVCP80.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\SHFOLDER.dll
+		                              C:\Program Files\TortoiseSVN\iconv\_tbl_simple.so
+		                              C:\Program Files\TortoiseSVN\iconv\windows-1252.so
+		                              C:\Program Files\TortoiseSVN\iconv\utf-8.so
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\cscui.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\CSCDLL.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\SETUPAPI.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\urlmon.dll
+		8.0.0.2006102200              C:\Program Files\Common Files\Adobe\Acrobat\ActiveX\AcroIEHelper.dll
+		9.1.3120.0                    C:\WINDOWS\system32\BHOManager.dll
+		7.10.3077.0                   C:\WINDOWS\system32\MSVCP71.dll
+		7.10.3052.4                   C:\WINDOWS\system32\MSVCR71.dll
+		5.0.120.4                     C:\Program Files\Java\jre1.5.0_12\bin\ssv.dll
+		5.1.2600.2180                 C:\WINDOWS\system32\OLEPRO32.DLL
+		1.0.2188                      C:\Program Files\Microsoft\Internet Explorer Developer Toolbar\IEDevToolbar.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSIMG32.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\mlang.dll
+		5.6.0.8831                    C:\WINDOWS\system32\jscript.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\xpsp2res.dll
+		3.1.4000.2435                 C:\WINDOWS\system32\msi.dll
+		1.0.2188                      C:\Program Files\Microsoft\Internet Explorer Developer Toolbar\SelectorObjectAPI.dll
+		9.0.0.18                      C:\Program Files\Mercury\LoadRunner\bin\AtlasRecorderPlugin.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\PocoFoundation.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\PocoNet.dll
+		5.1.2600.2912 (xpsp_sp2_gdr.060519-0003)C:\WINDOWS\system32\iphlpapi.dll
+		8.00.50727.42                 C:\WINDOWS\WinSxS\x86_Microsoft.VC80.ATL_1fc8b3b9a1e18e3b_8.0.50727.42_x-ww_6e805841\ATL80.DLL
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\shdoclc.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\hnetcfg.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\RASAPI32.DLL
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\rasman.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\TAPI32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\rtutils.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WINMM.dll
+		9.0.0.622                     C:\Program Files\Mercury\LoadRunner\bin\api_openssl_proxy.dll
+		9.0.0.1015                    C:\Program Files\Mercury\LoadRunner\bin\WebGetClientCertificate.dll
+		6.02.4131.0                   C:\WINDOWS\system32\MFC42.DLL
+		9.0.0.1015                    C:\Program Files\Mercury\LoadRunner\bin\WebCertificateCreator.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msv1_0.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\sensapi.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\USERENV.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\wshtcpip.dll
+		5.1.2600.2938 (xpsp_sp2_gdr.060626-0020)C:\WINDOWS\system32\DNSAPI.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\winrnr.dll
+		5.1.2600.2938 (xpsp_sp2_gdr.060626-0020)C:\WINDOWS\system32\rasadhlp.dll
+		9.0.0.622                     C:\PROGRA~1\Mercury\LOADRU~1\bin\api_sock_util.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\DBGHELP.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ICMP.DLL
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\Mshtml.dll
+		3.10.349.0                    C:\WINDOWS\system32\msls31.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\PSAPI.DLL
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msimtf.dll
+		11.0.5510                     C:\Program Files\Microsoft Office\OFFICE11\msohev.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\mshtmled.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\wdmaud.drv
+		5.1.2600.0 (xpclient.010817-1148)C:\WINDOWS\system32\msacm32.drv
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSACM32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\midimap.dll

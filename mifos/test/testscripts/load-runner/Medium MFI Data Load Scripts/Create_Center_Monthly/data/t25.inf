@@ -1,0 +1,8 @@
+[t25]
+FileName1=t25.htm
+URL1=http://9.161.154.14/mifos/centerCustAction.do?method=preview
+Total=1
+RequestHeaderFile=t25_RequestHeader.txt
+RequestBodyFile=t25_RequestBody.txt
+ResponseHeaderFile=t25_ResponseHeader.txt
+ContentType=text/html

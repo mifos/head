@@ -1,0 +1,7 @@
+"prdOfferingId=11&loanAmount=10000.0&interestRate=10.0&noOfInstallments=26&disbursementDateDD=0"
+"2&disbursementDateMM=06&disbursementDateYY=2008&disbursementDate=02%2F06%2F2008&disbursementDa"
+"teFormat=D%2FM%2FY&datePattern=dd%2FMM%2Fyy&gracePeriodDuration=0&loanOfferingFund=&businessAc"
+"tivityId=&collateralTypeId=&collateralNote=&selectedFee%5B0%5D.feeId=&selectedFee%5B0%5D.amoun"
+"t=&selectedFee%5B1%5D.feeId=&selectedFee%5B1%5D.amount=&selectedFee%5B2%5D.feeId=&selectedFee%"
+"5B2%5D.amount=&continueButton=Continue&gracePeriodTypeId=1&gracePeriodname=None&currentFlowKey"
+"=1211964801084&perspective="

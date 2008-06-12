@@ -1,0 +1,9 @@
+-+
+-DCCI
+-D_IDA_XL
+-DWINNT
+-IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Medium MFI Data Load Scripts\Create_Loan_Officer
+-IC:\Program Files\Mercury Interactive\LoadRunner\include
+-ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_loan_officer\\logfile.log
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_loan_officer\\combined_Create_Loan_Officer.c
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_loan_officer\\pre_cci.c

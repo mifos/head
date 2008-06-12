@@ -1,0 +1,8 @@
+[t7]
+FileName1=t7.htm
+URL1=http://9.161.154.14/mifos/loanAccountAction.do?method=schedulePreview
+Total=1
+RequestHeaderFile=t7_RequestHeader.txt
+RequestBodyFile=t7_RequestBody.txt
+ResponseHeaderFile=t7_ResponseHeader.txt
+ContentType=text/html

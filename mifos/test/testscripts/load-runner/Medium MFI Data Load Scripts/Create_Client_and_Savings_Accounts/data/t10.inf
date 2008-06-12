@@ -1,0 +1,14 @@
+[t10]
+FileName1=t10.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=get&globalCustNum=0002-000000004&recordOfficeId=2&recordLoanOfficerId=2
+Total=2
+RequestHeaderFile=t10_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t10_ResponseHeader.txt
+ContentType=text/html
+FileName2=t10_status_yellow.gif
+URL2=http://9.161.154.46:8080/mifos/pages/framework/images/status_yellow.gif
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=0

@@ -1,0 +1,8 @@
+[t23]
+FileName1=t23.htm
+URL1=http://9.161.154.14/mifos/custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=savings
+Total=1
+RequestHeaderFile=t23_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t23_ResponseHeader.txt
+ContentType=text/html

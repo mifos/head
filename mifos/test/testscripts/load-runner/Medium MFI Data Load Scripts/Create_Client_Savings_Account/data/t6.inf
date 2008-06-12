@@ -1,0 +1,8 @@
+[t6]
+FileName1=t6.htm
+URL1=http://9.161.154.14/mifos/savingsAction.do?method=getPrdOfferings&customerId=103217&randomNUm=428959222578242882
+Total=1
+RequestHeaderFile=t6_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t6_ResponseHeader.txt
+ContentType=text/html

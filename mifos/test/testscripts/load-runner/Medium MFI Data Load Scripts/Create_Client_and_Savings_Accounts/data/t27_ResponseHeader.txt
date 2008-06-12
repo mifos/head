@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+X-Powered-By: Servlet 2.4; JBoss-4.2.1.GA (build: SVNTag=JBoss_4_2_1_GA date=200707131605)/Tomcat-5.5
+Set-Cookie: JSESSIONID=F2835C4FA266CEE38C32A954C8685E45; Path=/
+Content-Type: text/html;charset=UTF-8
+Content-Length: 3162
+Date: Mon, 07 Jan 2008 11:43:17 GMT
+

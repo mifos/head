@@ -1,0 +1,633 @@
+3d1
+ <!--
+/**
+
+* createClientPersonalInfo.jsp    version: 1.0
+
+
+
+* Copyright (c) 2005-2006 Grameen Foundation USA
+
+* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+* All rights reserved.
+
+
+
+* Apache License
+* Copyright (c) 2005-2006 Grameen Foundation USA
+*
+
+* Licensed under the Apache License, Version 2.0 (the "License"); you may
+* not use this file except in compliance with the License. You may obtain
+* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+*
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and limitations under the
+
+* License.
+*
+* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+* and how it is applied.
+
+*
+
+*/
+ -->
+
+
+
+
+
+
+
+
+
+
+
+<!-- Tile  definitions -->
+
+	
+
+f0
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+69a
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=4531715127830564067">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+2000
+
+		<script language="javascript" SRC="pages/framework/js/date.js"></script>
+		<script language="javascript" SRC="pages/framework/js/conversion.js"></script>
+		<script language="javascript">
+
+
+  function goToCancelPage(){
+	clientCustActionForm.action="clientCustAction.do?method=cancel";
+	clientCustActionForm.submit();
+  }
+
+  function goToPreviewPage(){
+	document.getElementById("nextOrPreview").value='preview';
+	clientCustActionForm.action="clientCustAction.do?method=previewPersonalInfo";
+	if( chkForValidDates()){
+		clientCustActionForm.submit();
+	}
+
+  }
+</script>
+
+<script language="javascript">
+
+	/***<!-- NLO : Date: 15/07/2006  -->
+	<!--
+	     These functions check to see if the Father/Spouse Select is equal to Spouse
+	     If Father/Spouse is equal to Spouse and the Marital Status has not already been selected
+	     Then Marital Status is set to Married automatically
+	  -->
+	**/
+	var bAlreadySelected;
+	bAlreadySelected = false;
+
+	function CheckMaritalStatus(){
+		var sMaritalStatusValue = document.forms["clientCustActionForm"].elements["spouseName.nameType"].value;
+		if(bAlreadySelected==false) {
+			if(sMaritalStatusValue=='1')
+				document.forms["clientCustActionForm"].elements["clientDetailView.maritalStatus"].value=66;
+			else
+				document.forms["clientCustActionForm"].elements["clientDetailView.maritalStatus"].value='';
+		}
+	}
+
+	function MaritalStatusSelected(){
+		bAlreadySelected = true;
+	}
+
+</script>
+
+		<form name="clientCustActionForm" method="post" action="/mifos/clientCustAction.do?method=next" enctype="multipart/form-data" onsubmit="return chkForValidDates()">
+			<!-- Hidden varaibles for the input page -->
+			<input type="hidden" name="input" value="personalInfo">
+			<input type="hidden" name="nextOrPreview" value="next">
+			
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td align="center" class="heading">&nbsp;</td>
+						</tr>
+					</table>
+					<!-- Pipeline Bar -->
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td class="bluetablehead">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="25%">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img src="pages/framework/images/timeline/tick.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldgray">Select
+												Group/Branch Office
+											</td>
+										</tr>
+									</table>
+									</td>
+									<td width="25%" align="center">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img src="pages/framework/images/timeline/bigarrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorange">Personal information</td>
+										</tr>
+									</table>
+									</td>
+									<td width="25%" align="center">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img
+												src="pages/framework/images/timeline/orangearrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorangelight">MFI information</td>
+										</tr>
+									</table>
+									</td>
+									<td width="25%" align="right">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img
+												src="pages/framework/images/timeline/orangearrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorangelight">Review & submit</td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0" class="bluetableborder">
+						<tr>
+							<td align="left" valign="top" class="paddingleftCreates">
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+								<tr>
+									<td class="headingorange">
+										<span class="heading"> Create New
+											Client </span>
+											-  Enter personal information
+									</td>
+								</tr>
+								<!-- Instructions for the user -->
+								<tr>
+									<td class="fontnormal">
+										
+										
+											Complete the fields below. Then click Continue.
+											Click Cancel to return to Clients & Accounts without submitting information
+
+											<br>
+											<span class="mandatorytext"><font color="#FF0000">*</font></span>
+											Fields marked with an asterisk are required.
+										
+									</td>
+								</tr>
+							</table>
+							<br>
+							
+							
+								
+								
+									<table width="93%" border="0" cellspacing="0" cellpadding="3">
+										<font class="fontnormalRedBold"> </font>
+
+										<!-- Displaying the selected office name -->
+										<tr>
+											<td class="fontnormal"><span class="fontnormalbold"> Branch Office selected:</span>
+											BRANCH_OFFICE_1</td>
+										</tr>
+									</table>
+
+								
+							 <br>
+							
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+
+
+								<tr>
+									<td colspan="2" class="fontnormalbold">Personal information<br>
+									<br>
+									</td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td width="17%" align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Salutation:</td>
+									<td width="83%">
+									 <select name="clientName.salutation" size="1"><option value="">--Select--</option><option value="47">Mr</option>
+										
+											<option value="48">Mrs</option>
+										
+											<option value="228">Ms</option></select></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>First Name:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="clientName.firstName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Middle Name:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="clientName.middleName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Second Last Name:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="clientName.secondLastName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Last Name:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="clientName.lastName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<input type="hidden" name="clientName.nameType" value="3">
+								
+								<tr class="fontnormal">
+									<td align="right">Government ID:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="governmentId" maxlength="50" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td ali
+2000
+gn="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Date Of Birth:</td>
+									<td><!-- simple style --><input type="text" id="dateOfBirthDD" name="dateOfBirthDD" maxlength="2" size="2" value="" style="width:1.5em" /> DD <input type="text" id="dateOfBirthMM" name="dateOfBirthMM" maxlength="2" size="2" value="" style="width:1.5em" /> MM <input type="text" id="dateOfBirthYY" name="dateOfBirthYY" maxlength="4" size="4" value="" style="width:3em" /> YYYY </td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Gender:</td>
+
+									<td><select name="clientDetailView.gender" size="1"><option value="">--Select--</option><option value="49">Male</option>
+										
+											<option value="50">Female</option></select></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Marital Status:</td>
+
+									<td><select name="clientDetailView.maritalStatus" size="1" onchange="MaritalStatusSelected()"><option value="">--Select--</option><option value="66">Married</option>
+										
+											<option value="67">UnMarried</option>
+										
+											<option value="220">Widowed</option></select></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">Number Of Children:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="clientDetailView.numChildren" maxlength="5" size="10" value="" onkeypress="return FnCheckNumberOnPress(event);" onblur="FnCheckNumber(event,'','',this);"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Citizenship:</td>
+									<td> <select name="clientDetailView.citizenship" size="1"><option value="">--Select--</option><option value="130">Hindu</option>
+										
+											<option value="131">Muslim</option>
+										
+											<option value="221">Christian</option></select></td>
+
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Ethnicity:</td>
+									<td><select name="clientDetailView.ethinicity" size="1"><option value="">--Select--</option><option value="132">SC</option>
+										
+											<option value="133">BC</option>
+										
+											<option value="217">ST</option>
+										
+											<option value="218">OBC</option>
+										
+											<option value="219">FC</option></select></td>
+
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Education Level:</td>
+
+									<td><select name="clientDetailView.educationLevel" size="1"><option value="">--Select--</option><option value="134">Only Client</option>
+										
+											<option value="135">Only Husband</option>
+										
+											<option value="226">Both Literate</option>
+										
+											<option value="227">Both Illiterate</option></select></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Activities:</td>
+									<td><select name="clientDetailView.businessActivities" size="1"><option value="">--Select--</option><option value="136">Daily Labour</option>
+										
+											<option value="137">Agriculture</option>
+										
+											<option value="144">Animal Husbandry</option>
+										
+											<option value="145">Micro Enterprise</option>
+										
+											<option value="222">Production</option>
+										
+											<option value="225">Trading</option></select></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right"><span class="mandatorytext"><font color="#FF0000">*</font></span>Poverty Status:</td>
+									<td>
+										<input type="hidden" name="Client.PovertyStatus" value="clientDetailView.povertyStatus" /><select name="clientDetailView.povertyStatus" size="1"><option value="">--Select--</option><option value="41">Very poor</option>
+											
+												<option value="42">Poor</option>
+											
+												<option value="43">Non-poor</option></select>
+									</td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right">Handicapped:</td>
+									<td> <select name="clientDetailView.handicapped" size="1"><option value="">--Select--</option><option value="138">Yes</option>
+										
+											<option value="139">No</option></select></td>
+								</tr>
+
+								
+								<tr class="fontnormal">
+									<td align="right">Photograph:</td>
+									<td><input type="file" name="picture" maxlength="200" value="" onkeypress="return onKeyPressForFileComponent(this);"></td>
+								</tr>
+								
+								<tr class="fontnormal">
+									<td align="right" class="paddingL10"><span class="mandatorytext"><font color="#FF0000">*</font></span>Spouse/Father Name:</td>
+									<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr class="fontnormal">
+											<td width="14%">Relationship
+												<select name="spouseName.nameType" size="1" onchange="CheckMaritalStatus()" style="width:80px;"><option value="">--Select--</option><option value="1">Spouse</option>
+												
+													<option value="2">Father</option></select></td>
+											<td class="paddingL10">
+												<table border="0" cellspacing="0" cellpadding="0">
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															<span class="mandatorytext"><font color="#FF0000">*</font></span>First Name
+														</td>
+													</tr>
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="spouseName.firstName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)" style="width:100px;">
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td class="paddingL10">
+												<table border="0" cellspacing="0" cellpadding="0">
+													<tr class="fontnormal">
+														<td class="paddingL10">
+																Middle Name
+														</td>
+													</tr>
+													<tr class="fontnormal">
+														<td class="paddingL10">
+																<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="spouseName.middleName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)" style="width:100px;">
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td class="paddingL10">
+												<table border="0" cellspacing="0" cellpadding="0">
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															Second Last Name
+														</td>
+													</tr>
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="spouseName.secondLastName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)" style="width:100px;">
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td class="paddingL10">
+												<table border="0" cellspacing="0" cellpadding="0">
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															<span class="mandatorytext"><font color="#FF0000">*</font></span>Last Name
+														</td>
+													</tr>
+													<tr class="fontnormal">
+														<td class="paddingL10">
+															<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="spouseName.lastName" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnC
+18b1
+heckNumChars(event,this);return FnEscape(event,this)" style="width:100px;">
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							<br>
+							<!-- Address -->
+
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+								<tr>
+									<td colspan="2" class="fontnormalbold">Address
+									</td>
+								</tr>
+								<!-- Line 1 of address -->
+								<tr class="fontnormal">
+									<td width="17%" align="right" class="fontnormal">
+									Address1:
+									</td>
+									<td width="83%"><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.line1" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+
+								<!-- Line 2 of address -->
+
+								<tr class="fontnormal">
+									<td width="17%" align="right" class="fontnormal">
+									Address2:</td>
+									<td width="83%"><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.line2" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<!-- Line 3 of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">
+									Address 3:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.line3" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<!-- City of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">
+									City/District:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.city" maxlength="100" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<!-- State of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">
+									State:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.state" maxlength="100" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+
+								</tr>
+								<!-- Country of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">
+									Country:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.country" maxlength="100" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<!-- Postal Code of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">
+									Postal Code:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.zip" maxlength="20" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+								</tr>
+								<!-- Telephone of address -->
+								<tr class="fontnormal">
+									<td align="right" class="fontnormal">Telephone:</td>
+									<td><script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="address.phoneNumber" maxlength="20" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)"></td>
+
+								</tr>
+
+
+							</table>
+							<br>
+							<!-- Address end --> <!-- Custom Fields -->
+							
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+								<tr>
+									<td colspan="2" class="fontnormalbold">Additional information<br>
+									<br>
+									</td>
+								</tr>
+
+								<!-- For each custom field definition in the list custom field entity is passed as key to mifos label -->
+								
+									
+									<tr class="fontnormal">
+										<td width="17%" align="right">Replacement Status:</td>
+										<td width="83%">
+										<input type="hidden" name="customField[0].fieldId" value="3">
+										<input type="hidden" name="fieldTypeList" value="2">
+
+										 
+											<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="customField[0].fieldValue" maxlength="200" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)">
+										 
+										</td>
+									</tr>
+								
+
+							</table>
+							<br>
+							
+							<!-- Buttons -->
+							<table width="93%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="center" class="blueline">&nbsp;</td>
+								</tr>
+							</table>
+							<br>
+							<table width="93%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="center">
+
+										
+										
+											<input type="submit" value="Continue" style="width:70px;" class="buttn">
+										
+									 &nbsp; &nbsp; <input type="button" name="cancelButton" value="Cancel" onclick="goToCancelPage();" style="width:70px" class="cancelbuttn"></td>
+								</tr>
+							</table>
+							<input type="hidden" name="currentFlowKey" value="1199703755296">
+							<!-- Button end --> <br>
+							<!-- before main closing --></td>
+						</tr>
+					</table>
+					<br>
+					</td>
+				</tr>
+			</table>
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
+0
+

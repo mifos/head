@@ -1,0 +1,8 @@
+[t28]
+FileName1=t28.htm
+URL1=http://9.161.154.14/mifos/savingsAction.do?method=create
+Total=1
+RequestHeaderFile=t28_RequestHeader.txt
+RequestBodyFile=t28_RequestBody.txt
+ResponseHeaderFile=t28_ResponseHeader.txt
+ContentType=text/html

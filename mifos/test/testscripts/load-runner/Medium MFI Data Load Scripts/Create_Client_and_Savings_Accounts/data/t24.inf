@@ -1,0 +1,12 @@
+[t24]
+FileName1=t24.htm
+URL1=http://9.161.154.46:8080/mifos/editCustomerStatusAction.do?method=loadStatus&customerId=5&input=client&currentFlowKey=1199703705375
+Total=1
+RequestHeaderFile=t24_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t24_ResponseHeader.txt
+ContentType=text/html
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=1

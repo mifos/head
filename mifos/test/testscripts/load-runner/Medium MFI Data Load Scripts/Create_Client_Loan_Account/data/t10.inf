@@ -1,0 +1,8 @@
+[t10]
+FileName1=t10.htm
+URL1=http://9.161.154.14/mifos/loanAccountAction.do?method=get&customerId=103217&globalAccountNum=000100000110753&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=4098667750508468691
+Total=1
+RequestHeaderFile=t10_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t10_ResponseHeader.txt
+ContentType=text/html

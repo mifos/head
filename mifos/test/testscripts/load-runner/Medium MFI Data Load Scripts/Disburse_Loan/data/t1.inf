@@ -1,0 +1,8 @@
+[t1]
+FileName1=t1.htm
+URL1=http://9.161.154.14/mifos/loginAction.do;jsessionid=E649397824DB0CC2A5A5D507822DA738?method=load
+Total=1
+RequestHeaderFile=t1_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t1_ResponseHeader.txt
+ContentType=text/html

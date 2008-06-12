@@ -1,0 +1,12 @@
+[t37]
+FileName1=t37.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=create
+Total=1
+RequestHeaderFile=t37_RequestHeader.txt
+RequestBodyFile=t37_RequestBody.txt
+ResponseHeaderFile=t37_ResponseHeader.txt
+ContentType=text/html
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=1

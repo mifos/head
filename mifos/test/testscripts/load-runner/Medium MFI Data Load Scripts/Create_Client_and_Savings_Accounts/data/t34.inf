@@ -1,0 +1,14 @@
+[t34]
+FileName1=t34.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=loadMeeting
+Total=2
+RequestHeaderFile=t34_RequestHeader.txt
+RequestBodyFile=t34_RequestBody.txt
+ResponseHeaderFile=t34_ResponseHeader.txt
+ContentType=text/html
+FileName2=t34_meeting.html
+URL2=http://9.161.154.46:8080/mifos/pages/application/meeting/js/meeting.js
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=1

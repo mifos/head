@@ -1,0 +1,16 @@
+[t2]
+FileName1=t2.htm
+URL1=http://9.161.154.46:8080/mifos/custSearchAction.do?method=getHomePage
+Total=3
+RequestHeaderFile=t2_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t2_ResponseHeader.txt
+ContentType=text/html
+FileName2=t2_smallarrowleft.gif
+URL2=http://9.161.154.46:8080/mifos/pages/framework/images/smallarrowleft.gif
+FileName3=t2_smallarrowtop.gif
+URL3=http://9.161.154.46:8080/mifos/pages/framework/images/smallarrowtop.gif
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=1

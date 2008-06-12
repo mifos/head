@@ -1,0 +1,218 @@
+13
+
+
+
+
+
+
+
+
+	
+
+f0
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+63e
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=3424996403179263624">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+		
+6cc
+
+
+<td width="174" height="500" align="left" valign="top" class="bgorangeleft">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+          <td class="leftpanehead" colspan="2">
+          Clients & Accounts Tasks
+          </td>
+        </tr>
+       
+       
+       
+        <tr> 
+		<td class="leftpanelinks" colspan="2"><span class="fontnormalbold" >Manage Collection Sheets</span><br><a href="bulkentryaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Enter Collection Sheet Data</a><br><br><span class="fontnormalbold" >Create new Clients</span><br><a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0">Create new Center</a><br><a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=0&recordLoanOfficerId=0&input=createGroup">Create new Group</a><br><a href="groupCustAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=createClient">Create new Client</a><br><br><span class="fontnormalbold" >Create new Accounts</span><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=savings">Create Savings Account</a><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=loan">Create Loan Account</a><br><br><span class="fontnormalbold" >Manage account status</span><br><a href="ChangeAccountStatus.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Change account status</a><br><a href="multipleloansaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Create multiple Loan accounts</a><br><br></td>
+        </tr>
+</table>
+</td>      
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+f53
+
+
+		<form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+
+				
+				
+				
+
+				<tr>
+					<td width="70%" height="24" align="left" valign="top"
+						class="paddingL10">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td class="headingorange">BRANCH_OFFICE_1 <br>
+							</span><span class="fontnormalbold"> To review or edit a Client, 
+								
+									Group,&nbsp;
+	                  		Center,
+	                  	
+								
+							 or account </span></td>
+						</tr>
+					</table>
+					<br>
+					<table width="90%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="left" valign="top" class="fontnormalbold">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0"
+								style="float:left;">
+								<tr>
+									<td width="40%" align="left" valign="top" class="fontnormal">
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr class="fontnormal">
+											<td width="100%" colspan="2" class="bglightblue"><span
+												class="heading"> Search </span></td>
+										</tr>
+										<tr class="fontnormal">
+											<td height="26" colspan="2">To search,&nbsp; enter&nbsp; a&nbsp; Client,&nbsp; 
+												
+													Group,&nbsp;
+			                  		Center,
+			                  	
+												
+											 name, system ID or account number&nbsp;</td>
+										</tr>
+
+										<font class="fontnormalRedBold"> </font>
+										<tr class="fontnormal">
+											<td height="26" colspan="2"><input type="text" name="searchString" maxlength="200" value=""> <input type="submit" value="Search" style="width:60px;" class="buttn"></td>
+										</tr>
+									</table>
+									</td>
+									<td width="12%" align="center" valign="top"
+										class="headingorange">or&nbsp;</td>
+									<td width="48%" align="left" valign="top" class="fontnormal">
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr class="fontnormal">
+											<td width="100%" colspan="2" class="bglightblue"><span
+												class="heading"> Select a&nbsp; loan officer</span></td>
+										</tr>
+									</table>
+
+									
+									     
+									     <input type="hidden" name="officeId" value="2">
+									     
+										
+										
+									
+									<div id="Layer2"
+										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
+
+									
+										
+
+											
+											<a href="/mifos/custSearchAction.do?method=get&officeId=2&loanOfficerId=2&currentFlowKey=1199720264421">mifos_officer 1</a>
+											<br>
+											
+											<a href="/mifos/custSearchAction.do?method=get&officeId=2&loanOfficerId=3&currentFlowKey=1199720264421">mifos_officer 2</a>
+											<br>
+											
+											<a href="/mifos/custSearchAction.do?method=get&officeId=2&loanOfficerId=4&currentFlowKey=1199720264421">mifos_officer 3</a>
+											<br>
+											
+											<a href="/mifos/custSearchAction.do?method=get&officeId=2&loanOfficerId=5&currentFlowKey=1199720264421">mifos_officer 4</a>
+											<br>
+											
+											<a href="/mifos/custSearchAction.do?method=get&officeId=2&loanOfficerId=6&currentFlowKey=1199720264421">mifos_officer 5</a>
+											<br>
+											
+									  
+									
+									
+
+									</div>
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<br>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="method" value="mainSearch">
+			<input type="hidden" name="currentFlowKey" value="1199720264421">
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
+0
+

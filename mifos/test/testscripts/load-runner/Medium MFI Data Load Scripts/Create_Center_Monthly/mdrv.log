@@ -1,0 +1,26 @@
+Virtual User Script started
+Starting action vuser_init.
+Web Turbo Replay of LoadRunner 7.80.0 for WINXP; Web build 2271  	[MsgId: MMSG-27143]
+Run-Time Settings file: "C:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Version171\Create_Center_Monthly\\default.cfg"  	[MsgId: MMSG-27141]
+Ending action vuser_init.
+Running Vuser...
+Starting iteration 1.
+Starting action Action1.
+Action1.c(3): web_set_max_html_param_len was successful  	[MsgId: MMSG-27182]
+Action1.c(8): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(23): Redirecting "http://9.161.154.14/mifos/loginAction.do;jsessionid={JSESSIONID2}" (redirection depth=0)  	[MsgId: MMSG-26694]
+Action1.c(23): To location "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26693]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/css/cssstyle.css" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/images/logo.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/images/trans.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowleft.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowdown.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowtop.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do;jsessionid=FCFEEB4AE22076258CB30D283C0902C6?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(23): Downloading resource "http://9.161.154.14/mifos/pages/framework/images/buttons/buttonbg.jpg" (specified by argument number 20)  	[MsgId: MMSG-26577]
+Action1.c(23): Error -27190: No match found for the requested parameter "JSESSIONID2". Check whether the requested boundaries exist in the response data. Also, if the data you want to save exceeds 1024 bytes, use web_set_max_html_param_len to increase the parameter size  	[MsgId: MERR-27190]
+Action1.c(23): web_submit_data highest severity level was "ERROR", 32879 body bytes, 1830 header bytes  	[MsgId: MMSG-27178]
+Ending action Action1.
+Ending iteration 1.
+Ending Vuser...
+Starting action vuser_end.
+Abort was called from an action.

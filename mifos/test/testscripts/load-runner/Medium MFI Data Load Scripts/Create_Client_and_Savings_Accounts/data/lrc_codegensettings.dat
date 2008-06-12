@@ -1,0 +1,156 @@
+/////////////////////////////////////////////////////////////////////////////
+// LoadRunner : Multiprotocol Code generation Settings                     //
+// Mercury Interactive Corp.                                               //
+/////////////////////////////////////////////////////////////////////////////
+
+{{ ACTIVE PROTOCOLS LIST:
+    ( 1) WPLUS  (name=WPLUS)
+    ( 2) WebBase  (name=WebBase)
+    ( 3) QTWeb  (name=QTWeb)
+}}
+{{ FILTERING ORDER:
+    ( 1) CleanExtraEvents  (name=CleanExtraEvents)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : CleanExtraEvents_Init
+          Default    : CleanExtraEvents_DefaultProcess
+          Cleanup    : CleanExtraEvents_CleanUp
+                       
+    ( 2) ApiEventParser  (name=ApiEventParser)
+          State      : OFF
+          Protocols  : 
+          Module     : api_event_parser.dll
+          Initialize : ApiEventParser_Init
+          Default    : ApiEventParser_Default
+          Cleanup    : ApiEventParser_CleanUp
+                       
+    ( 3) MetadataInfo  (name=MetadataInfo)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : MetadataInfo_Init
+          Default    : MetadataInfo_DefaultProcess
+          Cleanup    : MetadataInfo_CleanUp
+                       
+    ( 4) WplusProtoFilterBegin  (name=WplusBegin)
+          State      : ON
+          Protocols  : WPLUS
+          Module     : api_sock_filter.dll
+          Initialize : WplusBegin_Init
+          Default    : WplusProtoFilterBegin_DefaultProcess
+          Cleanup    : WplusBegin_CleanUp
+                       
+    ( 5) *SECTION_DIVIDER_1  (name=Break)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : Break_Init
+          Default    : Break_DefaultProcess
+          Cleanup    : Break_CleanUp
+                       
+    ( 6) *SECTION_DIVIDER_2  (name=Break)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : Break_Init
+          Default    : Break_DefaultProcess
+          Cleanup    : Break_CleanUp
+                       
+    ( 7) FirstHttp  (name=FirstHttp)
+          State      : ON
+          Protocols  : WPLUS,HTTP
+          Module     : WebHTMLCodeGen.dll
+          Initialize : Http_FirstPassInit
+          Default    : FirstHttp_DefaultProcess
+          Cleanup    : Http_FirstPassCleanUp
+                       
+    ( 8) *SECTION_DIVIDER_3  (name=Break)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : Break_Init
+          Default    : Break_DefaultProcess
+          Cleanup    : Break_CleanUp
+                       
+    ( 9) SecondHttp  (name=SecondHttp)
+          State      : ON
+          Protocols  : HTTP
+          Module     : WebHTMLCodeGen.dll
+          Initialize : Http_SecondPassInit
+          Default    : SecondHttp_DefaultProcess
+          Cleanup    : Http_SecondPassCleanUp
+                       
+    (10) CleanDependentEvents  (name=CleanDependentEvents)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : CleanExtraEvents_Init
+          Default    : CleanExtraEvents_DefaultProcessPreScript
+          Cleanup    : CleanExtraEvents_CleanUp
+                       
+    (11) ThinkTime  (name=ThinkTime)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_com_filters.dll
+          Initialize : ThinkTime_Init
+          Default    : ThinkTime_DefaultProcess
+          Cleanup    : ThinkTime_CleanUp
+                       
+    (12) FixedThinkTime  (name=FixedThinkTime)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_com_filters.dll
+          Initialize : FixedThinkTime_Init
+          Default    : FixedThinkTime_DefaultProcess
+          Cleanup    : FixedThinkTime_CleanUp
+                       
+    (13) CAPI_CodeGen  (name=GenericCodeGen)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_basic_filters.dll
+          Initialize : GenericCodeGen_Init
+          Default    : GenericCodeGen_DefaultProcess
+          Cleanup    : GenericCodeGen_CleanUp
+                       
+    (14) C_CodeGen  (name=C_CodeGen)
+          State      : ON
+          Protocols  : 
+          Module     : lrc_code_gen_filter.dll
+          Initialize : C_CodeGen_Init
+          Default    : C_CodeGen_DefaultProcess
+          Cleanup    : C_CodeGen_CleanUp
+                       
+    (15) VBA_CodeGen  (name=VB_CodeGen)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_code_gen_filter.dll
+          Initialize : VBA_CodeGen_Init
+          Default    : VB_CodeGen_DefaultProcess
+          Cleanup    : VB_CodeGen_CleanUp
+                       
+    (16) VBS_CodeGen  (name=VB_CodeGen)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_code_gen_filter.dll
+          Initialize : VBS_CodeGen_Init
+          Default    : VB_CodeGen_DefaultProcess
+          Cleanup    : VB_CodeGen_CleanUp
+                       
+    (17) JS_CodeGen  (name=VB_CodeGen)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_code_gen_filter.dll
+          Initialize : JS_CodeGen_Init
+          Default    : VB_CodeGen_DefaultProcess
+          Cleanup    : VB_CodeGen_CleanUp
+                       
+    (18) DotNet_CodeGen  (name=DotNet_CodeGen)
+          State      : OFF
+          Protocols  : 
+          Module     : lrc_code_gen_filter.dll
+          Initialize : DotNet_CodeGen_Init
+          Default    : DotNet_CodeGen_DefaultProcess
+          Cleanup    : DotNet_CodeGen_CleanUp
+                       
+}}

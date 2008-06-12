@@ -1,0 +1,46 @@
+Virtual User Script started
+Starting action vuser_init.
+Web Turbo Replay of LoadRunner 7.80.0 for WINXP; Web build 2271  	[MsgId: MMSG-27143]
+Run-Time Settings file: "C:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Version171\Disburse_Loan1\\default.cfg"  	[MsgId: MMSG-27141]
+Ending action vuser_init.
+Running Vuser...
+Starting iteration 1.
+Starting action Action1.
+Action1.c(5): Redirecting "http://9.161.154.14/mifos" (redirection depth=0)  	[MsgId: MMSG-26694]
+Action1.c(5): To location "http://9.161.154.14/mifos/"  	[MsgId: MMSG-26693]
+Action1.c(5): Redirecting "http://9.161.154.14/mifos/" (redirection depth=1)  	[MsgId: MMSG-26694]
+Action1.c(5): To location "http://9.161.154.14/mifos/loginAction.do;jsessionid=FC090DAA2F7F5644A62315976A500F68?method=load"  	[MsgId: MMSG-26693]
+Action1.c(5): Found resource "http://9.161.154.14/mifos/pages/framework/css/cssstyle.css" in HTML "http://9.161.154.14/mifos/loginAction.do;jsessionid=FC090DAA2F7F5644A62315976A500F68?method=load"  	[MsgId: MMSG-26659]
+Action1.c(5): Found resource "http://9.161.154.14/mifos/pages/framework/images/logo.gif" in HTML "http://9.161.154.14/mifos/loginAction.do;jsessionid=FC090DAA2F7F5644A62315976A500F68?method=load"  	[MsgId: MMSG-26659]
+Action1.c(5): Found resource "http://9.161.154.14/mifos/pages/framework/images/trans.gif" in HTML "http://9.161.154.14/mifos/loginAction.do;jsessionid=FC090DAA2F7F5644A62315976A500F68?method=load"  	[MsgId: MMSG-26659]
+Action1.c(5): web_url was successful, 19324 body bytes, 1242 header bytes  	[MsgId: MMSG-27176]
+Action1.c(23): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(24): Redirecting "http://9.161.154.14/mifos/loginAction.do" (redirection depth=0)  	[MsgId: MMSG-26694]
+Action1.c(24): To location "http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage"  	[MsgId: MMSG-26693]
+Action1.c(24): Resource "http://9.161.154.14/mifos/pages/framework/css/cssstyle.css" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(24): Resource "http://9.161.154.14/mifos/pages/framework/images/logo.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(24): Resource "http://9.161.154.14/mifos/pages/framework/images/trans.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(24): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowleft.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(24): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowdown.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(24): Found resource "http://9.161.154.14/mifos/pages/framework/images/smallarrowtop.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage"  	[MsgId: MMSG-26659]
+Action1.c(24): web_submit_data was successful, 8236 body bytes, 926 header bytes  	[MsgId: MMSG-27176]
+Action1.c(46): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(48): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(49): Resource "http://9.161.154.14/mifos/pages/framework/css/cssstyle.css" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(49): Resource "http://9.161.154.14/mifos/pages/framework/images/logo.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(49): Resource "http://9.161.154.14/mifos/pages/framework/images/trans.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(49): Found resource "http://9.161.154.14/mifos/pages/framework/images/status_activegreen.gif" in HTML "http://9.161.154.14/mifos/custSearchAction.do"  	[MsgId: MMSG-26659]
+Action1.c(49): web_submit_data was successful, 11312 body bytes, 308 header bytes  	[MsgId: MMSG-27176]
+Action1.c(73): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(75): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(77): Registering web_reg_save_param was successful  	[MsgId: MMSG-27180]
+Action1.c(78): Resource "http://9.161.154.14/mifos/pages/framework/css/cssstyle.css" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(78): Resource "http://9.161.154.14/mifos/pages/framework/images/logo.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(78): Resource "http://9.161.154.14/mifos/pages/framework/images/trans.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(78): Resource "http://9.161.154.14/mifos/pages/framework/images/status_activegreen.gif" is in the cache already and will not be downloaded again  	[MsgId: MMSG-26655]
+Action1.c(78): web_url was successful, 23103 body bytes, 139 header bytes  	[MsgId: MMSG-27176]
+Abort was called from an action.
+Ending Vuser...
+Starting action vuser_end.
+Ending action vuser_end.
+Vuser Terminated.

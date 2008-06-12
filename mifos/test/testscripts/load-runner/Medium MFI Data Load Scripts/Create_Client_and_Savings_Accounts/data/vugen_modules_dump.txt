@@ -1,0 +1,239 @@
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\vugen.exe
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ntdll.dll
+		5.1.2600.3119 (xpsp_sp2_gdr.070416-1301)C:\WINDOWS\system32\kernel32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\IMAGEHLP.dll
+		7.0.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msvcrt.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\crlquery.dll
+		9.0.0.475                     C:\Program Files\Mercury\LoadRunner\bin\vug_grid.dll
+		5.1.2600.2726 (xpsp_sp2_gdr.050725-1528)C:\WINDOWS\system32\ole32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ADVAPI32.dll
+		5.1.2600.3173 (xpsp_sp2_gdr.070709-0051)C:\WINDOWS\system32\RPCRT4.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\Secur32.dll
+		5.1.2600.3159 (xpsp_sp2_gdr.070619-1300)C:\WINDOWS\system32\GDI32.dll
+		5.1.2600.3099 (xpsp_sp2_gdr.070308-0222)C:\WINDOWS\system32\USER32.dll
+		5.1.2600.3139                 C:\WINDOWS\system32\OLEAUT32.dll
+		9.0.0.525                     C:\Program Files\Mercury\LoadRunner\bin\XmlParserInterface.dll
+		2, 7, 0                       C:\Program Files\Mercury\LoadRunner\bin\xerces-c_2_7.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WS2_32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WS2HELP.dll
+		1, 10, 0, 0                   C:\Program Files\Mercury\LoadRunner\bin\Xalan-C_1_10Mic.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\XalanMessages_1_10.dll
+		3, 6, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icuin36.dll
+		3, 6, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icuuc36.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\icudt36.dll
+		6.02.3104.0                   C:\WINDOWS\system32\MSVCP60.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\mosifs32.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\thrdutil.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\mmalloc_logic.dll
+		6.00.2900.3241 (xpsp_sp2_qfe.071025-1245)C:\WINDOWS\system32\SHELL32.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\SHLWAPI.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\std-vc-mt.dll
+		7.0.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSVCIRT.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\mic_regex.dll
+		9.0.0.945                     C:\Program Files\Mercury\LoadRunner\bin\DBIR32.dll
+		500.0.0.5018                  C:\Program Files\Mercury\LoadRunner\bin\MLIB_DS.dll
+		8.1.0.337                     C:\Program Files\Mercury\LoadRunner\bin\RecordEJB.dll
+		9.0.0.1569                    C:\Program Files\Mercury\LoadRunner\bin\FuncView.dll
+		6.02.4131.0                   C:\WINDOWS\system32\MFC42.DLL
+		5.82 (xpsp.060825-0040)       C:\WINDOWS\system32\COMCTL32.dll
+		9.0.0.1438                    C:\Program Files\Mercury\LoadRunner\bin\MicDynScriptHandler.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\WSDLSDK.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\SoapRecordFilter.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\WebServicesSDK.dll
+		2, 0, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icuuc20.dll
+		2, 0, 0, 0                    C:\Program Files\Mercury\LoadRunner\bin\icudt20.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\LrJni.dll
+		9.0.0.165                     C:\Program Files\Mercury\LoadRunner\bin\ServiceManagementLight.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\config.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\WSDLParser.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\MicXMLDiffTool.dll
+		9.0.0.1269                    C:\Program Files\Mercury\LoadRunner\bin\WSDLToolkits.dll
+		9.0.0.210                     C:\Program Files\Mercury\LoadRunner\bin\ServiceManagement.dll
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\WININET.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\CRYPT32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSASN1.dll
+		9, 30, 0, 0                   C:\Program Files\Mercury\LoadRunner\bin\BCGCBPRO930.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\comdlg32.dll
+		3.525.1117.0 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ODBC32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WINMM.dll
+		9.0.0.2163                    C:\Program Files\Mercury\LoadRunner\bin\lr_vug32.dll
+		9.0.0.1451                    C:\Program Files\Mercury\LoadRunner\bin\inifile.dll
+		500.0.0.5017                  C:\Program Files\Mercury\LoadRunner\bin\runlogic.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\msg_handler.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\comm_util.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\xdr.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\libxdrutil.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\run_time_context.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\rtc_protocol.dll
+		9.0.0.986                     C:\Program Files\Mercury\LoadRunner\bin\vusercfg.dll
+		9.0.0.1569                    C:\Program Files\Mercury\LoadRunner\bin\DynamicTree.dll
+		9.0.0.1451                    C:\Program Files\Mercury\LoadRunner\bin\MultiVuser.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\parameng.dll
+		9.0.0.5018                    C:\Program Files\Mercury\LoadRunner\bin\dtable32.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\PickProtocol.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\script_creator_helper.dll
+		9.0.0.1451                    C:\Program Files\Mercury\LoadRunner\bin\vugencfg.dll
+		9.0.0.1434                    C:\Program Files\Mercury\LoadRunner\bin\ProtocolInfoLib.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MPR.dll
+		9.0.0.357                     C:\Program Files\Mercury\LoadRunner\bin\slick_edit.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\vsapi.dll
+		2, 7, 0                       C:\Program Files\Mercury\LoadRunner\bin\vsxmlutl.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WINSPOOL.DRV
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\IMM32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WSOCK32.dll
+		9.0.0.1434                    C:\Program Files\Mercury\LoadRunner\bin\MicEouComponents.dll
+		9.0.0.1434                    C:\Program Files\Mercury\LoadRunner\bin\MicXmlViewHelper.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\ReplayBinaryUtils32.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\sqlgrid.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\optn_dlg.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\pefile.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\VERSION.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\LPK.DLL
+		1.0420.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\USP10.dll
+		6.0 (xpsp.060825-0040)        C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSCTF.dll
+		3.525.1117.0 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\odbcint.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\UxTheme.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msimg32.dll
+		5.1.2600.0 (xpclient.010817-1148)C:\WINDOWS\system32\RICHED32.DLL
+		5.30.23.1221                  C:\WINDOWS\system32\RICHED20.dll
+		2001.12.4414.308              C:\WINDOWS\system32\CLBCATQ.DLL
+		2001.12.4414.258              C:\WINDOWS\system32\COMRes.dll
+		9.0.0.281                     C:\Program Files\Mercury\LoadRunner\bin\SOALicenseManager.dll
+		8, 0, 2, 0                    C:\Program Files\Mercury\LoadRunner\bin\LSAPIW32.DLL
+		5.1.2600.2976 (xpsp_sp2_gdr.060817-0106)C:\WINDOWS\system32\NETAPI32.dll
+		3.1.4000.2435                 C:\WINDOWS\system32\msi.dll
+		7.10.3077.0                   C:\WINDOWS\system32\MFC71U.DLL
+		7.10.3052.4                   C:\WINDOWS\system32\MSVCR71.dll
+		9.0.0.14                      C:\Program Files\Mercury\LoadRunner\bin\lrcrashhandler.dll
+		4.50.000                      C:\Program Files\Mercury\LoadRunner\bin\BugslayerUtil.dll
+		6.1.0017.2 (DbgBuild.030121-2003)C:\Program Files\Mercury\LoadRunner\bin\dbghelp.dll
+		8.00.50727.762                C:\WINDOWS\WinSxS\x86_Microsoft.VC80.CRT_1fc8b3b9a1e18e3b_8.0.50727.762_x-ww_6b128700\MSVCR80.dll
+		8.00.50727.762                C:\WINDOWS\WinSxS\x86_Microsoft.VC80.MFC_1fc8b3b9a1e18e3b_8.0.50727.762_x-ww_3bf8fa05\MFC80U.DLL
+		8.00.50727.42                 C:\WINDOWS\WinSxS\x86_Microsoft.VC80.ATL_1fc8b3b9a1e18e3b_8.0.50727.42_x-ww_6e805841\ATL80.DLL
+		8.00.50727.762                C:\WINDOWS\WinSxS\x86_Microsoft.VC80.MFCLOC_1fc8b3b9a1e18e3b_8.0.50727.762_x-ww_91481303\MFC80ENU.DLL
+		9.2.0.4911                    C:\Program Files\Mercury\LoadRunner\bin\TDExtendedAPI.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\FREC.dll
+		5.1.2600.2180                 C:\WINDOWS\system32\OLEPRO32.DLL
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\urlmon.dll
+		3.05.2284                     C:\WINDOWS\system32\ATL.DLL
+		2.0.50727.832 (QFE.050727-8300)C:\WINDOWS\system32\mscoree.dll
+		2.0.50727.832 (QFE.050727-8300)C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorwks.dll
+		2.0.50727.832 (QFE.050727-8300)C:\WINDOWS\assembly\NativeImages_v2.0.50727_32\mscorlib\642a46219aad501f8c5e7a1cb8e32d9b\mscorlib.ni.dll
+		5.1.2600.3019 (xpsp_sp2_gdr.061019-0414)C:\WINDOWS\system32\sxs.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\xpsp2res.dll
+		1.0.0.0                       C:\Program Files\Mercury\LoadRunner\bin\BPTManagerImpl.dll
+		1.0.0.0                       C:\Program Files\Mercury\LoadRunner\bin\BPTManager.dll
+		1.0.0.0                       C:\Program Files\Mercury\LoadRunner\bin\Interop.TDExtendedAPI.dll
+		2.0.50727.832 (QFE.050727-8300)C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\mscorjit.dll
+		1.0.0.0                       C:\Program Files\Mercury\LoadRunner\bin\Interop.SOAMaf.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msctfime.ime
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\vsRTE.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\vugen_replay_api.dll
+		9.0.0.1224                    C:\Program Files\Mercury\LoadRunner\bin\coparamui.dll
+		9.0.0.1224                    C:\Program Files\Mercury\LoadRunner\bin\paramui.dll
+		9.0.0.2163                    C:\Program Files\Mercury\LoadRunner\bin\is32.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramlr.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramtbl.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\mmdtable.dll
+		500.0.0.5022                  C:\Program Files\Mercury\LoadRunner\bin\libmemmap.dll
+		500.0.0.1                     C:\Program Files\Mercury\LoadRunner\bin\parambigtable.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramcst.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramunq.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramfnc.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramss.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramdte.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramvar.dll
+		500.0.0.5054                  C:\Program Files\Mercury\LoadRunner\bin\paramrnd.dll
+		1, 0, 0, 1                    C:\Program Files\Mercury\LoadRunner\bin\RecentScripts.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\PSAPI.DLL
+		9.0.0.37                      C:\Program Files\Mercury\LoadRunner\bin\PLATFORMSUPPORTMIC.DLL
+		1, 6, 0                       C:\Program Files\Mercury\LoadRunner\bin\xerces-c_1_6_0.dll
+		9.0.0.37                      C:\Program Files\Mercury\LoadRunner\bin\XalanDOMMic.dll
+		9.0.0.1660                    C:\Program Files\Mercury\LoadRunner\bin\SOAProtocol.dll
+		9.0.0.1660                    C:\Program Files\Mercury\LoadRunner\bin\ServiceManagementUILib.dll
+		9.0.0.2131                    C:\Program Files\Mercury\LoadRunner\bin\base_scripthandler.dll
+		9.1.1895.0                    C:\Program Files\Mercury\LoadRunner\bin\TulipAppInfo.dll
+		7.10.3077.0                   C:\WINDOWS\system32\ATL71.DLL
+		7.10.3077.0                   C:\WINDOWS\system32\MSVCP71.dll
+		9.0.0.1434                    C:\Program Files\Mercury\LoadRunner\bin\threadsafefileoperator.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\insp_gen.dll
+		9.0.0.2289                    C:\Program Files\Mercury\LoadRunner\bin\inspdll.dll
+		9.0.0.260                     C:\Program Files\Mercury\LoadRunner\bin\pc_integration.dll
+		7.8.4.0                       C:\Program Files\Mercury\LoadRunner\bin\orchidcommutils.dll
+		2, 1, 0, 1                    C:\Program Files\Mercury\LoadRunner\bin\XUpload.ocx
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\shdocvw.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\CRYPTUI.dll
+		5.131.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WINTRUST.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\WLDAP32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\SETUPAPI.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MLANG.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\shdoclc.dll
+		11.0.5510                     C:\Program Files\Common Files\Microsoft Shared\OFFICE11\MSOXMLMF.DLL
+		6.00.2900.3199 (xpsp_sp2_qfe.070821-1250)C:\WINDOWS\system32\Mshtml.dll
+		3.10.349.0                    C:\WINDOWS\system32\msls31.dll
+		8.90.1101.0                   C:\WINDOWS\system32\msxml3.dll
+		6.00.2900.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\ImgUtil.dll
+		5.6.0.8831                    C:\WINDOWS\system32\jscript.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\msimtf.dll
+		9.0.0.868                     C:\Program Files\Mercury\LoadRunner\bin\scriptview.ocx
+		9.0.0.986                     C:\Program Files\Mercury\LoadRunner\bin\runlogicview.ocx
+		9.0.0.1400                    C:\Program Files\Mercury\LoadRunner\bin\WebStudioDocuments.dll
+		9.0.0.5727                    C:\Program Files\Mercury\LoadRunner\bin\LrwiWebInfra.dll
+		500.0.0.5033                  C:\Program Files\Mercury\LoadRunner\bin\LRUN50.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\trans.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\lr_exp.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\trans_server.dll
+		500.0.0.5058                  C:\Program Files\Mercury\LoadRunner\bin\timediff_ext.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\wrapzlib.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\libdatatypes.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\data_types_ifs.dll
+		500.0.0.5141                  C:\Program Files\Mercury\LoadRunner\bin\jrequestor_srv.dll
+		500.0.0.5123                  C:\Program Files\Mercury\LoadRunner\bin\dc_requests.dll
+		500.0.0.5183                  C:\Program Files\Mercury\LoadRunner\bin\merc_uuid.dll
+		500.0.0.5136                  C:\Program Files\Mercury\LoadRunner\bin\faserver.dll
+		500.0.0.5123                  C:\Program Files\Mercury\LoadRunner\bin\wrapicu.dll
+		9.0.0.868                     C:\Program Files\Mercury\LoadRunner\bin\coscriptparser.dll
+		9.0.0.1519                    C:\Program Files\Mercury\LoadRunner\bin\webscripthandler.dll
+		9.0.0.1015                    C:\Program Files\Mercury\LoadRunner\bin\WebStepClsShared.dll
+		9.0.0.1015                    C:\Program Files\Mercury\LoadRunner\bin\mshtmtr.dll
+		9.0.0.1015                    C:\Program Files\Mercury\LoadRunner\bin\DynWininet.dll
+		9.0.0.1519                    C:\Program Files\Mercury\LoadRunner\bin\WebStepClsDesign.dll
+		9.0.0.1400                    C:\Program Files\Mercury\LoadRunner\bin\ArchiveManager.dll
+		9.0.0.1400                    C:\Program Files\Mercury\LoadRunner\bin\WebStudioViews.dll
+		9.0.0.1519                    C:\Program Files\Mercury\LoadRunner\bin\WebCorrelation.dll
+		9.0.0.2131                    C:\Program Files\Mercury\LoadRunner\bin\websteps_scripthandler.dll
+		9.0.0.2131                    C:\Program Files\Mercury\LoadRunner\bin\LrXmlScriptHandler.dll
+		9.0.0.2131                    C:\Program Files\Mercury\LoadRunner\bin\lrscripthandler.DLL
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\tagsdb.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\vshlp.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\cparse.dll
+		9.0.0.2131                    C:\Program Files\Mercury\LoadRunner\bin\unparsedhandler.DLL
+		1, 0, 0, 1                    C:\Program Files\Mercury\LoadRunner\bin\WebUIRes.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\appHelp.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\wdmaud.drv
+		5.1.2600.0 (xpclient.010817-1148)C:\WINDOWS\system32\msacm32.drv
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\MSACM32.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\system32\midimap.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\mswsock.dll
+		5.1.2600.2938 (xpsp_sp2_gdr.060626-0020)C:\WINDOWS\system32\DNSAPI.dll
+		5.1.2600.2180 (xpsp_sp2_rtm.040803-2158)C:\WINDOWS\System32\winrnr.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\vsvcs.dll
+		9.0.0.1400                    C:\Program Files\Mercury\LoadRunner\bin\TextContainer.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\vslick\win\dragdrop.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\api_inspector.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\trpfnc32.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\script_language_helper.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\api_scrinfo.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\Api_Filter_Helper.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\type_info_pool.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\lrc_basic_filters.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\api_event_parser.dll
+		9.0.0.622                     C:\Program Files\Mercury\LoadRunner\bin\api_sock_filter.dll
+		9.0.0.814                     C:\Program Files\Mercury\LoadRunner\bin\WebHTMLCodeGen.dll
+		9.0.0.1519                    C:\Program Files\Mercury\LoadRunner\bin\WebRecorder.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\LIBEAY32_MIC.dll
+		                              C:\Program Files\Mercury\LoadRunner\bin\SSLEAY32_MIC.dll
+		500.0.0.5112                  C:\Program Files\Mercury\LoadRunner\bin\jconv_str.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\lrc_com_filters.dll
+		9.0.0.1362                    C:\Program Files\Mercury\LoadRunner\bin\lrc_code_gen_filter.dll

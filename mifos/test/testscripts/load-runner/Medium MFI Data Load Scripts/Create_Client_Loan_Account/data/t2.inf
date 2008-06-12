@@ -1,0 +1,8 @@
+[t2]
+FileName1=t2.htm
+URL1=http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage
+Total=1
+RequestHeaderFile=t2_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t2_ResponseHeader.txt
+ContentType=text/html

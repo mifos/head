@@ -1,0 +1,8 @@
+[t16]
+FileName1=t16.htm
+URL1=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly%20Flat%20Interest%20Rate%20for%20Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+Total=1
+RequestHeaderFile=t16_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t16_ResponseHeader.txt
+ContentType=text/html

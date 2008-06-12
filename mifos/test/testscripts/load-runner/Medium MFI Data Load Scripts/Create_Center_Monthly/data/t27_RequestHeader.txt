@@ -1,0 +1,8 @@
+GET /mifos/centerCustAction.do?method=get&globalCustNum=0004-000111002&recordOfficeId=4&recordLoanOfficerId=12&randomNUm= HTTP/1.1
+Accept-Language: en-ie
+Referer: http://9.161.154.14/mifos/centerCustAction.do?method=create
+Connection: Keep-Alive
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/msword, application/xaml+xml, application/vnd.ms-xpsdocument, application/x-ms-xbap, application/x-ms-application, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, */*
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)
+Cookie: JSESSIONID=7B328CF9D4E7C225BD914F0FBBE8497F
+

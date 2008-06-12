@@ -1,0 +1,510 @@
+3f9
+<!--
+
+/**
+
+ * CreateSavingsProduct.jsp    version: 1.0
+
+
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
+
+-->
+
+
+
+
+
+
+
+
+
+
+	
+
+f0
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+656
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=-4633957043502487204">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch">Clients &amp; Accounts </a></td>
+          <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+          <td class="taborange"><a href="AdminAction.do?method=load&randomNUm=-4633957043502487204" class="tabfontwhite">Admin</a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+2000
+
+		<script>
+		<!--
+			function fnCancel(form) {
+				form.method.value="cancelCreate";
+				form.action="savingsproductaction.do";
+				form.submit();
+			}
+			function fnCheckRecMand() {
+				if(document.getElementsByName("savingsType")[0].value==1) {
+					document.getElementsByName("mandamnt")[0].style.display = "block";
+					document.getElementsByName("recamnt")[0].style.display = "none";
+				}
+				else {
+					document.getElementsByName("mandamnt")[0].style.display = "none";
+					document.getElementsByName("recamnt")[0].style.display = "block";
+				}
+			}
+
+			function fnCheckAppliesTo() {
+				if(document.getElementsByName("prdApplicableMaster")[0].value==2) {
+					document.getElementsByName("recommendedAmntUnit")[0].disabled=false;
+				}
+				else {
+					document.getElementsByName("recommendedAmntUnit")[0].selectedIndex=0;
+					document.getElementsByName("recommendedAmntUnit")[0].disabled=true;
+				}
+			}
+		//-->
+		</script>
+		<script src="pages/framework/js/date.js"></script>
+		<form name="savingsproductactionform" method="post" action="/mifos/savingsproductaction.do" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
+				validateMyForm(endDate,endDateFormat,endDateYY))">
+			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td align="center" class="heading">
+						&nbsp;
+					</td>
+				</tr>
+			</table>
+			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="bluetablehead">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="27%">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
+											</td>
+											<td class="timelineboldorange">
+												Savings
+												Product information
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td width="73%" align="right">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>
+												<img src="pages/framework/images/timeline/orangearrow.gif" width="17" height="17">
+											</td>
+											<td class="timelineboldorangelight">
+												Review &amp; submit
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
+				<tr>
+					<td align="left" valign="top" class="paddingleftCreates">
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td class="headingorange">
+									<span class="heading"> Add a new Savings Product - </span>
+									Enter
+									Savings
+									Product information
+								</td>
+							</tr>
+							<tr>
+								<td class="fontnormal">
+									Complete the fields below.
+									Then click Preview.
+									Click Cancel to return to Admin without submitting information.
+									<br>
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Fields marked with an asterisk are required.
+								</td>
+							</tr>
+						</table>
+						<br>
+						<font class="fontnormalRedBold"></font>
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="2" class="fontnormalbold">
+									Savings
+									product details
+									<br>
+									<br>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="30%" align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Product instance name
+									:
+								</td>
+								<td width="70%" valign="top">
+									<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="prdOfferingName" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)">
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Short name
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="prdOfferingShortName" maxlength="4" size="4" value="" onkeypress="return FnCheckNumCharsOnPress(event,this);" onblur="return FnCheckNumChars(event,this);return FnEscape(event,this)">
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top">
+									<span class="mandatorytext"></span>
+									Description
+									:
+								</td>
+								<td valign="top">
+									<textarea name="description" style="width:320px; height:110px;"></textarea>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Product category
+									:
+								</td>
+								<td valign="top">
+									<select name="prdCategory"><option value="">--Select--</option><option value="2">Other</option></select>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Start date
+									:
+								</td>
+								<td valign="top">
+									<!-- normal style --><input type="text" id="startDateDD" name="startDateDD" maxlength="2" size="2" value="07" onBlur="makeDateString('startDateDD','startDateMM','startDateYY','startDate','/')" style="width:1.5em" /> DD <input type="text" id="startDateMM" name="startDateMM" maxlength="2" size="2" value="01" onBlur="makeDateString('startDateDD','startDateMM','startDateYY','startDate','/')" style="width:1.5em" /> MM <input type="text" id="startDateYY" name="startDateYY" maxlength="4" size="4" value="2008" onBlur="makeDateString('startDateDD','startDateMM','startDateYY','startDate','/')" style="width:3em" /> YYYY <input type="hidden" id="startDate" name="startDate" value="07/01/2008" /><input type="hidden" id="startDateFormat" name="startDateFormat" value="D/M/Y" /><input type="hidden" id="datePattern" name="datePattern" value="dd/MM/yy" />
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"></span>
+									End date
+									:
+								</td>
+								<td valign="top">
+									<!-- normal style --><input type="text" id="endDateDD" name="endDateDD" maxlength="2" size="2" value="" onBlur="makeDateString('endDateDD','endDateMM','endDateYY','endDate','/')" style="width:1.5em" /> DD <input type="text" id="endDateMM" name="endDateMM" maxlength="2" size="2" value="" onBlur="makeDateString('endDateDD','endDateMM','endDateYY','endDate','/')" style="width:1.5em" /> MM <input type="text" id="endDateYY" name="endDateYY" maxlength="4" size="4" value="" onBlur="makeDateString('endDateDD','endDateMM','endDateYY','endDate','/')" style="width:3em" /> YYYY <input type="hidden" id="endDate" name="endDate" value="" /><input type="hidden" id="endDateFormat" name="endDateFormat" value="D/M/Y" /><input type="hidden" id="datePattern" name="datePattern" value="dd/MM/yy" />
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Applicable for
+									:
+								</td>
+								<td valign="top">
+									<select name="prdApplicableMaster" onchange="fnCheckAppliesTo();" style="width:136px;"><option value="">--Select--</option><option value="1">Clients</option>
+										
+											<option value="2">Groups</option>
+										
+											<option value="3">Centers</option></select>
+								</td>
+							</tr>
+						</table>
+						<br>
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="2" class="fontnormalbold">
+			
+2000
+						Targeted Deposits and Withdrawal Restrictions
+									<br>
+									<br>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td width="30%" align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Type of deposits
+									:
+								</td>
+								<td width="70%" valign="top">
+									<select name="savingsType" onchange="fnCheckRecMand();" style="width:136px;"><option value="">--Select--</option><option value="1">Mandatory</option>
+										
+											<option value="2">Voluntary</option></select>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" id="recamnt">
+									Recommended Amount for Deposit
+									:
+								</td>
+								<td align="right" id="mandamnt">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Mandatory amount for deposit
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/conversion.js"></script><script src="pages/framework/js/con_en.js"></script><script src="pages/framework/js/con_en_GB.js"></script><SCRIPT >makeRegEx2(7.1)</SCRIPT><input type="text" name="recommendedAmount" value="" onkeydown="saveText(this);this.focus();" onkeyup="return chekDecimal(7.1,this, event); " onkeypress="return keyPress(7.1,this,event);" onblur="if( false == doValidation(this,null,null,7.1)) this.focus();">
+								</td>
+							</tr>
+							<script type="text/javascript">
+							fnCheckRecMand();
+						</script>
+							<tr class="fontnormal" id="appliesto">
+								<td align="right">
+									Amount Applies to
+									:
+								</td>
+								<td valign="top">
+									<select name="recommendedAmntUnit" style="width:136px;"><option value="">--Select--</option><option value="1">Per Individual</option>
+										
+											<option value="2">Complete Group</option></select>
+								</td>
+							</tr>
+							<script type="text/javascript">
+							fnCheckAppliesTo();
+						</script>
+							<tr class="fontnormal">
+								<td align="right">
+									Max amount per withdrawal
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/conversion.js"></script><script src="pages/framework/js/con_en.js"></script><script src="pages/framework/js/con_en_GB.js"></script><SCRIPT >makeRegEx2(7.1)</SCRIPT><input type="text" name="maxAmntWithdrawl" value="" onkeydown="saveText(this);this.focus();" onkeyup="return chekDecimal(7.1,this, event); " onkeypress="return keyPress(7.1,this,event);" onblur="if( false == doValidation(this,null,null,7.1)) this.focus();">
+								</td>
+							</tr>
+						</table>
+						<br>
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="2" class="fontnormalbold">
+									Interest
+									rate
+									<br>
+									<br>
+								</td>
+
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Interest
+									rate
+									:
+								</td>
+								<td width="70%" valign="top">
+									<script src="pages/framework/js/conversion.js"></script><script src="pages/framework/js/con_en.js"></script><script src="pages/framework/js/con_en_GB.js"></script><SCRIPT >makeRegEx2(10.5)</SCRIPT><input type="text" name="interestRate" value="" onkeydown="saveText(this);this.focus();" onkeyup="return chekDecimal(10.5,this, event); " onkeypress="return keyPress(10.5,this,event);" onblur="if( false == doValidation(this,0,100,10.5)) this.focus();">
+									(0 - 100 )%
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									<span class="mandatorytext"> <span class="mandatorytext"><font color="#FF0000">*</font></span>Balance used for Interest calculation:
+								</td>
+								<td valign="top">
+									<select name="interestCalcType" style="width:136px;"><option value="">--Select--</option><option value="1">Minimum Balance</option>
+										
+											<option value="2">Average Balance</option></select>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Time period for
+									Interest
+									calculation
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="timeForInterestCacl" maxlength="3" size="3" value="" onkeypress="return FnCheckNumberOnPress(event);" onblur="FnCheckNumber(event,'','',this);">
+									<select name="recurTypeFortimeForInterestCacl" style="width:80px;"><option value="3">Day(s)</option>
+										
+											<option value="2">Month(s)</option></select>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>Frequency of
+									Interest
+									posting to accounts
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/func.js"></script><script src="pages/framework/js/func_en_GB.js"></script><input type="text" name="freqOfInterest" maxlength="3" size="3" value="" onkeypress="return FnCheckNumberOnPress(event);" onblur="FnCheckNumber(event,'','',this);">
+									month(s)
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right">
+									Min balance required for
+									Interest
+									calculation
+									:
+								</td>
+								<td valign="top">
+									<script src="pages/framework/js/conversion.js"></script><script src="pages/framework/js/con_en.js"></script><script src="pages/framework/js/con_en_GB.js"></script><SCRIPT >makeRegEx2(7.1)</SCRIPT><input type="text" name="minAmntForInt" value="" onkeydown="saveText(this);this.focus();" onkeyup="return chekDecimal(7.1,this, event); " onkeypress="return keyPress(7.1,this,event);" onblur="if( false == doValidation(this,null,null,7.1)) this.focus();">
+								</td>
+							</tr>
+						</table>
+						<br>
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="2" class="fontnormalbold">
+									Accounting
+									<br>
+									<br>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top" style="padding-top:8px;">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>GL code for deposits
+									:
+								</td>
+								<td width="70%" valign="top">
+									<select name="depositGLCode" style="width:136px;"><option value="">--Select--</option><option value="31">24101</option>
+										
+											<option value="41">4601</option>
+										
+											<option value="28">23101</option>
+										
+											<option value="43">4603</option>
+										
+											<option value="42">4602</option>
+										
+											<option value="44">4606</option></select>
+								</td>
+							</tr>
+							<tr class="fontnormal">
+								<td align="right" valign="top" style="padding-top:8px;">
+									<span class="mandatorytext"><font color="#FF0000">*</font></span>GL code for
+									Interest
+									:
+								</td>
+								<td valign="top">
+									<select name="interestGLCode" style="width:136px;"><option value="">--Select--</option><option value="57">41102</option>
+										
+											<option value="56">41101</option></select>
+								</td>
+							</tr>
+						</table>
+						<table width="93%" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td align="center" class="blueline">
+									&nbsp;
+								</td>
+							</tr>
+						</table>
+						<br>
+						<table width="93%" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td align="center">
+									<input type="submit" value="Preview" style="width:70px" class="buttn">
+									&nbsp;
+									<input type="button" name="cancel" value="Cancel" onclick="javascript:fnCancel(this.form)" style="width:70px" class="cancelbuttn">
+								</td>
+						
+253
+	</tr>
+						</table>
+						<br>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="method" value="preview">
+			<input type="hidden" name="currentFlowKey" value="1199706574265">
+		</form>
+<script type="text/javascript" language="JavaScript">
+  <!--
+  var focusControl = document.forms["savingsproductactionform"].elements["prdOfferingName"];
+
+  if (focusControl.type != "hidden" && !focusControl.disabled) {
+     focusControl.focus();
+  }
+  // -->
+</script>
+
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+
+
+0
+

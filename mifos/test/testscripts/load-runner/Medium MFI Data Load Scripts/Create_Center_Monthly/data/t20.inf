@@ -1,0 +1,8 @@
+[t20]
+FileName1=t20.htm
+URL1=http://9.161.154.14/mifos/custSearchAction.do?method=loadMainSearch
+Total=1
+RequestHeaderFile=t20_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t20_ResponseHeader.txt
+ContentType=text/html

@@ -1,0 +1,9 @@
+-+
+-DCCI
+-D_IDA_XL
+-DWINNT
+-IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Medium MFI Data Load Scripts\Create_Client_and_Savings_Accounts
+-IC:\Program Files\Mercury\LoadRunner\include
+-ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_client_and_savings_accounts\\logfile.log
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_client_and_savings_accounts\\combined_Create_Client_and_Savings_Accounts.c
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_client_and_savings_accounts\\pre_cci.c

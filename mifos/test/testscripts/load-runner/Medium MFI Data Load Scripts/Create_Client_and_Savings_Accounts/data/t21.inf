@@ -1,0 +1,14 @@
+[t21]
+FileName1=t21.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=preview
+Total=2
+RequestHeaderFile=t21_RequestHeader.txt
+RequestBodyFile=t21_RequestBody.txt
+ResponseHeaderFile=t21_ResponseHeader.txt
+ContentType=text/html
+FileName2=t21_CommonUtilities.html
+URL2=http://9.161.154.46:8080/mifos/pages/framework/js/CommonUtilities.js
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=0

@@ -1,0 +1,436 @@
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Tils definition for the header and menu -->
+
+	
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=-935587606061289832">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage" >
+		Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients & Accounts</a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+		
+
+<td width="174" height="500" align="left" valign="top" class="bgorangeleft">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+          <td class="leftpanehead" colspan="2">
+          Clients & Accounts Tasks
+          </td>
+        </tr>
+       
+        
+
+
+
+  <form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do?method=loadAllBranches">
+        <tr>
+          <td class="leftpanelinks"><table width="90%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="paddingbottom03"><span class="fontnormal8ptbold">Search by name, system ID or account number </span> </td>
+            </tr>
+          </table>
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="100%" colspan="2">
+                <input type="text" name="searchString" maxlength="200" size="20" value="">
+				
+				
+				
+				<input type="hidden" name="officeId" value="0"> 
+				
+					
+                </td>
+              </tr>
+            </table>
+            <table width="136" border="0" cellspacing="0" cellpadding="3">
+              <tr>
+                <td align="right">
+                 <input type="submit" name="searchButton" value="Search" class="buttn">
+                </td>
+              </tr>
+            </table> 
+            </td>
+            </tr>
+            </form>
+       
+        <tr> 
+		<td class="leftpanelinks" colspan="2"><span class="fontnormalbold" >Manage Collection Sheets</span><br><a href="bulkentryaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Enter Collection Sheet Data</a><br><br><span class="fontnormalbold" >Create new Clients</span><br><a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0">Create new Center</a><br><a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=0&recordLoanOfficerId=0&input=createGroup">Create new Group</a><br><a href="groupCustAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=createClient">Create new Client</a><br><br><span class="fontnormalbold" >Create new Accounts</span><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=savings">Create Savings Account</a><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=loan">Create Loan Account</a><br><a href="multipleloansaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Create multiple Loan accounts</a><br><br><span class="fontnormalbold" >Manage account status</span><br><a href="ChangeAccountStatus.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Change account status</a><br><br></td>
+        </tr>
+</table>
+</td>      
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+		<script language="javascript">
+  function GoToEditPage(){
+	centerActionForm.action="centerAction.do?method=manage";
+	centerActionForm.submit();
+  }
+
+</script>
+
+		<form name="centerCustActionForm" method="post" action="/mifos/centerCustAction.do">
+  		   
+  		   
+			<input type="hidden" name="input" value="CenterDetails}">
+			<!-- Hidden properties set for customer id, version, system id and version number -->
+			<input type="hidden" name="customerId" value="111002">
+			<input type="hidden" name="globalCustNum" value="0004-000111002">
+			<input type="hidden" name="versionNo" value="1">
+			<input type="hidden" name="statusId" value="13">
+			<input type="hidden" name="office.officeId" value="4">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td class="bluetablehead05">
+	            <span class="fontnormal8pt">
+	            	<a href="custSearchAction.do?method=getOfficeHomePage&officeId=4&officeName=BRANCH_OFFICE_12&randomNum=-935587606061289832">BRANCH_OFFICE_12</a> / <b>center_5751</b>
+	            </span>
+
+				</tr>
+			</table>
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<!-- Name of the center -->
+				<tr>
+					<td width="70%" align="left" valign="top" class="paddingL15T15">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td class="headingorange">center_5751</td>
+							<td rowspan="2" align="right" valign="top" class="headingorange">
+							<span class="fontnormal"> <!-- Edit center status link --> <a
+								href="editCustomerStatusAction.do?method=loadStatus&customerId=111002&input=center&currentFlowKey=1212483406893">
+							Edit Center Status </a><br>
+							</span></td>
+						</tr>
+						<tr>
+							<td colspan="2"><font class="fontnormalRedBold"></font></td>
+						</tr>
+						<tr>
+							<td class="fontnormalbold"> <!-- Status of the center. Depending on the status id active or inactive is displayed -->
+
+
+							
+								<span class="fontnormal"><img
+									src="pages/framework/images/status_activegreen.gif" width="8"
+									height="9">
+							  Active<br>
+							<!-- System Id of the center --> <span class="fontnormal">System ID:</span> <span class="fontnormal">0004-000111002<br>
+							<!-- Loan Officer of the center --> Loan officer:
+							mifos officer_20</span><br>
+							<br>
+							<!-- List of groups under the center -->
+							<span class="fontnormalBold"> Groups assigned
+								</span>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							
+								<span class="fontnormal"> <a
+									href="groupCustAction.do?method=load&centerSystemId=0004-000111002&parentOfficeId=4&recordOfficeId=4&recordLoanOfficerId=12&randomNUm=-935587606061289832">
+								Add
+								Group</a>
+								</span>
+							 <br>
+							<span class="fontnormal"> Click on a 
+							Group below to view the 
+							Group details
+							</span><br>
+							<div id="Layer2"
+								style="border: 1px solid #CECECE; height:100px; width:250px; overflow: auto; padding:6px; margin-top:5px;">
+							<span class="fontnormal"> 
+								
+								
+									<!-- -->
+									No
+									Groups
+									available
+									<!--  -->
+								
+							</div>
+							<br>
+							</td>
+						</tr>
+					</table>
+
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<!-- Account table -->
+						<tr>
+							<td width="36%" class="headingorange">Account information </td>
+						</tr>
+						<tr align="right">
+							<td class="headingorange"><span class="fontnormal"> 
+								Open new account:&nbsp;
+		               <a href="savingsAction.do?method=getPrdOfferings&customerId=111002&recordOfficeId=1&recordLoanOfficerId=1">Savings</a></span> </td>
+						</tr>
+					</table>
+
+
+					
+
+					<table width="96%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="65%" align="left" valign="top"
+								class="tableContentLightBlue"><span class="fontnormalbold"> Center charges  </span>
+							<table width="95%" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="53%"><span class="fontnormal">  <a
+										href="customerAccountAction.do?method=load&globalCustNum=0004-000111002">
+										View details
+									</a> </span></td>
+										</tr>
+									</table>
+									<span class="fontnormal">Amount Due: 0.0
+									</span></td>
+								</tr>
+								<tr>
+									<td><img src="pages/framework/images/trans.gif" width="5"
+										height="5"></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="50%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="10"
+								height="5"></td>
+						</tr>
+					</table>
+
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+
+						<tr>
+							<td width="38%" align="right" class="fontnormal"><span
+								class="fontnormal"><a
+								href="custAction.do?method=getClosedAccounts&customerId=111002&input=center&currentFlowKey=1212483406893&randomNUm=-935587606061289832">
+								View all closed accounts
+							</a> </span></td>
+						</tr>
+					</table>
+					<table width="50%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="10"
+								height="10"></td>
+						</tr>
+					</table>
+
+					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+
+						<tr>
+							<td width="50%" height="23" class="headingorange">Center information </td>
+							<td width="50%" align="right" class="fontnormal"><a href="/mifos/centerCustAction.do?method=manage&currentFlowKey=1212483406893">Edit
+								 
+								Center
+								 
+								details</a></td>
+						</tr>
+
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold"><span
+								class="fontnormal"> <!-- MFI Joining date --> MFI joining date:
+							03/06/2008
+							<br>
+							Center start date:
+							03/06/2008</td>
+						</tr>
+
+						<!-- External Id -->
+						<tr id="Center.ExternalId">
+							<td height="23" colspan="2" class="fontnormalbold"><span
+								class="fontnormal"> External Id:
+							<br>
+							</span></td>
+						</tr>
+
+						<!-- Client positions -->
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold"><br>
+							Official titles assigned<br>
+							  <br>
+							</td>
+						</tr>
+
+						<tr>
+							<td height="23" colspan="2" class="fontnormalbold"><span
+								class="fontnormal">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td class="fontnormalbold">Meeting details
+									</td>
+									<td align="right">
+									<a href="/mifos/meetingAction.do?method=edit&currentFlowKey=1212483406893&randomNUm=-935587606061289832&customerLevel=3">Edit Meeting Schedule</a></td>
+								</tr>
+							</table>
+							<span class="fontnormalRed"> Meetings:&nbsp;
+							Recur on Last Friday of every 1 month(s)</span><span
+								class="fontnormal"><br>
+							<span class="fontnormal">Dublin</span>
+							</span><span class="fontnormal"><br>
+							</span><br>
+							<span class="fontnormal"> </span><span class="fontnormal"> </span>
+							<!-- Address Fields --></td>
+						</tr>
+
+
+
+
+						<tr id="Center.Address">
+							<td height="23" colspan="2" class="fontnormalbold"> 
+							
+							<a href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=111002&currentFlowKey=1212483406893">View change log</a> <br>
+
+						</tr>
+					</table>
+
+					</td>
+
+
+
+				<!-- Performance History -->
+					<td width="30%" align="left" valign="top" class="paddingleft1">
+					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="bluetableborder">
+
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold"> Performance History </span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> # of active {0}s Clients:
+							0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> # of active {0}s Groups:
+							0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Total Loan portfolio: 0.0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Portfolio at risk: 0.0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"> Total Savings:
+							0.0</span></td>
+						</tr>
+
+					</table>
+
+
+					<!-- Performance History  end -->
+
+
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+               
+          <table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="bluetableborder">
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold">Recent Notes </span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td class="paddingL10">
+								
+								
+									<span class="fontnormal"> No notes available. </span>
+								
+							</td>
+						</tr>
+						<tr>
+							<td align="right" class="paddingleft05"><span
+								class="fontnormal8pt">  <a
+								href="customerNotesAction.do?method=load&customerId=111002&randomNUm=-935587606061289832&currentFlowKey=1212483406893">
+							Add a note </a> </span></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+

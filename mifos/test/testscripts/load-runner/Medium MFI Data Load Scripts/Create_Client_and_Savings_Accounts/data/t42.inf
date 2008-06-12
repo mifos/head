@@ -1,0 +1,14 @@
+[t42]
+FileName1=t42.htm
+URL1=http://9.161.154.46:8080/mifos/savingsAction.do?method=getPrdOfferings&customerId=6&recordOfficeId=1&recordLoanOfficerId=1&randomNUm=-1262651595697202334
+Total=2
+RequestHeaderFile=t42_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t42_ResponseHeader.txt
+ContentType=text/html
+FileName2=t42_CreateSavingsAccount.html
+URL2=http://9.161.154.46:8080/mifos/pages/application/savings/js/CreateSavingsAccount.js
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=1

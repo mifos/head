@@ -1,0 +1,8 @@
+[t22]
+FileName1=t22.htm
+URL1=http://9.161.154.14/mifos/centerCustAction.do?method=load&office.officeId=4&office.officeName=BRANCH_OFFICE_12&officeId=4&officeName=BRANCH_OFFICE_12&currentFlowKey=1212483276090
+Total=1
+RequestHeaderFile=t22_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t22_ResponseHeader.txt
+ContentType=text/html

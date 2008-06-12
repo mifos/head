@@ -1,0 +1,19 @@
+-+
+-DCCI
+-D_IDA_XL
+-DWINNT
+<<<<<<< .mine
+-IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Medium MFI Data Load Scripts\Create_Center
+=======
+-IC:\MIFOS\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Medium MFI Data Load Scripts\Create_Center
+>>>>>>> .r477
+-IC:\Program Files\Mercury Interactive\LoadRunner\include
+<<<<<<< .mine
+-ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\logfile.log
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\combined_Create_Center.c
+c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\pre_cci.c
+=======
+-ec:\mifos\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\logfile.log
+c:\mifos\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\combined_Create_Center.c
+c:\mifos\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_center\\pre_cci.c
+>>>>>>> .r477

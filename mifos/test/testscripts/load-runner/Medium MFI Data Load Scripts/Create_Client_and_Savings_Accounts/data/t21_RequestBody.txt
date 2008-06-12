@@ -1,0 +1,5 @@
+"input=mfiInfo&loanOfficerId=2&formedByPersonnel=2&externalId=&trainedDateDD=&trainedDateMM=&tr"
+"ainedDateYY=&trainedDate=&trainedDateFormat=D%2FM%2FY&datePattern=dd%2FMM%2Fyy&selectedFee%5B0"
+"%5D.feeId=&selectedFee%5B0%5D.amount=&selectedFee%5B1%5D.feeId=&selectedFee%5B1%5D.amount=&sel"
+"ectedFee%5B2%5D.feeId=&selectedFee%5B2%5D.amount=&savingsOffering%5B0%5D=&savingsOffering%5B1%"
+"5D=&savingsOffering%5B2%5D=&currentFlowKey=1199703573281"

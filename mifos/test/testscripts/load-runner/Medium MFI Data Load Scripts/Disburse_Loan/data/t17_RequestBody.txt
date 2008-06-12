@@ -1,0 +1,5 @@
+"currentFlowKey=1212683591812&transactionDateDD=02&transactionDateMM=06&transactionDateYY=2008&"
+"transactionDate=02%2F06%2F2008&transactionDateFormat=D%2FM%2FY&datePattern=dd%2FMM%2Fyy&receip"
+"tId=&receiptDateDD=&receiptDateMM=&receiptDateYY=&receiptDate=&receiptDateFormat=D%2FM%2FY&dat"
+"ePattern=dd%2FMM%2Fyy&paymentTypeId=1&prdOfferingName=Weekly+Flat+Interest+Rate+for+Clients&gl"
+"obalAccountNum=000100000116790&accountId=116790&method="

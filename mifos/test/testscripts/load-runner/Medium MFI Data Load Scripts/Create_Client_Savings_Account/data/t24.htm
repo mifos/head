@@ -1,0 +1,264 @@
+<!-- 
+
+/**
+
+ * accountsSearchSuccess.jsp    version: 1.0
+
+ 
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+ 
+
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+ * and how it is applied. 
+
+ *
+
+ */
+
+-->
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=-7161667860183507296">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage" >
+		Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients & Accounts</a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+    
+        
+        
+            <script>
+            function fun_cancel(form)
+            {
+
+                form.action="custSearchAction.do";
+                form.method.value="loadMainSearch";
+                form.submit();
+            }
+            </script>
+        
+    
+
+		<form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do?method=search">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td align="center" class="heading">&nbsp;</td>
+						</tr>
+					</table>
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td class="bluetablehead">
+							
+													
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="33%">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img src="pages/framework/images/timeline/bigarrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorange">Select customer</td>
+										</tr>
+									</table>
+									</td>
+									<td width="34%" align="center">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img
+												src="pages/framework/images/timeline/orangearrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorangelight">
+											Savings
+											account information</td>
+										</tr>
+									</table>
+									</td>
+									<td width="33%" align="right">
+									<table border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td><img
+												src="pages/framework/images/timeline/orangearrow.gif"
+												width="17" height="17"></td>
+											<td class="timelineboldorangelight">Review & submit</td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+						
+						
+							
+							</td>
+						</tr>
+					</table>
+					<table width="90%" border="0" align="center" cellpadding="0"
+						cellspacing="0" class="bluetableborder">
+						<tr>
+							<td width="70%" height="24" align="left" valign="top"
+								class="paddingleftCreates">
+							<table width="98%" border="0" cellspacing="0" cellpadding="3">
+								
+                                <tr>
+									<td class="headingorange">
+									
+									
+										<span class="heading"> 
+											Create 
+											Savings
+											Account - 
+										</span>  
+									
+									
+									
+									Select a customer</td>
+								</tr>
+								<tr>
+									<td class="fontnormalbold"><span class="fontnormal">To select, click on a resulting   
+										Client
+										or  
+										Group
+										
+											or  
+											Center
+										
+									    from the list below. Click Cancel to return to Clients & Accounts without submitting information.
+												</span></td>
+								</tr>
+								<tr>
+								</tr>
+							</table>
+							<br>
+							<table width="96%" border="0" cellspacing="0" cellpadding="0">
+								<tr align="left">
+									<td class="fontnormal">Search for:&nbsp; <input type="text" name="searchString" maxlength="200" value="GRCLIENT NO_140001" id="111"> &nbsp;
+									<input type="submit" name="searchButton" value="Search" class="buttn"></td>
+								</tr>
+								<tr class="fontnormal">
+									<td>
+									  
+										
+											<table width=100%border=0cellspacing=0cellpadding=0 ><tr><td colspan="2" valign="top" class="blueline"><img src="pages/framework/images/trans.gif " width="5" height="3"></td></tr><tr class="fontnormal"><td width="3%" >1.</td><td width="97%"<span class="fontnormal"></span><span class="fontnormal"><span class="fontnormal">BRANCH_OFFICE_43</span></span>	<span class="fontnormalbold">/</span><span class="fontnormal"><span class="fontnormal">CENTER_2667</span></span>	<span class="fontnormalbold">/</span><span class="fontnormal"><span class="fontnormal">GROUP_16667</span></span>	<span class="fontnormalbold">/</span><span class="fontnormalbold"><a href= "savingsAction.do?method=getPrdOfferings&customerId=58471&randomNUm=-7161667860183507296">GRCLIENT NO_140001:ID0035-000058471</a></span>	<br></td></tr><tr><td colspan="2" valign="top" class="blueline"><img src="pages/framework/images/trans.gif " width="10" height="5"></td></tr><tr><td height="35" colspan="2" align="center" class="blueline"><table width="400" border="0" cellspacing="0" cellpadding="0"><tr><td width="20%" class="fontnormalboldgray">Previous</td><td width="40%" align="center" class="fontnormalbold">Results 1-1 of 1 </td><td width="20%" align="right" class="fontnormalboldgray">Next</td></tr></table></td></tr></table>
+										
+										
+									  
+								   </td>
+								</tr>
+							</table><br>
+							<table width="96%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td align="center"><input type="button" name="cancelButton" value="Cancel" onclick="javascript:fun_cancel(this.form)" class="cancelbuttn"></td>
+								</tr>
+							</table>
+							<br>
+					</table>
+					</td>
+				</tr>
+			</table>
+            <input type="hidden" name="perspective" value="">
+            <input type="hidden" name="method" value="search">
+			<input type="hidden" name="currentFlowKey" value="1212741830517">
+			
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+

@@ -1,0 +1,8 @@
+[t17]
+FileName1=t17.htm
+URL1=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+Total=1
+RequestHeaderFile=t17_RequestHeader.txt
+RequestBodyFile=t17_RequestBody.txt
+ResponseHeaderFile=t17_ResponseHeader.txt
+ContentType=text/html

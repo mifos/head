@@ -1,0 +1,16 @@
+[t20]
+FileName1=t20.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=next
+Total=3
+RequestHeaderFile=t20_RequestHeader.txt
+RequestBodyFile=t20_RequestBody.txt
+ResponseHeaderFile=t20_ResponseHeader.txt
+ContentType=text/html
+FileName2=t20_con_en.html
+URL2=http://9.161.154.46:8080/mifos/pages/framework/js/con_en.js
+FileName3=t20_con_en_GB.html
+URL3=http://9.161.154.46:8080/mifos/pages/framework/js/con_en_GB.js
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=0

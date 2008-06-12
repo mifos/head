@@ -1,0 +1,3 @@
+Create_Clients.c (7): warning: unreachable code
+Create_Clients.c (7): syntax error; found `web_set_max_html_param_len' expecting `;'
+c:\\mifos ibm\\trunk\\documentation\\03 functional architecture\\08 test model\\medium mfi data load scripts\\create_client_and_savings_accounts\\\\combined_Create_Client_and_Savings_Accounts.c (6): 1 errors, not writing pre_cci.ci

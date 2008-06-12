@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Date: Tue, 03 Jun 2008 08:53:49 GMT
+Set-Cookie: JSESSIONID=7B328CF9D4E7C225BD914F0FBBE8497F; Path=/mifos
+Content-Type: text/html;charset=UTF-8
+Content-Length: 3211
+Connection: close
+

@@ -1,0 +1,162 @@
+Debug Message:
+	Correlation engine instance created; using configuration Default
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos
+
+Debug Message:
+	TaskID=4  URL=http://9.161.154.14/mifos/loginAction.do;jsessionid=C7616F5C1B4DEB985D8A8746618212C8?method=load
+
+Debug Message:
+	TaskID=4  URL=http://9.161.154.14/mifos/loginAction.do;jsessionid=C7616F5C1B4DEB985D8A8746618212C8?method=load
+
+Debug Message:
+	Rules could not be applied to /mifos/pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules created by group for InterStage
+
+Debug Message:
+	Source task not found for task 8
+
+Debug Message:
+	Rules created by group for PeopleSoft
+
+Debug Message:
+	Source task not found for task 8
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loginAction.do
+
+Debug Message:
+	Rules created by group for InterStage
+
+Debug Message:
+	Source task not found for task 10
+
+Debug Message:
+	Rules created by group for PeopleSoft
+
+Debug Message:
+	Source task not found for task 10
+
+Debug Message:
+	TaskID=10  URL=http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/custSearchAction.do?method=getHomePage
+
+Debug Message:
+	TaskID=18  URL=http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	TaskID=18  URL=http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	TaskID=18  URL=http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/custSearchAction.do
+
+Debug Message:
+	TaskID=24  URL=http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	TaskID=24  URL=http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	TaskID=24  URL=http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly%20Flat%20Interest%20Rate%20for%20Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanAccountAction.do?globalAccountNum=000100000116790&method=get&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=6556784602486829821
+
+Debug Message:
+	TaskID=30  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly%20Flat%20Interest%20Rate%20for%20Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	TaskID=30  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly%20Flat%20Interest%20Rate%20for%20Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly Flat Interest Rate for Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbgcancel.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly Flat Interest Rate for Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=load&accountId=116790&globalAccountNum=000100000116790&prdOfferingName=Weekly Flat Interest Rate for Clients&randomNUm=5390720853141255303&currentFlowKey=1212683591812
+
+Debug Message:
+	TaskID=42  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	TaskID=42  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbgcancel.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=preview&globalAccountNum=000100000116790
+
+Debug Message:
+	TaskID=48  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
+
+Debug Message:
+	TaskID=48  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
+
+Debug Message:
+	TaskID=48  URL=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
+
+Debug Message:
+	Rules could not be applied to pages/framework/images/buttons/buttonbg.jpg
+
+Debug Message:
+	Rules could not be applied to http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
+

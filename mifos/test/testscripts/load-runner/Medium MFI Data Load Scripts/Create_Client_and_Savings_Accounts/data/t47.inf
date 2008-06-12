@@ -1,0 +1,14 @@
+[t47]
+FileName1=t47.htm
+URL1=http://9.161.154.46:8080/mifos/clientCustAction.do?method=chooseOffice&groupFlag=0&currentFlowKey=1199719667468
+Total=2
+RequestHeaderFile=t47_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t47_ResponseHeader.txt
+ContentType=text/html
+FileName2=t47_bullet_circle.gif
+URL2=http://9.161.154.46:8080/mifos/pages/framework/images/bullet_circle.gif
+[ProtocolInfo]
+ProtocolId=QTWeb
+[AdditionalInfo]
+IsIgnorable=0

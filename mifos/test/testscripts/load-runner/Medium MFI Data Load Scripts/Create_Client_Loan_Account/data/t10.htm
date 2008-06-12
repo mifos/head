@@ -1,0 +1,754 @@
+<!--
+ 
+ * loanaccountdetail.jsp  version: xxx
+ 
+ 
+ 
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+ 
+ * All rights reserved.
+ 
+ 
+ 
+ * Apache License 
+ * Copyright (c) 2005-2006 Grameen Foundation USA 
+ * 
+ 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ *
+ 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the 
+ 
+ * License. 
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ 
+ * and how it is applied. 
+ 
+ *
+ 
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     	
+
+	
+
+
+
+
+
+<html lang="en">
+<head>
+<title>Mifos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+<link href='pages/framework/css/cssstyle.css' rel="stylesheet"
+	type="text/css">
+</head>
+
+<body>
+
+
+	
+
+
+
+
+<script language="javascript">
+	function fnLogout() {
+		location.href="loginAction.do?method=logout";
+	}
+</script>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="188" rowspan="2"><img src="pages/framework/images/logo.gif" width="188" height="74"></td>
+    <td align="right" bgcolor="#FFFFFF" class="fontnormal"><a href="yourSettings.do?method=get&randomNUm=-6147561173558637247">Your settings</a>
+     &nbsp;|&nbsp; <a href="javascript:fnLogout()">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
+        <tr>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage" >
+		Home</a></td>
+          
+              
+              
+                  <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients & Accounts</a></td>
+                  <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
+                  <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
+              
+          
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="bgwhite"><img src="pages/framework/images/trans.gif" width="100" height="2"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+
+		
+		
+
+<td width="174" height="500" align="left" valign="top" class="bgorangeleft">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+          <td class="leftpanehead" colspan="2">
+          Clients & Accounts Tasks
+          </td>
+        </tr>
+       
+        
+
+
+
+  <form name="custSearchActionForm" method="post" action="/mifos/custSearchAction.do?method=loadAllBranches">
+        <tr>
+          <td class="leftpanelinks"><table width="90%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="paddingbottom03"><span class="fontnormal8ptbold">Search by name, system ID or account number </span> </td>
+            </tr>
+          </table>
+            <table width="90%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="100%" colspan="2">
+                <input type="text" name="searchString" maxlength="200" size="20" value="brclient">
+				
+				
+				
+				<input type="hidden" name="officeId" value="0"> 
+				
+					
+                </td>
+              </tr>
+            </table>
+            <table width="136" border="0" cellspacing="0" cellpadding="3">
+              <tr>
+                <td align="right">
+                 <input type="submit" name="searchButton" value="Search" class="buttn">
+                </td>
+              </tr>
+            </table> 
+            </td>
+            </tr>
+            </form>
+       
+        <tr> 
+		<td class="leftpanelinks" colspan="2"><span class="fontnormalbold" >Manage Collection Sheets</span><br><a href="bulkentryaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Enter Collection Sheet Data</a><br><br><span class="fontnormalbold" >Create new Clients</span><br><a href="centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0">Create new Center</a><br><a href="groupCustAction.do?method=hierarchyCheck&recordOfficeId=0&recordLoanOfficerId=0&input=createGroup">Create new Group</a><br><a href="groupCustAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=createClient">Create new Client</a><br><br><span class="fontnormalbold" >Create new Accounts</span><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=savings">Create Savings Account</a><br><a href="custSearchAction.do?method=loadSearch&recordOfficeId=0&recordLoanOfficerId=0&input=loan">Create Loan Account</a><br><a href="multipleloansaction.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Create multiple Loan accounts</a><br><br><span class="fontnormalbold" >Manage account status</span><br><a href="ChangeAccountStatus.do?method=load&recordOfficeId=0&recordLoanOfficerId=0">Change account status</a><br><br></td>
+        </tr>
+</table>
+</td>      
+
+		<td align="left" valign="top" bgcolor="#FFFFFF"
+			class="paddingleftmain" height="500" >
+	
+		
+		
+		
+		<form name="loanAccountActionForm" method="post" action="/mifos/loanAccountAction.do">
+			
+			
+			
+			
+			
+
+
+			<input type="hidden" name="currentFlowKey" value="1211964883205">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="bluetablehead05"><span class="fontnormal8pt">
+					<a href="custSearchAction.do?method=getOfficeHomePage&officeId=2&officeName=BRANCH_OFFICE_10&randomNum=-6147561173558637247">BRANCH_OFFICE_10</a> / <a href="clientCustAction.do?method=get&globalCustNum=0002-000103217&randomNum=-6147561173558637247">BRCLIENT NO_1001</a> / <b>Weekly Declining Balance for Clients</b> </span></td>
+				</tr>
+			</table>
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="70%" align="left" valign="top" class="paddingL15T15">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="62%" class="headingorange">Weekly Declining Balance for Clients&nbsp;# 000100000110753 <br>
+							</td>
+							<td width="38%" rowspan="2" align="right" valign="top"
+								class="fontnormal">
+								<a href="editStatusAction.do?method=load&accountId=110753&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">Edit account status</a>
+							<br>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td><font class="fontnormalRedBold"></font></td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="fontnormalbold"><span class="fontnormal">
+							<html><body><img src="pages/framework/images/status_yellow.gif" /></body></html>
+ Application Pending Approval&nbsp;  </span></td>
+						</tr>
+						<tr>
+							<td class="fontnormal">Disbursal date: 02/06/2008
+							</td>
+						</tr>
+						<tr id="Loan.PurposeOfLoan">
+							<td class="fontnormal">Purpose of Loan:
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							
+								
+							</td>
+						</tr>
+					</table>
+					<table width="50%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="10"
+								height="10"></td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="33%" class="headingorange">Account summary</td>
+							<td width="33%" align="right" class="fontnormal"><a href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=110753&prdOfferingName=Weekly Declining Balance for Clients&globalAccountNum=000100000110753&accountType=1&accountStateId=2&recordOfficeId=2&recordLoanOfficerId=2&lastPaymentAction=&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">View repayment schedule</a></td>
+						</tr>
+					</table>
+
+					 
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr class="drawtablerow">
+							<td width="24%">&nbsp;</td>
+							<td width="20%" align="right" class="drawtablerowboldnoline">
+							Original Loan</td>
+							<td width="28%" align="right" class="drawtablerowboldnoline">
+							Amount paid</td>
+							<td width="28%" align="right" class="drawtablerowboldnoline">
+							Loan balance</td>
+						</tr>
+						<tr>
+							<td class="drawtablerow">Principal</td>
+							<td align="right" class="drawtablerow">10000.0</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">10000.0</td>
+						</tr>
+						<tr>
+							<td class="drawtablerow">Interest</td>
+							<td align="right" class="drawtablerow">261.7</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">261.7</td>
+						</tr>
+						<tr>
+							<td class="drawtablerow">Fees</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">0.0</td>
+						</tr>
+						<tr>
+							<td class="drawtablerow">Penalty</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">0.0</td>
+						</tr>
+						<tr>
+							<td class="drawtablerow">Total</td>
+							<td align="right" class="drawtablerow">10261.7</td>
+							<td align="right" class="drawtablerow">0.0</td>
+							<td align="right" class="drawtablerow">10261.7</td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="35%" class="headingorange"></td>
+							<td width="65%" align="right" class="fontnormal">&nbsp; </td>
+						</tr>
+					</table>
+					
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="69%" class="headingorange">Account details</td>
+							<td width="31%" align="right" valign="top" class="fontnormal">
+								<a href="/mifos/loanAccountAction.do?method=manage&customerId=103217&globalAccountNum=000100000110753&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">Edit account information</a>
+							</td>
+						</tr>
+						<tr>
+							<td height="23" colspan="2" class="fontnormal"><span
+								class="fontnormalbold"> 
+								Interest rules</span> <span class="fontnormal"><br>
+							Interest Rate Type:&nbsp; Declining Balance <br>
+							Interest rate:&nbsp;<span class="fontnormal">10.0%&nbsp;APR   </span><br>
+							</span> Interest deducted at disbursement :
+								
+								
+									No
+								
+							<br>
+							<br>
+							<span class="fontnormalbold"> Repayment rules </span><br>
+							Frequency of Installments:&nbsp;1
+							
+								
+									Week(s)
+								
+								
+							 <br>
+							Principal due on last installment:
+								
+								
+									No
+								
+							 <br>
+							Grace Period Type:&nbsp; None<br>
+							No. of installments:&nbsp;26 (Allowed Number of Installments:&nbsp;1
+							-&nbsp;52)<br>
+							Grace period for repayments:&nbsp;0&nbsp;Installments<br>
+							Source of fund:&nbsp; <br>
+							</td>
+						</tr>
+					</table>
+
+
+
+					<!-- Loan Account Details -->  <!--  -->
+
+					<table width="96%" border="0" cellpadding="0" cellspacing="0">
+						<tr id="collateral">
+							<td class="fontnormal"><br>
+							<span class="fontnormalbold">Collateral details</span></td>
+						</tr>
+						<tr id="Loan.CollateralType">
+							<td class="fontnormal">Collateral type:&nbsp;
+							
+								
+							
+								
+							</td>
+						</tr>
+						<tr id="Loan.CollateralNotes">
+							<td class="fontnormal"><br>
+							Collateral Notes:&nbsp;<br>
+							</td>
+						</tr>
+						<script>
+							if(document.getElementById("Loan.CollateralType").style.display=="none" &&
+								document.getElementById("Loan.CollateralNotes").style.display=="none")
+									document.getElementById("collateral").style.display="none";
+						</script>
+						
+									
+					<!-- Administrative documents -->
+	              	
+	   				<tr>
+						<td class="fontnormal"><br>
+						 <span class="fontnormalbold"> 
+						Administrative documents 
+							<br></span>
+						
+						</td>
+
+					</tr>
+			            			               		              	
+	              	  
+	         						
+
+
+
+						<tr>
+							<td class="fontnormal"><br>
+							 <span class="fontnormalbold"> Recurring account fees<br>
+							</span> <br>
+							</td>
+						</tr>
+					</table>
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td width="66%" class="headingorange">More account and transaction details</td>
+						</tr>
+						<tr>
+							<td class="fontnormal"> <span class="fontnormal"> <a href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=000100000110753&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">View status history</a><br>
+							<a href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=110753&currentFlowKey=1211964883205">View change log</a><br>
+							<a href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=000100000110753&accountId=110753&prdOfferingName=Weekly Declining Balance for Clients&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">View transaction history</a> </span></td>
+						</tr>
+					</table>
+					</td>
+					<td width="30%" align="left" valign="top" class="paddingleft1">
+					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="orangetableborder">
+						<tr>
+							<td class="orangetablehead05"><span class="fontnormalbold">Transactions</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10">
+								
+							 
+								
+
+									<span class="fontnormal8pt"> <a href="applyChargeAction.do?method=load&accountId=110753&randomNUm=-6147561173558637247&currentFlowKey=1211964883205">Apply charges</a><br>
+									</span>
+								
+							 
+								
+							 
+								
+							</td>
+						<tr>
+					</table>
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="bluetableborder">
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold">
+							Performance history </span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"># of payments: 0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt"># of missed payments: 0</span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt">Days in arrears:0 </span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><span class="fontnormal8pt">Loan maturity date:
+							</span></td>
+						</tr>
+					</table>
+					<table width="95%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td><img src="pages/framework/images/trans.gif" width="7"
+								height="8"></td>
+						</tr>
+					</table>
+					
+					<table width="100%" border="0" cellpadding="2" cellspacing="0"
+						class="bluetableborder">
+						<tr>
+							<td class="bluetablehead05"><span class="fontnormalbold">
+							Recent notes </span></td>
+						</tr>
+						<tr>
+							<td class="paddingL10"><img
+								src="pages/framework/images/trans.gif" width="10" height="2"></td>
+						</tr>
+						<tr>
+							<td class="paddingL10">
+								
+								
+									<span class="fontnormal"> No notes available. </span>
+								
+							</td>
+						</tr>
+						<tr>
+							<td align="right" class="paddingleft05"><span
+								class="fontnormal8pt">  <br>
+							<a href="notesAction.do?method=load&accountId=110753&currentFlowKey=1211964883205&randomNUm=-6147561173558637247">Add a note</a> </span></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			<!-- This hidden variable is being used in the next page -->
+			<input type="hidden" name="accountTypeId" value="1">
+			<input type="hidden" name="accountId" value="110753">
+			<input type="hidden" name="globalAccountNum" value="000100000110753">
+		</form>
+	 <input type="hidden" name="h_user_locale" value="en_GB"></td>
+	</tr>
+</table>
+
+</body>
+</html>
+

@@ -1,0 +1,41 @@
+[General]
+Type=QTWeb
+DefaultCfg=default.cfg
+AppName=NO_APP_IGNORE
+BuildTarget=
+ParamRightBrace=}
+ParamLeftBrace={
+NewFunctionHeader=1
+LastActiveAction=Create_Client_Savings_Account1
+CorrInfoReportDir=result1
+DevelopTool=Vugen
+MajorVersion=7
+MinorVersion=8
+ParameterFile=Create_Client_Savings_Account1.prm
+GlobalParameterFile=
+LastModifyVer=7.8
+ScriptExitOK=0
+[TransactionsOrder]
+Order=""
+[Actions]
+vuser_init=vuser_init.c
+Create_Client_Savings_Account1=Create_Client_Savings_Account1.c
+vuser_end=vuser_end.c
+[Recorded Actions]
+vuser_init=0
+Create_Client_Savings_Account1=1
+vuser_end=0
+[Replayed Actions]
+vuser_init=1
+Create_Client_Savings_Account1=1
+vuser_end=1
+[VuserProfiles]
+Profiles=Default Profile
+[CfgFiles]
+Default Profile=default.cfg
+[RunLogicFiles]
+Default Profile=default.usp
+[AutoRecovery]
+vuser_init.c=vuac449
+Create_Client_Savings_Account1.c=vuac450
+vuser_end.c=vuac457

@@ -1,0 +1,37 @@
+[General]
+Type=QTWeb
+DefaultCfg=default.cfg
+AppName=
+BuildTarget=
+ParamRightBrace=}
+ParamLeftBrace={
+NewFunctionHeader=1
+LastActiveAction=vuser_init
+CorrInfoReportDir=result1
+DevelopTool=Vugen
+MajorVersion=7
+MinorVersion=8
+ParameterFile=
+GlobalParameterFile=
+LastModifyVer=7.8
+ScriptExitOK=1
+[TransactionsOrder]
+Order=""
+[Actions]
+vuser_init=vuser_init.c
+Create_Client=Create_Client.c
+vuser_end=vuser_end.c
+[Recorded Actions]
+vuser_init=0
+Create_Client=0
+vuser_end=0
+[Replayed Actions]
+vuser_init=1
+Create_Client=1
+vuser_end=1
+[VuserProfiles]
+Profiles=Default Profile
+[CfgFiles]
+Default Profile=default.cfg
+[RunLogicFiles]
+Default Profile=default.usp
