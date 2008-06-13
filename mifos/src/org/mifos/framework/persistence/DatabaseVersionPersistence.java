@@ -34,10 +34,11 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.application.master.persistence.Upgrade183;
+import org.mifos.application.master.persistence.Upgrade198;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 197;
+	public static final int APPLICATION_VERSION = 198;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -88,6 +89,7 @@ public class DatabaseVersionPersistence {
 		register185(register);
 		register187(register);
 		register195(register);
+		register(register, new Upgrade198());
 		return Collections.unmodifiableMap(register);
 	}
 

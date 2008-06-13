@@ -49,9 +49,9 @@ public class AccountingRules {
 	
 	// if you change any of the following values please change the test cases to match these values
 	// if any of these configured entries are not defined in the application config file they will get these values
-	private static final BigDecimal defaultInitialRoundOffMultiple = new BigDecimal("0.1");
-	private static final BigDecimal defaultFinalRoundOffMultiple = new BigDecimal("0.01");
-	private static final RoundingMode defaultInitialRoundingMode = RoundingMode.FLOOR;
+	private static final BigDecimal defaultInitialRoundOffMultiple = new BigDecimal("1");
+	private static final BigDecimal defaultFinalRoundOffMultiple = new BigDecimal("1");
+	private static final RoundingMode defaultInitialRoundingMode = RoundingMode.HALF_UP;
 	private static final RoundingMode defaultFinalRoundingMode = RoundingMode.CEILING;
 	private static final RoundingMode defaultCurrencyRoundingMode = RoundingMode.HALF_UP;
 

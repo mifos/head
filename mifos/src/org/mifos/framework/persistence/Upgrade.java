@@ -171,6 +171,36 @@ public abstract class Upgrade {
 		statement.executeUpdate();
 		statement.close();
 	}
+	
+	/**
+	 * By default a single head office is present in a clean database, so
+	 * no offices have been created if there is only one office row present.
+	 * This test is being used to determine if the database has no user data 
+	 * in it.
+	 */
+	protected boolean noOfficesHaveBeenCreatedByEndUsers(Connection connection) throws SQLException {
+		return countRows(connection, "OFFICE") == 1;
+	}
+	
+	private int countRows(Connection connection, String tableName) throws SQLException {
+
+		int numFields = 0;
+		Statement statement = connection.createStatement();
+		try {
+			ResultSet results = statement.executeQuery(
+			"select count(*) from " + tableName);
+			if (!results.next()) {
+				throw new SystemException(SystemException.DEFAULT_KEY, 
+				"Query failed on table: " + tableName);
+			}
+			numFields = results.getInt(1);
+
+		} finally {
+			statement.close();
+		}
+		return numFields;
+
+	}
 
 }
 

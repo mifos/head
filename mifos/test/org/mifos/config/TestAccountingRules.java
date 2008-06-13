@@ -84,7 +84,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		// clear the RoundingRule property from the config file
 		configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundingMode);
 		RoundingMode defaultValue = AccountingRules.getInitialRoundingMode();
-		assertEquals(defaultValue, RoundingMode.FLOOR);
+		assertEquals(defaultValue, RoundingMode.HALF_UP);
 		// now set a wrong rounding mode in config
 		roundingMode = "UP";
 		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundingMode, roundingMode);
@@ -135,7 +135,7 @@ public class TestAccountingRules  extends MifosTestCase {
 	@Test 
 	public void testGetFinalRoundOffMultiple() {
 		BigDecimal configuredRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
-		String roundOffMultiple = "0.01";
+		String roundOffMultiple = "1";
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		configMgr.setProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, roundOffMultiple);
 		// return value from accounting rules class has to be the value defined in the config file
@@ -143,7 +143,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		// clear the RoundingRule property from the config file
 		configMgr.clearProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple);
 		BigDecimal defaultValue = AccountingRules.getFinalRoundOffMultiple();
-		assertEquals(defaultValue, new BigDecimal("0.01"));
+		assertEquals(defaultValue, new BigDecimal("1"));
 		//	save it back
 		configMgr.addProperty(AccountingRules.AccountingRulesFinalRoundOffMultiple, configuredRoundOffMultiple.toString());
 		
@@ -152,7 +152,7 @@ public class TestAccountingRules  extends MifosTestCase {
 	@Test 
 	public void testGetInitialRoundOffMultiple() {
 		BigDecimal configuredRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
-		String roundOffMultiple = "0.01";
+		String roundOffMultiple = "1";
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
 		configMgr.setProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, roundOffMultiple);
 		// return value from accounting rules class has to be the value defined in the config file
@@ -160,7 +160,7 @@ public class TestAccountingRules  extends MifosTestCase {
 		// clear the RoundingRule property from the config file
 		configMgr.clearProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple);
 		BigDecimal defaultValue = AccountingRules.getInitialRoundOffMultiple();
-		assertEquals(defaultValue, new BigDecimal("0.1"));
+		assertEquals(defaultValue, new BigDecimal("1"));
 		//	save it back
 		configMgr.addProperty(AccountingRules.AccountingRulesInitialRoundOffMultiple, configuredRoundOffMultiple.toString());
 		
