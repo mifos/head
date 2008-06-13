@@ -4672,7 +4672,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		totals.setRoundedMiscFeesDue(currencyRound_v2(exactTotalMiscFeesDue));
 		totals.setRoundedPenaltiesDue(currencyRound_v2(exactTotalPenaltiesDue));
 		totals.setRoundedMiscPenaltiesDue(currencyRound_v2(exactTotalMiscPenaltiesDue));
-		totals.setRoundedPrincipalDue(currencyRound_v2(exactTotalPrincipalDue));
+		totals.setRoundedPrincipalDue(exactTotalPrincipalDue);
 
 		//Adjust interest to account for rounding discrepancies
 		totals.setRoundedInterestDue(totals.getRoundedPaymentsDue()
