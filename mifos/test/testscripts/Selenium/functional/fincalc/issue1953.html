@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head profile="http://selenium-ide.openqa.org/profiles/test-case">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
-<title>FinCalc-TC03</title>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>issue1953</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">FinCalc-TC03</td></tr>
+<tr><td rowspan="1" colspan="3">issue1953</td></tr>
 </thead><tbody>
 <tr>
 	<td>verifyTextPresent</td>
@@ -58,12 +55,12 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Add a new Loan product.</td>
+	<td>Add a new Loan Product</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Enter Loan product information.</td>
+	<td>Enter Loan Product information</td>
 	<td></td>
 </tr>
 <tr>
@@ -109,12 +106,12 @@
 <tr>
 	<td>type</td>
 	<td>maxLoanAmount</td>
-	<td>100000</td>
+	<td>10000</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>defaultLoanAmount</td>
-	<td>17231</td>
+	<td>2500</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -129,16 +126,16 @@
 <tr>
 	<td>type</td>
 	<td>minInterestRate</td>
-	<td>3</td>
+	<td>0</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>defInterestRate</td>
-	<td>23</td>
+	<td>36</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//input[@name='freqOfInstallments' and @value='2']</td>
+	<td>freqOfInstallments</td>
 	<td></td>
 </tr>
 <tr>
@@ -149,7 +146,7 @@
 <tr>
 	<td>type</td>
 	<td>defNoInstallments</td>
-	<td>23</td>
+	<td>11</td>
 </tr>
 <tr>
 	<td>select</td>
@@ -173,7 +170,7 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Review &amp; submit</td>
+	<td>Review & submit</td>
 	<td></td>
 </tr>
 <tr>
@@ -208,7 +205,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Clients &amp; Accounts</td>
+	<td>link=Clients & Accounts</td>
 	<td></td>
 </tr>
 <tr>
@@ -233,7 +230,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=GROUPCLIENT NO_23: ID 0005-000000071</td>
+	<td>link=GROUPCLIENT NO_101: ID 0006-000000149</td>
 	<td></td>
 </tr>
 <tr>
@@ -269,17 +266,17 @@
 <tr>
 	<td>type</td>
 	<td>loanAmount</td>
-	<td>17231</td>
+	<td>100</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>interestRate</td>
-	<td>23.0</td>
+	<td>0</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>noOfInstallments</td>
-	<td>23</td>
+	<td>2</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -324,7 +321,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[2]/td[2]</td>
-	<td>17231.0</td>
+	<td>2500.0</td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
@@ -334,7 +331,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[3]/td[2]</td>
-	<td>7596.0</td>
+	<td>190.0</td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
@@ -344,7 +341,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[6]/td[2]</td>
-	<td>24827.0</td>
+	<td>2690.0</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -364,7 +361,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[4]/td[4]</td>
-	<td>748.7</td>
+	<td>227.7</td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
@@ -374,7 +371,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[4]/td[5]</td>
-	<td>330.3</td>
+	<td>17.3</td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
@@ -384,32 +381,7 @@
 <tr>
 	<td>assertText</td>
 	<td>//tr[4]/td[7]</td>
-	<td>1079.0</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[26]/td[1]</td>
-	<td>23</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[26]/td[4]</td>
-	<td>759.6</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[26]/td[5]</td>
-	<td>329.4</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[26]/td[6]</td>
-	<td>0.0</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[26]/td[7]</td>
-	<td>1089.0</td>
+	<td>245.0</td>
 </tr>
 
 </tbody></table>
