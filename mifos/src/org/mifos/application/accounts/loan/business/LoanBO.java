@@ -65,9 +65,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -101,11 +99,11 @@ import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.ProductMixPersistence;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -1433,7 +1431,14 @@ public class LoanBO extends AccountBO {
 			if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 				throw new AccountException(
 						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-			regeneratePaymentSchedule(false,null);
+			boolean isRepaymentIndependentOfMeetings = false;
+			try {
+				isRepaymentIndependentOfMeetings = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+			}
+			catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+			regeneratePaymentSchedule(isRepaymentIndependentOfMeetings, null);
 		}
 		updateCustomFields(customFields);
 		loanSummary.setOriginalPrincipal(loanAmount);
@@ -1680,8 +1685,8 @@ public class LoanBO extends AccountBO {
 								.getPenaltyAmount(), loanTrxn
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
-
-
+								
+								
 						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 						accntActionDate.setPaymentDate(null);
 						if (null != accntActionDate
@@ -3710,7 +3715,8 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating meeting schedule... ");
 
-		if (isRepaymentIndepOfMeetingEnabled) {
+		//WHY?
+		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
 			setLoanMeeting(newMeetingForRepaymentDay);
 		}
 		List<InstallmentDate> installmentDates = getInstallmentDates(
