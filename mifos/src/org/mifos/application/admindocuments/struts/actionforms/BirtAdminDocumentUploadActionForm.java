@@ -128,6 +128,10 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 				errors.add(ReportsConstants.ERROR_STATUS, new ActionMessage(
 						ReportsConstants.ERROR_STATUS));
 			}
+			if (this.statusList == null || this.statusList.length == 0) {
+				errors.add(ReportsConstants.ERROR_STATUSLIST, new ActionMessage(
+						ReportsConstants.ERROR_STATUSLIST));
+			}
 			if (methodFromRequest.equals(Methods.preview.toString())) {
 				if (file == null || !file.getFileName().endsWith(".rptdesign")) {
 					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
@@ -136,8 +140,8 @@ public class BirtAdminDocumentUploadActionForm extends ValidatorActionForm {
 				
 			}
 			if (methodFromRequest.equals(Methods.editpreview.toString())) {
-				if (file != null && !StringUtils.isEmpty(file.getFileName())
-						&& !file.getFileName().endsWith(".rptdesign")) {
+				if (file == null || StringUtils.isEmpty(file.getFileName())
+						|| !file.getFileName().endsWith(".rptdesign")) {
 					errors.add(ReportsConstants.ERROR_FILE, new ActionMessage(
 							ReportsConstants.ERROR_FILE));
 				}

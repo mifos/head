@@ -77,6 +77,7 @@ public interface ReportsConstants {
 	public static final String ERROR_FILE="error.file";
 	public static final String ERROR_ACCOUNTTYPE="error.accountType";
 	public static final String ERROR_STATUS = "error.status";
+	public static final String ERROR_STATUSLIST = "error.statusList";
 	public static final String ERROR_TITLEALREADYEXIST="error.titleAlreadyExist";
 	public static final String HIDDEN_PASSWORD = "********";
 	public static final String ERROR_CATEGORYNAME="error.categoryName";
