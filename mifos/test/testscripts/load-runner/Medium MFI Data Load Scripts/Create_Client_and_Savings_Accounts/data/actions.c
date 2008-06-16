@@ -1,4 +1,0 @@
-Actions()
-{
-	return 0;
-}

@@ -1,8 +1,0 @@
-[t11]
-FileName1=t11.htm
-URL1=http://9.161.154.14/mifos/loanDisbursmentAction.do?method=update
-Total=1
-RequestHeaderFile=t11_RequestHeader.txt
-RequestBodyFile=t11_RequestBody.txt
-ResponseHeaderFile=t11_ResponseHeader.txt
-ContentType=text/html

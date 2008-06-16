@@ -1,8 +1,0 @@
-[t12]
-FileName1=t12.htm
-URL1=http://9.161.154.14/mifos/loginAction.do;jsessionid=4D26617561554D89AFD762B7E9F68FB8?method=load
-Total=1
-RequestHeaderFile=t12_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t12_ResponseHeader.txt
-ContentType=text/html

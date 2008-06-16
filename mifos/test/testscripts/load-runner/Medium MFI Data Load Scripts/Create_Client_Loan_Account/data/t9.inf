@@ -1,8 +1,0 @@
-[t9]
-FileName1=t9.htm
-URL1=http://9.161.154.14/mifos/loanAccountAction.do
-Total=1
-RequestHeaderFile=t9_RequestHeader.txt
-RequestBodyFile=t9_RequestBody.txt
-ResponseHeaderFile=t9_ResponseHeader.txt
-ContentType=text/html

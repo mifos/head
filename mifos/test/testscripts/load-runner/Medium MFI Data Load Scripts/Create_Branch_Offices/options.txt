@@ -1,9 +1,0 @@
--+
--DCCI
--D_IDA_XL
--DWINNT
--IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Medium MFI Data Load Scripts\Create_Branch_Offices
--IC:\Program Files\Mercury\LoadRunner\include
--ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_branch_offices\\logfile.log
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_branch_offices\\combined_Create_Branch_Offices.c
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\medium mfi data load scripts\create_branch_offices\\pre_cci.c

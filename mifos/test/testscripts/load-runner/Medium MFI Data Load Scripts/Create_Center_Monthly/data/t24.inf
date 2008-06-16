@@ -1,8 +1,0 @@
-[t24]
-FileName1=t24.htm
-URL1=http://9.161.154.14/mifos/meetingAction.do
-Total=1
-RequestHeaderFile=t24_RequestHeader.txt
-RequestBodyFile=t24_RequestBody.txt
-ResponseHeaderFile=t24_ResponseHeader.txt
-ContentType=text/html

@@ -1,8 +1,0 @@
-[t28]
-FileName1=t28.htm
-URL1=http://9.161.154.14/mifos/centerCustAction.do?method=chooseOffice&recordOfficeId=0&recordLoanOfficerId=0
-Total=1
-RequestHeaderFile=t28_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t28_ResponseHeader.txt
-ContentType=text/html

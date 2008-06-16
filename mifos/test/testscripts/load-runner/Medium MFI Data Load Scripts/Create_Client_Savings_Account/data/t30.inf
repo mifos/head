@@ -1,8 +1,0 @@
-[t30]
-FileName1=t30.htm
-URL1=http://9.161.154.14/mifos/editStatusAction.do?method=load&accountId=154524&randomNUm=-7910405217550272738&currentFlowKey=1212741915864
-Total=1
-RequestHeaderFile=t30_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t30_ResponseHeader.txt
-ContentType=text/html

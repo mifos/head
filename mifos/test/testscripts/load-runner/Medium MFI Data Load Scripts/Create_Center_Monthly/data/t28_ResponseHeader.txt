@@ -1,6 +1,0 @@
-HTTP/1.1 200 OK
-Date: Tue, 03 Jun 2008 08:57:00 GMT
-Content-Type: text/html;charset=UTF-8
-Connection: close
-Transfer-Encoding: chunked
-

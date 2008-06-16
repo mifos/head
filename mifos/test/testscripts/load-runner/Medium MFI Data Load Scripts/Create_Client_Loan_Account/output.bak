@@ -1,3 +1,0 @@
-Just In Time Log mode.
-Log messages will be sent only when an error occurs.
-To change this behavior, look at the Log tab in Run Time Settings.

@@ -1,2 +1,0 @@
-"frequency=2&recurWeek=&weekDay=&monthType=1&monthDay=1&dayRecurMonth=1&monthRank=1&monthWeek=&"
-"recurMonth=&meetingPlace=dublin&method=create&currentFlowKey=1212480246021"

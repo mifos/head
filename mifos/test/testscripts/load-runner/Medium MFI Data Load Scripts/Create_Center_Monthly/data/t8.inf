@@ -1,8 +1,0 @@
-[t8]
-FileName1=t8.htm
-URL1=http://9.161.154.14/mifos/centerCustAction.do?method=preview
-Total=1
-RequestHeaderFile=t8_RequestHeader.txt
-RequestBodyFile=t8_RequestBody.txt
-ResponseHeaderFile=t8_ResponseHeader.txt
-ContentType=text/html

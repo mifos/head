@@ -1,8 +1,0 @@
-Create_Clients.c (4): warning: unreachable code
-Create_Clients.c (4): syntax error; found `{' expecting `;'
-Create_Client_and_Savings_Account.c (16): warning: unreachable code
-Create_Client_and_Savings_Account.c (16): syntax error; found `{' expecting `;'
-vuser_end.c (2): warning: unreachable code
-vuser_end.c (2): syntax error; found `{' expecting `;'
-c:\\mifos ibm\\trunk\\documentation\\03 functional architecture\\08 test model\\medium mfi data load scripts\\create_client_and_savings_accounts\\\\combined_Create_Client_and_Savings_Accounts.c (6): syntax error; found `end of input' expecting `}'
-c:\\mifos ibm\\trunk\\documentation\\03 functional architecture\\08 test model\\medium mfi data load scripts\\create_client_and_savings_accounts\\\\combined_Create_Client_and_Savings_Accounts.c (6): 4 errors, not writing pre_cci.ci

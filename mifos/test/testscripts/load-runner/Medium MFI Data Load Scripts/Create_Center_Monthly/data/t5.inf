@@ -1,8 +1,0 @@
-[t5]
-FileName1=t5.htm
-URL1=http://9.161.154.14/mifos/centerCustAction.do?method=load&office.officeId=2&office.officeName=BRANCH_OFFICE_10&officeId=2&officeName=BRANCH_OFFICE_10&currentFlowKey=1212480230214
-Total=1
-RequestHeaderFile=t5_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t5_ResponseHeader.txt
-ContentType=text/html

@@ -1,8 +1,0 @@
-[t10]
-FileName1=t10.htm
-URL1=http://9.161.154.14/mifos/savingsAction.do?method=get&globalAccountNum=000100000142161&recordOfficeId=2&recordLoanOfficerId=1
-Total=1
-RequestHeaderFile=t10_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t10_ResponseHeader.txt
-ContentType=text/html

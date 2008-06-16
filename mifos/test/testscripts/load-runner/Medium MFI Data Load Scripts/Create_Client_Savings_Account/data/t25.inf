@@ -1,8 +1,0 @@
-[t25]
-FileName1=t25.htm
-URL1=http://9.161.154.14/mifos/savingsAction.do?method=getPrdOfferings&customerId=58471&randomNUm=-7161667860183507296
-Total=1
-RequestHeaderFile=t25_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t25_ResponseHeader.txt
-ContentType=text/html

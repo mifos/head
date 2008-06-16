@@ -1,8 +1,0 @@
-[t6]
-FileName1=t6.htm
-URL1=http://9.161.154.14/mifos/clientCustAction.do?globalCustNum=0002-000022506&method=get&recordOfficeId=2&recordLoanOfficerId=2
-Total=1
-RequestHeaderFile=t6_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t6_ResponseHeader.txt
-ContentType=text/html

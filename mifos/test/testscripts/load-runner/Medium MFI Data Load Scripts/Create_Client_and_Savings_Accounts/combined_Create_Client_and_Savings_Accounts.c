@@ -1,6 +1,0 @@
-#include "lrun.h"
-#include "globals.h"
-#include "vuser_init.c"
-#include "Create_Clients.c"
-#include "Create_Client_and_Savings_Account.c"
-#include "vuser_end.c"

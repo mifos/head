@@ -1,8 +1,0 @@
-[t5]
-FileName1=t5.htm
-URL1=http://9.161.154.14/mifos/loanAccountAction.do?method=getPrdOfferings&customerId=103217&perspective=&randomNUm=-3681379466057753136
-Total=1
-RequestHeaderFile=t5_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t5_ResponseHeader.txt
-ContentType=text/html

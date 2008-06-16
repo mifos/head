@@ -1,9 +1,0 @@
--+
--DCCI
--D_IDA_XL
--DWINNT
--IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Version171\Create_Client_Loan_Account1
--IC:\Program Files\Mercury Interactive\LoadRunner\include
--ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\create_client_loan_account1\\logfile.log
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\create_client_loan_account1\\combined_Create_Client_Loan_Account1.c
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\create_client_loan_account1\\pre_cci.c

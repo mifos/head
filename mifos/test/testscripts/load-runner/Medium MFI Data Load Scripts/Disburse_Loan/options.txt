@@ -1,9 +1,0 @@
--+
--DCCI
--D_IDA_XL
--DWINNT
--IC:\Mifos IBM\trunk\documentation\03 Functional Architecture\08 Test Model\Version171\Disburse_Loan1
--IC:\Program Files\Mercury Interactive\LoadRunner\include
--ec:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\disburse_loan1\\logfile.log
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\disburse_loan1\\combined_Disburse_Loan1.c
-c:\mifos ibm\trunk\documentation\03 functional architecture\08 test model\version171\disburse_loan1\\pre_cci.c

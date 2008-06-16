@@ -1,8 +1,0 @@
-[t8]
-FileName1=t8.htm
-URL1=http://9.161.154.14/mifos/editStatusAction.do?method=load&accountId=116787&randomNUm=-4843638084781492826&currentFlowKey=1212683457672
-Total=1
-RequestHeaderFile=t8_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t8_ResponseHeader.txt
-ContentType=text/html

@@ -1,6 +1,0 @@
-HTTP/1.1 200 OK
-Date: Thu, 05 Jun 2008 16:29:02 GMT
-Content-Type: text/html;charset=UTF-8
-Content-Length: 3083
-Connection: close
-

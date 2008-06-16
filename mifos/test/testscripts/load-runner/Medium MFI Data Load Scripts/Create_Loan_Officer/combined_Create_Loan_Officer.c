@@ -1,5 +1,0 @@
-#include "globals.h"
-#include "lrun.h"
-#include "vuser_init.c"
-#include "Create_Loan_Officer.c"
-#include "vuser_end.c"

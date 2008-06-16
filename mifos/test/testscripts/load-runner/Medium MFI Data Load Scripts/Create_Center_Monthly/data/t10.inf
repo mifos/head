@@ -1,8 +1,0 @@
-[t10]
-FileName1=t10.htm
-URL1=http://9.161.154.14/mifos/centerCustAction.do?method=get&globalCustNum=0002-000110752&recordOfficeId=2&recordLoanOfficerId=2&randomNUm=
-Total=1
-RequestHeaderFile=t10_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t10_ResponseHeader.txt
-ContentType=text/html

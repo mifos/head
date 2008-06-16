@@ -1,6 +1,0 @@
-Create_Loan_Officer.c(97): office_Id1
-Create_Loan_Officer.c(102): The loanofficer_lastname is : 2
-Create_Loan_Officer.c(106): The office_Id is: 2
-Create_Loan_Officer.c(117): Error -26612: HTTP Status-Code=500 (Internal Server Error) for "http://9.161.154.46:8080/mifos/PersonAction.do?method=chooseOffice&recordOfficeId=2&recordLoanOfficerId=1&randomNUm=-2486890399787205420"  	[MsgId: MERR-26612]
-Create_Loan_Officer.c(117): Error -27190: No match found for the requested parameter "WCSParam_Diff3". Check whether the requested boundaries exist in the response data. Also, if the data you want to save exceeds 1024 bytes, use web_set_max_html_param_len to increase the parameter size  	[MsgId: MERR-27190]
-Vuser Terminated.

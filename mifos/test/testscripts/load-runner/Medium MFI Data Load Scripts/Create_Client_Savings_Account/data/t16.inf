@@ -1,8 +1,0 @@
-[t16]
-FileName1=t16.htm
-URL1=http://9.161.154.14/mifos/custSearchAction.do?method=loadMainSearch
-Total=1
-RequestHeaderFile=t16_RequestHeader.txt
-RequestBodyFile=NONE
-ResponseHeaderFile=t16_ResponseHeader.txt
-ContentType=text/html
