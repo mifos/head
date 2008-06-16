@@ -899,7 +899,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void applyCharge(Short feeId, Double charge) throws AccountException {
+	public void applyCharge(Short feeId, Double charge) throws AccountException, PersistenceException {
 		List<AccountActionDateEntity> dueInstallments = getTotalDueInstallments();
 		if (dueInstallments.isEmpty())
 			throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
@@ -2736,7 +2736,7 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 
 	private void applyPeriodicFee(FeeBO fee, Double charge,
 			List<AccountActionDateEntity> dueInstallments)
-			throws AccountException {
+			throws AccountException, PersistenceException {
 		AccountFeesEntity accountFee = getAccountFee(fee, charge);
 		Set<AccountFeesEntity> accountFeeSet = new HashSet<AccountFeesEntity>();
 		accountFeeSet.add(accountFee);
@@ -2747,8 +2747,24 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			installmentDates.add(new InstallmentDate(accountActionDateEntity
 					.getInstallmentId(), accountActionDateEntity
 					.getActionDate()));
+
+		boolean isRepaymentIndepOfMeetingEnabled = 
+			new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+		// get installments without adjusting for holidays
+		// note that this gets all installments, so this will only work if
+		// adjusting periodic fees is done when no installments have been paid
+		List<InstallmentDate> nonAdjustedInstallmentDates = getInstallmentDates(
+				getLoanMeeting(),
+				noOfInstallments,
+				getInstallmentSkipToStartRepayment(isRepaymentIndepOfMeetingEnabled),
+				isRepaymentIndepOfMeetingEnabled, false);
+		
+		if (installmentDates.size() != nonAdjustedInstallmentDates.size()) {
+			throw new RuntimeException("Adding a periodic fee to a loan with paid installments is currently not supported.");
+		}
+		
 		List<FeeInstallment> feeInstallmentList = mergeFeeInstallments(handlePeriodic(
-				accountFee, installmentDates));
+				accountFee, installmentDates, nonAdjustedInstallmentDates));
 		Money totalFeeAmountApplied = applyFeeToInstallments(
 				feeInstallmentList, dueInstallments);
 		updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
@@ -4621,11 +4637,15 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 	private void adjustLastInstallmentFees_v2 (LoanScheduleEntity lastInstallment, RepaymentTotals totals) {
 		Set<AccountFeesActionDetailEntity> feeDetails = lastInstallment.getAccountFeesActionDetails();
 		if ( !(feeDetails == null) && ! feeDetails.isEmpty()) {
+			Money lastInstallmentFeeSum = new Money();
+			for (AccountFeesActionDetailEntity e : feeDetails) {
+				lastInstallmentFeeSum = lastInstallmentFeeSum.add(e.getFeeAmount());
+			}
 			for ( Iterator it = feeDetails.iterator(); it.hasNext();) {
 				AccountFeesActionDetailEntity e = (AccountFeesActionDetailEntity) it.next();
 				e.adjustFeeAmount(totals.roundedAccountFeesDue
 									.subtract(totals.runningAccountFees)
-									.subtract(e.getFeeAmount()));
+									.subtract(lastInstallmentFeeSum));
 				//just adjust the first fee
 				return;
 			}

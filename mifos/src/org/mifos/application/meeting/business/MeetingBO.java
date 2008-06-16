@@ -344,7 +344,6 @@ public class MeetingBO extends BusinessObject {
 		List meetingDates= new ArrayList();
 		for (Date meetingDate = getFirstDate(getStartDate()); meetingDate
 				.compareTo(endDate) <= 0; meetingDate = getNextDate(meetingDate)) {
-			//meetingDates.add(meetingDate);
 			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
 		}
 		return meetingDates;

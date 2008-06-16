@@ -856,7 +856,7 @@ public class AccountBO extends BusinessObject {
 		return false;
 	}
 
-	public void applyCharge(Short feeId, Double charge) throws AccountException {
+	public void applyCharge(Short feeId, Double charge) throws AccountException, PersistenceException {
 	}
 
 	public AccountTypes getType() {
@@ -1242,6 +1242,7 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
+	@Deprecated
 	protected List<FeeInstallment> handlePeriodic(
 			AccountFeesEntity accountFees,
 			List<InstallmentDate> installmentDates) throws AccountException {

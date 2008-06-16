@@ -824,6 +824,21 @@ public class TestObjectFactory {
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
 	
+	public static LoanBO createBasicLoanAccount(
+			CustomerBO customer, AccountState state, Date startDate,
+			LoanOfferingBO offering) {
+		LoanBO loan = TestLoanBO.createBasicLoanAccount(customer, state,
+				startDate, offering);
+		try {
+			loan.save();
+		}
+		catch (AccountException e) {
+			throw new RuntimeException(e);
+		}
+		HibernateUtil.commitTransaction();
+		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
+	}
+	
 
 	public static LoanBO createIndividualLoanAccount(String globalNum, 
 			CustomerBO customer, AccountState state, Date startDate, 
@@ -1227,6 +1242,32 @@ public class TestObjectFactory {
 		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
+	/**
+	 * Return a new meeting object with a meeting occurring on the day of
+	 * the week that the test is run.  Creating a new method to fix issues with
+	 * meeting creation without breaking existing tests that may depend on it.
+	 * 
+	 *
+	 * @param recurAfter 1 means every day/week/month,
+	 * 2 means every second day/week/month... 
+	 * 
+	 */
+	public static MeetingBO getNewWeeklyMeeting(short recurAfter) {
+		Calendar calendar = new GregorianCalendar();
+		MeetingBO meeting;
+		try {
+			meeting = new MeetingBO(WeekDay
+					.getWeekDay((short) calendar.get(Calendar.DAY_OF_WEEK)), 
+					recurAfter, new Date(), CUSTOMER_MEETING, "meetingPlace");
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		return meeting;
+	}
+	
+	
 	/**
 	 * Return a new meeting object.
 	 * @param frequency DAILY, WEEKLY, MONTHLY
