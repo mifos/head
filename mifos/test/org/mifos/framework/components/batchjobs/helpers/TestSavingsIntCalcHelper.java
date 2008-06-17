@@ -181,10 +181,13 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 
 		assertEquals(helper.getDate("01/06/2006"), savings1
 				.getNextIntCalcDate());
-		assertEquals(15.4, savings1.getInterestToBePosted()
+		
+		// using the old money class the result here was 15.4
+		assertEquals(15.386, savings1.getInterestToBePosted()
 				.getAmountDoubleValue());
 
-		assertEquals(4.3, savings4.getInterestToBePosted()
+		// using the old money class the result here was 4.3
+		assertEquals(4.274, savings4.getInterestToBePosted()
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("01/06/2006"), savings4
 				.getNextIntCalcDate());

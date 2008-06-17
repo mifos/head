@@ -51,18 +51,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
-/**
- * This class is used to test Money class.
- */
-public class MoneyTest {
 
+public class MoneyTest {
 	public static junit.framework.Test suite() {
 		return new JUnit4TestAdapter(MoneyTest.class);
-	}
-	
-	@BeforeClass
-	public static void init() {
-		Money.setUsingNewMoney(false);
 	}
 	
 	@Test
@@ -149,14 +141,21 @@ public class MoneyTest {
 				money.divide(dividend));
 	}
 
-	@Test @Ignore
+	@Test
+	public void testDivide() {
+		BigDecimal dividend = new BigDecimal("10.0", Money.getInternalPrecisionAndRounding());
+		Money money = new Money(RUPEE, "20.0");
+		assertEquals("testing divide, should succeed", new Money(RUPEE, "2.0"),
+				money.divide(dividend));
+	}
+
+	@Test
 	public void testDivideRepeating() {
 		BigDecimal dividend = new BigDecimal("3.0", Money.getInternalPrecisionAndRounding());
 		Money money = new Money(RUPEE, "10.0");
 		assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"),
 				money.divide(dividend));
 	}
-	
 	
 	@Test
 	public void testDivideWithDiffCurrencies() {
@@ -187,28 +186,21 @@ public class MoneyTest {
 		assertEquals(new Money(EURO, "142.00"), Money.round(money));
 	}
 
-	// TODO: This test is broken and needs to be fixed!
-	@Test @Ignore
+	@Test
 	public void testRoundRepeating() {
 		MifosCurrency currency = new MifosCurrency((short)1,"test", "$", 
 				MifosCurrency.CEILING_MODE, (float)3.0, (short)1, (short)1,"USD" );
 		Money money = new Money(currency, "1");		
-		// need to figure out what the actual result should be.  
-		// this case was constructed just to generate the exception
 		assertEquals(new Money(currency, "3"), Money.round(money));
 	}
 
-	// TODO: This test is broken and needs to be fixed!
-	@Test @Ignore
+	@Test
 	public void testDivideMoneyRepeating() {
 		Money dividend = new Money(RUPEE, "3.0");
 		Money money = new Money(RUPEE, "10.0");
-		// need to figure out what final result should be, it won't be 0.0
-		// this case was constructed just to generate the exception
 		assertEquals("testing divide, should succeed", new Money(RUPEE, "3.3333333333330"),
 				money.divide(dividend));
 	}
-	
 	
 	@Test
 	public void testHashCode() {
@@ -225,14 +217,6 @@ public class MoneyTest {
 	}
 
 	@Test
-	public void testSetScaleOldMoney() {
-		assertEquals(142.3, new Money(RUPEE, "142.344").getAmountDoubleValue(),
-				0.00000001);
-		assertEquals(142.4, new Money(RUPEE, "142.356").getAmountDoubleValue(),
-				0.00000001);
-	}
-
-	@Test @Ignore
 	public void testSetScaleNewMoney() {
 		assertEquals(142.344, new Money(RUPEE, "142.344").getAmountDoubleValue(),
 				0.00000001);
@@ -248,70 +232,4 @@ public class MoneyTest {
 				.toString());
 	}
 
-	/*
-	 * This test is being used to understand the behavior of the rounding amount,
-	 * rounding mode, and digits after decimal.
-	 */
-	@Test
-	public void testRoundingModesForOldMoney() {
-		Short TEST_ID = 1;
-		float ROUNDING_AMOUNT_1_0 = (float)1.0;
-		float ROUNDING_AMOUNT_0_5 = (float)0.5;
-		Short IS_DEFAULT_CURRENCY = 0;
-		Short DIGITS_AFTER_DECIMAL_0 = 0;
-		Short DIGITS_AFTER_DECIMAL_1 = 1;
-		
-		MifosCurrency ceilingCurrency = new MifosCurrency((short)1,"Test Currency","@",
-				MifosCurrency.CEILING_MODE,ROUNDING_AMOUNT_1_0, IS_DEFAULT_CURRENCY,
-				DIGITS_AFTER_DECIMAL_0,"TST");
-		MifosCurrency floorCurrency = new MifosCurrency((short)2,"Test Currency","@",
-				MifosCurrency.FLOOR_MODE,ROUNDING_AMOUNT_1_0, IS_DEFAULT_CURRENCY,
-				DIGITS_AFTER_DECIMAL_0,"TST");
-		
-		// note that digits after decimal is enforced on creation of Money but
-		// rounding mode is not
-		assertEquals(new Money(ceilingCurrency, "100"),new Money(ceilingCurrency, "100.1"));
-		assertEquals(new Money(ceilingCurrency, "101"),new Money(ceilingCurrency, "100.5"));
-		assertEquals(new Money(ceilingCurrency, "11"), new Money(ceilingCurrency, "105").multiply(0.1));
-		// note that rounding mode is not applied to a calculation
-		assertEquals(new Money(ceilingCurrency, "10"), new Money(ceilingCurrency, "101").multiply(0.1));
-		
-		
-		// note that digits after decimal is enforced on creation of Money but
-		// rounding mode is not
-		assertEquals(new Money(floorCurrency, "100"), new Money(floorCurrency, "100.1"));
-		assertEquals(new Money(floorCurrency, "101"), new Money(floorCurrency, "100.5"));
-		// note that rounding mode is not applied to a calculation
-		assertEquals(new Money(floorCurrency, "11"), new Money(floorCurrency, "105").multiply(0.1));
-		assertEquals(new Money(floorCurrency, "10"), new Money(floorCurrency, "101").multiply(0.1));
-		
-		MifosCurrency ceilingCurrency2 = new MifosCurrency((short)3,"Test Currency","@",
-				MifosCurrency.CEILING_MODE,ROUNDING_AMOUNT_0_5, IS_DEFAULT_CURRENCY,
-				DIGITS_AFTER_DECIMAL_1,"TST");
-		MifosCurrency floorCurrency2 = new MifosCurrency((short)4,"Test Currency","@",
-				MifosCurrency.FLOOR_MODE,ROUNDING_AMOUNT_0_5, IS_DEFAULT_CURRENCY,
-				DIGITS_AFTER_DECIMAL_1,"TST");
-		
-		assertEquals(new Money(ceilingCurrency2, "100.1"),new Money(ceilingCurrency2, "100.1"));
-		assertEquals(new Money(ceilingCurrency2, "100.6"),new Money(ceilingCurrency2, "100.6"));
-		assertEquals(new Money(ceilingCurrency2, "10.6"), new Money(ceilingCurrency2, "106").multiply(0.1));
-		assertEquals(new Money(ceilingCurrency2, "10.1"), new Money(ceilingCurrency2, "101").multiply(0.1));
-		// note that rounding mode is applied when calling the round method
-		assertEquals(new Money(ceilingCurrency2, "11.0"), Money.round(new Money(ceilingCurrency2, "10.6")));
-		assertEquals(new Money(ceilingCurrency2, "10.5"), Money.round(new Money(ceilingCurrency2, "10.1")));
-		// note that rounding mode is not applied to a calculation
-		assertEquals(new Money(ceilingCurrency2, "0.2"), new Money(ceilingCurrency2, "1").divide(new Money(ceilingCurrency2, "5")));
-		
-		assertEquals(new Money(floorCurrency2, "100.1"), new Money(floorCurrency2, "100.1"));
-		assertEquals(new Money(floorCurrency2, "100.6"), new Money(floorCurrency2, "100.6"));
-		assertEquals(new Money(floorCurrency2, "10.6"), new Money(floorCurrency2, "106").multiply(0.1));
-		assertEquals(new Money(floorCurrency2, "10.1"), new Money(floorCurrency2, "101").multiply(0.1));
-		// note that rounding mode is applied when calling the round method
-		assertEquals(new Money(floorCurrency2, "10.5"), Money.round(new Money(floorCurrency2, "10.6")));
-		assertEquals(new Money(floorCurrency2, "10.0"), Money.round(new Money(floorCurrency2, "10.1")));
-		// note that rounding mode is not applied to a calculation
-		assertEquals(new Money(floorCurrency2, "0.2"), new Money(floorCurrency2, "1").divide(new Money(floorCurrency2, "5")));
-		
-	}
-	
 }
