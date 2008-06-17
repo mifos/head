@@ -1,1 +1,0 @@
-ant clean copy_files compile war
