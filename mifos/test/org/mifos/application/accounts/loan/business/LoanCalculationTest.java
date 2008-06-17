@@ -786,6 +786,36 @@ public class LoanCalculationTest  {
 		setUpLoanAndVerify999AccountWhenLoanIsRepaid(config, loanParams, testCaseData.expectedResult);
 	}
 	
+	// decliningEPI
+	@Test
+	public void testDecliningEPIWithFeeWithGrace() throws Exception 
+	{
+		allConsoleOutputEnabled = true;
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-WithFee-WithGrace.csv");
+		
+	}
+	
+	@Test
+	public void testDecliningEPINoFeeWithGrace() throws Exception 
+	{
+		allConsoleOutputEnabled = true;
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-WithGrace.csv");
+		
+	}
+	
+	@Test
+	public void testDecliningEPINoFeeNoGrace() throws Exception 
+	{
+		allConsoleOutputEnabled = true;
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-NoGrace.csv");
+		
+	}
+	
+	
+	
 	@Test
 	public void test999AccountLoansWithFees() throws NumberFormatException, PropertyNotFoundException,
 	SystemException, ApplicationException, URISyntaxException, Exception

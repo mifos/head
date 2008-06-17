@@ -3794,15 +3794,52 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		else //getGraceType() == GraceType.ALL
 			return (short) getGracePeriodDuration();
 	}
+	
+	// the decliningEPI amount = sum of interests for all installments
+	private Money getDecliningEPIAmountNonGrace_v2 (int numNonGraceInstallments) {
+		Money principalBalance = getLoanAmount();
+		Money principalPerPeriod = principalBalance.divide(new BigDecimal(numNonGraceInstallments));
+		double interestRate = getInterestFractionalRatePerInstallment_v2();
+		Money totalInterest = new Money("0");
+		for (int i = 0; i < numNonGraceInstallments; i++) {
+			Money interestThisPeriod = principalBalance.multiply(interestRate);
+			totalInterest = totalInterest.add(interestThisPeriod);
+			principalBalance = principalBalance.subtract(principalPerPeriod);
+		}
+
+		return totalInterest;
+	}
+	
+	
+	private Money getDecliningEPIAmount_v2() throws AccountException {
+						
+		Money interest = new Money("0");
+		if (getGraceType().equals(GraceType.PRINCIPALONLYGRACE)) {
+			Money graceInterestPayments = getDecliningEPIAmountGrace_v2 ();
+			Money nonGraceInterestPayments = getDecliningEPIAmountNonGrace_v2 (getNoOfInstallments() - getGracePeriodDuration());
+			interest = graceInterestPayments.add(nonGraceInterestPayments);
+		}
+		else
+		{
+			interest = getDecliningEPIAmountNonGrace_v2(getNoOfInstallments());
+		}
+		return interest;
+	}
 
 	private Money getLoanInterest_v2() throws AccountException {
 		
 		Money interest = null;
 		if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue()))
+		{
 			interest = getFlatInterestAmount_v2();
-		if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue()) 
-				|| getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
+		}
+		if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue()))
+		{
 			interest = getDecliningInterestAmount_v2();
+		}
+		else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue()))
+		{
+			interest = getDecliningEPIAmount_v2();
 		}
 		return interest;
 	}
@@ -3863,6 +3900,11 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		else
 			interest = getDecliningInterestAmountNonGrace_v2(getNoOfInstallments());
 		return interest;
+	}
+	
+	// the business rules for DecliningEPI for grace periods are the same as Declining's 
+	private Money getDecliningEPIAmountGrace_v2 () {
+		return getDecliningInterestAmountGrace_v2();
 	}
 	
 	private Money getDecliningInterestAmountGrace_v2 () {
@@ -3963,11 +4005,12 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			} else if (getLoanOffering().getInterestTypes().getId().equals(
 						InterestType.FLAT.getValue())) {
 				return allFlatInstallments_v2(loanInterest);
-			} else if ((getLoanOffering().getInterestTypes().getId().equals(
-					InterestType.DECLINING.getValue())) 
-					|| (getLoanOffering().getInterestTypes().getId().equals
-					( InterestType.DECLINING_EPI.getValue()))) {
+			} else if (getLoanOffering().getInterestTypes().getId().equals(
+					InterestType.DECLINING.getValue()))  {
 				return allDecliningInstallments_v2();
+			} else if (getLoanOffering().getInterestTypes().getId().equals
+					( InterestType.DECLINING_EPI.getValue())) {
+				return allDecliningEPIInstallments_v2();
 			}
 		}
 
@@ -4249,6 +4292,27 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 		return emiInstallments;
 	}
+	
+	
+	private List<EMIInstallment> generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2 () 
+	throws AccountException {
+
+		return generateDecliningEPIInstallmentsNoGrace_v2(getNoOfInstallments() - getGracePeriodDuration());
+	}
+	
+	
+	private List<EMIInstallment> allDecliningEPIInstallments_v2() throws AccountException {
+	
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
+			emiInstallments = generateDecliningEPIInstallmentsNoGrace_v2(getNoOfInstallments());
+		}
+		else  {
+			emiInstallments = generateDecliningEPIInstallmentsInterestOnly_v2();
+			emiInstallments.addAll(generateDecliningEPIInstallmentsAfterInterestOnlyGraceInstallments_v2());
+		}
+		return emiInstallments;
+}
 
 	/**
 	 * Return the list if payment installments for declining interest method, 
@@ -4283,6 +4347,27 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			return emiInstallments;
 	}
 	
+	
+	private List<EMIInstallment> generateDecliningEPIInstallmentsNoGrace_v2(int numInstallments) throws AccountException {
+
+		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+		Money principalBalance = getLoanAmount();
+		Money principalPerPeriod = principalBalance.divide(new BigDecimal(numInstallments));
+		double interestRate = getInterestFractionalRatePerInstallment_v2();
+		
+		for (int i = 0; i < numInstallments; i++) {
+			EMIInstallment installment = new EMIInstallment();
+			Money interestThisPeriod = principalBalance.multiply(interestRate);
+			installment.setInterest(interestThisPeriod);
+			installment.setPrincipal(principalPerPeriod);
+			principalBalance = principalBalance.subtract(principalPerPeriod);
+			emiInstallments.add(installment);
+		}
+
+		return emiInstallments;
+	}
+
+	
 	/**
 	 * Generate interest-only payments for the duration of the grace period. Interest paid is on the outstanding
 	 * balance, which during the grace period is the entire principal amount.
@@ -4301,6 +4386,11 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		return emiInstallments;
 	}
 	
+	// same as Declining
+	private List <EMIInstallment> generateDecliningEPIInstallmentsInterestOnly_v2() {
+		
+		return generateDecliningInstallmentsInterestOnly_v2();
+	}
 	/**
 	 * Calculate the installments after grace period, in the case of principal-only grace type for 
 	 * a declining-interest loan. Calculation is identical to the no-grace scenario except that the
@@ -4535,13 +4625,25 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 			installmentNum++;
 			if (it.hasNext()) { //handle all but the last installment
 				if (isGraceInstallment_v2 (installmentNum))
+				{
 					roundAndAdjustGraceInstallment_v2 (currentInstallment);
+				}
+				else if (getLoanOffering().getInterestTypes().getId().equals(
+						InterestType.DECLINING_EPI.getValue()))
+				{
+					roundAndAdjustNonGraceInstallmentForDecliningEPI_v2(currentInstallment);
+				}
 				else
-					roundAndAdjustButLastNonGraceInstallment_v2(currentInstallment);					
+				{
+					roundAndAdjustButLastNonGraceInstallment_v2(currentInstallment);
+				}
 				updateRunningTotals_v2 (totals, currentInstallment);
 			}
 			else
+			{
 				roundAndAdjustLastInstallment_v2(currentInstallment, totals);
+
+			}
 		} //for		
 	}
 
@@ -4609,6 +4711,17 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		//TODO: above comment applies to principal
 		installment.setPrincipal(roundedTotalInstallmentPaymentDue
 									.subtract(installment.getInterestDue())
+									.subtract(installment.getTotalFeeDueWithMiscFeeDue())
+									.subtract(installment.getPenaltyDue()));
+	}
+	
+	private void roundAndAdjustNonGraceInstallmentForDecliningEPI_v2 (LoanScheduleEntity installment) {
+		Money roundedTotalInstallmentPaymentDue = initialRound_v2(installment.getTotalPaymentDue());
+		roundInstallmentAccountFeesDue_v2(installment);
+		installment.setPrincipal(currencyRound_v2(installment.getPrincipal()));
+		//TODO: above comment applies to principal
+		installment.setInterest(roundedTotalInstallmentPaymentDue
+									.subtract(installment.getPrincipalDue())
 									.subtract(installment.getTotalFeeDueWithMiscFeeDue())
 									.subtract(installment.getPenaltyDue()));
 	}
