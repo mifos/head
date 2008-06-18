@@ -408,6 +408,26 @@ public class TestAccountingRules  extends MifosTestCase {
 		configMgr.addProperty(AccountingRules.AccountingRulesNumberOfInterestDays, interestDaysInConfig);
 	}
 	
+	private void checkDigitsAfterDecimalMultiple(int digitsAfterDecimalInt, String multiple) {
+		Short digitsAfterDecimal = (short)digitsAfterDecimalInt;
+		ConfigurationManager.getInstance().setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimal);
+		assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple());		
+	}
+	@Test 
+	public void testGetDigitsAfterDecimalMultiple() {
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal();
+		try {
+			checkDigitsAfterDecimalMultiple(2, "0.01");
+			checkDigitsAfterDecimalMultiple(1, "0.1");
+			checkDigitsAfterDecimalMultiple(0, "1");
+			checkDigitsAfterDecimalMultiple(-1, "10");
+			checkDigitsAfterDecimalMultiple(-2, "100");
+
+		} finally {
+			configMgr.setProperty(AccountingRules.AccountingRulesDigitsAfterDecimal, digitsAfterDecimalSaved);
+		}
+	}
 	
 
 }

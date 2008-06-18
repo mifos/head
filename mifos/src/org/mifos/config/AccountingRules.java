@@ -379,15 +379,18 @@ public class AccountingRules {
 		return getRoundingModeFromString(modeStr, "CurrencyRoundingMode", defaultCurrencyRoundingMode);
 	}
 
-	
-
-	// refactor this later
 	/*
 	 * Return a decimal corresponding to the number of digits after the decimal.
 	 * For example 2 digits after the decimal should map to 0.01, one digit to 0.1 
 	 */
 	public static BigDecimal getDigitsAfterDecimalMultiple() {
-		return new BigDecimal("." + StringUtils.leftPad("1",getDigitsAfterDecimal().intValue(),"0"));
+		int digitsAfterDecimal = getDigitsAfterDecimal().intValue();
+		if (digitsAfterDecimal >= 0) {
+			BigDecimal divisor = new BigDecimal("10").pow(digitsAfterDecimal);
+			return new BigDecimal("1").divide(divisor);
+		} else {
+			return new BigDecimal("10").pow(-digitsAfterDecimal);
+		}
 	}
 	
 	
