@@ -26,20 +26,18 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.business.service.ConfigService;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.springframework.core.io.Resource;
 
-public class BranchCashConfirmationConfigService extends ConfigService {
+public class HOCashConfirmationConfigService extends CashConfirmationConfigService {
 
-	private static final String DISPLAY_SIGNATURE_COLUMN = "display.signature.column";
 	private static final String PRODUCT_OFFERING_DISBURSEMENT_IDS = "product.offering.disbursement.ids";
 	private static final String CENTER_RECOVERY_PRODUCT_OFFERING_IDS = "product.offering.recovery.ids";
 	private static final String CENTER_ISSUE_PRODUCT_OFFERING_IDS = "product.offering.issue.ids";
 
-	public BranchCashConfirmationConfigService(Resource resource) {
+	public HOCashConfirmationConfigService(Resource resource) {
 		super(resource);
 	}
 
@@ -69,9 +67,5 @@ public class BranchCashConfirmationConfigService extends ConfigService {
 			throws ServiceException {
 		return (List<Short>) CollectionUtils.collect(
 				getPropertyValues(productIdKey), TRANSFORM_STRING_TO_SHORT);
-	}
-	
-	public boolean displaySignatureColumn() throws ServiceException {
-		return isPropertyPresent(DISPLAY_SIGNATURE_COLUMN) && Boolean.valueOf(getProperty(DISPLAY_SIGNATURE_COLUMN));
 	}
 }

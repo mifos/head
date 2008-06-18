@@ -72,7 +72,7 @@ public interface FilePaths {
 		"org/mifos/config/resources/applicationContext.xml";
 	public static final String REPORT_PRODUCT_OFFERING_CONFIG = "/org/mifos/application/reports/resources/CollectionSheetReport.properties";
 	public static final String BRANCH_REPORT_CONFIG = "/org/mifos/application/reports/resources/ProgressReport.properties";
-	public static final String BRANCH_CASH_CONFIRMATION_REPORT_CONFIG = "/org/mifos/application/reports/resources/BranchCashConfirmationReport.properties";
+	public static final String HO_CASH_CONFIRMATION_REPORT_CONFIG = "/org/mifos/application/reports/resources/HOCashConfirmationReport.properties";
 	public static final String REPORT_PARAMETER_VALIDATOR_CONFIG = "/org/mifos/config/reportParameterValidators.xml";
 	/**
 	 * A Mifos specialist or systems administrator can use this file to override

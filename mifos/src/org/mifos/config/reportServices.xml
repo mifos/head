@@ -107,8 +107,16 @@
 			</value>
 		</constructor-arg>
 	</bean>
-	<bean name="branchCashConfirmationConfigService"
-		class="org.mifos.application.reports.business.service.BranchCashConfirmationConfigService">
+	<bean name="hoCashConfirmationConfigService"
+		class="org.mifos.application.reports.business.service.HOCashConfirmationConfigService">
+		<constructor-arg>
+			<value>
+				classpath:org/mifos/application/reports/resources/HOCashConfirmationReport.properties
+			</value>
+		</constructor-arg>
+	</bean>
+	<bean name="cashConfirmationConfigService"
+		class="org.mifos.application.reports.business.service.CashConfirmationConfigService">
 		<constructor-arg>
 			<value>
 				classpath:org/mifos/application/reports/resources/BranchCashConfirmationReport.properties

@@ -27,10 +27,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class ReportServiceFactory {
 	private static final String CASCADING_REPORT_PARAMETER_SERVICE = "cascadingReportParameterService";
 	private static final String BRANCH_CASH_CONFIRMATION_REPORT_SERVICE = "branchCashConfirmationReportService";
-	private static final String BRANCH_CASH_CONFIRMATION_CONFIG_SERVICE_BEAN = "branchCashConfirmationConfigService";
+	private static final String HO_CASH_CONFIRMATION_CONFIG_SERVICE_BEAN = "hoCashConfirmationConfigService";
 	private static final String BRANCH_REPORT_SERVICE_BEAN = "branchReportService";
 	private static final String COLLECTION_SHEET_REPORT_SERVICE_BEAN = "collectionSheetReportService";
 	private static final String BRANCH_REPORT_CONFIG_SERVICE_BEAN = "branchReportConfigService";
+	private static final String CASH_CONFIRMATION_CONFIG_SERVICE_BEAN = "cashConfirmationConfigService";
 	private static ICollectionSheetReportService CACHE_ENABLED_INSTANCE;
 	private static ClassPathXmlApplicationContext classPathXmlApplicationContext;
 
@@ -74,11 +75,16 @@ public class ReportServiceFactory {
 								userId));
 	}
 
-	public static BranchCashConfirmationConfigService getBranchCashConfirmationConfigService() {
-		return (BranchCashConfirmationConfigService) classPathXmlApplicationContext
-				.getBean(BRANCH_CASH_CONFIRMATION_CONFIG_SERVICE_BEAN);
+	public static HOCashConfirmationConfigService getHOCashConfirmationConfigService() {
+		return (HOCashConfirmationConfigService) classPathXmlApplicationContext
+				.getBean(HO_CASH_CONFIRMATION_CONFIG_SERVICE_BEAN);
 	}
 
+	public static CashConfirmationConfigService getCashConfirmationConfigService() {
+		return (CashConfirmationConfigService) classPathXmlApplicationContext
+				.getBean(CASH_CONFIRMATION_CONFIG_SERVICE_BEAN);
+	}
+	
 	public static IBranchCashConfirmationReportService getBranchCashConfirmationReportService(
 			Integer userId) {
 		IBranchCashConfirmationReportService serviceBean = (IBranchCashConfirmationReportService) classPathXmlApplicationContext

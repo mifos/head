@@ -157,6 +157,13 @@ try {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>
         </script-data-source>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="MifosJDBCDataSource" id="39">
+            <property name="odaDriverClass">com.mysql.jdbc.Driver</property>
+            <property name="odaURL">jdbc:mysql://localhost:3306/mifos?useUnicode=true&amp;characterEncoding=UTF-8</property>
+            <property name="odaUser">root</property>
+            <encrypted-property name="odaPassword">bXlzcWw=</encrypted-property>
+            <property name="odaJndiName"></property>
+        </oda-data-source>
     </data-sources>
     <data-sets>
         <script-data-set name="BranchOffices" id="34">

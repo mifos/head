@@ -28,7 +28,7 @@ public class ReportParameterValidatorFactoryTest extends MifosTestCase {
 	private static final String COLLECTION_SHEET_REPORT_FILENAME = "report/CollectionSheetReport.rptdesign";
 	private static final String ACTIVE_LOANS_BY_LOAN_OFFICER_REPORT_FILENAME = "report/ActiveLoansByLoanOfficer.rptdesign";
 	private static final String BRANCH_REPORT_FILENAME = "report/ProgressReport.rptdesign";
-	private static final String BRANCH_CASH_CONFIRMATION_REPORT_FILENAME = "report/BranchCashConfirmationReport.rptdesign";
+	private static final String HO_CASH_CONFIRMATION_REPORT_FILENAME = "report/HOCashConfirmationReport.rptdesign";
 
 	public void testReturnsNullIfValidatorNotFound() throws Exception {
 		ReportParameterValidator<ReportParameterForm> validator = new ReportParameterValidatorFactory()
@@ -62,7 +62,7 @@ public class ReportParameterValidatorFactoryTest extends MifosTestCase {
 	}
 
 	public void testReturnsBranchCashConfirmationReportValidator() throws Exception {
-		retrieveAndAssertValidatorType(BRANCH_CASH_CONFIRMATION_REPORT_FILENAME,
+		retrieveAndAssertValidatorType(HO_CASH_CONFIRMATION_REPORT_FILENAME,
 				BranchCashConfirmationReportParamValidator.class);
 	}
 

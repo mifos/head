@@ -1,0 +1,1646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+    <property name="units">in</property>
+    <property name="includeResource">BirtReportResource/HOCashConfirmationResource</property>
+    <property name="comments">Copyright (c) 2006 MIFOS, Grameen Foundation, USA</property>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">BirtReportResource/MifosReport.rptlibrary</property>
+            <property name="namespace">MifosReport</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="branchId" id="602">
+            <property name="valueType">dynamic</property>
+            <property name="dataType">integer</property>
+            <text-property name="promptText">Select Branch</text-property>
+            <property name="controlType">list-box</property>
+            <property name="dataSetName">BranchOffices</property>
+            <expression name="valueExpr">dataSetRow["ds_branchId"]</expression>
+            <expression name="labelExpr">dataSetRow["ds_branchName"]</expression>
+            <property name="mustMatch">true</property>
+            <property name="defaultValue">-2</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="branchReportDate" id="218">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <text-property name="promptText">Enter Run Date (DD/MM/YYYY)</text-property>
+            <property name="allowBlank">true</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="userId" id="601" extends="MifosReport.userId">
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <script-data-source name="BranchCashConfirmation" id="220">
+            <method name="open"><![CDATA[try {
+	logger = Packages.java.util.logging.Logger.getLogger("");
+	branchCashConfirmationService = new 
+			Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getBranchCashConfirmationReportService(params["userId"]);
+    configService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService();
+    formatCurrency = function(amount) {
+	    return Packages.org.mifos.framework.util.helpers.MoneyFactory.createMoney(configService.getCurrency(), 
+	    			new Packages.java.math.BigDecimal(amount==null?0:amount)).toString();
+    }			
+    displaySignatureColumn = function() {
+    	return configService.displaySignatureColumn();
+    }
+} catch (e) {
+	logger.info("BCCReport: Ds-open: exception : BranchCashConfirmationDataSource: "+e);
+}]]></method>
+        </script-data-source>
+        <script-data-source name="ReportParameterDataSource" id="599" extends="MifosReport.ReportParameterDataSource"/>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="CenterRecoveries" id="221">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_productName</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">ds_due</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">ds_actual</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">ds_arrears</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_productName</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_due</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_actual</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_arrears</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_productName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_due</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">ds_actual</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">ds_arrears</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">BranchCashConfirmation</property>
+            <method name="open"><![CDATA[try{
+    centerRecoveriesIterator = branchCashConfirmationService.getCenterRecoveries(params["branchId"],params["branchReportDate"]).iterator();
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: CenterRecoveries: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[try{
+	if(!centerRecoveriesIterator.hasNext())
+	    return false;
+	
+	var centerRecovery = centerRecoveriesIterator.next();
+	row["ds_productName"] = centerRecovery.getProductOffering();
+	row["ds_due"] = centerRecovery.getDue();
+	row["ds_actual"] = centerRecovery.getActual();
+	row["ds_arrears"] = centerRecovery.getArrears();
+	return true;
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: CenterRecoveries: fetch: exception : "+e);
+}]]></method>
+        </script-data-set>
+        <script-data-set name="BranchCashHeader" id="262">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">branch_name</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">run_date</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">branch_name</property>
+                </structure>
+                <structure>
+                    <property name="columnName">run_date</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">branch_name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">run_date</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">BranchCashConfirmation</property>
+            <method name="open"><![CDATA[try {
+	reportHeader = branchCashConfirmationService.getReportHeader(params["branchId"],params["branchReportDate"]);
+	dataRead = false;
+} catch(e) {
+	logger.info("BCCReport: BranchCashHeader: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[try {
+	if(dataRead) return false;
+	row["branch_name"]=reportHeader.getBranchName();
+	row["run_date"]=reportHeader.getRunDate();
+	dataRead = true;
+	return true;
+} catch(e) {
+	logger.info("BCCReport: BranchCashHeader: fetch: exception : "+e);
+}]]></method>
+        </script-data-set>
+        <script-data-set name="CenterIssues" id="270">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_productName</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">ds_actual</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_productName</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_actual</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_productName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_actual</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">BranchCashConfirmation</property>
+            <method name="open"><![CDATA[try{
+    centerIssuesIterator = branchCashConfirmationService.getCenterIssues(params["branchId"],params["branchReportDate"]).iterator();
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: CenterIssues: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[try{
+	if(!centerIssuesIterator.hasNext())
+	    return false;
+	
+	var centerIssue = centerIssuesIterator.next();
+	row["ds_productName"] = centerIssue.getProductOffering();
+	row["ds_actual"] = centerIssue.getActual();	
+	return true;
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: CenterIssues: fetch: exception : "+e);
+}]]></method>
+        </script-data-set>
+        <script-data-set name="Disbursements" id="337">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ds_productName</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ds_actual</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ds_productName</property>
+                </structure>
+                <structure>
+                    <property name="columnName">ds_actual</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ds_productName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">ds_actual</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">BranchCashConfirmation</property>
+            <method name="open"><![CDATA[try{
+    disbursementsIterator = branchCashConfirmationService.getDisbursements(params["branchId"],params["branchReportDate"]).iterator();
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: Disbursements: open: exception : "+e);
+}]]></method>
+            <method name="fetch"><![CDATA[try{
+	if(!disbursementsIterator.hasNext())
+	    return false;
+	
+	var disbursement = disbursementsIterator.next();
+	row["ds_productName"] = disbursement.getProductOffering();
+	row["ds_actual"] = disbursement.getActual();	
+	return true;
+}catch(e){
+    logger.info("Branch Cash Confirmation Report: Disbursements: fetch: exception : "+e);
+}]]></method>
+        </script-data-set>
+        <script-data-set name="BranchOffices" id="600" extends="MifosReport.BranchOffices"/>
+    </data-sets>
+    <styles>
+        <style name="pageHeaderLeft" id="427">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">18pt</property>
+        </style>
+        <style name="pageHeaderRight" id="428">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">25pt</property>
+            <property name="color">#808080</property>
+            <property name="textAlign">right</property>
+            <property name="verticalAlign">top</property>
+        </style>
+        <style name="pageHeader" id="429">
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">2pt</property>
+        </style>
+        <style name="pageSubheaderText" id="430">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="pageSubheader" id="431">
+            <property name="marginBottom">10pt</property>
+        </style>
+        <style name="tableSubheader" id="432">
+            <property name="backgroundColor">#C0C0C0</property>
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">10pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">left</property>
+        </style>
+        <style name="fieldText" id="433">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">9pt</property>
+            <property name="fontWeight">bold</property>
+        </style>
+        <style name="numberFormat" id="434">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">8pt</property>
+            <property name="paddingRight">5px</property>
+            <property name="textAlign">right</property>
+        </style>
+        <style name="rowText" id="435">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">8pt</property>
+        </style>
+        <style name="valueText" id="436">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">8pt</property>
+        </style>
+        <style name="dataTable" id="437">
+            <property name="marginTop">5pt</property>
+            <property name="marginBottom">0pt</property>
+            <property name="paddingTop">0pt</property>
+            <property name="paddingBottom">0pt</property>
+        </style>
+        <style name="numberFieldText" id="549">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">9pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="textAlign">center</property>
+        </style>
+        <style name="signatureLine" id="561">
+            <property name="borderBottomStyle">dotted</property>
+            <property name="borderBottomWidth">1pt</property>
+        </style>
+        <style name="signatureText" id="585">
+            <property name="fontFamily">"Arial"</property>
+            <property name="fontSize">11pt</property>
+            <property name="textAlign">center</property>
+        </style>
+        <style name="signatureBlock" id="586">
+            <property name="marginTop">30pt</property>
+        </style>
+        <style name="dataBlock" id="587">
+            <property name="paddingTop">10pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">portrait</property>
+            <property name="topMargin">1cm</property>
+            <property name="leftMargin">1cm</property>
+            <property name="bottomMargin">1cm</property>
+            <property name="rightMargin">1cm</property>
+            <page-footer>
+                <grid id="143">
+                    <property name="width">100%</property>
+                    <column id="144"/>
+                    <column id="145"/>
+                    <row id="146">
+                        <cell id="147">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">8pt</property>
+                            <label id="149">
+                                <property name="textAlign">right</property>
+                                <text-property name="text">Page</text-property>
+                            </label>
+                        </cell>
+                        <cell id="148">
+                            <property name="fontFamily">"Arial"</property>
+                            <property name="fontSize">8pt</property>
+                            <auto-text id="150">
+                                <property name="type">page-number</property>
+                            </auto-text>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="151">
+            <column id="152"/>
+            <column id="172"/>
+            <column id="178"/>
+            <column id="153"/>
+            <row id="588">
+                <cell id="589">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">pageHeader</property>
+                    <property name="verticalAlign">bottom</property>
+                    <grid id="593">
+                        <property name="width">100%</property>
+                        <column id="594">
+                            <property name="width">4.7291666667in</property>
+                        </column>
+                        <column id="595"/>
+                        <row id="596">
+                            <cell id="597">
+                                <property name="verticalAlign">middle</property>
+                                <label id="166">
+                                    <property name="style">pageHeaderLeft</property>
+                                    <text-property name="text" key="branch.cash.report.header">Branch Cash Confirmation</text-property>
+                                </label>
+                            </cell>
+                            <cell id="598">
+                                <property name="verticalAlign">bottom</property>
+                                <label id="167">
+                                    <property name="style">pageHeaderRight</property>
+                                    <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="438">
+                <cell id="439">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="paddingBottom">5pt</property>
+                    <grid id="443">
+                        <property name="style">pageSubheader</property>
+                        <property name="marginBottom">5pt</property>
+                        <property name="width">100%</property>
+                        <column id="444">
+                            <property name="width">1.0520833333in</property>
+                        </column>
+                        <column id="445">
+                            <property name="width">0.2083333333in</property>
+                        </column>
+                        <column id="446">
+                            <property name="width">4.75in</property>
+                        </column>
+                        <column id="447">
+                            <property name="width">0.4895833333in</property>
+                        </column>
+                        <column id="448">
+                            <property name="width">0.2083333333in</property>
+                        </column>
+                        <column id="449">
+                            <property name="width">0.9166666667in</property>
+                        </column>
+                        <row id="450">
+                            <cell id="451">
+                                <property name="style">pageSubheaderText</property>
+                                <label id="173">
+                                    <text-property name="text">Branch Name</text-property>
+                                </label>
+                            </cell>
+                            <cell id="452">
+                                <property name="style">pageSubheaderText</property>
+                                <label id="547">
+                                    <text-property name="text">:</text-property>
+                                </label>
+                            </cell>
+                            <cell id="453">
+                                <property name="style">pageSubheaderText</property>
+                                <data id="263">
+                                    <property name="dataSet">BranchCashHeader</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">branch_name</property>
+                                            <expression name="expression">dataSetRow["branch_name"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">branch_name</property>
+                                </data>
+                            </cell>
+                            <cell id="454">
+                                <property name="style">pageSubheaderText</property>
+                                <label id="179">
+                                    <text-property name="text">Date</text-property>
+                                </label>
+                            </cell>
+                            <cell id="455">
+                                <property name="style">pageSubheaderText</property>
+                                <label id="548">
+                                    <text-property name="text">:</text-property>
+                                </label>
+                            </cell>
+                            <cell id="456">
+                                <property name="style">pageSubheaderText</property>
+                                <data id="264">
+                                    <property name="dataSet">BranchCashHeader</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">run_date</property>
+                                            <expression name="expression">dataSetRow["run_date"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">run_date</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="163">
+                <cell id="164">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <table id="183">
+                        <property name="width">100%</property>
+                        <property name="dataSet">CenterRecoveries</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">ds_productName</property>
+                                <expression name="expression">dataSetRow["ds_productName"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_due</property>
+                                <expression name="expression">dataSetRow["ds_due"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_actual</property>
+                                <expression name="expression">dataSetRow["ds_actual"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_arrears</property>
+                                <expression name="expression">dataSetRow["ds_arrears"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_digitsAfterDecimal</property>
+                                <expression name="expression">dataSetRow["ds_digitsAfterDecimal"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">actuals_total</property>
+                                <expression name="expression">row["ds_digitsAfterDecimal"](10)</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">total_actual</property>
+                                <expression name="expression">formatCurrency(Total.sum(row["ds_actual"]))</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <column id="199"/>
+                        <column id="200"/>
+                        <column id="201"/>
+                        <column id="202"/>
+                        <header>
+                            <row id="184">
+                                <cell id="185">
+                                    <property name="colSpan">4</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableSubheader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="208">
+                                        <text-property name="text" key="branch.cash.report.recoveries.header">Total Recoveries from Kendras</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="203">
+                                <cell id="204">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="209">
+                                        <text-property name="text" key="branch.cash.report.product.name.header">Product Name</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="205">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="210">
+                                        <text-property name="text" key="branch.cash.report.due.header">Dues</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="206">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="211">
+                                        <text-property name="text" key="branch.cash.report.actual.header">Actuals</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="207">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="212">
+                                        <text-property name="text" key="branch.cash.report.arrears.header">Arrears</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="189">
+                                <cell id="190">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="250">
+                                        <property name="resultSetColumn">ds_productName</property>
+                                    </data>
+                                </cell>
+                                <cell id="191">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="251">
+                                        <property name="resultSetColumn">ds_due</property>
+                                    </data>
+                                </cell>
+                                <cell id="192">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="252">
+                                        <property name="resultSetColumn">ds_actual</property>
+                                    </data>
+                                </cell>
+                                <cell id="193">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="253">
+                                        <property name="resultSetColumn">ds_arrears</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="194">
+                                <cell id="195">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="213">
+                                        <text-property name="text" key="branch.cash.report.actuals.footer">Actuals Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="197">
+                                    <property name="style">numberFormat</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="259">
+                                        <property name="resultSetColumn">total_actual</property>
+                                    </data>
+                                </cell>
+                                <cell id="198">
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+                <cell id="182">
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                    <grid id="374">
+                        <property name="width">100%</property>
+                        <column id="375">
+                            <property name="width">80pt</property>
+                        </column>
+                        <column id="376"/>
+                        <row id="377">
+                            <cell id="378">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="383">
+                                    <text-property name="text" key="branch.cash.report.misc.income.header">Miscellanous Income</text-property>
+                                </label>
+                            </cell>
+                            <cell id="379">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="380">
+                            <cell id="381">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="384">
+                                    <text-property name="text" key="branch.cash.report.fine.collected.header">Fine Collected</text-property>
+                                </label>
+                            </cell>
+                            <cell id="382">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="265">
+                <cell id="266">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <table id="273">
+                        <property name="width">100%</property>
+                        <property name="dataSet">CenterIssues</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">ds_productName</property>
+                                <expression name="expression">dataSetRow["ds_productName"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_actual</property>
+                                <expression name="expression">dataSetRow["ds_actual"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">issues_total</property>
+                                <expression name="expression">formatCurrency(Total.sum(row["ds_actual"]))</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <column id="283"/>
+                        <column id="284"/>
+                        <header>
+                            <row id="274">
+                                <cell id="275">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableSubheader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="285">
+                                        <text-property name="text" key="branch.cash.report.issues.header">Issues made out of collections at Kendras</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="288">
+                                <cell id="289">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="286">
+                                        <text-property name="text" key="branch.cash.report.product.name.header">Product Name</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="290">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="287">
+                                        <text-property name="text" key="branch.cash.report.actual.header">Actuals</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="277">
+                                <cell id="278">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="293">
+                                        <property name="resultSetColumn">ds_productName</property>
+                                    </data>
+                                </cell>
+                                <cell id="279">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="294">
+                                        <property name="resultSetColumn">ds_actual</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="280">
+                                <cell id="281">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="324">
+                                        <text-property name="text" key="branch.cash.report.total.footer">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="282">
+                                    <property name="style">numberFormat</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="340">
+                                        <property name="resultSetColumn">issues_total</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+                <cell id="272">
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                </cell>
+                <cell id="269">
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                    <grid id="391">
+                        <property name="width">100%</property>
+                        <column id="392">
+                            <property name="width">80pt</property>
+                        </column>
+                        <column id="393"/>
+                        <row id="394">
+                            <cell id="395">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="403">
+                                    <text-property name="text" key="branch.cash.report.loyalty.rebate.header">Loyalty Rebate</text-property>
+                                </label>
+                            </cell>
+                            <cell id="396">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="397">
+                            <cell id="398">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="404">
+                                    <text-property name="text" key="branch.cash.report.death.relief.expenses">Death Relief Expenses</text-property>
+                                </label>
+                            </cell>
+                            <cell id="399">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="400">
+                            <cell id="401">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="405">
+                                    <text-property name="text" key="branch.cash.report.net.cash.header">Net Cash</text-property>
+                                </label>
+                            </cell>
+                            <cell id="402">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="295">
+                <cell id="296">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <table id="312">
+                        <property name="width">100%</property>
+                        <property name="dataSet">Disbursements</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">ds_productName</property>
+                                <expression name="expression">dataSetRow["ds_productName"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">ds_actual</property>
+                                <expression name="expression">dataSetRow["ds_actual"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">disbursements_total</property>
+                                <expression name="expression">formatCurrency(Total.sum(row["ds_actual"]))</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <column id="322"/>
+                        <column id="323"/>
+                        <header>
+                            <row id="313">
+                                <cell id="314">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableSubheader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="331">
+                                        <text-property name="text" key="branch.cash.report.disbursements.header">Actual Disbursements made</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="332">
+                                <cell id="333">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="335">
+                                        <text-property name="text" key="branch.cash.report.product.name.header">Product Name</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="334">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="336">
+                                        <text-property name="text" key="branch.cash.report.actual.header">Actuals</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="316">
+                                <cell id="317">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="338">
+                                        <property name="resultSetColumn">ds_productName</property>
+                                    </data>
+                                </cell>
+                                <cell id="318">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="339">
+                                        <property name="resultSetColumn">ds_actual</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="319">
+                                <cell id="320">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="342">
+                                        <text-property name="text" key="branch.cash.report.total.footer">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="321">
+                                    <property name="style">numberFormat</property>
+                                    <property name="fontWeight">bold</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="341">
+                                        <property name="resultSetColumn">disbursements_total</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+                <cell id="298">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                </cell>
+                <cell id="550">
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                    <grid id="416">
+                        <property name="width">100%</property>
+                        <column id="417">
+                            <property name="width">80pt</property>
+                        </column>
+                        <column id="418"/>
+                        <row id="419">
+                            <cell id="420">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="425">
+                                    <text-property name="text" key="branch.cash.report.cash.taken.header">Cash taken for Loans</text-property>
+                                </label>
+                            </cell>
+                            <cell id="421">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="422">
+                            <cell id="423">
+                                <property name="style">fieldText</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="426">
+                                    <text-property name="text" key="branch.cash.report.refund.loan.amount">Refund Loan Amount</text-property>
+                                </label>
+                            </cell>
+                            <cell id="424">
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+            <row id="551">
+                <property name="height">0.3020833333in</property>
+                <cell id="552">
+                    <property name="colSpan">4</property>
+                    <property name="rowSpan">1</property>
+                    <grid id="562">
+                        <property name="style">signatureBlock</property>
+                        <property name="width">100%</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn()</expression>
+                            </structure>
+                        </list-property>
+                        <column id="563"/>
+                        <column id="564"/>
+                        <column id="565"/>
+                        <column id="566"/>
+                        <column id="567"/>
+                        <column id="568"/>
+                        <row id="569">
+                            <cell id="570">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="603">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(1)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="604"/>
+                                    <row id="605">
+                                        <cell id="606">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="607">
+                                        <cell id="608">
+                                            <property name="style">signatureText</property>
+                                            <label id="583">
+                                                <text-property name="text" key="branch.cash.report.sign.1">Signature</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="571">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="609">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(2)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="610"/>
+                                    <row id="611">
+                                        <cell id="612">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="613">
+                                        <cell id="614">
+                                            <property name="style">signatureText</property>
+                                            <label id="615">
+                                                <text-property name="text" key="branch.cash.report.sign.2">Verified By</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="572">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="616">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="617"/>
+                                    <row id="618">
+                                        <cell id="619">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="620">
+                                        <cell id="621">
+                                            <property name="style">signatureText</property>
+                                            <label id="622">
+                                                <text-property name="text" key="branch.cash.report.sign.3">Signature</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="573">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="623">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(3)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="624"/>
+                                    <row id="625">
+                                        <cell id="626">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="627">
+                                        <cell id="628">
+                                            <property name="style">signatureText</property>
+                                            <label id="629">
+                                                <text-property name="text" key="branch.cash.report.sign.4">Signature</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="574">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="637">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(5)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="638"/>
+                                    <row id="639">
+                                        <cell id="640">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="641">
+                                        <cell id="642">
+                                            <property name="style">signatureText</property>
+                                            <label id="584">
+                                                <property name="fontSize">10pt</property>
+                                                <text-property name="text" key="branch.cash.report.sign.5">Branch Manager</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="575">
+                                <property name="colSpan">1</property>
+                                <property name="rowSpan">2</property>
+                                <grid id="630">
+                                    <property name="width">100%</property>
+                                    <list-property name="visibility">
+                                        <structure>
+                                            <property name="format">all</property>
+                                            <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getHOCashConfirmationConfigService().displaySignatureColumn(6)</expression>
+                                        </structure>
+                                    </list-property>
+                                    <column id="631"/>
+                                    <row id="632">
+                                        <cell id="633">
+                                            <property name="style">signatureLine</property>
+                                        </cell>
+                                    </row>
+                                    <row id="634">
+                                        <cell id="635">
+                                            <property name="style">signatureText</property>
+                                            <label id="636">
+                                                <text-property name="text" key="branch.cash.report.sign.6">Signature</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                        </row>
+                        <row id="576"/>
+                    </grid>
+                </cell>
+            </row>
+        </grid>
+    </body>
+</report>

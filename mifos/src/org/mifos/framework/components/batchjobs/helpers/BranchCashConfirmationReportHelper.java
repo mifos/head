@@ -27,7 +27,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.cashconfirmationreport.BranchCashConfirmationReportBO;
-import org.mifos.application.reports.business.service.BranchCashConfirmationConfigService;
+import org.mifos.application.reports.business.service.HOCashConfirmationConfigService;
 import org.mifos.application.reports.business.service.IBranchCashConfirmationReportService;
 import org.mifos.application.reports.business.service.ReportServiceFactory;
 import org.mifos.framework.components.batchjobs.MifosTask;
@@ -40,24 +40,24 @@ import org.mifos.framework.util.helpers.DateUtils;
 public class BranchCashConfirmationReportHelper extends TaskHelper {
 
 	private IBranchCashConfirmationReportService service;
-	private BranchCashConfirmationConfigService configService;
+	private HOCashConfirmationConfigService configService;
 
 	public BranchCashConfirmationReportHelper(MifosTask mifosTask) {
 		this(mifosTask, ReportServiceFactory
 				.getBranchCashConfirmationReportService(null),
-				ReportServiceFactory.getBranchCashConfirmationConfigService());
+				ReportServiceFactory.getHOCashConfirmationConfigService());
 	}
 
 	public BranchCashConfirmationReportHelper(MifosTask task,
 			IBranchCashConfirmationReportService service,
-			BranchCashConfirmationConfigService configService) {
+			HOCashConfirmationConfigService configService) {
 		super(task);
 		this.service = service;
 		this.configService = configService;
 	}
 
 	public BranchCashConfirmationReportHelper(MifosTask task,
-			BranchCashConfirmationConfigService configService) {
+			HOCashConfirmationConfigService configService) {
 		this(task, ReportServiceFactory
 				.getBranchCashConfirmationReportService(null), configService);
 	}

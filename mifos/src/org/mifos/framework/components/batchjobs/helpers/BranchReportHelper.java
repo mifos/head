@@ -38,7 +38,6 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class BranchReportHelper extends TaskHelper {
 

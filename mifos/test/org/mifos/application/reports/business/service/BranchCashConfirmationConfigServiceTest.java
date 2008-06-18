@@ -30,37 +30,37 @@ import junit.framework.TestCase;
 
 public class BranchCashConfirmationConfigServiceTest extends TestCase {
 
-	private BranchCashConfirmationConfigService branchCashConfirmationConfigService;
+	private HOCashConfirmationConfigService hOCashConfirmationConfigService;
 
 	public void testGetActionDate() {
 		assertEquals(DateUtils.currentDate(),
-				branchCashConfirmationConfigService.getActionDate());
+				hOCashConfirmationConfigService.getActionDate());
 	}
 
 	public void testGetProductOfferingsForRecoveries() throws ServiceException {
 		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
 				.valueOf("2"), Short.valueOf("3")),
-				branchCashConfirmationConfigService
+				hOCashConfirmationConfigService
 						.getProductOfferingsForRecoveries());
 	}
 
 	public void testGetProductOfferingsForIssues() throws Exception {
 		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
-				.valueOf("2"), Short.valueOf("3")), branchCashConfirmationConfigService
+				.valueOf("2"), Short.valueOf("3")), hOCashConfirmationConfigService
 				.getProductOfferingsForIssues());
 	}
 
 	public void testGetProductOfferingsForDisbursements() throws Exception {
 		assertEquals(CollectionUtils.asList(Short.valueOf("1"), Short
-				.valueOf("2")), branchCashConfirmationConfigService
+				.valueOf("2")), hOCashConfirmationConfigService
 				.getProductOfferingsForDisbursements());
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		Resource branchCashConfirmationReportConfig = new ClassPathResource(
-				FilePaths.BRANCH_CASH_CONFIRMATION_REPORT_CONFIG);
-		branchCashConfirmationConfigService = new BranchCashConfirmationConfigService(
+				FilePaths.HO_CASH_CONFIRMATION_REPORT_CONFIG);
+		hOCashConfirmationConfigService = new HOCashConfirmationConfigService(
 				branchCashConfirmationReportConfig);
 	}
 
