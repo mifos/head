@@ -39,9 +39,11 @@ import static org.mifos.framework.http.request.RequestConstants.PERSPECTIVE;
 import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -717,13 +719,14 @@ public class LoanAccountAction extends AccountAppAction {
         
         if (isRepaymentIndepOfMeetingEnabled){
         	RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+        	final Date repaymentStartDate = this.resolveRepaymentStartDate(loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
         	if(recurrenceType == RecurrenceType.WEEKLY)
         		newMeetingForRepaymentDay = new MeetingBO(recurrenceType.getValue(), Short.valueOf(loanActionForm.getMonthWeek()), 
-        				Short.valueOf(loanActionForm.getRecurMonth()), loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()), 
+        				Short.valueOf(loanActionForm.getRecurMonth()), repaymentStartDate, 
         				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
         	else if(recurrenceType == RecurrenceType.MONTHLY)
         		newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanActionForm.getMonthWeek()), Short.valueOf(loanActionForm.getRecurMonth()), 
-        				loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()), 
+        				repaymentStartDate, 
         				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
         				Short.valueOf(loanActionForm.getMonthRank()));
         }
@@ -777,6 +780,23 @@ public class LoanAccountAction extends AccountAppAction {
 		loan.setCollateralNote(loanActionForm.getCollateralNote());
 		loan.setCollateralTypeId(loanActionForm.getCollateralTypeIdValue());
 		return loan;
+	}
+	
+	/**
+	 * Resolve repayment start date according to given disbursement date
+	 * 
+	 * The resulting date equates to the disbursement date plus MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY:
+	 *  e.g. If disbursement date is 18 June 2008, and MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY is 1 then the repayment start date would be 19 June 2008
+	 * 
+	 * @return Date repaymentStartDate
+	 * @throws PersistenceException
+	 */
+	private Date resolveRepaymentStartDate(Date disbursementDate) throws PersistenceException {
+		int minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+		final GregorianCalendar repaymentStartDate = new GregorianCalendar();
+		repaymentStartDate.setTime(disbursementDate);
+		repaymentStartDate.add(Calendar.DAY_OF_WEEK, minDaysInterval);
+		return repaymentStartDate.getTime();
 	}
 
 	private LoanBO redoLoan(LoanAccountActionForm loanActionForm,
