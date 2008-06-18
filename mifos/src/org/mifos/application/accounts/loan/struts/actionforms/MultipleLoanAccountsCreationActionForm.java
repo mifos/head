@@ -42,6 +42,7 @@ import static org.mifos.framework.util.CollectionUtils.select;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,9 @@ import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -239,7 +242,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 							.getMinLoanAmount().toString(), clientDetail
 							.getMaxLoanAmount().toString());
 			}
-			if (StringUtils.isEmpty(clientDetail.getBusinessActivity())) {
+			if (StringUtils.isEmpty(clientDetail.getBusinessActivity()) && isPurposeOfLoanMandatory(request)) {
 				addError(errors, LoanConstants.PURPOSE_OF_LOAN,
 						LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD);
 			}
@@ -302,5 +305,29 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 				((MultipleLoanCreationViewHelper)arg0).resetSelected();
 			}
 		});
+	}
+	
+	/**
+	 * Returns true or false depending on whether the purpose of the loan is mandatory or not
+	 */
+	private boolean isPurposeOfLoanMandatory(HttpServletRequest request) {
+		logger.debug("Checking if purpose of loan is Mandatory");
+		
+		Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+			.getSession().getServletContext().getAttribute(Constants.FIELD_CONFIGURATION);
+		List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.LOAN.getValue());
+		
+		boolean isMandatory = false;
+
+		for(FieldConfigurationEntity entity : mandatoryfieldList) {
+			if(entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
+				isMandatory = true;
+				logger.debug("Returning true");
+				break;
+			}
+		}
+		
+		logger.debug("Returning "+isMandatory);
+		return isMandatory;
 	}
 }
