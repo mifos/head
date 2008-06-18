@@ -351,10 +351,11 @@ public interface NamedQueryConstants {
 	public String COUNT_CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS = "Customer.count_search_noofficeid_noclients";
 	// for collection sheet
 
-	public String CUSTOMERS_WITH_SPECIFIED_MEETING_DATE = "CollectionSheetCustomer.customersWithSpecifiedMeetingDate";
+	public String COLLECTION_SHEET_CUSTOMERS_WITH_SPECIFIED_MEETING_DATE_AS_SQL = "CollectionSheetCustomer.customersWithSpecifiedMeetingDateAsSql";
 	public String CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE = "CollectionSheetCustomer.customersWithSpecifiedDisbursalDate";
-	public String CUSTOMERS_LOANS_WITH_SPECIFIED_MEETING_DATE = "CollectionSheetCustomer.loansWithSpecifiedMeetingDate";
-	public String CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE = "CollectionSheetCustomer.savingssWithSpecifiedMeetingDate";
+	public String COLLECTION_SHEET_CUSTOMER_LOANS_WITH_SPECIFIED_MEETING_DATE_AS_SQL = "CollectionSheetCustomer.loansWithSpecifiedMeetingDateAsSql";
+
+	public String COLLECTION_SHEET_CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE_AS_SQL= "CollectionSheetCustomer.savingssWithSpecifiedMeetingDateAsSql";
 
 	public String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";
 	public String GET_FIELD_TYPE = "getFieldType";
@@ -493,6 +494,7 @@ public interface NamedQueryConstants {
 
 	public String GET_PAYMENT_TYPES = "getPaymentTypes";
 	public String GET_YESTERDAYS_INSTALLMENT_FOR_ACTIVE_CUSTOMERS = "getYesterdaysInstallmentForActiveCustomers";
+	public String CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS = "customerScheduleEntity.getScheduleForIds";
 	public String GET_UPDATED_CUSTOMER_MEETINGS = "getUpdatedMeetings";
 	public String GET_MISSED_DEPOSITS_PAID_AFTER_DUEDATE = "accounts.countOfMissedDepositsPaidAfterDueDate";
 	public String GET_CENTER_COUNT_BY_NAME = "Customer.getCenterCount";
@@ -679,6 +681,8 @@ public interface NamedQueryConstants {
 	public String GET_REPAYMENT_RULE="holiday.getRepaymentRule";
 	public String ALL_LOAN_SCHEDULE = "account.getAllLoanSchedules";
 	public String ALL_SAVING_SCHEDULE = "account.getAllSavingSchedules";
+	public String SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS = "savingsScheduleEntity.getScheduleForIds";
+	public String LOAN_SCHEDULE_GET_SCHEDULE_FOR_IDS = "loanScheduleEntity.getScheduleForIds";	
 	public String GET_HOLIDAYS_BY_FLAG = "holiday.getHoildaysByFlag";
 
 	public String GET_ALL_FIELD_CONFIGURATION_LIST = "getAllFieldConfigurationList";

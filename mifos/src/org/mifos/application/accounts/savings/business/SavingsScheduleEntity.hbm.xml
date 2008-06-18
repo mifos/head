@@ -50,5 +50,11 @@
 				   and savingSchedule.actionDate <= date(:THRU_DATE)
 		]]>
 	</query>
+	
+	<query name="savingsScheduleEntity.getScheduleForIds">
+		<![CDATA[ from org.mifos.application.accounts.savings.business.SavingsScheduleEntity savingSchedule
+				 where savingSchedule.id in (:ids)
+		]]>
+	</query>			
 
 </hibernate-mapping>

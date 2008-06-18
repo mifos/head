@@ -37,20 +37,32 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
+import static org.mifos.application.NamedQueryConstants.COLLECTION_SHEET_CUSTOMERS_WITH_SPECIFIED_MEETING_DATE_AS_SQL;
+import static org.mifos.application.NamedQueryConstants.COLLECTION_SHEET_CUSTOMER_LOANS_WITH_SPECIFIED_MEETING_DATE_AS_SQL;
+import static org.mifos.application.NamedQueryConstants.COLLECTION_SHEET_CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE_AS_SQL;
+import static org.mifos.application.NamedQueryConstants.CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS;
+import static org.mifos.application.NamedQueryConstants.LOAN_SCHEDULE_GET_SCHEDULE_FOR_IDS;
+import static org.mifos.application.NamedQueryConstants.SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS;
+import static org.mifos.framework.util.CollectionUtils.splitListIntoParts;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Query;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
+import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
 public class CollectionSheetPersistence extends Persistence {
-	
+
 	public CollectionSheetPersistence() {
 		super();
 	}
@@ -63,18 +75,16 @@ public class CollectionSheetPersistence extends Persistence {
 	 */
 	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) 
 	throws PersistenceException {
-		Map<String, Object> queryParameters = Collections.singletonMap(
+		Map<String, Object> params = Collections.singletonMap(
 			CollectionSheetConstants.MEETING_DATE, (Object)date);
-		List<AccountActionDateEntity> accountActionDate = 
-			executeNamedQuery(
-				NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_MEETING_DATE,
-				queryParameters);
-		accountActionDate.addAll(executeNamedQuery(
-				NamedQueryConstants.CUSTOMERS_LOANS_WITH_SPECIFIED_MEETING_DATE,
-			queryParameters));
-		accountActionDate.addAll(executeNamedQuery(
-			NamedQueryConstants.CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE,
-			queryParameters));
+		List<List<String>> actionDateQueries = new ArrayList<List<String>>();
+		actionDateQueries.add(Arrays.asList(COLLECTION_SHEET_CUSTOMERS_WITH_SPECIFIED_MEETING_DATE_AS_SQL, CUSTOMER_SCHEDULE_GET_SCHEDULE_FOR_IDS));
+		actionDateQueries.add(Arrays.asList(COLLECTION_SHEET_CUSTOMER_LOANS_WITH_SPECIFIED_MEETING_DATE_AS_SQL, LOAN_SCHEDULE_GET_SCHEDULE_FOR_IDS));
+		actionDateQueries.add(Arrays.asList(COLLECTION_SHEET_CUSTOMER_SAVINGSS_WITH_SPECIFIED_MEETING_DATE_AS_SQL, SAVING_SCHEDULE_GET_SCHEDULE_FOR_IDS));
+		List<AccountActionDateEntity> accountActionDate = new ArrayList<AccountActionDateEntity>();
+		for (List<String> list : actionDateQueries) {
+			accountActionDate.addAll(convertIdsToObjectUsingQuery(executeNamedQuery(list.get(0), params), list.get(1)));
+		}
 		return accountActionDate;
 	}
 	
@@ -88,5 +98,20 @@ public class CollectionSheetPersistence extends Persistence {
 		return executeNamedQuery(
 			NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE,
 			Collections.singletonMap(CollectionSheetConstants.MEETING_DATE, date));
+	}
+
+	// Hibernate cannot handle too many items in the IN CLAUSE in one shot
+	// http://opensource.atlassian.com/projects/hibernate/browse/HHH-1985
+	private static final int MAX_LIST_SIZE_FOR_HIBERNATE_IN_CLAUSE = 5000;
+	public List convertIdsToObjectUsingQuery(List<Integer> ids, String queryName) {
+		if(ids.isEmpty()) return new ArrayList();
+		List<List> parts = splitListIntoParts(ids, MAX_LIST_SIZE_FOR_HIBERNATE_IN_CLAUSE);
+		Query query =  createdNamedQuery(queryName);
+		List result = new ArrayList();
+		for (List part : parts) {
+			query.setParameterList(QueryParamConstants.ID_LIST, part);
+			result.addAll(query.list());
+		}
+		return result;
 	}
 }

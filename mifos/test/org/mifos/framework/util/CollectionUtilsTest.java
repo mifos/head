@@ -19,6 +19,9 @@
  */
 package org.mifos.framework.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -39,5 +42,53 @@ public class CollectionUtilsTest extends TestCase {
 		assertEquals(Integer.valueOf(0), list.get(0));
 		assertEquals(Integer.valueOf(1), list.get(1));
 		assertEquals(Integer.valueOf(2), list.get(2));
+	}
+
+	public void testSplitListReturnsEmptyListForEmptyList() throws Exception {
+		assertEquals(Collections.EMPTY_LIST, CollectionUtils
+				.splitListIntoParts(new ArrayList(), 10));
+	}
+
+	public void testSplitListThrowsExceptionIfSizeOfPartsIsZero()
+			throws Exception {
+		try {
+			CollectionUtils.splitListIntoParts(Arrays.asList(1, 2, 3), 0);
+			fail("Split list should throw exception if size of each part is zero");
+		}
+		catch (IllegalArgumentException e) {
+		}
+	}
+
+	public void testSplitReturnsSameListIfSizeOfEachPartIsGreaterThanListSize()
+			throws Exception {
+		List expected = new ArrayList();
+		expected.add(Arrays.asList(1, 2, 3));
+		assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays
+				.asList(1, 2, 3), 4));
+	}
+
+	public void testSplitListEvenlyIfListSizeIsMultipleOfSizeOfEachPart()
+			throws Exception {
+		List expected = new ArrayList();
+		expected.add(Arrays.asList(1, 2));
+		expected.add(Arrays.asList(3, 4));
+		assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays
+				.asList(1, 2, 3, 4), 2));
+	}
+	
+	public void testSplitReturnsOneSublistIfListSizeEqualsSizeOfEachPart() throws Exception {
+		List expected = new ArrayList();
+		expected.add(Arrays.asList(1,2,3));
+		assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays.asList(1,2,3), 3));
+	}
+
+	public void testSplitListIntoPartsAndARemainderIfListSizeIsNotMultipleOfSizeOfEachPart()
+			throws Exception {
+		List expected = new ArrayList();
+		expected.add(Arrays.asList(1, 2));
+		expected.add(Arrays.asList(3, 4));
+		expected.add(Arrays.asList(5));
+		assertEquals(expected, CollectionUtils.splitListIntoParts(Arrays
+				.asList(1, 2, 3, 4, 5), 2));
 	}
 }

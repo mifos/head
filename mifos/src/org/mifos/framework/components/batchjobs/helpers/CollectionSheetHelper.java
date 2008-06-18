@@ -77,7 +77,7 @@ public class CollectionSheetHelper extends TaskHelper {
 		super(mifosTask);
 	}
 
-	private CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
+	public CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
 		Calendar meeting = new GregorianCalendar();
 		meeting.setTimeInMillis(currentDate.getTime());
 		meeting.roll(Calendar.DATE, getDaysInAdvance());
@@ -152,7 +152,6 @@ public class CollectionSheetHelper extends TaskHelper {
 						"After retrieving account action date objects for next meeting date. ");
 		if (null != accountActionDates && accountActionDates.size() > 0) {
 			collectionSheet.populateAccountActionDates(accountActionDates);
-
 		}
 		List<LoanBO> loanBOs = new CollectionSheetPersistence()
 				.getLnAccntsWithDisbursalDate(collectionSheet
@@ -172,7 +171,6 @@ public class CollectionSheetHelper extends TaskHelper {
 			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 					.debug("After updating collective totals");
 		}
-
 	}
 
 	/**

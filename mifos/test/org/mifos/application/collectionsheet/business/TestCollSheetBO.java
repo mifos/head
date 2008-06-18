@@ -125,106 +125,15 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	}
 
-	public void testCollSheetForLoanDisbursalInterestDeducted()
-	throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 2);
-		LoanBO loan = (LoanBO) accountBO;
-		collectionSheet = createCollectionSheet(getCurrentDate());
-		generateCollectionSheetForDate(collectionSheet);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
-		collectionSheet.update(Short.valueOf("2"));
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
-		CollSheetLnDetailsEntity collSheetLoanDetail = collectionSheet
-				.getCollectionSheetCustomerForCustomerId(group.getCustomerId())
-				.getLoanDetailsForAccntId(loan.getAccountId());
-		Money disbursedAmount = collSheetLoanDetail.getAmntToBeDisbursed();
-		assertEquals(300.00, disbursedAmount.getAmountDoubleValue());
-		assertEquals(12.00, collSheetLoanDetail.getInterestDue()
-				.getAmountDoubleValue());
-		assertEquals(40.00, collSheetLoanDetail.getFeesDue()
-				.getAmountDoubleValue());
-	}
-
-	public void testCollSheetForSavingsDeposit() throws Exception {
-		accountBO = createSavingsAccount(SavingsType.MANDATORY);
-		SavingsBO savings = (SavingsBO) accountBO;
-		AccountActionDateEntity firstInstallmentActionDate = savings
-				.getAccountActionDate((short) 3);
-		collectionSheet = createCollectionSheet(firstInstallmentActionDate
-				.getActionDate());
-		generateCollectionSheetForDate(collectionSheet);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
-		collectionSheet.update(Short.valueOf("2"));
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = collectionSheet
-				.getCollectionSheetCustomerForCustomerId(client.getCustomerId())
-				.getSavingsDetailsForAccntId(savings.getAccountId());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
-		assertEquals(400.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-	}
-
-	public void testCollSheetForSavingsDepositVoluntary() throws Exception {
-		accountBO = createSavingsAccount(SavingsType.VOLUNTARY);
-		SavingsBO savings = (SavingsBO) accountBO;
-		AccountActionDateEntity firstInstallmentActionDate = savings
-				.getAccountActionDate((short) 3);
-		collectionSheet = createCollectionSheet(firstInstallmentActionDate
-				.getActionDate());
-		generateCollectionSheetForDate(collectionSheet);
-		HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
-		collectionSheet.update(Short.valueOf("2"));
-		HibernateUtil.getTransaction().commit();
-		HibernateUtil.closeSession();
-		CollSheetSavingsDetailsEntity collSheetSavingsDetail = collectionSheet
-				.getCollectionSheetCustomerForCustomerId(client.getCustomerId())
-				.getSavingsDetailsForAccntId(savings.getAccountId());
-		assertEquals(200.00, collSheetSavingsDetail.getRecommendedAmntDue()
-				.getAmountDoubleValue());
-		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue()
-				.getAmountDoubleValue());
-	}
-
-	public void testPouplateCustomers() {
+	public void testPouplateCustomers() throws SystemException, ApplicationException {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 		List<AccountActionDateEntity> accountActionDates = 
 			getCustomerAccntDetails();
-		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
+		collSheet.populateCustomerLoanAndSavingsDetails(accountActionDates);
 		assertEquals(collSheet.getCollectionSheetCustomers().size(), 3);
 		for (AccountActionDateEntity entity : accountActionDates) {
 			TestObjectFactory.cleanUp(entity.getCustomer());
 		}
-	}
-
-	public void testPopulateLoanAccounts() throws Exception {
-		CollectionSheetBO collSheet = new CollectionSheetBO();
-		List<AccountActionDateEntity> accountActionDates = getLnAccntDetails();
-		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
-
-		collSheet.populateLoanAccounts(accountActionDates);
-
-		Set<CollSheetCustBO> collSheetCustBOs = collSheet
-				.getCollectionSheetCustomers();
-		for (CollSheetCustBO collSheetCust : collSheetCustBOs) {
-			assertNotNull(collSheetCust.getCollectionSheetLoanDetails());
-		}
-
-		doCleanUp(accountActionDates);
-	}
-
-	public void testUpdateCollectiveTotals() throws Exception {
-		CollectionSheetBO collSheet = new CollectionSheetBO();
-		List<AccountActionDateEntity> accountActionDates = getLnAccntDetails();
-		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
-		collSheet.populateLoanAccounts(accountActionDates);
-		doCleanUp(accountActionDates);
 	}
 
 	public void testCreateSuccess() throws Exception {

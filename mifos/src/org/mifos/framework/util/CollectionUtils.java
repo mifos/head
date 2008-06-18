@@ -7,9 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.LoanCounter;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.framework.util.helpers.Transformer;
 
@@ -83,7 +80,8 @@ public class CollectionUtils {
 		return collect(selectedCollection, transformer);
 	}
 
-	public static <T, O> Collection<O> collect(Collection<T> collection, Transformer<T, O> transformer) {
+	public static <T, O> Collection<O> collect(Collection<T> collection,
+			Transformer<T, O> transformer) {
 		Collection<O> outputCollection = new ArrayList<O>();
 		for (T item : collection) {
 			outputCollection.add(transformer.transform(item));
@@ -101,5 +99,21 @@ public class CollectionUtils {
 				}
 			}
 		}
+	}
+
+	public static List<List> splitListIntoParts(List list, int sizeOfEachPart) {
+		if (sizeOfEachPart <= 0)
+			throw new IllegalArgumentException(
+					"Cannot split list into sizes of zero or less. Given value: "
+							+ sizeOfEachPart);
+
+		List<List> result = new ArrayList<List>();
+		int start = 0, end = sizeOfEachPart;
+		while (start < list.size()) {
+			result.add(list.subList(start, Math.min(end, list.size())));
+			start = end;
+			end += sizeOfEachPart;
+		}
+		return result;
 	}
 }

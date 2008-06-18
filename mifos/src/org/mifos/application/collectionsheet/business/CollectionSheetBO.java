@@ -38,8 +38,10 @@
 package org.mifos.application.collectionsheet.business;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -58,6 +60,8 @@ import org.mifos.framework.exceptions.SystemException;
 
 public class CollectionSheetBO extends BusinessObject {
 
+	private static final int CUSTOMER_ID_MAP_INITIAL_CAPACITY = 10000;
+
 	public CollectionSheetBO() {
 		super();
 	}
@@ -71,8 +75,10 @@ public class CollectionSheetBO extends BusinessObject {
 	private Date runDate;
 
 	private Set<CollSheetCustBO> collectionSheetCustomers;
-
 	
+	private Map<Integer, CollSheetCustBO> collectionSheetCustomerLookup = new HashMap<Integer, CollSheetCustBO>(
+			CUSTOMER_ID_MAP_INITIAL_CAPACITY);
+
 	public void populateTestInstance(Date collSheetDate, Date runDate, Set<CollSheetCustBO> collectionSheetCustomers, 
 			Short statusFlag) {
 		this.collSheetDate = collSheetDate;
@@ -138,6 +144,7 @@ public class CollectionSheetBO extends BusinessObject {
 			collectionSheetCustomers = new HashSet<CollSheetCustBO>();
 		}
 		collectionSheetCustomers.add(collectionSheetCustomer);
+		collectionSheetCustomerLookup.put(collectionSheetCustomer.getCustId(), collectionSheetCustomer);
 	}
 
 	/**
@@ -148,15 +155,7 @@ public class CollectionSheetBO extends BusinessObject {
 	 */
 	public CollSheetCustBO getCollectionSheetCustomerForCustomerId(
 			Integer customerId) {
-		if (null != collectionSheetCustomers
-				&& collectionSheetCustomers.size() > 0) {
-			for (CollSheetCustBO collectionSheetCustomer : collectionSheetCustomers) {
-				if (collectionSheetCustomer.getCustId().equals(customerId)) {
-					return collectionSheetCustomer;
-				}
-			}
-		}
-		return null;
+		return collectionSheetCustomerLookup.get(customerId);
 	}
 
 	/**
@@ -240,15 +239,18 @@ public class CollectionSheetBO extends BusinessObject {
 	}
 
 	/**
-	 * Populates customer and customer account details.
+	 * Populates customer, customer account, loan and savings details
 	 * 
 	 * This is achieved by retrieving customer objects from the list
 	 * accountActionDates passed as parameter, also if the account associated
 	 * with that item of accountActionDates is a CustomerAccount it populates
 	 * the relevant details from that object like fees , misc penalty etc.
+	 * @throws ApplicationException 
+	 * @throws SystemException 
 	 */
-	void pouplateCustAndCustAccntDetails(
-			List<AccountActionDateEntity> accountActionDates) {
+	void populateCustomerLoanAndSavingsDetails(
+			List<AccountActionDateEntity> accountActionDates) throws SystemException, ApplicationException {
+		long cumulative = 0, count = 0;
 		for (AccountActionDateEntity accountActionDate : accountActionDates) {
 			// it might be present in the set if that customer was already added
 			// because it has got more than one loan/savings account.
@@ -257,7 +259,6 @@ public class CollectionSheetBO extends BusinessObject {
 					.debug("checkin if the customer already exists in the list");
 			CollSheetCustBO collectionSheetCustomer = getCollectionSheetCustomerForCustomerId(accountActionDate
 					.getCustomer().getCustomerId());
-
 			if (null == collectionSheetCustomer) {
 				collectionSheetCustomer = new CollSheetCustBO();
 				CustomerBO customer = accountActionDate.getCustomer();
@@ -277,6 +278,7 @@ public class CollectionSheetBO extends BusinessObject {
 							"account type id is "
 									+ accountActionDate.getAccount()
 											.getType());
+			addCollectionSheetCustomer(collectionSheetCustomer);
 			if (accountActionDate.getAccount().getType()
 					== AccountTypes.CUSTOMER_ACCOUNT) {
 				collectionSheetCustomer
@@ -284,71 +286,19 @@ public class CollectionSheetBO extends BusinessObject {
 				MifosLogManager
 						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 						.debug("after adding account details");
-			}
-			addCollectionSheetCustomer(collectionSheetCustomer);
-		}
-
-	}
-
-	/**
-	 * 
-	 * This method creates an object of CollSheetLnDetailsEntity for every
-	 * record in accountActiondates if the account type associated with that
-	 * record is a loan account.It populates the due and over due amounts for
-	 * that CollectionSheetLnDetailsEntity object and then adds that object to
-	 * the respective collectionsheetCustBO object.
-	 */
-	void populateLoanAccounts(List<AccountActionDateEntity> accountActionDates)
-			throws SystemException, ApplicationException {
-
-		// This method assumes that Customer details for customer id to which
-		// the loan account belongs are already populated because of a call to
-		// pouplateCustAndCustAccntDetails() method before calling this method.
-		// iterate over the accountActionDateList and check if there is any loan
-		// account due to meet today if yes add it to the
-		// collectionSheetCustomer.
-		for (AccountActionDateEntity accountActionDate : accountActionDates) {
-			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug("accounts size: " + accountActionDates.size());
-			if (accountActionDate.getAccount().getType()
+			}else if (accountActionDate.getAccount().getType()
 					== AccountTypes.LOAN_ACCOUNT) {
 				MifosLogManager
 						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 						.debug("Loan accoutns size: " + accountActionDate);
 				CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
 				collectionSheetLoanDetail.addAccountDetails(accountActionDate);
-				getCollectionSheetCustomerForCustomerId(
-						accountActionDate.getCustomer().getCustomerId())
-						.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
-			}
-		}
-	}
-
-	/**
-	 * This method terates over the lst of account acton dates and if the
-	 * account is of type savings account, it creates a new object of
-	 * CollSheetSavingsEntityDetaislEntity sets the account totals in that
-	 * object and then adds that object to the record with corresponding
-	 * cutomerid in collectionSheetcustomer set.
-	 */
-	void populateSavingsAccounts(
-			List<AccountActionDateEntity> accountActionDates)
-			throws SystemException, ApplicationException {
-
-		// This method assumes that Customer details for customer id to which
-		// the loan account belongs are already populated because of a call to
-		// pouplateCustAndCustAccntDetails()method before calling this
-		// method.iterate over the accountActionDateList and check if there is
-		// any savings account due to meet today if yes add it to the
-		// collectionSheetCustomer.
-		for (AccountActionDateEntity accountActionDate : accountActionDates) {
-			if (accountActionDate.getAccount().getType()
+				collectionSheetCustomer.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
+			}else if (accountActionDate.getAccount().getType()
 					== AccountTypes.SAVINGS_ACCOUNT) {
 				CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 				collSheetSavingsDetail.addAccountDetails(accountActionDate);
-				getCollectionSheetCustomerForCustomerId(
-						accountActionDate.getCustomer().getCustomerId())
-						.addCollectionSheetSavingsDetail(collSheetSavingsDetail);
+				collectionSheetCustomer.addCollectionSheetSavingsDetail(collSheetSavingsDetail);
 			}
 		}
 	}
@@ -365,14 +315,8 @@ public class CollectionSheetBO extends BusinessObject {
 	public void populateAccountActionDates(
 			List<AccountActionDateEntity> accountActionDates)
 			throws SystemException, ApplicationException {
-		pouplateCustAndCustAccntDetails(accountActionDates);
+		populateCustomerLoanAndSavingsDetails(accountActionDates);
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
 				"after populate customers");
-		populateLoanAccounts(accountActionDates);
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
-				"after populate loan accounts");
-		populateSavingsAccounts(accountActionDates);
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(
-				"after populate after populate savings account");
 	}
 }

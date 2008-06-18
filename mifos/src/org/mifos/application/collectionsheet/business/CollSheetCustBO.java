@@ -492,17 +492,12 @@ public class CollSheetCustBO extends BusinessObject {
 		
 	}
 	
-	
 	public Short getLoanOfficerId() {
 		return loanOfficerId;
 	}
 	
-	
 	public void setLoanOfficerId(Short loanOfficerId) {
 		this.loanOfficerId = loanOfficerId;
 	}
-
-
-
 	
 }

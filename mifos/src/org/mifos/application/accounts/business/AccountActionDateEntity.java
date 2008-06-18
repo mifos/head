@@ -130,4 +130,6 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 	public boolean isPaid() {
 		return getPaymentStatusAsEnum() == PaymentStatus.PAID;
 	}
+
+	
 }
