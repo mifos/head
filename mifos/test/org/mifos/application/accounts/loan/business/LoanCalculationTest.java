@@ -788,9 +788,49 @@ public class LoanCalculationTest  {
 	
 	// decliningEPI
 	@Test
+	public void testDecliningEPISoham25Installments1DigitAfterDecimal() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham25Installments1DigitAfterDecimal.csv");
+		
+	}
+
+	@Test
+	public void testDecliningEPISoham60Installments1DigitAfterDecimal() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham60Installments1DigitAfterDecimal.csv");
+		
+	}
+	@Test
+	public void testDecliningEPISoham25Installments() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham25Installments.csv");
+		
+	}
+
+	@Test
+	public void testDecliningEPISoham60Installments() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-Soham60Installments.csv");
+		
+	}
+	
+	@Test
+	public void testDecliningEPINoFeeNoGrace() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-NoGrace.csv");
+		
+	}
+	
+	
+	@Test
 	public void testDecliningEPIWithFeeWithGrace() throws Exception 
 	{
-		allConsoleOutputEnabled = true;
+		
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
 		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-WithFee-WithGrace.csv");
 		
@@ -799,20 +839,13 @@ public class LoanCalculationTest  {
 	@Test
 	public void testDecliningEPINoFeeWithGrace() throws Exception 
 	{
-		allConsoleOutputEnabled = true;
+	
 		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
 		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-WithGrace.csv");
 		
 	}
 	
-	@Test
-	public void testDecliningEPINoFeeNoGrace() throws Exception 
-	{
-		allConsoleOutputEnabled = true;
-		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
-		runOneTestCaseWithDataFromSpreadSheet(rootPath, "decliningEPI-NoFee-NoGrace.csv");
-		
-	}
+	
 	
 	
 	
@@ -1695,12 +1728,12 @@ class LoanTestCaseData {
 	{
 		setNumberOfInterestDays(config.getDaysInYear());
 		AccountingRules.setDigitsAfterDecimal((short)config.getDigitsAfterDecimal());
-		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
 		setInitialRoundingMode(config.getInitialRoundingMode());
 		setFinalRoundingMode(config.getFinalRoundingMode());
 		AccountingRules.setInitialRoundOffMultiple(new BigDecimal(config.getInitialRoundOffMultiple()));
 		AccountingRules.setFinalRoundOffMultiple(new BigDecimal(config.getFinalRoundOffMultiple()));
 		AccountingRules.setCurrencyRoundingMode(config.getCurrencyRoundingMode());
+		Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
 		
 		/*
 		 * When constructing a "meeting" here, it looks like the frequency 
