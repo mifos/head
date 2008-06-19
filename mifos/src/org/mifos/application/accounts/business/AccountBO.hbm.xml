@@ -131,7 +131,7 @@
 			<many-to-one name="loanMeeting" column="MEETING_ID"
 				access="field"
 				class="org.mifos.application.meeting.business.MeetingBO"
-				unique="true" insert="true" cascade="all" update="false" />
+				unique="true" insert="true" cascade="all"/>
 			<many-to-one name="gracePeriodType"
 				column="GRACE_PERIOD_TYPE_ID"
 				class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"

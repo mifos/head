@@ -1395,7 +1395,9 @@ public class LoanBO extends AccountBO {
 			Date disbursmentDate, Short gracePeriodDuration,
 			Integer businessActivityId, String collateralNote,
 			Integer collateralTypeId,
-			List<CustomFieldView> customFields) throws AccountException {
+			List<CustomFieldView> customFields,
+			boolean isRepaymentIndepOfMeetingEnabled,
+			MeetingBO newMeetingForRepaymentDay) throws AccountException {
 		if (interestDeductedAtDisbursment) {
 			try {
 				if (noOfInstallments <= 1)
@@ -1431,14 +1433,7 @@ public class LoanBO extends AccountBO {
 			if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 				throw new AccountException(
 						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-			boolean isRepaymentIndependentOfMeetings = false;
-			try {
-				isRepaymentIndependentOfMeetings = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
-			}
-			catch (PersistenceException e) {
-				throw new AccountException(e);
-			}
-			regeneratePaymentSchedule(isRepaymentIndependentOfMeetings, null);
+			regeneratePaymentSchedule(isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
 		}
 		updateCustomFields(customFields);
 		loanSummary.setOriginalPrincipal(loanAmount);
@@ -3205,6 +3200,16 @@ private List<EMIInstallment> allDecliningInstallments(Money loanInterest)
 		}
 		catch (PersistenceException e) {
 			throw new AccountException(e);
+		}
+		// Delete previous loan meeting if there is a new meeting for repayment day
+		if (isRepaymentIndepOfMeetingEnabled && newMeetingForRepaymentDay != null) {
+			try {
+				if (null != this.getLoanMeeting()) {
+					new LoanPersistence().delete(this.getLoanMeeting());
+				}
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 		this.resetAccountActionDates();
 		loanMeeting.setMeetingStartDate(disbursementDate);

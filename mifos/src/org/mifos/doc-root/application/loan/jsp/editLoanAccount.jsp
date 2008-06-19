@@ -92,6 +92,10 @@ explanation of the license and how it is applied.
 				func_disableSubmitBtn("approvedButton");
 				
 			}
+            function fun_cancel(form) {
+		    	form.action="loanAccountAction.do?method=cancel";
+				form.submit();
+            }
  		</script>
 
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -102,7 +106,10 @@ explanation of the license and how it is applied.
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}"	var="loanIndividualMonitoringIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />
-			
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceId')}" var="recurrenceId" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceName')}" var="recurrenceName" />
+
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
@@ -274,7 +281,40 @@ explanation of the license and how it is applied.
 							<html-el:hidden property="intDedDisbursement" value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
 							<input type="checkbox" name="intDedDisb" onclick="setGracePeriod()" /></td>
 						</tr>
-						-->							
+						-->
+						
+						<!--  For Repayment day  -->
+						<c:if
+							test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
+							<tr class="fontnormal">
+
+								<td align="right" class="fontnormal"><span
+									class="mandatorytext"></span> <mifos:mifoslabel
+									name="loan.repayment_date" mandatory="yes" />:</td>
+								<td valign="top"><c:if
+									test="${recurrenceId == '2'}">
+									<mifos:mifoslabel name="meeting.labelThe"
+										bundle="MeetingResources" />
+									<mifos:select property="monthRank">
+										<c:forEach var="weekRank"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}">
+											<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+										</c:forEach>
+									</mifos:select>
+								</c:if><mifos:select property="monthWeek">
+									<c:forEach var="weekDay"
+										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}">
+										<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
+									</c:forEach>
+								</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
+									bundle="MeetingResources" /> <mifos:mifosnumbertext
+									property="recurMonth" size="3" maxlength="3" disabled="true" />
+								<c:out
+									value="${recurrenceName}" />
+								</td>
+							</tr>
+						</c:if>
+										
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>
@@ -399,6 +439,8 @@ explanation of the license and how it is applied.
 				property="globalAccountNum" />
 			<html-el:hidden value="${BusinessKey.accountState.id}"
 				property="accountStateId" />
+			<html-el:hidden value="${recurrenceId}"
+				property="recurrenceId" />
 
 		</html-el:form>
 		</body>

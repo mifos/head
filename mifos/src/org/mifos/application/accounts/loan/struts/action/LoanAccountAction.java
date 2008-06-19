@@ -25,6 +25,7 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.PER
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.PROPOSEDDISBDATE;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.RECENTACCOUNTACTIVITIES;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
+import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
@@ -104,6 +105,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanAmountOption;
@@ -562,13 +564,12 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		MeetingDetailsEntity meetingDetails = customerBO.getCustomerMeeting()
 				.getMeeting().getMeetingDetails();
-		if (recurrenceType == RecurrenceType.WEEKLY)
-			loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue()
-					.toString());
+		loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
 		if (recurrenceType == RecurrenceType.MONTHLY
-				&& meetingDetails.getWeekRank() != null)
+				&& meetingDetails.getWeekRank() != null) {
 			loanActionForm.setMonthRank(meetingDetails.getWeekRank().getValue()
 					.toString());
+		}
 
 		SessionUtils.removeAttribute(LOANOFFERING, request);
 		SessionUtils.setAttribute(LOANOFFERING, loanOffering,
@@ -715,20 +716,12 @@ public class LoanAccountAction extends AccountAppAction {
 		CustomerBO customer = getCustomer(request);
 		LoanBO loan;
 		MeetingBO newMeetingForRepaymentDay = null;
-		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();        
         
-        if (isRepaymentIndepOfMeetingEnabled){
-        	RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
-        	final Date repaymentStartDate = this.resolveRepaymentStartDate(loanActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
-        	if(recurrenceType == RecurrenceType.WEEKLY)
-        		newMeetingForRepaymentDay = new MeetingBO(recurrenceType.getValue(), Short.valueOf(loanActionForm.getMonthWeek()), 
-        				Short.valueOf(loanActionForm.getRecurMonth()), repaymentStartDate, 
-        				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
-        	else if(recurrenceType == RecurrenceType.MONTHLY)
-        		newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanActionForm.getMonthWeek()), Short.valueOf(loanActionForm.getRecurMonth()), 
-        				repaymentStartDate, 
-        				MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
-        				Short.valueOf(loanActionForm.getMonthRank()));
+		// Resolve new meeting for repayment day
+		if (isRepaymentIndepOfMeetingEnabled){
+        	Short recurrenceId = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();        	
+        	newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanActionForm, customer, recurrenceId);
         }
         
 
@@ -1135,6 +1128,18 @@ public class LoanAccountAction extends AccountAppAction {
 					clients, request);
 
 		}
+		// Set necessary form data if RepaymentIndepOfMeetingEnabled flag is true
+		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+			SessionUtils.setAttribute(
+							REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+							1, request);
+			SessionUtils.setAttribute(LOANACCOUNTOWNERISACLIENT,
+					"yes", request);
+			loadDataForRepaymentDate(request);
+			loanActionForm.setRecurMonth(customer.getCustomerMeeting()
+					.getMeeting().getMeetingDetails().getRecurAfter()
+					.toString());
+		}
 
 		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
@@ -1152,6 +1157,26 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(LOANOFFERING, loanOffering,
 				request);
 		loadUpdateMasterData(request);
+		
+		// Set repayment day form and request variables
+		if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isWeekly()) {
+			WeekDay weekday = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue();		
+			if (null != weekday) {
+				loanActionForm.setMonthWeek(new Short(weekday.getValue()).toString());
+			}
+		} else if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isMonthly()) {
+			Short weekDayValue = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue().getValue();		
+			if (null != weekDayValue) {
+				loanActionForm.setMonthWeek(weekDayValue.toString());
+			}
+			RankOfDaysEntity rankOfDays = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getRankOfDays();			
+			if (null != rankOfDays) {
+				loanActionForm.setMonthRank(rankOfDays.getId().toString());
+			}
+		}
+		SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum().getValue(), request);
+		SessionUtils.setAttribute(RECURRENCENAME, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceName(), request);
+		
 		setFormAttributes(loanBO, form, request);
 		loanBOInSession = null;
 		return mapping.findForward(ActionForwards.manage_success.toString());
@@ -1279,6 +1304,18 @@ public class LoanAccountAction extends AccountAppAction {
 		setInitialObjectForAuditLogging(loanBO);
 
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		
+		// Set newMeetingForRepaymentDay if isRepaymentIndepOfMeetingEnabled flag is true
+		CustomerBO customer = loanBOInSession.getCustomer();
+		MeetingBO newMeetingForRepaymentDay = null;
+		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		
+		// Resolve new meeting for repayment day
+		if (isRepaymentIndepOfMeetingEnabled){
+		        	Short recurrenceId = (Short) SessionUtils.getAttribute(RECURRENCEID, request);
+		        	newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer, recurrenceId);
+		}
+		
 		loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(),
 				loanAccountActionForm.getLoanAmountValue(),
 				loanAccountActionForm.getInterestDoubleValue(),
@@ -1288,7 +1325,10 @@ public class LoanAccountAction extends AccountAppAction {
 						.getGracePeriodDurationValue(), loanAccountActionForm
 						.getBusinessActivityIdValue(), loanAccountActionForm
 						.getCollateralNote(), loanAccountActionForm.getCollateralTypeIdValue(),
-						loanAccountActionForm.getCustomFields());		
+						loanAccountActionForm.getCustomFields(),
+						isRepaymentIndepOfMeetingEnabled,
+						newMeetingForRepaymentDay
+						);		
 	      
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 		
@@ -1321,6 +1361,31 @@ public class LoanAccountAction extends AccountAppAction {
 		
 		
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	/**
+	 * Create new meeting for the repayment day.
+	 * 
+	 * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be created and returned
+	 *  
+	 */
+	private MeetingBO createNewMeetingForRepaymentDay(
+			HttpServletRequest request,
+			LoanAccountActionForm loanAccountActionForm,
+			CustomerBO customer, Short recurrenceId)
+			throws PersistenceException, MeetingException {
+		MeetingBO newMeetingForRepaymentDay = null;
+		final Date repaymentStartDate = this.resolveRepaymentStartDate(loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
+		if(RecurrenceType.WEEKLY.getValue().equals(recurrenceId))
+			newMeetingForRepaymentDay = new MeetingBO(recurrenceId, Short.valueOf(loanAccountActionForm.getMonthWeek()), 
+					Short.valueOf(loanAccountActionForm.getRecurMonth()), repaymentStartDate, 
+					MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());    	
+		else if(RecurrenceType.MONTHLY.getValue().equals(recurrenceId))
+			newMeetingForRepaymentDay = new MeetingBO(Short.valueOf(loanAccountActionForm.getMonthWeek()), Short.valueOf(loanAccountActionForm.getRecurMonth()), 
+					repaymentStartDate, 
+					MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+					Short.valueOf(loanAccountActionForm.getMonthRank()));
+		return newMeetingForRepaymentDay;
 	}
 
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {

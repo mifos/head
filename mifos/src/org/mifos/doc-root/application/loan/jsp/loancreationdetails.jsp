@@ -702,6 +702,8 @@ explanation of the license and how it is applied.
 				value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="perspective"
 				value="${loanAccountActionForm.perspective}" />
+			<html-el:hidden value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId}"
+				property="recurrenceId" />
 			<script>intDedAtDisb();</script>
 		</html-el:form>
 	</tiles:put>

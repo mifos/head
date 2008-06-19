@@ -287,7 +287,7 @@ public class TestLoanBO extends MifosTestCase {
 					loanBO.getLoanAmount(), loanBO.getInterestRate(), 
 					loanBO.getNoOfInstallments(), loanBO.getDisbursementDate(),
 					loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), "Loan account updated",
-					null, null);
+					null, null, false, null);
 
 			FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 					"Periodic Fee", FeeCategory.LOAN, "25", RecurrenceType.WEEKLY,
@@ -374,7 +374,7 @@ public class TestLoanBO extends MifosTestCase {
 					loanBO.getLoanAmount(), loanBO.getInterestRate(), 
 					loanBO.getNoOfInstallments(), loanBO.getDisbursementDate(),
 					loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), "Loan account updated",
-					null, null);
+					null, null, false, null);
 
 			HashMap fees1 = new HashMap();
 			fees1.put("Mainatnence Fee", "100.0");
@@ -1281,7 +1281,7 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanBO) accountBO).updateLoan(true, loanBO.getLoanAmount(), loanBO
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
 				(short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2,
-				"Added note", null, null);
+				"Added note", null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = TestObjectFactory.getObject(CustomerBO.class, group
@@ -4194,7 +4194,7 @@ public class TestLoanBO extends MifosTestCase {
 				loanBO.getInterestRate(), loanBO.getNoOfInstallments(),
 				newDate, loanBO.getGracePeriodDuration(), loanBO
 						.getBusinessActivityId(), loanBO.getCollateralNote(),
-				null, null);
+				null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = TestObjectFactory.getObject(CustomerBO.class, group
@@ -4223,7 +4223,7 @@ public class TestLoanBO extends MifosTestCase {
 				loanBO.getInterestRate(), loanBO.getNoOfInstallments(),
 				newDate, loanBO.getGracePeriodDuration(), loanBO
 						.getBusinessActivityId(), loanBO.getCollateralNote(),
-				null, null);
+				null, null, false, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = TestObjectFactory.getObject(CustomerBO.class, group
@@ -4913,7 +4913,7 @@ public class TestLoanBO extends MifosTestCase {
 							.getNoOfInstallments(), offSetCurrentDate(15),
 					loanBO.getGracePeriodDuration(), loanBO
 							.getBusinessActivityId(), "Loan account updated",
-					null, null);
+					null, null, false, null);
 			fail("The Loan object is created for invalid disbursement date");
 		}
 		catch (AccountException expected) {
@@ -4938,7 +4938,7 @@ public class TestLoanBO extends MifosTestCase {
 							.getDisbursementDate(), loanBO
 							.getGracePeriodDuration(), loanBO
 							.getBusinessActivityId(), "Loan account updated",
-					null, null);
+					null, null, false, null);
 			assertTrue(
 					"The Loan object is created for valid disbursement date",
 					true);
@@ -4959,7 +4959,7 @@ public class TestLoanBO extends MifosTestCase {
 				loanBO.getLoanAmount(), loanBO.getInterestRate(), 
 				NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), 
 				loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), 
-				"Loan account updated",	null, null);
+				"Loan account updated",	null, null, false, null);
 			fail("Invalid no of installment");
 		}
 		catch (AccountException ae) {
@@ -4976,7 +4976,7 @@ public class TestLoanBO extends MifosTestCase {
 				loanBO.getLoanAmount(), loanBO.getInterestRate(), 
 				NUMBER_OF_INSTALLMENTS, loanBO.getDisbursementDate(), 
 				loanBO.getGracePeriodDuration(), loanBO.getBusinessActivityId(), 
-				"Loan account updated",	null, null);
+				"Loan account updated",	null, null, false, null);
 		}
 		catch (AccountException ae) {
 			fail("Invalid no of installment");

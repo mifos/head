@@ -78,7 +78,6 @@ public class MeetingBO extends BusinessObject {
 	private Date meetingStartDate;
 
 	private String meetingPlace;
-	private Short weekNumber;
 	
 	/* TODO: This looks like it should be a local variable in
 	   each of the places which uses it.  I don't see it being
@@ -143,11 +142,11 @@ public class MeetingBO extends BusinessObject {
 	}
 	
 	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, 
-			MeetingType meetingType, String meetingPlace,short weekNumber)
+			MeetingType meetingType, String meetingPlace, Short weekNumber)
 	throws MeetingException {
 		
-		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, 
-				startDate, meetingType, meetingPlace,weekNumber);
+		this(RecurrenceType.MONTHLY, null, WeekDay.getWeekDay(dayNumber), RankType.getRankType(weekNumber), recurAfter, 
+				startDate, meetingType, meetingPlace);
 		
 	}
 	public MeetingBO(int recurrenceId,Short dayNumber, Short recurAfter, Date startDate, 
@@ -158,22 +157,7 @@ public class MeetingBO extends BusinessObject {
 				startDate, meetingType, meetingPlace);
 		
 	}
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber,
-			WeekDay weekDay, RankType rank, Short recurAfter, 
-			Date startDate, MeetingType meetingType, String meetingPlace, short weekNumber)
-	throws MeetingException {
-	  	this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
-		this.meetingDetails = new MeetingDetailsEntity(
-				new RecurrenceTypeEntity(recurrenceType), dayNumber, 
-				weekDay, rank, recurAfter, this);
-		//TODO: remove this check after meeting create is migrated.
-	  	if(meetingType!=null)
-			this.meetingType = new MeetingTypeEntity(meetingType);
-		this.meetingId = null;
-		this.meetingStartDate = DateUtils.getDateWithoutTimeStamp(startDate.getTime());
-		this.meetingPlace = meetingPlace;
-		this.weekNumber= weekNumber;
-	}	
+	
 	public MeetingDetailsEntity getMeetingDetails() {
 		return meetingDetails;
 	}
@@ -592,14 +576,14 @@ public class MeetingBO extends BusinessObject {
 			int disbursalDateValue = gc.get(GregorianCalendar.DATE);
 			
 			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getWeekNumber());
+			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
 			int fisrtRepaymentDateValue= gc.get(GregorianCalendar.DATE);
 			//if date passed in, is after the date on which schedule has to lie, move to next month 
 			if(disbursalDateValue>=fisrtRepaymentDateValue)
 				gc.add(GregorianCalendar.MONTH,1);
 			
 			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getWeekNumber());
+			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
 			
 			scheduleDate=gc.getTime();
 			
@@ -644,7 +628,7 @@ public class MeetingBO extends BusinessObject {
 //			move to next month and return date.
 			gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
 			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getWeekNumber());
+			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
 			scheduleDate=gc.getTime();
 		}else{
 			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST))
@@ -674,11 +658,4 @@ public class MeetingBO extends BusinessObject {
 		return scheduleDate;
 	}
 
-	public Short getWeekNumber() {
-		return weekNumber;
-	}
-
-	public void setWeekNumber(Short weekNumber) {
-		this.weekNumber = weekNumber;
-	}
 }

@@ -67,6 +67,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.AmountRange;
@@ -75,8 +76,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -170,6 +171,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String recurMonth;
 
 	private String firstRepaymentDay;
+	
+	private String recurrenceId;
 
 	private AmountRange amountRange;
 
@@ -213,6 +216,14 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	public void setWeekRank(String weekRank) {
 		this.weekRank = weekRank;
+	}
+	
+	public String getRecurrenceId() {
+		return recurrenceId;
+	}
+
+	public void setRecurrenceId(String recurrenceId) {
+		this.recurrenceId = recurrenceId;
 	}
 
 	public List<PaymentDataHtmlBean> getPaymentDataBeans() {
@@ -620,6 +631,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 				|| getState().equals(AccountState.LOAN_PENDING_APPROVAL))
 			checkValidationForPreview(errors, request);
 		validateCustomFields(request, errors);
+		validateRepaymentDayRequired(request, errors);
 	}
 
 	private void checkValidationForPreviewBefore(ActionErrors errors,
@@ -876,10 +888,13 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private void validateRepaymentDayRequired(HttpServletRequest request,
 			ActionErrors errors) {
 		try {
-			//   Integer  recurrenceId=(Integer) request.getAttribute("recurrenceId");
-			int recurrenceId = 1;
+			// Default
+			Short recurrenceId = RecurrenceType.WEEKLY.getValue();
+			if (null != this.getRecurrenceId()) {
+				recurrenceId = new Short(this.getRecurrenceId());
+			}
 			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
-				if (recurrenceId == 2) {
+				if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
 					if (StringUtils.isNullOrEmpty(this.getMonthRank())
 							|| StringUtils.isNullOrEmpty(this.getMonthWeek())
 							|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
@@ -889,7 +904,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 					}
 				}
-				else if (recurrenceId == 1) {
+				else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
 					if (StringUtils.isNullOrEmpty(this.getMonthWeek())
 							|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
 						addError(errors, "",

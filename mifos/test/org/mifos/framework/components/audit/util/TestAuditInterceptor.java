@@ -61,7 +61,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
 				(short)2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, 
 				"Added note", null,
-				null);
+				null, false, null);
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
