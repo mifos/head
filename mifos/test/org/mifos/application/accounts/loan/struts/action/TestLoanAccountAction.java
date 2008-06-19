@@ -1001,7 +1001,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		Date firstInstallmentDate = loan.getDetailsOfNextInstallment()
 				.getActionDate();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		String newDate = offSetCurrentDate(6, userContext.getPreferredLocale());
+		Date newDate = DateUtils.addWeeks(loan.getDisbursementDate(), 1);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -1012,7 +1012,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 				.getDefInterestRate().toString());
 		addRequestParameter("noOfInstallments", loanOffering.getEligibleInstallmentSameForAllLoan()
 				.getDefaultNoOfInstall().toString());
-		addRequestParameter("disbursementDate", newDate);
+		addRequestParameter("disbursementDate", DateUtils.format(newDate));
 		addRequestParameter("businessActivityId", "1");
 		addRequestParameter("intDedDisbursement", "0");
 		addRequestParameter("gracePeriodDuration", "1");
@@ -1025,7 +1025,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
 		assertFalse(loan.isInterestDeductedAtDisbursement());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
-		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
+		assertEquals(DateUtils.format(newDate), DateUtils.getUserLocaleDate(TestObjectFactory
 				.getContext().getPreferredLocale(), DateUtils
 				.toDatabaseFormat(loan.getDisbursementDate())));
 		assertEquals(firstInstallmentDate, loan.getAccountActionDate(

@@ -69,6 +69,7 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -1309,11 +1310,16 @@ public class LoanAccountAction extends AccountAppAction {
 		CustomerBO customer = loanBOInSession.getCustomer();
 		MeetingBO newMeetingForRepaymentDay = null;
 		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
-		
+
 		// Resolve new meeting for repayment day
 		if (isRepaymentIndepOfMeetingEnabled){
-		        	Short recurrenceId = (Short) SessionUtils.getAttribute(RECURRENCEID, request);
-		        	newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer, recurrenceId);
+		     Short recurrenceId = (Short) SessionUtils.getAttribute(RECURRENCEID, request);
+		     newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer, recurrenceId);
+		}
+		// ensure new disbursement date falls on a meeting day
+		else {
+			if (!isNewDisbursalDateValid(request, loanAccountActionForm, customer))
+				throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);;
 		}
 		
 		loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(),
@@ -1339,28 +1345,37 @@ public class LoanAccountAction extends AccountAppAction {
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0
 				&& loanBO.getCustomer().getCustomerLevel().isGroup()) {
-		
-		List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
-		
-        for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-        	
-        	loanBO.updateLoan(
-        			new Money(!loanAccountDetail
-        					.getLoanAmount().toString().equals("-")?loanAccountDetail
-					.getLoanAmount().longValue()+"":"0"),
-    				!loanAccountDetail.getBusinessActivity().equals("-")?Integer.valueOf(loanAccountDetail.getBusinessActivity()):0);
-       	request.setAttribute(CUSTOMER_ID,loanBO.getCustomer().getCustomerId().toString());
+			List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
+			
+	        for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
+	        	loanBO.updateLoan(new Money(!loanAccountDetail
+	        					.getLoanAmount().toString().equals("-")?loanAccountDetail
+						.getLoanAmount().longValue()+"":"0"),
+	    				!loanAccountDetail.getBusinessActivity().equals("-")?Integer.valueOf(loanAccountDetail.getBusinessActivity()):0);
+	        	request.setAttribute(CUSTOMER_ID,loanBO.getCustomer().getCustomerId().toString());
+			}
+	    }
 
-		}
-    }
-
-		
 		loanBOInSession = null;
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
 		
-		
 		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	/**
+	 * Checks that the user-specified disbursement date falls on a meeting date
+	 */
+	private boolean isNewDisbursalDateValid(HttpServletRequest request, LoanAccountActionForm loanAccountActionForm, CustomerBO customer) 
+		throws MeetingException {
+		Date disbursementDate = loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale());
+		int numberOfInstallments = loanAccountActionForm.getNoOfInstallmentsValue();
+		List<Date> meetingDates = customer.getCustomerMeeting().getMeeting().getAllDates(numberOfInstallments);
+		for (Date date : meetingDates) {
+			if (disbursementDate.equals(DateUtils.getDateWithoutTimeStamp(date)))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1376,6 +1391,7 @@ public class LoanAccountAction extends AccountAppAction {
 			throws PersistenceException, MeetingException {
 		MeetingBO newMeetingForRepaymentDay = null;
 		final Date repaymentStartDate = this.resolveRepaymentStartDate(loanAccountActionForm.getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
+		
 		if(RecurrenceType.WEEKLY.getValue().equals(recurrenceId))
 			newMeetingForRepaymentDay = new MeetingBO(recurrenceId, Short.valueOf(loanAccountActionForm.getMonthWeek()), 
 					Short.valueOf(loanAccountActionForm.getRecurMonth()), repaymentStartDate, 
