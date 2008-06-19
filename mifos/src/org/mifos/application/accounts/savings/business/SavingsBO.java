@@ -1969,12 +1969,6 @@ public class SavingsBO extends AccountBO {
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
-				if (meetingDates.get(0).compareTo(
-						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
-					meetingDates.remove(0);
-				} else {
-					meetingDates.remove(totalInstallmentDatesToBeChanged);
-				}
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
@@ -1985,13 +1979,7 @@ public class SavingsBO extends AccountBO {
 							.getId().equals(
 									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
-				for (int count = 0; count < meetingDates.size(); count++) {
-					short installmentId = (short) (nextInstallmentId.intValue() + count);
-					AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-					if (accountActionDate != null)
-						((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
-								meetingDates.get(count).getTime()));
-				}
+				updateSavingsSchedule(nextInstallmentId, meetingDates);
 			} else {
 				List<CustomerBO> children;
 				try {
@@ -2000,19 +1988,39 @@ public class SavingsBO extends AccountBO {
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
-				for (int count = 0; count < meetingDates.size(); count++) {
-					short installmentId = (short) (nextInstallmentId.intValue() + count);
-					for (CustomerBO customer : children) {
-						AccountActionDateEntity accountActionDate = getAccountActionDate(
-								installmentId, customer.getCustomerId());
-						if (accountActionDate != null)
-							((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
-									meetingDates.get(count).getTime()));
-					}
-				}
+				updateSavingsSchedule(nextInstallmentId, meetingDates, children);
 			}
 		}
 
+	}
+
+	private void updateSavingsSchedule(Short nextInstallmentId,
+			List<Date> meetingDates, List<CustomerBO> children) {
+		for (int count = 0; count < meetingDates.size(); count++) {
+			short installmentId = (short) (nextInstallmentId + count);
+			for (CustomerBO customer : children) {
+				AccountActionDateEntity accountActionDate = getAccountActionDate(
+						installmentId, customer.getCustomerId());
+				if (accountActionDate != null) {
+					Date meetingDate = meetingDates.get(installmentId - 1);
+					((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
+							meetingDate.getTime()));
+				}
+			}
+		}
+	}
+
+	private void updateSavingsSchedule(Short nextInstallmentId,
+			List<Date> meetingDates) {
+		for (int count = 0; count < meetingDates.size(); count++) {
+			short installmentId = (short) (nextInstallmentId + count);
+			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+			if (accountActionDate != null) {
+				Date meetingDate = meetingDates.get(installmentId - 1);
+				((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
+						meetingDate.getTime()));
+			}
+		}
 	}
 
 	public Money getTotalPaymentDue(Integer customerId) {

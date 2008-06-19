@@ -407,20 +407,12 @@ public class AccountBO extends BusinessObject {
 	public final void handleChangeInMeetingSchedule() throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		short installmentId = 0;
 		if (accountActionDateEntity != null) {
+			short installmentId = accountActionDateEntity.getInstallmentId();
 			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
-				installmentId = (short) (accountActionDateEntity
-						.getInstallmentId().intValue() + 1);
-			} else {
-				installmentId = (short) (accountActionDateEntity
-						.getInstallmentId().intValue());
+				installmentId += 1;
 			}
-			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
-			Date meetingStartDate = meeting.getMeetingStartDate();
-			meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 			regenerateFutureInstallments(installmentId);
-			meeting.setMeetingStartDate(meetingStartDate);
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
 			} catch (PersistenceException e) {
@@ -707,10 +699,8 @@ public class AccountBO extends BusinessObject {
 				&& getAccountActionDates().size() > 0) {
 			for (AccountActionDateEntity accountAction : getAccountActionDates()) {
 				if (accountAction.getActionDate().compareTo(currentDate) >= 0)
-					if (null == nextAccountAction)
-						nextAccountAction = accountAction;
-					else if (nextAccountAction.getInstallmentId() > accountAction
-							.getInstallmentId())
+					if (null == nextAccountAction || 
+							nextAccountAction.getInstallmentId() > accountAction.getInstallmentId())
 						nextAccountAction = accountAction;
 			}
 		}

@@ -228,28 +228,23 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
-		List<java.util.Date> meetingDates = null;
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(accountActionDateEntity
 						.getActionDate());
-		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
-				(short) 10);
-		Calendar calendar = new GregorianCalendar();
-		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
-		if (dayOfWeek == 5)
-			meetingDates.remove(0);
+		List<java.util.Date> meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(10);
+
 		for (AccountBO account : center.getAccounts()) {
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(2).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -260,13 +255,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(2).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -332,23 +327,20 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 						.getActionDate());
 		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
 				(short) 10);
-		Calendar calendar = new GregorianCalendar();
-		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
-		if (dayOfWeek == 5)
-			meetingDates.remove(0);
+
 		for (AccountBO account : center.getAccounts()) {
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(2).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -359,13 +351,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(0).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(2).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}

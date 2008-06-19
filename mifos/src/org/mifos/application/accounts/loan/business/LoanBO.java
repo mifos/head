@@ -1794,27 +1794,24 @@ public class LoanBO extends AccountBO {
 			try {
 				MeetingBO meeting = buildLoanMeeting(customer
 						.getCustomerMeeting().getMeeting(), getLoanMeeting(),
-						new Date(System.currentTimeMillis()));
+						getLoanMeeting().getMeetingStartDate());
 				meetingDates = meeting
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
-				if (meetingDates.get(0).compareTo(
-						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
-					meetingDates.remove(0);
-				}
-				else {
-					meetingDates.remove(totalInstallmentDatesToBeChanged);
-				}
 			}
 			catch (MeetingException me) {
 				throw new AccountException(me);
 			}
-			for (int count = 0; count < meetingDates.size(); count++) {
-				short installmentId = (short) (nextInstallmentId.intValue() + count);
-				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-				if (accountActionDate != null)
-					((LoanScheduleEntity) accountActionDate)
-							.setActionDate(new java.sql.Date(meetingDates.get(
-									count).getTime()));
+			updateLoanSchedule(nextInstallmentId, meetingDates);
+		}
+	}
+
+	private void updateLoanSchedule(Short nextInstallmentId, List<Date> meetingDates) {
+		for (int count = 0; count < meetingDates.size(); count++) {
+			short installmentId = (short) (nextInstallmentId + count);
+			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+			if (accountActionDate != null) {
+				Date meetingDate = meetingDates.get(installmentId - 1);
+				((LoanScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
 			}
 		}
 	}

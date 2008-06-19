@@ -2855,13 +2855,10 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
-		Calendar calendar = new GregorianCalendar();
-		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
-		if (dayOfWeek == 5)
-			meetingDates.remove(0);
+
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId().intValue() + 1));
+						.getInstallmentId() + 1));
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -2874,17 +2871,15 @@ public class TestLoanBO extends MifosTestCase {
 
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(0).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
-			else if (actionDateEntity.getInstallmentId().equals(
-					Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(1).getTime()), DateUtils
-						.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
+			if (actionDateEntity.getInstallmentId() == 1)
+				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()),
+						DateUtils.getCurrentDateWithoutTimeStamp());
+			else if (actionDateEntity.getInstallmentId() == 2)
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(1)), 
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
+			else if (actionDateEntity.getInstallmentId() == 3)
+				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates.get(2)), 
+						DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
 		}
 	}
 
@@ -2928,7 +2923,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(accountActionDateEntity.getActionDate());
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
-						.getInstallmentId().intValue() + 1));
+						.getInstallmentId() + 1));
 		((LoanBO) accountBO).update();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
@@ -2942,11 +2937,9 @@ public class TestLoanBO extends MifosTestCase {
 				.getRecurAfter());
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(new DateTime(
-						startDate.getTime()).plusDays(1).getMillis()),
-						DateUtils.getDateWithoutTimeStamp(actionDateEntity
-								.getActionDate().getTime()));
+			if (actionDateEntity.getInstallmentId() == 1) 
+				assertEquals(DateUtils.getDateWithoutTimeStamp(startDate),
+					DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()));
 		}
 	}
 

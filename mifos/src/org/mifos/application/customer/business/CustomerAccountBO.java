@@ -411,23 +411,22 @@ public class CustomerAccountBO extends AccountBO {
 				getCustomer().changeUpdatedMeeting();
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
-				if (meetingDates.get(0).compareTo(
-						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
-					meetingDates.remove(0);
-				} else {
-					meetingDates.remove(totalInstallmentDatesToBeChanged);
-				}
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			} catch (CustomerException ce) {
 				throw new AccountException(ce);
 			}
-			for (int count = 0; count < meetingDates.size(); count++) {
-				short installmentId = (short) (nextInstallmentId.intValue() + count);
-				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
-				if (accountActionDate != null)
-					((CustomerScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
-							meetingDates.get(count).getTime()));
+			updateCustomerSchedule(nextInstallmentId, meetingDates);
+		}
+	}
+
+	private void updateCustomerSchedule(Short nextInstallmentId, List<Date> meetingDates) {
+		for (int count = 0; count < meetingDates.size(); count++) {
+			short installmentId = (short) (nextInstallmentId + count);
+			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+			if (accountActionDate != null) {
+				Date meetingDate = meetingDates.get(installmentId - 1); // meeting dates are zero-based
+				((CustomerScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
 			}
 		}
 	}

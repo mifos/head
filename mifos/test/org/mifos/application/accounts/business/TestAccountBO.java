@@ -459,11 +459,14 @@ public class TestAccountBO extends TestAccount {
 	public void testHandleChangeInMeetingSchedule()
 			throws ApplicationException, SystemException {
 		TestObjectFactory.flushandCloseSession();
+		// center initially set up with meeting today
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
+		
+		// change meeting weekday to thursday
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
 				(WeekDaysEntity) new MasterPersistence()
 						.retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
@@ -480,35 +483,29 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
-		Calendar calendar = new GregorianCalendar();
-		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
-		if (dayOfWeek == 5)
-			meetingDates.remove(0);
+		
 		for (AccountActionDateEntity actionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
-						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
-			else if (actionDateEntity.getInstallmentId().equals(
-					Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
-						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			checkScheduleDates(meetingDates, actionDateEntity);
 		}
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
-			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
-						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
-			else if (actionDateEntity.getInstallmentId().equals(
-					Short.valueOf("3")))
-				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
-						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+			checkScheduleDates(meetingDates, actionDateEntity);
 		}
+	}
 
+	private void checkScheduleDates(List<java.util.Date> meetingDates, AccountActionDateEntity actionDateEntity) {
+		// first installment should remain today, ie meeting unchanged
+		if (actionDateEntity.getInstallmentId() == 1) 
+			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()),
+					DateUtils.getCurrentDateWithoutTimeStamp());
+		// next week's installment & subsequent weeks should be on new meeting dates
+		else if (actionDateEntity.getInstallmentId() == 2)
+			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
+					DateUtils.getDateWithoutTimeStamp(meetingDates.get(1)));
+		else if (actionDateEntity.getInstallmentId() == 3)
+			assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity.getActionDate()), 
+					DateUtils.getDateWithoutTimeStamp(meetingDates.get(2)));
 	}
 
 	public void testDeleteFutureInstallments() throws HibernateException,
