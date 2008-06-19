@@ -38,12 +38,10 @@ public class AbstractCollectionSheetTestCase extends MifosTestCase {
 	protected static final Integer ANOTHER_GROUP_ID = Integer.valueOf(201);
 	protected static final Date TODAYS_DATE = DateUtils.currentDateAsSqlDate();
 	protected static final int MAX_COUNT = 10;
-	protected static final Integer ALL_CENTER_ID = convertShortToInteger(ALL_CENTER_SELECTION_ITEM
-			.getId());
-	protected static final Short ALL_LOAN_OFFICER_SHORT_ID = ALL_LOAN_OFFICER_SELECTION_ITEM
+	protected static final Integer ALL_CENTER_ID = ALL_CENTER_SELECTION_ITEM
 			.getId();
-	protected static final Integer ALL_LOAN_OFFICER_ID = NumberUtils
-			.convertShortToInteger(ALL_LOAN_OFFICER_SHORT_ID);
+	protected static final Integer ALL_LOAN_OFFICER_ID = ALL_LOAN_OFFICER_SELECTION_ITEM
+	.getId();
 	protected static final PersonnelBO LOAN_OFFICER = PersonnelFixture
 			.createLoanOfficer(LOAN_OFFICER_SHORT_ID);
 	protected CollectionSheetService collectionSheetService;
@@ -67,7 +65,7 @@ public class AbstractCollectionSheetTestCase extends MifosTestCase {
 	protected static final OfficeBO OFFICE = OfficecFixture
 			.createOffice(BRANCH_SHORT_ID);
 	protected static final SelectionItem OFFICE_SELECTION_ITEM = new SelectionItem(
-			OFFICE.getOfficeId(), OFFICE.getOfficeName());
+			convertShortToInteger(OFFICE.getOfficeId()), OFFICE.getOfficeName());
 
 	
 	protected Integer s2i(Short s) {
@@ -119,18 +117,18 @@ public class AbstractCollectionSheetTestCase extends MifosTestCase {
 		for (int i = 0; i < MAX_COUNT; i++) {
 			OfficeBO office = OfficecFixture.createOffice(String.valueOf(i));
 			branchOffices.add(office);
-			branchOfficesSelectionItems.add(new SelectionItem(office
-					.getOfficeId(), office.getOfficeName()));
+			branchOfficesSelectionItems.add(new SelectionItem(convertShortToInteger(office
+					.getOfficeId()), office.getOfficeName()));
 			PersonnelBO loanOfficer = PersonnelFixture
 					.createPersonnel(new Short(String.valueOf(i)));
 			loanOfficers.add(loanOfficer);
-			loanOfficersSelectionItems.add(new SelectionItem(loanOfficer
-					.getPersonnelId(), loanOfficer.getDisplayName()));
+			loanOfficersSelectionItems.add(new SelectionItem(convertShortToInteger(loanOfficer
+					.getPersonnelId()), loanOfficer.getDisplayName()));
 			CenterBO centerBO = CustomerFixture.createCenterBO(Integer
 					.valueOf(i), LOAN_OFFICER);
 			centers.add(centerBO);
-			centerSelectionItems.add(new SelectionItem(i2s(centerBO
-					.getCustomerId()), centerBO.getDisplayName()));
+			centerSelectionItems.add(new SelectionItem(centerBO
+					.getCustomerId(), centerBO.getDisplayName()));
 		}
 		anyPersonnel = PersonnelFixture.createPersonnel(ANY_SHORT_ID);
 		anyOffice = OfficecFixture.createOffice(ANY_SHORT_ID);

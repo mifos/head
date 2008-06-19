@@ -34,7 +34,7 @@ public class ReportsParameterService implements IReportsParameterService {
 		}
 	}
 
-	public List<SelectionItem> getActiveLoanOfficersUnderOffice(Short branchId)
+	public List<SelectionItem> getActiveLoanOfficersUnderOffice(Integer branchId)
 			throws ServiceException {
 		try {
 			return selectionItemPersistence
@@ -45,8 +45,8 @@ public class ReportsParameterService implements IReportsParameterService {
 		}
 	}
 
-	public List<SelectionItem> getActiveCentersUnderUser(Short branchId,
-			Short loanOfficerId) throws ServiceException {
+	public List<SelectionItem> getActiveCentersUnderUser(Integer branchId,
+			Integer loanOfficerId) throws ServiceException {
 		try {
 			return selectionItemPersistence.getActiveCentersUnderUser(branchId,
 					loanOfficerId);
@@ -56,8 +56,8 @@ public class ReportsParameterService implements IReportsParameterService {
 		}
 	}
 
-	public List<DateSelectionItem> getMeetingDates(Short branchId,
-			Short loanOfficerId, Integer centerId, Date from) throws ServiceException {
+	public List<DateSelectionItem> getMeetingDates(Integer branchId,
+			Integer loanOfficerId, Integer centerId, Date from) throws ServiceException {
 		try {
 			return selectionItemPersistence.getMeetingDates(branchId,
 					loanOfficerId, centerId, from);

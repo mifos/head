@@ -37,8 +37,6 @@
  */
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.mifos.framework.util.helpers.NumberUtils.convertShortToInteger;
-
 import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
@@ -74,16 +72,16 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 						.convertShortToInteger(branchOffice.getOfficeId());
 				cascadingReportParameterService.getActiveLoanOfficers(
 						MIFOS_USER_ID, officeId);
-				Integer allLoanOfficerId = convertShortToInteger(SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
-						.getId());
+				Integer allLoanOfficerId = SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
+						.getId();
 				cascadingReportParameterService.getActiveCentersForLoanOfficer(
 						allLoanOfficerId, officeId);
 				cascadingReportParameterService
 						.getMeetingDatesForCollectionSheet(
 								officeId,
 								allLoanOfficerId,
-								convertShortToInteger(SelectionItem.ALL_CENTER_SELECTION_ITEM
-										.getId()));
+								SelectionItem.ALL_CENTER_SELECTION_ITEM
+										.getId());
 			}
 		}
 		catch (ServiceException e) {

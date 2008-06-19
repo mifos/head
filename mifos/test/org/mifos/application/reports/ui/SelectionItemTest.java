@@ -14,6 +14,7 @@ import org.mifos.application.reports.persistence.SelectionItemPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.NumberUtils;
 
 public class SelectionItemTest extends MifosTestCase {
 	private static final Short LOAN_OFFICER_ID = Short.valueOf("2");
@@ -23,7 +24,7 @@ public class SelectionItemTest extends MifosTestCase {
 	private static final Date FROM_DATE = DateUtils.getDate(2006,
 			Calendar.JANUARY, 1);
 	private static final Integer CUSTOMER_ID = CUST_ID;
-	private static final Short BRANCH_ID = Short.valueOf("3");
+	private static final Integer BRANCH_ID = Integer.valueOf(3);
 	private SelectionItemPersistence selectionItemPersistence;
 	private Session session;
 	private Transaction transaction;
@@ -55,7 +56,7 @@ public class SelectionItemTest extends MifosTestCase {
 	public void testRetrievesMeetingDateInclusiveOfFromDate() throws Exception {
 		Set<CollSheetCustBO> clientSheets = new HashSet<CollSheetCustBO>();
 		clientSheets.add(new CollSheetCustBO(CUST_ID, "", CUST_LEVEL,
-				BRANCH_ID, "", LOAN_OFFICER_ID));
+				BRANCH_ID.shortValue(), "", LOAN_OFFICER_ID));
 		CollectionSheetBO collectionSheet = new CollectionSheetBO();
 		collectionSheet.populateTestInstance(DateUtils
 				.convertToSqlDate(FROM_DATE), DateUtils.currentDateAsSqlDate(),
@@ -63,7 +64,7 @@ public class SelectionItemTest extends MifosTestCase {
 		session.save(collectionSheet);
 		DateSelectionItem meetingOnFromDate = new DateSelectionItem(FROM_DATE);
 		List<DateSelectionItem> meetingDates = selectionItemPersistence
-				.getMeetingDates(BRANCH_ID, LOAN_OFFICER_ID, CUSTOMER_ID,
+				.getMeetingDates(BRANCH_ID,NumberUtils.convertShortToInteger(LOAN_OFFICER_ID), CUSTOMER_ID,
 						FROM_DATE);
 		assertTrue(meetingDates.contains(meetingOnFromDate));
 	}

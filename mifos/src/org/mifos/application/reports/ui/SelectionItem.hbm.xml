@@ -5,7 +5,7 @@
 <hibernate-mapping>
 	<class name="org.mifos.application.reports.ui.SelectionItem">
 		<composite-id>
-		<key-property name="id" type="short" access="field" />
+		<key-property name="id" type="integer" access="field" />
 		<key-property name="displayName" type="string" access="field" />
 		</composite-id>
 	</class>

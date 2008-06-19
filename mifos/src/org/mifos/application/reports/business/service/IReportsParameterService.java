@@ -14,13 +14,13 @@ public interface IReportsParameterService {
 			String officeSearchId) throws ServiceException;
 
 	public abstract List<SelectionItem> getActiveLoanOfficersUnderOffice(
-			Short branchId) throws ServiceException;
+			Integer branchId) throws ServiceException;
 
 	public abstract List<SelectionItem> getActiveCentersUnderUser(
-			Short branchId, Short loanOfficerId) throws ServiceException;
+			Integer branchId, Integer loanOfficerId) throws ServiceException;
 
-	public abstract List<DateSelectionItem> getMeetingDates(Short branchId,
-			Short loanOfficerId, Integer centerId, Date from)
+	public abstract List<DateSelectionItem> getMeetingDates(Integer branchId,
+			Integer loanOfficerId, Integer centerId, Date from)
 			throws ServiceException;
 
 	public boolean invalidate();

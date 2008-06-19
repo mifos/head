@@ -42,9 +42,9 @@ public abstract class AbstractReportParameterForm implements
 	public abstract String[] getAllFormParameterNames();
 	
 	protected void addErrorIfInvalid(Errors errors, String input,
-			Short invalidValue, String fieldName, String errorCode) {
+			Integer invalidValue, String fieldName, String errorCode) {
 		if (!NumberUtils.isDigits(input)
-				|| invalidValue.equals(Short.valueOf(input))) {
+				|| invalidValue.equals(Integer.valueOf(input))) {
 			errors.rejectValue(fieldName, errorCode);
 		}
 	}

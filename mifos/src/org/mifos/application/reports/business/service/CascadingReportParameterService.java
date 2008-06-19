@@ -78,7 +78,7 @@ public class CascadingReportParameterService {
 	}
 
 	public List<SelectionItem> getActiveLoanOfficersUnderUserInBranch(
-			PersonnelBO user, Short branchId) throws ServiceException {
+			PersonnelBO user, Integer branchId) throws ServiceException {
 		List<SelectionItem> officers = new ArrayList<SelectionItem>();
 
 		if (NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchId)) {
@@ -98,7 +98,7 @@ public class CascadingReportParameterService {
 
 		if (user.isLoanOfficer()) {
 			officers.add(SELECT_LOAN_OFFICER_SELECTION_ITEM);
-			officers.add(new SelectionItem(user.getPersonnelId(), user
+			officers.add(new SelectionItem(convertShortToInteger(user.getPersonnelId()), user
 					.getDisplayName()));
 			return officers;
 		}
@@ -112,7 +112,7 @@ public class CascadingReportParameterService {
 	}
 
 	public List<SelectionItem> getActiveCentersInBranchForLoanOfficer(
-			Short branchId, Short loanOfficerId) throws ServiceException {
+			Integer branchId, Integer loanOfficerId) throws ServiceException {
 		List<SelectionItem> activeCenters = new ArrayList<SelectionItem>();
 		if (loanOfficerId == null
 				|| SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(loanOfficerId))
@@ -128,9 +128,9 @@ public class CascadingReportParameterService {
 		}
 		else {
 			PersonnelBO loanOfficer = personnelBusinessService
-					.getPersonnel(loanOfficerId);
-			loanOfficers = CollectionUtils.asList(new SelectionItem(loanOfficer
-					.getPersonnelId(), loanOfficer.getDisplayName()));
+					.getPersonnel(loanOfficerId.shortValue());
+			loanOfficers = CollectionUtils.asList(new SelectionItem(convertShortToInteger(loanOfficer
+					.getPersonnelId()), loanOfficer.getDisplayName()));
 		}
 
 		List<SelectionItem> allCentersUnderBranch = new ArrayList<SelectionItem>();
@@ -153,10 +153,10 @@ public class CascadingReportParameterService {
 		Short officerId = convertIntegerToShort(officerIdInt);
 		List<DateSelectionItem> meetingDates = new ArrayList<DateSelectionItem>();
 		if (branchId == null
-				|| SELECT_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchId)
-				|| NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchId)
-				|| SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerId)
-				|| NA_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerId)
+				|| SELECT_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
+				|| NA_BRANCH_OFFICE_SELECTION_ITEM.sameAs(branchIdInt)
+				|| SELECT_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)
+				|| NA_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)
 				|| SELECT_CENTER_SELECTION_ITEM.sameAs(customerId)
 				|| NA_CENTER_SELECTION_ITEM.sameAs(customerId)) {
 			meetingDates.add(NA_MEETING_DATE);
@@ -165,22 +165,22 @@ public class CascadingReportParameterService {
 
 		if (ALL_CENTER_SELECTION_ITEM.sameAs(customerId)) {
 			List<SelectionItem> officers = new ArrayList<SelectionItem>();
-			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerId)) {
+			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)) {
 				officers = reportsParameterService
-						.getActiveLoanOfficersUnderOffice(branchId);
+						.getActiveLoanOfficersUnderOffice(branchIdInt);
 			}
 			else {
-				officers = CollectionUtils.asList(new SelectionItem(officerId,
+				officers = CollectionUtils.asList(new SelectionItem(officerIdInt,
 						null));
 			}
 			for (SelectionItem officer : officers) {
 				List<SelectionItem> customers = new ArrayList<SelectionItem>();
 				customers = reportsParameterService.getActiveCentersUnderUser(
-						branchId, officer.getId());
+						branchIdInt, officer.getId());
 				for (SelectionItem customer : customers) {
 					List<DateSelectionItem> meetingDatesForCustomer = reportsParameterService
-							.getMeetingDates(branchId, officer.getId(),
-									convertShortToInteger(customer.getId()),
+							.getMeetingDates(branchIdInt, officer.getId(),
+									customer.getId(),
 									today());
 					if (meetingDatesForCustomer != null)
 						meetingDates.addAll(meetingDatesForCustomer);
@@ -188,13 +188,13 @@ public class CascadingReportParameterService {
 			}
 		}
 		else {
-			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerId)) {
+			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerIdInt)) {
 				CustomerBO customer = customerBusinessService
 						.getCustomer(customerId);
 				officerId = customer.getPersonnel().getPersonnelId();
 			}
 			List<DateSelectionItem> meetingDatesForOfficerBranchCustomer = reportsParameterService
-					.getMeetingDates(branchId, officerId, customerId, today());
+					.getMeetingDates(branchIdInt, officerIdInt, customerId, today());
 			if (meetingDatesForOfficerBranchCustomer != null)
 				meetingDates.addAll(meetingDatesForOfficerBranchCustomer);
 		}
@@ -204,8 +204,8 @@ public class CascadingReportParameterService {
 	}
 
 	java.sql.Date today() {
-		return DateUtils.sqlToday();
-//		return DateUtils.getSqlDate(2007, Calendar.JUNE, 30);
+//		return DateUtils.sqlToday();
+		return DateUtils.getSqlDate(2007, Calendar.JUNE, 1);
 	}
 
 	public List<CustomerBO> getApplicableCustomers(Short branchId,
@@ -213,7 +213,7 @@ public class CascadingReportParameterService {
 		List<CustomerBO> activeCenters = new ArrayList<CustomerBO>();
 		if (ALL_CENTER_SELECTION_ITEM.sameAs(customerId)) {
 			List<PersonnelBO> activeLoanOfficers = new ArrayList<PersonnelBO>();
-			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(officerId)) {
+			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(convertShortToInteger(officerId))) {
 				activeLoanOfficers.addAll(personnelBusinessService
 						.getActiveLoanOfficersUnderOffice(branchId));
 			}
@@ -245,13 +245,13 @@ public class CascadingReportParameterService {
 			Integer branchId) throws ServiceException {
 		return getActiveLoanOfficersUnderUserInBranch(personnelBusinessService
 				.getPersonnel(convertIntegerToShort(userId)),
-				convertIntegerToShort(branchId));
+				branchId);
 	}
 
 	public List<SelectionItem> getActiveCentersForLoanOfficer(
 			Integer loanOfficerId, Integer branchId) throws ServiceException {
 		return getActiveCentersInBranchForLoanOfficer(
-				convertIntegerToShort(branchId),
-				convertIntegerToShort(loanOfficerId));
+				branchId,
+				loanOfficerId);
 	}
 }

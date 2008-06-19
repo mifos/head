@@ -30,9 +30,9 @@ public class SelectionItem implements Serializable {
 			SELECT_ID, SELECT_DISPLAY_NAME);
 	
 	private String displayName;
-	private Short id;
+	private Integer id;
 
-	public SelectionItem(Short id, String displayName) {
+	public SelectionItem(Integer id, String displayName) {
 		super();
 		this.displayName = displayName;
 		this.id = id;
@@ -42,7 +42,7 @@ public class SelectionItem implements Serializable {
 		super();
 	}
 
-	public Short getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -84,10 +84,6 @@ public class SelectionItem implements Serializable {
 	}
 
 	public boolean sameAs(Integer id) {
-		return this.id.equals(convertIntegerToShort(id));
-	}
-
-	public boolean sameAs(Short id) {
 		return this.id.equals(id);
 	}
 

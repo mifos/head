@@ -81,7 +81,7 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 				ANY_PERSONNEL);
 		expect(
 				reportsParameterServiceMock
-						.getActiveLoanOfficersUnderOffice(ANY_SHORT_ID))
+						.getActiveLoanOfficersUnderOffice(ANY_ID))
 				.andReturn(loanOfficersSelectionItems);
 		replay(personnelBusinessServiceMock);
 		replay(reportsParameterServiceMock);
@@ -130,7 +130,7 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 		assertEquals(2, activeLoanOfficers.size());
 		assertSame(SELECT_LOAN_OFFICER_SELECTION_ITEM, activeLoanOfficers
 				.get(0));
-		assertEquals(new SelectionItem(LOAN_OFFICER.getPersonnelId(),
+		assertEquals(new SelectionItem(convertShortToInteger(LOAN_OFFICER.getPersonnelId()),
 				LOAN_OFFICER.getDisplayName()), activeLoanOfficers.get(1));
 		verify(personnelBusinessServiceMock);
 	}
@@ -139,22 +139,22 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 		setExpectationForAnyUserWhenRetrievingLoanOfficer();
 		expect(
 				reportsParameterServiceMock
-						.getActiveLoanOfficersUnderOffice(ANY_SHORT_ID))
+						.getActiveLoanOfficersUnderOffice(ANY_ID))
 				.andReturn(new ArrayList<SelectionItem>());
 		replay(personnelBusinessServiceMock);
 		replay(reportsParameterServiceMock);
-		retrieveAndAssertLoanOfficer(anyOffice.getOfficeId(),
+		retrieveAndAssertLoanOfficer(convertShortToInteger(anyOffice.getOfficeId()),
 				NA_LOAN_OFFICER_SELECTION_ITEM);
 		verify(personnelBusinessServiceMock);
 		verify(reportsParameterServiceMock);
 	}
 
-	private void retrieveAndAssertLoanOfficer(Short officeId,
+	private void retrieveAndAssertLoanOfficer(Integer officeId,
 			SelectionItem expectedLoanOfficer) throws ServiceException,
 			PersistenceException {
 		List<SelectionItem> activeLoanOfficers = cascadingReportParameterService
 				.getActiveLoanOfficers(PERSONNEL_ANY_ID,
-						convertShortToInteger(officeId));
+						officeId);
 		verify(personnelBusinessServiceMock);
 		assertEquals(1, activeLoanOfficers.size());
 		assertEquals(expectedLoanOfficer, activeLoanOfficers.get(0));
@@ -178,7 +178,7 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 	public void testCenterForExistingLoanOfficer() throws Exception {
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID, anyPersonnel.getPersonnelId()))
+						BRANCH_ID, convertShortToInteger(anyPersonnel.getPersonnelId())))
 				.andReturn(centerSelectionItems);
 		expect(personnelBusinessServiceMock.getPersonnel(ANY_SHORT_ID))
 				.andReturn(anyPersonnel);
@@ -202,7 +202,7 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 				.getPersonnelId()));
 		expect(
 				reportsParameterServiceMock
-						.getActiveLoanOfficersUnderOffice(BRANCH_SHORT_ID))
+						.getActiveLoanOfficersUnderOffice(BRANCH_ID))
 				.andReturn(personnels);
 		ArrayList<SelectionItem> anyCustomers = new ArrayList<SelectionItem>();
 		SelectionItem anyOneCustomer = SelectionItemFixture
@@ -216,17 +216,17 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 		otherCustomers.add(SelectionItemFixture.createSelectionItem(4));
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID, anyPersonnel.getPersonnelId()))
+						BRANCH_ID, convertShortToInteger(anyPersonnel.getPersonnelId())))
 				.andReturn(anyCustomers);
 		expect(
 				reportsParameterServiceMock.getActiveCentersUnderUser(
-						BRANCH_SHORT_ID, otherPersonnel.getId())).andReturn(
+						BRANCH_ID, otherPersonnel.getId())).andReturn(
 				otherCustomers);
 		replay(reportsParameterServiceMock);
 		replay(personnelBusinessServiceMock);
 		List<SelectionItem> activeCenters = cascadingReportParameterService
 				.getActiveCentersForLoanOfficer(
-						s2i(ALL_LOAN_OFFICER_SELECTION_ITEM.getId()), BRANCH_ID);
+						ALL_LOAN_OFFICER_SELECTION_ITEM.getId(), BRANCH_ID);
 		assertEquals(5, activeCenters.size());
 		assertEquals(SelectionItem.ALL_CENTER_SELECTION_ITEM, activeCenters
 				.get(0));
@@ -236,12 +236,12 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 		verify(personnelBusinessServiceMock);
 	}
 
-	private void retrieveAndAssertCenterBO(Short loanOfficerId,
+	private void retrieveAndAssertCenterBO(Integer loanOfficerId,
 			SelectionItem expectedCenter) throws ServiceException,
 			PersistenceException {
 		List<SelectionItem> centersForLoanOfficer = cascadingReportParameterService
 				.getActiveCentersForLoanOfficer(
-						convertShortToInteger(loanOfficerId), null);
+						loanOfficerId, null);
 		assertEquals(1, centersForLoanOfficer.size());
 		assertEquals(expectedCenter, centersForLoanOfficer.get(0));
 	}
@@ -250,8 +250,8 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 	public void testGetMeetingDatesForCenterWhenSpecifiedBranchOfficerAndCenter()
 			throws Exception {
 		expect(
-				reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-						LOAN_OFFICER_SHORT_ID, CENTER_ID, DateUtils.sqlToday()))
+				reportsParameterServiceMock.getMeetingDates(BRANCH_ID,
+						LOAN_OFFICER_ID, CENTER_ID, DateUtils.sqlToday()))
 				.andReturn(new ArrayList<DateSelectionItem>());
 		replay(reportsParameterServiceMock);
 		cascadingReportParameterService.getMeetingDatesForCollectionSheet(BRANCH_ID,
@@ -262,8 +262,8 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 	public void testGetMeetingDatesForCeneterWhenSpecifiedBranchAllOfficerAndCenterParameters()
 			throws Exception {
 		expect(
-				reportsParameterServiceMock.getMeetingDates(BRANCH_SHORT_ID,
-						center.getPersonnel().getPersonnelId(), CENTER_ID,
+				reportsParameterServiceMock.getMeetingDates(BRANCH_ID,
+						ALL_LOAN_OFFICER_ID, CENTER_ID,
 						DateUtils.sqlToday())).andReturn(
 				new ArrayList<DateSelectionItem>());
 		expect(customerBusinessServiceMock.getCustomer(CENTER_ID)).andReturn(
@@ -280,10 +280,10 @@ public class CascadingReportParameterServiceTest extends AbstractCollectionSheet
 		List<org.mifos.application.reports.ui.DateSelectionItem> meetingDates = cascadingReportParameterService
 				.getMeetingDatesForCollectionSheet(
 						BRANCH_ID,
-						convertShortToInteger(NA_LOAN_OFFICER_SELECTION_ITEM
-								.getId()),
-						convertShortToInteger(NA_CENTER_SELECTION_ITEM.getId())
-						);
+						NA_LOAN_OFFICER_SELECTION_ITEM
+								.getId(),
+						NA_CENTER_SELECTION_ITEM.getId())
+						;
 		assertEquals(1, meetingDates.size());
 	}
 

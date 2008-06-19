@@ -92,9 +92,9 @@ public interface ReportsConstants {
 	public static final String SELECT_DISPLAY_NAME = "---Select---";
 	public static final String NOT_APPLICABLE_DISPLAY_NAME = "-Not Applicable-";
 	public static final String ALL_DISPLAY_NAME = "ALL";
-	public static final Short NOT_APPLICABLE_ID = new Short("-3");
-	public static final Short SELECT_ID = new Short("-2");
-	public static final Short ALL_ID = new Short("-1");
+	public static final Integer NOT_APPLICABLE_ID = new Integer("-3");
+	public static final Integer SELECT_ID = new Integer("-2");
+	public static final Integer ALL_ID = new Integer("-1");
 	public static final Date NA_DATE = new Date(0l);
 //ended by collection sheet report module
 }

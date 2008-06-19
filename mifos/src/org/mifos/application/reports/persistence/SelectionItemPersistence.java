@@ -34,7 +34,7 @@ public class SelectionItemPersistence extends Persistence {
 				queryParameters);
 	}
 
-	public List<SelectionItem> getActiveLoanOfficersUnderOffice(Short officeId)
+	public List<SelectionItem> getActiveLoanOfficersUnderOffice(Integer officeId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("officeId", officeId);
@@ -46,8 +46,8 @@ public class SelectionItemPersistence extends Persistence {
 				queryParameters);
 	}
 
-	public List<SelectionItem> getActiveCentersUnderUser(Short branchId,
-			Short loanOfficerId) throws PersistenceException {
+	public List<SelectionItem> getActiveCentersUnderUser(Integer branchId,
+			Integer loanOfficerId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = populateCustomerQueryParams(
 				branchId, loanOfficerId, CustomerLevel.CENTER.getValue(),
 				CustomerStatus.CENTER_ACTIVE.getValue());
@@ -56,8 +56,8 @@ public class SelectionItemPersistence extends Persistence {
 				queryParameters);
 	}
 
-	private HashMap<String, Object> populateCustomerQueryParams(Short branchId,
-			Short loanOfficerId, Short customerLevel, Short customerStatus) {
+	private HashMap<String, Object> populateCustomerQueryParams(Integer branchId,
+			Integer loanOfficerId, Short customerLevel, Short customerStatus) {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("personnelId", loanOfficerId);
 		queryParameters.put("officeId", branchId);
@@ -66,8 +66,8 @@ public class SelectionItemPersistence extends Persistence {
 		return queryParameters;
 	}
 
-	public List<SelectionItem> getActiveGroupsUnderUser(Short officeId,
-			Short personnelId) throws PersistenceException {
+	public List<SelectionItem> getActiveGroupsUnderUser(Integer officeId,
+			Integer personnelId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = populateCustomerQueryParams(
 				officeId, personnelId, CustomerLevel.GROUP.getValue(),
 				CustomerStatus.GROUP_ACTIVE.getValue());
@@ -76,8 +76,8 @@ public class SelectionItemPersistence extends Persistence {
 				queryParameters);
 	}
 	
-	public List<DateSelectionItem> getMeetingDates(Short branchId,
-			Short loanOfficerId, Integer customerId, Date from)
+	public List<DateSelectionItem> getMeetingDates(Integer branchId,
+			Integer loanOfficerId, Integer customerId, Date from)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("COLL_SHEET_RUN_STATUS", CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
