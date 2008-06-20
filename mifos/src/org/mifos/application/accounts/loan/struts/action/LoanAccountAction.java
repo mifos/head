@@ -556,8 +556,13 @@ public class LoanAccountAction extends AccountAppAction {
 				.getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
 		SessionUtils.setAttribute(RECURRENCEID, recurrenceType
 				.getValue(), request);
-		CustomerBO customerBO = (CustomerBO) request.getSession().getAttribute(
+		Object object = request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
+		CustomerBO customerBO = null;
+		if (object instanceof CustomerBO)
+		{
+			customerBO = (CustomerBO)object;
+		} 
 		if (customerBO == null) {
 			customerBO = (CustomerBO) SessionUtils.getAttribute(
 					LOANACCOUNTOWNER, request);
