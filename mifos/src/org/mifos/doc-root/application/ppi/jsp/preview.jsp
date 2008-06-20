@@ -96,7 +96,7 @@ explanation of the license and how it is applied.
 			<tr>
 				<td><br></td>
 			</tr>
-			<tr>
+			<!-- tr>
             	<td width="20%" height="22" class="fontnormalbold">
                 <mifos:mifoslabel name="PPI.PoveryStatus" bundle="PPIUIResources" />
                 </td>
@@ -148,7 +148,7 @@ explanation of the license and how it is applied.
                 <c:out value="${results.nonPoorMax}"/>
                 </td>
                 <td>&nbsp;</td>
-            </tr>
+            </tr -->
 		</table><br>
 		<table width="93%" border="0" cellpadding="0" cellspacing="0">
 			<tr>

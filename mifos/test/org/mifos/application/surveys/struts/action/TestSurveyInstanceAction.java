@@ -509,8 +509,11 @@ public class TestSurveyInstanceAction extends MifosMockStrutsTestCase {
 
 		PPIPersistence ppiPersistence = new PPIPersistence();
 		PPISurvey ppiSurvey = ppiPersistence.retrieveActivePPISurvey();
-
-		addRequestParameter("value(surveyId)", Integer.toString(ppiSurvey.getSurveyId()));
+		if((ppiSurvey!=null)){
+			addRequestParameter("value(surveyId)", Integer.toString(ppiSurvey.getSurveyId()));
+		} else {
+			addRequestParameter("value(surveyId)", "0");
+		}
 		setRequestPathInfo("/surveyInstanceAction");
 		addRequestParameter("method", "create_entry");
 		actionPerform();

@@ -129,20 +129,23 @@ explanation of the license and how it is applied.
 		</table>
 		<table width="93%" border="0" cellpadding="3" cellspacing="0">
         	<tr>
-				<td colspan="2">
+        	 <!-- PPI Admin is commented out on this and the following table -->
+        	 <!-- As per issue 1883 -->
+				<!-- <td colspan="2">
 				<span class="fontnormalbold">
 				<mifos:mifoslabel name="PPI.definePovertyStatus" bundle="PPIUIResources" /> 
 				</span>
 				<br><span class="fontnormal">
 				<mifos:mifoslabel name="PPI.definePovertyStatusIntructions" bundle="PPIUIResources" />
 				</span><br>
-				</td>
+				</td> -->
 			</tr>
 		</table>
 		<table width="93%" border="0" cellpadding="3" cellspacing="0">
 			<tr class="fontnormal">
 				<td width="30%" align="right"><table width="80%" border="0" cellpadding="3" cellspacing="0">
-                	<tr>
+                	<tr/>
+                	<!-- <tr>
                     	<td width="22%" height="22" class="fontnormalbold">
                     	<mifos:mifoslabel name="PPI.PoveryStatus" bundle="PPIUIResources" />
                     	</td>
@@ -164,7 +167,7 @@ explanation of the license and how it is applied.
                         </td>
                         <td>&nbsp;</td>
                     </tr>
-<tr>
+					<tr>
                     	<td height="22" class="drawtablerow">
                     	<mifos:mifoslabel name="PPI.Band.Poor" bundle="PPIUIResources" />
                     	</td>
@@ -179,6 +182,7 @@ explanation of the license and how it is applied.
                     </tr>
                     <tr>
                     	<td height="22" class="drawtablerow">
+                    	
                     	<mifos:mifoslabel name="PPI.Band.AtRisk" bundle="PPIUIResources" />
                     	</td>
                         <td width="17%" align="center" class="drawtablerow">
@@ -202,13 +206,13 @@ explanation of the license and how it is applied.
                         <html-el:text property="value(nonPoorMax)" size="4" disabled="true"/>
                         </td>
                         <td>&nbsp;</td>
-                    </tr>
+                    </tr> -->
         	</tr>
 		</table><br><br>
 		<table width="93%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
                 <td align="center">
-                <html-el:submit property="button" styleClass="buttn" disabled="true">
+                <html-el:submit property="button" styleClass="buttn">
                 <mifos:mifoslabel name="Surveys.button.preview" bundle="SurveysUIResources" />
                 </html-el:submit>&nbsp; 
                 <html-el:button property="calcelButton" styleClass="cancelbuttn" onclick="window.location='AdminAction.do?method=load'">

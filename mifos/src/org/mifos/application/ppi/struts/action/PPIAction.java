@@ -19,12 +19,15 @@
  */
 package org.mifos.application.ppi.struts.action;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,6 +43,7 @@ import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.Schema;
@@ -49,6 +53,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.PersistenceAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.PPICalculator;
+import org.xml.sax.SAXException;
 
 public class PPIAction extends PersistenceAction {
 	
@@ -151,6 +156,7 @@ public class PPIAction extends PersistenceAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		Map<String, Object> results;
 		try {
 			results = validator.validate((GenericActionForm)form);
@@ -161,7 +167,6 @@ public class PPIAction extends PersistenceAction {
 		
 		try {
 			PPIPersistence ppiPersistence = new PPIPersistence();
-			
 			PPISurvey ppiSurvey = ppiPersistence.retrievePPISurveyByCountry(
 					(Country)results.get("country"));
 			
@@ -170,42 +175,14 @@ public class PPIAction extends PersistenceAction {
 					curSurvey.setState(SurveyState.INACTIVE);
 			}
 			
-			ppiSurvey = ppiSurvey == null ?
-					new PPISurvey((Country)results.get("country")) : ppiSurvey;
-			
-			for (PPILikelihood likelihood : ppiSurvey.getLikelihoods()) {
-				ppiPersistence.delete(likelihood);
+			if (ppiSurvey == null) {
+				createNewPPISurvey(results);
+			} else {
+				// for now (see bug 1883) updatePPISurvey will only update the state of an existing survey
+				// ie. active/inactive. It will not update questions, likelihoods etc
+				updatePPISurvey(results, ppiSurvey);
 			}
-			XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
-	        // TODO: parseInto method parses values from the xml document and overwrites whatever is stored in the database.
-	        ppiSurvey = xmlParser.parseInto(
-					"org/mifos/framework/util/resources/ppi/PPISurvey" + 
-					results.get("country") + ".xml", ppiSurvey);
-	
-	        // TODO: Now it appears that PPI surveys, overwrite applies to no matter what.  This needs to be fixed.
-	        ppiSurvey.setAppliesTo(SurveyType.CLIENT);
-			ppiSurvey.setState((SurveyState)results.get("state"));
-	
-	        // TODO: Now we seem to be going back to the database for values...????
-	        ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
-			ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
-			ppiSurvey.setPoorMin((Integer)results.get("poorMin"));
-			ppiSurvey.setPoorMax((Integer)results.get("poorMax"));
-			ppiSurvey.setAtRiskMin((Integer)results.get("atRiskMin"));
-			ppiSurvey.setAtRiskMax((Integer)results.get("atRiskMax"));
-			ppiSurvey.setNonPoorMin((Integer)results.get("nonPoorMin"));
-			ppiSurvey.setNonPoorMax((Integer)results.get("nonPoorMax"));
 			
-			
-			ppiPersistence.createOrUpdate(ppiSurvey);
-			
-			// What's going on here?
-			if (ppiSurvey.getState() == SurveyState.ACTIVE.getValue()) {
-				List<PPISurvey> allSurveys = ppiPersistence.retrieveAllPPISurveys();
-				for (PPISurvey currentSurvey : allSurveys) {
-					if (!currentSurvey.equals(ppiSurvey));
-				}
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -213,6 +190,41 @@ public class PPIAction extends PersistenceAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	
+	private void createNewPPISurvey(Map<String, Object> results) throws Exception {
+		PPIPersistence ppiPersistence = new PPIPersistence();
+		PPISurvey ppiSurvey = new PPISurvey((Country)results.get("country"));
+		
+		for (PPILikelihood likelihood : ppiSurvey.getLikelihoods()) {
+			ppiPersistence.delete(likelihood);
+		}
+		XmlPPISurveyParser xmlParser = new XmlPPISurveyParser();
+        // TODO: parseInto method parses values from the xml document and overwrites whatever is stored in the database.
+        ppiSurvey = xmlParser.parseInto(
+				"org/mifos/framework/util/resources/ppi/PPISurvey" + 
+				results.get("country") + ".xml", ppiSurvey);
+
+        // TODO: Now it appears that PPI surveys, overwrite applies to no matter what.  This needs to be fixed.
+        ppiSurvey.setAppliesTo(SurveyType.CLIENT);
+		ppiSurvey.setState((SurveyState)results.get("state"));
+
+        // TODO: Now we seem to be going back to the database for values...????
+        ppiSurvey.setVeryPoorMin((Integer)results.get("veryPoorMin"));
+		ppiSurvey.setVeryPoorMax((Integer)results.get("veryPoorMax"));
+		ppiSurvey.setPoorMin((Integer)results.get("poorMin"));
+		ppiSurvey.setPoorMax((Integer)results.get("poorMax"));
+		ppiSurvey.setAtRiskMin((Integer)results.get("atRiskMin"));
+		ppiSurvey.setAtRiskMax((Integer)results.get("atRiskMax"));
+		ppiSurvey.setNonPoorMin((Integer)results.get("nonPoorMin"));
+		ppiSurvey.setNonPoorMax((Integer)results.get("nonPoorMax"));
+		
+		ppiPersistence.createOrUpdate(ppiSurvey);
+	}
+
+	private void updatePPISurvey(Map<String, Object> results, PPISurvey ppiSurvey) throws PersistenceException {
+		ppiSurvey.setState((SurveyState)results.get("state"));
+		new PPIPersistence().createOrUpdate(ppiSurvey);
+	}
+
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		PPIPersistence persistence = new PPIPersistence();
