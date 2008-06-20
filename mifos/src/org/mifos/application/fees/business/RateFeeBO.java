@@ -133,7 +133,12 @@ public class RateFeeBO extends FeeBO {
 	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.RATE;
 	}
-	
+
+	@Override
+	public boolean doesFeeInvolveFractionalAmounts() {
+		return true;
+	}
+
 	public FeeChangeType calculateNewFeeChangeType(Double otherRate,
 			FeeStatusEntity otherStatus) {
 		if (!rate.equals(otherRate)) {

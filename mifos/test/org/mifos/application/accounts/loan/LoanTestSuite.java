@@ -43,7 +43,7 @@ public class LoanTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestLoanRepayTag.class);
 		testSuite.addTestSuite(MultipleLoanAccountsCreationActionTest.class);
 		testSuite.addTestSuite(TestLoanBOForReversal.class);
-        testSuite.addTestSuite(TestLoanBORedoDisbursal.class);
+        testSuite.addTest(TestLoanBORedoDisbursal.testSuite());
         testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
 		return testSuite;
 	}

@@ -39,6 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mifos.framework.TestUtils.EURO;
 import static org.mifos.framework.TestUtils.RUPEE;
@@ -51,6 +52,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
+
+import com.mchange.util.AssertException;
 
 public class MoneyTest {
 	public static junit.framework.Test suite() {
@@ -194,6 +197,12 @@ public class MoneyTest {
 		assertEquals(new Money(currency, "3"), Money.round(money));
 	}
 
+	@Test
+	public void testIsRoundedAmount() {
+		assertTrue ((new Money(EURO, "1")).isRoundedAmount());
+		assertFalse ((new Money(EURO, "1.1")).isRoundedAmount());
+	}
+	
 	@Test
 	public void testDivideMoneyRepeating() {
 		Money dividend = new Money(RUPEE, "3.0");

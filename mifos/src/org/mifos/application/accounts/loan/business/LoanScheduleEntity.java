@@ -58,6 +58,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	private Money interest;
 
+	//TODO: Instance variable "penalty" appears to be unused. Verify and remove.
 	private Money penalty;
 
 	private Money miscFee;
@@ -462,6 +463,21 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return false;
 	}
 	
+	public boolean isPaymentAppliedToAccountFees() {
+		Money feesPaid = new Money("0.0");
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
+			feesPaid = feesPaid.add(accountFeesActionDetail.getFeeAmountPaid());
+		}
+		return !feesPaid.equals(new Money("0.0"));
+	}
 	
-
+	public boolean isPaymentApplied() {
+		Money zero = new Money("0.0");
+		return
+			! getPrincipalPaid().equals(zero)
+			|| ! getInterestPaid().equals(zero)
+			|| ! getMiscFeePaid().equals(zero)
+			|| ! getMiscPenaltyPaid().equals(zero)
+			|| isPaymentAppliedToAccountFees();
+	}
 }

@@ -44,7 +44,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.PersistentObject;
 
-public abstract class AccountActionDateEntity extends PersistentObject {
+public abstract class AccountActionDateEntity extends PersistentObject implements Comparable {
 
 	protected final Integer actionDateId;
 
@@ -130,6 +130,9 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 	public boolean isPaid() {
 		return getPaymentStatusAsEnum() == PaymentStatus.PAID;
 	}
-
 	
+	public int compareTo (Object obj) {
+		return this.getInstallmentId().compareTo(((AccountActionDateEntity)obj).getInstallmentId());
+	}
+
 }

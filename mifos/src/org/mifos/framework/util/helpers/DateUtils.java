@@ -757,4 +757,19 @@ public class DateUtils {
 	public static void setCurrentTime(Long currentTime) {
 		DateUtils.currentTime = currentTime;
 	}
+	
+	public static Date getFirstDateForDayOfWeekAfterDate(int meetingDayOfWeek, Date startDate) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(startDate);
+
+		// Jump to next week if the required weekday has passed for current week
+		if (gc.get(Calendar.DAY_OF_WEEK) > meetingDayOfWeek) {
+			gc.add(Calendar.WEEK_OF_MONTH, 1);
+		}
+		
+		// Set the day of week as the require weekday
+		gc.add(Calendar.DAY_OF_WEEK, meetingDayOfWeek - gc.get(Calendar.DAY_OF_WEEK));
+		return gc.getTime();
+	}
+
 }

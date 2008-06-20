@@ -317,6 +317,27 @@ public final class Money implements Serializable {
 		return money;
 	}
 
+	
+	public Money currencyRoundAmount () {
+		return Money.round(this, AccountingRules.getDigitsAfterDecimalMultiple(),
+				              AccountingRules.getCurrencyRoundingMode());
+	}
+	
+	public Money initialRoundedAmount () {
+		return Money.round(this, AccountingRules.getInitialRoundOffMultiple(),
+				              AccountingRules.getInitialRoundingMode());
+	}
+	
+	public Money finalRoundedAmount () {
+		return Money.round(this, AccountingRules.getFinalRoundOffMultiple(),
+				              AccountingRules.getFinalRoundingMode());
+	}
+
+	public boolean isRoundedAmount() {
+		return this.equals(initialRoundedAmount())
+		       && this.equals(finalRoundedAmount());
+	}
+
 	public static Money roundToCurrencyPrecision(Money money) {
 		if (null != money) {
 			BigDecimal roundOffMultiple = AccountingRules.getDigitsAfterDecimalMultiple();

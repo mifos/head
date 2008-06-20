@@ -3,6 +3,7 @@ package org.mifos.framework.util.helpers;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import junit.framework.TestCase;
@@ -13,6 +14,18 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.config.Localization;
 
 public class DateUtilsTest extends TestCase {
+	
+	private Locale savedDefaultLocale;
+	
+	@Override
+	public void setUp () {
+		savedDefaultLocale = Locale.getDefault();
+	}
+	
+	@Override
+	public void tearDown() {
+		Locale.setDefault(savedDefaultLocale);
+	}
 
 	public void testDateToDatabaseFormat() throws Exception {
 		java.util.Date date = new Date(1000333444000L);
@@ -184,5 +197,71 @@ public class DateUtilsTest extends TestCase {
 		
 		date = DateUtils.getDate("30/01/2009");
 		assertEquals("28/02/2009", DateUtils.format(DateUtils.addMonths(date, 1)));
+	}
+	
+	private boolean assertFirstDateForDayOfWeekAfterDate 
+		(int dayOfWeek, Date startDate, Date nextDate) {
+		
+		Date actualNextDate = 
+			DateUtils.getFirstDateForDayOfWeekAfterDate(dayOfWeek, startDate);
+		
+		assertEquals (nextDate, actualNextDate);
+		return false;
+	}
+	
+	private Date getDate (int year, int month, int day) {
+		return DateUtils.getDateWithoutTimeStamp 
+							((new GregorianCalendar(year, month, day)).getTime());
+	}
+	
+	private void assertFirstDateForDayOfWeekAfterDates() {
+		
+		Date monday1 = getDate (2008, 4, 26);
+		Date tuesday1 = getDate (2008, 4, 27);
+		Date wednesday1 = getDate (2008, 4, 28);
+		Date sunday2  = getDate (2008, 5, 1);
+		Date monday2  = getDate (2008, 5, 2);
+		Date tuesday2 = getDate (2008, 5, 3);
+		Date wednesday2 = getDate (2008, 5, 4);
+		Date thursday2 = getDate (2008, 5, 5);
+		Date friday2 = getDate (2008, 5, 6);
+		Date saturday2 = getDate (2008, 5, 7);
+		Date sunday3 = getDate (2008, 5, 8);
+		Date monday3 = getDate (2008, 5, 9);
+		Date friday3 = getDate (2008, 5, 13);
+
+		//verify correctly crosses month boundary
+		assertFirstDateForDayOfWeekAfterDate(Calendar.MONDAY, wednesday1, monday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.TUESDAY, wednesday1, tuesday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.WEDNESDAY, wednesday1, wednesday1);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.SUNDAY, wednesday1, sunday2);
+		//start first day of week (sunday in the US)
+		assertFirstDateForDayOfWeekAfterDate(Calendar.SUNDAY, sunday2, sunday2);	
+		assertFirstDateForDayOfWeekAfterDate(Calendar.MONDAY, sunday2, monday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.TUESDAY, sunday2, tuesday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.WEDNESDAY, sunday2, wednesday2);
+		//start last day of week (saturday in the US)
+		assertFirstDateForDayOfWeekAfterDate(Calendar.FRIDAY, saturday2, friday3);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.SATURDAY, saturday2, saturday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.SUNDAY, saturday2, sunday3);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.MONDAY, saturday2, monday3);
+		//start first day of week in other countries (Monday)
+		assertFirstDateForDayOfWeekAfterDate(Calendar.SUNDAY, monday2, sunday3);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.MONDAY, monday2, monday2);
+		assertFirstDateForDayOfWeekAfterDate(Calendar.TUESDAY, monday2, tuesday2);
+
+	}
+	public void testGetFirstDateForDayOfWeekAfterDate () {
+		
+		Locale.setDefault(new Locale("en", "US"));
+		assertEquals("Default Locale: ", "en_US", Locale.getDefault().toString());
+		assertEquals(Calendar.SUNDAY, (new GregorianCalendar()).getFirstDayOfWeek());
+		assertFirstDateForDayOfWeekAfterDates();
+		
+		Locale.setDefault(new Locale("en", "GB"));
+		assertEquals("Default Locale: ", "en_GB", Locale.getDefault().toString());
+		assertEquals(Calendar.MONDAY, (new GregorianCalendar()).getFirstDayOfWeek());
+		assertFirstDateForDayOfWeekAfterDates();
+		
 	}
 }

@@ -1133,8 +1133,6 @@ public class TestObjectFactory {
 		try {
 			MeetingBO meeting = new MeetingBO(meetingFrequency, recurAfter,
 					new Date(), MeetingType.PERIODIC_FEE);
-			//create center with empty list of fees
-	        CenterBO center=TestObjectFactory.createCenter("Center",meeting, null);
 			return createPeriodicRateFee(
 					feeName, feeCategory, rate, feeFormula,
 					meetingFrequency, recurAfter, TestUtils.makeUserWithLocales(), meeting);
@@ -1334,6 +1332,7 @@ public class TestObjectFactory {
 	public static void cleanUp(CustomerBO customer) {
 		if (null != customer) {
 			deleteCustomer(customer);
+			customer = null;
 		}
 	}
 

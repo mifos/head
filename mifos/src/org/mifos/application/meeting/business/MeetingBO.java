@@ -439,18 +439,9 @@ public class MeetingBO extends BusinessObject {
 	}
 	
 	Date getFirstDateForWeek(Date startDate) {
-		gc.setTime(startDate);
-
-		// Jump to next week if the required weekday has passed for current week
-		if (gc.get(Calendar.DAY_OF_WEEK) > getMeetingDetails().getWeekDay()
-				.getValue()) {
-			gc.add(Calendar.WEEK_OF_MONTH, 1);
-		}
-		
-		// Set the day of week as the require weekday
-		gc.set(Calendar.DAY_OF_WEEK, getMeetingDetails().getWeekDay()
-				.getValue());
-		return gc.getTime();
+		return DateUtils.getFirstDateForDayOfWeekAfterDate(
+				getMeetingDetails().getWeekDay().getValue(), 
+				startDate);
 	}
 	
 	private Date getNextDateForWeek(Date startDate){

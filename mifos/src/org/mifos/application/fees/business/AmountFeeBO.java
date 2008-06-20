@@ -108,6 +108,11 @@ public class AmountFeeBO extends FeeBO {
 		return RateAmountFlag.AMOUNT;
 	}
 
+	@Override
+	public boolean doesFeeInvolveFractionalAmounts() {
+		return ! this.getFeeAmount().isRoundedAmount();
+	}
+	
 	private void validateFeeAmount(Money amount) throws FeeException {
 		if (amount == null || amount.getAmountDoubleValue() <= 0.0)
 			throw new FeeException(FeeConstants.INVALID_FEE_AMOUNT);

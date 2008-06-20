@@ -173,6 +173,47 @@ public class FeeBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	public void testDoesFeeInvolveFractionalAmountsForWholeAmountFee() throws Exception {
+		String name = "Customer_OneTime_AmountFee";
+		fee = createOneTimeAmountFee(name, FeeCategory.CENTER, "100", false,
+				FeePayment.UPFRONT);
+		fee.save();
+		HibernateUtil.commitTransaction();
+		
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+		
+		assertFalse(fee.doesFeeInvolveFractionalAmounts());
+		
+		HibernateUtil.closeSession();
+	}
+
+	public void testDoesFeeInvolveFractionalAmountsForFractionalAmountFee() throws Exception {
+		String name = "Customer_OneTime_AmountFee";
+		fee = createOneTimeAmountFee(name, FeeCategory.CENTER, "100.23", false,
+				FeePayment.UPFRONT);
+		fee.save();
+		HibernateUtil.commitTransaction();
+		
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+		
+		assertTrue(fee.doesFeeInvolveFractionalAmounts());
+		
+		HibernateUtil.closeSession();
+	}
+
+	public void testDoesFeeInvolveFractionalAmountsForRateFee() throws Exception {
+		fee = createOneTimeRateFee("Customer_OneTime_RateFee",
+				FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false,
+				FeePayment.UPFRONT);
+		fee.save();
+		HibernateUtil.commitTransaction();
+		
+
+		fee = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId());
+		assertTrue(fee.doesFeeInvolveFractionalAmounts());
+		HibernateUtil.closeSession();
+	}
+
 	public void testCreateOneTimeRateFee() throws Exception {
 		fee = createOneTimeRateFee("Customer_OneTime_RateFee",
 				FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false,

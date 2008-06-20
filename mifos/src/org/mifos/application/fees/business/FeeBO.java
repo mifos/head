@@ -213,7 +213,16 @@ public abstract class FeeBO extends BusinessObject {
 	public boolean isTimeOfDisbursement() {
 		return getFeeFrequency().isTimeOfDisbursement();
 	}
-
+	
+	/**
+	 * Returns true if any fees applied to an installment might be an
+	 * amount that exceeds the precision specified by initial or final
+	 * rounding of amounts in an installment. This check is required
+	 * temporarily in order to prevent re-rounding when a fee is
+	 * added after payments have been made.
+	 */
+	public abstract boolean doesFeeInvolveFractionalAmounts();
+	
 	public boolean isCustomerDefaultFee() {
 		return getFeeLevels().size() > 0;
 	}
