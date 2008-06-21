@@ -533,6 +533,12 @@ public class SavingsBO extends AccountBO {
 					trxn = (new SavingsPersistence())
 							.retrieveFirstTransaction(getAccountId());
 				}
+								
+				if (trxn == null || (trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_ADJUSTMENT))) {
+					//trxn = (new SavingsPersistence()).retrieveLastTransactionAtAdjustment(getAccountId(), fromDate);
+					final List<AccountTrxnEntity> transactions = this.getAccountTrxnsOrderByTrxnCreationDate();
+					trxn = (SavingsTrxnDetailEntity) transactions.get(transactions.size() - 1);
+				}
 			}
 		} catch (PersistenceException pe) {
 			throw new AccountException(pe);

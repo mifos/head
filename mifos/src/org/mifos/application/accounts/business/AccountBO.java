@@ -1193,6 +1193,25 @@ public class AccountBO extends BusinessObject {
 				personnelId);
     }
 
+
+    protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnCreationDate() {
+		List<AccountTrxnEntity> accountTrxnList = new ArrayList<AccountTrxnEntity>();
+		for (AccountPaymentEntity payment : getAccountPayments()) {
+			accountTrxnList.addAll(payment.getAccountTrxns());
+		}
+
+		Collections.sort(accountTrxnList, new Comparator<AccountTrxnEntity>() {
+			public int compare(AccountTrxnEntity trx1, AccountTrxnEntity trx2) {
+				if (trx1.getCreatedDate().equals(trx2.getCreatedDate()))
+					return trx1.getAccountTrxnId().compareTo(
+							trx2.getAccountTrxnId());
+				else
+					return trx1.getCreatedDate().compareTo(trx2.getCreatedDate());
+			}
+		});
+		return accountTrxnList;
+	}
+    
     protected List<AccountTrxnEntity> getAccountTrxnsOrderByTrxnDate() {
 		List<AccountTrxnEntity> accountTrxnList = new ArrayList<AccountTrxnEntity>();
 		for (AccountPaymentEntity payment : getAccountPayments()) {
