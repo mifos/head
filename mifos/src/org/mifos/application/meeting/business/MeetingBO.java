@@ -53,6 +53,7 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -267,10 +268,23 @@ public class MeetingBO extends BusinessObject {
 
 		while(currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0 && currentScheduleDate.compareTo(endDateWOTimeStamp)<0)
 			currentScheduleDate=getNextDate(currentScheduleDate);
-		return (currentScheduleDate.compareTo(endDateWOTimeStamp)<=0 && currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+		
+		boolean isRepaymentIndepOfMeetingEnabled;
+		try {
+			isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		} catch (PersistenceException e) {
+			throw new MeetingException(e);
+		}
+		if (isRepaymentIndepOfMeetingEnabled) {
+			return (currentScheduleDate.compareTo(endDateWOTimeStamp)<=0);
+		} else {
+			// If repayment date is dependend on meeting date, then they need to match
+			return (currentScheduleDate.compareTo(endDateWOTimeStamp)<=0 && currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+		}		
 	}
 	
-	public boolean isValidMeetingDate(Date meetingDate, int occurrences)throws MeetingException{
+	public boolean isValidMeetingDate(Date meetingDate, int occurrences)
+		throws MeetingException {
 		validateMeetingDate(meetingDate);
 		validateOccurences(occurrences);
 		Date currentScheduleDate=getFirstDate(getStartDate());
@@ -278,7 +292,19 @@ public class MeetingBO extends BusinessObject {
 		
 		for(int currentNumber=1; (currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0) && currentNumber<occurrences; currentNumber++)
 			currentScheduleDate=getNextDate(currentScheduleDate);
-		return (currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+		
+		boolean isRepaymentIndepOfMeetingEnabled;
+		try {
+			isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		} catch (PersistenceException e) {
+			throw new MeetingException(e);
+		}
+		if (!isRepaymentIndepOfMeetingEnabled) {
+			// If repayment date is dependend on meeting date, then they need to match
+			return (currentScheduleDate.compareTo(meetingDateWOTimeStamp)==0);
+		}
+		
+		return true;
 	}
 	
 	
@@ -438,10 +464,32 @@ public class MeetingBO extends BusinessObject {
 		return gc.getTime();		
 	}
 	
+	/**
+	 * Set the day of week according to given start day to the require weekday, i.e. so it matches the meeting week day.
+	 * 
+	 * e.g.
+	 * 	- If start date is Monday 9 June 2008 and meeting week day is Tuesday, then roll forward the date to Tuesday 10 June 2008
+	 *  - or if start date is Sunday 8 June 2008 and meeting week day is Saturday, then roll forward the date to Saturday 14 June 2008
+	 *  - or if start date is Tuesday 10 2008 June and meeting week day is Monday, then roll forward the date to Monday 16 June 2008
+	 *  - or if start date is Sunday 8 June 2008 and meeting week day is Sunday, then keep the date as Sunday 8 June 2008
+	 *  - or if start date is Saturday 7 June 2008 and meeting week day is Sunday, then roll forward the date to Sunday 9 June 2008
+	 *  
+	 */
 	Date getFirstDateForWeek(Date startDate) {
-		return DateUtils.getFirstDateForDayOfWeekAfterDate(
-				getMeetingDetails().getWeekDay().getValue(), 
-				startDate);
+		final GregorianCalendar firstDateForWeek = new GregorianCalendar();
+		firstDateForWeek.setTime(startDate);
+		int startDateWeekDay = firstDateForWeek.get(Calendar.DAY_OF_WEEK);
+		int meetingWeekDay = getMeetingDetails().getWeekDay().getValue();
+		
+		// Calculate amount of days that need adding to roll forward to the meeting day
+		int amountOfDaysToAdd = (meetingWeekDay - startDateWeekDay);
+		if (amountOfDaysToAdd < 0) {
+			// amountOfDaysToAdd can result in a negative (e.g. Calendar.SATURDAY (7) is greater than Calendar.SUNDAY (1),
+			// if so then will add 7 to roll forward a week
+			amountOfDaysToAdd += 7;
+		}
+		firstDateForWeek.add(Calendar.DAY_OF_WEEK, amountOfDaysToAdd);
+		return firstDateForWeek.getTime();
 	}
 	
 	private Date getNextDateForWeek(Date startDate){

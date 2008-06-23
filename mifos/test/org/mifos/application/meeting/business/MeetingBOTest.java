@@ -37,9 +37,12 @@
  */
 package org.mifos.application.meeting.business;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -78,6 +81,131 @@ public class MeetingBOTest extends MifosTestCase{
 			assertEquals(MeetingConstants.INVALID_ENDDATE, e.getKey());
 		}
 	}
+	
+	/**
+	 * Performs the following test:
+	 * 	1. Creates test data - from Sunday to Saturday, and its expected dates after invoking meeting.getFirstDateForWeek() method
+	 *  2. Invokes verifyFirstDateForWeekForGivenStartDate for each test data set and asserts that meeting.getFirstDateForWeek() method works as expected
+	 */
+	public void testFirstDateForWeekMethodForEachDayOfTheWeek()
+		throws Exception {
+		
+		// Set test data - from Sunday to Saturday, and its expected dates after invoking meeting.getFirstDateForWeek() method
+		Date sundayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 8).getTime(); // SUNDAY 8 June
+		Date[] expectedDatesForSunday = {
+			sundayStartDate, // SUNDAY 8 June
+			new GregorianCalendar(2008, Calendar.JUNE, 9).getTime(), // MONDAY 9 June
+			new GregorianCalendar(2008, Calendar.JUNE, 10).getTime(), // TUESDAY 10 June
+			new GregorianCalendar(2008, Calendar.JUNE, 11).getTime(), // WEDNESDAY 11 June
+			new GregorianCalendar(2008, Calendar.JUNE, 12).getTime(), // THURSDAY 12 June
+			new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(), // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+				
+		Date mondayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 9).getTime(); // MONDAY 9 June
+		Date[] expectedDatesForMonday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			mondayStartDate, // MONDAY 9 June
+			new GregorianCalendar(2008, Calendar.JUNE, 10).getTime(), // TUESDAY 10 June
+			new GregorianCalendar(2008, Calendar.JUNE, 11).getTime(), // WEDNESDAY 11 June
+			new GregorianCalendar(2008, Calendar.JUNE, 12).getTime(), // THURSDAY 12 June
+			new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(), // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+		
+		Date tuesdayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 10).getTime(); // TUESDAY 10 June
+		Date[] expectedDatesForTuesday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			new GregorianCalendar(2008, Calendar.JUNE, 16).getTime(), // MONDAY 16 June
+			tuesdayStartDate, // TUESDAY 10 June
+			new GregorianCalendar(2008, Calendar.JUNE, 11).getTime(), // WEDNESDAY 11 June
+			new GregorianCalendar(2008, Calendar.JUNE, 12).getTime(), // THURSDAY 12 June
+			new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(), // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+		
+		Date wednesdayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 11).getTime(); // WEDNESDAY 11 June
+		Date[] expectedDatesForWednesday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			new GregorianCalendar(2008, Calendar.JUNE, 16).getTime(), // MONDAY 16 June
+			new GregorianCalendar(2008, Calendar.JUNE, 17).getTime(), // TUESDAY 17 June
+			wednesdayStartDate, // WEDNESDAY 11 June
+			new GregorianCalendar(2008, Calendar.JUNE, 12).getTime(), // THURSDAY 12 June
+			new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(), // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+		
+		Date thursdayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 12).getTime(); // THURSDAY 12 June
+		Date[] expectedDatesForThursday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			new GregorianCalendar(2008, Calendar.JUNE, 16).getTime(), // MONDAY 16 June
+			new GregorianCalendar(2008, Calendar.JUNE, 17).getTime(), // TUESDAY 17 June
+			new GregorianCalendar(2008, Calendar.JUNE, 18).getTime(), // WEDNESDAY 18 June
+			thursdayStartDate, // THURSDAY 12 June
+			new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(), // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+		
+		Date fridayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 13).getTime(); // FRIDAY 13 June
+		Date[] expectedDatesForFriday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			new GregorianCalendar(2008, Calendar.JUNE, 16).getTime(), // MONDAY 16 June
+			new GregorianCalendar(2008, Calendar.JUNE, 17).getTime(), // TUESDAY 17 June
+			new GregorianCalendar(2008, Calendar.JUNE, 18).getTime(), // WEDNESDAY 18 June
+			new GregorianCalendar(2008, Calendar.JUNE, 19).getTime(), // THURSDAY 19 June
+			fridayStartDate, // FRIDAY 13 June
+			new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(), // SATURDAY 14 June
+			};
+		
+		Date saturdayStartDate =  new GregorianCalendar(2008, Calendar.JUNE, 14).getTime(); // SATURDAY 14 June
+		Date[] expectedDatesForSaturday = {
+			new GregorianCalendar(2008, Calendar.JUNE, 15).getTime(), // SUNDAY 15 June
+			new GregorianCalendar(2008, Calendar.JUNE, 16).getTime(), // MONDAY 16 June
+			new GregorianCalendar(2008, Calendar.JUNE, 17).getTime(), // TUESDAY 17 June
+			new GregorianCalendar(2008, Calendar.JUNE, 18).getTime(), // WEDNESDAY 18 June
+			new GregorianCalendar(2008, Calendar.JUNE, 19).getTime(), // THURSDAY 19 June
+			new GregorianCalendar(2008, Calendar.JUNE, 20).getTime(), // FRIDAY 20 June
+			saturdayStartDate, // SATURDAY 14 June
+			};
+		
+		// Verify that meeting.getFirstDateForWeek() method works as expected
+		verifyFirstDateForWeekForGivenStartDate(sundayStartDate, expectedDatesForSunday);
+		verifyFirstDateForWeekForGivenStartDate(mondayStartDate, expectedDatesForMonday);
+		verifyFirstDateForWeekForGivenStartDate(tuesdayStartDate, expectedDatesForTuesday);
+		verifyFirstDateForWeekForGivenStartDate(wednesdayStartDate, expectedDatesForWednesday);
+		verifyFirstDateForWeekForGivenStartDate(thursdayStartDate, expectedDatesForThursday);
+		verifyFirstDateForWeekForGivenStartDate(fridayStartDate, expectedDatesForFriday);
+		verifyFirstDateForWeekForGivenStartDate(saturdayStartDate, expectedDatesForSaturday);		
+	}
+	
+	/**
+	 * Verify first date for week is resolved as expected for given start date.
+	 * 
+	 * Note, it invokes verifyFirstDateForWeekForGivenStartDateAndWeekDay for each day of the week
+	 */
+	private void verifyFirstDateForWeekForGivenStartDate(Date startDate, Date[] expectedDates) throws MeetingException {
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.SUNDAY, startDate, expectedDates[0]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.MONDAY, startDate, expectedDates[1]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.TUESDAY, startDate, expectedDates[2]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.WEDNESDAY, startDate, expectedDates[3]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.THURSDAY, startDate, expectedDates[4]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.FRIDAY, startDate, expectedDates[5]);
+		verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay.SATURDAY, startDate, expectedDates[6]);
+	}
+
+	/**
+	 * Asserts that meeting.getFirstDateForWeek(startDate) returns a date matching the expected date.
+	 * 
+	 * A dummy meeting is created with the given weekDay, and then the resulting date
+	 * from meeting.getFirstDateForWeek(startDate) is asserted to be the expected date
+	 * 
+	 */
+	private void verifyFirstDateForWeekForGivenStartDateAndWeekDay(WeekDay weekDay, Date startDate, Date expectedDate) throws MeetingException {
+		// Assert getFirstDateForWeek works as expected for meeting with given weekDay
+		MeetingBO meeting = createWeeklyMeeting(weekDay, ONE, new Date());
+		assertTrue(meeting.getFirstDateForWeek(startDate).compareTo(expectedDate) == 0);
+	}
+	
 	
 	public void testGetAllDatesWeeklyWithRepaymentIndepOfMeetingEnabled()
 			throws Exception {
