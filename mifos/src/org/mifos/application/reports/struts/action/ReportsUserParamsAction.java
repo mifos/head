@@ -75,6 +75,7 @@ public class ReportsUserParamsAction extends BaseAction {
 	public static ActionSecurity getSecurity(){
 		ReportActionSecurity security = new ReportActionSecurity("reportsUserParamsAction", "loadAddList");
 
+                // FIXME: no associated activity exists for this constant
 		security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		
 		//map the report id to it's corrosponding activity id. though it's rough but it works :->
@@ -114,6 +115,7 @@ public class ReportsUserParamsAction extends BaseAction {
 			}
 		}
 		
+                // FIXME: no associated activity exists for this constant
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
