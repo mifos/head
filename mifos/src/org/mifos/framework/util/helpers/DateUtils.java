@@ -50,6 +50,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.LocalizationConverter;
@@ -757,5 +758,11 @@ public class DateUtils {
 	public static void setCurrentTime(Long currentTime) {
 		DateUtils.currentTime = currentTime;
 	}
+	
+    public static WeekDay getWeekDayForDate(Date date) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        return WeekDay.getWeekDay(calendar.get(Calendar.DAY_OF_WEEK));
+    }
 	
 }

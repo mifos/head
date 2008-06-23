@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import org.joda.time.DateMidnight;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.Localization;
 
 public class DateUtilsTest extends TestCase {
@@ -197,6 +198,16 @@ public class DateUtilsTest extends TestCase {
 		
 		date = DateUtils.getDate("30/01/2009");
 		assertEquals("28/02/2009", DateUtils.format(DateUtils.addMonths(date, 1)));
+	}
+	
+	public void testGetWeekDayForDate() {
+		assertEquals(WeekDay.SUNDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("01/06/2008")));
+		assertEquals(WeekDay.MONDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("02/06/2008")));
+		assertEquals(WeekDay.TUESDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("03/06/2008")));
+		assertEquals(WeekDay.WEDNESDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("04/06/2008")));
+		assertEquals(WeekDay.THURSDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("05/06/2008")));
+		assertEquals(WeekDay.FRIDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("06/06/2008")));
+		assertEquals(WeekDay.SATURDAY, DateUtils.getWeekDayForDate(DateUtils.getDate("07/06/2008")));
 	}
 	
 	private Date getDate (int year, int month, int day) {

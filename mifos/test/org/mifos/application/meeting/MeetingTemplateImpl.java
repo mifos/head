@@ -25,6 +25,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class MeetingTemplateImpl implements MeetingTemplate {
     private RecurrenceType recurrenceType;
@@ -36,9 +37,18 @@ public class MeetingTemplateImpl implements MeetingTemplate {
     private MeetingType meetingType;
     private String meetingPlace;
 
+    private MeetingTemplateImpl(Date startDate, WeekDay weekDay) {
+        this.recurrenceType = RecurrenceType.WEEKLY;
+        this.weekDay = weekDay;
+        this.meetingType = MeetingType.CUSTOMER_MEETING;
+        this.startDate = startDate;
+        this.recurAfter = 1;
+        this.meetingPlace = "SomeTestMeetingPlaceLocation";
+    }
+
     private MeetingTemplateImpl(Date startDate) {
         this.recurrenceType = RecurrenceType.WEEKLY;
-        this.weekDay = WeekDay.MONDAY;
+        this.weekDay = DateUtils.getWeekDayForDate(startDate);
         this.meetingType = MeetingType.CUSTOMER_MEETING;
         this.startDate = startDate;
         this.recurAfter = 1;
@@ -78,10 +88,15 @@ public class MeetingTemplateImpl implements MeetingTemplate {
     }
 
     public static MeetingTemplateImpl createWeeklyMeetingTemplate() {
-        return createWeeklyMeetingTemplateStartingFrom(new Date());
+        return createWeeklyMeetingTemplateOnMondaysStartingFrom(new Date());
+    }
+
+    public static MeetingTemplateImpl createWeeklyMeetingTemplateOnMondaysStartingFrom(Date startDate) {
+    	return new MeetingTemplateImpl(startDate, WeekDay.MONDAY);
     }
 
     public static MeetingTemplateImpl createWeeklyMeetingTemplateStartingFrom(Date startDate) {
     	return new MeetingTemplateImpl(startDate);
     }
+    
 }
