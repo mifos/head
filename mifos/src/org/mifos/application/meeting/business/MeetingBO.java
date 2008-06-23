@@ -419,7 +419,7 @@ public class MeetingBO extends BusinessObject {
 			throw new MeetingException(MeetingConstants.INVALID_ENDDATE);
 	}
 	
-	private Date getFirstDate(Date startDate){
+	public Date getFirstDate(Date startDate){
 		if(isWeekly())
 			return getFirstDateForWeek(startDate);
 		else if(isMonthly())

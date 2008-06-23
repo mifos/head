@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -670,9 +671,15 @@ public class AccountBO extends BusinessObject {
 
 	public Date getNextMeetingDate() {
 		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
-		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
-		return nextAccountAction != null ? nextAccountAction.getActionDate()
-				: new java.sql.Date(currentDate.getTime());
+		if (nextAccountAction != null)
+			return nextAccountAction.getActionDate();
+		// calculate the next date based on the customer's meeting object
+		CustomerMeetingEntity customerMeeting = customer.getCustomerMeeting();
+		if (customerMeeting != null) {
+			Date nextMeetingDate = customerMeeting.getMeeting().getFirstDate(new Date());
+			return new java.sql.Date(nextMeetingDate.getTime());
+		} 
+		return new java.sql.Date(DateUtils.getCurrentDateWithoutTimeStamp().getTime());
 	}
 
 	public List<AccountActionDateEntity> getDetailsOfInstallmentsInArrears() {
