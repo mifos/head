@@ -1,6 +1,9 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
 <title>SeleniumPPI</title>
 </head>
 <body>
@@ -40,7 +43,32 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
+	<td>link=View PPI settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Country: India</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Status: Active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
 	<td></td>
 </tr>
 <tr>
@@ -210,7 +238,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Clients & Accounts</td>
+	<td>link=Clients &amp; Accounts</td>
 	<td></td>
 </tr>
 <tr>
@@ -380,7 +408,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.editCustomerStatusActionForm.newStatusId[1]</td>
+	<td>//input[@name='newStatusId' and @value='3']</td>
 	<td></td>
 </tr>
 <tr>
@@ -434,14 +462,14 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//td[1]/table/tbody/tr[4]/td</td>
-	<td>exact:Country: null <br /> Status: null</td>
+	<td>verifyTextPresent</td>
+	<td>Country: null</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//td[1]/table/tbody/tr[4]/td</td>
-	<td>exact:Country: null <br /> Status: null</td>
+	<td>verifyTextPresent</td>
+	<td>Status: null</td>
+	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -469,46 +497,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>//tr[6]/td[1]</td>
-	<td>Very Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[6]/td[2]</td>
-	<td>0 - 24</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[7]/td[1]</td>
-	<td>Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[7]/td[2]</td>
-	<td>25 - 49</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[8]/td[1]</td>
-	<td>At Risk</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[8]/td[2]</td>
-	<td>50 - 74</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[1]</td>
-	<td>Non Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[2]</td>
-	<td>75 - 100</td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>button</td>
 	<td></td>
@@ -517,46 +505,6 @@
 	<td>clickAndWait</td>
 	<td>link=View PPI settings</td>
 	<td></td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[1]</td>
-	<td>Very Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[9]/td[2]</td>
-	<td>0 - 24</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[10]/td[1]</td>
-	<td>Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[10]/td[2]</td>
-	<td>25 - 49</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[11]/td[1]</td>
-	<td>At Risk</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[11]/td[2]</td>
-	<td>50 - 74</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[12]/td[1]</td>
-	<td>Non Poor</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>//tr[12]/td[2]</td>
-	<td>75 - 100</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -665,52 +613,52 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_1)'][4]</td>
+	<td>//input[@name='value(response_1)' and @value='6']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_2)'][1]</td>
+	<td>//input[@name='value(response_2)' and @value='8']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_3)'][1]</td>
+	<td>//input[@name='value(response_3)' and @value='10']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_4)'][1]</td>
+	<td>//input[@name='value(response_4)' and @value='14']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_5)'][1]</td>
+	<td>//input[@name='value(response_5)' and @value='19']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_6)'][2]</td>
+	<td>//input[@name='value(response_6)' and @value='22']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_7)'][1]</td>
+	<td>//input[@name='value(response_7)' and @value='24']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_8)'][1]</td>
+	<td>//input[@name='value(response_8)' and @value='26']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_9)'][1]</td>
+	<td>//input[@name='value(response_9)' and @value='28']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_10)'][1]</td>
+	<td>//input[@name='value(response_10)' and @value='31']</td>
 	<td></td>
 </tr>
 <tr>
@@ -725,52 +673,52 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_1)'][5]</td>
+	<td>//input[@name='value(response_1)' and @value='6']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_2)'][1]</td>
+	<td>//input[@name='value(response_2)' and @value='8']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_3)'][1]</td>
+	<td>//input[@name='value(response_3)' and @value='10']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_4)'][3]</td>
+	<td>//input[@name='value(response_4)' and @value='14']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_5)'][3]</td>
+	<td>//input[@name='value(response_5)' and @value='19']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_6)'][2]</td>
+	<td>//input[@name='value(response_6)' and @value='22']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_7)'][1]</td>
+	<td>//input[@name='value(response_7)' and @value='24']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_8)'][1]</td>
+	<td>//input[@name='value(response_8)' and @value='26']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_9)'][1]</td>
+	<td>//input[@name='value(response_9)' and @value='28']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.genericActionForm.elements['value(response_10)'][1]</td>
+	<td>//input[@name='value(response_10)' and @value='31']</td>
 	<td></td>
 </tr>
 <tr>
@@ -796,7 +744,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>//table[5]/tbody/tr[1]/td[2]/strong</td>
-	<td>90</td>
+	<td>97</td>
 </tr>
 <tr>
 	<td>storeText</td>
@@ -855,7 +803,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Clients & Accounts</td>
+	<td>link=Clients &amp; Accounts</td>
 	<td></td>
 </tr>
 <tr>
@@ -980,7 +928,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>document.editCustomerStatusActionForm.newStatusId[1]</td>
+	<td>//input[@name='newStatusId' and @value='9']</td>
 	<td></td>
 </tr>
 <tr>
