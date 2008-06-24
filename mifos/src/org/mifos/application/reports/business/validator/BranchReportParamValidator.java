@@ -21,6 +21,8 @@ package org.mifos.application.reports.business.validator;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import org.mifos.application.reports.business.AbstractReportParameterForm;
 import org.mifos.application.reports.business.BranchReportParameterForm;
 import org.mifos.application.reports.business.service.IBranchReportService;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;

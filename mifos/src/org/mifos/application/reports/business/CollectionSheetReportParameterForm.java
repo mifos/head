@@ -58,6 +58,13 @@ public class CollectionSheetReportParameterForm extends
 	}
 
 	public void validate(Errors errors) {
+		validateCascadingParameters(errors);
+		addErrorIfInvalid(errors, meetingDate,
+				DateSelectionItem.NA_MEETING_DATE.getDate(),
+				MEETING_DATE_PARAM, MEETING_DATE_INVALID_MSG);
+	}
+
+	protected void validateCascadingParameters(Errors errors) {
 		addErrorIfInvalid(errors, branchId, SELECT_BRANCH_OFFICE_SELECTION_ITEM
 				.getId(), BRANCH_ID_PARAM, BRANCH_ID_INVALID_MSG);
 		addErrorIfInvalid(errors, loanOfficerId,
@@ -69,9 +76,6 @@ public class CollectionSheetReportParameterForm extends
 				.getId(), CENTER_ID_PARAM, CENTER_ID_INVALID_MSG);
 		addErrorIfInvalid(errors, centerId, NA_CENTER_SELECTION_ITEM.getId(),
 				CENTER_ID_PARAM, CENTER_ID_INVALID_MSG);
-		addErrorIfInvalid(errors, meetingDate,
-				DateSelectionItem.NA_MEETING_DATE.getDate(),
-				MEETING_DATE_PARAM, MEETING_DATE_INVALID_MSG);
 	}
 
 	public static CollectionSheetReportParameterForm build(
@@ -86,15 +90,15 @@ public class CollectionSheetReportParameterForm extends
 		removeRequestParams(modifiedRequest, errors);
 	}
 
-	private static String extractMeetingDate(HttpServletRequest request) {
+	public static String extractMeetingDate(HttpServletRequest request) {
 		return ServletUtils.getParameter(request, MEETING_DATE_PARAM);
 	}
 
-	private static String extractCenterId(HttpServletRequest request) {
+	public static String extractCenterId(HttpServletRequest request) {
 		return ServletUtils.getParameter(request, CENTER_ID_PARAM);
 	}
 
-	private static String extractLoanOfficerId(HttpServletRequest request) {
+	public static String extractLoanOfficerId(HttpServletRequest request) {
 		return ServletUtils.getParameter(request, LOAN_OFFICER_ID_PARAM);
 	}
 
@@ -106,5 +110,9 @@ public class CollectionSheetReportParameterForm extends
 	@Override
 	public String[] getAllFormParameterNames() {
 		return ReportValidationConstants.COLLECTION_SHEET_REPORT_PARAMS_ARRAY;
+	}
+
+	protected String getMeetingDate() {
+		return meetingDate;
 	}
 }

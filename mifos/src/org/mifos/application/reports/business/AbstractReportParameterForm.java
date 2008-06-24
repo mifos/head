@@ -19,6 +19,8 @@
  */
 package org.mifos.application.reports.business;
 
+import static org.mifos.application.reports.util.helpers.ReportUtils.reportDatePattern;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.validator.DateValidator;
 import org.mifos.application.reports.business.validator.Errors;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
 import org.mifos.framework.servlet.ModifiableParameterServletRequest;
@@ -73,6 +76,11 @@ public abstract class AbstractReportParameterForm implements
 			if (errors.getFieldError(reportParam) != null)
 				modifiedRequest.removeParameter(reportParam);
 		}
+	}
+
+	protected void addErrorIfInvalidRunDate(Errors errors, String runDate, String fieldName, String errorCode) {
+		if(!DateValidator.getInstance().isValid(runDate, reportDatePattern(), false))
+			errors.rejectValue(fieldName, errorCode);
 	}
 
 	protected static String extractBranchId(HttpServletRequest request) {

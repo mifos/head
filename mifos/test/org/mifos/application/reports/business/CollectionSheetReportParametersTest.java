@@ -10,9 +10,7 @@ import static org.mifos.application.reports.ui.SelectionItem.SELECT_LOAN_OFFICER
 
 import java.text.ParseException;
 
-import org.easymock.classextension.EasyMock;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
-
 
 public class CollectionSheetReportParametersTest extends AbstractReportParametersTest {
 

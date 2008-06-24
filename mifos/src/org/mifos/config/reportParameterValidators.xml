@@ -26,7 +26,7 @@ explanation of the license and how it is applied.
 		class="org.mifos.application.reports.business.validator.CollectionSheetReportParamValidator">
 		<constructor-arg>
 			<list>
-				<value>report/CollectionSheetReport.rptdesign</value>
+				<value>report/BatchCollectionSheetReport.rptdesign</value>
 			</list>
 		</constructor-arg>
 	</bean>
@@ -62,4 +62,13 @@ explanation of the license and how it is applied.
 		</constructor-arg>
 		<constructor-arg ref="branchCashConfirmationReportService" />
 	</bean>
+	
+	<bean
+		class="org.mifos.application.reports.business.validator.SqlCollectionSheetReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>report/CollectionSheetReport.rptdesign</value>
+			</list>
+		</constructor-arg>
+	</bean>	
 </beans>

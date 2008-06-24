@@ -1,5 +1,8 @@
 package org.mifos.application.reports.business.service;
 
+import static org.mifos.application.reports.ui.SelectionItem.ALL_CENTER_SELECTION_ITEM;
+import static org.mifos.application.reports.ui.SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM;
+
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,10 +11,24 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 
 public class CollectionSheetService {
+	
+	private final CollectionSheetReportPersistence collectionSheetReportPersistence;
+
+	CollectionSheetService(CollectionSheetReportPersistence collectionSheetReportPersistence) {
+		this.collectionSheetReportPersistence = collectionSheetReportPersistence;
+	}
+	
+	public CollectionSheetService(){
+		this(new CollectionSheetReportPersistence());
+	}
+
 	public List<CollSheetCustBO> getCollectionSheetForCustomerOnMeetingDate(
 			Date meetingDate, Integer centerId, Short loanOfficerId,
 			CustomerLevel customerLevel) throws PersistenceException {
@@ -66,5 +83,31 @@ public class CollectionSheetService {
 		List<CollSheetCustBO> centersCollectionSheet = new CollectionSheetPersistence()
 				.executeNamedQuery(queryName, parameters);
 		return centersCollectionSheet;
+	}
+
+	public List<CollectionSheetReportData> extractReportData(Integer branchId,
+			java.util.Date meetingDate, Integer personnelId, Integer centerId)
+			throws ServiceException {
+		try {
+			if (ALL_LOAN_OFFICER_SELECTION_ITEM.sameAs(personnelId)) {
+				if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId))
+					return collectionSheetReportPersistence
+							.extractReportDataAllLoanOfficersAllCenters(
+									branchId, meetingDate);
+				else return collectionSheetReportPersistence
+						.extractReportDataAllLoanOfficersOneCenter(branchId,
+								meetingDate, centerId);
+			}
+			else if (ALL_CENTER_SELECTION_ITEM.sameAs(centerId)) {
+				return collectionSheetReportPersistence
+						.extractReportDataAllCentersUnderLoanOfficer(branchId,
+								meetingDate, personnelId);
+			}
+			return collectionSheetReportPersistence.extractReportData(branchId,
+					meetingDate, personnelId, centerId);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

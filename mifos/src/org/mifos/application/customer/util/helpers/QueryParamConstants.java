@@ -39,5 +39,8 @@ public interface QueryParamConstants {
 	public static final String DISBURSEMENT_DATE = "disbursementDate";
 	public static final String PERSONNEL_ID_LIST = "personnelIdList";
 	public static final String ID_LIST = "ids";
+	public static final String MEETING_DATE = "MEETING_DATE";
+	public static final String PERSONNEL_ID = "PERSONNEL_ID";
+	public static final String CENTER_ID = "CENTER_ID";
 
 }

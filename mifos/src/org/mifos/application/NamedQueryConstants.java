@@ -777,4 +777,5 @@ public interface NamedQueryConstants {
 
 	public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE = "branchCashConfirmationReport.getReportForDate";
 	public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE_AND_BRANCH = "branchCashConfirmationReport.getReportForDateAndBranch";
+	public String COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA = "collectionSheet.extractCollectionSheetReportData";
 }

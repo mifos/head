@@ -20,6 +20,8 @@ import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEnt
 import org.mifos.application.collectionsheet.business.CollectionSheetCustomerBOFixture;
 import org.mifos.application.collectionsheet.business.CollectionSheetLoanDetailsEntityFixture;
 import org.mifos.application.collectionsheet.business.CollectionSheetSavingDetailsEntityFixture;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -32,6 +34,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.reports.business.dto.CollectionSheetReportDTO;
+import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -79,6 +82,7 @@ public class CollectionSheetReportServiceTest extends
 	private CollSheetSavingsDetailsEntity skSavingDetailsEntity;
 	private ReportProductOfferingService reportProductOfferingServiceMock;
 	private IReportsParameterService reportsParameterServiceMock;
+	private String meetingDateStr;
 
 	public void testGetCollectionSheetForGivenBranchLoanOfficerCenterAndMeetingDate()
 			throws Exception {
@@ -351,6 +355,7 @@ public class CollectionSheetReportServiceTest extends
 	protected void setUp() throws Exception {
 		super.setUp();
 		meetingDate = DateUtils.getDate(2000, Calendar.JANUARY, 1);
+		meetingDateStr = "01/01/2000";
 		sqlMeetingDate = DateUtils.convertToSqlDate(meetingDate);
 		MifosLogManager.configure(FilePaths.LOGFILE);
 		collectionSheetServiceMock = createMock(CollectionSheetService.class);
@@ -407,4 +412,12 @@ public class CollectionSheetReportServiceTest extends
 				.createInstanceForTest(SK_SAVING_PRD_OFFERING_ID);
 
 	}
+	
+	public void testGetReportDataReturnsListOfCollectionSheetReportData() throws Exception {
+		expect(collectionSheetServiceMock.extractReportData(BRANCH_ID, meetingDate, PERSONNEL_ANY_ID, CENTER_ID)).andReturn(new ArrayList<CollectionSheetReportData>());
+		replay(collectionSheetServiceMock);
+		List<CollectionSheetReportData> reportData = collectionSheetReportService.getReportData(BRANCH_ID, meetingDateStr, PERSONNEL_ANY_ID, CENTER_ID);
+		verify(collectionSheetServiceMock);
+	}
+	
 }

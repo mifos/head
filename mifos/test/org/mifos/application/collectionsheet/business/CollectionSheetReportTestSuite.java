@@ -3,6 +3,7 @@ package org.mifos.application.collectionsheet.business;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistenceTest;
 import org.mifos.application.reports.business.service.CascadingReportParameterServiceTest;
 import org.mifos.application.reports.business.service.CollectionSheetReportServiceTest;
 import org.mifos.application.reports.business.service.CollectionSheetServiceTest;
@@ -19,6 +20,7 @@ public class CollectionSheetReportTestSuite extends TestSuite {
 		suite.addTestSuite(ReportServiceFactoryTest.class);
 		suite.addTestSuite(ReportProductOfferingServiceTest.class);
 		suite.addTestSuite(CascadingReportParameterServiceTest.class);
+		suite.addTestSuite(CollectionSheetReportPersistenceTest.class);
 		return suite;
 	}
 }

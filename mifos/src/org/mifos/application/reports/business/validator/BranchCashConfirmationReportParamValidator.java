@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.application.reports.business.AbstractReportParameterForm;
 import org.mifos.application.reports.business.BranchReportParameterForm;
 import org.mifos.application.reports.business.service.BranchCashConfirmationReportService;
 import org.mifos.application.reports.util.helpers.ReportValidationConstants;
@@ -39,10 +40,14 @@ public class BranchCashConfirmationReportParamValidator extends
 		this.service = service;
 	}
 
-	public BranchReportParameterForm buildReportParameterForm(
-			HttpServletRequest request) {
-		return BranchReportParameterForm.build(request);
-	}
+	public BranchReportParameterForm buildReportParameterForm(HttpServletRequest request) {
+		throw new RuntimeException("not implemented");
+	}	
+	
+//	public AbstractReportParameterForm buildReportParameterForm(
+//			HttpServletRequest request) {
+//		return BranchReportParameterForm.build(request);
+//	}
 
 	@Override
 	public void validate(BranchReportParameterForm form, Errors errors) {
@@ -55,4 +60,5 @@ public class BranchCashConfirmationReportParamValidator extends
 					ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
 		}
 	}
+
 }

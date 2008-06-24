@@ -2,6 +2,7 @@ package org.mifos.application.reports.business.service;
 import static org.mifos.framework.util.helpers.FilePaths.REPORT_PRODUCT_OFFERING_CONFIG;
 import static org.mifos.framework.util.helpers.NumberUtils.convertIntegerToShort;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity;
 import org.mifos.application.collectionsheet.business.CollSheetSavingsDetailsEntity;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -23,6 +25,10 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.reports.business.dto.CollectionSheetReportDTO;
+import org.mifos.application.reports.business.dto.CollectionSheetReportData;
+import org.mifos.application.reports.util.helpers.ReportUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.NumberUtils;
@@ -175,5 +181,17 @@ public class CollectionSheetReportService implements
 								.isOfProductOffering(productOffering);
 					}
 				});
+	}
+
+	public List<CollectionSheetReportData> getReportData(Integer branchId,
+			String meetingDate, Integer personnelId, Integer centerId) throws ServiceException {
+		try {
+			Date meetingDateAsDate = ReportUtils.parseReportDate(meetingDate);
+			return collectionSheetService.extractReportData(
+					branchId, meetingDateAsDate, personnelId, centerId);
+		}
+		catch (ParseException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

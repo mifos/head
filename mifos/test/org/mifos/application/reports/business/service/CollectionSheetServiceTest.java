@@ -1,6 +1,7 @@
 package org.mifos.application.reports.business.service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -9,11 +10,15 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetReportPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.reports.business.dto.CollectionSheetReportData;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
+import static org.easymock.classextension.EasyMock.*;
 
 public class CollectionSheetServiceTest extends AbstractCollectionSheetTestCase {
 	private Session session;
@@ -115,6 +120,67 @@ public class CollectionSheetServiceTest extends AbstractCollectionSheetTestCase 
 		session.save(collectionSheetBO);
 		session.save(collectionSheetBOForCenterBranchLoanOfficer);
 		session.save(collectionSheetBOBeforeSpecifiedMeetingDate);
+	}
+	
+	public void testCollectionSheetServiceCallsAllLoanOfficerSingleCenterMethod()
+			throws Exception {
+		CollectionSheetReportPersistence collectionSheetReportPersistenceMock = createMock(CollectionSheetReportPersistence.class);
+		expect(
+				collectionSheetReportPersistenceMock
+						.extractReportDataAllLoanOfficersOneCenter(BRANCH_ID,
+								meetingDate, CENTER_ID)).andReturn(
+				new ArrayList<CollectionSheetReportData>());
+		replay(collectionSheetReportPersistenceMock);
+		CollectionSheetService service = new CollectionSheetService(
+				collectionSheetReportPersistenceMock);
+		service.extractReportData(BRANCH_ID, meetingDate, ALL_LOAN_OFFICER_ID,
+				CENTER_ID);
+		verify(collectionSheetReportPersistenceMock);
+	}
+	
+	public void testCollectionSheetServiceCallsAllLoanOfficerAllCentersMethod() throws Exception {
+		CollectionSheetReportPersistence collectionSheetReportPersistenceMock = createMock(CollectionSheetReportPersistence.class);
+		expect(
+				collectionSheetReportPersistenceMock
+						.extractReportDataAllLoanOfficersAllCenters(BRANCH_ID,
+								meetingDate)).andReturn(
+				new ArrayList<CollectionSheetReportData>());
+		replay(collectionSheetReportPersistenceMock);
+		CollectionSheetService service = new CollectionSheetService(
+				collectionSheetReportPersistenceMock);
+		service.extractReportData(BRANCH_ID, meetingDate, ALL_LOAN_OFFICER_ID,
+				ALL_CENTER_ID);
+		verify(collectionSheetReportPersistenceMock);		
+	}
+	
+	public void testCollectionSheetServiceCallsOneLoanOfficerAllCentersMethod() throws Exception {
+		CollectionSheetReportPersistence collectionSheetReportPersistenceMock = createMock(CollectionSheetReportPersistence.class);
+		expect(
+				collectionSheetReportPersistenceMock
+						.extractReportDataAllCentersUnderLoanOfficer(BRANCH_ID,
+								meetingDate, LOAN_OFFICER_ID)).andReturn(
+				new ArrayList<CollectionSheetReportData>());
+		replay(collectionSheetReportPersistenceMock);
+		CollectionSheetService service = new CollectionSheetService(
+				collectionSheetReportPersistenceMock);
+		service.extractReportData(BRANCH_ID, meetingDate, LOAN_OFFICER_ID,
+				ALL_CENTER_ID);
+		verify(collectionSheetReportPersistenceMock);				
+	}
+	
+	public void testCollectionSheetServiceCallsOneLoanOfficerOneCenterMethod() throws Exception {
+		CollectionSheetReportPersistence collectionSheetReportPersistenceMock = createMock(CollectionSheetReportPersistence.class);
+		expect(
+				collectionSheetReportPersistenceMock
+						.extractReportData(BRANCH_ID,
+								meetingDate, LOAN_OFFICER_ID, CENTER_ID)).andReturn(
+				new ArrayList<CollectionSheetReportData>());
+		replay(collectionSheetReportPersistenceMock);
+		CollectionSheetService service = new CollectionSheetService(
+				collectionSheetReportPersistenceMock);
+		service.extractReportData(BRANCH_ID, meetingDate, LOAN_OFFICER_ID,
+				CENTER_ID);
+		verify(collectionSheetReportPersistenceMock);		
 	}
 
 	@Override
