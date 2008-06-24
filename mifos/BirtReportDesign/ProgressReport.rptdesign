@@ -56,30 +56,7 @@
 	logger.info("MCSReport: Ds-open: exception : BranchReportDataSource: "+e);
 }]]></method>
         </script-data-source>
-        <script-data-source name="MifosCollectionSheet" id="167" extends="MifosReport.MifosCollectionSheet">
-            <method name="open"><![CDATA[logger = Packages.java.util.logging.Logger.getLogger("");
-
-ALL_ID = new Packages.java.lang.Integer(-1);
-SELECT_ID = new Packages.java.lang.Integer(-2);
-NA_ID = new Packages.java.lang.Integer(-3);
-userId = params["userId"];
-CUSTOMER_LEVEL_GROUP  = 2;
-CUSTOMER_LEVEL_CENTER = 3;
-MAX_PRODUCT_COUNT = 2;
-//user config variable: customerLevel
-//set this to either CUSTOMER_LEVEL_CENTER or CUSTOMER_LEVEL_GROUP
-customerLevel = CUSTOMER_LEVEL_CENTER;
-
-customerLevelLabel = (customerLevel == CUSTOMER_LEVEL_CENTER) ? "Center" : "Group";
-
-try {
-	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
-    //collectionSheetService = new Packages.org.mifos.application.reports.business.service.CollectionSheetReportService();
-    collectionSheetService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
-} catch (e) {
-	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
-}]]></method>
-        </script-data-source>
+        <script-data-source name="ReportParameterDataSource" id="638" extends="MifosReport.ReportParameterDataSource"/>
     </data-sources>
     <data-sets>
         <script-data-set name="BranchSummary" id="156">
@@ -525,7 +502,9 @@ return true;]]></method>
     new Packages.java.util.logging.Logger.getLogger("").info("BranchReport: ReportHeader fetch:"+e);
 }]]></method>
         </script-data-set>
-        <script-data-set name="BranchOffices" id="168" extends="MifosReport.BranchOffices"/>
+        <script-data-set name="BranchOffices" id="168" extends="MifosReport.BranchOffices">
+            <property name="dataSource">ReportParameterDataSource</property>
+        </script-data-set>
         <script-data-set name="BranchLoanArrearsAging" id="170">
             <list-property name="resultSetHints">
                 <structure>
@@ -553,6 +532,11 @@ return true;]]></method>
                     <property name="name">amount_outstanding_aging</property>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">interest_aging</property>
+                    <property name="dataType">string</property>
+                </structure>
             </list-property>
             <list-property name="columnHints">
                 <structure>
@@ -569,6 +553,9 @@ return true;]]></method>
                 </structure>
                 <structure>
                     <property name="columnName">amount_outstanding_aging</property>
+                </structure>
+                <structure>
+                    <property name="columnName">interest_aging</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -598,6 +585,11 @@ return true;]]></method>
                         <property name="name">amount_outstanding_aging</property>
                         <property name="dataType">string</property>
                     </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">interest_aging</property>
+                        <property name="dataType">string</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">BranchReportDataSource</property>
@@ -615,6 +607,7 @@ return true;]]></method>
 	row["loans_aging"]=loanArrearsAgingItem.getLoansAging();
 	row["amount_aging"]=loanArrearsAgingItem.getAmountAging();
 	row["amount_outstanding_aging"]=loanArrearsAgingItem.getAmountOutstandingAging();
+	row["interest_aging"]=loanArrearsAgingItem.getInterestAging();
 	return true;
 }catch(e){
 	logger.info("BranchReport: BranchLoanArrearsAging: fetch: exception: " + e);
@@ -3796,26 +3789,37 @@ return true;]]></method>
                                 <expression name="expression">Total.sum(row["loans_aging"])</expression>
                                 <property name="dataType">integer</property>
                             </structure>
+                            <structure>
+                                <property name="name">interest_aging</property>
+                                <expression name="expression">dataSetRow["interest_aging"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
+                            <structure>
+                                <property name="name">total_interest_aging</property>
+                                <expression name="expression">Total.sum(row["interest_aging"])</expression>
+                                <property name="dataType">float</property>
+                            </structure>
                         </list-property>
                         <column id="190">
-                            <property name="width">1.35in</property>
+                            <property name="width">3.5cm</property>
                         </column>
                         <column id="191">
-                            <property name="width">0.5972222222in</property>
+                            <property name="width">1.5cm</property>
                         </column>
                         <column id="192">
-                            <property name="width">0.5694444444in</property>
+                            <property name="width">1.5cm</property>
                         </column>
                         <column id="193">
-                            <property name="width">1.326in</property>
+                            <property name="width">2.5cm</property>
                         </column>
-                        <column id="194">
-                            <property name="width">1.47in</property>
+                        <column id="643">
+                            <property name="width">2cm</property>
                         </column>
+                        <column id="194"/>
                         <header>
                             <row id="205">
                                 <cell id="206">
-                                    <property name="colSpan">5</property>
+                                    <property name="colSpan">6</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">tableSubheader</property>
                                     <label id="211">
@@ -3852,11 +3856,18 @@ return true;]]></method>
                                         <text-property name="text" key="branch.report.loan.arrears.amount">Amount</text-property>
                                     </label>
                                 </cell>
+                                <cell id="640">
+                                    <property name="style">fieldText</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="644">
+                                        <text-property name="text" key="branch.report.loan.arrears.interest">Interest</text-property>
+                                    </label>
+                                </cell>
                                 <cell id="177">
                                     <property name="style">fieldText</property>
                                     <property name="textAlign">center</property>
                                     <label id="203">
-                                        <text-property name="text" key="branch.report.loan.arrears.amount.outstanding">Amount Outstanding</text-property>
+                                        <text-property name="text" key="branch.report.loan.arrears.amount.outstanding">Amt Out</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -3920,6 +3931,16 @@ return true;]]></method>
                                             <property name="pattern">###0.00</property>
                                         </structure>
                                         <property name="resultSetColumn">amount_aging</property>
+                                    </data>
+                                </cell>
+                                <cell id="641">
+                                    <property name="style">numberFormat</property>
+                                    <data id="646">
+                                        <structure name="numberFormat">
+                                            <property name="category">Currency</property>
+                                            <property name="pattern">###0.00</property>
+                                        </structure>
+                                        <property name="resultSetColumn">interest_aging</property>
                                     </data>
                                 </cell>
                                 <cell id="183">
@@ -3994,6 +4015,24 @@ return true;]]></method>
                                         </structure>
                                         <property name="textAlign">right</property>
                                         <property name="resultSetColumn">total_amount_aging</property>
+                                    </data>
+                                </cell>
+                                <cell id="642">
+                                    <property name="borderBottomColor">#000000</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderRightColor">#000000</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <data id="647">
+                                        <property name="fontFamily">"Arial"</property>
+                                        <property name="fontSize">8pt</property>
+                                        <structure name="numberFormat">
+                                            <property name="category">Currency</property>
+                                            <property name="pattern">###0.00</property>
+                                        </structure>
+                                        <property name="textAlign">right</property>
+                                        <property name="resultSetColumn">total_interest_aging</property>
                                     </data>
                                 </cell>
                                 <cell id="578">
@@ -4139,26 +4178,24 @@ return true;]]></method>
                                             <property name="dataType">float</property>
                                         </structure>
                                     </list-property>
-                                    <column id="370">
-                                        <property name="width">0.7222222222in</property>
-                                    </column>
+                                    <column id="370"/>
                                     <column id="371">
-                                        <property name="width">0.5555555556in</property>
+                                        <property name="width">0.6in</property>
                                     </column>
                                     <column id="372">
-                                        <property name="width">0.9166666667in</property>
+                                        <property name="width">0.9in</property>
                                     </column>
                                     <column id="373">
-                                        <property name="width">0.9444444444in</property>
+                                        <property name="width">0.9in</property>
                                     </column>
                                     <column id="374">
-                                        <property name="width">0.5833333333in</property>
+                                        <property name="width">0.6in</property>
                                     </column>
                                     <column id="375">
-                                        <property name="width">0.9027777778in</property>
+                                        <property name="width">0.9in</property>
                                     </column>
                                     <column id="376">
-                                        <property name="width">1.7in</property>
+                                        <property name="width">0.9in</property>
                                     </column>
                                     <header>
                                         <row id="397">
@@ -4188,7 +4225,7 @@ return true;]]></method>
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="406">
-                                                    <text-property name="text" key="branch.report.loan.details.header.disbursed">Loans Disbursed</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.header.disbursed">All Loans</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="351">
@@ -4197,7 +4234,7 @@ return true;]]></method>
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="407">
-                                                    <text-property name="text" key="branch.report.loan.details.header.outstanding">Loans Outstanding</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.header.outstanding">Active Loans</text-property>
                                                 </label>
                                             </cell>
                                         </row>
@@ -4214,7 +4251,7 @@ return true;]]></method>
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="411">
-                                                    <text-property name="text" key="branch.report.loan.details.amount.header">Amount</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.amount.header">Amount Disbursed</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="385">
@@ -4235,14 +4272,14 @@ return true;]]></method>
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="414">
-                                                    <text-property name="text" key="branch.report.loan.details.amount.header">Amount</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.amount.header">Principal Outstanding</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="388">
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="415">
-                                                    <text-property name="text" key="branch.report.loan.details.interest.header">Interest</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.interest.header">Interest Oustanding</text-property>
                                                 </label>
                                             </cell>
                                         </row>
@@ -4273,6 +4310,12 @@ return true;]]></method>
                                                         <property name="category">Currency</property>
                                                         <property name="pattern">###0.00</property>
                                                     </structure>
+                                                    <list-property name="visibility">
+                                                        <structure>
+                                                            <property name="format">all</property>
+                                                            <expression name="valueExpr">row["loan_amount_issued"]==0</expression>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">loan_amount_issued</property>
                                                 </data>
                                             </cell>
@@ -4283,6 +4326,12 @@ return true;]]></method>
                                                         <property name="category">Currency</property>
                                                         <property name="pattern">###0.00</property>
                                                     </structure>
+                                                    <list-property name="visibility">
+                                                        <structure>
+                                                            <property name="format">all</property>
+                                                            <expression name="valueExpr">row["loan_interest_issued"]==0</expression>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">loan_interest_issued</property>
                                                 </data>
                                             </cell>
@@ -4300,6 +4349,12 @@ return true;]]></method>
                                                         <property name="category">Currency</property>
                                                         <property name="pattern">###0.00</property>
                                                     </structure>
+                                                    <list-property name="visibility">
+                                                        <structure>
+                                                            <property name="format">all</property>
+                                                            <expression name="valueExpr">row["loan_outstanding_amount"]==0</expression>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">loan_outstanding_amount</property>
                                                 </data>
                                             </cell>
@@ -4310,6 +4365,12 @@ return true;]]></method>
                                                         <property name="category">Currency</property>
                                                         <property name="pattern">###0.00</property>
                                                     </structure>
+                                                    <list-property name="visibility">
+                                                        <structure>
+                                                            <property name="format">all</property>
+                                                            <expression name="valueExpr">row["loan_outstanding_interest"]==0</expression>
+                                                        </structure>
+                                                    </list-property>
                                                     <property name="resultSetColumn">loan_outstanding_interest</property>
                                                 </data>
                                             </cell>
@@ -4635,6 +4696,12 @@ return true;]]></method>
                                             <property name="category">Currency</property>
                                             <property name="pattern">###0.00</property>
                                         </structure>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">row["loans_amount_outstanding"]==0</expression>
+                                            </structure>
+                                        </list-property>
                                         <property name="resultSetColumn">loans_amount_outstanding</property>
                                     </data>
                                 </cell>
@@ -4646,6 +4713,12 @@ return true;]]></method>
                                             <property name="category">Currency</property>
                                             <property name="pattern">###0.00</property>
                                         </structure>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">row["fees_interest_amount_outstanding"]==0</expression>
+                                            </structure>
+                                        </list-property>
                                         <property name="resultSetColumn">fees_interest_amount_outstanding</property>
                                     </data>
                                 </cell>
@@ -4657,6 +4730,12 @@ return true;]]></method>
                                             <property name="category">Currency</property>
                                             <property name="pattern">###0.00</property>
                                         </structure>
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">row["loan_arrears_amount"]==0</expression>
+                                            </structure>
+                                        </list-property>
                                         <property name="resultSetColumn">loan_arrears_amount</property>
                                     </data>
                                 </cell>

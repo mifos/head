@@ -19,11 +19,13 @@
  */
 package org.mifos.application.branchreport.persistence;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.framework.util.helpers.MoneyFixture.createMoney;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,27 +45,13 @@ import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.business.ClientDetailView;
-import org.mifos.application.customer.client.business.ClientNameDetailView;
-import org.mifos.application.customer.client.business.service.ClientBusinessService;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.reports.business.service.BranchReportTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import static org.easymock.classextension.EasyMock.*;
 
 public class BranchReportPersistenceTest extends BranchReportTestCase {
 
@@ -295,7 +283,7 @@ public class BranchReportPersistenceTest extends BranchReportTestCase {
 		BranchReportLoanArrearsAgingBO branchReportLoanArrearsAgingBO = new BranchReportLoanArrearsAgingBO(
 				LoanArrearsAgingPeriod.FIVE_TO_EIGHT_WEEK, Integer.valueOf(1),
 				Integer.valueOf(2), createMoney(15724323.10),
-				createMoney(1283439.70));
+				createMoney(1283439.70), createMoney(459625.70));
 		BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(
 				null, Short.valueOf("2"), DateUtils.currentDate());
 		branchReport.addLoanArrearsAging(branchReportLoanArrearsAgingBO);

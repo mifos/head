@@ -38,6 +38,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 	private Integer loansAging;
 	private Money amountAging;
 	private Money amountOutstandingAging;
+	private Money interestAging;
 
 	public BranchReportLoanArrearsAgingBO() {
 		super();
@@ -45,19 +46,20 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 
 	public BranchReportLoanArrearsAgingBO(LoanArrearsAgingPeriod agingPeriod,
 			Integer clientsAging, Integer loansAging, Money amountAging,
-			Money amountOutstandingAging) {
+			Money amountOutstandingAging, Money interestAging) {
 		super();
 		this.agingPeriod = agingPeriod;
 		this.clientsAging = clientsAging;
 		this.loansAging = loansAging;
 		this.amountAging = amountAging;
 		this.amountOutstandingAging = amountOutstandingAging;
+		this.interestAging = interestAging;
 	}
 
 	public BranchReportLoanArrearsAgingBO(
 			LoanArrearsAgingPeriod loanArrearsAgingPeriod) {
 		this(loanArrearsAgingPeriod, NumberUtils.ZERO, NumberUtils.ZERO, ZERO,
-				ZERO);
+				ZERO, ZERO);
 	}
 
 	public String getPeriodDescription() {
@@ -76,6 +78,10 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 		return MoneyUtils.getMoneyAmount(amountOutstandingAging);
 	}
 
+	public BigDecimal getInterestAging() {
+		return MoneyUtils.getMoneyAmount(interestAging);
+	}
+
 	public Integer getClientsAging() {
 		return clientsAging;
 	}
@@ -91,7 +97,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 	@Override
 	public int hashCode() {
 		final int PRIME = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = PRIME * result
 				+ ((agingPeriod == null) ? 0 : agingPeriod.hashCode());
 		result = PRIME * result
@@ -105,6 +111,8 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 		result = PRIME * result
 				+ ((clientsAging == null) ? 0 : clientsAging.hashCode());
 		result = PRIME * result
+				+ ((interestAging == null) ? 0 : interestAging.hashCode());
+		result = PRIME * result
 				+ ((loansAging == null) ? 0 : loansAging.hashCode());
 		return result;
 	}
@@ -113,7 +121,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -148,6 +156,12 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 		}
 		else if (!clientsAging.equals(other.clientsAging))
 			return false;
+		if (interestAging == null) {
+			if (other.interestAging != null)
+				return false;
+		}
+		else if (!interestAging.equals(other.interestAging))
+			return false;
 		if (loansAging == null) {
 			if (other.loansAging != null)
 				return false;
@@ -178,6 +192,7 @@ public class BranchReportLoanArrearsAgingBO extends BusinessObject {
 				+ agingPeriod.getDescription() + " clientsAging: "
 				+ clientsAging + " loansAging: " + loansAging
 				+ " amountAging: " + amountAging + " amountOutstandignAging: "
-				+ amountOutstandingAging + "]";
+				+ amountOutstandingAging + " interestAging: " + interestAging
+				+ "]";
 	}
 }

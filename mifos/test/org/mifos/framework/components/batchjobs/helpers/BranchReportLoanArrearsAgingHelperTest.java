@@ -99,7 +99,7 @@ public class BranchReportLoanArrearsAgingHelperTest extends
 	public void testLoanArrearsContructor() throws Exception {
 		Money agingAmount = createMoney(3.3333);
 		BranchReportLoanArrearsAgingBO loanArrears = new BranchReportLoanArrearsAgingBO(
-				null, null, null, agingAmount, createMoney(3.3333));
+				null, null, null, agingAmount, createMoney(3.3333), createMoney(666.70));
 		assertEquals(agingAmount.getAmount().setScale(
 				agingAmount.getCurrency().getDefaultDigitsAfterDecimal(), RoundingMode.HALF_UP),
 				loanArrears.getAmountAging());

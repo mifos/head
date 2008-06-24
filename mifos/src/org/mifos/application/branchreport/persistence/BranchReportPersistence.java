@@ -29,7 +29,6 @@ import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_ST
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_ACTIVE_BORROWERS_LOANS;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_CENTER_AND_CLIENT_COUNT;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_LOAN_AMOUNT_OUTSTANDING;
-import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_NEW_GROUP_JOINED_COUNT;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_PAR;
 import static org.mifos.application.NamedQueryConstants.EXTRACT_BRANCH_REPORT_TOTAL_STAFFING_LEVEL_SUMMARY;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_CLIENT_SUMMARY_FOR_DATE_AND_BRANCH;
@@ -42,9 +41,11 @@ import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFFI
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFF_SUMMARY_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_ID;
 import static org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO.TOTAL_STAFF_ROLE_NAME;
+import static org.mifos.application.customer.util.helpers.CustomerLevel.CLIENT;
 import static org.mifos.application.customer.util.helpers.CustomerSearchConstants.OFFICEID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.BRANCH_ID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.CURRENCY_ID;
+import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.DAYS_IN_ARREARS;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.LOAN_ACTIVE_IN_BAD_STANDING;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.LOAN_ACTIVE_IN_GOOD_STANDING;
@@ -77,7 +78,6 @@ import org.mifos.application.branchreport.BranchReportLoanDetailsBO;
 import org.mifos.application.branchreport.BranchReportStaffSummaryBO;
 import org.mifos.application.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
@@ -156,16 +156,18 @@ public class BranchReportPersistence extends Persistence {
 		params.put(MIN_DAYS, period.getMinDays());
 		params.put(NOT_LESS_THAN_DAYS, period.getNotLessThanDays());
 		params.put(CURRENCY_ID, currency.getCurrencyId());
+		params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
 		List queryResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOAN_ARREARS_IN_PERIOD, params);
 		if (queryResult.isEmpty())
 			return new BranchReportLoanArrearsAgingBO(period, ZERO, ZERO,
-					zero(currency), zero(currency));
+					zero(currency), zero(currency), zero(currency));
 		Object[] resultSet = (Object[]) queryResult.get(0);
 		return new BranchReportLoanArrearsAgingBO(period,
 				(Integer) resultSet[0], (Integer) resultSet[1], createMoney(
 						currency, (BigDecimal) resultSet[2]), createMoney(
-						currency, (BigDecimal) resultSet[3]));
+						currency, (BigDecimal) resultSet[3]), createMoney(
+						currency, (BigDecimal) resultSet[4]));
 	}
 
 	public List<BranchReportStaffSummaryBO> extractBranchReportStaffSummary(
@@ -256,6 +258,7 @@ public class BranchReportPersistence extends Persistence {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue());
 		params.put(LOAN_ACTIVE_IN_BAD_STANDING,
 				AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue());
+		params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
 		return getCalculateValueFromQueryResult(executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_CLIENT_SUMMARY_PAR, params));
 	}
@@ -283,7 +286,7 @@ public class BranchReportPersistence extends Persistence {
 			MifosCurrency currency) throws PersistenceException {
 		List<Object[]> resultSet = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOAN_DETAILS,
-				populateQueryParamsWithBranchAndCurrency(branchId, currency));
+				populateQueryParamsWithBranchCurrencyAndCustomerLevel(branchId, currency));
 		ArrayList<BranchReportLoanDetailsBO> loanDetails = new ArrayList<BranchReportLoanDetailsBO>();
 		for (Object[] result : resultSet) {
 			loanDetails.add(new BranchReportLoanDetailsBO((String) result[0],
@@ -302,7 +305,7 @@ public class BranchReportPersistence extends Persistence {
 
 		List<Object[]> riskListResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK,
-				populateQueryParamsWithBranchCurrencyRiskDays(branchId,
+				populateQueryParamsWithBranchCurrencyCustomerLevelAndRiskDays(branchId,
 						currency, daysInArrearsForRisk));
 		LoanArrearsProfileForLoansAtRisk profileForLoansAtRisk = riskListResult
 				.isEmpty() ? new LoanArrearsProfileForLoansAtRisk(currency)
@@ -311,7 +314,7 @@ public class BranchReportPersistence extends Persistence {
 
 		List<Object[]> resultListForBranch = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_IN_ARREARS,
-				populateQueryParamsWithBranchAndCurrency(branchId, currency));
+				populateQueryParamsWithBranchCurrencyAndCustomerLevel(branchId, currency));
 
 		LoanArrearsProfileForBranch resultForBranch = resultListForBranch
 				.isEmpty() ? new LoanArrearsProfileForBranch(currency)
@@ -330,6 +333,12 @@ public class BranchReportPersistence extends Persistence {
 				profileForLoansAtRisk.outstandingAmountAtRisk,
 				profileForLoansAtRisk.overdueAmountAtRisk, clientsAtRisk);
 		return loanArrearProfileForBranch;
+	}
+
+	private Map populateQueryParamsWithBranchCurrencyAndCustomerLevel(Short branchId, MifosCurrency currency) {
+		Map params = populateQueryParamsWithBranchAndCurrency(branchId, currency);
+		params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
+		return params;
 	}
 
 	private void populatePortfolioAtRiskPercentage(
@@ -407,9 +416,9 @@ public class BranchReportPersistence extends Persistence {
 		return params;
 	}
 
-	private Map<String, Object> populateQueryParamsWithBranchCurrencyRiskDays(
+	private Map<String, Object> populateQueryParamsWithBranchCurrencyCustomerLevelAndRiskDays(
 			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) {
-		Map<String, Object> params = populateQueryParamsWithBranchAndCurrency(
+		Map<String, Object> params = populateQueryParamsWithBranchCurrencyAndCustomerLevel(
 				branchId, currency);
 		params.put(QueryParamConstants.DAYS_IN_ARREARS, daysInArrearsForRisk);
 		return params;
@@ -418,7 +427,13 @@ public class BranchReportPersistence extends Persistence {
 	private static class LoanArrearsProfileForBranch {
 		private Integer loansInArrears;
 		private Integer clientsInArrears;
+		/**
+		 * Maps to Amount in Arrears in Report
+		 */
 		private Money overDueBalance;
+		/**
+		 * Maps to Amount Outstanding In Arrears in Report
+		 */
 		private Money unpaidBalance;
 
 		public LoanArrearsProfileForBranch(Object[] resultForBranch,

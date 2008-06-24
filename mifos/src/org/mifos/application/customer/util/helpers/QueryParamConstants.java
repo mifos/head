@@ -25,6 +25,7 @@ public interface QueryParamConstants {
 	public static final String MIN_DAYS = "MIN_DAYS";
 	public static final String NOT_LESS_THAN_DAYS = "NOT_LESS_THAN_DAYS";
 	public static final String CURRENCY_ID = "currencyId";
+	public static final String CUSTOMER_LEVEL_ID = "customerLevelId";
 	public static final String TOTAL_STAFF_ROLE_NAME_PARAM = "TOTAL_STAFF_ROLE_NAME";
 	public static final String TOTAL_STAFF_ROLE_ID_PARAM = "TOTAL_STAFF_ROLE_ID";
 	public static final String RUN_DATE = "RUN_DATE";
