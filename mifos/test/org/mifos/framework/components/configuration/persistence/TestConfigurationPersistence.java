@@ -29,7 +29,7 @@ public class TestConfigurationPersistence extends MifosTestCase {
 	public void testGetDefaultCurrency() throws Exception {
 		MifosCurrency defaultCurrency =
 			configurationPersistence.getDefaultCurrency();
-		assertEquals("RUPEE", defaultCurrency.getCurrencyName());
+		assertEquals("Indian Rupee", defaultCurrency.getCurrencyName());
 	}
 
 	public void testNoDefaultCurrency() throws Exception {
