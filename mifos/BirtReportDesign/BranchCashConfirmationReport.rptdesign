@@ -5,6 +5,13 @@
     <property name="units">in</property>
     <property name="includeResource">BirtReportResource/BranchCashConfirmationResource</property>
     <property name="comments">Copyright (c) 2006 MIFOS, Grameen Foundation, USA</property>
+    <method name="initialize"><![CDATA[vTotalPrincipal=0;
+vTotalActual=0;
+vTotalPrepayment=0;
+vTotalFeeAmount=0;
+vTotalFines=0;
+vTotalDisbursement=0;
+vTotalELDisbursement=0;]]></method>
     <list-property name="libraries">
         <structure>
             <property name="fileName">BirtReportResource/MifosReport.rptlibrary</property>
@@ -14,8 +21,11 @@
     <parameters>
         <scalar-parameter name="branchId" id="601">
             <property name="valueType">dynamic</property>
-            <property name="dataType">integer</property>
+            <property name="dataType">decimal</property>
             <text-property name="promptText">Select Branch</text-property>
+            <property name="concealValue">false</property>
+            <property name="allowBlank">true</property>
+            <property name="allowNull">false</property>
             <property name="controlType">list-box</property>
             <property name="dataSetName">BranchOffices</property>
             <expression name="valueExpr">dataSetRow["ds_branchId"]</expression>
@@ -39,7 +49,19 @@
     <data-sources>
         <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="MifosJDBCDataSource" id="599"
  extends="MifosReport.MifosJDBCDataSource"/>
-        <script-data-source name="ReportParameterDataSource" id="698" extends="MifosReport.ReportParameterDataSource"/>
+        <script-data-source name="ReportParameterDataSource" id="698" extends="MifosReport.ReportParameterDataSource">
+            <method name="open"><![CDATA[logger = Packages.java.util.logging.Logger.getLogger("");
+ALL_ID = new Packages.java.lang.Integer(-1);
+SELECT_ID = new Packages.java.lang.Integer(-2);
+NA_ID = new Packages.java.lang.Integer(-3);
+userId = params["userId"];
+try {
+	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
+    reportParameterService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCascadingReportParameterService();
+} catch (e) {
+	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
+}]]></method>
+        </script-data-source>
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="ReportHeaderDataSet" id="600">
@@ -903,6 +925,309 @@ from
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <script-data-set name="BranchOffices" id="699" extends="MifosReport.BranchOffices"/>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="PrepaymentDetailsDataSet" id="775">
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">OFFICE_ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">PRD_OFFERING_SHORT_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">prepaidprincipal</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">prepaidinterest</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">prepaidEF</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">MifosJDBCDataSource</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">branchId</property>
+                    <property name="paramName">branchId</property>
+                    <property name="dataType">decimal</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">OFFICE_ID</property>
+                    <property name="nativeName">OFFICE_ID</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">PRD_OFFERING_SHORT_NAME</property>
+                    <property name="nativeName">PRD_OFFERING_SHORT_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">prepaidprincipal</property>
+                    <property name="nativeName">prepaidprincipal</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">prepaidinterest</property>
+                    <property name="nativeName">prepaidinterest</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">prepaidEF</property>
+                    <property name="nativeName">prepaidEF</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+            </list-property>
+            <property name="queryText">Select 
+		off.office_id as officeId, 
+		po.prd_offering_short_name as prdName, 
+		ifnull(sum(lsch.principal_paid),0.000) as prepaidprincipal, 
+		ifnull(sum(lsch.interest_paid),0.000) as prepaidinterest, 
+		ifnull(sum(lsch.misc_fees_paid),0.000) as prepaidEF  
+	from 
+		prd_offering po 
+		left join 
+			loan_account la on la.prd_offering_id=po.prd_offering_id 
+		left join 
+			account acc on acc.account_id=la.account_id 
+                left join 
+			office off on off.office_id=acc.office_id 
+		left join 
+			loan_schedule lsch on lsch.account_id = la.account_id
+	WHERE 
+		off.office_id=?
+	AND
+		date_format(lsch.action_date,'%Y%m%d') > date_format(now(),'%Y%m%d') 
+	and 
+		date_format(lsch.payment_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+	and
+		(acc.account_state_id = 5 
+		or 
+			acc.account_state_id = 9 
+		or 
+			date_format(acc.closed_date,'%Y%m%d')=date_format(now(),'%Y%m%d')
+		)
+	group by 
+		la.prd_offering_id</property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>OFFICE_ID</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>5</design:nativeDataTypeCode>
+            <design:precision>6</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>officeId</design:label>
+            <design:formattingHints>
+              <design:displaySize>6</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>PRD_OFFERING_SHORT_NAME</design:name>
+            <design:position>2</design:position>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>prdName</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>prepaidprincipal</design:name>
+            <design:position>3</design:position>
+            <design:nativeDataTypeCode>3</design:nativeDataTypeCode>
+            <design:precision>32</design:precision>
+            <design:scale>3</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>prepaidprincipal</design:label>
+            <design:formattingHints>
+              <design:displaySize>34</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>prepaidinterest</design:name>
+            <design:position>4</design:position>
+            <design:nativeDataTypeCode>3</design:nativeDataTypeCode>
+            <design:precision>32</design:precision>
+            <design:scale>3</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>prepaidinterest</design:label>
+            <design:formattingHints>
+              <design:displaySize>34</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>prepaidEF</design:name>
+            <design:position>5</design:position>
+            <design:nativeDataTypeCode>3</design:nativeDataTypeCode>
+            <design:precision>32</design:precision>
+            <design:scale>3</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>prepaidEF</design:label>
+            <design:formattingHints>
+              <design:displaySize>34</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="ELDisbursementDetailsDataSet" id="976">
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">OFFICE_ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">PRD_OFFERING_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">loanamount</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">MifosJDBCDataSource</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">branchId</property>
+                    <property name="paramName">branchId</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">OFFICE_ID</property>
+                    <property name="nativeName">OFFICE_ID</property>
+                    <property name="dataType">integer</property>
+                    <property name="nativeDataType">5</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">PRD_OFFERING_NAME</property>
+                    <property name="nativeName">PRD_OFFERING_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">loanamount</property>
+                    <property name="nativeName">loanamount</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">3</property>
+                </structure>
+            </list-property>
+            <property name="queryText">Select 
+	o.office_id as officeid, 
+	p.prd_offering_name as prdofferingname, 
+	sum(l.loan_amount) as loanamount 
+from 
+	office o
+		left join 
+			account a on a.office_id = o.office_id
+		left join 
+			loan_account l on l.account_id = a.account_id
+		left join 
+			prd_offering p on p.prd_offering_id = l.prd_offering_id
+	WHERE 
+			o.office_id = ?  
+		and 
+			date_format(l.disbursement_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+		and 
+			a.account_state_id = 5
+		and 
+			l.prd_offering_id in (2)
+	group by 
+		l.prd_offering_id</property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>1.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:name>CUSTOMER_ID</design:name>
+            <design:position>1</design:position>
+            <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
+            <design:precision>11</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>customer_id</design:label>
+            <design:formattingHints>
+              <design:displaySize>11</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="pageHeaderLeft" id="427">
@@ -985,15 +1310,15 @@ from
         </style>
         <style name="tableHeader" id="701">
             <property name="fontFamily">"Arial"</property>
-            <property name="fontSize">15pt</property>
+            <property name="fontSize">10pt</property>
             <property name="fontWeight">bold</property>
-            <property name="textAlign">center</property>
+            <property name="textAlign">left</property>
         </style>
     </styles>
     <page-setup>
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">a4</property>
-            <property name="orientation">portrait</property>
+            <property name="orientation">landscape</property>
             <property name="topMargin">1cm</property>
             <property name="leftMargin">1cm</property>
             <property name="bottomMargin">1cm</property>
@@ -1026,13 +1351,15 @@ from
     </page-setup>
     <body>
         <grid id="151">
-            <column id="152"/>
-            <column id="172"/>
-            <column id="178"/>
-            <column id="153"/>
+            <column id="152">
+                <property name="width">13.7cm</property>
+            </column>
+            <column id="178">
+                <property name="width">5.53125in</property>
+            </column>
             <row id="588">
                 <cell id="589">
-                    <property name="colSpan">4</property>
+                    <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="style">pageHeader</property>
                     <property name="verticalAlign">bottom</property>
@@ -1052,10 +1379,31 @@ from
                             </cell>
                             <cell id="598">
                                 <property name="verticalAlign">bottom</property>
-                                <label id="167">
-                                    <property name="style">pageHeaderRight</property>
-                                    <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
-                                </label>
+                                <grid id="982">
+                                    <property name="width">100%</property>
+                                    <column id="983"/>
+                                    <column id="984"/>
+                                    <row id="985">
+                                        <cell id="986">
+                                            <property name="textAlign">right</property>
+                                            <image id="981">
+                                                <property name="height">50px</property>
+                                                <property name="width">50px</property>
+                                                <property name="source">url</property>
+                                                <expression name="uri">images/GrameenKoota.gif</expression>
+                                            </image>
+                                        </cell>
+                                        <cell id="987">
+                                            <property name="textAlign">left</property>
+                                            <property name="verticalAlign">middle</property>
+                                            <label id="167">
+                                                <property name="style">pageHeaderRight</property>
+                                                <property name="textAlign">left</property>
+                                                <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </grid>
                             </cell>
                         </row>
                     </grid>
@@ -1063,7 +1411,7 @@ from
             </row>
             <row id="438">
                 <cell id="439">
-                    <property name="colSpan">4</property>
+                    <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -1074,22 +1422,20 @@ from
                         <property name="marginBottom">5pt</property>
                         <property name="width">100%</property>
                         <column id="444">
-                            <property name="width">1.0520833333in</property>
+                            <property name="width">3cm</property>
                         </column>
                         <column id="445">
-                            <property name="width">0.2083333333in</property>
+                            <property name="width">0.5cm</property>
                         </column>
-                        <column id="446">
-                            <property name="width">4.75in</property>
-                        </column>
+                        <column id="446"/>
                         <column id="447">
-                            <property name="width">0.4895833333in</property>
+                            <property name="width">1.5cm</property>
                         </column>
                         <column id="448">
-                            <property name="width">0.2083333333in</property>
+                            <property name="width">0.5cm</property>
                         </column>
                         <column id="449">
-                            <property name="width">0.9166666667in</property>
+                            <property name="width">3cm</property>
                         </column>
                         <row id="450">
                             <cell id="451">
@@ -1160,7 +1506,7 @@ from
             </row>
             <row id="163">
                 <cell id="164">
-                    <property name="colSpan">4</property>
+                    <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <property name="style">dataBlock</property>
                     <table id="183">
@@ -1227,21 +1573,109 @@ from
                                 <expression name="expression">dataSetRow["arrearsEF"]</expression>
                                 <property name="dataType">decimal</property>
                             </structure>
+                            <structure>
+                                <property name="name">total_actuals</property>
+                                <expression name="expression">row["actualprincipal"]+row["actualinterest"]+row["actualEF"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalDues</property>
+                                <expression name="expression">row["dueprincipal"]+row["dueinterest"]+row["dueEF"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalArrears</property>
+                                <expression name="expression">row["arrearsrprincipal"]+row["arrearsinterest"]+row["arrearsEF"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalActualPrincipal</property>
+                                <expression name="expression">Total.sum(row["actualprincipal"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalActualRepayment</property>
+                                <expression name="expression">Total.sum(row["total_actuals"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalActualInterest</property>
+                                <expression name="expression">Total.sum(row["actualinterest"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalActualFees</property>
+                                <expression name="expression">Total.sum(row["actualEF"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalDuePrincipal</property>
+                                <expression name="expression">Total.sum(row["dueprincipal"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalDueInterest</property>
+                                <expression name="expression">Total.sum(row["dueinterest"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalDueFees</property>
+                                <expression name="expression">Total.sum(row["dueEF"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalTotalDues</property>
+                                <expression name="expression">Total.sum(row["totalDues"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalArrearsPrincipal</property>
+                                <expression name="expression">Total.sum(row["arrearsrprincipal"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalArrearsInterest</property>
+                                <expression name="expression">Total.sum(row["arrearsinterest"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalArrearsFees</property>
+                                <expression name="expression">Total.sum(row["arrearsEF"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalTotalArrears</property>
+                                <expression name="expression">Total.sum(row["totalArrears"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
                         </list-property>
-                        <column id="199"/>
-                        <column id="613"/>
-                        <column id="200"/>
-                        <column id="625"/>
+                        <column id="199">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="613">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="200">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="625">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="758">
+                            <property name="width">2.5cm</property>
+                        </column>
                         <column id="632"/>
                         <column id="201"/>
                         <column id="638"/>
+                        <column id="765"/>
                         <column id="202"/>
                         <column id="649"/>
                         <column id="655"/>
+                        <column id="772"/>
                         <header>
                             <row id="602">
                                 <cell id="603">
-                                    <property name="colSpan">10</property>
+                                    <property name="colSpan">13</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">tableHeader</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -1280,28 +1714,7 @@ from
                                     <property name="borderTopWidth">thin</property>
                                 </cell>
                                 <cell id="615">
-                                    <property name="colSpan">3</property>
-                                    <property name="rowSpan">1</property>
-                                    <property name="style">tableSubheader</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <property name="textAlign">center</property>
-                                    <label id="210">
-                                        <text-property name="text" key="branch.cash.report.due.header">Dues [including overdue]</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="628">
-                                    <property name="colSpan">3</property>
+                                    <property name="colSpan">4</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">tableSubheader</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -1321,8 +1734,29 @@ from
                                         <text-property name="text" key="branch.cash.report.actual.header">Actual</text-property>
                                     </label>
                                 </cell>
+                                <cell id="628">
+                                    <property name="colSpan">4</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableSubheader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">center</property>
+                                    <label id="210">
+                                        <text-property name="text" key="branch.cash.report.due.header">Dues</text-property>
+                                    </label>
+                                </cell>
                                 <cell id="618">
-                                    <property name="colSpan">3</property>
+                                    <property name="colSpan">4</property>
                                     <property name="rowSpan">1</property>
                                     <property name="style">tableSubheader</property>
                                     <property name="borderBottomColor">#808080</property>
@@ -1377,8 +1811,8 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <label id="614">
-                                        <text-property name="text" key="branch.cash.report.due.principal">Principal</text-property>
+                                    <label id="641">
+                                        <text-property name="text" key="branch.cash.report.actual.principal">Principal</text-property>
                                     </label>
                                 </cell>
                                 <cell id="205">
@@ -1395,9 +1829,9 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <label id="619">
+                                    <label id="642">
                                         <property name="textAlign">left</property>
-                                        <text-property name="text" key="branch.cash.report.due.interest">Interest</text-property>
+                                        <text-property name="text" key="branch.cash.report.actual.interest">Interest</text-property>
                                     </label>
                                 </cell>
                                 <cell id="622">
@@ -1414,9 +1848,28 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <label id="626">
+                                    <label id="643">
                                         <property name="textAlign">left</property>
-                                        <text-property name="text" key="branch.cash.report.due.fees">Principal</text-property>
+                                        <text-property name="text" key="branch.cash.report.actual.fees">Fees</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="756">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="759">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text" key="branch.cash.report.actual.total">Total</text-property>
                                     </label>
                                 </cell>
                                 <cell id="629">
@@ -1434,8 +1887,8 @@ from
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">left</property>
-                                    <label id="641">
-                                        <text-property name="text" key="branch.cash.report.actual.principal">Principal</text-property>
+                                    <label id="614">
+                                        <text-property name="text" key="branch.cash.report.due.principal">Principal</text-property>
                                     </label>
                                 </cell>
                                 <cell id="206">
@@ -1453,9 +1906,9 @@ from
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">left</property>
-                                    <label id="642">
+                                    <label id="619">
                                         <property name="textAlign">left</property>
-                                        <text-property name="text" key="branch.cash.report.actual.interest">Interest</text-property>
+                                        <text-property name="text" key="branch.cash.report.due.interest">Interest</text-property>
                                     </label>
                                 </cell>
                                 <cell id="635">
@@ -1473,9 +1926,29 @@ from
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <property name="textAlign">left</property>
-                                    <label id="643">
+                                    <label id="626">
                                         <property name="textAlign">left</property>
-                                        <text-property name="text" key="branch.cash.report.actual.fees">Principal</text-property>
+                                        <text-property name="text" key="branch.cash.report.due.fees">Fees</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="763">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="766">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text" key="branch.cash.report.due.total">Total</text-property>
                                     </label>
                                 </cell>
                                 <cell id="207">
@@ -1535,7 +2008,27 @@ from
                                     <property name="textAlign">left</property>
                                     <label id="658">
                                         <property name="textAlign">left</property>
-                                        <text-property name="text" key="branch.cash.report.arrearsl.fees">Principal</text-property>
+                                        <text-property name="text" key="branch.cash.report.actual.fees">Fees</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="770">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="773">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text" key="branch.cash.report.arrears.total">Principal</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -1574,65 +2067,11 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <data id="663">
-                                        <property name="resultSetColumn">dueprincipal</property>
-                                    </data>
-                                </cell>
-                                <cell id="191">
-                                    <property name="style">numberFormat</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <data id="664">
-                                        <property name="resultSetColumn">dueinterest</property>
-                                    </data>
-                                </cell>
-                                <cell id="623">
-                                    <property name="style">numberFormat</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <data id="665">
-                                        <property name="resultSetColumn">dueEF</property>
-                                    </data>
-                                </cell>
-                                <cell id="630">
-                                    <property name="style">numberFormat</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
                                     <data id="666">
                                         <property name="resultSetColumn">actualprincipal</property>
                                     </data>
                                 </cell>
-                                <cell id="192">
+                                <cell id="191">
                                     <property name="style">numberFormat</property>
                                     <property name="borderBottomColor">#808080</property>
                                     <property name="borderBottomStyle">solid</property>
@@ -1650,7 +2089,7 @@ from
                                         <property name="resultSetColumn">actualinterest</property>
                                     </data>
                                 </cell>
-                                <cell id="636">
+                                <cell id="623">
                                     <property name="style">numberFormat</property>
                                     <property name="borderBottomColor">#808080</property>
                                     <property name="borderBottomStyle">solid</property>
@@ -1666,6 +2105,96 @@ from
                                     <property name="borderTopWidth">thin</property>
                                     <data id="668">
                                         <property name="resultSetColumn">actualEF</property>
+                                    </data>
+                                </cell>
+                                <cell id="757">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="760">
+                                        <property name="resultSetColumn">total_actuals</property>
+                                    </data>
+                                </cell>
+                                <cell id="630">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="663">
+                                        <property name="resultSetColumn">dueprincipal</property>
+                                    </data>
+                                </cell>
+                                <cell id="192">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="664">
+                                        <property name="resultSetColumn">dueinterest</property>
+                                    </data>
+                                </cell>
+                                <cell id="636">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="665">
+                                        <property name="resultSetColumn">dueEF</property>
+                                    </data>
+                                </cell>
+                                <cell id="764">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="767">
+                                        <property name="resultSetColumn">totalDues</property>
                                     </data>
                                 </cell>
                                 <cell id="193">
@@ -1722,25 +2251,1291 @@ from
                                         <property name="resultSetColumn">arrearsEF</property>
                                     </data>
                                 </cell>
+                                <cell id="771">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="774">
+                                        <property name="resultSetColumn">totalArrears</property>
+                                    </data>
+                                </cell>
                             </row>
                         </detail>
+                        <footer>
+                            <row id="850">
+                                <cell id="851">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="864">
+                                        <text-property name="text" key="branch.cash.report.repayment.total">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="852">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="865">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">(Total.count()==0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalActualPrincipal</property>
+                                    </data>
+                                    <label id="959">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalPrincipal+=row["totalActualPrincipal"];
+Total.count()!=0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="853">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="894">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalActualInterest</property>
+                                    </data>
+                                    <label id="960">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()!=0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="854">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="895">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalActualFees</property>
+                                    </data>
+                                    <label id="961">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()!=0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="855">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="866">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalActualRepayment</property>
+                                    </data>
+                                    <label id="962">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalActual=row["totalActualRepayment"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="856">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="896">
+                                        <property name="resultSetColumn">totalDuePrincipal</property>
+                                    </data>
+                                </cell>
+                                <cell id="857">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="897">
+                                        <property name="resultSetColumn">totalDueInterest</property>
+                                    </data>
+                                </cell>
+                                <cell id="858">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="898">
+                                        <property name="resultSetColumn">totalDueFees</property>
+                                    </data>
+                                </cell>
+                                <cell id="859">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="899">
+                                        <property name="resultSetColumn">totalTotalDues</property>
+                                    </data>
+                                </cell>
+                                <cell id="860">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="900">
+                                        <property name="resultSetColumn">totalArrearsPrincipal</property>
+                                    </data>
+                                </cell>
+                                <cell id="861">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="901">
+                                        <property name="resultSetColumn">totalArrearsInterest</property>
+                                    </data>
+                                </cell>
+                                <cell id="862">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="902">
+                                        <property name="resultSetColumn">totalArrearsFees</property>
+                                    </data>
+                                </cell>
+                                <cell id="863">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="903">
+                                        <property name="resultSetColumn">totalTotalArrears</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </footer>
                     </table>
+                </cell>
+            </row>
+            <row id="749">
+                <cell id="750">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <table id="804">
+                        <property name="width">100%</property>
+                        <property name="dataSet">PrepaymentDetailsDataSet</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">OFFICE_ID</property>
+                                <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">PRD_OFFERING_SHORT_NAME</property>
+                                <expression name="expression">dataSetRow["PRD_OFFERING_SHORT_NAME"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">prepaidprincipal</property>
+                                <expression name="expression">dataSetRow["prepaidprincipal"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">prepaidinterest</property>
+                                <expression name="expression">dataSetRow["prepaidinterest"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">prepaidEF</property>
+                                <expression name="expression">dataSetRow["prepaidEF"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalPrepayment</property>
+                                <expression name="expression">row["prepaidprincipal"]+row["prepaidinterest"]+row["prepaidEF"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">total_principal_prepayment</property>
+                                <expression name="expression">Total.sum(row["prepaidprincipal"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">total_interest</property>
+                                <expression name="expression">Total.sum(row["prepaidinterest"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">total_fees</property>
+                                <expression name="expression">Total.sum(row["prepaidEF"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalPrepaymentForAllPrd</property>
+                                <expression name="expression">Total.sum(row["totalPrepayment"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                        </list-property>
+                        <column id="818">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="827">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="833">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="823">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="819">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <header>
+                            <row id="805">
+                                <cell id="806">
+                                    <property name="colSpan">5</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableHeader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="807">
+                                        <text-property name="text" key="branch.cash.report.prepayment.header">Prepayment Details</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="808">
+                                <list-property name="visibility">
+                                    <structure>
+                                        <property name="format">all</property>
+                                        <expression name="valueExpr">true</expression>
+                                    </structure>
+                                </list-property>
+                                <cell id="809">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="810">
+                                        <text-property name="text" key="branch.cash.report.prepayment.product">Product</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="825">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="828">
+                                        <text-property name="text" key="branch.cash.report.prepayment.principal">Principal</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="831">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="829">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text" key="branch.cash.report.prepayment.interest">Interest</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="821">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="834">
+                                        <property name="textAlign">left</property>
+                                        <text-property name="text" key="branch.cash.report.prepayment.fees">Fees</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="811">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <property name="textAlign">left</property>
+                                    <label id="812">
+                                        <text-property name="text" key="branch.cash.report.prepayment.total">Total</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="813">
+                                <cell id="814">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="835">
+                                        <property name="resultSetColumn">PRD_OFFERING_SHORT_NAME</property>
+                                    </data>
+                                </cell>
+                                <cell id="826">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="836">
+                                        <property name="resultSetColumn">prepaidprincipal</property>
+                                    </data>
+                                </cell>
+                                <cell id="832">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="837">
+                                        <property name="resultSetColumn">prepaidinterest</property>
+                                    </data>
+                                </cell>
+                                <cell id="822">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="838">
+                                        <property name="resultSetColumn">prepaidEF</property>
+                                    </data>
+                                </cell>
+                                <cell id="816">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="839">
+                                        <property name="resultSetColumn">totalPrepayment</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="867">
+                                <cell id="868">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="873">
+                                        <text-property name="text" key="branch.cash.report.prepayment.total">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="869">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="847">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <method name="onRender"><![CDATA[Packages.java.util.logging.Logger.getLogger("").error("Inside on Render");
+if(Total.row()==0) 
+	this.text=0
+Packages.java.util.logging.Logger.getLogger("").error("Out of on Render");]]></method>
+                                        <property name="resultSetColumn">total_principal_prepayment</property>
+                                    </data>
+                                    <label id="953">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalPrincipal+=row["total_principal_prepayment"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="870">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="848">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">total_interest</property>
+                                    </data>
+                                    <label id="957">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()!=0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="871">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="849">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">total_fees</property>
+                                    </data>
+                                    <label id="956">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()!=0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="872">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="874">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalPrepaymentForAllPrd</property>
+                                    </data>
+                                    <label id="955">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalPrepayment=row["totalPrepayment"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+                <cell id="752">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                </cell>
+            </row>
+            <row id="875">
+                <cell id="876">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <grid id="880">
+                        <property name="width">100%</property>
+                        <column id="881">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="882">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="883">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="884">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <column id="885">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <row id="886">
+                            <cell id="887">
+                                <property name="style">tableHeader</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="892">
+                                    <text-property name="text" key="branch.cash.report.grandtotal">Grand Total</text-property>
+                                </label>
+                            </cell>
+                            <cell id="888">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <data id="954">
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">grandTotalPrincipal</property>
+                                            <expression name="expression">vTotalPrincipal</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">grandTotalPrincipal</property>
+                                </data>
+                            </cell>
+                            <cell id="889">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                            <cell id="890">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                            </cell>
+                            <cell id="891">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <data id="963">
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">grandTotalTotal</property>
+                                            <expression name="expression">vTotalActual+vTotalPrepayment</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">grandTotalTotal</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="878">
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
                 </cell>
             </row>
             <row id="265">
                 <cell id="266">
-                    <property name="colSpan">2</property>
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
                     <property name="style">dataBlock</property>
+                    <table id="312">
+                        <property name="width">100%</property>
+                        <property name="dataSet">FeeDetailsDataSet</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">OFFICE_ID</property>
+                                <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">FEE_NAME</property>
+                                <expression name="expression">dataSetRow["FEE_NAME"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">feeamount</property>
+                                <expression name="expression">dataSetRow["feeamount"]</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                            <structure>
+                                <property name="name">totalFeeAmount</property>
+                                <expression name="expression">Total.sum(row["feeamount"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                        </list-property>
+                        <column id="322">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="323">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <header>
+                            <row id="313">
+                                <cell id="314">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableHeader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="331">
+                                        <text-property name="text" key="branch.cash.report.fees.header">Fee Details</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="332">
+                                <cell id="333">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="335">
+                                        <text-property name="text" key="branch.cash.report.fees.feetype">Feetype</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="334">
+                                    <property name="style">numberFieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="336">
+                                        <text-property name="text" key="branch.cash.report.fees.feeamount">Fee Amount</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                        <detail>
+                            <row id="316">
+                                <cell id="317">
+                                    <property name="style">valueText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="694">
+                                        <property name="resultSetColumn">FEE_NAME</property>
+                                    </data>
+                                </cell>
+                                <cell id="318">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="695">
+                                        <property name="resultSetColumn">feeamount</property>
+                                    </data>
+                                </cell>
+                            </row>
+                        </detail>
+                        <footer>
+                            <row id="910">
+                                <cell id="911">
+                                    <property name="style">fieldText</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="913">
+                                        <text-property name="text" key="branch.cash.report.fee.total">Total</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="912">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="914">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalFeeAmount</property>
+                                    </data>
+                                    <label id="964">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalFeeAmount=row["totalFeeAmount"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </footer>
+                    </table>
+                </cell>
+                <cell id="272">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">bottom</property>
+                </cell>
+            </row>
+            <row id="295">
+                <cell id="296">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <table id="675">
+                        <property name="width">100%</property>
+                        <property name="dataSet">FinesDataSet</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">OFFICE_ID</property>
+                                <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                            <structure>
+                                <property name="name">fines</property>
+                                <expression name="expression">Total.sum(dataSetRow["fines"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
+                        </list-property>
+                        <column id="690">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="691">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <header>
+                            <row id="676">
+                                <cell id="677">
+                                    <property name="colSpan">1</property>
+                                    <property name="rowSpan">1</property>
+                                    <property name="style">tableHeader</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <label id="678">
+                                        <text-property name="text" key="branch.cash.report.fines.header">Fines</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="980">
+                                    <property name="style">numberFormat</property>
+                                    <property name="borderBottomColor">#808080</property>
+                                    <property name="borderBottomStyle">solid</property>
+                                    <property name="borderBottomWidth">thin</property>
+                                    <property name="borderLeftColor">#808080</property>
+                                    <property name="borderLeftStyle">solid</property>
+                                    <property name="borderLeftWidth">thin</property>
+                                    <property name="borderRightColor">#808080</property>
+                                    <property name="borderRightStyle">solid</property>
+                                    <property name="borderRightWidth">thin</property>
+                                    <property name="borderTopColor">#808080</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">thin</property>
+                                    <data id="697">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">fines</property>
+                                    </data>
+                                    <label id="965">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalFines=row["fines"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </header>
+                    </table>
+                </cell>
+                <cell id="298">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">dataBlock</property>
+                    <property name="verticalAlign">top</property>
+                </cell>
+            </row>
+            <row id="915">
+                <property name="height">0.3020833333in</property>
+                <cell id="916">
+                    <grid id="918">
+                        <property name="width">100%</property>
+                        <column id="919">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="920">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <row id="921">
+                            <cell id="922">
+                                <property name="style">tableHeader</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="924">
+                                    <text-property name="text">Total Recoveries</text-property>
+                                </label>
+                            </cell>
+                            <cell id="923">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <data id="977">
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">totalRecoveries</property>
+                                            <expression name="expression">vTotalActual+vTotalPrepayment+vTotalFeeAmount+vTotalFines</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">totalRecoveries</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="917"/>
+            </row>
+            <row id="744">
+                <property name="height">0.3020833333in</property>
+                <cell id="745">
+                    <property name="colSpan">1</property>
+                    <property name="rowSpan">1</property>
                     <table id="273">
                         <property name="width">100%</property>
                         <property name="dataSet">DisbursementDetailsDataSet</property>
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr">(Total.count() &lt; 1)</expression>
-                            </structure>
-                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">OFFICE_ID</property>
@@ -1757,9 +3552,18 @@ from
                                 <expression name="expression">dataSetRow["loanamount"]</expression>
                                 <property name="dataType">decimal</property>
                             </structure>
+                            <structure>
+                                <property name="name">totalLoanDisbursement</property>
+                                <expression name="expression">Total.sum(row["loanamount"])</expression>
+                                <property name="dataType">decimal</property>
+                            </structure>
                         </list-property>
-                        <column id="283"/>
-                        <column id="284"/>
+                        <column id="283">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="284">
+                            <property name="width">2.5cm</property>
+                        </column>
                         <header>
                             <row id="274">
                                 <cell id="275">
@@ -1863,73 +3667,9 @@ from
                                 </cell>
                             </row>
                         </detail>
-                    </table>
-                </cell>
-                <cell id="272">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">1</property>
-                    <property name="style">dataBlock</property>
-                    <property name="verticalAlign">bottom</property>
-                </cell>
-            </row>
-            <row id="295">
-                <cell id="296">
-                    <property name="colSpan">2</property>
-                    <property name="rowSpan">1</property>
-                    <property name="style">dataBlock</property>
-                    <table id="312">
-                        <property name="width">100%</property>
-                        <property name="dataSet">FeeDetailsDataSet</property>
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr">(Total.count() &lt; 1)</expression>
-                            </structure>
-                        </list-property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">OFFICE_ID</property>
-                                <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
-                                <property name="name">FEE_NAME</property>
-                                <expression name="expression">dataSetRow["FEE_NAME"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                            <structure>
-                                <property name="name">feeamount</property>
-                                <expression name="expression">dataSetRow["feeamount"]</expression>
-                                <property name="dataType">decimal</property>
-                            </structure>
-                        </list-property>
-                        <column id="322"/>
-                        <column id="323"/>
-                        <header>
-                            <row id="313">
-                                <cell id="314">
-                                    <property name="colSpan">2</property>
-                                    <property name="rowSpan">1</property>
-                                    <property name="style">tableHeader</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="331">
-                                        <text-property name="text" key="branch.cash.report.fees.header">Fee Details</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                            <row id="332">
-                                <cell id="333">
+                        <footer>
+                            <row id="970">
+                                <cell id="971">
                                     <property name="style">fieldText</property>
                                     <property name="borderBottomColor">#808080</property>
                                     <property name="borderBottomStyle">solid</property>
@@ -1943,51 +3683,11 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <label id="335">
-                                        <text-property name="text" key="branch.cash.report.fees.feetype">Feetype</text-property>
+                                    <label id="948">
+                                        <text-property name="text" key="branch.cash.report.disbursement.total">Total</text-property>
                                     </label>
                                 </cell>
-                                <cell id="334">
-                                    <property name="style">numberFieldText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="336">
-                                        <text-property name="text" key="branch.cash.report.fees.feeamount">Fee Amount</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                        </header>
-                        <detail>
-                            <row id="316">
-                                <cell id="317">
-                                    <property name="style">valueText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <data id="694">
-                                        <property name="resultSetColumn">FEE_NAME</property>
-                                    </data>
-                                </cell>
-                                <cell id="318">
+                                <cell id="972">
                                     <property name="style">numberFormat</property>
                                     <property name="borderBottomColor">#808080</property>
                                     <property name="borderBottomStyle">solid</property>
@@ -2001,113 +3701,192 @@ from
                                     <property name="borderTopColor">#808080</property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
-                                    <data id="695">
-                                        <property name="resultSetColumn">feeamount</property>
+                                    <data id="949">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">Total.count()==0</expression>
+                                            </structure>
+                                        </list-property>
+                                        <property name="resultSetColumn">totalLoanDisbursement</property>
                                     </data>
+                                    <label id="966">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">if(Total.count()!=0)
+     vTotalDisbursement=row["totalLoanDisbursement"];
+(Total.count()!=0)</expression>
+                                            </structure>
+                                        </list-property>
+                                        <text-property name="text">0.00</text-property>
+                                    </label>
                                 </cell>
                             </row>
-                        </detail>
+                        </footer>
                     </table>
                 </cell>
-                <cell id="298">
-                    <property name="colSpan">2</property>
+                <cell id="747">
+                    <property name="colSpan">1</property>
                     <property name="rowSpan">1</property>
-                    <property name="style">dataBlock</property>
-                    <property name="verticalAlign">top</property>
-                    <table id="675">
-                        <property name="width">100%</property>
-                        <property name="dataSet">FinesDataSet</property>
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr">(Total.count() &lt; 1)</expression>
-                            </structure>
-                        </list-property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">OFFICE_ID</property>
-                                <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
-                                <property name="name">fines</property>
-                                <expression name="expression">dataSetRow["fines"]</expression>
-                                <property name="dataType">decimal</property>
-                            </structure>
-                        </list-property>
-                        <column id="690"/>
-                        <column id="691"/>
-                        <header>
-                            <row id="676">
-                                <cell id="677">
-                                    <property name="colSpan">2</property>
-                                    <property name="rowSpan">1</property>
-                                    <property name="style">tableHeader</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="678">
-                                        <text-property name="text" key="branch.cash.report.fines.header">Fines</text-property>
-                                    </label>
-                                </cell>
-                            </row>
-                        </header>
-                        <detail>
-                            <row id="684">
-                                <cell id="685">
-                                    <property name="style">valueText</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <label id="692">
-                                        <text-property name="text">Fines &amp; Penalties</text-property>
-                                    </label>
-                                </cell>
-                                <cell id="686">
-                                    <property name="style">numberFormat</property>
-                                    <property name="borderBottomColor">#808080</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">thin</property>
-                                    <property name="borderLeftColor">#808080</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">thin</property>
-                                    <property name="borderRightColor">#808080</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">thin</property>
-                                    <property name="borderTopColor">#808080</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">thin</property>
-                                    <data id="697">
-                                        <property name="resultSetColumn">fines</property>
-                                    </data>
-                                </cell>
-                            </row>
-                        </detail>
-                    </table>
                 </cell>
+            </row>
+            <row id="925">
+                <property name="height">0.3020833333in</property>
+                <cell id="926">
+                    <grid id="928">
+                        <property name="width">100%</property>
+                        <column id="929">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="930">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <row id="931">
+                            <cell id="932">
+                                <property name="style">tableHeader</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="934">
+                                    <text-property name="text">Cash From Branch</text-property>
+                                </label>
+                            </cell>
+                            <cell id="933">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <data id="978">
+                                    <property name="dataSet">ELDisbursementDetailsDataSet</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">OFFICE_ID</property>
+                                            <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
+                                            <property name="dataType">integer</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">PRD_OFFERING_NAME</property>
+                                            <expression name="expression">dataSetRow["PRD_OFFERING_NAME"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">loanamount</property>
+                                            <expression name="expression">dataSetRow["loanamount"]</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">cashFromBranch</property>
+                                            <expression name="expression">Total.sum(row["loanamount"])-vTotalDisbursement</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">cashFromBranch</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="927"/>
+            </row>
+            <row id="935">
+                <property name="height">0.3020833333in</property>
+                <cell id="936">
+                    <grid id="938">
+                        <property name="width">100%</property>
+                        <column id="939">
+                            <property name="width">10cm</property>
+                        </column>
+                        <column id="940">
+                            <property name="width">2.5cm</property>
+                        </column>
+                        <row id="941">
+                            <cell id="942">
+                                <property name="style">tableHeader</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <label id="944">
+                                    <text-property name="text">Net Cash</text-property>
+                                </label>
+                            </cell>
+                            <cell id="943">
+                                <property name="style">numberFormat</property>
+                                <property name="borderBottomColor">#808080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#808080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#808080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#808080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <data id="979">
+                                    <property name="dataSet">ELDisbursementDetailsDataSet</property>
+                                    <list-property name="boundDataColumns">
+                                        <structure>
+                                            <property name="name">OFFICE_ID</property>
+                                            <expression name="expression">dataSetRow["OFFICE_ID"]</expression>
+                                            <property name="dataType">integer</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">PRD_OFFERING_NAME</property>
+                                            <expression name="expression">dataSetRow["PRD_OFFERING_NAME"]</expression>
+                                            <property name="dataType">string</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">loanamount</property>
+                                            <expression name="expression">dataSetRow["loanamount"]</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">netCash</property>
+                                            <expression name="expression">vTotalActual+vTotalPrepayment+vTotalFeeAmount+vTotalFines-Total.sum(row["loanamount"])</expression>
+                                            <property name="dataType">decimal</property>
+                                        </structure>
+                                    </list-property>
+                                    <property name="resultSetColumn">netCash</property>
+                                </data>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="937"/>
             </row>
             <row id="551">
                 <property name="height">0.3020833333in</property>
                 <cell id="552">
-                    <property name="colSpan">4</property>
+                    <property name="colSpan">2</property>
                     <property name="rowSpan">1</property>
                     <grid id="562">
                         <property name="style">signatureBlock</property>
