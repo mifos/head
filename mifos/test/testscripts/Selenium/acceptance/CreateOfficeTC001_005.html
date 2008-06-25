@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>CreateOfficeTC001_005</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateOfficeTC001_005</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Admin</td>
+	<td>Admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Define a new office</td>
+	<td>Define a new office</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} month = dates.getMonth() + 1;if (month &lt; 10){month = '0' + month;}var year = dates.getFullYear();day + '/' + month + '/' + year}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Bangalore_branch${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Branch Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=regexp:Mifos\s+HO</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>bangalore</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>EGL</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>karnataka</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>India</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>560071</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>918025003632</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View office details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office type: Branch Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Bangalore_Regional${time}</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Regional Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=regexp:Mifos\s+HO</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>bangalore</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>EGL</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>karnataka</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>India</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>560071</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>918025003632</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View office details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office type: Regional Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Bangalore_Div${time}</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Divisional Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=regexp:Mifos\s+HO</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>bangalore</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>EGL</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>karnataka</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>India</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>560071</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>918025003632</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View office details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office type: Divisional Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Bangalore_AreaOf${time}</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Area Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=regexp:Mifos\s+HO</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>bangalore</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>EGL</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>karnataka</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>India</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>560071</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>918025003632</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View office details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office type: Area Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
