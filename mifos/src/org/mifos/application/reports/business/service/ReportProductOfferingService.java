@@ -58,4 +58,13 @@ public class ReportProductOfferingService extends ConfigService {
 		return savingsProductBusinessService
 				.getSavingsProduct(getSavingsProduct2());
 	}
+	
+	public boolean displaySignatureColumn(Integer columnNumber)
+			throws ServiceException {
+		return isPropertyPresent(ReportConfigServiceConstants.DISPLAY_SIGNATURE_COLUMN
+				+ "." + columnNumber)
+				&& Boolean
+						.valueOf(getProperty(ReportConfigServiceConstants.DISPLAY_SIGNATURE_COLUMN
+								+ "." + columnNumber));
+	}	
 }

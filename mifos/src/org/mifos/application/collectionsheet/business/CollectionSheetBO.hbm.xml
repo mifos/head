@@ -133,7 +133,7 @@
 		Where (
 		   a.account_state_id = 5 or a.account_state_id = 9
 		   ) and a.office_id = :BRANCH_ID and a.account_type_id = 1
-		group by a.customer_id order by a.customer_id
+		group by a.customer_id
 	 ) loan on coll.memid = loan.customer_id
 
 	 left join
@@ -160,12 +160,11 @@
                          and l.payment_status = 0 
                          and (a.account_state_id = 5 or a.account_state_id = 9) 
                          and a.account_type_id = 1                         
-                         group by l.account_id order by a.customer_id
+                         group by l.account_id
                   ) loansch on loansch.customer_id = c.customer_id 
                     where c.branch_id = :BRANCH_ID 
                     and c.customer_level_id = 1
                     group by c.customer_id 
-                    order by c.customer_id
            ) loanduesch on coll.memid = loanduesch.customer_id
 
 	   left join
@@ -191,12 +190,11 @@
 			    and a.account_state_id = 3 
 			    and a.office_id = :BRANCH_ID 
 			    and a.account_type_id = 1 
-			    AND l.PRD_OFFERING_ID=p.PRD_OFFERING_ID order by a.customer_id
+			    AND l.PRD_OFFERING_ID=p.PRD_OFFERING_ID
 		     ) loandisb on loandisb.customer_id = c.customer_id 
 		       where c.branch_id = :BRANCH_ID 
 		       and c.customer_level_id = 1
                        group by c.customer_id 
-                       order by c.customer_id
              ) ld on coll.memid = ld.customer_id
           ]]>   
 	</sql-query>

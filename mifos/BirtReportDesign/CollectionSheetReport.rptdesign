@@ -6,6 +6,15 @@
     <property name="includeResource">BirtReportResource/CollectionSheetReportResources</property>
     <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
     <method name="initialize"><![CDATA[reportContext.setPersistentGlobalVariable("pageNum","0");]]></method>
+    <list-property name="libraries">
+        <structure>
+            <property name="fileName">BirtReportResource/signature.rptlibrary</property>
+            <property name="namespace">UI</property>
+        </structure>
+    </list-property>
+    <list-property name="includeScripts">
+        <property>test.js</property>
+    </list-property>
     <parameters>
         <cascading-parameter-group name="branch_loanofficer_center" id="905">
             <property name="dataSetMode">multiple</property>
@@ -99,6 +108,20 @@ MAX_PRODUCT_COUNT = 2;
 try {
 	dateFormat = new Packages.java.text.SimpleDateFormat("dd/MM/yyyy");
     collectionSheetService = Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService();
+    
+    var SEPARATOR = "||"; //this should be same as the separator set in group_concat in CollectionSheetBO.hbm.xml
+    
+    // this function accepts a string of format: prd_name1:value<SEPARATOR>prd_name2:value2...so on    
+    // and sorts on prd_name. Used in ReportData dataset fetch()
+    sortColumnsWithSeparator = function(column){    
+        if(column.indexOf(SEPARATOR) == -1)
+           return column;
+
+        column = "" + column;
+        var tokens = column.split(SEPARATOR);
+        tokens.sort();
+        return tokens.join(SEPARATOR);
+     }    
 } catch (e) {
 	logger.info("MCSReport: Ds-open: exception : MifosScriptedDS : "+e);
 }]]></method>
@@ -503,18 +526,33 @@ return true;]]></method>
     row["center_id"] = item.getCenterId();
     row["loan_officer"] = item.getLoanOfficerName();
     row["member_name"] = item.getMemberName();
-    row["loan_balance"] = item.getLoanBalance();
     row["total_loan_balance"] = item.getTotalLoanBalance();
     row["group_name"] = item.getGroupName();
     row["center_name"] = item.getCenterName();
     row["office_name"] = item.getOfficeName();
     row["meeting_date"] = item.getMeetingDate();
-    row["loan_due"] = item.getLoanDue();
     row["total_loan_due"] = item.getTotalLoanDue();
-    row["loan_fees"] = item.getLoanFees();
     row["total_loan_fees"] = item.getTotalLoanFees();
-    row["loan_disb"]  = item.getLoanDisbursed();
     row["total_loan_disb"]  = item.getTotalLoanDisbursed();
+    
+    var loanBalance = item.getLoanBalance();
+    var loanDue = item.getLoanDue();
+    var loanFees = item.getLoanFees();        
+    var loanDisb = item.getLoanDisbursed();
+    
+    //These columns have value of type: prd_name1:value<SEPARATOR>prd_name2:value2...so on
+    //They need to be sorted in alphabetical order of prd_name. SEPARATOR is declared in 
+    // MifosCollectionSheetDataSource open()
+    var columnsToSort = {
+        "loan_balance" : loanBalance, 
+        "loan_due"        : loanDue, 
+        "loan_fees"       : loanFees, 
+        "loan_disb"       : loanDisb
+    };
+    
+    for(key in columnsToSort){
+        row[key] = sortColumnsWithSeparator(columnsToSort[key]);
+    }
     return true;
 }catch(e){
     logger.info("CollectionSheetReport: ReportData: fetch: "+e);   
@@ -702,8 +740,25 @@ return true;]]></method>
                     <column id="49"/>
                     <row id="50">
                         <property name="height">0.15in</property>
-                        <cell id="51">
-                            <label id="1440">
+                        <cell id="51"/>
+                    </row>
+                </grid>
+            </page-header>
+            <page-footer>
+                <grid id="1612">
+                    <property name="width">100%</property>
+                    <column id="1613"/>
+                    <column id="1614"/>
+                    <row id="1615">
+                        <cell id="1616">
+                            <text id="1618">
+                                <property name="contentType">html</property>
+                                <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                            </text>
+                        </cell>
+                        <cell id="1617">
+                            <property name="textAlign">right</property>
+                            <label id="1619">
                                 <method name="onCreate"><![CDATA[pgNum=parseInt(reportContext.getPersistentGlobalVariable("pageNum"));
 pgNum=pgNum+1;
 this.text="Page "+ pgNum.toString();
@@ -712,7 +767,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                     </row>
                 </grid>
-            </page-header>
+            </page-footer>
         </simple-master-page>
     </page-setup>
     <body>
@@ -862,13 +917,13 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <property name="width">0.8854166667in</property>
             </column>
             <column id="177">
-                <property name="width">1.0416666667in</property>
+                <property name="width">0.875in</property>
             </column>
             <column id="178">
                 <property name="width">0.71875in</property>
             </column>
             <column id="181">
-                <property name="width">0.7083333333in</property>
+                <property name="width">0.875in</property>
             </column>
             <column id="182">
                 <property name="width">0.6458333333in</property>
@@ -1059,7 +1114,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                     <cell id="72">
                                         <property name="style">pageSubheaderLeft</property>
                                         <label id="1003">
-                                            <text-property name="text" key="collection.sheet.center.label">Center   :</text-property>
+                                            <text-property name="text" key="collection.sheet.center.label">Center :</text-property>
                                         </label>
                                     </cell>
                                     <cell id="920">
@@ -1146,8 +1201,11 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                             <property name="colSpan">1</property>
                             <property name="rowSpan">2</property>
                             <property name="style">tableHeader</property>
+                            <property name="fontSize">7pt</property>
+                            <property name="textAlign">left</property>
+                            <property name="verticalAlign">bottom</property>
                             <label id="890">
-                                <text-property name="text" key="collection.sheet.table.att">P/A/L</text-property>
+                                <text-property name="text" key="collection.sheet.table.att">LP/P/A/L</text-property>
                             </label>
                         </cell>
                     </row>
@@ -1196,7 +1254,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         <cell id="1497">
                             <property name="style">tableMainSubheader</property>
                             <label id="1506">
-                                <text-property name="text" key="collection.sheet.table.other.collection.total">TOTAL</text-property>
+                                <text-property name="text" key="collection.sheet.table.other.collection.total">TOTAL FEES</text-property>
                             </label>
                         </cell>
                         <cell id="205">
@@ -1236,13 +1294,20 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         <property name="height">0.2in</property>
                         <cell id="554">
                             <property name="style">centerFooter</property>
-                            <property name="textAlign">center</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="paddingLeft">5pt</property>
+                            <property name="textAlign">left</property>
                             <data id="1462">
                                 <property name="resultSetColumn">center_id</property>
                             </data>
                         </cell>
                         <cell id="555">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <data id="1466">
                                 <property name="resultSetColumn">center_name</property>
@@ -1250,11 +1315,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                         <cell id="556">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="557">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                             <data id="1465">
@@ -1263,11 +1334,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                         <cell id="560">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="561">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                             <data id="1474">
@@ -1276,11 +1353,17 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                         <cell id="565">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="1500">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                             <data id="1510">
@@ -1289,26 +1372,41 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                         <cell id="566">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="844">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="1485">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="970">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
                         </cell>
                         <cell id="859">
                             <property name="style">centerFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                         </cell>
                     </row>
@@ -1422,7 +1520,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                     </cell>
                                     <cell id="1393">
                                         <property name="colSpan">1</property>
-                                        <property name="rowSpan">6</property>
+                                        <property name="rowSpan">7</property>
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -1586,7 +1684,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                     </cell>
                                     <cell id="1414">
                                         <property name="colSpan">1</property>
-                                        <property name="rowSpan">3</property>
+                                        <property name="rowSpan">4</property>
                                         <property name="fontSize">10pt</property>
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
@@ -1603,13 +1701,44 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                     </cell>
                                     <cell id="1416">
                                         <property name="colSpan">1</property>
-                                        <property name="rowSpan">3</property>
+                                        <property name="rowSpan">4</property>
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
                                         <property name="borderRightColor">#000000</property>
                                         <property name="borderRightStyle">solid</property>
                                         <property name="borderRightWidth">thin</property>
+                                    </cell>
+                                </row>
+                                <row id="1644">
+                                    <property name="height">0.2in</property>
+                                    <property name="style">summaryText</property>
+                                    <cell id="1645">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="borderLeftColor">#000000</property>
+                                        <property name="borderLeftStyle">solid</property>
+                                        <property name="borderLeftWidth">thin</property>
+                                        <property name="borderRightColor">#000000</property>
+                                        <property name="borderRightStyle">solid</property>
+                                        <property name="borderRightWidth">thin</property>
+                                        <label id="1650">
+                                            <property name="fontSize">10pt</property>
+                                            <text-property name="text" key="collection.sheet.summary.disbursement.actual">Actual Disbursement</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="1646">
+                                        <property name="fontSize">11pt</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="borderRightColor">#000000</property>
+                                        <property name="borderRightStyle">solid</property>
+                                        <property name="borderRightWidth">thin</property>
+                                        <property name="paddingRight">5px</property>
+                                        <property name="textAlign">right</property>
                                     </cell>
                                 </row>
                                 <row id="1417">
@@ -1678,24 +1807,97 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                             </grid>
                         </cell>
                     </row>
+                    <row id="1558">
+                        <property name="height">0.28125in</property>
+                        <method name="onCreate"><![CDATA[reportContext.setPersistentGlobalVariable("pageNum","0");]]></method>
+                        <cell id="1559">
+                            <label id="1584"/>
+                        </cell>
+                        <cell id="1560"/>
+                        <cell id="1561"/>
+                        <cell id="1562"/>
+                        <cell id="1563"/>
+                        <cell id="1564"/>
+                        <cell id="1565"/>
+                        <cell id="1566"/>
+                        <cell id="1567"/>
+                        <cell id="1568"/>
+                        <cell id="1569"/>
+                        <cell id="1570"/>
+                        <cell id="1571"/>
+                    </row>
                     <row id="1441">
-                        <property name="height">0.05in</property>
+                        <property name="height">0.3020833333in</property>
                         <method name="onCreate"><![CDATA[reportContext.setPersistentGlobalVariable("pageNum","0");]]></method>
                         <cell id="1442">
-                            <label id="1453"/>
+                            <property name="colSpan">13</property>
+                            <property name="rowSpan">1</property>
+                            <grid name="NewGrid" id="1585" extends="UI.NewGrid">
+                                <overridden-values>
+                                    <ref-entry baseId="40" name="NewGrid1">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(1)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="52" name="NewLabel">
+                                        <property name="textID">collection.sheet.signature.center.leader</property>
+                                    </ref-entry>
+                                    <ref-entry baseId="46" name="NewGrid2">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(2)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="53" name="NewLabel1"/>
+                                    <ref-entry baseId="55" name="NewGrid3">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(3)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="79" name="NewLabel11">
+                                        <property name="textID">collection.sheet.signature.center.manager</property>
+                                    </ref-entry>
+                                    <ref-entry baseId="61" name="NewGrid4">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(4)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="80" name="NewLabel12"/>
+                                    <ref-entry baseId="67" name="NewGrid5">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(5)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="81" name="NewLabel13"/>
+                                    <ref-entry baseId="73" name="NewGrid6">
+                                        <list-property name="visibility">
+                                            <structure>
+                                                <property name="format">all</property>
+                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(6)</expression>
+                                            </structure>
+                                        </list-property>
+                                    </ref-entry>
+                                    <ref-entry baseId="82" name="NewLabel14">
+                                        <property name="text">Cashier</property>
+                                        <property name="textID">collection.sheet.signature.cashier</property>
+                                    </ref-entry>
+                                </overridden-values>
+                            </grid>
                         </cell>
-                        <cell id="1443"/>
-                        <cell id="1444"/>
-                        <cell id="1445"/>
-                        <cell id="1446"/>
-                        <cell id="1447"/>
-                        <cell id="1448"/>
-                        <cell id="1503"/>
-                        <cell id="1449"/>
-                        <cell id="1450"/>
-                        <cell id="1488"/>
-                        <cell id="1451"/>
-                        <cell id="1452"/>
                     </row>
                 </footer>
             </group>
@@ -1712,16 +1914,24 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <footer>
                     <row id="349">
                         <property name="height">0.2in</property>
+                        <property name="style">groupFooter</property>
                         <cell id="350">
                             <property name="style">groupFooter</property>
-                            <property name="paddingLeft">0pt</property>
-                            <property name="textAlign">center</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="paddingLeft">5pt</property>
+                            <property name="paddingRight">0px</property>
+                            <property name="textAlign">left</property>
                             <data id="1461">
                                 <property name="resultSetColumn">group_id</property>
                             </data>
                         </cell>
                         <cell id="351">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <property name="textAlign">left</property>
                             <data id="1463">
                                 <property name="resultSetColumn">group_name</property>
@@ -1729,48 +1939,81 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </cell>
                         <cell id="352">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="353">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <data id="1464">
                                 <property name="resultSetColumn">group_loan_balance</property>
                             </data>
                         </cell>
                         <cell id="356">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="357">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <data id="1473">
                                 <property name="resultSetColumn">group_loan_due</property>
                             </data>
                         </cell>
                         <cell id="361">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="1499">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <data id="1509">
                                 <property name="resultSetColumn">group_total_fees</property>
                             </data>
                         </cell>
                         <cell id="362">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="843">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="1484">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                         <cell id="969">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                             <data id="1476">
                                 <property name="resultSetColumn">group_total_loan_issue</property>
                             </data>
                         </cell>
                         <cell id="858">
                             <property name="style">groupFooter</property>
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
                         </cell>
                     </row>
                 </footer>
@@ -1781,6 +2024,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="style">rowText</property>
                     <cell id="150">
                         <property name="style">idText</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="paddingLeft">5pt</property>
                         <property name="textAlign">left</property>
                         <data id="1455">
@@ -1788,6 +2034,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         </data>
                     </cell>
                     <cell id="151">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="paddingRight">5px</property>
                         <data id="1457">
                             <property name="resultSetColumn">member_name</property>
@@ -1795,6 +2044,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     </cell>
                     <cell id="152">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <property name="textAlign">left</property>
                         <data id="1458">
                             <property name="resultSetColumn">loan_balance</property>
@@ -1802,6 +2054,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     </cell>
                     <cell id="153">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1459">
                             <structure name="numberFormat">
                                 <property name="category">Unformatted</property>
@@ -1811,48 +2066,75 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     </cell>
                     <cell id="156">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1471">
                             <property name="resultSetColumn">loan_due</property>
                         </data>
                     </cell>
                     <cell id="157">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1472">
                             <property name="resultSetColumn">total_loan_due</property>
                         </data>
                     </cell>
                     <cell id="161">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1507">
                             <property name="resultSetColumn">loan_fees</property>
                         </data>
                     </cell>
                     <cell id="1498">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1508">
                             <property name="resultSetColumn">total_loan_fees</property>
                         </data>
                     </cell>
                     <cell id="206">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                     </cell>
                     <cell id="842">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                     </cell>
                     <cell id="1483">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1492">
                             <property name="resultSetColumn">loan_disb</property>
                         </data>
                     </cell>
                     <cell id="968">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                         <data id="1475">
                             <property name="resultSetColumn">total_loan_disb</property>
                         </data>
                     </cell>
                     <cell id="857">
                         <property name="style">numberFormat</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
                     </cell>
                 </row>
             </detail>

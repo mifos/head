@@ -67,7 +67,7 @@ public abstract class ConfigService {
 		return CollectionUtils.asList(values);
 	}
 	
-	protected boolean isPropertyPresent(String key) {
+	public boolean isPropertyPresent(String key) {
 		return config.containsKey(key);
 	}
 }

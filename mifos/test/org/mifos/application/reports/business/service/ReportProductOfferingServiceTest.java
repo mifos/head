@@ -108,6 +108,21 @@ public class ReportProductOfferingServiceTest extends MifosTestCase {
 			fail("Was not able to find reportproductoffering config file" + e);
 		}
 	}
+	
+	public void testFindsSignatureConfigProperties() throws Exception {
+		retrieveAndAssertSignatureColumn("1");
+		retrieveAndAssertSignatureColumn("2");
+		retrieveAndAssertSignatureColumn("3");
+		retrieveAndAssertSignatureColumn("4");
+		retrieveAndAssertSignatureColumn("5");
+		retrieveAndAssertSignatureColumn("6");
+	}
+
+	private void retrieveAndAssertSignatureColumn(String signatureColumnNumber) {
+		assertTrue("could not find signature column "+signatureColumnNumber, reportProductOfferingService
+				.isPropertyPresent(ReportConfigServiceConstants.DISPLAY_SIGNATURE_COLUMN+"."
+						+ signatureColumnNumber));
+	}
 
 	public void testThrowsExceptionIfConfigFileNotFound() throws Exception {
 		try {

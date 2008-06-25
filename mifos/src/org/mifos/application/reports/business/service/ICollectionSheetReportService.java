@@ -16,4 +16,7 @@ public interface ICollectionSheetReportService {
 	
 	public List<CollectionSheetReportData> getReportData(Integer branchId,
 			String meetingDate, Integer personnelId, Integer centerId) throws ServiceException;
+	
+	public boolean displaySignatureColumn(Integer columnNumber)
+	throws ServiceException;	
 }

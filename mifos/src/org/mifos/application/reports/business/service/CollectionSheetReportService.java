@@ -194,4 +194,10 @@ public class CollectionSheetReportService implements
 			throw new ServiceException(e);
 		}
 	}
+	
+	public boolean displaySignatureColumn(Integer columnNumber)
+			throws ServiceException {
+		return reportProductOfferingService
+				.displaySignatureColumn(columnNumber);
+	}
 }

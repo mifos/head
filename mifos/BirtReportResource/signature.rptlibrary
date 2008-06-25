@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<library xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <property name="theme">defaultTheme</property>
+    <themes>
+        <theme name="defaultTheme" id="2"/>
+    </themes>
+    <components>
+        <grid name="NewGrid" id="4">
+            <property name="width">100%</property>
+            <column id="5"/>
+            <column id="6"/>
+            <column id="7"/>
+            <column id="8"/>
+            <column id="9"/>
+            <column id="10"/>
+            <row id="11">
+                <cell id="12">
+                    <grid name="NewGrid1" id="40">
+                        <property name="width">100%</property>
+                        <list-property name="visibility">
+                            <structure>
+                                <property name="format">all</property>
+                                <expression name="valueExpr">true</expression>
+                            </structure>
+                        </list-property>
+                        <column id="41"/>
+                        <row id="42">
+                            <cell id="43">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="44">
+                            <cell id="45">
+                                <property name="textAlign">center</property>
+                                <label name="NewLabel" id="52">
+                                    <text-property name="text">Signature 1</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="13">
+                    <property name="textAlign">center</property>
+                    <grid name="NewGrid2" id="46">
+                        <property name="width">100%</property>
+                        <column id="47"/>
+                        <row id="48">
+                            <cell id="49">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="50">
+                            <cell id="51">
+                                <label name="NewLabel1" id="53">
+                                    <text-property name="text">Signature 2</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="14">
+                    <grid name="NewGrid3" id="55">
+                        <property name="width">100%</property>
+                        <column id="56"/>
+                        <row id="57">
+                            <cell id="58">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="59">
+                            <cell id="60">
+                                <property name="textAlign">center</property>
+                                <label name="NewLabel11" id="79">
+                                    <text-property name="text">Signature 3</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="15">
+                    <property name="textAlign">center</property>
+                    <grid name="NewGrid4" id="61">
+                        <property name="width">100%</property>
+                        <column id="62"/>
+                        <row id="63">
+                            <cell id="64">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="textAlign">left</property>
+                            </cell>
+                        </row>
+                        <row id="65">
+                            <cell id="66">
+                                <label name="NewLabel12" id="80">
+                                    <text-property name="text">Signature 4</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="16">
+                    <grid name="NewGrid5" id="67">
+                        <property name="width">100%</property>
+                        <column id="68"/>
+                        <row id="69">
+                            <cell id="70">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="71">
+                            <cell id="72">
+                                <property name="textAlign">center</property>
+                                <label name="NewLabel13" id="81">
+                                    <text-property name="text">Signature 5</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+                <cell id="17">
+                    <grid name="NewGrid6" id="73">
+                        <property name="width">100%</property>
+                        <column id="74"/>
+                        <row id="75">
+                            <cell id="76">
+                                <property name="borderBottomColor">#000000</property>
+                                <property name="borderBottomStyle">dotted</property>
+                                <property name="borderBottomWidth">thin</property>
+                            </cell>
+                        </row>
+                        <row id="77">
+                            <cell id="78">
+                                <property name="textAlign">center</property>
+                                <label name="NewLabel14" id="82">
+                                    <text-property name="text">Signature 6</text-property>
+                                </label>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+        </grid>
+    </components>
+    <page-setup>
+        <simple-master-page name="NewSimpleMasterPage" id="3"/>
+    </page-setup>
+</library>
