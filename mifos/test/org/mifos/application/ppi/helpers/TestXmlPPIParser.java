@@ -14,6 +14,7 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.config.GeneralConfig;
 import org.w3c.dom.Document;
 
 public class TestXmlPPIParser {
@@ -65,7 +66,8 @@ public class TestXmlPPIParser {
 			parser.parse(new ByteArrayInputStream(getInvalidXmlSurvey().getBytes("UTF-8")));
 			fail("should have thrown an exception");
 		} catch (IllegalStateException e) {
-			assertEquals("org.mifos.framework.exceptions.ValidationException: Question choices amount to more than 100 points.", e.getMessage());
+			int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
+			assertEquals("org.mifos.framework.exceptions.ValidationException: Question choices amount to more than " + nonPoorMax + " points.", e.getMessage());
 		}
 	}
 	

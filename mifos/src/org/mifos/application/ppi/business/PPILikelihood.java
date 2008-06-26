@@ -49,6 +49,7 @@ import org.apache.commons.lang.math.IntRange;
 import org.apache.commons.lang.math.Range;
 import org.mifos.application.surveys.business.Survey;
 import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.config.GeneralConfig;
 
 public class PPILikelihood implements Serializable {
 	private int likelihoodId;
@@ -128,7 +129,8 @@ public class PPILikelihood implements Serializable {
 	}
 	
 	private void checkRange(Range score) throws ValidationException {
-		if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > 100)
+		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+		if (score.getMinimumInteger() < 0 || score.getMaximumInteger() > maxPoints)
 			throw new ValidationException("exception.validation.ppi.PpiLikelihoodArgsInvalidException");
 	}
 

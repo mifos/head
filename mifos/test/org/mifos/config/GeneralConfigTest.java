@@ -52,5 +52,22 @@ public class GeneralConfigTest extends MifosTestCase{
 		configMgr.setProperty(GeneralConfig.PerCenterTimeOutForBulkEntry, configuredValue);
 		
 	}
+	
+	@Test 
+	public void testGetMaxPointsPerPPISurvey() {
+		int configuredValue = GeneralConfig.getMaxPointsPerPPISurvey();
+		ConfigurationManager configMgr = ConfigurationManager.getInstance();
+		int currentValue = 30;
+		configMgr.setProperty(GeneralConfig.MaxPointsPerPPISurvey, currentValue);
+		assertEquals(currentValue, GeneralConfig.getMaxPointsPerPPISurvey());
+		// clear the RoundingRule property from the config file so should get the default value
+		configMgr.clearProperty(GeneralConfig.MaxPointsPerPPISurvey);
+		int defaultValue = GeneralConfig.getMaxPointsPerPPISurvey();
+		int expectedDefaultValue = 101;
+		assertEquals(defaultValue, expectedDefaultValue);
+		// save it back
+		configMgr.setProperty(GeneralConfig.MaxPointsPerPPISurvey, configuredValue);
+		
+	}
 
 }

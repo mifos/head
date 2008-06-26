@@ -10,6 +10,7 @@ import org.mifos.application.ppi.persistence.PPIPersistence;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
@@ -79,7 +80,8 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method","configure");
 		actionPerform();
 		verifyNoActionMessages();
-		
+		int nonPoorMaxInt = GeneralConfig.getMaxPointsPerPPISurvey();
+		Integer nonPoorMax = new Integer(nonPoorMaxInt);
 		addRequestParameter("value(country)", Country.INDIA.toString());
 		addRequestParameter("value(state)", SurveyState.ACTIVE.toString());
 		addRequestParameter("value(veryPoorMin)", "0");
@@ -89,7 +91,7 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(atRiskMin)", "50");
 		addRequestParameter("value(atRiskMax)", "74");
 		addRequestParameter("value(nonPoorMin)", "75");
-		addRequestParameter("value(nonPoorMax)", "100");
+		addRequestParameter("value(nonPoorMax)", nonPoorMax.toString());
 		addRequestParameter("method","preview");
 		actionPerform();
 		verifyNoActionErrors();
@@ -105,7 +107,8 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method","configure");
 		actionPerform();
 		verifyNoActionMessages();
-		
+		int nonPoorMaxInt = GeneralConfig.getMaxPointsPerPPISurvey();
+		Integer nonPoorMax = new Integer(nonPoorMaxInt);
 		addRequestParameter("value(country)", Country.INDIA.toString());
 		addRequestParameter("value(state)", SurveyState.ACTIVE.toString());
 		addRequestParameter("value(veryPoorMin)", "0");
@@ -115,7 +118,7 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(atRiskMin)", "50");
 		addRequestParameter("value(atRiskMax)", "74");
 		addRequestParameter("value(nonPoorMin)", "75");
-		addRequestParameter("value(nonPoorMax)", "100");
+		addRequestParameter("value(nonPoorMax)", nonPoorMax.toString());
 		addRequestParameter("method","preview");
 		actionPerform();
 		verifyNoActionErrors();
@@ -132,7 +135,8 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method","configure");
 		actionPerform();
 		verifyNoActionMessages();
-		
+		int nonPoorMaxInt = GeneralConfig.getMaxPointsPerPPISurvey();
+		Integer nonPoorMax = new Integer(nonPoorMaxInt);
 		addRequestParameter("value(country)", Country.INDIA.toString());
 		addRequestParameter("value(state)", SurveyState.ACTIVE.toString());
 		addRequestParameter("value(veryPoorMin)", "0");
@@ -142,7 +146,7 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(atRiskMin)", "50");
 		addRequestParameter("value(atRiskMax)", "74");
 		addRequestParameter("value(nonPoorMin)", "75");
-		addRequestParameter("value(nonPoorMax)", "100");
+		addRequestParameter("value(nonPoorMax)", nonPoorMax.toString());
 		addRequestParameter("method","preview");
 		actionPerform();
 		verifyNoActionErrors();
@@ -165,7 +169,7 @@ public class TestPPIAction extends MifosMockStrutsTestCase {
 		addRequestParameter("value(atRiskMin)", "50");
 		addRequestParameter("value(atRiskMax)", "74");
 		addRequestParameter("value(nonPoorMin)", "75");
-		addRequestParameter("value(nonPoorMax)", "100");
+		addRequestParameter("value(nonPoorMax)", nonPoorMax.toString());
 		addRequestParameter("method","preview");
 		actionPerform();
 		verifyNoActionErrors();

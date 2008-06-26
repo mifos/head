@@ -21,6 +21,7 @@ package org.mifos.application.ppi.business;
 
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyResponse;
+import org.mifos.config.GeneralConfig;
 
 public class PPISurveyInstance extends SurveyInstance {
 
@@ -67,9 +68,10 @@ public class PPISurveyInstance extends SurveyInstance {
 		int sum = 0;
 		for (SurveyResponse response : getSurveyResponses()) {
 			sum += response.getPoints();
-		}	
-		if (sum > 100)
-			throw new RuntimeException("Score is larger than 100");
+		}
+		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+		if (sum > maxPoints)
+			throw new RuntimeException("Score is larger than " + maxPoints);
 		return sum;
 	}
 

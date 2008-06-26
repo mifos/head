@@ -13,7 +13,7 @@
 	<question name="Cooking energy" mandatory="true" order="1">
 		<text>What is the household's primary energy source for cooking?</text>
 		<choice points="0">Firewood and chips, charcoal, or none</choice>
-		<choice points="4">Any other fuel</choice>
+		<choice points="8">Any other fuel</choice>
 	</question>
 	<question name="Own tv" mandatory="true" order="2">
 		<text>Does the household own a television?</text>
@@ -30,7 +30,7 @@
 	<question name="Principal occupation" mandatory="true" order="4">
 		<text>What is the principle occupation of the household?</text>
 		<choice points="0">Agricultural labourers</choice>
-		<choice points="5">Operators and labourers, bricklayers, construction workers</choice>
+		<choice points="6">Operators and labourers, bricklayers, construction workers</choice>
 		<choice points="8">Cultivators, farmers, fishers, hunters, loggers, unknown</choice>
 		<choice points="11">Sales workers, service workers, and transport equipment operators</choice>
 		<choice points="13">Professional, technical, clerical, administrative, managerial, executive, teachers</choice>
@@ -83,6 +83,6 @@
 		<likelihood scoreFrom="80" scoreTo="84" bottomHalf="0.0" topHalf="0.0"/>
 		<likelihood scoreFrom="85" scoreTo="89" bottomHalf="0.0" topHalf="0.0"/>
 		<likelihood scoreFrom="90" scoreTo="94" bottomHalf="0.0" topHalf="0.0"/>
-		<likelihood scoreFrom="95" scoreTo="100" bottomHalf="0.0" topHalf="0.0"/>
+		<likelihood scoreFrom="95" scoreTo="101" bottomHalf="0.0" topHalf="0.0"/>
 	</likelihoods>
 </ppi>

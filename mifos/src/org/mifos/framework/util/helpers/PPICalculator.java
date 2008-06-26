@@ -4,6 +4,7 @@ import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPISurvey;
 import org.mifos.application.surveys.business.SurveyInstance;
 import org.mifos.application.surveys.business.SurveyResponse;
+import org.mifos.config.GeneralConfig;
 
 public class PPICalculator {
 	
@@ -18,9 +19,9 @@ public class PPICalculator {
 			PPIChoice choice = (PPIChoice) response.getChoiceValue();
 			sum += choice.getPoints();
 		}
-		
-		if (sum > 100)
-			throw new RuntimeException("Index is larger that 100");
+		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+		if (sum > maxPoints)
+			throw new RuntimeException("Index is larger that " + maxPoints);
 		
 		
 		return sum;
@@ -52,8 +53,8 @@ public class PPICalculator {
 			int max = survey.getNonPoorMax();
 			sum += max * (max + 1) / 2 - min * (min + 1) / 2 ;
 		}*/
-		
-		return survey.getNonPoorMax() == 100 && survey.getVeryPoorMin() == 0
+		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+		return survey.getNonPoorMax() == maxPoints && survey.getVeryPoorMin() == 0
 				&& survey.getVeryPoorMax() == survey.getPoorMin() - 1
 				&& survey.getPoorMax() == survey.getAtRiskMin() - 1
 				&& survey.getAtRiskMax() == survey.getNonPoorMin() - 1;

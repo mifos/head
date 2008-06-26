@@ -65,5 +65,5 @@ public class SurveysConstants {
     
     public static final int QUESTION_TYPE_GENERAL = 0;
     public static final int QUESTION_TYPE_PPI = 1;
-	public static final int MAX_POINTS_PER_PPI_SURVEY = 100;
+	
 }

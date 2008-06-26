@@ -37,6 +37,7 @@ import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.mifos.config.GeneralConfig;
 
 public class TestPPISurvey {
 	private PPIPersistence persistence;
@@ -128,6 +129,7 @@ public class TestPPISurvey {
 		PPISurvey ppiSurvey = new PPISurvey("PPI Test Survey", SurveyState.ACTIVE,
 				SurveyType.CLIENT, Country.INDIA);
 		ppiSurvey.populateDefaultValues();
+		int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
 		
 		assertTrue(0 == ppiSurvey.getVeryPoorMin());
 		assertTrue (ppiSurvey.getVeryPoorMin()<= ppiSurvey.getVeryPoorMax());
@@ -137,7 +139,7 @@ public class TestPPISurvey {
 		assertTrue (ppiSurvey.getAtRiskMin() <= ppiSurvey.getAtRiskMax());
 		assertTrue (ppiSurvey.getAtRiskMax() == ppiSurvey.getNonPoorMin() - 1);
 		assertTrue (ppiSurvey.getNonPoorMin() <= ppiSurvey.getNonPoorMax());
-		assertTrue (ppiSurvey.getNonPoorMax() == 100);
+		assertTrue (ppiSurvey.getNonPoorMax() == nonPoorMax);
 	}
 	
 	@Test

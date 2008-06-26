@@ -39,6 +39,7 @@ import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
@@ -142,8 +143,9 @@ public class XmlPPISurveyParser {
 			}
 			totalPoints += largestChoice;
 		}
-		if (totalPoints > SurveysConstants.MAX_POINTS_PER_PPI_SURVEY)
-			throw new ValidationException("Question choices amount to more than 100 points.");
+		int maxPoints = GeneralConfig.getMaxPointsPerPPISurvey();
+		if (totalPoints > maxPoints)
+			throw new ValidationException("Question choices amount to more than " + maxPoints + " points.");
 	}
 
 	private void parseQuestionChoices(Element questionNode, Question question, boolean emptyQuestionList) {

@@ -27,6 +27,7 @@ import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mifos.config.GeneralConfig;
 import org.mifos.framework.exceptions.ValidationException;
 
 public class PpiLikelihoodTest {
@@ -70,7 +71,8 @@ public class PpiLikelihoodTest {
 	
 	@Test(expected=ValidationException.class)
 	public void testLikelihoodConstructorScoreOutOfRange()  throws Exception{
-		PPILikelihood lh = new PPILikelihood(0, 101, 10.5, 30.2);
+		int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
+		PPILikelihood lh = new PPILikelihood(0, nonPoorMax + 1 , 10.5, 30.2);
 	}
 	
 	@Test(expected=ValidationException.class)
@@ -150,7 +152,8 @@ public class PpiLikelihoodTest {
 	public void testGetScoreOutOfRange() throws Exception {
 		PPISurvey survey = new PPISurvey();
 		survey.setLikelihoods(createRows());
-		PPILikelihood l = survey.getLikelihood(101);
+		int nonPoorMax = GeneralConfig.getMaxPointsPerPPISurvey();
+		PPILikelihood l = survey.getLikelihood(nonPoorMax + 1);
 	}
 
 	public static junit.framework.Test suite() {

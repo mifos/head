@@ -32,6 +32,7 @@ import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.config.GeneralConfig;
 
 public class PPISurvey extends Survey {
 	
@@ -52,7 +53,7 @@ public class PPISurvey extends Survey {
 	public static int DEFAULT_AT_RISK_MIN = 50;
 	public static int DEFAULT_AT_RISK_MAX = 74;
 	public static int DEFAULT_NON_POOR_MIN = 75;
-	public static int DEFAULT_NON_POOR_MAX = 100;
+	public static int DEFAULT_NON_POOR_MAX = GeneralConfig.getMaxPointsPerPPISurvey();
 	
 	private List<PPILikelihood> likelihoods = new ArrayList<PPILikelihood>();
 	
@@ -180,8 +181,8 @@ public class PPISurvey extends Survey {
 	}
 	
 	public PPILikelihood getLikelihood(int score) {
-		if (score < 0 || score > 100) 
-			throw new IllegalArgumentException("score must be between 0 and 100");
+		if (score < 0 || score > DEFAULT_NON_POOR_MAX) 
+			throw new IllegalArgumentException("score must be between 0 and " + DEFAULT_NON_POOR_MAX);
 		for (PPILikelihood likelihood : likelihoods) {
 			if (score >= likelihood.getScoreFrom() && score <= likelihood.getScoreTo())
 				return likelihood;
