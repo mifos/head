@@ -1386,11 +1386,12 @@ from
                                     <row id="985">
                                         <cell id="986">
                                             <property name="textAlign">right</property>
-                                            <image id="981">
-                                                <property name="height">50px</property>
-                                                <property name="width">50px</property>
+                                            <property name="verticalAlign">middle</property>
+                                            <image id="988">
+                                                <property name="height">10px</property>
+                                                <property name="width">65px</property>
                                                 <property name="source">url</property>
-                                                <expression name="uri">images/GrameenKoota.gif</expression>
+                                                <expression name="uri">images/mfi_logo.gif</expression>
                                             </image>
                                         </cell>
                                         <cell id="987">
@@ -1399,7 +1400,7 @@ from
                                             <label id="167">
                                                 <property name="style">pageHeaderRight</property>
                                                 <property name="textAlign">left</property>
-                                                <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
+                                                <text-property name="text" key="branch.cash.report.branchname">MFI Name</text-property>
                                             </label>
                                         </cell>
                                     </row>

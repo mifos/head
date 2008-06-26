@@ -1272,8 +1272,8 @@ return true;]]></method>
                     <property name="textAlign">right</property>
                     <property name="verticalAlign">top</property>
                     <grid id="625">
-                        <property name="height">0.5833333333in</property>
-                        <property name="width">2.8in</property>
+                        <property name="height">0.3888888889in</property>
+                        <property name="width">2.7916666667in</property>
                         <column id="626">
                             <property name="width">1.1in</property>
                         </column>
@@ -1281,15 +1281,15 @@ return true;]]></method>
                             <property name="width">1.6in</property>
                         </column>
                         <row id="628">
-                            <property name="height">0.2in</property>
+                            <property name="height">0.3888888889in</property>
                             <cell id="629">
                                 <property name="textAlign">right</property>
-                                <property name="verticalAlign">top</property>
-                                <image id="624">
-                                    <property name="height">40px</property>
-                                    <property name="width">46px</property>
-                                    <property name="source">embed</property>
-                                    <property name="imageName">GrameenKoota.GIF</property>
+                                <property name="verticalAlign">middle</property>
+                                <image id="662">
+                                    <property name="height">8px</property>
+                                    <property name="width">60px</property>
+                                    <property name="source">url</property>
+                                    <expression name="uri">images/mfi_logo.gif</expression>
                                 </image>
                             </cell>
                             <cell id="630">
@@ -1300,7 +1300,7 @@ return true;]]></method>
                                     <property name="fontSize">15pt</property>
                                     <property name="color">gray</property>
                                     <property name="textAlign">center</property>
-                                    <text-property name="text" key="branch.report.branchname">Grameen Koota</text-property>
+                                    <text-property name="text" key="branch.report.branchname">MFI Name</text-property>
                                 </label>
                             </cell>
                         </row>
@@ -4580,7 +4580,7 @@ return true;]]></method>
                                     <property name="style">fieldText</property>
                                     <property name="textAlign">center</property>
                                     <label id="297">
-                                        <text-property name="text" key="branch.report.staff.summary.number.centers"> # Kendras</text-property>
+                                        <text-property name="text" key="branch.report.staff.summary.centers">Centers</text-property>
                                     </label>
                                 </cell>
                                 <cell id="275">
@@ -4757,47 +4757,4 @@ return true;]]></method>
             </row>
         </grid>
     </body>
-    <list-property name="images">
-        <structure>
-            <property name="name">GrameenKoota.GIF</property>
-            <property name="data">
-                R0lGODlhVQBPAPcAAAAAAIAAAACAAICAAAAAgIAAgACAgICAgMDAwP8AAAD/AP//AAAA//8A/wD/////
-                /wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                AAAAAAAAAAAAAAAAAAAAAAAAMwAAZgAAmQAAzAAA/wAzAAAzMwAzZgAzmQAzzAAz/wBmAABmMwBmZgBm
-                mQBmzABm/wCZAACZMwCZZgCZmQCZzACZ/wDMAADMMwDMZgDMmQDMzADM/wD/AAD/MwD/ZgD/mQD/zAD/
-                /zMAADMAMzMAZjMAmTMAzDMA/zMzADMzMzMzZjMzmTMzzDMz/zNmADNmMzNmZjNmmTNmzDNm/zOZADOZ
-                MzOZZjOZmTOZzDOZ/zPMADPMMzPMZjPMmTPMzDPM/zP/ADP/MzP/ZjP/mTP/zDP//2YAAGYAM2YAZmYA
-                mWYAzGYA/2YzAGYzM2YzZmYzmWYzzGYz/2ZmAGZmM2ZmZmZmmWZmzGZm/2aZAGaZM2aZZmaZmWaZzGaZ
-                /2bMAGbMM2bMZmbMmWbMzGbM/2b/AGb/M2b/Zmb/mWb/zGb//5kAAJkAM5kAZpkAmZkAzJkA/5kzAJkz
-                M5kzZpkzmZkzzJkz/5lmAJlmM5lmZplmmZlmzJlm/5mZAJmZM5mZZpmZmZmZzJmZ/5nMAJnMM5nMZpnM
-                mZnMzJnM/5n/AJn/M5n/Zpn/mZn/zJn//8wAAMwAM8wAZswAmcwAzMwA/8wzAMwzM8wzZswzmcwzzMwz
-                /8xmAMxmM8xmZsxmmcxmzMxm/8yZAMyZM8yZZsyZmcyZzMyZ/8zMAMzMM8zMZszMmczMzMzM/8z/AMz/
-                M8z/Zsz/mcz/zMz///8AAP8AM/8AZv8Amf8AzP8A//8zAP8zM/8zZv8zmf8zzP8z//9mAP9mM/9mZv9m
-                mf9mzP9m//+ZAP+ZM/+ZZv+Zmf+ZzP+Z///MAP/MM//MZv/Mmf/MzP/M////AP//M///Zv//mf//zP//
-                /yH5BAEAABAALAAAAABVAE8AAAj/AP8JHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePIEOK
-                HEmypMmTHKc0QYky1ZQp/6ihSMUSJDVqU1BMoUnQj5+XM6nVtEjtpx+eAoUiTOVzip+hEoui8FlQqUGX
-                fqZaharQpdaBqW7+S5UKxdiEOGFu5UpwJtiYMsWS/TfVIAqzA+/CZAt2JdyneZUeFbh3oMyZgJPi5aoT
-                adi6Av0QQopwp0zDSt0ONSsUZ+CwSpk6ffmS7NZUhP6NpkZzZ+KTKMR6Fhjbj9iYpHMz3Tr45dHWg1HG
-                NuzU8Ni0Ya9KVZt3IGCfr0cO16lz9tiZlP3guRtdddbOoBd7/y85xSrr5KynpC6Y86775Ow5F+3MWvXa
-                jkcLC0z+U/9+9wACaFBcgu00l3geMRUdfy8NGGCA/tF220/n0SWSTmMddVtxBmVF1oem3VRWd3cJVdhT
-                aX3EnG06wbSTXXrBddN5YgG4lllzXUZXeR1ZZ2Fk/h3mHl0PNjgVdHbhZttZP24UZGcIFpQVkQFSNRxC
-                PsZEWEdmkaZliV2Z9WCLdN1H0BSvJJXTXBFa1GWDtEUppZhFwnQlQsEh90pRGw1G1k9hcZhQWVQCaKSZ
-                bUUGXpMYmfUTZHI6WKihZS5k233wNZrUPz+p1hChYx7KUINzJdWdRGE9xZNQqFWlJUGEKv+kGVi3EYbX
-                pS5i5FN9PonJXnv6laUXdQ9SNpNOiTllIphtRvTbnr162hNQrwnbIrEAGuvSi5E9V520FjWYGE0ILobg
-                ZND9Blp9YJkL1of6RQoRh4j5euZA+iFKELuROYcZZf1eBGdRgCGo4GCHTQkXsnmJtldaPCbFp5T6OvTS
-                ff6RtaZqGBZ3F7mZxdlvf1J2WHFDFxvkH4se30XXUx9XqqPLnHrnX4RLWrRrkj1RWeaiNOcMWKlS0QwX
-                TRVyejJDO4PIKKcCIgfYTUe9ZvSktD6V1XARV+QUuTSXKyCnVUvclL/txRljt+AdiBFrWpf2Dx5bBTh3
-                ZFy7uBhTQ2L/TVu+tL2dZUxWuweThmBWbbTdhRZ2tamCTw1W4UPaJmy3o4DpN+NEDnjqRHKKZ7e1efe9
-                +diWk52bvBAlDBRNGqrt8tY0A6V5e2GPfWRsa4lGkUwRLofX6Nmqhnteuht+HVMJPf4QUHjGTCnuXNso
-                +/ACZlur8R9OZJl4ZeUEPaW0u2X7lYzTfln5rxXW7ELllWXVtsNiXf6y712P98e1UYrv/xGZWLyExZrL
-                UMdW+cNWZsb2Kj/FTD/JQhVPHvajqdAkVviy3vl4wjnjwUR+zmHXxEr1kAjGhIRe0tF/3CMUBSLQaE55
-                CpzaMppObWleGbrWrNTEouGQTii9ihnH//pWGz80ITRWodANnzYqTo2oPRjrIZRYSLb8DdFlMvlTxPjl
-                E54khnUHOdwXF3OYzuBOLUkL4p3gA6xM/aMJhaGaYr4FEWshD4DfOZpeutYtyuDEis0xXt2M8zsSwnA/
-                TtxXU/QCKNEUD5E/wUN5UCQtknlEiF4M2G6q8qHt7ccnqdmLbUpTMDd6JCfsgp1S0uadC4bFkZCh2lzU
-                hRQbjmRKQzsO3vbyteNQbWuULEpydpMpW45EJuliXu22JMPylIcQXhqLS+wzQ+ABjCSEEKIHp+kpOy3m
-                VPmZH2S4kpWuaexFWkvMqZJYlmuy5VE5K4hpmHSQcnqSL4TjjpmYBy2Xgyznnvg0TH9yoqEZzehP5QxK
-                QKNyMKNUDaALjahEJ0rRilr0ohjNqEYjEhAAOw==
-            </property>
-        </structure>
-    </list-property>
 </report>

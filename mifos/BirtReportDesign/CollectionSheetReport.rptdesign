@@ -1046,7 +1046,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                                                         <property name="fontSize">15pt</property>
                                                         <property name="color">#808080</property>
                                                         <property name="textAlign">right</property>
-                                                        <text-property name="text" key="collection.sheet.local.title">Grameen Koota</text-property>
+                                                        <text-property name="text" key="collection.sheet.local.title">MFI Name</text-property>
                                                     </label>
                                                 </cell>
                                             </row>
