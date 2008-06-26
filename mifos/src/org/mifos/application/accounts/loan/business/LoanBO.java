@@ -1848,14 +1848,18 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateLoanSchedule(Short nextInstallmentId, List<Date> meetingDates) {
-		for (int count = 0; count < meetingDates.size(); count++) {
-			short installmentId = (short) (nextInstallmentId + count);
+		short installmentId = nextInstallmentId;
+		
+		for (int count = nextInstallmentId; count < meetingDates.size(); count++) {
 			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+		
 			if (accountActionDate != null) {
 				Date meetingDate = meetingDates.get(installmentId - 1);
 				((LoanScheduleEntity) accountActionDate).setActionDate(new java.sql.Date(meetingDate.getTime()));
 			}
+			installmentId++;
 		}
+		
 	}
 
 	/*
