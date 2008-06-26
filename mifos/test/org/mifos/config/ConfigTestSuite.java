@@ -24,6 +24,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 import org.mifos.config.TestLocalization;
 import org.mifos.config.TestFiscalCalendarRules;
+import org.mifos.config.GeneralConfig;
 
 public class ConfigTestSuite extends TestSuite {
 
@@ -44,6 +45,7 @@ public class ConfigTestSuite extends TestSuite {
 		suite.addTest(TestClientRules.suite());
 		suite.addTest(TestProcessFlowRules.suite());
 		suite.addTest(ChartOfAccountsConfigTest.suite());
+		suite.addTest(GeneralConfigTest.suite());
 		
 		return suite;
 	}

@@ -189,6 +189,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("attendenceSelected[0]", "2");
 		addRequestDateParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
+		addRequestParameter("customerId", "1");
 
 		performNoErrors();
 		verifyForward("create_success");

@@ -52,6 +52,7 @@ public interface BulkEntryConstants {
 	public String PREVIEWSUCCESS="preview_success";
 	public String CREATESUCCESS="create_success";
 	public String PREVIUOSSUCCESS="previuos_success";
+	public String GET_FAILURE="get_failure";
 	
 	public String BRANCHOFFICESLIST="BranchOfficesList";
 	public String LOANOFFICERSLIST="LoanOfficersList";
@@ -93,6 +94,7 @@ public interface BulkEntryConstants {
 	public String MEETINGDATEEXCEPTION = "errors.meetingdate";
 	public String ERRORSUPDATE = "errors.update";
 	public String REFRESH = "refresh";
+	public String LOCKED_CENTER_ERROR = "errors.lockedCenter";
 	
 	public String PRESENT="1";
 	

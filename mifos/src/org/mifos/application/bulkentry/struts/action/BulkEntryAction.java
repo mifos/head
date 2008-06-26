@@ -40,7 +40,10 @@ package org.mifos.application.bulkentry.struts.action;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -98,6 +101,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
+import org.mifos.config.GeneralConfig;
 
 public class BulkEntryAction extends BaseAction {
 
@@ -105,15 +109,25 @@ public class BulkEntryAction extends BaseAction {
 
 	private static MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.BULKENTRYLOGGER);
+	
+	private static Hashtable processedCenterList = new Hashtable<Integer, LockInfo>();
+	private static long allowedLockingTime;
 
 	public BulkEntryAction() {
 		masterService = (MasterDataService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.MasterDataService);
+		allowedLockingTime = getAllowedLockingTime();
 	}
 
 	@Override
 	protected BusinessService getService() {
 		return new BulkEntryBusinessService();
+	}
+	
+	// locking time is in milliseconds and is set in config file as minutes
+	private long getAllowedLockingTime()
+	{
+		return GeneralConfig.getPerCenterTimeOutForBulkEntry() * 60 * 1000;
 	}
 	
 	public static ActionSecurity getSecurity() {
@@ -271,6 +285,78 @@ public class BulkEntryAction extends BaseAction {
 						request);
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
+	
+	private LockInfo createLockValue(long lockTime, String userId)
+	{
+		return new LockInfo(lockTime, userId);
+	}
+	
+	// this method returns the lock info if there is a lock on the center and the wait time < allowedLockingTime
+	private LockInfo startProcessingCenter(String centerIdStr, String userId)
+	{
+		LockInfo previousLockInfo = null;
+		Calendar currentCalendar = new GregorianCalendar();
+		long currentTime = currentCalendar.getTimeInMillis();
+		Integer centerId = Integer.parseInt(centerIdStr);
+		synchronized(processedCenterList)
+		{
+			// there is a lock on this center, so check the locking time to see if it's expired
+			if (processedCenterList.containsKey(centerId))
+			{
+				LockInfo info = (LockInfo)processedCenterList.get(centerId);
+				long previousTime = info.getLockTime();
+				long waitTime = currentTime - previousTime;
+				if (waitTime >= allowedLockingTime)
+				{
+					processedCenterList.remove(centerId);
+					processedCenterList.put(centerId, createLockValue(currentTime, userId));
+				}
+				else // return this info for error message
+				{
+					previousLockInfo = info;
+				}
+				
+			}
+			// no lock so put a lock on it
+			else
+			{
+				processedCenterList.put(centerId, createLockValue(currentTime, userId));
+			}
+		}
+
+		return previousLockInfo;
+	}
+	
+	private void  removeLock(ActionForm form)
+	{
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		Integer centerId = Integer.parseInt(bulkEntryForm.getCustomerId());
+		synchronized(processedCenterList)
+		{
+			if (processedCenterList.containsKey(centerId))
+			{
+				processedCenterList.remove(centerId);
+			}
+		}
+		
+	}
+	
+	private void buildErrorMessage(String centerName, HttpServletRequest request, LockInfo info)
+	{
+		
+		ActionErrors actionErrors = new ActionErrors();
+		Calendar currentCalendar = new GregorianCalendar();
+		long currentTime = currentCalendar.getTimeInMillis();
+		long waitTime = currentTime - info.getLockTime();
+		long timeLeftToWait = allowedLockingTime - waitTime;
+		timeLeftToWait = timeLeftToWait / 1000;
+		long minutes = timeLeftToWait / 60;
+		long seconds = timeLeftToWait % 60;
+		actionErrors.add(BulkEntryConstants.LOCKED_CENTER_ERROR,
+					new ActionMessage(BulkEntryConstants.LOCKED_CENTER_ERROR, centerName, info.getUserId(), minutes, seconds));
+		
+		request.setAttribute(Globals.ERROR_KEY, actionErrors);
+	}
 
 	/**
 	 * This method is called once the search criterias have been entered by the
@@ -284,8 +370,19 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
+		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
+		CustomerView parentCustomer = getSelectedCustomer(request, form);
 		UserContext userContext = getUserContext(request);
+		String centerId = bulkEntryForm.getCustomerId();
+		String userId = userContext.getName();
+		LockInfo info = startProcessingCenter(centerId, userId);
+		if (info != null)
+		{
+			// error
+			buildErrorMessage(parentCustomer.getDisplayName(), request, info);
+			return mapping.findForward(BulkEntryConstants.GET_FAILURE);
+		}
+	
 		Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate",
 				request);
 		BulkEntryBO bulkEntry = (BulkEntryBO) request.getSession()
@@ -294,7 +391,6 @@ public class BulkEntryAction extends BaseAction {
 		bulkEntry.setLoanOfficer(loanOfficer);
 		bulkEntry.setOffice(getSelectedBranchOffice(request, form));
 		bulkEntry.setPaymentType(getSelectedPaymentType(request, form));
-		CustomerView parentCustomer = getSelectedCustomer(request, form);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 		bulkEntry.setLoanProducts(masterService.getLoanProductsAsOfMeetingDate(
 				meetingDate, parentCustomer.getCustomerSearchId(), loanOfficer
@@ -322,6 +418,7 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
 				BulkEntryConstants.BULKENTRY, request);
 		List<ClientBO> clients = new ArrayList<ClientBO>();
@@ -396,6 +493,7 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		removeLock(form);
 		return mapping.findForward(ActionForwards.cancel_success.toString());
 	}
 
@@ -485,6 +583,8 @@ public class BulkEntryAction extends BaseAction {
 		}
 		// TO clear bulk entry cache in persistence service
 		bulkEntryService = null;
+		// remove lock on the center
+		removeLock(form);
 		return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
 	}
 
@@ -622,6 +722,33 @@ public class BulkEntryAction extends BaseAction {
 			
 		}
 		return locale;
+	}
+	
+	private class LockInfo
+	{
+		private long lockTime;
+		private String userId;
+		
+		public LockInfo(long lockTime, String userId)
+		{
+			this.lockTime = lockTime;
+			this.userId = userId;
+		}
+		
+		public long getLockTime() {
+			return lockTime;
+		}
+		public void setLockTime(long lockTime) {
+			this.lockTime = lockTime;
+		}
+		public String getUserId() {
+			return userId;
+		}
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+		
+		
 	}
 
 }
