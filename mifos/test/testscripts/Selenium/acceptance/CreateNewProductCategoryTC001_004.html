@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>CreateNewProductCategoryTC001_004</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateNewProductCategoryTC001_004</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Admin</td>
+	<td>Admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Define new category - Enter Product category information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Category Details</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>*Product Type</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>*Category Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Category Description</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>productType</td>
+	<td>label=Loan</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryName</td>
+	<td>TestLoan${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryDesc</td>
+	<td>auto generated test loan product</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>//input[@value='Preview']</td>
+	<td>Preview</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>cancel</td>
+	<td>Cancel</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Define new category - Review &amp; submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Category details</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product Type: Loan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Category Name: TestLoan${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>auto generated test loan product</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>edit</td>
+	<td>Edit category information</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You have successfully added a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=View category details now</td>
+	<td>View category details now</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View category details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>TestLoan${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Product Type: Loan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Edit category information</td>
+	<td>Edit category information</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[8]</td>
+	<td>auto generated test loan product</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Product Categories</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>TestLoan${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new product category</td>
+	<td>define a new product category</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new product category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Define new category - Enter Product category information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Category Details</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>*Product Type</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>*Category Name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Category Description</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>productType</td>
+	<td>label=Savings</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryName</td>
+	<td>TestSavings${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>productCategoryDesc</td>
+	<td>auto generated savings product</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product Type: Savings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Category Name: TestSavings${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View category details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>TestSavings${time2}</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
