@@ -39,8 +39,8 @@
 package org.mifos.application.bulkentry.struts.action;
 
 import java.sql.Date;
+import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -295,8 +295,7 @@ public class BulkEntryAction extends BaseAction {
 	private LockInfo startProcessingCenter(String centerIdStr, String userId)
 	{
 		LockInfo previousLockInfo = null;
-		Calendar currentCalendar = new GregorianCalendar();
-		long currentTime = currentCalendar.getTimeInMillis();
+		long currentTime = System.currentTimeMillis();
 		Integer centerId = Integer.parseInt(centerIdStr);
 		synchronized(processedCenterList)
 		{
@@ -345,18 +344,22 @@ public class BulkEntryAction extends BaseAction {
 	{
 		
 		ActionErrors actionErrors = new ActionErrors();
-		Calendar currentCalendar = new GregorianCalendar();
+		GregorianCalendar currentCalendar = new GregorianCalendar();
 		long currentTime = currentCalendar.getTimeInMillis();
 		long waitTime = currentTime - info.getLockTime();
 		long timeLeftToWait = allowedLockingTime - waitTime;
 		timeLeftToWait = timeLeftToWait / 1000;
 		long minutes = timeLeftToWait / 60;
 		long seconds = timeLeftToWait % 60;
+		currentCalendar.setTimeInMillis(info.getLockTime());
+		DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.US);
+		String lockTime = timeFormatter.format(currentCalendar.getTime());
 		actionErrors.add(BulkEntryConstants.LOCKED_CENTER_ERROR,
-					new ActionMessage(BulkEntryConstants.LOCKED_CENTER_ERROR, centerName, info.getUserId(), minutes, seconds));
+					new ActionMessage(BulkEntryConstants.LOCKED_CENTER_ERROR, info.getUserId(), lockTime, minutes, seconds));
 		
 		request.setAttribute(Globals.ERROR_KEY, actionErrors);
 	}
+
 
 	/**
 	 * This method is called once the search criterias have been entered by the
