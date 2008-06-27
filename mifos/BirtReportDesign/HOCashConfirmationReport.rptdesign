@@ -448,7 +448,7 @@
                                 <property name="verticalAlign">bottom</property>
                                 <label id="167">
                                     <property name="style">pageHeaderRight</property>
-                                    <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
+                                    <text-property name="text" key="branch.cash.report.branchname">MFI Name</text-property>
                                 </label>
                             </cell>
                         </row>
@@ -610,7 +610,7 @@
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <label id="208">
-                                        <text-property name="text" key="branch.cash.report.recoveries.header">Total Recoveries from Kendras</text-property>
+                                        <text-property name="text" key="branch.cash.report.recoveries.header">Total Recoveries from Centers</text-property>
                                     </label>
                                 </cell>
                             </row>
@@ -950,7 +950,7 @@
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">thin</property>
                                     <label id="285">
-                                        <text-property name="text" key="branch.cash.report.issues.header">Issues made out of collections at Kendras</text-property>
+                                        <text-property name="text" key="branch.cash.report.issues.header">Issues made out of collections at Centers</text-property>
                                     </label>
                                 </cell>
                             </row>

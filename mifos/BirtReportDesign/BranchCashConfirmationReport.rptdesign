@@ -21,7 +21,7 @@ vTotalELDisbursement=0;]]></method>
     <parameters>
         <scalar-parameter name="branchId" id="601">
             <property name="valueType">dynamic</property>
-            <property name="dataType">decimal</property>
+            <property name="dataType">integer</property>
             <text-property name="promptText">Select Branch</text-property>
             <property name="concealValue">false</property>
             <property name="allowBlank">true</property>
@@ -40,6 +40,15 @@ vTotalELDisbursement=0;]]></method>
             <property name="hidden">true</property>
             <property name="valueType">static</property>
             <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="runDate" id="989">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <text-property name="promptText">Enter Date (DD/MM/YYYY)</text-property>
             <property name="controlType">text-box</property>
             <structure name="format">
                 <property name="category">Unformatted</property>
@@ -82,10 +91,18 @@ try {
             <property name="dataSource">MifosJDBCDataSource</property>
             <list-property name="parameters">
                 <structure>
+                    <property name="name">date</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
                     <property name="name">officeId</property>
                     <property name="paramName">branchId</property>
                     <property name="dataType">integer</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -106,7 +123,7 @@ try {
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <property name="queryText">select o.DISPLAY_NAME, date_format(now(), '%d %b %Y') as run_date
+            <property name="queryText">select o.DISPLAY_NAME, date_format(str_to_date(?,'%d/%m/%Y'), '%d %b %Y') as run_date
 from office o where o.OFFICE_ID=?</property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -226,6 +243,38 @@ from office o where o.OFFICE_ID=?</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">runDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">actionDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">paymentDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">4</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closedDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">5</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <list-property name="resultSet">
                 <structure>
@@ -339,16 +388,16 @@ from
 	WHERE 
 			o.office_id = ?
 		and 
-			date_format(l.action_date,'%Y%m%d') &lt;=date_format(now(),'%Y%m%d') 
+			date_format(l.action_date,'%Y%m%d') &lt;=date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 		and 
-			(weekday(l.action_date)= weekday(now())) 
+			(weekday(l.action_date)= weekday(str_to_date(?,'%d/%m/%Y'))) 
 		and 
-			(date_format(l.payment_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+			(date_format(l.payment_date,'%Y%m%d') = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 		or 
 			isnull(l.payment_date) = true) 
 		and
 			(a.account_state_id = 5 or a.account_state_id = 9 
-				or (a.account_state_id &lt;> 10 and date_format(a.closed_date,'%Y%m%d') =date_format(now(),'%Y%m%d')))
+				or (a.account_state_id &lt;> 10 and date_format(a.closed_date,'%Y%m%d') =date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d')))
 	group by 
 		la.prd_offering_id		</property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -584,6 +633,14 @@ from
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">disbursementDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <list-property name="resultSet">
                 <structure>
@@ -623,7 +680,7 @@ from
 	WHERE 
 			o.office_id = ?  
 		and 
-			date_format(l.disbursement_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+			date_format(l.disbursement_date,'%Y%m%d') = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 		and 
 			a.account_state_id = 5
 	group by 
@@ -717,6 +774,14 @@ from
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">disbursementDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <list-property name="resultSet">
                 <structure>
@@ -758,7 +823,7 @@ from
 	WHERE 
 			o.office_id = ?
 		and 
-			la.disbursement_date = date_format(now(),'%Y%m%d')
+			la.disbursement_date = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d')
 		and	
 			a.account_state_id = 5
 	group by 
@@ -847,6 +912,14 @@ from
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">paymentDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <list-property name="resultSet">
                 <structure>
@@ -876,7 +949,7 @@ from
 	WHERE 
 		o.office_id = ?
 	and 
-		date_format(cs.payment_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+		date_format(cs.payment_date,'%Y%m%d') = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 	and 
 		cs.payment_status = 1
 	group by 
@@ -924,7 +997,9 @@ from
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
-        <script-data-set name="BranchOffices" id="699" extends="MifosReport.BranchOffices"/>
+        <script-data-set name="BranchOffices" id="699" extends="MifosReport.BranchOffices">
+            <property name="dataSource">ReportParameterDataSource</property>
+        </script-data-set>
         <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="PrepaymentDetailsDataSet" id="775">
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
@@ -962,6 +1037,30 @@ from
                     <property name="paramName">branchId</property>
                     <property name="dataType">decimal</property>
                     <property name="position">1</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">actionDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">paymentDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">3</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">closedDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">4</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1022,15 +1121,15 @@ from
 	WHERE 
 		off.office_id=?
 	AND
-		date_format(lsch.action_date,'%Y%m%d') > date_format(now(),'%Y%m%d') 
+		date_format(lsch.action_date,'%Y%m%d') > date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 	and 
-		date_format(lsch.payment_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+		date_format(lsch.payment_date,'%Y%m%d') = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 	and
 		(acc.account_state_id = 5 
 		or 
 			acc.account_state_id = 9 
 		or 
-			date_format(acc.closed_date,'%Y%m%d')=date_format(now(),'%Y%m%d')
+			date_format(acc.closed_date,'%Y%m%d')=date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d')
 		)
 	group by 
 		la.prd_offering_id</property>
@@ -1155,6 +1254,14 @@ from
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
+                <structure>
+                    <property name="name">disbursementDate</property>
+                    <property name="paramName">runDate</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
             </list-property>
             <list-property name="resultSet">
                 <structure>
@@ -1194,7 +1301,7 @@ from
 	WHERE 
 			o.office_id = ?  
 		and 
-			date_format(l.disbursement_date,'%Y%m%d') = date_format(now(),'%Y%m%d') 
+			date_format(l.disbursement_date,'%Y%m%d') = date_format(str_to_date(?,'%d/%m/%Y'),'%Y%m%d') 
 		and 
 			a.account_state_id = 5
 		and 
@@ -1386,12 +1493,11 @@ from
                                     <row id="985">
                                         <cell id="986">
                                             <property name="textAlign">right</property>
-                                            <property name="verticalAlign">middle</property>
-                                            <image id="988">
-                                                <property name="height">10px</property>
-                                                <property name="width">65px</property>
+                                            <image id="981">
+                                                <property name="height">50px</property>
+                                                <property name="width">50px</property>
                                                 <property name="source">url</property>
-                                                <expression name="uri">images/mfi_logo.gif</expression>
+                                                <expression name="uri">images/GrameenKoota.gif</expression>
                                             </image>
                                         </cell>
                                         <cell id="987">
@@ -1400,7 +1506,7 @@ from
                                             <label id="167">
                                                 <property name="style">pageHeaderRight</property>
                                                 <property name="textAlign">left</property>
-                                                <text-property name="text" key="branch.cash.report.branchname">MFI Name</text-property>
+                                                <text-property name="text" key="branch.cash.report.branchname">Grameen Koota</text-property>
                                             </label>
                                         </cell>
                                     </row>
@@ -1462,17 +1568,12 @@ from
                                             <property name="dataType">string</property>
                                         </structure>
                                         <structure>
-                                            <property name="name">now()</property>
-                                            <expression name="expression">dataSetRow["now()"]</expression>
-                                            <property name="dataType">date-time</property>
-                                        </structure>
-                                        <structure>
-                                            <property name="name">branch_name</property>
-                                            <expression name="expression">row["DISPLAY_NAME"]</expression>
+                                            <property name="name">run_date</property>
+                                            <expression name="expression">dataSetRow["run_date"]</expression>
                                             <property name="dataType">string</property>
                                         </structure>
                                     </list-property>
-                                    <property name="resultSetColumn">branch_name</property>
+                                    <property name="resultSetColumn">DISPLAY_NAME</property>
                                 </data>
                             </cell>
                             <cell id="454">

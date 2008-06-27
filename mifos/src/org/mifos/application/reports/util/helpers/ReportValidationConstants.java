@@ -36,6 +36,7 @@ public class ReportValidationConstants {
 	public static final String MEETING_DATE_PARAM = "meetingDate";
 	public static final String LOAN_PRODUCT_ID_PARAM = "loanProductId";
 	public static final String RUN_DATE_PARAM = "branchReportDate";
+	public static final String RUN_DATE_PARAM_FOR_CASH_CONF_REPORT = "runDate";
 
 	public static final String[] COLLECTION_SHEET_REPORT_PARAMS_ARRAY = {
 			BRANCH_ID_PARAM, LOAN_OFFICER_ID_PARAM, CENTER_ID_PARAM,
@@ -46,6 +47,10 @@ public class ReportValidationConstants {
 	
 	public static final String[] BRANCH_REPORT_PARAMS_ARRAY = {
 			BRANCH_ID_PARAM, RUN_DATE_PARAM };
+	
+	public static final String[] JDBC_CASH_CONFIRMATION_REPORT_PARAMS_ARRAY = {
+		BRANCH_ID_PARAM, RUN_DATE_PARAM_FOR_CASH_CONF_REPORT };
+	
 	
 
 }

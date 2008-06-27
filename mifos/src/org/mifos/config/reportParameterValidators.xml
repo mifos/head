@@ -71,4 +71,13 @@ explanation of the license and how it is applied.
 			</list>
 		</constructor-arg>
 	</bean>	
+	
+	<bean
+		class="org.mifos.application.reports.business.validator.JdbcBranchCashConfirmationReportParamValidator">
+		<constructor-arg>
+			<list>
+				<value>report/BranchCashConfirmationReport.rptdesign</value>
+			</list>
+		</constructor-arg>
+	</bean>	
 </beans>
