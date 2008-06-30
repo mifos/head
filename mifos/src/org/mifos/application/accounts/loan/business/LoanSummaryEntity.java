@@ -225,18 +225,12 @@ public class LoanSummaryEntity extends PersistentObject {
 		originalFees = originalFees.subtract(fees);
 		originalPenalty = originalPenalty.subtract(penalty);
 		originalInterest = originalInterest.subtract(interest);
-		if (loan.isUsingNewLoanSchedulingMethod())
-		{
-			rawAmountTotal = rawAmountTotal.subtract(interest.add(fees));
-		}
+		rawAmountTotal = rawAmountTotal.subtract(interest.add(fees));
 	}
 	
 	void updateOriginalFees(Money charge){
 		setOriginalFees(getOriginalFees().add(charge));
-		if (loan.isUsingNewLoanSchedulingMethod())
-		{
-			rawAmountTotal = rawAmountTotal.add(charge);
-		}
+		rawAmountTotal = rawAmountTotal.add(charge);
 	}
 	
 	void updateOriginalPenalty(Money charge){

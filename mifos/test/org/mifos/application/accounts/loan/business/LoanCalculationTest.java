@@ -159,7 +159,6 @@ public class LoanCalculationTest  {
 	public void setUp() throws Exception {
 		userContext = TestObjectFactory.getContext();
 
-		LoanBO.setUsingNewLoanSchedulingMethod(true);
 		savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
 		savedFinalRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
 		savedCurrencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
