@@ -288,11 +288,10 @@ public class TestSavingsHelper extends MifosTestCase {
 	}
 
 	public void testInterestPostingDateEveryYear() throws Exception {
-		Date interestPostingDate = helper.getNextScheduleDate(DateUtils
-				.currentDate(), null, new MeetingBO(Short.valueOf("31"), Short
-				.valueOf("6"), getDate("01/01/2006"),
-				MeetingType.SAVINGS_INTEREST_POSTING,
-				"somePlace"));
+		Date interestPostingDate = helper.getNextScheduleDate(
+				getDate("02/01/2008"), null, new MeetingBO(Short.valueOf("31"),
+						Short.valueOf("6"), getDate("01/01/2006"),
+						MeetingType.SAVINGS_INTEREST_POSTING, "somePlace"));
 		assertEquals(getDate("30/06/2008"), interestPostingDate);
 	}
 }
