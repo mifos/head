@@ -66,22 +66,23 @@ public class CollectionSheetReportParameterCachingHelper extends TaskHelper {
 		try {
 			List<OfficeBO> branchOffices = new OfficeBusinessService()
 					.getBranchOffices();
-			for (OfficeBO branchOffice : branchOffices) {
-
-				Integer officeId = NumberUtils
-						.convertShortToInteger(branchOffice.getOfficeId());
-				cascadingReportParameterService.getActiveLoanOfficers(
-						MIFOS_USER_ID, officeId);
-				Integer allLoanOfficerId = SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
-						.getId();
-				cascadingReportParameterService.getActiveCentersForLoanOfficer(
-						allLoanOfficerId, officeId);
-				cascadingReportParameterService
-						.getMeetingDatesForCollectionSheet(
-								officeId,
-								allLoanOfficerId,
-								SelectionItem.ALL_CENTER_SELECTION_ITEM
-										.getId());
+			if (branchOffices != null) {
+				for (OfficeBO branchOffice : branchOffices) {
+					Integer officeId = NumberUtils
+							.convertShortToInteger(branchOffice.getOfficeId());
+					cascadingReportParameterService.getActiveLoanOfficers(
+							MIFOS_USER_ID, officeId);
+					Integer allLoanOfficerId = SelectionItem.ALL_LOAN_OFFICER_SELECTION_ITEM
+							.getId();
+					cascadingReportParameterService
+							.getActiveCentersForLoanOfficer(allLoanOfficerId,
+									officeId);
+					cascadingReportParameterService
+							.getMeetingDatesForCollectionSheet(officeId,
+									allLoanOfficerId,
+									SelectionItem.ALL_CENTER_SELECTION_ITEM
+											.getId());
+				}
 			}
 		}
 		catch (ServiceException e) {
