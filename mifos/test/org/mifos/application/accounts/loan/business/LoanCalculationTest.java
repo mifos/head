@@ -2,9 +2,9 @@ package org.mifos.application.accounts.loan.business;
 
 import static org.junit.Assert.assertEquals;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
+import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -83,8 +83,6 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.NumberUtils.DOUBLE_ZERO;
-import static org.mifos.framework.util.helpers.NumberUtils.SHORT_ZERO;
 
 
 
@@ -785,6 +783,21 @@ public class LoanCalculationTest  {
 		LoanParameters loanParams = testCaseData.getLoanParams();
 		setUpLoanAndVerify999AccountWhenLoanIsRepaid(config, loanParams, testCaseData.expectedResult);
 	}
+
+	@Test
+	public void testDecliningInterestEPITestCases() throws Exception 
+	{
+		String rootPath = "org/mifos/application/accounts/loan/business/testCaseData/decliningEPI/";
+		String[] dataFileNames = getCSVFiles(rootPath);
+		for (int i=0; i < dataFileNames.length; i++) {
+			if (fileNameContains(dataFileNames[i], decliningEPIGraceFeeTestCases)) {
+				runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileNames[i]);
+				tearDown();
+				setUp();
+			}
+		}
+	}
+	
 	
 	// decliningEPI
 	@Test
@@ -2455,7 +2468,36 @@ class LoanTestCaseData {
 			"testcase-2008-05-13-flat-grace-fee-set1.25", 
 			"testcase-2008-05-13-flat-grace-fee-set1.26"
 			};
-	
+
+	private String[] decliningEPIGraceFeeTestCases = {
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.01",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.02",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.03",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.04", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.05", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.06",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.07",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.08",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.09", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.10",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.11",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.12",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.13",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.14",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.15", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.16", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.17", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.18",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.19",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.20",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.21",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.22",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.23",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.24",
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.25", 
+			"testcase-2008-06-27-decliningEPI-grace-fee-set1.26"
+			
+	};	
 	
 	private String[] decliningGraceFeeTestCases = {
 			"testcase-2008-05-13-declining-grace-fee-set1.01",
