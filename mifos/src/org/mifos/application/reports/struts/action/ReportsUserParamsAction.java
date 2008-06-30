@@ -79,9 +79,10 @@ public class ReportsUserParamsAction extends BaseAction {
 		security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		
 		//map the report id to it's corrosponding activity id. though it's rough but it works :->
-		security.allowReport(1, ReportSecurityConstants.CLIENT_SUMMARY_AND_HISTORY_REPORT);
-		security.allowReport(2, ReportSecurityConstants.CLIENT_PRODUCT_WISE_HISTORY_REPORT);
-		security.allowReport(3, ReportSecurityConstants.CLIENT_SETTLEMENT_INFO_REPORT);
+//		security.allowReport(1, ReportSecurityConstants.CLIENT_SUMMARY_AND_HISTORY_REPORT);
+		security.allowReport(1, ReportSecurityConstants.COLLECTION_SHEET_REPORT);
+		security.allowReport(2, ReportSecurityConstants.BRANCH_CASH_CONFIRMATION_REPORT);
+		security.allowReport(3, ReportSecurityConstants.BRANCH_PROGRESS_REPORT);
 		security.allowReport(4, ReportSecurityConstants.CLIENT_LOAN_REPAYMENT_SCHEDULE);
 		security.allowReport(5, ReportSecurityConstants.CLIENT_FEES_CHARGES_AND_PENALTIES_REPORT);
 		security.allowReport(6, ReportSecurityConstants.CLIENT_PENDING_APPROVAL_REPORT);

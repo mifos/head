@@ -482,4 +482,8 @@ public interface SecurityConstants {
 	
 	/** Can view install-time configuration settings. */
 	public final short CAN_VIEW_ORGANIZATION_SETTINGS = 230;
+
+	public final short CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT = 231;
+
+	public final Short CAN_VIEW_BRANCH_REPORT = 232;
 }

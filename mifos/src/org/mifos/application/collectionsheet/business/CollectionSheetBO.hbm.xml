@@ -70,7 +70,7 @@
        round(ifnull(loanduesch.tloandue,0),0) as tloandue ,
        
        ifnull(ld.loandis,0) as loandis,
-       round(ifnull(ld.tloandis,5),0) as tloandis, 
+       round(ifnull(ld.tloandis,0),0) as tloandis, 
        
        ifnull(ld.loanfees,0) as loanfees, 
        round(ifnull(ld.tloanfees,0),0) as tloanfees from

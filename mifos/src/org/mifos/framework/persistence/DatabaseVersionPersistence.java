@@ -38,7 +38,7 @@ import org.mifos.application.master.persistence.Upgrade198;
 
 public class DatabaseVersionPersistence {
 
-	public static final int APPLICATION_VERSION = 201;
+	public static final int APPLICATION_VERSION = 204;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
 
@@ -90,6 +90,8 @@ public class DatabaseVersionPersistence {
 		register187(register);
 		register195(register);
 		register(register, new Upgrade198());
+		register203(register);
+		register204(register);
 		return Collections.unmodifiableMap(register);
 	}
 
@@ -317,6 +319,44 @@ public class DatabaseVersionPersistence {
 				FinancialActionConstants.RESCHEDULE.getValue(), "FinancialAction-LoanRescheduled"),
 				new AddAccountAction(195,
 						AccountActionTypes.LOAN_RESCHEDULED.getValue(), "AccountAction-LoanRescheduled")));
+	}	
+	
+	private static void register203(Map<Integer, Upgrade> register) {
+		register(
+				register,
+				new CompositeUpgrade(
+						new AddReport(
+								203,
+								(short) 0,
+								ReportsCategoryBO.ANALYSIS,
+								"Branch Cash Confirmation Report",
+								"branch_cash_confirmation_report",
+								"BranchCashConfirmationReport.rptdesign",
+								SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT),
+						new AddActivity(
+								203,
+								"Permissions-CanViewBranchCashConfirmationReport",
+								SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT,
+								SecurityConstants.ANALYSIS)
+						)
+				); 
+	}
+	
+	private static void register204(Map<Integer, Upgrade> register) {
+		register(register,
+				new CompositeUpgrade(
+				new AddReport(204,
+								(short) 0, ReportsCategoryBO.ANALYSIS,
+								"Branch Progress Report",
+								"branch_progress_report",
+								"ProgressReport.rptdesign",
+								SecurityConstants.CAN_VIEW_BRANCH_REPORT),
+						new AddActivity(204,
+								"Permissions-CanViewBranchProgressReport",
+								SecurityConstants.CAN_VIEW_BRANCH_REPORT,
+								SecurityConstants.ANALYSIS)
+				)
+		);
 	}	
 	
 	private final Connection connection;

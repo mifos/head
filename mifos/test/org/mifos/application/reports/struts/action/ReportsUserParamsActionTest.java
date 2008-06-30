@@ -2,6 +2,7 @@ package org.mifos.application.reports.struts.action;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -15,6 +16,7 @@ public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		TestDatabase.resetMySQLDatabase();
 		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		ActivityContext ac = new ActivityContext((short) 0, userContext
@@ -30,7 +32,7 @@ public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 	public void testLoadAddListShouldGoToBirtReport(){
 		setRequestPathInfo("/reportsUserParamsAction.do");
 		addRequestParameter("method", "loadAddList");
-		addRequestParameter("reportId", "28");
+		addRequestParameter("reportId", "1");
 		actionPerform();
 		verifyForwardPath("/pages/application/reports/jsp/birtReport.jsp");
 		
@@ -39,9 +41,9 @@ public class ReportsUserParamsActionTest extends MifosMockStrutsTestCase {
 	public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId(){
 		
 		ActionSecurity security = ReportsUserParamsAction.getSecurity();
-		assertEquals(ReportSecurityConstants.CLIENT_SUMMARY_AND_HISTORY_REPORT, security.get("loadAddList-1").shortValue());
-		assertEquals(ReportSecurityConstants.CLIENT_PRODUCT_WISE_HISTORY_REPORT, security.get("loadAddList-2").shortValue());
-		assertEquals(ReportSecurityConstants.CLIENT_SETTLEMENT_INFO_REPORT, security.get("loadAddList-3").shortValue());
+		assertEquals(ReportSecurityConstants.COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
+		assertEquals(ReportSecurityConstants.BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2").shortValue());
+		assertEquals(ReportSecurityConstants.BRANCH_PROGRESS_REPORT, security.get("loadAddList-3").shortValue());
 		assertEquals(ReportSecurityConstants.CLIENT_LOAN_REPAYMENT_SCHEDULE, security.get("loadAddList-4").shortValue());
 		assertEquals(ReportSecurityConstants.CLIENT_FEES_CHARGES_AND_PENALTIES_REPORT, security.get("loadAddList-5").shortValue());
 		assertEquals(ReportSecurityConstants.CLIENT_PENDING_APPROVAL_REPORT, security.get("loadAddList-6").shortValue());
