@@ -60,6 +60,7 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -1119,6 +1120,7 @@ public class CustomerPersistence extends Persistence {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put(CustomerSearchConstants.OFFICEID, office.getOfficeId());
 		params.put("loanCyclePeriod", loanCyclePeriod);
+		params.put(QueryParamConstants.CUSTOMER_LEVEL_ID, CustomerLevel.CLIENT);
 		return params;
 	}
 	

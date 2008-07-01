@@ -50,10 +50,10 @@ public class BranchReportClientSummaryHelperTest extends MifosTestCase {
 	public void testPopulatesClientSummary() throws Exception {
 		BranchReportBO branchReport = BranchReportBOFixture.createBranchReport(
 				Integer.valueOf(1), BRANCH_ID, DateUtils.currentDate());
-		new BranchReportClientSummaryHelper(OfficecFixture
-				.createOffice(BRANCH_ID), branchReport,
-				getCustomerBusinessServiceStub(), getBranchReportServiceStub(),
-				getBranchReportConfigServiceStub()).populateClientSummary();
+		new BranchReportClientSummaryHelper(getCustomerBusinessServiceStub(),
+				getBranchReportServiceStub(),
+				getBranchReportConfigServiceStub()).populateClientSummary(
+				branchReport, OfficecFixture.createOffice(BRANCH_ID));
 		assertClientSummary(branchReport);
 	}
 

@@ -42,5 +42,9 @@ public interface QueryParamConstants {
 	public static final String MEETING_DATE = "MEETING_DATE";
 	public static final String PERSONNEL_ID = "PERSONNEL_ID";
 	public static final String CENTER_ID = "CENTER_ID";
+	public static final String OFFICE_ID = "officeId";
+	public static final String CUSTOMER_STATUS_DESCRIPTION = "customerStatusDescription";
+	public static final String CUSOTMER_CUSTOM_FIELD_VALUE = "fieldValue";
+	public static final String CUSTOMER_CUSTOM_FIELD_ID = "fieldId";
 
 }

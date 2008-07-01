@@ -901,6 +901,8 @@
 	<sql-query name="Customers.getDormantClientsCountByLoanAccountForOffice">
 	    <return-scalar column="dormantLoanAccounts" type="integer"/>
 		<![CDATA[select count(distinct(c.customer_id)) as dormantLoanAccounts from customer c
+				    left join 
+				    	customer_state cs on cs.status_id=c.status_id
 					where c.customer_id not in
 					(
 					    select cust.customer_id from customer cust, account acc, loan_account la 
@@ -911,12 +913,16 @@
 					    and cust.branch_id = :officeId
 					)
 					and c.branch_id = :officeId
+                    and cs.description='Customer Was Active'
+                    and c.customer_level_id=:customerLevelId
 		]]>
 	</sql-query>
 	<sql-query name="Customers.getVeryPoorDormantClientsCountByLoanAccountForOffice">
 		<return-scalar column="veryPoorDormantLoanAccounts" type="integer"/>
-		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantLoanAccounts from customer c, customer_detail cd
-				    where c.customer_id not in
+		<![CDATA[select count(distinct(c.customer_id)) as veryPoorDormantLoanAccounts from customer c
+				    left join customer_detail cd on cd.customer_id=c.customer_id
+				    left join customer_state cs on cs.status_id=c.status_id
+		    	where c.customer_id not in
 				    (
 				        select cust.customer_id from customer cust, customer_detail cust_detail, account acc, loan_account la 
 				        where (cust.created_date > date_sub(current_date, interval :loanCyclePeriod day)
@@ -928,13 +934,15 @@
 				        and cust_detail.poverty_status=41
 				    )
 				    and c.branch_id = :officeId
-				    and c.customer_id=cd.customer_id
+				    and c.customer_level_id=:customerLevelId
+                    and cs.description='Customer Was Active'
 				    and cd.poverty_status=41
 		]]>
 	</sql-query>
 	<sql-query name="Customers.getDormantClientsCountBySavingAccountForOffice">
 	    <return-scalar column="dormantSavingAccounts" type="integer"/>
 		<![CDATA[select count(distinct(c.customer_id)) as dormantSavingAccounts from customer c
+					left join customer_state cs on cs.status_id=c.status_id
 					where c.customer_id not in
 					(
 					    select cust.customer_id from customer cust, account acc, savings_account sa 
@@ -945,6 +953,8 @@
 					    and cust.branch_id = :officeId
 					)
 					and c.branch_id = :officeId
+					and c.customer_level_id=:customerLevelId
+					and cs.description='Customer Was Active'
 		]]>
 	</sql-query>
 	<sql-query name="Customers.getVeryPoorDormantClientsCountBySavingAccountForOffice">
@@ -962,9 +972,161 @@
 				        and cust_detail.poverty_status=41
 				    )
 				    and c.branch_id = :officeId
+				    and c.customer_level_id=:customerLevelId
 				    and c.customer_id=cd.customer_id
 				    and cd.poverty_status=41
 		]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getCustomerCountForOffice">
+		<return-scalar column="customerCount" type="integer"/>
+		<![CDATA[
+			SELECT 
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM
+				CUSTOMER CUST
+			WHERE
+				CUST.CUSTOMER_LEVEL_ID=:customerLevelId
+			AND
+				CUST.BRANCH_ID=:officeId
+		]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getCustomerCountBasedOnStatusForOffice">
+		<return-scalar column="customerStatus" type="string"/>
+		<return-scalar column="customerCount" type="integer"/>
+		<![CDATA[
+			SELECT 
+				CS.DESCRIPTION as customerStatus,
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+			LEFT JOIN 
+				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
+			WHERE 
+				CUST.CUSTOMER_LEVEL_ID=:customerLevelId 
+			AND
+				CUST.BRANCH_ID=:officeId 
+			AND
+				CS.DESCRIPTION in (:customerStatusDescription)
+			GROUP BY
+				CS.DESCRIPTION 
+		]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getVeryPoorCustomerCountBasedOnStatusForOffice">
+		<return-scalar column="customerStatus" type="string"/>
+		<return-scalar column="customerCount" type="integer"/>
+		<![CDATA[
+			SELECT 
+				CS.DESCRIPTION as customerStatus,
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+			LEFT JOIN 
+				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
+			LEFT JOIN
+				CUSTOMER_DETAIL CD ON CD.CUSTOMER_ID=CUST.CUSTOMER_ID
+			WHERE 
+				CUST.CUSTOMER_LEVEL_ID=:customerLevelId 
+			AND
+				CUST.BRANCH_ID=:officeId 
+			AND
+				CS.DESCRIPTION in (:customerStatusDescription)
+			AND
+				CD.POVERTY_STATUS=41
+			GROUP BY
+				CS.DESCRIPTION
+		]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getActiveAccountUserCountForOffice">
+	<return-scalar column="customerCount" type="integer"/>
+	<![CDATA[
+		SELECT 
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+ 			LEFT JOIN 
+  				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
+ 			LEFT JOIN
+  				ACCOUNT ACC ON ACC.CUSTOMER_ID=CUST.CUSTOMER_ID
+ 			WHERE 
+  				CUST.CUSTOMER_LEVEL_ID=:customerLevelId
+ 			AND
+  				CUST.BRANCH_ID=:officeId
+ 			AND 
+  				CS.DESCRIPTION='Customer Was Active'
+ 			AND 
+  				ACC.ACCOUNT_TYPE_ID=:accountTypeId
+ 			AND
+  				ACC.ACCOUNT_STATE_ID=:accountStateId
+	]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getVeryPoorActiveBorrowersCountForOffice">
+	<return-scalar column="customerCount" type="integer"/>
+	<![CDATA[
+		SELECT 
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+ 			LEFT JOIN 
+  				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
+ 			LEFT JOIN
+  				ACCOUNT ACC ON ACC.CUSTOMER_ID=CUST.CUSTOMER_ID
+ 			LEFT JOIN
+  				CUSTOMER_DETAIL CD ON CD.CUSTOMER_ID=CUST.CUSTOMER_ID
+ 			WHERE 
+  				CUST.CUSTOMER_LEVEL_ID=:customerLevelId
+ 			AND
+  				CUST.BRANCH_ID=:officeId
+ 			AND 
+  				CS.DESCRIPTION='Customer Was Active'
+ 			AND 
+  				ACC.ACCOUNT_TYPE_ID=:accountTypeId
+ 			AND
+  				ACC.ACCOUNT_STATE_ID=:accountStateId
+			AND
+				CD.POVERTY_STATUS=41
+	]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getReplacementCountForOffice">
+	<return-scalar column="customerCount" type="integer"/>
+	<![CDATA[
+			SELECT 
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+			LEFT JOIN 
+				CUSTOMER_CUSTOM_FIELD CCF ON CCF.CUSTOMER_ID = CUST.CUSTOMER_ID 
+			WHERE 
+				CUST.BRANCH_ID=:officeId 
+			AND 
+				CUST.CUSTOMER_LEVEL_ID=:customerLevelId 
+			AND 
+				CCF.FIELD_ID=:fieldId
+			AND 
+				CCF.FIELD_VALUE=:fieldValue
+	]]>
+	</sql-query>
+	<sql-query name="Customer.Sql.getVeryPoorReplacementCountForOffice">
+	<return-scalar column="customerCount" type="integer"/>
+	<![CDATA[
+		SELECT 
+				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
+			FROM 
+				CUSTOMER CUST 
+			LEFT JOIN 
+				CUSTOMER_CUSTOM_FIELD CCF ON CCF.CUSTOMER_ID = CUST.CUSTOMER_ID 
+			LEFT JOIN 
+				CUSTOMER_DETAIL CD ON CD.CUSTOMER_ID = CUST.CUSTOMER_ID 
+			WHERE 
+				CUST.BRANCH_ID=:officeId
+			AND 
+				CUST.CUSTOMER_LEVEL_ID =:customerLevelId
+			AND 
+				CCF.FIELD_ID=:fieldId
+			AND 
+				CCF.FIELD_VALUE=:fieldValue
+			AND 
+				CD.POVERTY_STATUS=41
+	]]>
 	</sql-query>
 	<!-- All clients to be considered when calculating very poor dormant clients (see previous query) -->
 	<query name="Customers.getVeryPoorClientsToConsiderForDormantCount">

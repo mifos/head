@@ -87,9 +87,8 @@ public class BranchReportHelper extends TaskHelper {
 		BranchReportBO branchReport = new BranchReportBO(branchOffice
 				.getOfficeId(), runDate);
 
-		new BranchReportClientSummaryHelper(branchOffice, branchReport,
-				customerBusinessService, branchReportService,
-				branchReportConfigService).populateClientSummary();
+		new BranchReportClientSummaryHelper(customerBusinessService, branchReportService,
+				branchReportConfigService).populateClientSummary(branchReport, branchOffice);
 		new BranchReportLoanArrearsAgingHelper(branchReport,
 				branchReportService, branchReportConfigService)
 				.populateLoanArrearsAging();

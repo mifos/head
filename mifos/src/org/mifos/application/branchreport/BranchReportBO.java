@@ -61,6 +61,12 @@ public class BranchReportBO extends BusinessObject {
 		clientSummary.setBranchReport(this);
 	}
 
+	public void addClientSummaries(List<BranchReportClientSummaryBO> clientSummaries) {
+		for (BranchReportClientSummaryBO clientSummary : clientSummaries) {
+			addClientSummary(clientSummary);
+		}
+	}
+	
 	public void addLoanArrearsAging(
 			BranchReportLoanArrearsAgingBO loanArrearAgingBO) {
 		loanArrearsAging.add(loanArrearAgingBO);

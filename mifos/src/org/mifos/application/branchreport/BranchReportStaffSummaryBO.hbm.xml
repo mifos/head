@@ -102,45 +102,44 @@ explanation of the license and how it is applied.
 	    <return-scalar column="centerCount" type="integer"/>	
 	    <return-scalar column="clientCount" type="integer"/>	
 	    <![CDATA[
-	    select 
-				c.LOAN_OFFICER_ID as personnelId, 
-				(select 
-						count(centers.CUSTOMER_ID) 
-					from 
-						customer centers 
-		                        left join
-		                                customer_state cs on cs.status_id=centers.status_id
-		                        where 
-		                                cs.description='Customer Was Active'
-		                        and    
-		                        	centers.CUSTOMER_LEVEL_ID=3 
-					and 
-						centers.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID
-				) as centerCount, 
-				(select 
-						count(clients.CUSTOMER_ID) 
-					from 
-						Customer clients 
-					left join
-		                                customer_state cs on cs.status_id=clients.status_id
-		                        where 
-					        cs.description='Customer Was Active'
-		                        and    
-		                        	clients.CUSTOMER_LEVEL_ID=1 
-					and 
-						clients.LOAN_OFFICER_ID=c.LOAN_OFFICER_ID
-				) as clientCount 
-			from 
-				Customer c, 
-				Personnel p 
-			where 
-				c.LOAN_OFFICER_ID = p.PERSONNEL_ID 
-			and 
-				p.OFFICE_ID = :officeId
-			and 
-				p.PERSONNEL_STATUS=1 
-			group by 
-				c.LOAN_OFFICER_ID
+		    SELECT 
+					p.PERSONNEL_ID as personnelId, 
+					(SELECT 
+							COUNT(centers.CUSTOMER_ID) 
+						FROM 
+							customer centers 
+						LEFT JOIN
+							customer_state cs on cs.status_id=centers.status_id
+						WHERE 
+							cs.description='Customer Was Active'
+						AND    
+							centers.CUSTOMER_LEVEL_ID=3 
+						AND 
+							centers.LOAN_OFFICER_ID=p.PERSONNEL_ID
+					) as centerCount, 
+					(SELECT 
+							COUNT(clients.CUSTOMER_ID) 
+						FROM 
+							Customer clients 
+						LEFT JOIN
+							customer_state cs on cs.status_id=clients.status_id
+						WHERE 
+							cs.description='Customer Was Active'
+						AND    
+							clients.CUSTOMER_LEVEL_ID=1 
+						AND 
+							clients.LOAN_OFFICER_ID=p.PERSONNEL_ID
+					) as clientCount 
+				from 
+					PERSONNEL p 
+				where 
+					p.OFFICE_ID = :officeId
+				and 
+					p.PERSONNEL_STATUS=1 
+				and 
+					p.LEVEL_ID=1
+				group by 
+					p.PERSONNEL_ID
                  ]]>
 	</sql-query>
 	<!--
