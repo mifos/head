@@ -27,6 +27,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public class SvnRevision extends Properties {
 	private static final String REVISION = "versioninfo.revision";
+	private static final String BRANCH = "versioninfo.branch";
 	
 	public SvnRevision() {
 		this(FilePaths.SVN_REVISION_PROPERTYFILE);
@@ -48,5 +49,10 @@ public class SvnRevision extends Properties {
 	public String getVersion() {
 		String revision = getProperty(REVISION);
 		return revision == null ? "unknown" : revision;
+	}
+	
+	public String getBranch() {
+		String branch = getProperty(BRANCH);
+		return branch == null ? "unknown" : branch;
 	}
 }

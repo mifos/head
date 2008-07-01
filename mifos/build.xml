@@ -79,12 +79,23 @@
 	      </tokenfilter>
 	   </filterchain>
 	</loadfile>
+	<loadfile property="svn.branch" srcFile="${basedir}/.svn/entries" failonerror="true">
+	   <filterchain>
+	      <headfilter lines="6"/>
+	      <tokenfilter>
+	         <filetokenizer/>
+			 <replaceregex pattern=".*[\r\n]+https://mifos\.dev\.java\.net/svn/mifos(/branches|tags)?/(\w+)/.*"
+	            flags="s" replace="\2"/>                               
+	      </tokenfilter>
+	   </filterchain>
+	</loadfile>
 	</target>
 	
 	<target name="copy-revision" depends="svn-revision" description="Creates revision property file">
 		<copy file="${src.dir}/org/mifos/config/resources/versionInfo.properties" todir="${build.classes}/org/mifos/config/resources" overwrite="true" >
 			<filterset>
 				<filter token="revision" value="${svn.version}" />
+				<filter token="branch" value="${svn.branch}" />
 			</filterset>
 		</copy>	
 	</target>

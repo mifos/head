@@ -98,6 +98,10 @@ public class SystemInfo implements Serializable {
 		return context.getServerInfo();
 	}
 	
+	public String getSvnBranch() {
+		return svnRevision.getBranch();
+	}
+	
 	public String getSvnRevision() {
 		return svnRevision.getVersion();
 	}

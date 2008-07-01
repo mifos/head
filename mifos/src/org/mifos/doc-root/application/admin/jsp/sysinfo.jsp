@@ -62,7 +62,7 @@ explanation of the license and how it is applied.
 					</tr>
 					<tr>
 						<td><span class="fontnormal"><mifos:mifoslabel name="admin.sysinfo.svnrevision" bundle="adminUIResources" /></span></td>
-						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.svnRevision}"/></span></td>
+						<td><span class="fontnormal"><c:out value="${sessionScope.systemInfo.svnBranch}"/>@<c:out value="${sessionScope.systemInfo.svnRevision}"/></span></td>
 					</tr>
 				</table>
 			</td>
