@@ -20,9 +20,9 @@ public class MifosSchedulerTest extends MifosTestCase {
 		MifosScheduler mifosScheduler = new MifosScheduler();
 		mifosScheduler.registerTasks();
 		List<String> taskNames = mifosScheduler.getTaskNames();
-		assertEquals(14, taskNames.size());
+		assertEquals(13, taskNames.size());
 		assertTrue(taskNames.contains("ProductStatus"));
-		assertTrue(taskNames.contains("CollectionSheetTask"));
+		//assertTrue(taskNames.contains("CollectionSheetTask"));
 		assertTrue(taskNames.contains("LoanArrearsTask"));
 		assertTrue(taskNames.contains("SavingsIntCalcTask"));
 		assertTrue(taskNames.contains("SavingsIntPostingTask"));

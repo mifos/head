@@ -5,14 +5,14 @@
 		<initial-time>24:00:00</initial-time>
 		<delay-time>86400</delay-time>
 	</scheduler>
-	<scheduler>
+	<!--<scheduler>
 		<task-class-name>CollectionSheetTask</task-class-name>
 		<initial-time>24:00:00</initial-time>
 		<delay-time>86400</delay-time>
-	</scheduler>
+	</scheduler>-->
 	<scheduler>
 		<task-class-name>CollectionSheetReportParameterCachingTask</task-class-name>
-		<initial-time>24:00:00</initial-time>
+		<initial-time>10:00:00</initial-time>
 		<delay-time>86400</delay-time>
 	</scheduler>
 	<scheduler>
