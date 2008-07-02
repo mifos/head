@@ -42,6 +42,7 @@ import java.util.ResourceBundle;
 
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
+import org.mifos.framework.http.request.RequestConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 
 /**
@@ -61,7 +62,8 @@ public class PageScroll {
 	 * @return string	next page.
 	 */
 	protected static String getPages(int current,
-			int pageSize, int size, String action, String currentFlowKey, Locale locale) {
+			int pageSize, int size, String action, String currentFlowKey, 
+			Locale locale, String perspective) {
 		StringBuilder result = new StringBuilder();
 		ResourceBundle resource = ResourceBundle.getBundle(FilePaths.TABLE_TAG_PROPERTIESFILE, locale);
 		//to check the onClick status of the prev and next whether that is disable or not
@@ -92,13 +94,15 @@ public class PageScroll {
 		resultsStr = resultsStr.replaceFirst("%s3", new Integer(size).toString());
 
 		if (prev) {
-			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey,current-1)).append("</td>");
+			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(
+				getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey,current-1,perspective)).append("</td>");
 		} else {
 			result.append("<td width=\"20%\" class=\"fontnormalboldgray\">" + previousStr + "</td>");
 		}
 		result.append("<td width=\"40%\" align=\"center\" class=\"fontnormalbold\">" + resultsStr +  " </td>");
 		if (next) {
-			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(getAnchor(action, nextStr,"searchNext", currentFlowKey,current+1)).append("</td>");
+			result.append("<td width=\"20%\" class=\"fontnormalbold\">").append(
+				getAnchor(action, nextStr,"searchNext", currentFlowKey,current+1,perspective)).append("</td>");
 		} else {
 			result.append("<td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">" + nextStr + "</td>");
 		}
@@ -117,7 +121,8 @@ public class PageScroll {
 	 * @param paramvalue2	method value(previous or next).
 	 * @return
 	 */
-	protected static String getAnchor(String hRef, String text,String method, String currentFlowKey,int current) {
+	protected static String getAnchor(String hRef, String text,String method, 
+		String currentFlowKey,int current, String perspective) {
 		StringBuilder result = new StringBuilder();
 		
 		result.append("<a href='").append(hRef)
@@ -126,8 +131,16 @@ public class PageScroll {
 			  .append("&currentFlowKey=")
 			  .append(currentFlowKey)
 			  .append("&current=")
-			  .append(current)
-			  .append("'>").append(text)
+			  .append(current);
+		
+		if (perspective != null) {
+			  result.append("&")
+			  .append(RequestConstants.PERSPECTIVE)
+			  .append("=")
+			  .append(perspective);
+		}
+		
+		result.append("'>").append(text)
 			  .append("</a>");
 		return result.toString();
 	}

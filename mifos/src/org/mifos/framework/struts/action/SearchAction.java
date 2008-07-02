@@ -33,6 +33,11 @@ public class SearchAction extends BaseAction {
 		return null;
 	}
 	
+	private void setPerspective(HttpServletRequest request) {
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }		
+	}
 	public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		//Integer current = (Integer)SessionUtils.getAttribute("current",request);
@@ -41,6 +46,7 @@ public class SearchAction extends BaseAction {
 		//SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
 		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","previous",TableTagConstants.PATH,request.getSession());
+		setPerspective(request);
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
 		if( forwardkey ==null)throw new PageExpiredException();
 		return mapping.findForward(forwardkey);
@@ -54,6 +60,7 @@ public class SearchAction extends BaseAction {
 		//SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
 		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","next",TableTagConstants.PATH,request.getSession());
+		setPerspective(request);
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
 		if (forwardkey == null) {
 			throw new PageExpiredException();

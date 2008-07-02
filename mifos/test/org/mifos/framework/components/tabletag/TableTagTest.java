@@ -11,11 +11,13 @@ import javax.servlet.jsp.JspException;
 
 import junit.framework.TestCase;
 
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.config.Localization;
 import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
+import org.mifos.framework.http.request.RequestConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -197,11 +199,20 @@ public class TableTagTest extends TestCase {
 
 	public void testPageScroll(){
 		Locale locale = Localization.getInstance().getMainLocale();
-		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234", locale));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234", locale));
-		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234", locale));
+		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1,null));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234", locale, null));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"20%\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234", locale, null));
+		assertEquals("<tr><td width=\"20%\" class=\"fontnormalboldgray\">Previous</td><td width=\"40%\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"20%\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234", locale, null));
 	}
+
+	public void testPageScrollgetAnchor(){
+		Locale locale = Localization.getInstance().getMainLocale();
+		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1,null));
+		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1&" + 
+				RequestConstants.PERSPECTIVE + "=" + LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN + 
+				"'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1,LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN));
+	}
+	
 	public void testLink(){
 		assertEquals("",Link.createLink(new String []{""},null,null,null,null,null,null));
 		assertEquals("<span class=\"fontnormalbold\"><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span class=\"fontnormalbold\"><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load","fontnormalbold","1234","9999"));

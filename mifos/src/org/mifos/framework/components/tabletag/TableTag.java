@@ -58,6 +58,7 @@ import org.mifos.framework.exceptions.TableTagException;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.http.request.RequestConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -526,8 +527,10 @@ public class TableTag extends BodyTagSupport {
 		out.write(result.toString());
 		String currentFlowkey = (String) ((HttpServletRequest) pageContext
 				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
+		String perspective = (String) ((HttpServletRequest) pageContext
+				.getRequest()).getAttribute(RequestConstants.PERSPECTIVE);
 		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
-				currentFlowkey, locale));
+				currentFlowkey, locale, perspective));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}
@@ -617,8 +620,10 @@ public class TableTag extends BodyTagSupport {
 		out.write(result.toString());
 		String currentFlowkey = (String) ((HttpServletRequest) pageContext
 				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
+		String perspective = (String) ((HttpServletRequest) pageContext
+				.getRequest()).getAttribute(RequestConstants.PERSPECTIVE);
 		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
-				currentFlowkey, locale));
+				currentFlowkey, locale, perspective));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}
