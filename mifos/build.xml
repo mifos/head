@@ -84,7 +84,7 @@
 	      <headfilter lines="6"/>
 	      <tokenfilter>
 	         <filetokenizer/>
-			 <replaceregex pattern=".*[\r\n]+https://mifos\.dev\.java\.net/svn/mifos(/branches|tags)?/(\w+)/.*"
+                 <replaceregex pattern=".*[\r\n]+https://mifos\.dev\.java\.net/svn/mifos(/branches|/tags)?/([^/]*)/.*"
 	            flags="s" replace="\2"/>                               
 	      </tokenfilter>
 	   </filterchain>
