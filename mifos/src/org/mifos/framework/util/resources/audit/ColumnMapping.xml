@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <columnPropertyMapping>
 
+	<!-- Commas in displayKey attribues lead to concatenated strings in the
+	changelog. See AuditConfigurtion.getKeys(String). -->
 	<entityType name="Loan" classPath="org.mifos.application.accounts.loan.business.LoanBO">
 		<entitiesToLog>
 			<entity name="accountState"/>
@@ -221,7 +223,7 @@
 		<propertyName name="notes" parentName="historicalData" displayKey="historicalData.notes"/>
 		<propertyName name="loanCycleNumber" parentName="historicalData" displayKey="Loan,historicalData.loanCycleNumber"/>
 
-		<propertyName name="officeName" parentName="office" displayKey="BranchOffice,Customer.name" />
+		<propertyName name="officeName" parentName="office" displayKey="customer.branch_membership" />
 		<propertyName name="officeId" parentName="office" doNotLog="yes" />
 		<propertyName name="shortName" parentName="office" doNotLog="yes" />
 		<propertyName name="globalOfficeNum" parentName="office" doNotLog="yes" />
