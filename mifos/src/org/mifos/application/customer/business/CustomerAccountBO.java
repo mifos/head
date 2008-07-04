@@ -404,13 +404,11 @@ public class CustomerAccountBO extends AccountBO {
 						GroupConstants.CLOSED)) {
 			List<Date> meetingDates = null;
 			int installmentSize = getLastInstallmentId();
-			int totalInstallmentDatesToBeChanged = installmentSize
-					- nextInstallmentId + 1;
 			try {
 				getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
 				getCustomer().changeUpdatedMeeting();
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+						.getAllDates(installmentSize);
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			} catch (CustomerException ce) {
@@ -422,7 +420,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	private void updateCustomerSchedule(Short nextInstallmentId, List<Date> meetingDates) {
 		short installmentId = nextInstallmentId;
-		for (int count = nextInstallmentId; count < meetingDates.size(); count++) {
+		for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
 			
 			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 			if (accountActionDate != null) {

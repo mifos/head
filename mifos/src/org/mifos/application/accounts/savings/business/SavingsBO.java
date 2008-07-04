@@ -1973,11 +1973,9 @@ public class SavingsBO extends AccountBO {
 						AccountStates.SAVINGS_ACC_CLOSED)) {
 			List<Date> meetingDates = null;
 			int installmentSize = getLastInstallmentId();
-			int totalInstallmentDatesToBeChanged = installmentSize
-					- nextInstallmentId + 1;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+						.getAllDates(installmentSize);
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
@@ -2005,7 +2003,7 @@ public class SavingsBO extends AccountBO {
 
 	private void updateSavingsSchedule(Short nextInstallmentId,
 			List<Date> meetingDates, List<CustomerBO> children) {
-		for (int count = 0; count < meetingDates.size(); count++) {
+		for (int count = 0; count <= meetingDates.size(); count++) {
 			short installmentId = (short) (nextInstallmentId + count);
 			for (CustomerBO customer : children) {
 				AccountActionDateEntity accountActionDate = getAccountActionDate(

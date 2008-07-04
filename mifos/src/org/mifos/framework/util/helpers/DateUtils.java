@@ -561,6 +561,10 @@ public class DateUtils {
 	public static Date getCurrentDateWithoutTimeStamp() {
 		return getDateWithoutTimeStamp(getCurrentTime());
 	}
+	
+	public static Date getCurrentPlusWeeksDateWithoutTimeStamp(int weeks) {
+		return getDateWithoutTimeStamp(getCurrentTime() + (604800000 * weeks));
+	}
 
 	private static long getCurrentTime() {
 		return currentTime  == null ? System.currentTimeMillis() : currentTime;

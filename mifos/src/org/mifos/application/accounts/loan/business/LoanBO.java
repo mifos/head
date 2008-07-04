@@ -1828,14 +1828,12 @@ public class LoanBO extends AccountBO {
 						AccountState.LOAN_CANCELLED.getValue()))) {
 			List<Date> meetingDates = null;
 			int installmentSize = getLastInstallmentId();
-			int totalInstallmentDatesToBeChanged = installmentSize
-					- nextInstallmentId + 1;
 			try {
 				MeetingBO meeting = buildLoanMeeting(customer
 						.getCustomerMeeting().getMeeting(), getLoanMeeting(),
 						getLoanMeeting().getMeetingStartDate());
 				meetingDates = meeting
-						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+						.getAllDates(installmentSize);
 			}
 			catch (MeetingException me) {
 				throw new AccountException(me);
@@ -1847,7 +1845,7 @@ public class LoanBO extends AccountBO {
 	private void updateLoanSchedule(Short nextInstallmentId, List<Date> meetingDates) {
 		short installmentId = nextInstallmentId;
 		
-		for (int count = nextInstallmentId; count < meetingDates.size(); count++) {
+		for (int count = nextInstallmentId; count <= meetingDates.size(); count++) {
 			AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 		
 			if (accountActionDate != null) {
