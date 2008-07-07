@@ -77,6 +77,8 @@ public class BranchReportHelper extends TaskHelper {
 	void populateBranchReportBatch(Session session, Date runDate) throws BatchJobException,
 			ServiceException {
 		List<OfficeBO> branchOffices = officeBusinessService.getBranchOffices();
+		if (branchOffices == null)
+			return;
 		for (OfficeBO branchOffice : branchOffices) {
 			createBranchReport(session, branchOffice, runDate);
 		}
