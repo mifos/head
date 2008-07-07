@@ -4,21 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>F1TC009</title>
+<title>LoginWithInactiveUserTC009</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">F1TC009</td></tr>
+<tr><td rowspan="1" colspan="3">LoginWithInactiveUserTC009</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/mifos/loginAction.do;jsessionid=78EF9EC51CA44969642F9DF05E9DD946?method=load</td>
+	<td>/mifos/loginAction.do?method=logout</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>Welcome to mifos</td>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
 	<td></td>
 </tr>
 <tr>

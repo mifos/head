@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>F4TC01_06</title>
+<title>CreateUserTC01_06</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">F4TC01_06</td></tr>
+<tr><td rowspan="1" colspan="3">CreateUserTC01_06</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -40,16 +40,6 @@
 	<td>verifyText</td>
 	<td>link=Admin</td>
 	<td>Admin</td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Admin</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertTextPresent</td>
-	<td>Welcome to mifos administrative area</td>
-	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -135,6 +125,16 @@
 	<td>clickAndWait</td>
 	<td>//input[@value='Submit']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You have successfully added a new office </td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>link=View office details now</td>
+	<td>View office details now</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
