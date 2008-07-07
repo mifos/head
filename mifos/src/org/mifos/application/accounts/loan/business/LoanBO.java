@@ -861,7 +861,7 @@ public class LoanBO extends AccountBO {
 			FeeBO fee = getAccountFeesObject(feeId);
 			if (havePaymentsBeenMade()
 				&& fee.doesFeeInvolveFractionalAmounts()) {
-				throw new AccountException("Can't apply this fee after payments have been applied");
+				throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
 			}
 
 			totalFeeAmount = updateAccountActionDateEntity(installmentIds,
@@ -950,7 +950,7 @@ public class LoanBO extends AccountBO {
 			if (havePaymentsBeenMade()
 				&& (fee.doesFeeInvolveFractionalAmounts() 
 					|| ! isRoundedAmount(charge))) {
-				throw new AccountException("Can't apply this fee after payments have been applied");
+				throw new AccountException(AccountExceptionConstants.CANT_APPLY_FEE_EXCEPTION);
 			}
 
 			if (fee.getFeeFrequency().getFeePayment() != null) {
@@ -2295,7 +2295,7 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		
 		if (! canApplyMiscCharge(charge)) {
-			throw new AccountException("Can't apply this charge after payments have been applied");
+			throw new AccountException(AccountExceptionConstants.CANT_APPLY_CHARGE_EXCEPTION);
 		}
 
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
