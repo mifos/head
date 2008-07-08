@@ -26,8 +26,12 @@ production environment.
     4.2. Running Mifos
     
 5. Links to Documentation
-    5.1. release notes
-    5.2. platform matrix
-    5.3. hardware prerequisites
-    4.4. user/admin documentation
-    5.5. upgrade documentation
+
+  The following are links to more detailed information about Mifos
+  which is available online.
+  
+    5.1. Release Notes - http://mifos.org/developers/wiki/V11
+    5.2. Platform Matrix
+    5.3. Hardware Prerequisites - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11#server-hardware-recommendations
+    5.4. User/Admin Documentation
+    5.5. Upgrade Documentation
