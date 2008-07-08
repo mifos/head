@@ -1,0 +1,33 @@
+Mifos Installation
+
+This document is a concise guide to installing Mifos for use in a 
+production environment.
+
+1.  Software Prerequisites
+
+  Before running Mifos, you will need to download and install 
+  the software packages below.  Please refer to their respective web
+  sites for details on installing each package.  
+    
+    1.1. Java - JDK 1.5.0_15 (JDK 1.6 is not supported)
+    1.2. MySQL - Community Edition 5.0.51a
+    1.3. Apache Tomcat - 6.0.16
+     
+2. Installing and Configuring MySQL
+    2.1. Database parameters (versions & system configuration)
+    2.2. Initializing the database (running SQL scripts)
+    
+3. Installing and Configuring Apache Tomcat
+    3.1. Parameters (versions & system configuration)
+    3.2. Installing the WAR
+    
+4. Configuring and Running Mifos
+    4.1. Configuring Mifos
+    4.2. Running Mifos
+    
+5. Links to Documentation
+    5.1. release notes
+    5.2. platform matrix
+    5.3. hardware prerequisites
+    4.4. user/admin documentation
+    5.5. upgrade documentation
