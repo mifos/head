@@ -1,3 +1,13 @@
+Third-party libraries used by Mifos are covered under various licenses. The
+licenses are available in the "lib" directory, alongside the corresponding
+library. If you don't have the full source code, you can browse the "lib"
+directory at the following URL:
+
+    https://mifos.dev.java.net/source/browse/mifos/trunk/mifos/lib
+
+Mifos itself is available under the following license:
+
+=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~
 
                                  Apache License
                            Version 2.0, January 2004
