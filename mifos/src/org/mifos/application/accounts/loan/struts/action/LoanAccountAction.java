@@ -570,7 +570,11 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 		MeetingDetailsEntity meetingDetails = customerBO.getCustomerMeeting()
 				.getMeeting().getMeetingDetails();
-		loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
+		if (meetingDetails.getWeekDay() == null) {
+			loanActionForm.setMonthWeek(meetingDetails.getDayNumber().toString());			
+		} else {
+			loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
+		}
 		if (recurrenceType == RecurrenceType.MONTHLY
 				&& meetingDetails.getWeekRank() != null) {
 			loanActionForm.setMonthRank(meetingDetails.getWeekRank().getValue()
