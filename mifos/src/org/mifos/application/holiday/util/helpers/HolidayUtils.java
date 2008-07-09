@@ -59,7 +59,7 @@ public class HolidayUtils {
 		return adjustDateUsingRepaymentRule(holiday.getRepaymentRuleId(), adjustedDate, meeting);
 	}
 
-	private static Calendar getNextWorkingDay(Calendar day) {
+	public static Calendar getNextWorkingDay(Calendar day) {
 		do {
 			day.add(Calendar.DATE, 1);
 		}while(!isWorkingDay(day));

@@ -261,13 +261,24 @@ public class MeetingBO extends BusinessObject {
 		validateMeetingDate(meetingDate);
 		validateEndDate(endDate);
 		Date currentScheduleDate=getFirstDate(getStartDate());
+		Calendar c = Calendar.getInstance();
+		c.setTime(currentScheduleDate);
+		if(!HolidayUtils.isWorkingDay(c)) {
+			currentScheduleDate=HolidayUtils.getNextWorkingDay(c).getTime();
+		}
 		Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
 		Date endDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(endDate.getTime());
 		if(meetingDateWOTimeStamp.compareTo(endDateWOTimeStamp)>0)
 			return false;
 
-		while(currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0 && currentScheduleDate.compareTo(endDateWOTimeStamp)<0)
+		while(currentScheduleDate.compareTo(meetingDateWOTimeStamp)<0 && currentScheduleDate.compareTo(endDateWOTimeStamp)<0) {
 			currentScheduleDate=getNextDate(currentScheduleDate);
+			c.setTime(currentScheduleDate);
+			if(!HolidayUtils.isWorkingDay(c)) {
+				currentScheduleDate=HolidayUtils.getNextWorkingDay(c).getTime();
+			}
+
+		}
 		
 		boolean isRepaymentIndepOfMeetingEnabled;
 		try {
