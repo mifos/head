@@ -25,8 +25,8 @@ production environment.
         log-slow-queries=mysql_slow_query.log
         long_query_time=1
 
-        We also recommend customizing the database connection pool settings as
-        follows:
+        For production environments, we also recommend customizing the 
+        database connection pool settings as follows:
 
         hibernate.c3p0.acquire_increment=5
         hibernate.c3p0.idle_test_period=30 
@@ -72,6 +72,9 @@ production environment.
         Mifos configuration should be reviewed and adjusted as needed BEFORE
         deploying and starting Mifos the first time. See section 5.1 (below)
         for more information.
+        
+        A default configuration is provided, so if you just want to get Mifos
+        quickly up and running to try it out, then no configuration is needed.
 
     4.2. Running Mifos
         Execute the Tomcat startup script in CATALINA_HOME/bin, then visit the
