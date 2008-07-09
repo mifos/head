@@ -19,19 +19,33 @@ production environment.
     
 3. Installing and Configuring Apache Tomcat
     3.1. Parameters (versions & system configuration)
-    3.2. Installing the WAR
+    3.2. Installing the WAR (deployment)
     
 4. Configuring and Running Mifos
     4.1. Configuring Mifos
+
+        Mifos configuration should be reviewed and adjusted as needed BEFORE
+        deploying and starting Mifos the first time. See section 5.1 (below)
+        for more information.
+
     4.2. Running Mifos
+
+        Once the WAR is installed, Mifos will start when Tomcat starts.
     
 5. Links to Documentation
 
   The following are links to more detailed information about Mifos
   which is available online.
   
-    5.1. Release Notes - http://mifos.org/developers/wiki/V11
-    5.2. Platform Matrix
-    5.3. Hardware Prerequisites - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11#server-hardware-recommendations
-    5.4. User/Admin Documentation
-    5.5. Upgrade Documentation
+    5.1. Configuring Mifos - http://mifos.org/developers/wiki/ConfiguringMifos
+
+        Pay particular attention to "trapdoor" settings in the application-wide
+        install-time configuration file.
+
+    5.2. Release Notes - http://mifos.org/developers/wiki/V11
+    5.3. Platform Matrix
+    5.4. Hardware Prerequisites - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11#server-hardware-recommendations
+    5.5. User/Admin Documentation
+    5.6. Upgrade Documentation
+    5.7. Ubuntu Install Guide - http://mifos.org/developers/wiki/MifosUbuntuInstall
+    5.8. Windows Install Guide - http://mifos.org/developers/install-mifos/install-windows
