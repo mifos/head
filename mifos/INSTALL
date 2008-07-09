@@ -3,70 +3,82 @@ Mifos Installation
 This document is a concise guide to installing Mifos for use in a 
 production environment.
 
-1.  Software Prerequisites
-
+1. Software Prerequisites
   Before running Mifos, you will need to download and install 
   the software packages below.  Please refer to their respective web
   sites for details on installing each package.  
-    
+
     1.1. Java - JDK 1.5.0_12 (JDK 1.6 is not supported)
     1.2. MySQL - Community Edition 5.0.51a
     1.3. Apache Tomcat - 6.0.14
-     
+
 2. Installing and Configuring MySQL
     2.1. Database parameters 
         We recommend the following configuration settings for MySQL
         (found in my.ini in the MySQL home directory on a Windows install).
         These values can also be configured through the MySQL Administrator 
         application.
-        
+
         max_connections=300
         innodb_buffer_pool_size=1024M
         log-error=mysql_error.log
-		log-slow-queries=mysql_slow_query.log
-		long_query_time=1
-        
+        log-slow-queries=mysql_slow_query.log
+        long_query_time=1
+
     2.2. Initializing the database
-    	To initialize the Mifos database run the 4 commands below
-    	(these commands assume a database username of "root" and
-    	password of "mysql", adjust them as necessary if your
-    	database login is different).
-    	
+        To initialize the Mifos database run the 4 commands below
+        (these commands assume a database username of "root" and
+        password of "mysql", adjust them as necessary if your
+        database login is different).
+
         mysql -u root -pmysql < sql/create_mifos_db.sql
         mysql -D mifos -u root -pmysql < sql/latest-schema.sql
         mysql -D mifos -u root -pmysql < sql/latest-data.sql
         mysql -D mifos -u root -pmysql < sql/init_mifos_password.sql
-        
+
         If your database instance already has a "mifos" database, then
         you will need to drop the database before running these commands.
-    
+
 3. Installing and Configuring Apache Tomcat
-    3.1. Parameters (versions & system configuration)
+    3.1. Java Virtual Machine and Tomcat Parameters
+        Set the following environment variables:
+
+        JAVA_HOME     ... directory where Java is installed
+        CATALINA_HOME ... directory where Tomcat is installed
+        JAVA_OPTS     ... "-Xms128M -Xmx1024M"
+
     3.2. Installing the WAR (deployment)
-    
+        Copy into CATALINA_HOME/webapps. If the following temporary directories
+        exist, they should be deleted:
+
+        CATALINA_HOME/webapps/mifos
+        CATALINA_HOME/work/Catalina/hostname/mifos
+
 4. Configuring and Running Mifos
     4.1. Configuring Mifos
-
         Mifos configuration should be reviewed and adjusted as needed BEFORE
         deploying and starting Mifos the first time. See section 5.1 (below)
         for more information.
 
     4.2. Running Mifos
+        Execute the Tomcat startup script in CATALINA_HOME/bin, then visit the
+        base URL in a browser:
 
-        Once the WAR is installed, Mifos will start when Tomcat starts.
-    
+        http://localhost:8080/mifos
+
+        username: mifos
+        password: testmifos
+
 5. Links to Documentation
-
   The following are links to more detailed information about Mifos
   which is available online.
-  
-    5.1. Configuring Mifos - http://mifos.org/developers/wiki/ConfiguringMifos
 
+    5.1. Configuring Mifos - http://mifos.org/developers/wiki/ConfiguringMifos
         Pay particular attention to "trapdoor" settings in the application-wide
-        install-time configuration file.
+        install-time configuration file. Chart of accounts configuration is
+        also a "trapdoor".
 
     5.2. Release Notes - http://mifos.org/developers/wiki/V11
-    5.3. Platform Matrix
-    5.4. Hardware Prerequisites - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11#server-hardware-recommendations
-    5.5. Ubuntu Install Guide - http://mifos.org/developers/wiki/MifosUbuntuInstall
-    5.6. Windows Install Guide - http://mifos.org/developers/install-mifos/install-windows
+    5.3. System Recommendations (hardware, networking) - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11
+    5.4. Ubuntu Install Guide - http://mifos.org/developers/wiki/MifosUbuntuInstall
+    5.5. Windows Install Guide - http://mifos.org/developers/install-mifos/install-windows
