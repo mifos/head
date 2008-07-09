@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>SurveyTC_24</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">SurveyTC_24</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Define questions</td>
+	<td>Define questions</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define questions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 1st question</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>b</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion${time2}</td>
+	<td>TestQuestion${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion2${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 2nd Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Free text</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion2${time2}</td>
+	<td>TestQuestion2${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion3${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 3rd Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Number</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion3${time2}</td>
+	<td>TestQuestion3${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion4${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 4th Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Single select</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>b</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion4${time2}</td>
+	<td>TestQuestion4${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion5${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 5th Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Date</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion5${time2}</td>
+	<td>TestQuestion5${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Define new survey</td>
+	<td>Define new survey</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new survey</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(name)</td>
+	<td>newSurvey${time2}</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>value(appliesTo)</td>
+	<td>label=All</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>value(newQuestion)</td>
+	<td>label=TestQuestion${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>value(newQuestion)</td>
+	<td>label=TestQuestion2${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>value(newQuestion)</td>
+	<td>label=TestQuestion3${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@name='button' and @value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Define new survey - Review &amp; submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Survey name: newSurvey${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Survey applies to: All</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Printer version</td>
+	<td>Printer version</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You have successfully defined a new survey</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>View survey details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//strong</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Survey applies to: All</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>TestQuestion${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>TestQuestion2${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>TestQuestion3${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define a new office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>officeName</td>
+	<td>Bangalore_branch${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>shortName</td>
+	<td>${time2}</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>officeLevel</td>
+	<td>label=Branch Office</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>parentOfficeId</td>
+	<td>label=regexp:Mifos\s+HO</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line1</td>
+	<td>bangalore</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.line3</td>
+	<td>EGL</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.state</td>
+	<td>karnataka</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.country</td>
+	<td>India</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.zip</td>
+	<td>560071</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>address.phoneNumber</td>
+	<td>918025003632</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View office details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office short name: ${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Office type: Branch Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new system user</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Bangalore_branch${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>firstName</td>
+	<td>New</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>lastName</td>
+	<td>User${time}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobMM</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobDD</td>
+	<td>21</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>dobYY</td>
+	<td>1980</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>gender</td>
+	<td>label=Male</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>preferredLocale</td>
+	<td>label=English</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>level</td>
+	<td>label=Loan Officer</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>MoveRight</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginName</td>
+	<td>loanofficer_blore${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userPassword</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordRepeat</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>New User${time} has been assigned the system ID number:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>View user details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View user details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>New User${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Clients &amp; Accounts</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>To review or edit a Client, Group, or account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Create new Center</td>
+	<td>Create new Center</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Create new Center</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span</td>
+	<td>Create a new Center -</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Bangalore_branch${time}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>displayName</td>
+	<td>Center${time2}</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>loanOfficerId</td>
+	<td>label=New User${time}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Schedule Meeting</td>
+	<td>Schedule Meeting</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Schedule Meeting</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>weekDay</td>
+	<td>label=Wednesday</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>recurWeek</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>meetingPlace</td>
+	<td>IBMBlore</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Create a new Center - Review &amp; submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>You have successfully created a new Center.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=View Center details now</td>
+	<td>View Center details now</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Center details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Active</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Attach a survey</td>
+	<td>Attach a survey</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Attach a survey</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Center${time2} - Attach survey</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>value(surveyId)</td>
+	<td>label=newSurvey${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Center${time2} - Enter survey data</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=newSurvey${time2}</td>
+	<td>newSurvey${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=newSurvey${time2}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>newSurvey${time2} - Details</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Center: Center${time2}</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

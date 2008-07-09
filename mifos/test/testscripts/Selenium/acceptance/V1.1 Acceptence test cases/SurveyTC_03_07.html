@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>SurveyTC_03</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">SurveyTC_03</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Define questions</td>
+	<td>Define questions</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{new Date().getTime()}</td>
+	<td>time</td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{storedVars['time'].toString().substring(9,13)}</td>
+	<td>time2</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define questions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 1st question</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>b</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion${time2}</td>
+	<td>TestQuestion${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion2${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 2nd Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Free text</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion2${time2}</td>
+	<td>TestQuestion2${time2}</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion3${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 3rd Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Number</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion3${time2}</td>
+	<td>TestQuestion3${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion4${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 4th Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Single select</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>a</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>choice</td>
+	<td>b</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion4${time2}</td>
+	<td>TestQuestion4${time2}</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=define a new question</td>
+	<td>define a new question</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=define a new question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(shortName)</td>
+	<td>TestQuestion5${time2}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>value(questionText)</td>
+	<td>This is 5th Question</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>answerType</td>
+	<td>label=Date</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>AddQuestionButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=remove</td>
+	<td>remove</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@id='AddQuestionButton' and @onclick=&quot;submitQuestionForm('createQuestions')&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=TestQuestion5${time2}</td>
+	<td>TestQuestion5${time2}</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
