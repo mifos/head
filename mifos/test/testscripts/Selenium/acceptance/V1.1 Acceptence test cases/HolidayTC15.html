@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>HolidayTC15</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">HolidayTC15</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new holidays</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayName</td>
+	<td>holidy</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{&quot;0&quot;+(new Date().getDate())}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{'0'+(2+(new Date().getMonth()))}</td>
+	<td>month</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{1+(new Date().getFullYear())}</td>
+	<td>year</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayFromDateDD</td>
+	<td>${date}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayFromDateMM</td>
+	<td>${month}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayFromDateYY</td>
+	<td>${year}</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>javascript:selenium.browserbot.getCurrentWindow().document.getElementById('holidayFromDate').value = selenium.browserbot.getCurrentWindow().document.getElementById('holidayFromDateDD').value + '/' + selenium.browserbot.getCurrentWindow().document.getElementById('holidayFromDateMM').value + '/' + selenium.browserbot.getCurrentWindow().document.getElementById('holidayFromDateYY').value;</td>
+	<td>${date}/${month}/${year}</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{&quot;1&quot;+(new Date().getDate())}</td>
+	<td>date</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{'0'+(2+(new Date().getMonth()))}</td>
+	<td>month</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{1+(new Date().getFullYear())}</td>
+	<td>year</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayThruDateDD</td>
+	<td>${date}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayThruDateMM</td>
+	<td>${month}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>holidayThruDateYY</td>
+	<td>${year}</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>javascript:selenium.browserbot.getCurrentWindow().document.getElementById('holidayThruDate').value = selenium.browserbot.getCurrentWindow().document.getElementById('holidayThruDateDD').value + '/' + selenium.browserbot.getCurrentWindow().document.getElementById('holidayThruDateMM').value + '/' + selenium.browserbot.getCurrentWindow().document.getElementById('holidayThruDateYY').value;</td>
+	<td>${date}/${month}/${year}</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>repaymentRuleId</td>
+	<td>label=Next Working Day</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>Preview</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
