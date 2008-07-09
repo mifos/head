@@ -25,6 +25,19 @@ production environment.
         log-slow-queries=mysql_slow_query.log
         long_query_time=1
 
+        We also recommend customizing database connection pool settings as
+        follows:
+
+        hibernate.c3p0.acquire_increment=5
+        hibernate.c3p0.idle_test_period=30 
+        hibernate.c3p0.max_size=100
+        hibernate.c3p0.max_statements=0 
+        hibernate.c3p0.min_size=20 
+        hibernate.c3p0.timeout=30
+
+        See section 5.1 below (configuring mifos) for more information on
+        customizing the Mifos Database Connection.
+
     2.2. Initializing the database
         To initialize the Mifos database run the 4 commands below
         (these commands assume a database username of "root" and
