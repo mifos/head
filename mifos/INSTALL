@@ -10,7 +10,7 @@ production environment.
 
     1.1. Java - JDK 1.5.0_12 (JDK 1.6 is not supported)
     1.2. MySQL - Community Edition 5.0.51a
-    1.3. Apache Tomcat - 6.0.14
+    1.3. Apache Tomcat - 6.0.16
 
 2. Installing and Configuring MySQL
     2.1. Database parameters 
@@ -25,7 +25,7 @@ production environment.
         log-slow-queries=mysql_slow_query.log
         long_query_time=1
 
-        We also recommend customizing database connection pool settings as
+        We also recommend customizing the database connection pool settings as
         follows:
 
         hibernate.c3p0.acquire_increment=5
@@ -87,9 +87,9 @@ production environment.
   which is available online.
 
     5.1. Configuring Mifos - http://mifos.org/developers/wiki/ConfiguringMifos
-        Pay particular attention to "trapdoor" settings in the application-wide
-        install-time configuration file. Chart of accounts configuration is
-        also a "trapdoor".
+        Pay particular attention to "trapdoor" settings (settings that can't be
+        changed once they have been set) in the application-wide install-time 
+        configuration file. Chart of accounts configuration is also a "trapdoor".
 
     5.2. Release Notes - http://mifos.org/developers/wiki/V11
     5.3. System Recommendations (hardware, networking) - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11

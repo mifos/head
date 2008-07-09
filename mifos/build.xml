@@ -590,7 +590,7 @@
 
 	<target name="deploy" depends="war">
 		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
-		<copy file="${dist}/${webapplication.name}.war" 
+		<copy file="${dist.dir}/${webapplication.name}.war" 
 			todir="${deploy.destination}"
 		/>
 	</target>
