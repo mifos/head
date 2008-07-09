@@ -590,11 +590,23 @@
 
 	<target name="deploy" depends="war">
 		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
-		<copy file="${dist.dir}/${webapplication.name}.war" 
+		<copy file="${dist}/${webapplication.name}.war" 
 			todir="${deploy.destination}"
 		/>
 	</target>
 
+	<target name="distribution">
+		<echo message="Creating distribution package from war ${dist.dir}/${webapplication.name}.war"/>
+		<zip destfile="${dist.dir}/distribution.zip">
+			<zipfileset dir="${basedir}" includes="INSTALL,LICENSE" />
+			<zipfileset dir="${basedir}" includes="sql/create_mifos_db.sql,
+					sql/latest-schema.sql,
+					sql/latest-data.sql,
+					sql/init_mifos_password.sql" />
+			<zipfileset dir="${basedir}" includes = "dist/mifos.war" fullpath="mifos.war" />
+		  </zip>		
+	</target>
+	
 	<target name="javadoc">
 		<mkdir dir="${doc.dir}/api"/>
 		<javadoc packagenames="org.*"
