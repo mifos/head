@@ -38,11 +38,12 @@ production environment.
         See section 5.1 below (configuring mifos) for more information on
         customizing the Mifos Database Connection.
 
-    2.3. Initializing the Mifos database
-        To initialize the Mifos database run the 4 commands below
-        (these commands assume a database username of "root" and
+    2.2. Initializing the Mifos database
+        To initialize the Mifos database run the 4 commands below.
+        (These commands assume a database username of "root" and
         password of "mysql", adjust them as necessary if your
-        database login is different).
+        database login is different. See the link in section 5.1 
+        (below) for more information.).
 
         mysql -u root -pmysql < sql/create_mifos_db.sql
         mysql -D mifos -u root -pmysql < sql/latest-schema.sql

@@ -54,6 +54,9 @@
 
 	<property name="test.classes" value="${build.test.dir}/classes"/>
 
+	<property name="current.release.number" value="1.1.0"/>
+	<property name="current.release.name" value="mifos_v${current.release.number}"/>
+	
 	<property name="db.driver" value="com.mysql.jdbc.Driver"/>
 	<property name="database.driver.jar" 
 		value="./lib/mysql-connector-java-5.1.5-bin.jar"/>
@@ -595,15 +598,15 @@
 		/>
 	</target>
 
-	<target name="distribution">
+	<target name="release_package">
 		<echo message="Creating distribution package from war ${dist.dir}/${webapplication.name}.war"/>
-		<zip destfile="${dist.dir}/distribution.zip">
-			<zipfileset dir="${basedir}" includes="INSTALL,LICENSE" />
+		<zip destfile="${dist.dir}/${current.release.name}.zip">
+			<zipfileset dir="${basedir}" includes="INSTALL,LICENSE" prefix="${current.release.name}"/>
 			<zipfileset dir="${basedir}" includes="sql/create_mifos_db.sql,
 					sql/latest-schema.sql,
 					sql/latest-data.sql,
-					sql/init_mifos_password.sql" />
-			<zipfileset dir="${basedir}" includes = "dist/mifos.war" fullpath="mifos.war" />
+					sql/init_mifos_password.sql" prefix="${current.release.name}"/>
+			<zipfileset dir="${basedir}" includes = "dist/mifos.war" fullpath="${current.release.name}/mifos.war" />
 		  </zip>		
 	</target>
 	
