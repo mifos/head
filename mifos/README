@@ -29,24 +29,5 @@ Developers
 Start here:
     http://mifos.org/developers
 
-
-FAQ (Frequently Asked Questions)
-========
-
-Q. I can't connect to the database!
-++++++++
-Confirm that users and permissions are properly configured in the MySQL
-database.
-
-Verify that  "testdb.user" and "testdb.pwd" is  correctly specified in
-conf/my.build.properties as per your Mysql environment.
-
-Q. I want a faster build
-++++++++
-If you want to skip running the junit tests, you can do so with:
-
-    ant war 
-
-Q. How do I stop Tomcat?
-++++++++
-Hit CTRL-C.
+Frequently Asked Questions:
+    http://mifos.org/developers/wiki/FAQ
