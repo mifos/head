@@ -12,7 +12,7 @@ production environment.
     1.2. MySQL - Community Edition 5.0.51b
     1.3. Apache Tomcat - 6.0.16
 
-2. Installing and Configuring MySQL
+2. Configuring MySQL
     2.1. Database parameters 
         We recommend the following configuration settings for MySQL
         (found in my.ini in the MySQL home directory on a Windows install).
@@ -38,7 +38,7 @@ production environment.
         See section 5.1 below (configuring mifos) for more information on
         customizing the Mifos Database Connection.
 
-    2.2. Initializing the database
+    2.3. Initializing the Mifos database
         To initialize the Mifos database run the 4 commands below
         (these commands assume a database username of "root" and
         password of "mysql", adjust them as necessary if your
@@ -52,13 +52,13 @@ production environment.
         If your database instance already has a "mifos" database, then
         you will need to drop the database before running these commands.
 
-3. Installing and Configuring Apache Tomcat
+3. Configuring Apache Tomcat
     3.1. Java Virtual Machine and Tomcat Parameters
         Set the following environment variables:
 
         JAVA_HOME     ... directory where Java is installed
         CATALINA_HOME ... directory where Tomcat is installed
-        CATALINA_OPTS ... "-Xms128M -Xmx1024M"
+        CATALINA_OPTS ... "-Xms1024M -Xmx1024M"
 
     3.2. Installing the WAR (deployment)
         Copy into CATALINA_HOME/webapps. If the following temporary directories
@@ -100,4 +100,7 @@ production environment.
     5.2. Release Notes - http://mifos.org/developers/wiki/V11
     5.3. System Recommendations (hardware, networking) - http://mifos.org/developers/wiki/MifosSystemRecommendationsV11
     5.4. Ubuntu Install Guide - http://mifos.org/developers/wiki/MifosUbuntuInstall
+        This is an installation guide describing how to install Mifos by building it from the source code. 
     5.5. Windows Install Guide - http://mifos.org/developers/install-mifos/install-windows
+        This is an installation guide describing how to install Mifos by building it from the source code. 
+    
