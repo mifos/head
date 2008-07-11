@@ -61,7 +61,7 @@ production environment.
 
         JAVA_HOME     ... directory where Java is installed
         CATALINA_HOME ... directory where Tomcat is installed
-        CATALINA_OPTS ... "-Xms1024M -Xmx1024M -XX:MaxPermSize=256m"
+        CATALINA_OPTS ... -Xms1024M -Xmx1024M -XX:MaxPermSize=256m
 
     3.2. Installing the WAR (deployment)
         Copy into CATALINA_HOME/webapps. If the following temporary directories
