@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>LSIMMonthlyLoan</title>
+<title>LSIMMonthlyLoanTC04</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">LSIMMonthlyLoan</td></tr>
+<tr><td rowspan="1" colspan="3">LSIMMonthlyLoanTC04</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -512,18 +512,33 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>//input[@name='frequency' and @value='2']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>javascript{switch(new Date().getDate()){case 1: case 2: case 3: case 4: case 5: case 6: case 7: strDay = 'First'; break;case 8: case 9: case 10: case 11: case 12: case 13: case 14: strDay = 'Second'; break;case 15: case 16: case 17: case 18: case 19: case 20: case 21: strDay = 'Third'; break;case 22: case 23: case 24: case 25: case 26: case 27: case 28: strDay = 'Fourth'; break;case 29: case 30: case 31: strDay = 'Last';}}</td>
+	<td>monthrank</td>
+</tr>
+<tr>
 	<td>store</td>
 	<td>javascript{switch(new Date().getDay()){case 0: strDay = 'Sunday'; break;case 1: strDay = 'Monday'; break;case 2: strDay = 'Tuesday'; break;case 3: strDay = 'Wednesday'; break;case 4: strDay = 'Thursday'; break;case 5: strDay = 'Friday'; break;case 6: strDay = 'Saturday'; break;}}</td>
 	<td>daytoday</td>
 </tr>
 <tr>
 	<td>select</td>
-	<td>weekDay</td>
+	<td>monthRank</td>
+	<td>label=${monthrank}</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>monthWeek</td>
 	<td>label=${daytoday}</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>recurWeek</td>
+	<td>recurMonth</td>
 	<td>1</td>
 </tr>
 <tr>
