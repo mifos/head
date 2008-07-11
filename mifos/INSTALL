@@ -25,8 +25,12 @@ production environment.
         log-slow-queries=mysql_slow_query.log
         long_query_time=1
 
-        For production environments, we also recommend customizing the 
-        database connection pool settings as follows:
+        See section 5.1 below (configuring mifos) for more information on
+        customizing the Mifos Database Connection.
+
+        For production environments, we recommend customizing the 
+        database connection pool settings found in hibernate.properties
+        as follows:
 
         hibernate.c3p0.acquire_increment=5
         hibernate.c3p0.idle_test_period=30 
@@ -35,15 +39,13 @@ production environment.
         hibernate.c3p0.min_size=20 
         hibernate.c3p0.timeout=30
 
-        See section 5.1 below (configuring mifos) for more information on
-        customizing the Mifos Database Connection.
-
     2.2. Initializing the Mifos database
-        To initialize the Mifos database run the 4 commands below.
-        (These commands assume a database username of "root" and
+        To initialize the Mifos database run the 4 commands below
+        from the directory which contains this INSTALL file.
+        These commands assume a database username of "root" and
         password of "mysql", adjust them as necessary if your
         database login is different. See the link in section 5.1 
-        (below) for more information.).
+        (below) for more information. 
 
         mysql -u root -pmysql < sql/create_mifos_db.sql
         mysql -D mifos -u root -pmysql < sql/latest-schema.sql
@@ -59,7 +61,7 @@ production environment.
 
         JAVA_HOME     ... directory where Java is installed
         CATALINA_HOME ... directory where Tomcat is installed
-        CATALINA_OPTS ... "-Xms1024M -Xmx1024M"
+        CATALINA_OPTS ... "-Xms1024M -Xmx1024M -XX:MaxPermSize=256m"
 
     3.2. Installing the WAR (deployment)
         Copy into CATALINA_HOME/webapps. If the following temporary directories
