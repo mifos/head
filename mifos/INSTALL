@@ -8,7 +8,7 @@ production environment.
   the software packages below.  Please refer to their respective web
   sites for details on installing each package.  
 
-    1.1. Java - JDK/JRE 1.5.0_12 (JDK/JRE 1.6 is not supported)
+    1.1. Sun Microsystems Java - JDK/JRE 1.5.0_12 (JDK/JRE 1.6 is not supported)
     1.2. MySQL - Community Edition 5.0.51b
     1.3. Apache Tomcat - 6.0.16
     
@@ -68,11 +68,12 @@ production environment.
         CATALINA_OPTS ... -Xms1024M -Xmx1024M -XX:MaxPermSize=256m
 
     3.2. Installing the WAR (deployment)
-        Copy into CATALINA_HOME/webapps. If the following temporary directories
-        exist, they should be deleted:
+        Copy mifos.war into CATALINA_HOME/webapps. If the following temporary 
+        directories exist, they should be deleted:
 
         CATALINA_HOME/webapps/mifos
         CATALINA_HOME/work/Catalina/hostname/mifos
+            (Where 'hostname' is the name of your server.)
 
 4. Configuring and Running Mifos
     4.1. Configuring Mifos
