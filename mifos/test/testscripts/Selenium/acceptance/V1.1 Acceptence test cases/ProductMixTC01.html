@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>ProductMixTC01</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ProductMixTC01</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/mifos/loginAction.do?method=logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>successfully logged out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>link=Admin</td>
+	<td>Admin</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new Loan product</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[3]/tbody/tr/td/table[1]/tbody/tr[1]/td</td>
+	<td>Add a new Loan product. - Enter Loan product information.</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{'MyLoanProduct' + (new Date()).getTime()}</td>
+	<td>randomLoanProductName</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingName</td>
+	<td>${randomLoanProductName}</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{storedVars['randomLoanProductName'].substring(22,26)}</td>
+	<td>randomShortLoanProductName</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingShortName</td>
+	<td>${randomShortLoanProductName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>auto-generated randomly-named loan product</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdCategory</td>
+	<td>label=Other</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdApplicableMaster</td>
+	<td>label=Clients</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minLoanAmount</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxLoanAmount</td>
+	<td>100000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defaultLoanAmount</td>
+	<td>70000</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestTypes</td>
+	<td>label=Flat</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxInterestRate</td>
+	<td>30</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minInterestRate</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defInterestRate</td>
+	<td>20</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>freqOfInstallments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxNoInstallments</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defNoInstallments</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestGLCode</td>
+	<td>label=31101</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>principalGLCode</td>
+	<td>label=1503</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[3]/tbody/tr/td/table[1]/tbody/tr[1]/td</td>
+	<td>Add a new Loan product. - Review &amp; submit</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product instance name: ${randomLoanProductName}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Short name: ${randomShortLoanProductName}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=View Loan product details now.</td>
+	<td>View Loan product details now.</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Loan product details now.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>${randomLoanProductName}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Welcome to mifos administrative area</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define new Loan product</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[3]/tbody/tr/td/table[1]/tbody/tr[1]/td</td>
+	<td>Add a new Loan product. - Enter Loan product information.</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{'MyLoanProduct2' + (new Date()).getTime()}</td>
+	<td>randomLoanProductNam1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingName</td>
+	<td>${randomLoanProductNam1}</td>
+</tr>
+<tr>
+	<td>storeExpression</td>
+	<td>javascript{storedVars['randomLoanProductNam1'].substring(22,26)}</td>
+	<td>randomShortLoanProductName</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>prdOfferingShortName</td>
+	<td>${randomShortLoanProductName}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>description</td>
+	<td>auto-generated randomly-named loan product</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdCategory</td>
+	<td>label=Other</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdApplicableMaster</td>
+	<td>label=Clients</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minLoanAmount</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxLoanAmount</td>
+	<td>100000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defaultLoanAmount</td>
+	<td>70000</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestTypes</td>
+	<td>label=Flat</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxInterestRate</td>
+	<td>30</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>minInterestRate</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defInterestRate</td>
+	<td>20</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>freqOfInstallments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>maxNoInstallments</td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>defNoInstallments</td>
+	<td>11</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>interestGLCode</td>
+	<td>label=31101</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>principalGLCode</td>
+	<td>label=1503</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[3]/tbody/tr/td/table[1]/tbody/tr[1]/td</td>
+	<td>Add a new Loan product. - Review &amp; submit</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Product instance name: ${randomLoanProductNam1}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Short name: ${randomShortLoanProductName}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=View Loan product details now.</td>
+	<td>View Loan product details now.</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Loan product details now.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>${randomLoanProductNam1}</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Define products mix</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Add a new product mix - Enter product mix information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Product mix details</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>*Product type</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>*Product instance name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>productType</td>
+	<td>label=Loan</td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>productInstance</td>
+	<td>label=${randomLoanProductName}</td>
+</tr>
+<tr>
+	<td>removeSelection</td>
+	<td>productMix</td>
+	<td>label=${randomLoanProductNam1}</td>
+</tr>
+<tr>
+	<td>addSelection</td>
+	<td>productMix</td>
+	<td>label=${randomLoanProductNam1}</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='&lt;&lt; Remove']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>submitBut</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>View product mix details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//a[contains(text(),'View<br />									product<br />									mix<br />									details now')]</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
