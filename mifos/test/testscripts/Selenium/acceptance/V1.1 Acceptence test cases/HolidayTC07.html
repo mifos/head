@@ -77,18 +77,18 @@
 	<td>My own</td>
 </tr>
 <tr>
-	<td>storeExpression</td>
-	<td>javascript{&quot;0&quot;+(new Date().getDate())}</td>
+	<td>store</td>
+	<td>javascript{var dates = new Date();var day = dates.getDate();if (day &lt; 10){day = '0' + day;} day}</td>
 	<td>date</td>
 </tr>
 <tr>
 	<td>storeExpression</td>
-	<td>javascript{'0'+(2+(new Date().getMonth()))}</td>
+	<td>javascript{'0'+(1+(new Date().getMonth()))}</td>
 	<td>month</td>
 </tr>
 <tr>
 	<td>storeExpression</td>
-	<td>javascript{(new Date().getFullYear())}</td>
+	<td>javascript{1+(new Date().getFullYear())}</td>
 	<td>year</td>
 </tr>
 <tr>
