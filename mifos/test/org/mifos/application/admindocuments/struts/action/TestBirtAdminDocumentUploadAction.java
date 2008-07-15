@@ -76,7 +76,7 @@ public class TestBirtAdminDocumentUploadAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 
 		BirtAdminDocumentUploadActionForm form = new BirtAdminDocumentUploadActionForm();
-		form.setAdminiDocumentTitle("testShouldSubmitSucessWhenUploadNewAdminDocument");
+		form.setAdminiDocumentTitle("testShouldSubmitSucessWhenUploadNewAdminDocumentWithAVeryLongNameThatExceedsOneHundredCharactersInLength");
 		form.setIsActive("1");
 		form.setFile(new MockFormFile("testFileName1.rptdesign"));
 		setActionForm(form);
