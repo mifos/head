@@ -622,21 +622,23 @@ public class MeetingBO extends BusinessObject {
 		Date scheduleDate=null;
 		gc.setTime(startDate);
 
-		if (isMonthlyOnDate()){
-			int disbursalDateValue = gc.get(GregorianCalendar.DATE);
-			
-			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
-			int fisrtRepaymentDateValue= gc.get(GregorianCalendar.DATE);
+		if (isMonthlyOnDate()){			
+			int dt = gc.get(GregorianCalendar.DATE);
 			//if date passed in, is after the date on which schedule has to lie, move to next month 
-			if(disbursalDateValue>=fisrtRepaymentDateValue)
+			if(dt> getMeetingDetails().getDayNumber())
 				gc.add(GregorianCalendar.MONTH,1);
-			
-			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
-			
+			//set the date on which schedule has to lie
+			int M1 = gc.get(GregorianCalendar.MONTH);
+			gc.set(GregorianCalendar.DATE,getMeetingDetails().getDayNumber());
+			int M2 = gc.get(GregorianCalendar.MONTH);
+			int daynum=getMeetingDetails().getDayNumber();
+			while(M1!=M2){
+				gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+				gc.set(GregorianCalendar.DATE,daynum-1);
+				M2 = gc.get(GregorianCalendar.MONTH);
+				daynum--;
+			}
 			scheduleDate=gc.getTime();
-			
 		}else{
 			//if current weekday is after the weekday on which schedule has to lie, move to next week
 			if (gc.get(Calendar.DAY_OF_WEEK)>getMeetingDetails().getWeekDay().getValue())
@@ -675,10 +677,18 @@ public class MeetingBO extends BusinessObject {
 		Date scheduleDate=null;
 		gc.setTime(startDate);
 		if(isMonthlyOnDate()){
-//			move to next month and return date.
+			//move to next month and return date.
 			gc.add(GregorianCalendar.MONTH,getMeetingDetails().getRecurAfter());
-			gc.set(GregorianCalendar.DAY_OF_WEEK,getMeetingDetails().getDayNumber());
-			gc.set(GregorianCalendar.DAY_OF_WEEK_IN_MONTH,getMeetingDetails().getWeekRank().getValue());
+			int M1 = gc.get(GregorianCalendar.MONTH);
+			gc.set(GregorianCalendar.DATE,getMeetingDetails().getDayNumber());
+			int M2 = gc.get(GregorianCalendar.MONTH);
+			int daynum=getMeetingDetails().getDayNumber();
+			while(M1!=M2){
+				gc.set(GregorianCalendar.MONTH,gc.get(GregorianCalendar.MONTH)-1);
+				gc.set(GregorianCalendar.DATE,daynum-1);
+				M2 = gc.get(GregorianCalendar.MONTH);
+				daynum--;
+			}
 			scheduleDate=gc.getTime();
 		}else{
 			if(!getMeetingDetails().getWeekRank().equals(RankType.LAST))

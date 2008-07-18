@@ -165,11 +165,21 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String weekRank;
 
 	private String monthWeek;
+	
+	private String monthType;
+	
+	private String monthDay;
+	
+	private String dayRecurMonth;
 
 	private String weekDay;
 
 	private String recurMonth;
 
+	private String recurWeek;
+	
+	private String frequency;
+	
 	private String firstRepaymentDay;
 	
 	private String recurrenceId;
@@ -177,6 +187,16 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private AmountRange amountRange;
 
 	private InstallmentRange installmentRange;
+	
+	private String dayNumber;
+
+	public String getDayNumber() {
+		return dayNumber;
+	}
+
+	public void setDayNumber(String dayNumber) {
+		this.dayNumber = dayNumber;
+	}
 
 	public String getMonthRank() {
 		return monthRank;
@@ -193,6 +213,30 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public void setMonthWeek(String monthWeek) {
 		this.monthWeek = monthWeek;
 	}
+	
+	public String getMonthType() {
+		return monthType;
+	}
+	
+	public void setMonthType(String monthType) {
+		this.monthType = monthType;
+	}
+	
+	public String getMonthDay() {
+		return monthDay;
+	}
+	
+	public void setMonthDay(String monthDay) {
+		this.monthDay = monthDay;
+	}
+	
+	public String getDayRecurMonth() {
+		return dayRecurMonth;
+	}
+	
+	public void setDayRecurMonth(String dayRecurMonth) {
+		this.dayRecurMonth = dayRecurMonth;
+	}
 
 	public String getRecurMonth() {
 		return recurMonth;
@@ -200,6 +244,22 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	public void setRecurMonth(String recurMonth) {
 		this.recurMonth = recurMonth;
+	}
+	
+	public String getRecurWeek() {
+		return recurWeek;
+	}
+	
+	public void setRecurWeek(String recurWeek) {
+		this.recurWeek = recurWeek;
+	}
+	
+	public String getFrequency() {
+		return frequency;
+	}
+	
+	public void setFrequency(String frequency) {
+		this.frequency = frequency;
 	}
 
 	public String getWeekDay() {
@@ -894,27 +954,36 @@ public class LoanAccountActionForm extends BaseActionForm {
 				recurrenceId = new Short(this.getRecurrenceId());
 			}
 			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
-				if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
-					if (StringUtils.isNullOrEmpty(this.getMonthRank())
-							|| StringUtils.isNullOrEmpty(this.getMonthWeek())
-							|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
+				if(StringUtils.isNullOrEmpty(this.getFrequency())) {
+					addError(errors, "",
+							LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
+							"");					
+				} else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+					if(StringUtils.isNullOrEmpty(this.getRecurWeek()) ||
+							StringUtils.isNullOrEmpty(this.getWeekDay())){
 						addError(errors, "",
 								LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
 								"");
-
 					}
-				}
-				else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-					if (StringUtils.isNullOrEmpty(this.getMonthWeek())
-							|| StringUtils.isNullOrEmpty(this.getRecurMonth())) {
-						addError(errors, "",
-								LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
-								"");
-
+				} else {
+					if(monthType.equals("1")) {
+						if(StringUtils.isNullOrEmpty(this.getMonthDay()) ||
+								StringUtils.isNullOrEmpty(this.getDayRecurMonth())) {
+							addError(errors, "",
+									LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
+									"");
+						}
+					} else {
+						if(StringUtils.isNullOrEmpty(this.getMonthRank()) ||
+								StringUtils.isNullOrEmpty(this.getMonthWeek()) ||
+								StringUtils.isNullOrEmpty(this.getRecurMonth())) {
+							addError(errors, "",
+									LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
+									"");
+						}
 					}
 				}
 			}
-
 		}
 		catch (PersistenceException e) {
 			throw new IllegalStateException(e);

@@ -51,6 +51,24 @@ explanation of the license and how it is applied.
             </SCRIPT>
 		</c:if>
 
+		<script>
+		function showMeetingFrequency(){
+			if (document.loanAccountActionForm.frequency[1].checked == true) {
+				document.getElementById("weekDIV").style.display = "none";
+				document.getElementById("monthDIV").style.display = "block";
+				document.getElementsByName("recurrenceId")[0].value = "2";
+				if(document.loanAccountActionForm.monthType[0].checked == false && document.loanAccountActionForm.monthType[1].checked == false)
+					document.getElementsByName("monthType")[0].checked=true;
+			} else {
+				document.loanAccountActionForm.frequency[0].checked=true;
+				console.log(document.getElementsByName("recurrenceId"));
+				document.getElementById("weekDIV").style.display = "block";
+				document.getElementById("monthDIV").style.display = "none";
+				document.getElementsByName("recurrenceId")[0].value = "1";
+			}
+		}
+
+		</script>
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.LoanUIResources"/>
 
@@ -411,33 +429,87 @@ explanation of the license and how it is applied.
 								<!--  For Repayment day  -->
 								<c:if
 									test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
-									<tr class="fontnormal">
+								<tr class="fontnormal">
+									<td align="right" valign="top"><mifos:mifoslabel
+										name="meeting.labelFrequencyOfMeeting" mandatory="yes"
+										bundle="MeetingResources">
+									</mifos:mifoslabel></td>
+									<td align="left" valign="top"
+										style="border-top: 1px solid #CECECE; border-left: 1px solid #CECECE; border-right: 1px solid #CECECE;">
+									<table width="98%" border="0" cellspacing="0" cellpadding="2">
+										<tr valign="top" class="fontnormal">
 
-										<td align="right" class="fontnormal"><span
-											class="mandatorytext"></span> <mifos:mifoslabel
-											name="loan.repayment_date" mandatory="yes" />:</td>
-										<td valign="top"><c:if
-											test="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == '2'}">
-											<mifos:mifoslabel name="meeting.labelThe"
-												bundle="MeetingResources" />
-											<mifos:select property="monthRank">
-												<c:forEach var="weekRank"
-													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}">
-													<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
-												</c:forEach>
+											<td width="24%"><html-el:radio property="frequency" value="1"
+												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /></td>
+											<td width="55%"><html-el:radio property="frequency" value="2"
+												onclick="showMeetingFrequency();" /> <mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+									<tr class="fontnormal">
+									<td width="22%" align="right" valign="top">&nbsp;</td>
+									<td width="59%" align="left" valign="top"
+										style="border: 1px solid #CECECE;">
+									
+									<div id="weekDIV" style="height:40px; width:380px; "><mifos:mifoslabel
+										name="meeting.labelRecurWeeks" bundle="MeetingResources" />
+
+
+
+									<table border="0" cellspacing="0" cellpadding="2">
+										<tr class="fontnormal">
+											<td colspan="4"><mifos:mifoslabel
+												name="meeting.labelRecurEvery" bundle="MeetingResources" />
+
+
+											<mifos:mifosnumbertext property="recurWeek" size="3"  maxlength="3"/> <mifos:mifoslabel
+												name="meeting.labelWeeks" bundle="MeetingResources" /> 
+												<mifos:select property="weekDay">
+													<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
+													</c:forEach>
+												</mifos:select></td>
+										</tr>
+									</table>
+									</div>
+									<div id="monthDIV" style="height:65px; width:450px; "><mifos:mifoslabel
+										name="meeting.labelRecurMonths" bundle="MeetingResources" />
+									<br>
+									<table border="0" cellspacing="0" cellpadding="2">
+										<tr class="fontnormal">
+											<td><html-el:radio property="monthType" value="1" /></td>
+											<td><mifos:mifoslabel name="meeting.labelDay"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext
+												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
+												 <mifos:mifoslabel name="meeting.labelOfEvery"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext
+												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+										</tr>
+										<tr class="fontnormal">
+											<td><html-el:radio property="monthType" value="2" /></td>
+											<td><mifos:mifoslabel name="meeting.labelThe"
+												bundle="MeetingResources" /> 
+												<mifos:select	property="monthRank" onfocus="checkMonthType2()">
+													<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
+															<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+													</c:forEach>
 											</mifos:select>
-										</c:if> <mifos:select property="monthWeek">
-											<c:forEach var="weekDay"
-												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}">
-												<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
-											</c:forEach>
-										</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
-											bundle="MeetingResources" /> <mifos:mifosnumbertext
-											property="recurMonth" size="3" maxlength="3" disabled="true" />
-										<c:out
-											value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceName}" />
-										</td>
-									</tr>
+											<mifos:select property="monthWeek" onfocus="checkMonthType2()">
+												<c:forEach var="weekDay" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}" >
+															<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
+												</c:forEach>
+											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
+												bundle="MeetingResources" /> <mifos:mifosnumbertext
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
+												name="meeting.labelMonths" bundle="MeetingResources" /></td>
+										</tr>
+									</table>
+									</div>
+									</td></tr>
 
 									<!-- TODO: Change the property of checkbox -->
 									<!-- Disable interest deducted at disbursement
@@ -708,3 +780,6 @@ explanation of the license and how it is applied.
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
+<script>
+showMeetingFrequency();
+</script>

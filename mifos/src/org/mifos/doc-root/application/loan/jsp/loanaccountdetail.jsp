@@ -102,7 +102,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td class="fontnormalbold"><span class="fontnormal">
 							<mifoscustom:MifosImage id="${BusinessKey.accountState.id}"
 								moduleName="accounts" /> <c:out
-								value="${BusinessKey.accountState.name}" />&nbsp; <c:forEach
+								value="${BusinessKey.accountState.name}" />&nbsp; 
+								<c:forEach
 								var="flagSet" items="${BusinessKey.accountFlags}">
 								<span class="fontnormal"><c:out
 									value="${flagSet.flag.name}" /></span>

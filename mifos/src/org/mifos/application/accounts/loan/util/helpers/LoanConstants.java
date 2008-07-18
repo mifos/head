@@ -209,5 +209,6 @@ public interface LoanConstants {
 	
 	//Configurable mandatory fields
 	public final String PURPOSE_OF_LOAN = "PurposeOfLoan";	
+	public final String DISPLAY_DAY_NUMBER="displayDayNumber";
 
 }
