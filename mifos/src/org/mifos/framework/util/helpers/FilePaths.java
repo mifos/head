@@ -134,4 +134,6 @@ public interface FilePaths {
 	public static final String SVN_REVISION_PROPERTYFILE = "org/mifos/config/resources/versionInfo.properties";
 	public final String BULKENTRY_RESOURCE = LOCALIZED_RESOURCE_PATH + "BulkEntryUIResources";
 	public final String CHECKLIST_RESOURCE = LOCALIZED_RESOURCE_PATH + "CheckListUIResources";
+	public final String VIEW_CONFIG_RESOURCE = LOCALIZED_RESOURCE_PATH + "ViewConfigurationSettingsUIResources";
+	public final String CONFIG_KEY_VALUE_RESOURCE = LOCALIZED_RESOURCE_PATH + "ConfigKeyValueUIResources";
 }

@@ -39,6 +39,7 @@ package org.mifos.framework.components.configuration.persistence;
 
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,5 +189,9 @@ public class ConfigurationPersistence extends Persistence {
 	public static boolean isRepaymentIndepOfMeetingEnabled() throws PersistenceException {
 		Integer repIndepOfMeetingEnabled = new ConfigurationPersistence().getConfigurationKeyValueInteger(REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED).getValue();
 	    return !(repIndepOfMeetingEnabled == null || repIndepOfMeetingEnabled == 0);
+	}
+
+	public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
+		return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
 	}
 }

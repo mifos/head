@@ -75,6 +75,7 @@ import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceTest;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
@@ -148,7 +149,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CollectionSheetReportTestSuite.suite());		
 		suite.addTest(BranchReportTestSuite.suite());		
-		suite.addTest(BranchCashConfirmationReportTestSuite.suite());		
+		suite.addTest(BranchCashConfirmationReportTestSuite.suite());
 
 		return suite;
 	}

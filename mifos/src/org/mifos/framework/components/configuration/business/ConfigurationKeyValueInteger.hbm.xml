@@ -16,5 +16,8 @@
 	<query name="getConfigurationKeyValueByKey">
 		<![CDATA[from org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger as config where config.key = :KEY]]>
 	</query>
+	<query name="getAllConfigurationValues">
+		<![CDATA[from org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger as config]]>
+	</query>
 	
 </hibernate-mapping>

@@ -10,6 +10,7 @@ import org.mifos.application.configuration.struts.action.LabelConfigurationActio
 import org.mifos.application.configuration.struts.action.LookupOptionsActionTest;
 import org.mifos.application.configuration.struts.tag.CustomFieldCategoryListTagTest;
 import org.mifos.application.configuration.struts.tag.CustomFieldsListTagTest;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistenceTest;
 
 public class ApplicationConfigurationTestSuite extends TestSuite {
 	
@@ -31,7 +32,7 @@ public class ApplicationConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(CustomFieldsActionTest.class);
 		testSuite.addTestSuite(CustomFieldCategoryListTagTest.class);
 		testSuite.addTestSuite(CustomFieldsListTagTest.class);
-		
+		testSuite.addTestSuite(ConfigurationPersistenceTest.class);
 		return testSuite;
 		
 	}

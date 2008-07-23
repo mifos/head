@@ -533,6 +533,15 @@
             <forward name="update_success" path="/AdminAction.do?method=load" redirect="true"/>
             <forward name="get_success" path="/pages/application/ppi/jsp/get.jsp"/>
         </action>
+        
+        <action path="/viewConfigurationSettingsAction"
+                 type="org.mifos.application.admin.struts.action.ViewConfigurationSettingsAction"
+                 parameter="method"
+                 scope="session"
+                 validate="false"
+                 name="genericActionForm">
+             <forward name="load_success" path="/pages/application/admin/jsp/viewconfigurationsettings.jsp"/>            
+         </action>
 
         <action path="/moratoriumAction"
                 type="org.mifos.application.moratorium.struts.action.MoratoriumAction"
@@ -639,5 +648,9 @@
  	 <!-- View Organization Settings Resources -->
 	 <message-resources key="viewOrganizationSettingsUIResources"
 		parameter="org.mifos.config.localizedResources.ViewOrganizationSettingsUIResources"
+		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/> 
+		<!-- View Configuration Settings Resources -->
+	 <message-resources key="viewConfigurationSettingsUIResources"
+		parameter="org.mifos.config.localizedResources.ViewConfigurationSettingsUIResources"
 		factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>                       
 </struts-config>

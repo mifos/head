@@ -472,6 +472,7 @@ public interface NamedQueryConstants {
 	// configuration
 	public String GET_MFI_LOCALE = "getMFILocale";
 	public final String GET_CONFIGURATION_KEYVALUE_BY_KEY = "getConfigurationKeyValueByKey";
+	public final String GET_ALL_CONFIGURATION_VALUES = "getAllConfigurationValues";
 
 
 	//Fething fees with formula
