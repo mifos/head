@@ -408,7 +408,7 @@ public class GroupCustAction extends CustAction {
 				ClientRules.getCenterHierarchyExists(), request);
 		SessionUtils.setCollectionAttribute(ClientConstants.LOANCYCLECOUNTER,
 				getCustomerBusinessService().fetchLoanCycleCounter(
-						groupBO.getCustomerId()), request);
+						groupBO), request);
 		List<LoanBO> loanAccounts = groupBO.getOpenLoanAccounts();
 		List<SavingsBO> savingsAccounts = groupBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);

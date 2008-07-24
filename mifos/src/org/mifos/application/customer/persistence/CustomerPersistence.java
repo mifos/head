@@ -46,14 +46,18 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerCustomFieldEntity;
+import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerStatusFlagEntity;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -757,53 +761,34 @@ public class CustomerPersistence extends Persistence {
 		return getCountFromQueryResult(queryResult);
 	}
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
-			throws PersistenceException {
-		HashMap<String, Integer> queryParameters = new HashMap<String, Integer>();
-		queryParameters.put("customerId", customerId);
-		List queryResult = executeNamedQuery(
-				NamedQueryConstants.FETCH_LOANCOUNTERS, queryParameters);
-		if (null != queryResult && queryResult.size() > 0) {
-			MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
-					"Fetch loan cycle counter query returned : "
-							+ queryResult.size() + " rows");
-			List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
-			for (Object obj : queryResult) {
-				String prdOfferingName = (String) obj;
-				MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
-						"Prd offering name of the loan account is "
-								+ prdOfferingName);
-				int counter = 1;
-				LoanCycleCounter loanCycleCounter = new LoanCycleCounter(
-						prdOfferingName, counter);
-				if (!loanCycleCounters.contains(loanCycleCounter)) {
-					MifosLogManager
-							.getLogger(LoggerConstants.CLIENTLOGGER)
-							.debug(
-									"Prd offering name "
-											+ prdOfferingName
-											+ " does not already exist in the list hence adding it to the list");
-					loanCycleCounters.add(loanCycleCounter);
-				}
-				else {
-					MifosLogManager
-							.getLogger(LoggerConstants.CLIENTLOGGER)
-							.debug(
-									"Prd offering name "
-											+ prdOfferingName
-											+ " already exists in the list hence incrementing the counter.");
-					for (LoanCycleCounter loanCycle : loanCycleCounters) {
-						if (loanCycle.getOfferingName().equals(prdOfferingName)) {
-							loanCycle.incrementCounter();
-						}
-					}
-				}
-			}
-			return loanCycleCounters;
+	public List<LoanCycleCounter> fetchLoanCycleCounter(
+			CustomerBO customerBO) throws PersistenceException {
+		if (customerBO.isGroup()) {
+			return runLoanCycleQuery(
+					NamedQueryConstants.FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_GROUP,
+					customerBO);
+		}else if (customerBO.isClient()) {
+			return runLoanCycleQuery(
+					NamedQueryConstants.FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_CLIENT,
+					customerBO);
 		}
-		MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER).debug(
-				"Fetch loan cycle counter query returned : 0 rows");
-		return null;
+		return new ArrayList<LoanCycleCounter>();
+	}
+	
+	private List<LoanCycleCounter> runLoanCycleQuery(String queryName,
+			CustomerBO customerBO) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId", customerBO.getCustomerId());
+		List<LoanCycleCounter> loanCycleCounters = new ArrayList<LoanCycleCounter>();
+		List<Object[]> queryResult = executeNamedQuery(queryName,
+				queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			for (Object[] objects : queryResult) {
+				loanCycleCounters.add(new LoanCycleCounter((String) objects[0],
+						(Integer) objects[1]));
+			}
+		}
+		return loanCycleCounters;
 	}
 
 	public List<CustomerStatusEntity> retrieveAllCustomerStatusList(

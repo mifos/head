@@ -448,8 +448,8 @@ public interface NamedQueryConstants {
 	public String LISTOFSAVINGSANDLOANACCOUNTS = "accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";
 
-	public String FETCH_LOANCOUNTERS = "Customer.fetchLoanCounters";
-
+	public String FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_GROUP = "Customer.fetchProductNamesWithLoanCounterEnabledForGroup";
+	public String FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_CLIENT = "Customer.fetchProductNamesWithLoanCounterEnabledForClient";
 
 	//Customer Accounts Quries
 	public String CUSTOMER_ACTIVE_LOAN_ACCOUNTS = "Customer.getActiveLoanAccounts";

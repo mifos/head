@@ -345,9 +345,40 @@
     <query name="Customer.getActiveCustomerWithSearchId">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO as customer where customer.searchId=:SEARCH_STRING and customer.office.officeId = :OFFICE_ID and customer.customerStatus.id in (3,4,9,10,13) order by customer.customerActivationDate]]>
 	</query>
-	<query name="Customer.fetchLoanCounters">
+	<query name="Customer.fetchProductNamesWithLoanCounterEnabled">
 	        	   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.application.accounts.loan.business.LoanBO as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounter=1 and lo.accountState.id in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
-        </query> 
+    </query> 
+    
+  	<sql-query name="Customer.fetchProductNamesWithLoanCounterEnabledForGroup">
+	    <return-scalar column="productName" type="string"/>
+	    <return-scalar column="loanCounter" type="integer"/>
+	     <![CDATA[
+			select po.prd_offering_name as productName, glc.loan_cycle_counter as loanCounter 
+			from group_loan_counter glc, group_perf_history gph, loan_offering lo, prd_offering po
+			where glc.group_perf_id=gph.id 
+			and lo.prd_offering_id=glc.loan_offering_id
+			and lo.loan_counter_flag=1
+			and po.prd_offering_id=lo.prd_offering_id
+			and gph.customer_id = (:customerId)
+			order by productName
+	     ]]> 
+	</sql-query>
+	
+	  	<sql-query name="Customer.fetchProductNamesWithLoanCounterEnabledForClient">
+	    <return-scalar column="productName" type="string"/>
+	    <return-scalar column="loanCounter" type="integer"/>
+	     <![CDATA[
+			select po.prd_offering_name as productName, glc.loan_cycle_counter as loanCounter 
+			from loan_counter glc, client_perf_history cph, loan_offering lo, prd_offering po
+			where glc.client_perf_id=cph.id 
+			and lo.prd_offering_id=glc.loan_offering_id
+			and lo.loan_counter_flag=1
+			and po.prd_offering_id=lo.prd_offering_id
+			and cph.customer_id = (:customerId)
+			order by productName
+	     ]]> 
+	</sql-query>
+ 
         
     <query name="Customer.cust_count_search">
 	        	   <![CDATA[select count(*) 

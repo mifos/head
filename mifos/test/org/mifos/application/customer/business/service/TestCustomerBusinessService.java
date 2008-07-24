@@ -197,21 +197,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		}
 	}
 
-	public void testFetchLoanCycleCounter() throws Exception {
-		account = getLoanAccount();
-		loanOffering.setLoanCounter(true);
-		TestObjectFactory.updateObject(loanOffering);
-		TestObjectFactory.flushandCloseSession();
-		List<LoanCycleCounter> loanCycleCounters = ((CustomerBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Customer))
-				.fetchLoanCycleCounter(group.getCustomerId());
-		for (LoanCycleCounter loanCycleCounter : loanCycleCounters) {
-			assertEquals(loanCycleCounter.getOfferingName(), "Loan");
-			assertEquals(loanCycleCounter.getCounter(), 1);
-			break;
-		}
-	}
-
 	public void testFailureFetchLoanCycleCounter() throws Exception {
 		account = getLoanAccount();
 		loanOffering.setLoanCounter(true);
@@ -221,7 +206,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		try {
 			((CustomerBusinessService) ServiceFactory.getInstance()
 					.getBusinessService(BusinessServiceName.Customer))
-					.fetchLoanCycleCounter(group.getCustomerId());
+					.fetchLoanCycleCounter((CustomerBO)group);
 			assertTrue(false);
 		}
 		catch (ServiceException e) {

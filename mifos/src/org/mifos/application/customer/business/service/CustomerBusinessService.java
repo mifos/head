@@ -167,10 +167,10 @@ public class CustomerBusinessService extends BusinessService {
 		}
 	}
 
-	public List<LoanCycleCounter> fetchLoanCycleCounter(Integer customerId)
+	public List<LoanCycleCounter> fetchLoanCycleCounter(CustomerBO customer)
 			throws ServiceException {
 		try {
-			return new CustomerPersistence().fetchLoanCycleCounter(customerId);
+			return customerPersistence.fetchLoanCycleCounter(customer);
 		}
 		catch (PersistenceException e) {
 			throw new ServiceException(e);
