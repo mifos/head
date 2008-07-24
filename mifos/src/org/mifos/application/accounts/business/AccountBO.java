@@ -481,9 +481,6 @@ public class AccountBO extends BusinessObject {
 				reschedule();
 			}
 
-			if(newStatusId.equals(AccountState.LOAN_CLOSED_RESCHEDULED.getValue())) {
-				updateClientPerformanceOnRescheduleLoan();
-			}
 			MifosLogManager
 					.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 					.debug(

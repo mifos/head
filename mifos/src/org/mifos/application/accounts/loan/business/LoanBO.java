@@ -2622,8 +2622,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnWriteOff() {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
@@ -2669,25 +2668,6 @@ public class LoanBO extends AccountBO {
 					.setLastGroupLoanAmount(lastLoanAmount);
 			groupPerformanceHistoryEntity.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
 		}
-	}
-
-	@Override
-	protected void updateClientPerformanceOnRescheduleLoan() {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory
-					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
-		}
-		else if (getCustomer().isGroup()
-				&& getCustomer().getPerformanceHistory() != null) {
-			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			groupPerformanceHistoryEntity
-					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
-		}
-
 	}
 
 	private void regeneratePaymentSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
