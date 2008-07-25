@@ -221,7 +221,9 @@ public interface NamedQueryConstants {
 	public String GETCUSTOMERMEETING = "customer.getCustomerMeeting";
 	public String RECENTACCACTIVITY = "accountTrxn.recentAccountActivity";
 	public String ACCOUNTFLAGFORGIVENACCOUNT = "accounts.getAccountFlag";
-
+	
+	// for Loan accounts
+	public String GET_COSIGNING_CLIENTS_FOR_GLIM = "loan.getCosigningLoansOfClientsForGlim";
 
 	//for account status
 	public String ACCOUNT_FLAGS = "masterdata.accountstatusflag";
@@ -448,8 +450,8 @@ public interface NamedQueryConstants {
 	public String LISTOFSAVINGSANDLOANACCOUNTS = "accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";
 
-	public String FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_GROUP = "Customer.fetchProductNamesWithLoanCounterEnabledForGroup";
-	public String FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_CLIENT = "Customer.fetchProductNamesWithLoanCounterEnabledForClient";
+	public String FETCH_PRODUCT_NAMES_FOR_GROUP = "Customer.fetchProductNamesForGroup";
+	public String FETCH_PRODUCT_NAMES_FOR_CLIENT = "Customer.fetchProductNamesForClient";
 
 	//Customer Accounts Quries
 	public String CUSTOMER_ACTIVE_LOAN_ACCOUNTS = "Customer.getActiveLoanAccounts";
@@ -786,4 +788,5 @@ public interface NamedQueryConstants {
 	public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE = "branchCashConfirmationReport.getReportForDate";
 	public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE_AND_BRANCH = "branchCashConfirmationReport.getReportForDateAndBranch";
 	public String COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA = "collectionSheet.extractCollectionSheetReportData";
+	
 }

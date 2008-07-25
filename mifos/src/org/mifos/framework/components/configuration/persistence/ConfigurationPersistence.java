@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
@@ -193,5 +194,9 @@ public class ConfigurationPersistence extends Persistence {
 
 	public List<ConfigurationKeyValueInteger> getAllConfigurationKeyValueIntegers() throws PersistenceException {
 		return executeNamedQuery(NamedQueryConstants.GET_ALL_CONFIGURATION_VALUES, Collections.EMPTY_MAP);
+	}
+
+	public boolean isGlimEnabled() throws PersistenceException {
+		return (getConfigurationValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED)==LoanConstants.GLIM_ENABLED_VALUE);
 	}
 }

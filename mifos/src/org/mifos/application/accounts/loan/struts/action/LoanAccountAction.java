@@ -9,7 +9,7 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOA
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNERISACLIENT;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNERISAGROUP;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
-import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANINDIVIDUALMONITORINGENABLED;
+import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANPRDOFFERINGS;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
@@ -281,7 +281,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 			SessionUtils.setAttribute(
-					LOANINDIVIDUALMONITORINGENABLED,
+					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			if (customer.isGroup()) {
 				SessionUtils.setAttribute(
@@ -475,7 +475,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 			SessionUtils.setAttribute(
-					LOANINDIVIDUALMONITORINGENABLED,
+					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			request.setAttribute(METHODCALLED, "getPrdOfferings");
 			if (customer.isGroup()) {
@@ -615,14 +615,14 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		CustomerBO customer = getCustomer(request);
 		Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
-				.getAttribute(LOANINDIVIDUALMONITORINGENABLED,
+				.getAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 						request);
 
 		if (null != loanIndividualMonitoringIsEnabled
 				&& 0 != loanIndividualMonitoringIsEnabled.intValue()
 				&& customer.isGroup()) {
 			SessionUtils.setAttribute(
-					LOANINDIVIDUALMONITORINGENABLED,
+					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			List<String> ids_clients_selected = loanActionForm.getClients();
 			List<LoanAccountDetailsViewHelper> listdetail = loanActionForm
@@ -881,7 +881,7 @@ public class LoanAccountAction extends AccountAppAction {
 			if (null != loanIndividualMonitoringIsEnabled
 					&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 				SessionUtils.setAttribute(
-						LOANINDIVIDUALMONITORINGENABLED,
+						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 						loanIndividualMonitoringIsEnabled.intValue(), request);
 				if (customer.getCustomerLevel().isGroup()) {
 					SessionUtils.setAttribute(
@@ -1062,7 +1062,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (null != loanIndividualMonitoringIsEnabled
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 			SessionUtils.setAttribute(
-					LOANINDIVIDUALMONITORINGENABLED,
+					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			if (customer.isGroup()) {
 				SessionUtils.setAttribute(
@@ -1182,7 +1182,7 @@ public class LoanAccountAction extends AccountAppAction {
 				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
 			
 			SessionUtils.setAttribute(
-					LOANINDIVIDUALMONITORINGENABLED,
+					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			if (customer.getCustomerLevel().isGroup()) {
 				SessionUtils.setAttribute(

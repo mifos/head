@@ -23,14 +23,19 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.customer.util.helpers.QueryParamConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -454,6 +459,17 @@ public class AccountPersistence extends Persistence {
 		} catch (PersistenceException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public List<CustomerBO> getCoSigningClientsForGlim(Integer accountId) throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(QueryParamConstants.ACCOUNT_ID,accountId);
+		List<LoanBO> loans = executeNamedQuery(NamedQueryConstants.GET_COSIGNING_CLIENTS_FOR_GLIM, queryParameters);
+		List<CustomerBO> clients = new ArrayList<CustomerBO>();
+		for (LoanBO loanBO : loans) {
+			clients.add(loanBO.getCustomer());
+		}
+		return clients;
 	}
 }
 

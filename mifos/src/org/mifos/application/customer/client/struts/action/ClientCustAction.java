@@ -600,7 +600,7 @@ public class ClientCustAction extends CustAction {
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         Integer loanIndividualMonitoringIsEnabled=configurationPersistence.getConfigurationKeyValueInteger("loanIndividualMonitoringIsEnabled").getValue();
         if ( null != loanIndividualMonitoringIsEnabled && loanIndividualMonitoringIsEnabled.intValue()!=0) 
-            SessionUtils.setAttribute(LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+            SessionUtils.setAttribute(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
     				loanIndividualMonitoringIsEnabled.intValue(),request);
            
 		ClientBO clientBO = (ClientBO) getCustomerBusinessService()

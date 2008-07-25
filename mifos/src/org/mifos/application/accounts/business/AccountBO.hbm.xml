@@ -510,4 +510,8 @@
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO]]>
 	</query>
 	
+	<query name="loan.getCosigningLoansOfClientsForGlim">
+		<![CDATA[select loan from org.mifos.application.accounts.loan.business.LoanBO loan where loan.parentAccount.accountId=:accountId]]>
+	</query>
+	
 </hibernate-mapping>

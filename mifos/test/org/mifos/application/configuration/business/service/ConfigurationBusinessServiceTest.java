@@ -15,12 +15,27 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 
 public class ConfigurationBusinessServiceTest extends MifosTestCase{
 	
+	
+	private ConfigurationPersistence configPersistenceMock;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		configPersistenceMock = createMock(ConfigurationPersistence.class);
+	}
+	
 	@Test
 	public void testRetreiveConfigurationFromPersistence() throws Exception {
-		ConfigurationPersistence configPersistenceMock = createMock(ConfigurationPersistence.class);
 		expect(configPersistenceMock.getAllConfigurationKeyValueIntegers()).andReturn(new ArrayList<ConfigurationKeyValueInteger>());
 		replay(configPersistenceMock);
 		new ConfigurationBusinessService(configPersistenceMock).getConfiguration();
+		verify(configPersistenceMock);
+	}
+	
+	public void testIsGlimEnabled() throws Exception {
+		expect(configPersistenceMock.isGlimEnabled()).andReturn(true);
+		replay(configPersistenceMock);
+		new ConfigurationBusinessService(configPersistenceMock).isGlimEnabled();
 		verify(configPersistenceMock);
 	}
 }

@@ -849,7 +849,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			CustomerBO customer = getCustomer(request);
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
-							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 							request);
 			if (null != loanIndividualMonitoringIsEnabled
 					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
@@ -890,7 +890,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			CustomerBO customer = getCustomer(request);
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
-							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 							request);
 
 			if (null != loanIndividualMonitoringIsEnabled
@@ -997,7 +997,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			CustomerBO customer = getCustomer(request);
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
-							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 							request);
 
 			if (null != loanIndividualMonitoringIsEnabled
@@ -1048,7 +1048,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
-							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 							request);
 			//Check the group level purpose of loan for each client in the group.
 			if(customer.getCustomerLevel().isGroup() && purposeOfLoanIsMandatory) {
@@ -1102,7 +1102,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			CustomerBO customer = getCustomer(request);
 			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
 					.getAttribute(
-							LoanConstants.LOANINDIVIDUALMONITORINGENABLED,
+							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
 							request);
 
 			if (null != loanIndividualMonitoringIsEnabled

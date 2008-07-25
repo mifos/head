@@ -19,9 +19,14 @@
  */
 package org.mifos.framework.components.configuration.persistence;
 
+import org.apache.commons.configuration.ConfigurationKey;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class ConfigurationPersistenceTest extends MifosTestCase {
 	
@@ -34,6 +39,11 @@ public class ConfigurationPersistenceTest extends MifosTestCase {
 	}
 
 	public void testCheckIndividualMonitoringKeyExists() throws Exception {
-		assertNotNull(new ConfigurationPersistence().getConfigurationKeyValueInteger(LoanConstants.LOANINDIVIDUALMONITORINGENABLED));
+		assertNotNull(new ConfigurationPersistence().getConfigurationKeyValueInteger(LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED));
 	}	
+	
+	public void testIfGroupLoanWithIndividualMonitoringIsEnabled() throws Exception {
+		assertFalse(new ConfigurationPersistence().isGlimEnabled());
+	}
+	
 }

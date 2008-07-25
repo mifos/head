@@ -164,7 +164,6 @@ public interface LoanConstants {
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.loan.specifyFeeAmount";
 	public static final String FEE ="Fee";
 	public static final String PROPOSEDDISBDATE ="proposedDisbDate";
-	public static final String LOANINDIVIDUALMONITORINGENABLED ="loanIndividualMonitoringIsEnabled";
 	public static final String RECURRENCEID="recurrenceId";
 	public static final String RECURRENCENAME="recurrenceName";
  	
@@ -194,7 +193,7 @@ public interface LoanConstants {
 	public static final String BRANCHID="branchId";
 	public static final String LOANOFFICERID="loanOfficerId";
 	public static final String LOANPRODUCTID="loanProductId";
-	static final String LOAN_INDIVIDUAL_MONITORING_IS_ENABLED="loanIndividualMonitoringIsEnabled";
+	public static final String LOAN_INDIVIDUAL_MONITORING_IS_ENABLED="loanIndividualMonitoringIsEnabled";
 	/**
 	 * Toggles whether or not the <strong><em>disbursement</em></strong> day
 	 * for a loan can be different from the meeting day.
@@ -210,5 +209,7 @@ public interface LoanConstants {
 	//Configurable mandatory fields
 	public final String PURPOSE_OF_LOAN = "PurposeOfLoan";	
 	public final String DISPLAY_DAY_NUMBER="displayDayNumber";
+	public final String LOANACCOUNT = "loanBO";
+	public static final int GLIM_ENABLED_VALUE = 1;
 
 }

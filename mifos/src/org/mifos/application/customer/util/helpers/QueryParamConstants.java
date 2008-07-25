@@ -46,5 +46,6 @@ public interface QueryParamConstants {
 	public static final String CUSTOMER_STATUS_DESCRIPTION = "customerStatusDescription";
 	public static final String CUSOTMER_CUSTOM_FIELD_VALUE = "fieldValue";
 	public static final String CUSTOMER_CUSTOM_FIELD_ID = "fieldId";
+	public static final String ACCOUNT_ID = "accountId";
 
 }

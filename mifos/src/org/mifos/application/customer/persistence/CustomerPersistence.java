@@ -765,11 +765,11 @@ public class CustomerPersistence extends Persistence {
 			CustomerBO customerBO) throws PersistenceException {
 		if (customerBO.isGroup()) {
 			return runLoanCycleQuery(
-					NamedQueryConstants.FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_GROUP,
+					NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_GROUP,
 					customerBO);
 		}else if (customerBO.isClient()) {
 			return runLoanCycleQuery(
-					NamedQueryConstants.FETCH_PRODUCT_NAMES_WITH_LOAN_COUNTER_ENABLED_FOR_CLIENT,
+					NamedQueryConstants.FETCH_PRODUCT_NAMES_FOR_CLIENT,
 					customerBO);
 		}
 		return new ArrayList<LoanCycleCounter>();
