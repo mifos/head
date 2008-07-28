@@ -415,4 +415,17 @@ public class AccountBusinessService extends BusinessService {
 		throw new ServiceException(e);
 	}
 	}
+
+	public List<CustomerBO> getCoSigningClientsForGlim(Integer accountId)
+			throws ServiceException {
+		try {
+			return new AccountPersistence()
+					.getCoSigningClientsForGlim(accountId);
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	
 }

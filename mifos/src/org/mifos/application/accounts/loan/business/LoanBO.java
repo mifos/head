@@ -74,6 +74,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeBO;
@@ -2564,8 +2565,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
@@ -2576,8 +2576,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnPayment() {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
@@ -2588,49 +2587,16 @@ public class LoanBO extends AccountBO {
 
 	private void updateCustomerHistoryOnDisbursement(Money disburseAmount)
 			throws AccountException {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() + 1);
-			clientPerfHistory.updateLoanCounter(getLoanOffering(),
-					YesNoFlag.YES);
+		try {
+			getCustomer().updatePerformanceHistoryOnDisbursement(this, disburseAmount);
 		}
-		else if (getCustomer().isGroup()
-				&& getCustomer().getPerformanceHistory() != null) {
-			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			groupPerformanceHistoryEntity
-					.setLastGroupLoanAmount(disburseAmount);
-			groupPerformanceHistoryEntity.updateLoanCounter(getLoanOffering(),
-					YesNoFlag.YES);
-			try {
-				if (new ConfigurationBusinessService().isGlimEnabled()) {
-					try {
-						List<CustomerBO> clients = new AccountPersistence()
-								.getCoSigningClientsForGlim(getAccountId());
-						for (CustomerBO clientBO : clients) {
-							((ClientPerformanceHistoryEntity) clientBO
-									.getPerformanceHistory())
-									.updateLoanCounter(getLoanOffering(),
-											YesNoFlag.YES);
-						}
-					}
-					catch (PersistenceException e) {
-						throw new AccountException(e);
-					}
-				}
-			}
-			catch (ServiceException e) {
-				throw new AccountException(e);
-			}
+		catch (CustomerException e) {
+			throw new AccountException(e);
 		}
 	}
 
 	private void updateCustomerHistoryOnRepayment(Money totalAmount) {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
@@ -2641,8 +2607,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void updateCustomerHistoryOnArrears() {
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
+		if (getCustomer().isClient()
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();

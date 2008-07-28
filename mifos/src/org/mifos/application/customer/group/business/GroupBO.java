@@ -42,6 +42,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -77,6 +79,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class denotes the Group (row in customer table) object and all
@@ -546,5 +549,16 @@ public class GroupBO extends CustomerBO {
 				                template.getLoanOfficerId(), center);
 		group.setCustomerActivationDate(customerActivationDate);
 		return group;
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) throws CustomerException {
+		try {
+			((GroupPerformanceHistoryEntity) getPerformanceHistory())
+					.updateOnDisbursement(loan, disburseAmount);
+		}
+		catch (AccountException e) {
+			throw new CustomerException(e);
+		}
 	}
 }

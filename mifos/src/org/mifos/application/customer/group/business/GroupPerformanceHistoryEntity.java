@@ -10,14 +10,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
+import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 
@@ -238,6 +246,28 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			catch (Exception e) {
 				return SHORT_ZERO;
 			}
+		}
+	}
+
+	public void updateOnDisbursement(LoanBO loan, Money disburseAmount)
+			throws AccountException {
+		setLastGroupLoanAmount(disburseAmount);
+		LoanOfferingBO loanOffering = loan.getLoanOffering();
+		updateLoanCounter(loanOffering, YesNoFlag.YES);
+		try {
+			if (new ConfigurationBusinessService().isGlimEnabled()) {
+				List<CustomerBO> clients = new AccountBusinessService()
+						.getCoSigningClientsForGlim(loan.getAccountId());
+				for (CustomerBO clientBO : clients) {
+					ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
+							.getPerformanceHistory());
+					clientPerformanceHistoryEntity
+							.updateOnDisbursement(loanOffering);
+				}
+			}
+		}
+		catch (ServiceException e) {
+			throw new AccountException(e);
 		}
 	}
 

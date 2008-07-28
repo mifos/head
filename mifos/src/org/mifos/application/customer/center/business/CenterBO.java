@@ -6,6 +6,7 @@ package org.mifos.application.customer.center.business;
 import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
@@ -32,6 +33,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 
 public class CenterBO extends CustomerBO {
 
@@ -152,5 +154,10 @@ public class CenterBO extends CustomerBO {
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting);
 		deleteMeeting(newMeeting);
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
+		//centers do no have performace history
 	}
 }

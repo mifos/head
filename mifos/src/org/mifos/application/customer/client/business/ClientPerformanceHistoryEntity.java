@@ -198,4 +198,8 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			}
 		}
 	}
+
+	public void updateOnDisbursement(LoanOfferingBO loanOffering) {
+		updateLoanCounter(loanOffering, YesNoFlag.YES);
+	}
 }

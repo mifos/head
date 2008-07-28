@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -51,6 +52,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientBO extends CustomerBO {
@@ -915,5 +917,15 @@ public class ClientBO extends CustomerBO {
 	
 	public void attachPpiSurveyInstance(SurveyInstance ppiSurvey) {
 		/* TODO not implemented yet */
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
+		ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
+		performanceHistory.setNoOfActiveLoans(performanceHistory
+				.getNoOfActiveLoans() + 1);
+		performanceHistory.updateLoanCounter(loan.getLoanOffering(),
+				YesNoFlag.YES);
+
 	}
 }
