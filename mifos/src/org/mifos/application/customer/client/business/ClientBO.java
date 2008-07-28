@@ -920,12 +920,20 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
+	public void updatePerformanceHistoryOnDisbursement(LoanBO loan,
+			Money disburseAmount) {
 		ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
+		performanceHistory.updateOnDisbursement(loan.getLoanOffering());
 		performanceHistory.setNoOfActiveLoans(performanceHistory
 				.getNoOfActiveLoans() + 1);
-		performanceHistory.updateLoanCounter(loan.getLoanOffering(),
-				YesNoFlag.YES);
-
 	}
+
+	@Override
+	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) {
+		ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
+		performanceHistory.updateOnWriteOff(loan.getLoanOffering());
+		performanceHistory.setNoOfActiveLoans(performanceHistory
+				.getNoOfActiveLoans() - 1);
+	}
+	
 }

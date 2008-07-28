@@ -160,4 +160,9 @@ public class CenterBO extends CustomerBO {
 	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
 		//centers do no have performace history
 	}
+
+	@Override
+	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) {
+		//centers do no have performace history	
+	}
 }

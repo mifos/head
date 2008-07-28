@@ -52,24 +52,47 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	 * on products 
 	 */
 	private Set<GroupLoanCounter> loanCounters;
+
+	private ConfigurationBusinessService configService;
+
+	private AccountBusinessService accountBusinessService;
 	
 	public GroupPerformanceHistoryEntity(GroupBO group) {
 		this(0, new Money(), new Money(), new Money(), new Money(), new Money());
 		this.group = group;
 	}
 
-	public GroupPerformanceHistoryEntity(Integer clientCount,
+	private GroupPerformanceHistoryEntity(Integer clientCount,
 			Money lastGroupLoanAmount, Money avgLoanForMember,
 			Money totalOutstandingPortfolio, Money totalSavings,
-			Money portfolioAtRisk) {
+			Money portfolioAtRisk, ConfigurationBusinessService configService,
+			AccountBusinessService accountBusinessService) {
 		this.portfolioAtRisk = portfolioAtRisk;
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
 		this.totalSavings = totalSavings;
 		this.avgLoanForMember = avgLoanForMember;
 		this.lastGroupLoanAmount = lastGroupLoanAmount;
 		this.clientCount = clientCount;
+		this.configService = configService;
+		this.accountBusinessService = accountBusinessService;
 		this.loanCounters = new HashSet<GroupLoanCounter>();
 		this.id = null;
+	}
+
+	GroupPerformanceHistoryEntity(ConfigurationBusinessService configService,
+			AccountBusinessService accountBusinessService) {
+		this(0, new Money(), new Money(), new Money(), new Money(),
+				new Money(), configService, accountBusinessService);
+	}
+
+	public GroupPerformanceHistoryEntity(Integer clientCount,
+			Money lastGroupLoanAmount, Money avgLoanForMember,
+			Money totalOutstandingPortfolio, Money totalSavings,
+			Money portfolioAtRisk) {
+		this(clientCount, lastGroupLoanAmount, avgLoanForMember,
+				totalOutstandingPortfolio, totalSavings, portfolioAtRisk,
+				new ConfigurationBusinessService(),
+				new AccountBusinessService());
 	}
 
 	protected GroupPerformanceHistoryEntity() {
@@ -255,8 +278,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		LoanOfferingBO loanOffering = loan.getLoanOffering();
 		updateLoanCounter(loanOffering, YesNoFlag.YES);
 		try {
-			if (new ConfigurationBusinessService().isGlimEnabled()) {
-				List<CustomerBO> clients = new AccountBusinessService()
+			if (configService.isGlimEnabled()) {
+				List<CustomerBO> clients = accountBusinessService
 						.getCoSigningClientsForGlim(loan.getAccountId());
 				for (CustomerBO clientBO : clients) {
 					ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
@@ -273,5 +296,24 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	public Set<GroupLoanCounter> getLoanCounters() {
 		return loanCounters;
+	}
+
+	public void updateOnWriteOff(LoanBO loan) throws AccountException {
+		updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
+		try {
+			if (configService.isGlimEnabled()) {
+				List<CustomerBO> clients = accountBusinessService
+						.getCoSigningClientsForGlim(loan.getAccountId());
+				for (CustomerBO clientBO : clients) {
+					ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
+							.getPerformanceHistory());
+					clientPerformanceHistoryEntity
+							.updateOnWriteOff(loan.getLoanOffering());
+				}
+			}
+		}
+		catch (ServiceException e) {
+			throw new AccountException(e);
+		}
 	}
 }

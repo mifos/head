@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -43,11 +42,8 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.AccountTypeEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -69,10 +65,7 @@ import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerPerformanceHistory;
-import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
@@ -115,7 +108,6 @@ import org.mifos.framework.components.configuration.persistence.ConfigurationPer
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -2616,22 +2608,13 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void updateCustomerHistoryOnWriteOff() {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory
-					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() - 1);
+	private void updateCustomerHistoryOnWriteOff() throws AccountException {
+		try {
+			getCustomer()
+					.updatePerformanceHistoryOnWriteOff(this);
 		}
-		else if (getCustomer().isGroup()
-				&& getCustomer().getPerformanceHistory() != null) {
-			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			groupPerformanceHistoryEntity
-					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
+		catch (CustomerException e) {
+			throw new AccountException(e);
 		}
 	}
 
