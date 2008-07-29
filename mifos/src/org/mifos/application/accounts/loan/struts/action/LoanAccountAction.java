@@ -80,6 +80,7 @@ import org.mifos.application.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.application.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.application.admindocuments.util.helpers.AdminDocumentsContants;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
@@ -467,16 +468,8 @@ public class LoanAccountAction extends AccountAppAction {
 			request.setAttribute(PERSPECTIVE, request
 					.getParameter(PERSPECTIVE));
 		}
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED)
-				.getValue();
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
-			SessionUtils.setAttribute(
-					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-					loanIndividualMonitoringIsEnabled.intValue(), request);
+		if (isGlimEnabled()) {
+			setGlimEnabledAsSessionAttribute(request);
 			request.setAttribute(METHODCALLED, "getPrdOfferings");
 			if (customer.isGroup()) {
 				SessionUtils.setAttribute(
@@ -494,7 +487,7 @@ public class LoanAccountAction extends AccountAppAction {
 								.shortValue());
 				if (clients == null || clients.size() == 0) {
 					throw new ApplicationException(
-							GroupConstants.IMPOSSIBLETOCREATEGROUPLOAN);
+							GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
 				}
 
 				setClientDetails(loanActionForm, clients);
@@ -522,6 +515,16 @@ public class LoanAccountAction extends AccountAppAction {
 
 		return mapping.findForward(ActionForwards.getPrdOfferigs_success
 				.toString());
+	}
+
+	private boolean isGlimEnabled() throws ServiceException {
+		return new ConfigurationBusinessService().isGlimEnabled();
+	}
+
+	private void setGlimEnabledAsSessionAttribute(HttpServletRequest request) throws PageExpiredException, ServiceException {
+		SessionUtils.setAttribute(
+				LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
+				isGlimEnabled()?LoanConstants.GLIM_ENABLED_VALUE:LoanConstants.GLIM_DISABLED_VALUE, request);
 	}
 
 	private void setClientDetails(LoanAccountActionForm loanActionForm,
@@ -1172,33 +1175,20 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
+		boolean isGlimEnabled = isGlimEnabled();
 		CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
-		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
 		
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
-			
-			SessionUtils.setAttribute(
-					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-					loanIndividualMonitoringIsEnabled.intValue(), request);
+		if (isGlimEnabled) {
+			setGlimEnabledAsSessionAttribute(request);
 			if (customer.getCustomerLevel().isGroup()) {
 				SessionUtils.setAttribute(
 						LOANACCOUNTOWNERISAGROUP, "yes", request);
-				
-
 			}
 		}
 
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0
-				&& customer.getCustomerLevel().isGroup()) {
-
+		if (isGlimEnabled && customer.isGroup()) {
 			List<String> ids_clients_selected = loanAccountForm
 					.getClients();
-
 			List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
 			List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm
 					.getClientDetails();
@@ -1224,7 +1214,6 @@ public class LoanAccountAction extends AccountAppAction {
 					
 					List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
 							"BusinessActivities", request);
-						
 					
 					for(ValueListElement busact:businessActEntity){
 						

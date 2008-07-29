@@ -60,8 +60,8 @@ public interface LoanExceptionConstants {
 	public final String INVALIDMINMAX = "errors.defMinMax";
 	public final String SELECT_ATLEAST_ONE_RECORD = "errors.alleastonerecord";
 	public final String LOANCOULDNOTCOEXIST = "errors.loancouldnotcoexist";
-	public final String LOANANDPURPOSEENTREDWITHOUTSELECTINGINDIVIDUAL = "errors.loanandpurposeentredwithoutselectingindividual";
-	public final String NUMBEROFSELECTEDMEMBERSISNOTATLEASTTWO = "errors.numberofselectedmembersisnotatleasttwo";
+	public final String LOAN_DETAILS_ENTERED_WITHOUT_SELECTING_INDIVIDUAL = "errors.loanandpurposeentredwithoutselectingindividual";
+	public final String NUMBER_OF_SELECTED_MEMBERS_IS_LESS_THAN_TWO = "errors.numberofselectedmembersisnotatleasttwo";
 	public final String SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
 	public final String CUSTOMERLOANAMOUNTFIELD = "errors.individualamountfield";
 	public final String CUSTOMERPURPOSEOFLOANFIELD = "errors.individualpurposeofloanfield";

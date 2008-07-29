@@ -210,6 +210,8 @@ public interface LoanConstants {
 	public final String PURPOSE_OF_LOAN = "PurposeOfLoan";	
 	public final String DISPLAY_DAY_NUMBER="displayDayNumber";
 	public final String LOANACCOUNT = "loanBO";
+	public static final int MINIMUM_NUMBER_OF_CLIENTS_IN_GROUP_LOAN = 2;
 	public static final int GLIM_ENABLED_VALUE = 1;
+	public static final int GLIM_DISABLED_VALUE = 1;
 
 }

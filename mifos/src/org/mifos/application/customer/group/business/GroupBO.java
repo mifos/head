@@ -556,8 +556,7 @@ public class GroupBO extends CustomerBO {
 		try {
 			((GroupPerformanceHistoryEntity) getPerformanceHistory())
 					.updateOnDisbursement(loan, disburseAmount);
-		}
-		catch (AccountException e) {
+		}catch (AccountException e) {
 			throw new CustomerException(e);
 		}
 	}
@@ -567,8 +566,7 @@ public class GroupBO extends CustomerBO {
 		GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
 		try {
 			performanceHistory.updateOnWriteOff(loan);
-		}
-		catch (AccountException e) {
+		}catch (AccountException e) {
 			throw new CustomerException(e);
 		}
 	}	

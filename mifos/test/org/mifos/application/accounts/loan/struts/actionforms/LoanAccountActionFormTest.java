@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.apache.struts.action.ActionErrors;
@@ -172,6 +173,17 @@ public class LoanAccountActionFormTest extends MifosTestCase {
 		new LoanAccountActionForm().checkForMinMax(actionErrors, "2",
 				new LoanAmountSameForAllLoanBO((double) 1, (double) 3,
 						(double) 2, null), AMOUNT_ERROR_KEY);
+		assertEquals(0, actionErrors.size());
+	}
+	
+	public void testShouldAddErrorIfNoMembersSelected() throws Exception {
+		form.validateSelectedClients(actionErrors);
+		assertEquals(1, actionErrors.size());
+	}
+	
+	public void testShouldValidateIfMembersSelected() throws Exception {
+		form.setClients(Arrays.asList("1", "2"));
+		form.validateSelectedClients(actionErrors);
 		assertEquals(0, actionErrors.size());
 	}
 }
