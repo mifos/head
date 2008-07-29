@@ -61,7 +61,6 @@ explanation of the license and how it is applied.
 					document.getElementsByName("monthType")[0].checked=true;
 			} else {
 				document.loanAccountActionForm.frequency[0].checked=true;
-				console.log(document.getElementsByName("recurrenceId"));
 				document.getElementById("weekDIV").style.display = "block";
 				document.getElementById("monthDIV").style.display = "none";
 				document.getElementsByName("recurrenceId")[0].value = "1";
