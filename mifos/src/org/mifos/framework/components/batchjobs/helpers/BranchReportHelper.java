@@ -36,6 +36,9 @@ import org.mifos.application.reports.business.service.ReportServiceFactory;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -45,6 +48,7 @@ public class BranchReportHelper extends TaskHelper {
 	private OfficeBusinessService officeBusinessService;
 	private IBranchReportService branchReportService;
 	private BranchReportConfigService branchReportConfigService;
+	
 
 	public BranchReportHelper(MifosTask mifosTask) {
 		super(mifosTask);
@@ -57,9 +61,12 @@ public class BranchReportHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
+		System.out.println("Task BranchReportTask starts ");
+		long time1 = System.currentTimeMillis();
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = session.beginTransaction();
 		Date runDate = new Date(timeInMillis);
+		
 		try {
 			removeExistingBranchReportsForGivenRunDate(runDate);
 			populateBranchReportBatch(session, runDate);
@@ -72,6 +79,10 @@ public class BranchReportHelper extends TaskHelper {
 		catch (ServiceException e) {
 			throw new BatchJobException(e);
 		}
+		long time2 = System.currentTimeMillis();
+		long duration = time2 - time1;
+		getLogger().info("Time to run BranchReportTask " + duration);
+		System.out.println("Task BranchReportTask runs in " + duration);
 	}
 
 	void populateBranchReportBatch(Session session, Date runDate) throws BatchJobException,
@@ -79,8 +90,13 @@ public class BranchReportHelper extends TaskHelper {
 		List<OfficeBO> branchOffices = officeBusinessService.getBranchOffices();
 		if (branchOffices == null)
 			return;
+		System.out.println("There are  " + branchOffices.size() + " offices");
 		for (OfficeBO branchOffice : branchOffices) {
+			System.out.println("Start generating report for branch office " + branchOffice.getOfficeName());
+			long time1 = System.currentTimeMillis();
 			createBranchReport(session, branchOffice, runDate);
+			System.out.println("Generating report for branch office " + branchOffice.getOfficeName() + 
+					" in " + (System.currentTimeMillis() - time1));
 		}
 	}
 
@@ -104,6 +120,8 @@ public class BranchReportHelper extends TaskHelper {
 				branchReportService, branchReportConfigService)
 				.populateLoanArrearsProfile();
 		session.save(branchReport);
+		session.flush();
+		session.clear();
 		return branchReport;
 	}
 

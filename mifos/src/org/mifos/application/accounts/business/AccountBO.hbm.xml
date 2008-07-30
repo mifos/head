@@ -356,10 +356,10 @@
 
 	<!-- Get the Loan accounts	that are in arrears-->
 	<query name="accounts.GetLoanArrearsInGoodStanding">
-		<![CDATA[select account.accountId from org.mifos.application.accounts.loan.business.LoanBO account
+		<![CDATA[select distinct(account.accountId) from org.mifos.application.accounts.loan.business.LoanBO account
 			join  account.accountActionDates as actiondate
 			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
-			and account.accountState.id in (:LOANAPPROVED,:LOANACTIVEINGOODSTAND)
+			and account.accountState.id = :LOANACTIVEINGOODSTAND
 			and actiondate.actionDate < date(:CHECKDATE)
 			and actiondate.paymentStatus=:PAYMENTSTATUS 
 			group by account.accountId]]>

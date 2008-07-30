@@ -93,8 +93,6 @@ public class LoanPersistence extends Persistence {
 				.getValue());
 		queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID
 				.getValue()));
-		queryParameters.put("LOANAPPROVED", Short
-				.valueOf(AccountStates.LOANACC_APPROVED));
 		queryParameters.put("LOANACTIVEINGOODSTAND", Short
 				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
 		queryParameters.put("CHECKDATE", date);

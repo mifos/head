@@ -170,6 +170,16 @@ public class HibernateUtil {
 		threadLocal.set(null);
 
 	}
+	
+	public static void flushAndClearSession() {
+		Session session = getSessionTL();
+		if (session.isOpen()) {
+			session.flush();
+			session.clear();
+		}
+		
+
+	}
 
 	public static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {

@@ -32,8 +32,10 @@ import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.config.GeneralConfig;
 
 public class LoanArrearsHelper extends TaskHelper {
+	
 
 	public LoanArrearsHelper(MifosTask mifosTask) {
 		super(mifosTask);
@@ -41,44 +43,83 @@ public class LoanArrearsHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
+		long time1 = System.currentTimeMillis();
+		System.out.println("LoanArrearsTask starts");
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<String> errorList = new ArrayList<String>();
 		List<Integer> listAccountIds = null;
+		int accountNumber = 0;
 		try {
 			Short latenessDays = new LoanPrdPersistence()
 					.retrieveLatenessForPrd();
+			long time3 = System.currentTimeMillis();
 			listAccountIds = new LoanPersistence()
 					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
+			long duration2 = System.currentTimeMillis() - time3;
+			accountNumber = listAccountIds.size();
+			System.out.println("LoanArrearsTask: getLoanAccountsInArrearsInGoodStanding ran in " + 
+					duration2 + " milliseconds" + " got " + accountNumber + " accounts to update.");
 		} catch (Exception e) {
 			throw new BatchJobException(e);
 		}
-		for (Integer accountId : listAccountIds) {
-			try {
-				LoanBO loanBO = (LoanBO) accountPersistence
-						.getAccount(accountId);
-				if (loanBO.getAccountState().equals(
-						AccountState.LOAN_PENDING_APPROVAL)){
-					throw new Exception("Loan was pending approval");
-				}
-
-				if(loanBO.getAccountState().isInState(AccountState.LOAN_APPROVED)){
-					//Do nothing
-					//"LOAN_APPROVED" should not move to "LOAN ACTIVE IN BAD STANDING"
-					//fixes issue #1848
-				} else {
+		LoanBO loanBO = null;
+		int i=1;
+		int batchSize = GeneralConfig.getBatchSizeForBatchJobs();
+		int recordCommittingSize = GeneralConfig.getRecordCommittingSizeForBatchJobs();
+		
+		try
+		{
+			long startTime = System.currentTimeMillis();
+			for (Integer accountId : listAccountIds) {
+					loanBO = (LoanBO) accountPersistence
+							.getAccount(accountId);
+					assert (loanBO.getAccountState().getId().shortValue() ==
+						AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue().shortValue());
+					
+						
 					loanBO.handleArrears();
-				}
+					if (i % batchSize == 0)
+					{
+						HibernateUtil.flushAndClearSession();
+					}
+					if (i % recordCommittingSize == 0)
+					{
+						HibernateUtil.commitTransaction();
+					}
+					if (i % 1000 == 0)
+					{
+						long time = System.currentTimeMillis();
+						System.out.println("1000 accounts updated in " + (time - startTime) + 
+								" milliseconds. There are " + (accountNumber -i) + " more accounts to be updated.");
+						startTime = time;
+						
+					}
+					i++;	
+					
 				
+				}
 				HibernateUtil.commitTransaction();
+				
+				
 			} catch (Exception e) {
+				getLogger().debug("LoanArrearsTask " + e.getMessage());
 				HibernateUtil.rollbackTransaction();
-				errorList.add(accountId.toString());
+				if (loanBO != null)
+				{
+					errorList.add(loanBO.getAccountId().toString());
+				}
 			} finally {
+				
 				HibernateUtil.closeSession();
 			}
-		}
+		long time2 = System.currentTimeMillis();
+		long duration = time2 - time1;
+		getLogger().info("Time to run LoanArrearsTask " + duration);
+		System.out.println("LoanArrearsTask ran in " + duration + " milliseconds");
 		if (errorList.size() > 0)
 			throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
+		getLogger().debug("LoanArrearsTask ran successfully");
+		System.out.println("LoanArrearsTask ran successfully");
 	}
 
 	@Override
