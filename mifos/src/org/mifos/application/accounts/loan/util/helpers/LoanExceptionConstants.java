@@ -62,8 +62,8 @@ public interface LoanExceptionConstants {
 	public final String LOANCOULDNOTCOEXIST = "errors.loancouldnotcoexist";
 	public final String LOAN_DETAILS_ENTERED_WITHOUT_SELECTING_INDIVIDUAL = "errors.loanandpurposeentredwithoutselectingindividual";
 	public final String NUMBER_OF_SELECTED_MEMBERS_IS_LESS_THAN_TWO = "errors.numberofselectedmembersisnotatleasttwo";
-	public final String SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
-	public final String CUSTOMERLOANAMOUNTFIELD = "errors.individualamountfield";
-	public final String CUSTOMERPURPOSEOFLOANFIELD = "errors.individualpurposeofloanfield";
+	public final String SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
+	public final String CUSTOMER_LOAN_AMOUNT_FIELD = "errors.individualamountfield";
+	public final String CUSTOMER_PURPOSE_OF_LOAN_FIELD = "errors.individualpurposeofloanfield";
 	public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";	
 }

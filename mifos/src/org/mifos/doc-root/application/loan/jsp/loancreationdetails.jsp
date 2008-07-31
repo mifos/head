@@ -303,10 +303,10 @@ explanation of the license and how it is applied.
 														name="selectAll1"></td>
 											<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
 												name="loan.acc_owner" /></td>
-											<td width="31%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+											<td width="31%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
 												name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
 												name="loan.amt" /></td>
-											<td width="35%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
+											<td width="35%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
 												name="loan.business_work_act" /> <mifos:mifoslabel
 												name="${ConfigurationConstants.LOAN}" /></td>
 										</tr>
@@ -330,10 +330,12 @@ explanation of the license and how it is applied.
 													name="${ConfigurationConstants.CLIENT_ID}"
 													isColonRequired="Yes" /></span> <c:out
 													value="${client.globalCustNum}" /> <br>
-												<span class="fontnormalbold"><c:out
-													value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
-													value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
-													value="${client.governmentId}" /> <br>
+												<c:if test="${not empty client.governmentId}">
+													<span class="fontnormalbold"><c:out
+														value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
+														value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
+														value="${client.governmentId}" /> <br>
+												</c:if>
 												</td>
 												<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
 													property="clientDetails[${indice}].loanAmount"
@@ -562,22 +564,25 @@ explanation of the license and how it is applied.
 										</c:forEach>
 									</mifos:select></td>
 								</tr>
-								<tr class="fontnormal">
-									<td align="right" class="fontnormal"><mifos:mifoslabel
-										keyhm="Loan.PurposeOfLoan" name="Loan.PurposeOfLoan"
-										bundle="loanUIResources" /> <mifos:mifoslabel
-										keyhm="Loan.PurposeOfLoan"
-										name="${ConfigurationConstants.LOAN}" isColonRequired="yes"
-										bundle="loanUIResources"
-										isManadatoryIndicationNotRequired="yes" /></td>
-									<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
-										property="businessActivityId">
-										<c:forEach var="BusinessActivity"
-											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
-											<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
-										</c:forEach>
-									</mifos:select></td>
-								</tr>
+								<c:if test="${loanaccountownerisagroup != 'yes'}">
+									<tr class="fontnormal">
+										<td align="right" class="fontnormal"><mifos:mifoslabel
+											keyhm="Loan.PurposeOfLoan" name="Loan.PurposeOfLoan"
+											bundle="loanUIResources" /> <mifos:mifoslabel
+											keyhm="Loan.PurposeOfLoan"
+											name="${ConfigurationConstants.LOAN}" isColonRequired="yes"
+											bundle="loanUIResources"
+											isManadatoryIndicationNotRequired="yes" /></td>
+											
+										<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
+											property="businessActivityId">
+											<c:forEach var="BusinessActivity"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
+												<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+											</c:forEach>
+										</mifos:select></td>
+									</tr>
+								</c:if>
 
 								<tr class="fontnormal">
 									<td align="right" class="fontnormal"><mifos:mifoslabel

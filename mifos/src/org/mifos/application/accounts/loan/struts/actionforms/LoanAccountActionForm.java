@@ -42,6 +42,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +53,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.Transformer;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -171,11 +171,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String weekRank;
 
 	private String monthWeek;
-	
+
 	private String monthType;
-	
+
 	private String monthDay;
-	
+
 	private String dayRecurMonth;
 
 	private String weekDay;
@@ -183,17 +183,17 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String recurMonth;
 
 	private String recurWeek;
-	
+
 	private String frequency;
-	
+
 	private String firstRepaymentDay;
-	
+
 	private String recurrenceId;
 
 	private AmountRange amountRange;
 
 	private InstallmentRange installmentRange;
-	
+
 	private String dayNumber;
 
 	private ConfigurationBusinessService configService;
@@ -221,27 +221,27 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public void setMonthWeek(String monthWeek) {
 		this.monthWeek = monthWeek;
 	}
-	
+
 	public String getMonthType() {
 		return monthType;
 	}
-	
+
 	public void setMonthType(String monthType) {
 		this.monthType = monthType;
 	}
-	
+
 	public String getMonthDay() {
 		return monthDay;
 	}
-	
+
 	public void setMonthDay(String monthDay) {
 		this.monthDay = monthDay;
 	}
-	
+
 	public String getDayRecurMonth() {
 		return dayRecurMonth;
 	}
-	
+
 	public void setDayRecurMonth(String dayRecurMonth) {
 		this.dayRecurMonth = dayRecurMonth;
 	}
@@ -253,19 +253,19 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public void setRecurMonth(String recurMonth) {
 		this.recurMonth = recurMonth;
 	}
-	
+
 	public String getRecurWeek() {
 		return recurWeek;
 	}
-	
+
 	public void setRecurWeek(String recurWeek) {
 		this.recurWeek = recurWeek;
 	}
-	
+
 	public String getFrequency() {
 		return frequency;
 	}
-	
+
 	public void setFrequency(String frequency) {
 		this.frequency = frequency;
 	}
@@ -285,7 +285,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public void setWeekRank(String weekRank) {
 		this.weekRank = weekRank;
 	}
-	
+
 	public String getRecurrenceId() {
 		return recurrenceId;
 	}
@@ -681,11 +681,100 @@ public class LoanAccountActionForm extends BaseActionForm {
 		checkValidationForPreviewBefore(errors, request);
 		validateFees(request, errors);
 		validateCustomFields(request, errors);
-		validateIndividualLoanFields(request, errors);
-		validateNumberOfSelectedMembers(request, errors);
-		validateSumOfTheAmountsSpecified(request, errors);
+		performGlimSpecificValidations(errors, request);
 		validateRepaymentDayRequired(request, errors);
-		validatePurposeOfLoanFields(request, errors);
+		validatePurposeOfLoanFields(errors, getMandatoryFields(request));
+	}
+
+
+	private void performGlimSpecificValidations(ActionErrors errors,
+			HttpServletRequest request) throws PageExpiredException,
+			ServiceException {
+		if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
+			removeClientsNotCheckedInForm(request);
+			validateIndividualLoanFieldsForGlim(request, errors);
+			validateSelectedClients(errors);
+			validateSumOfTheAmountsSpecified(errors);
+			validatePurposeOfLoanForGlim(errors);
+		}
+	}
+
+	//Since this Struts form is set up as "session" scope, we need to clear
+	//the form fields in cases where they are used across pages.
+	//Currently we do that in the following case: When old values of clientId are
+	//retained from the account creation page, form validation
+	//on submission from the Edit Account Information page is messed up. Calling
+	//this method fixes that problem
+	private void removeClientsNotCheckedInForm(HttpServletRequest request) {
+		List<String> clientIds = getSelectedClientIdsFromRequest(request);
+		setClientsNotPresentInInputToEmptyString(clientIds);
+	}
+
+	void setClientsNotPresentInInputToEmptyString(List<String> clientIds) {
+		for (int i = 0; i < clients.size(); i++) {
+			if (!clientIds.contains(clients.get(i))) {
+				clients.set(i, "");
+			}
+		}
+	}
+
+	List<String> getSelectedClientIdsFromRequest(HttpServletRequest request) {
+		Collection paramsStartingWithClients = CollectionUtils.select(
+				convertEnumerationToList(request.getParameterNames()),
+				new Predicate() {
+					public boolean evaluate(Object object) {
+						return ((String) object).startsWith("clients");
+					}
+				});
+		List<String> indices = extractClientIdsFromRequest(request,
+				paramsStartingWithClients);
+		return indices;
+	}
+
+	private List<String> extractClientIdsFromRequest(
+			HttpServletRequest request, Collection paramsStartingWithClients) {
+		List<String> clientIds = new ArrayList<String>();
+		for (Iterator iter = paramsStartingWithClients.iterator(); iter
+				.hasNext();) {
+			String element = (String) iter.next();
+			clientIds.add(request.getParameter(element));
+		}
+		return clientIds;
+	}
+
+	private List<String> convertEnumerationToList(Enumeration parameterNames) {
+		List<String> params = new ArrayList<String>();
+		while (parameterNames.hasMoreElements()) {
+			params.add((String) parameterNames.nextElement());
+		}
+		return params;
+	}
+
+	void validatePurposeOfLoanForGlim(ActionErrors errors) {
+		List<String> ids_clients_selected = getClients();
+		List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
+
+		for (LoanAccountDetailsViewHelper loanAccount : listdetail) {
+			if (ids_clients_selected.contains(loanAccount.getClientId())) {
+				if (StringUtils
+						.isNullOrEmpty(loanAccount.getBusinessActivity())) {
+					addErrorInvalidPurpose(errors);
+					return;
+				}
+			}
+		}
+	}
+
+	private void addErrorInvalidPurpose(ActionErrors errors) {
+		addError(errors, LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD);
+	}
+
+	private void validatePurposeOfLoanFields(ActionErrors errors,
+			List<FieldConfigurationEntity> mandatoryFields) {
+		if (isPurposeOfLoanMandatory(mandatoryFields)
+				&& StringUtils.isNullOrEmpty(getBusinessActivityId())) {
+			addErrorInvalidPurpose(errors);
+		}
 	}
 
 	private void checkValidationForPreview(ActionErrors errors,
@@ -710,16 +799,19 @@ public class LoanAccountActionForm extends BaseActionForm {
 		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
 				.getAttribute(LoanConstants.LOANOFFERING, request);
 
-		checkForMinMax(errors, loanAmount, amountRange, resources
-				.getString("loan.amount"));
-		checkForMinMax(errors, interestRate, loanOffering
-				.getMaxInterestRate(), loanOffering.getMinInterestRate(),
-				resources.getString("loan.noOfInstallments"));
+		if (!new ConfigurationBusinessService().isGlimEnabled()) {
+			checkForMinMax(errors, loanAmount, amountRange, resources
+					.getString("loan.amount"));
+		}
+		checkForMinMax(errors, interestRate, loanOffering.getMaxInterestRate(),
+				loanOffering.getMinInterestRate(), resources
+						.getString("loan.noOfInstallments"));
 		checkForMinMax(errors, noOfInstallments, installmentRange, resources
 				.getString("loan.noOfInstallments"));
 		if (StringUtils.isNullOrEmpty(getDisbursementDate())) {
 			addError(errors, "Proposed/Actual disbursal date",
-					"errors.validandmandatory", resources.getString("loan.disbursalDate"));
+					"errors.validandmandatory", resources
+							.getString("loan.disbursalDate"));
 		}
 		if (isInterestDedAtDisbValue()) {
 			setGracePeriodDuration("0");
@@ -851,26 +943,6 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 	}
 
-	private void validateNumberOfSelectedMembers(HttpServletRequest request,
-			ActionErrors errors) {
-		try {
-			CustomerBO customer = getCustomer(request);
-			if (configService.isGlimEnabled()
-					&& customer.isGroup()) {
-				validateSelectedClients(errors);
-			}
-		}
-		catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		}
-		catch (ServiceException e) {
-			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
-					new ActionMessage(
-							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
-		}
-	}
-
 	void validateSelectedClients(ActionErrors errors) {
 		List<String> selectedClients = new ArrayList();
 		for (String id : getClients()) {
@@ -878,74 +950,52 @@ public class LoanAccountActionForm extends BaseActionForm {
 				selectedClients.add(id);
 			}
 		}
-		
+
 		if (selectedClients.size() < LoanConstants.MINIMUM_NUMBER_OF_CLIENTS_IN_GROUP_LOAN) {
 			addError(
 					errors,
 					"",
 					LoanExceptionConstants.NUMBER_OF_SELECTED_MEMBERS_IS_LESS_THAN_TWO,
 					"");
-		}		
+		}
 	}
 
-	private void validateSumOfTheAmountsSpecified(HttpServletRequest request,
-			ActionErrors errors) {
-		try {
-			CustomerBO customer = getCustomer(request);
-			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
-					.getAttribute(
-							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-							request);
+	void validateSumOfTheAmountsSpecified(ActionErrors errors) {
+		List<String> ids_clients_selected = getClients();
+		double totalAmount = new Double(0);
+		boolean foundInvalidAmount = false;
 
-			if (null != loanIndividualMonitoringIsEnabled
-					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
-					&& customer.getCustomerLevel().isGroup()) {
-
-				List<String> ids_clients_selected = getClients();
-				List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
-
-				double totalAmout = new Double(0);
-				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-					if (ids_clients_selected
-							.contains(tempAccount.getClientId())) {
-						if (tempAccount.getLoanAmount() != null) {
-							totalAmout = totalAmout
-									+ tempAccount.getLoanAmount().doubleValue();
-						}
-						else {
-							errors
-									.add(
-											LoanExceptionConstants.CUSTOMERLOANAMOUNTFIELD,
-											new ActionMessage(
-													LoanExceptionConstants.CUSTOMERLOANAMOUNTFIELD));
-							break;
-						}
-
+		for (LoanAccountDetailsViewHelper loanDetail : getClientDetails()) {
+			if (!foundInvalidAmount) {
+				if (ids_clients_selected.contains(loanDetail.getClientId())) {
+					if (loanDetail.isAmountZeroOrNull()) {
+						addError(
+								errors,
+								LoanExceptionConstants.CUSTOMER_LOAN_AMOUNT_FIELD);
+						foundInvalidAmount = true;
 					}
-
-				}
-				if (StringUtils.isNullOrEmpty(Double.valueOf(totalAmout)
-						.toString())
-						|| totalAmout > amountRange.getMaxLoanAmount()
-						|| totalAmout < amountRange.getMinLoanAmount()) {
-					addError(
-							errors,
-							LoanConstants.LOANAMOUNT,
-							LoanExceptionConstants.SUMOFINDIVIDUALAMOUNTSISNOTINTHERANGEOFALLOWEDAMOUNTS,
-							getStringValue(amountRange.getMinLoanAmount()),
-							getStringValue(amountRange.getMaxLoanAmount()));
+					else {
+						totalAmount = totalAmount
+								+ loanDetail.getLoanAmount().doubleValue();
+					}
 				}
 			}
 		}
-		catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+
+		if (!foundInvalidAmount
+				&& (StringUtils.isNullOrEmpty(Double.valueOf(totalAmount)
+						.toString()) || !amountRange.isInRange(totalAmount))) {
+			addError(
+					errors,
+					LoanConstants.LOANAMOUNT,
+					LoanExceptionConstants.SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS,
+					getStringValue(amountRange.getMinLoanAmount()),
+					getStringValue(amountRange.getMaxLoanAmount()));
 		}
-		catch (ServiceException e) {
-			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
-					new ActionMessage(
-							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
-		}
+	}
+
+	private void addError(ActionErrors errors, String errorCode) {
+		errors.add(errorCode, new ActionMessage(errorCode));
 	}
 
 
@@ -958,30 +1008,39 @@ public class LoanAccountActionForm extends BaseActionForm {
 				recurrenceId = new Short(this.getRecurrenceId());
 			}
 			if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
-				if(StringUtils.isNullOrEmpty(this.getFrequency())) {
+				if (StringUtils.isNullOrEmpty(this.getFrequency())) {
 					addError(errors, "",
-							LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
-							"");					
-				} else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
-					if(StringUtils.isNullOrEmpty(this.getRecurWeek()) ||
-							StringUtils.isNullOrEmpty(this.getWeekDay())){
+							LoanExceptionConstants.REPAYMENTDAYISREQUIRED, "");
+				}
+				else if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+					if (StringUtils.isNullOrEmpty(this.getRecurWeek())
+							|| StringUtils.isNullOrEmpty(this.getWeekDay())) {
 						addError(errors, "",
 								LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
 								"");
 					}
-				} else {
-					if(monthType.equals("1")) {
-						if(StringUtils.isNullOrEmpty(this.getMonthDay()) ||
-								StringUtils.isNullOrEmpty(this.getDayRecurMonth())) {
-							addError(errors, "",
+				}
+				else {
+					if (monthType.equals("1")) {
+						if (StringUtils.isNullOrEmpty(this.getMonthDay())
+								|| StringUtils.isNullOrEmpty(this
+										.getDayRecurMonth())) {
+							addError(
+									errors,
+									"",
 									LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
 									"");
 						}
-					} else {
-						if(StringUtils.isNullOrEmpty(this.getMonthRank()) ||
-								StringUtils.isNullOrEmpty(this.getMonthWeek()) ||
-								StringUtils.isNullOrEmpty(this.getRecurMonth())) {
-							addError(errors, "",
+					}
+					else {
+						if (StringUtils.isNullOrEmpty(this.getMonthRank())
+								|| StringUtils.isNullOrEmpty(this
+										.getMonthWeek())
+								|| StringUtils.isNullOrEmpty(this
+										.getRecurMonth())) {
+							addError(
+									errors,
+									"",
 									LoanExceptionConstants.REPAYMENTDAYISREQUIRED,
 									"");
 						}
@@ -995,178 +1054,49 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	}
 
-	private void validateIndividualLoanFields(HttpServletRequest request,
-			ActionErrors errors) {
-		try {
-			CustomerBO customer = getCustomer(request);
-			if (configService.isGlimEnabled() && customer.isGroup()) {
+	private void validateIndividualLoanFieldsForGlim(
+			HttpServletRequest request, ActionErrors errors) {
 
-				final Collection allClients = getAllClientIdsForGroup();
-				List<LoanAccountDetailsViewHelper> listDetail = new ArrayList<LoanAccountDetailsViewHelper>(
-						getClientDetails());
-				allClients.removeAll(getClients());
-
-				CollectionUtils.filter(listDetail, new Predicate() {
-					public boolean evaluate(Object object) {
-						return allClients
-								.contains(((LoanAccountDetailsViewHelper) object)
-										.getClientId());
-					}
-				});
-
-				if (CollectionUtils.find(listDetail, new Predicate() {
-					public boolean evaluate(Object object) {
-						LoanAccountDetailsViewHelper loanAccountDetail = (LoanAccountDetailsViewHelper) object;
-						return !(loanAccountDetail.getLoanAmount() == null && ""
-								.equals(loanAccountDetail.getBusinessActivity()));
-					}
-				}) != null) {
+		for (LoanAccountDetailsViewHelper listDetail : clientDetails) {
+			if (!listDetail.isEmpty()) {
+				if (!getClients().contains(listDetail.getClientId())) {
 					addError(
 							errors,
 							"",
 							LoanExceptionConstants.LOAN_DETAILS_ENTERED_WITHOUT_SELECTING_INDIVIDUAL,
 							"");
+					break;
+
 				}
 			}
 		}
-		catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		}
-		catch (ServiceException e) {
-			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
-					new ActionMessage(
-							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
-		}
 	}
 
-	private Collection getAllClientIdsForGroup() {
-		return CollectionUtils.transformedCollection(getClientDetails(), new Transformer(){
-			public String transform(Object input) {
-				return ((LoanAccountDetailsViewHelper)input).getClientId();
-			}
-		});
-	}
-	
-
-	private void validatePurposeOfLoanFields(HttpServletRequest request,
-			ActionErrors errors) {
-		try {
-			CustomerBO customer = getCustomer(request);
-
-			Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
-			.getSession().getServletContext().getAttribute(
-					Constants.FIELD_CONFIGURATION);
-			List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap.get(EntityType.LOAN.getValue());
-
-			boolean purposeOfLoanIsMandatory = isPurposeOfLoanMandatory(mandatoryfieldList);
-			
-			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
-					.getAttribute(
-							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-							request);
-			//Check the group level purpose of loan for each client in the group.
-			if(customer.getCustomerLevel().isGroup() && purposeOfLoanIsMandatory) {
-			    // this value is red from config_key_value_integer table should be set to 1 to enable the validation.
-				if (null != loanIndividualMonitoringIsEnabled
-						&& 0 != loanIndividualMonitoringIsEnabled.intValue()) {
-
-
-					List<String> ids_clients_selected = getClients();
-					List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
-
-					for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-					
-						if (ids_clients_selected.contains(tempAccount.getClientId())) {
-								if (StringUtils.isNullOrEmpty(tempAccount.getBusinessActivity())) {
-									errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
-										new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
-								break;
-								}
-						}
-					}
-
-
-			} else {
-
-				if (StringUtils.isNullOrEmpty(this.getBusinessActivityId())) {
-					errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
-							new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
-				}
-			}
-			// Check the client level purpose of loan.
-			} else if(customer.getCustomerLevel().isClient() && purposeOfLoanIsMandatory) {
-				if (StringUtils.isNullOrEmpty(this.getBusinessActivityId())) {
-					errors.add(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
-							new ActionMessage(LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
-				}
-			}
-		} catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		} catch (ServiceException e) {
-			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
-					new ActionMessage(
-							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
-		}
-	}
-	
-	private void xvalidatePurposeOfLoanFields(HttpServletRequest request,
-			ActionErrors errors) {
-		try {
-			CustomerBO customer = getCustomer(request);
-			Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
-					.getAttribute(
-							LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-							request);
-
-			if (null != loanIndividualMonitoringIsEnabled
-					&& 0 != loanIndividualMonitoringIsEnabled.intValue()
-					&& customer.getCustomerLevel().isGroup()) {
-
-				List<String> ids_clients_selected = getClients();
-				List<LoanAccountDetailsViewHelper> listdetail = getClientDetails();
-				for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-					if (ids_clients_selected
-							.contains(tempAccount.getClientId())) {
-						if (StringUtils.isNullOrEmpty(tempAccount
-								.getBusinessActivity().toString())) {
-							errors
-									.add(
-											LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD,
-											new ActionMessage(
-													LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD));
-							break;
-						}
-					}
-				}
-
-			}
-		}
-		catch (PageExpiredException pee) {
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
-					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-		}
-		catch (ServiceException e) {
-			errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION,
-					new ActionMessage(
-							ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
-		}
+	private List<FieldConfigurationEntity> getMandatoryFields(
+			HttpServletRequest request) {
+		Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = (Map<Short, List<FieldConfigurationEntity>>) request
+				.getSession().getServletContext().getAttribute(
+						Constants.FIELD_CONFIGURATION);
+		List<FieldConfigurationEntity> mandatoryfieldList = entityMandatoryFieldMap
+				.get(EntityType.LOAN.getValue());
+		return mandatoryfieldList;
 	}
 
-	private boolean isPurposeOfLoanMandatory(List<FieldConfigurationEntity> mandatoryfieldList) {
+	private boolean isPurposeOfLoanMandatory(
+			List<FieldConfigurationEntity> mandatoryfieldList) {
 		boolean isMandatory = false;
 
-		for(FieldConfigurationEntity entity : mandatoryfieldList) {
+		for (FieldConfigurationEntity entity : mandatoryfieldList) {
 
-			if(entity.getFieldName().equalsIgnoreCase(LoanConstants.PURPOSE_OF_LOAN)) {
+			if (entity.getFieldName().equalsIgnoreCase(
+					LoanConstants.PURPOSE_OF_LOAN)) {
 				isMandatory = true;
 				break;
 			}
 		}
 		return isMandatory;
 	}
-	
+
 	private void validateRedoLoanPayments(HttpServletRequest request,
 			ActionErrors errors) {
 		try {
@@ -1284,6 +1214,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	public void setClients(int i, String string) {
+
 		while (this.clients.size() <= i)
 			this.clients.add(new String());
 		this.clients.set(i, string);
@@ -1344,5 +1275,30 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	public Short getMaxNoInstallmentsValue() {
 		return installmentRange.getMaxNoOfInstall();
+	}
+
+	public void removeClientDetailsWithNoMatchingClients() {
+		List<LoanAccountDetailsViewHelper> clientDetailsCopy = new ArrayList<LoanAccountDetailsViewHelper>(
+				clientDetails);
+		CollectionUtils.filter(clientDetailsCopy,
+				new RemoveEmptyClientDetailsForUncheckedClients(getClients()));
+		clientDetails = new ArrayList<LoanAccountDetailsViewHelper>(
+				clientDetailsCopy);
+	}
+
+	private static class RemoveEmptyClientDetailsForUncheckedClients implements
+			Predicate {
+
+		private final List<String> clients2;
+
+		RemoveEmptyClientDetailsForUncheckedClients(List<String> clients) {
+			clients2 = clients;
+		}
+
+		public boolean evaluate(Object object) {
+			LoanAccountDetailsViewHelper loanDetail = ((LoanAccountDetailsViewHelper) object);
+			return !(!clients2.contains(loanDetail.getClientId()) && (loanDetail
+					.isEmpty()));
+		}
 	}
 }

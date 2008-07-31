@@ -419,7 +419,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("method", "create");
 		addRequestParameter("stateSelected", "1");
 		actionPerform();
-		verifyActionErrors(new String[] {LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD});
+		verifyActionErrors(new String[] {LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD});
 		
 		addRequestParameter("clientDetails[0].businessActivity", "0001");
 		performNoErrors();

@@ -244,7 +244,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			}
 			if (StringUtils.isEmpty(clientDetail.getBusinessActivity()) && isPurposeOfLoanMandatory(request)) {
 				addError(errors, LoanConstants.PURPOSE_OF_LOAN,
-						LoanExceptionConstants.CUSTOMERPURPOSEOFLOANFIELD);
+						LoanExceptionConstants.CUSTOMER_PURPOSE_OF_LOAN_FIELD);
 			}
 		}
 		logger.debug("outside checkValidationForCreate method");

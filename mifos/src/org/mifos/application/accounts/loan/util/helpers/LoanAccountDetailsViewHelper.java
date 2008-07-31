@@ -38,7 +38,9 @@
 package org.mifos.application.accounts.loan.util.helpers;
 
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class LoanAccountDetailsViewHelper extends BusinessObject {
 
@@ -49,6 +51,13 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 
 	public LoanAccountDetailsViewHelper() {
 		this(null);
+	}
+	
+	LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount){
+		this(null);
+		this.clientId = clientId;
+		this.businessActivity = businessActivity;
+		this.loanAmount = loanAmount;
 	}
 
 	private final Integer individualAccountId;
@@ -137,6 +146,15 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
+	
+	public boolean isEmpty() {
+		return loanAmount == null
+				&& StringUtils.isNullOrEmpty(businessActivity);
+	}
 
+	public boolean isAmountZeroOrNull() {
+		return loanAmount == null
+				|| (Double.compare(loanAmount, NumberUtils.DOUBLE_ZERO) == 0);
+	}	
 
 }
