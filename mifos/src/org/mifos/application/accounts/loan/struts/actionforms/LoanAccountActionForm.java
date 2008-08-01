@@ -787,6 +787,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		if (getState().equals(AccountState.LOAN_PARTIAL_APPLICATION)
 				|| getState().equals(AccountState.LOAN_PENDING_APPROVAL))
 			checkValidationForPreview(errors, request);
+		performGlimSpecificValidations(errors, request);
 		validateCustomFields(request, errors);
 		validateRepaymentDayRequired(request, errors);
 	}

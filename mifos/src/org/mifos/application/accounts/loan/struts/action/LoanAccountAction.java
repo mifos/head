@@ -7,7 +7,7 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.CLI
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNER;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNERISACLIENT;
-import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNERISAGROUP;
+import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
@@ -41,18 +41,24 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -162,19 +168,32 @@ public class LoanAccountAction extends AccountAppAction {
 
 	private ConfigurationPersistence configurationPersistence;
 
+	private ConfigurationBusinessService configService;
+
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
 
 	public LoanAccountAction() throws Exception {
-		loanBusinessService = new LoanBusinessService();
+		this(new ConfigurationBusinessService(), new LoanBusinessService());
+	}
+
+	private LoanAccountAction(ConfigurationBusinessService configService,
+			LoanBusinessService loanBusinessService) {
+		this.configService = configService;
+		this.loanBusinessService = loanBusinessService;
 		feeService = new FeeBusinessService();
 		loanPrdBusinessService = new LoanPrdBusinessService();
 		clientBusinessService = new ClientBusinessService();
 		masterDataService = new MasterDataService();
 		meetingBusinessService = new MeetingBusinessService();
 		configurationPersistence = new ConfigurationPersistence();
+	}
+
+	LoanAccountAction(LoanBusinessService loanBusinessService,
+			ConfigurationBusinessService configService) {
+		this(configService, loanBusinessService);
 	}
 
 	@Override
@@ -286,7 +305,7 @@ public class LoanAccountAction extends AccountAppAction {
 					loanIndividualMonitoringIsEnabled.intValue(), request);
 			if (customer.isGroup()) {
 				SessionUtils.setAttribute(
-						LOANACCOUNTOWNERISAGROUP, "yes", request);
+						LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
 			}
 		}
 		
@@ -469,11 +488,9 @@ public class LoanAccountAction extends AccountAppAction {
 					.getParameter(PERSPECTIVE));
 		}
 		if (isGlimEnabled()) {
-			setGlimEnabledAsSessionAttribute(request);
+			setGlimSessionAttributes(request,customer);
 			request.setAttribute(METHODCALLED, "getPrdOfferings");
 			if (customer.isGroup()) {
-				SessionUtils.setAttribute(
-						LOANACCOUNTOWNERISAGROUP, "yes", request);
 				SessionUtils.setCollectionAttribute(
 						MasterConstants.BUSINESS_ACTIVITIES,
 						masterDataService
@@ -495,17 +512,15 @@ public class LoanAccountAction extends AccountAppAction {
 						clients, request);
 				SessionUtils.setAttribute("clientListSize", clients.size(),
 						request);
-
 			}
 		}
 
-
-		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+		if (configService.isRepaymentIndepOfMeetingEnabled()) {
 			SessionUtils.setAttribute(
 							REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
 							1, request);
 			SessionUtils.setAttribute(LOANACCOUNTOWNERISACLIENT,
-					"yes", request);
+					LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
 			loadDataForRepaymentDate(request);
 			loanActionForm.setRecurMonth(customer.getCustomerMeeting()
 					.getMeeting().getMeetingDetails().getRecurAfter()
@@ -521,10 +536,15 @@ public class LoanAccountAction extends AccountAppAction {
 		return new ConfigurationBusinessService().isGlimEnabled();
 	}
 
-	private void setGlimEnabledAsSessionAttribute(HttpServletRequest request) throws PageExpiredException, ServiceException {
-		SessionUtils.setAttribute(
-				LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-				isGlimEnabled()?LoanConstants.GLIM_ENABLED_VALUE:LoanConstants.GLIM_DISABLED_VALUE, request);
+	private void setGlimSessionAttributes(HttpServletRequest request, CustomerBO customer)
+			throws PageExpiredException, ServiceException {
+		SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
+				isGlimEnabled() ? LoanConstants.GLIM_ENABLED_VALUE
+						: LoanConstants.GLIM_DISABLED_VALUE, request);
+		if (customer.isGroup()) {
+			SessionUtils.setAttribute(
+					LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
+		}
 	}
 
 	private void setClientDetails(LoanAccountActionForm loanActionForm,
@@ -617,31 +637,12 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletResponse response) throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		CustomerBO customer = getCustomer(request);
-		Integer loanIndividualMonitoringIsEnabled = (Integer) SessionUtils
-				.getAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-						request);
 
-		if (null != loanIndividualMonitoringIsEnabled
-				&& 0 != loanIndividualMonitoringIsEnabled.intValue()
-				&& customer.isGroup()) {
-			SessionUtils.setAttribute(
-					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-					loanIndividualMonitoringIsEnabled.intValue(), request);
-			List<String> ids_clients_selected = loanActionForm.getClients();
-			List<LoanAccountDetailsViewHelper> listdetail = loanActionForm
-					.getClientDetails();
-
-			double totalAmout = new Double(0);
-			for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-				if (ids_clients_selected.contains(tempAccount.getClientId())) {
-					if (tempAccount.getLoanAmount() != null) {
-						totalAmout = totalAmout
-								+ tempAccount.getLoanAmount().doubleValue();
-					}
-				}
-
-			}
-			loanActionForm.setLoanAmount(Double.toString(totalAmout));
+		if (configService.isGlimEnabled() && customer.isGroup()) {
+			setGlimSessionAttributes(request, customer);
+			double totalAmount = calculateTotalAmountForGlim(loanActionForm.getClients(), loanActionForm
+					.getClientDetails());
+			loanActionForm.setLoanAmount(Double.toString(totalAmount));
 		}
 
 		LoanBO loan = constructLoan(loanActionForm, request);
@@ -670,6 +671,23 @@ public class LoanAccountAction extends AccountAppAction {
 		return mapping.findForward(ActionForwards.schedulePreview_success
 				.toString());
 	}
+
+	private double calculateTotalAmountForGlim(
+			List<String> ids_clients_selected,
+			List<LoanAccountDetailsViewHelper> clientDetails) {
+		double totalAmount = new Double(0);
+		for (LoanAccountDetailsViewHelper loanAccount : clientDetails) {
+			if (ids_clients_selected.contains(loanAccount.getClientId())) {
+				if (loanAccount.getLoanAmount() != null) {
+					totalAmount = totalAmount
+							+ loanAccount.getLoanAmount().doubleValue();
+				}
+			}
+
+		}
+		return totalAmount;
+	}
+	
 	private static boolean checkIntervalBetweenTwoDates(
 			Date firstRepaymentDate, Date disbursementDate) throws PersistenceException, AccountException {
 		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
@@ -888,7 +906,7 @@ public class LoanAccountAction extends AccountAppAction {
 						loanIndividualMonitoringIsEnabled.intValue(), request);
 				if (customer.getCustomerLevel().isGroup()) {
 					SessionUtils.setAttribute(
-							LOANACCOUNTOWNERISAGROUP, "yes",
+							LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES,
 							request);
 				}
 			}
@@ -972,14 +990,14 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
+
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		String perspective = loanActionForm.getPerspective();
 		if (perspective != null) {
 			request.setAttribute(PERSPECTIVE, perspective);
 		}
-		CustomerBO customer = getCustomer(((CustomerBO) SessionUtils.getAttribute(
-						LOANACCOUNTOWNER, request)).getCustomerId());
+		CustomerBO customer = getCustomer(((CustomerBO) SessionUtils
+				.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId());
 		LoanBO loan;
 		if (perspective != null
 				&& perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
@@ -997,20 +1015,11 @@ public class LoanAccountAction extends AccountAppAction {
 			loan.save(loanActionForm.getState());
 
 		}
-
-
-		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
-		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0
-				&& customer.getCustomerLevel().isGroup()) {
-
+		boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
+		if (configService.isGlimEnabled() && customer.isGroup()) {
 			List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
 					.getAttribute("loanAccountDetailsView", request);
 			for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-
 				LoanBO individualLoan = LoanBO.createIndividualLoan(loan
 						.getUserContext(), loan.getLoanOffering(),
 						getCustomerBySystemId(loanAccountDetail.getClientId()),
@@ -1048,73 +1057,17 @@ public class LoanAccountAction extends AccountAppAction {
 			throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
+		CustomerBO customer = getCustomerFromRequest(request);
+		
+		populateGlimAttributes(request, loanActionForm, globalAccountNum, customer);
 
-		String customerId = request.getParameter(CUSTOMER_ID);
-
-		CustomerBO customer = null;
-		if (isNotEmpty(customerId)) {
-			customer = getCustomer(Integer.valueOf(customerId));
-		}
-
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED)
-				.getValue();
-
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0) {
-			SessionUtils.setAttribute(
-					LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
-					loanIndividualMonitoringIsEnabled.intValue(), request);
-			if (customer.isGroup()) {
-				SessionUtils.setAttribute(
-						LOANACCOUNTOWNERISAGROUP, "yes", request);
-			}
-		}
-
-		if (null != loanIndividualMonitoringIsEnabled
-				&& 0 != loanIndividualMonitoringIsEnabled.intValue()
-				&& customer.isGroup()) {
-			LoanBO loanBO = loanBusinessService
-					.findBySystemId(globalAccountNum);
-			List<LoanBO> individualLoans = loanBusinessService
-					.findIndividualLoans(Integer.valueOf(loanBO.getAccountId())
-							.toString());
-
-			List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
-			List<ClientBO> clients = new ArrayList<ClientBO>();
-
-			for (LoanBO temploan : individualLoans) {
-				LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
-				clients.add(clientBusinessService.getClient(temploan
-						.getCustomer().getCustomerId().intValue()));
-				clientDetail.setClientId(getStringValue(temploan.getCustomer()
-						.getCustomerId()));
-				clientDetail.setClientName(temploan.getCustomer()
-						.getDisplayName());
-				clientDetail.setBusinessActivity(Integer.toString(
-						temploan.getBusinessActivityId()));
-				clientDetail
-						.setLoanAmount(temploan.getLoanAmount() != null ? temploan
-								.getLoanAmount().getAmountDoubleValue()
-								: new Double(0));
-
-				clientDetails.add(clientDetail);
-			}
-
-			loanActionForm.setClientDetails(clientDetails);
-			SessionUtils.setCollectionAttribute(CLIENT_LIST,
-					clients, request);
-
-		}
 		// Set necessary form data if RepaymentIndepOfMeetingEnabled flag is true
-		if (ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled()) {
+		if (configService.isRepaymentIndepOfMeetingEnabled()) {
 			SessionUtils.setAttribute(
 							REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
 							1, request);
 			SessionUtils.setAttribute(LOANACCOUNTOWNERISACLIENT,
-					"yes", request);
+					LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
 			loadDataForRepaymentDate(request);
 			loanActionForm.setRecurMonth(customer.getCustomerMeeting()
 					.getMeeting().getMeetingDetails().getRecurAfter()
@@ -1161,6 +1114,82 @@ public class LoanAccountAction extends AccountAppAction {
 		loanBOInSession = null;
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
+	
+	private CustomerBO getCustomerFromRequest(HttpServletRequest request)
+			throws ServiceException {
+		String customerId = request.getParameter(CUSTOMER_ID);
+		if (isNotEmpty(customerId)) {
+			return getCustomer(Integer.valueOf(customerId));
+		}
+		return null;
+	}
+
+	private void populateGlimAttributes(HttpServletRequest request,
+			LoanAccountActionForm loanActionForm, String globalAccountNum,
+			CustomerBO customer) throws PageExpiredException, ServiceException {
+		GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(
+				loanActionForm, globalAccountNum, customer);
+		glimSessionAttributes.putIntoSession(request);
+	}
+
+	GlimSessionAttributes getGlimSpecificPropertiesToSet(
+			LoanAccountActionForm loanActionForm, String globalAccountNum,
+			CustomerBO customer) throws ServiceException, PageExpiredException {
+		if (configService.isGlimEnabled() && customer.isGroup()) {
+			List<LoanBO> individualLoans = loanBusinessService
+					.getAllChildrenForParentGlobalAccountNum(globalAccountNum);
+			List<ClientBO> activeClientsUnderGroup = clientBusinessService
+					.getActiveClientsUnderGroup(customer.getCustomerId()
+							.shortValue());
+			List<LoanAccountDetailsViewHelper> clientDetails = populateClientDetailsFromLoan(
+					activeClientsUnderGroup, individualLoans);
+			loanActionForm.setClientDetails(clientDetails);
+
+			List<String> clientIds = new ArrayList<String>();
+			for (LoanBO loanBO : individualLoans) {
+				clientIds.add(loanBO.getCustomer().getCustomerId().toString());
+			}			
+			loanActionForm.setClients(clientIds);
+			
+			return new GlimSessionAttributes(LoanConstants.GLIM_ENABLED_VALUE,
+					activeClientsUnderGroup,
+					LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
+		}
+		else {
+			return new GlimSessionAttributes(LoanConstants.GLIM_DISABLED_VALUE);
+		}
+	}
+
+	
+	List<LoanAccountDetailsViewHelper> populateClientDetailsFromLoan(
+			List<ClientBO> activeClientsUnderGroup, List<LoanBO> individualLoans)
+			throws ServiceException {
+		List<LoanAccountDetailsViewHelper> clientDetails = new ArrayList<LoanAccountDetailsViewHelper>();
+		for (final ClientBO client : activeClientsUnderGroup) {
+			LoanAccountDetailsViewHelper clientDetail = new LoanAccountDetailsViewHelper();
+			clientDetail.setClientId(getStringValue(client.getCustomerId()));
+			clientDetail.setClientName(client.getDisplayName());
+			LoanBO loanAccount = (LoanBO) CollectionUtils.find(individualLoans,
+					new Predicate() {
+						public boolean evaluate(Object object) {
+							return client.getCustomerId().equals(
+									((LoanBO) object).getCustomer()
+											.getCustomerId());
+						}
+
+					});
+			if (loanAccount != null) {
+				clientDetail.setBusinessActivity(Integer.toString(loanAccount
+						.getBusinessActivityId()));
+				clientDetail
+						.setLoanAmount(loanAccount.getLoanAmount() != null ? loanAccount
+								.getLoanAmount().getAmountDoubleValue()
+								: new Double(0));
+			}
+			clientDetails.add(clientDetail);
+		}
+		return clientDetails;
+	}
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward managePrevious(ActionMapping mapping, ActionForm form,
@@ -1177,74 +1206,76 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
 		boolean isGlimEnabled = isGlimEnabled();
 		CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
-		
+
 		if (isGlimEnabled) {
-			setGlimEnabledAsSessionAttribute(request);
-			if (customer.getCustomerLevel().isGroup()) {
-				SessionUtils.setAttribute(
-						LOANACCOUNTOWNERISAGROUP, "yes", request);
-			}
+			setGlimSessionAttributes(request, customer);
 		}
 
-		if (isGlimEnabled && customer.isGroup()) {
-			List<String> ids_clients_selected = loanAccountForm
-					.getClients();
-			List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
-			List<LoanAccountDetailsViewHelper> listdetail = loanAccountForm
-					.getClientDetails();
-			for (String index : ids_clients_selected) {
-				if (null != index && !EMPTY.equals(index)) {
-					LoanAccountDetailsViewHelper tempLoanAccount = new LoanAccountDetailsViewHelper();
-					ClientBO clt = clientBusinessService
-							.getClient(getIntegerValue(index));
-					LoanAccountDetailsViewHelper account = null;
-					for (LoanAccountDetailsViewHelper tempAccount : listdetail) {
-						if (tempAccount.getClientId().equals(index)) {
-							account = tempAccount;
-						}
-					}
-					tempLoanAccount.setClientId(clt.getGlobalCustNum()
-							.toString());
-					tempLoanAccount.setClientName(clt.getDisplayName());
-					tempLoanAccount.setLoanAmount(((null != account
-							.getLoanAmount() && !"".equals(account
-							.getLoanAmount())) ? account.getLoanAmount()
-							: Double.valueOf(0.0)));
+		Short localeId = getUserContext(request).getLocaleId();
 
-					
-					List<BusinessActivityEntity>  businessActEntity=(List<BusinessActivityEntity>) SessionUtils.getAttribute(
-							"BusinessActivities", request);
-					
-					for(ValueListElement busact:businessActEntity){
-						
-						if(busact.getId().toString().equals(account.getBusinessActivity()))
-						{
-							tempLoanAccount.setBusinessActivity(busact.getId().toString());
-							tempLoanAccount.setBusinessActivityName(busact.getName());
-						}
+		if (isGlimEnabled && customer.isGroup()) {
+			List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
+			List<LoanAccountDetailsViewHelper> clientDetails = loanAccountForm
+					.getClientDetails();
+			for (final String clientId : loanAccountForm.getClients()) {
+				if (!StringUtils.isEmpty(clientId)) {
+					LoanAccountDetailsViewHelper matchingClientDetail = (LoanAccountDetailsViewHelper) CollectionUtils
+							.find(clientDetails, new Predicate() {
+								public boolean evaluate(Object object) {
+									return ((LoanAccountDetailsViewHelper) object)
+											.getClientId().equals(clientId);
+								}
+							});
+
+					if (matchingClientDetail != null) {
+						matchingClientDetail
+								.setBusinessActivityName(findBusinessActivityName(
+										matchingClientDetail
+												.getBusinessActivity(),
+										localeId));
+						matchingClientDetail
+								.setGovermentId(findGovernmentId(getIntegerValue(clientId)));
+						loanAccountDetailsView.add(matchingClientDetail);
 					}
-					
-					tempLoanAccount.setGovermentId((!StringUtils
-							.isNullOrEmpty(clt.getGovernmentId()) ? clt
-							.getGovernmentId() : "-").toString());
-					loanAccountDetailsView.add(tempLoanAccount);
 				}
 			}
 			SessionUtils.setCollectionAttribute("loanAccountDetailsView",
 					loanAccountDetailsView, request);
 		}
-	
+
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		resetBusinessActivity(request, localeId, loanAccountActionForm);
+		return mapping.findForward(ActionForwards.managepreview_success
+				.toString());
+	}
+
+	private void resetBusinessActivity(HttpServletRequest request, Short localeId, LoanAccountActionForm loanAccountActionForm) throws PageExpiredException, Exception {
 		SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
 				request);
 		if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
 			SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
 					getNameForBusinessActivityEntity(loanAccountActionForm
-							.getBusinessActivityIdValue(), getUserContext(
-							request).getLocaleId()), request);
+							.getBusinessActivityIdValue(), localeId), request);
 		}
-		return mapping.findForward(ActionForwards.managepreview_success
-				.toString());
+	}
+
+	private String findGovernmentId(Integer clientId) throws ServiceException {
+		ClientBO client = clientBusinessService.getClient(clientId);
+		String governmentId = client.getGovernmentId();
+		return StringUtils.isNullOrEmpty(governmentId) ? "-" : governmentId;
+	}
+
+	private String findBusinessActivityName(String businessActivity,
+			Short localeId) throws ServiceException {
+		List<ValueListElement> businessActEntity = masterDataService
+				.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, localeId);
+		for (ValueListElement busact : businessActEntity) {
+
+			if (busact.getId().toString().equals(businessActivity)) {
+				return busact.getName();
+			}
+		}
+		return null;
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)
@@ -1751,4 +1782,78 @@ public class LoanAccountAction extends AccountAppAction {
 			throws ServiceException {
 		return meetingBusinessService;
 	}
+	
+	static class GlimSessionAttributes {
+
+		private final Integer isGlimEnabled;
+		private final List<ClientBO> clients;
+		private final String loanAccountOwnerIsGroup;
+
+		GlimSessionAttributes(int isGlimEnabled, List<ClientBO> clients,
+				String loanAccountOwnerIsGroup) {
+			this.isGlimEnabled = isGlimEnabled;
+			this.clients = clients;
+			this.loanAccountOwnerIsGroup = loanAccountOwnerIsGroup;
+		}
+
+		GlimSessionAttributes(int isGlimEnabled) {
+			this(isGlimEnabled, Collections.EMPTY_LIST, "");
+		}
+
+		void putIntoSession(HttpServletRequest request)
+				throws PageExpiredException {
+			SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED,
+					isGlimEnabled, request);
+			SessionUtils.setCollectionAttribute(CLIENT_LIST, clients, request);
+			SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP,
+					loanAccountOwnerIsGroup, request);
+		}
+
+		@Override
+		public int hashCode() {
+			final int PRIME = 31;
+			int result = 1;
+			result = PRIME * result + ((clients == null) ? 0 : clients.hashCode());
+			result = PRIME * result + ((isGlimEnabled == null) ? 0 : isGlimEnabled.hashCode());
+			result = PRIME * result + ((loanAccountOwnerIsGroup == null) ? 0 : loanAccountOwnerIsGroup.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			final GlimSessionAttributes other = (GlimSessionAttributes) obj;
+			if (clients == null) {
+				if (other.clients != null)
+					return false;
+			}
+			else if (!clients.equals(other.clients))
+				return false;
+			if (isGlimEnabled == null) {
+				if (other.isGlimEnabled != null)
+					return false;
+			}
+			else if (!isGlimEnabled.equals(other.isGlimEnabled))
+				return false;
+			if (loanAccountOwnerIsGroup == null) {
+				if (other.loanAccountOwnerIsGroup != null)
+					return false;
+			}
+			else if (!loanAccountOwnerIsGroup.equals(other.loanAccountOwnerIsGroup))
+				return false;
+			return true;
+		}
+		
+		@Override
+		public String toString() {
+			return "isGlimEnabled:"+isGlimEnabled+" loanAccountOwnerIsAGroup:"+loanAccountOwnerIsGroup+" clients:"+clients;
+		}
+
+	}
+
 }

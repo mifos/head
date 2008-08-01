@@ -3,7 +3,9 @@ package org.mifos.application.accounts.loan.struts.action;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -13,6 +15,15 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
+import org.easymock.classextension.EasyMock;
+import org.easymock.classextension.IMocksControl;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -25,15 +36,19 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
@@ -84,6 +99,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyFactory;
+import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -94,6 +111,10 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	private String flowKey1;
 	private HashMap<String, String> schedulePreviewPageParams;
 	private HashMap<String, String> prdOfferingPageParams;
+	private CustomerBO customerMock;
+	private LoanBusinessService loanBusinessServiceMock;
+	private ConfigurationBusinessService configurationBusinessServiceMock;
+	private HttpServletRequest requestMock;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -1406,5 +1427,83 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	private void initPrdOfferingPageParams(LoanOfferingBO loanOffering) {
 		prdOfferingPageParams.put("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
+	}
+	
+	public void testShouldGetGlimSpecificAttributes() throws Exception {
+		customerMock = createMock(CustomerBO.class);
+		expect(customerMock.isGroup()).andReturn(true);
+		expect(customerMock.getCustomerId()).andReturn(1);
+		LoanBusinessService loanBusinessServiceMock = createMock(LoanBusinessService.class);
+		expect(
+				loanBusinessServiceMock
+						.getAllChildrenForParentGlobalAccountNum("1"))
+				.andReturn(Collections.EMPTY_LIST);
+		ConfigurationBusinessService configurationBusinessServiceMock = createMock(ConfigurationBusinessService.class);
+		expect(configurationBusinessServiceMock.isGlimEnabled())
+				.andReturn(true);
+		LoanAccountAction loanAccountAction = new LoanAccountAction(
+				loanBusinessServiceMock, configurationBusinessServiceMock);
+		HttpServletRequest requestMock = createMock(HttpServletRequest.class);
+
+		LoanAccountAction.GlimSessionAttributes glimSessionAttributes = new LoanAccountAction.GlimSessionAttributes(
+				LoanConstants.GLIM_ENABLED_VALUE, Collections.EMPTY_LIST,
+				LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
+		replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
+
+		assertEquals(glimSessionAttributes, loanAccountAction
+				.getGlimSpecificPropertiesToSet(new LoanAccountActionForm(),
+						"1", customerMock));
+		verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
+	}
+	
+	public void testShouldNotSetAnyGlimSpecificAttributesIfGlimDisabled() throws Exception {
+		loanBusinessServiceMock = createMock(LoanBusinessService.class);
+		customerMock = createMock(CustomerBO.class);
+		expect(customerMock.isGroup()).andReturn(false);
+		configurationBusinessServiceMock = createMock(ConfigurationBusinessService.class);
+		expect(configurationBusinessServiceMock.isGlimEnabled())
+				.andReturn(true);
+		LoanAccountAction loanAccountAction = new LoanAccountAction(
+				loanBusinessServiceMock, configurationBusinessServiceMock);
+		requestMock = createMock(HttpServletRequest.class);
+		replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
+		LoanAccountAction.GlimSessionAttributes glimSessionAttributes = new LoanAccountAction.GlimSessionAttributes(
+				LoanConstants.GLIM_DISABLED_VALUE);
+		assertEquals(glimSessionAttributes, loanAccountAction
+				.getGlimSpecificPropertiesToSet(new LoanAccountActionForm(),
+						"1", customerMock));
+		verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);		
+	}
+
+	public void testShouldPopulateClientDetailsFromLoan() throws Exception {
+		
+		ClientBO clientMock1 = createMock(ClientBO.class);
+		expect(clientMock1.getCustomerId()).andReturn(1).anyTimes();
+		expect(clientMock1.getDisplayName()).andReturn("client 1");
+		
+		ClientBO clientMock2 = createMock(ClientBO.class);
+		expect(clientMock2.getCustomerId()).andReturn(2).anyTimes();
+		expect(clientMock2.getDisplayName()).andReturn("client 2");
+		
+		LoanBO loanMock = createMock(LoanBO.class);
+		expect(loanMock.getCustomer()).andReturn(clientMock1).anyTimes();
+		expect(loanMock.getBusinessActivityId()).andReturn(3);
+		expect(loanMock.getLoanAmount()).andReturn(new Money("100")).anyTimes();
+		
+		LoanAccountDetailsViewHelper clientDetails1 = new LoanAccountDetailsViewHelper();
+		clientDetails1.setClientId("1");
+		clientDetails1.setClientName("client 1");
+		clientDetails1.setBusinessActivity("3");
+		clientDetails1.setLoanAmount(new Double(100));
+		
+		LoanAccountDetailsViewHelper clientDetails2 = new LoanAccountDetailsViewHelper();
+		clientDetails2.setClientId("2");
+		clientDetails2.setClientName("client 2");
+		
+		replay(clientMock1,clientMock2,loanMock);
+		
+		List<LoanAccountDetailsViewHelper> clientDetails = new LoanAccountAction().populateClientDetailsFromLoan(Arrays.asList(clientMock1,clientMock2), Arrays.asList(loanMock));
+		assertEquals(Arrays.asList(clientDetails1,clientDetails2),clientDetails);
+		verify(clientMock1,clientMock2,loanMock);
 	}
 }

@@ -47,6 +47,8 @@ public class LoanBusinessService extends BusinessService {
 					new Object[] { accountId });
 		}
 	}
+	
+
 	public List<LoanActivityView> getRecentActivityView(
 			String globalAccountNumber, Short localeId) throws ServiceException {
 		LoanBO loanBO = findBySystemId(globalAccountNumber);
@@ -154,5 +156,11 @@ public class LoanBusinessService extends BusinessService {
 
 	public void initialize(Object object) {
 		new LoanPersistence().initialize(object);
+	}
+	
+	public List<LoanBO> getAllChildrenForParentGlobalAccountNum(
+			String globalAccountNum) throws ServiceException {
+		return findIndividualLoans(findBySystemId(globalAccountNum)
+				.getAccountId().toString());
 	}
 }

@@ -157,15 +157,17 @@
 								</c:otherwise>
 							</c:choose> </span></td>
 						</tr>
-						<tr id="Loan.PurposeOfLoan">
-							<td class="fontnormal"><mifos:mifoslabel
-								name="loan.business_work_act" keyhm="Loan.PurposeOfLoan"
-								isManadatoryIndicationNotRequired="yes" /><mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />&nbsp;
-							<span class="fontnormal">
-
-							 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivitieName')}" /></span></td>
-						</tr>
+						<c:if test="${loanIndividualMonitoringIsEnabled != '1'}">
+							<tr id="Loan.PurposeOfLoan">
+								<td class="fontnormal"><mifos:mifoslabel
+									name="loan.business_work_act" keyhm="Loan.PurposeOfLoan"
+									isManadatoryIndicationNotRequired="yes" /><mifos:mifoslabel
+									name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />&nbsp;
+								<span class="fontnormal">
+	
+								 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivitieName')}" /></span></td>
+							</tr>
+						</c:if>
 						<tr id="Loan.CollateralType">
 							<td class="fontnormal"><mifos:mifoslabel
 								name="loan.collateral_type" keyhm="Loan.CollateralType"

@@ -46,5 +46,14 @@ public class ConfigurationBusinessService extends BusinessService {
 		}
 	}
 	
+	public boolean isRepaymentIndepOfMeetingEnabled() throws ServiceException {
+		try {
+			return configurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		}
+		catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
 }
 

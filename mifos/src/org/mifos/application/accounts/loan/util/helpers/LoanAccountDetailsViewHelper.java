@@ -155,6 +155,87 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 	public boolean isAmountZeroOrNull() {
 		return loanAmount == null
 				|| (Double.compare(loanAmount, NumberUtils.DOUBLE_ZERO) == 0);
-	}	
+	}
 
+	@Override
+	public int hashCode() {
+		final int PRIME = 31;
+		int result = 1;
+		result = PRIME * result + ((accountId == null) ? 0 : accountId.hashCode());
+		result = PRIME * result + ((businessActivity == null) ? 0 : businessActivity.hashCode());
+		result = PRIME * result + ((businessActivityName == null) ? 0 : businessActivityName.hashCode());
+		result = PRIME * result + ((clientId == null) ? 0 : clientId.hashCode());
+		result = PRIME * result + ((clientName == null) ? 0 : clientName.hashCode());
+		result = PRIME * result + ((govermentId == null) ? 0 : govermentId.hashCode());
+		result = PRIME * result + ((individualAccountId == null) ? 0 : individualAccountId.hashCode());
+		result = PRIME * result + ((loanAmount == null) ? 0 : loanAmount.hashCode());
+		result = PRIME * result + ((loanPurpose == null) ? 0 : loanPurpose.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final LoanAccountDetailsViewHelper other = (LoanAccountDetailsViewHelper) obj;
+		if (accountId == null) {
+			if (other.accountId != null)
+				return false;
+		}
+		else if (!accountId.equals(other.accountId))
+			return false;
+		if (businessActivity == null) {
+			if (other.businessActivity != null)
+				return false;
+		}
+		else if (!businessActivity.equals(other.businessActivity))
+			return false;
+		if (businessActivityName == null) {
+			if (other.businessActivityName != null)
+				return false;
+		}
+		else if (!businessActivityName.equals(other.businessActivityName))
+			return false;
+		if (clientId == null) {
+			if (other.clientId != null)
+				return false;
+		}
+		else if (!clientId.equals(other.clientId))
+			return false;
+		if (clientName == null) {
+			if (other.clientName != null)
+				return false;
+		}
+		else if (!clientName.equals(other.clientName))
+			return false;
+		if (govermentId == null) {
+			if (other.govermentId != null)
+				return false;
+		}
+		else if (!govermentId.equals(other.govermentId))
+			return false;
+		if (individualAccountId == null) {
+			if (other.individualAccountId != null)
+				return false;
+		}
+		else if (!individualAccountId.equals(other.individualAccountId))
+			return false;
+		if (loanAmount == null) {
+			if (other.loanAmount != null)
+				return false;
+		}
+		else if (!loanAmount.equals(other.loanAmount))
+			return false;
+		if (loanPurpose == null) {
+			if (other.loanPurpose != null)
+				return false;
+		}
+		else if (!loanPurpose.equals(other.loanPurpose))
+			return false;
+		return true;
+	}	
 }
