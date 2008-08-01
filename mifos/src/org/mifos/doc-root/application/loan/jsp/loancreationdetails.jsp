@@ -380,8 +380,9 @@ explanation of the license and how it is applied.
 									<br>
 									</td>
 								</tr>
-								<tr class="fontnormal">
-									<c:if test="${loanaccountownerisagroup != 'yes'}">
+							    <c:if test="${loanaccountownerisagroup != 'yes'}">
+									<tr class="fontnormal">
+
 											<td align="right" class="fontnormal" width="30%"><mifos:mifoslabel
 												name="loan.amount" mandatory="yes" />:</td>
 											<td valign="top"><mifos:mifosdecimalinput
@@ -389,8 +390,8 @@ explanation of the license and how it is applied.
 												name="loan.allowed_amount" /> &nbsp; <c:out
 												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
-									</c:if>
-								</tr>
+									</tr>
+								</c:if>
 								<tr class="fontnormal">
 									<td width="30%" align="right" class="fontnormal"><span
 										class="mandatorytext"></span> 

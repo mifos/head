@@ -194,6 +194,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		addRequestParameter("disbursementDate", newDate);
 		addRequestParameter("gracePeriodDuration", "0");
 		addRequestParameter("intDedDisbursement", "0");
+		addRequestParameter("customerId", group.getCustomerId().toString());
 		actionPerform();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request

@@ -7,11 +7,10 @@ import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.CLI
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNER;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNERISACLIENT;
-import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
-import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOANPRDOFFERINGS;
+import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
 import static org.mifos.application.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -41,18 +40,14 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,7 +71,6 @@ import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionF
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -108,7 +102,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.RankOfDaysEntity;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.business.service.MeetingBusinessService;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
@@ -1144,13 +1137,7 @@ public class LoanAccountAction extends AccountAppAction {
 			List<LoanAccountDetailsViewHelper> clientDetails = populateClientDetailsFromLoan(
 					activeClientsUnderGroup, individualLoans);
 			loanActionForm.setClientDetails(clientDetails);
-
-			List<String> clientIds = new ArrayList<String>();
-			for (LoanBO loanBO : individualLoans) {
-				clientIds.add(loanBO.getCustomer().getCustomerId().toString());
-			}			
-			loanActionForm.setClients(clientIds);
-			
+			loanActionForm.setClients(fetchClientIdsWithMatchingLoans(individualLoans, clientDetails));
 			return new GlimSessionAttributes(LoanConstants.GLIM_ENABLED_VALUE,
 					activeClientsUnderGroup,
 					LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
@@ -1158,6 +1145,23 @@ public class LoanAccountAction extends AccountAppAction {
 		else {
 			return new GlimSessionAttributes(LoanConstants.GLIM_DISABLED_VALUE);
 		}
+	}
+
+	private List<String> fetchClientIdsWithMatchingLoans(List<LoanBO> individualLoans, List<LoanAccountDetailsViewHelper> clientDetails) {
+		List<String> clientIds = new ArrayList<String>();
+		for (final LoanAccountDetailsViewHelper clientDetail : clientDetails) {
+			LoanBO loanMatchingClientDetail = (LoanBO)CollectionUtils.find(individualLoans, new Predicate(){
+				public boolean evaluate(Object object) {
+					return ((LoanBO)object).getCustomer().getCustomerId().toString().equals(clientDetail.getClientId());
+				}
+			});
+			if(loanMatchingClientDetail != null){
+				clientIds.add(clientDetail.getClientId());
+			}else{
+				clientIds.add("");
+			}
+		}
+		return clientIds;
 	}
 
 	
@@ -1204,14 +1208,12 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
+		Short localeId = getUserContext(request).getLocaleId();
 		boolean isGlimEnabled = isGlimEnabled();
 		CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
-
 		if (isGlimEnabled) {
 			setGlimSessionAttributes(request, customer);
 		}
-
-		Short localeId = getUserContext(request).getLocaleId();
 
 		if (isGlimEnabled && customer.isGroup()) {
 			List<LoanAccountDetailsViewHelper> loanAccountDetailsView = new ArrayList<LoanAccountDetailsViewHelper>();
@@ -1248,6 +1250,7 @@ public class LoanAccountAction extends AccountAppAction {
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
 	}
+
 
 	private void resetBusinessActivity(HttpServletRequest request, Short localeId, LoanAccountActionForm loanAccountActionForm) throws PageExpiredException, Exception {
 		SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME,
@@ -1305,16 +1308,11 @@ public class LoanAccountAction extends AccountAppAction {
 		// Set newMeetingForRepaymentDay if isRepaymentIndepOfMeetingEnabled flag is true
 		CustomerBO customer = loanBOInSession.getCustomer();
 		MeetingBO newMeetingForRepaymentDay = null;
-		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();
+		boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
 
 		// Resolve new meeting for repayment day
 		if (isRepaymentIndepOfMeetingEnabled){
 		     newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanAccountActionForm, customer);
-		}
-		// ensure new disbursement date falls on a meeting day
-		else {
-			if (!isNewDisbursalDateValid(request, loanAccountActionForm, customer))
-				throw new AccountException(LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);;
 		}
 		
 		loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(),
@@ -1331,21 +1329,17 @@ public class LoanAccountAction extends AccountAppAction {
 						newMeetingForRepaymentDay
 						);		
 	      
-		ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-		
-		Integer loanIndividualMonitoringIsEnabled = configurationPersistence
-				.getConfigurationKeyValueInteger(
-						LOAN_INDIVIDUAL_MONITORING_IS_ENABLED).getValue();
+	
 		  
-		if (null != loanIndividualMonitoringIsEnabled
-				&& loanIndividualMonitoringIsEnabled.intValue() != 0
-				&& loanBO.getCustomer().getCustomerLevel().isGroup()) {
+		if (configService.isGlimEnabled()
+				&& customer.isGroup()) {
 			List<LoanAccountDetailsViewHelper> loanAccountDetailsList= (List<LoanAccountDetailsViewHelper>) SessionUtils.getAttribute("loanAccountDetailsView",request);
 			
 	        for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-	        	loanBO.updateLoan(new Money(!loanAccountDetail
-	        					.getLoanAmount().toString().equals("-")?loanAccountDetail
-						.getLoanAmount().longValue()+"":"0"),
+	        	Double loanAmount = loanAccountDetail
+					        					.getLoanAmount();
+				Money loanMoney = new Money(!loanAmount.toString().equals("-")?loanAmount.longValue()+"":"0");
+				loanBO.updateLoan(loanMoney,
 	    				!loanAccountDetail.getBusinessActivity().equals("-")?Integer.valueOf(loanAccountDetail.getBusinessActivity()):0);
 	        	request.setAttribute(CUSTOMER_ID,loanBO.getCustomer().getCustomerId().toString());
 			}

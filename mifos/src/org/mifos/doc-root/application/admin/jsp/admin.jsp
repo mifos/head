@@ -169,15 +169,6 @@ while(enn.hasMoreElements()){
 								action="ppiAction.do?method=configure">
 								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
 						</tr>
-						<tr class="fontnormal">
-							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
-								height="11"></td>
-							<td>
-							 <html-el:link
-								action="viewConfigurationSettingsAction.do?method=get&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.viewconfigurationsettings" /></html-el:link></td>
-						</tr>
-
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>

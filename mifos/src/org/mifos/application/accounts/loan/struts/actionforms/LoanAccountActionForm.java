@@ -56,6 +56,8 @@ import org.apache.commons.collections.Predicate;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountDetailsViewHelper;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -790,7 +792,18 @@ public class LoanAccountActionForm extends BaseActionForm {
 		performGlimSpecificValidations(errors, request);
 		validateCustomFields(request, errors);
 		validateRepaymentDayRequired(request, errors);
+		validateDisbursementDate(errors,getCustomer(request),getDisbursementDateValue(getUserContext(request).getPreferredLocale()));
 	}
+	
+	private void validateDisbursementDate(ActionErrors errors,
+			CustomerBO customer, java.sql.Date disbursementDateValue)
+			throws AccountException, ServiceException {
+		if (!configService.isRepaymentIndepOfMeetingEnabled()
+				&& !LoanBO.isDisbursementDateValid(customer,
+						disbursementDateValue)) {
+			addError(errors, LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+		}
+	}	
 
 	private void checkValidationForPreviewBefore(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {

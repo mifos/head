@@ -3,8 +3,6 @@ package org.mifos.framework.components.configuration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.application.admin.struts.action.ViewConfigurationSettingsActionTest;
-import org.mifos.application.admin.struts.action.ViewConfigurationSettingsUIBeanTest;
 import org.mifos.application.master.business.TestMifosCurrency;
 import org.mifos.framework.components.configuration.business.TestConfiguration;
 import org.mifos.framework.components.configuration.business.TestConfigurationKeyValueInteger;
@@ -25,9 +23,6 @@ public class ConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestConfigurationIntializer.class);
 		testSuite.addTestSuite(TestConfiguration.class);
 		testSuite.addTestSuite(TestConfigurationKeyValueInteger.class);
-		testSuite.addTestSuite(ViewConfigurationSettingsActionTest.class);
-		testSuite.addTestSuite(ViewConfigurationSettingsUIBeanTest.class);
 		return testSuite;
-		
 	}
 }

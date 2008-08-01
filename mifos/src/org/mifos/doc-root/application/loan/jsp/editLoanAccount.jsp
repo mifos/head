@@ -35,7 +35,6 @@ explanation of the license and how it is applied.
 	<tiles:put name="body" type="string">
 		<body onload="disableFields()">
 		<SCRIPT SRC="pages/application/loan/js/EditLoanAccount.js"></SCRIPT>
-		
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script src="pages/framework/js/conversion.js"></script>
@@ -156,7 +155,6 @@ explanation of the license and how it is applied.
 					<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
 						<c:if test="${loanaccountownerisagroup == 'yes'}">
 
-							
 								<tr>
 									<td width="5%" valign="top"
 										class="drawtablerowboldnolinebg"><input
@@ -173,6 +171,7 @@ explanation of the license and how it is applied.
 											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
 										</fmt:message></td>
 								</tr>
+								<script type="text/javascript">var CLIENTS_SIZE_COUNTER = 0;</script>
 								<c:forEach var="client" varStatus="loopStatus1"
 									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 									<bean:define id="indice" toScope="request">
@@ -182,20 +181,21 @@ explanation of the license and how it is applied.
 										<td valign="top" class="drawtablerow"><html-el:checkbox
 											property="clients[${indice}]"
 											value="${client.customerId}"
-											onclick="selectAllCheck(this)" /></td>
+											onclick="selectAllCheck(this)"
+											onchange="CalculateTotalLoanAmount(CLIENTS_SIZE_COUNTER);" /></td>
 										<td width="29%" valign="top" class="drawtablerow"><span
 											class="fontnormalbold"><mifos:mifoslabel
 											name="${ConfigurationConstants.CLIENT}"
 											isColonRequired="Yes" /></span> <c:out
 											value="${client.displayName}" /> <br>
-										<span class="fontnormalbold"><mifos:mifoslabel
-											name="${ConfigurationConstants.CLIENT_ID}"
-											isColonRequired="Yes" /></span> <c:out
-											value="${client.globalCustNum}" /> <br>
-										<span class="fontnormalbold"><c:out
-											value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
-											value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
-											value="${client.governmentId}" />
+											<span class="fontnormalbold"><mifos:mifoslabel
+												name="${ConfigurationConstants.CLIENT_ID}"
+												isColonRequired="Yes" /></span> <c:out
+												value="${client.globalCustNum}" /> <br>
+											<span class="fontnormalbold"><c:out
+												value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
+												value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
+												value="${client.governmentId}" />
 										<br>
 										</td>
 										<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
@@ -206,33 +206,54 @@ explanation of the license and how it is applied.
 												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
 												<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
 											</c:forEach>
-										</mifos:select></td>
+										</mifos:select></td>										
 									</tr>
+									<script type="text/javascript">CLIENTS_SIZE_COUNTER++;</script>
 								</c:forEach>
-							
-							<br>	<br>		<br>	
-
+								</table>
+								<table align="right" width="93%" border="0" cellpadding="3"
+										cellspacing="0">
+										<tr>
+											<td align="right" class="fontnormalbold" width="28%"><mifos:mifoslabel
+												name="loan.totalamount" />:</td>
+											<td valign="top" class="fontnormal"><mifos:mifosdecimalinput
+												property="loanAmount" styleId="sumLoanAmount" value="0.0" readonly="true" />
+											<mifos:mifoslabel
+												name="loan.allowed_amount" /> &nbsp; <c:out
+												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
+											<script>CalculateTotalLoanAmount(CLIENTS_SIZE_COUNTER);</script>	
+										</tr>
+								</table>
 						</c:if>
 					</c:if> 
-					<!--  -->
-					
-						
-						
-						<tr class="fontnormal">
-							<td width="30%" align="right" class="fontnormal">
-								<font color="#FF0000">*</font>
-								<fmt:message key="loan.loanAmount">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-								</fmt:message>:&nbsp;</td>
-							<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
-								value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
-								name="loan.allowed_amount" />&nbsp; <c:out
-								value="${sessionScope.loanAccountActionForm.minLoanAmount}" />
-							&nbsp; - &nbsp; <c:out
-								value="${sessionScope.loanAccountActionForm.maxLoanAmount}" />)
-							</td>
-
-						</tr>
+<br>
+<br>					
+						<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
+										name="loan.acc_details" /> <br>
+								<br>
+								</td>
+							</tr>
+ 							<c:if test="${loanaccountownerisagroup != 'yes'}">											
+							<tr class="fontnormal">
+									<td width="30%" align="right" class="fontnormal">
+										<font color="#FF0000">*</font>
+										<fmt:message key="loan.loanAmount">
+											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
+										</fmt:message>:&nbsp;</td>
+									<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
+										value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
+										name="loan.allowed_amount" />&nbsp; <c:out
+										value="${sessionScope.loanAccountActionForm.minLoanAmount}" />
+									&nbsp; - &nbsp; <c:out
+										value="${sessionScope.loanAccountActionForm.maxLoanAmount}" />)
+									</td>
+								</tr>
+								
+							</c:if>	
+												
 						<tr class="fontnormal">
 							<td width="30%" align="right" class="fontnormal">
 								<font color="#FF0000">*</font>
@@ -325,21 +346,23 @@ explanation of the license and how it is applied.
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
 							<html-el:hidden property="gracePeriodDuration"/>
 							<html-el:hidden property="gracePeriodTypeId" value="${BusinessKey.gracePeriodType.id}" />
-						<script>setIntrestAtDisb();</script>
-						<tr class="fontnormal">
-							<td align="right" class="fontnormal"><mifos:mifoslabel
-								keyhm="Loan.PurposeOfLoan" name="Loan.PurposeOfLoan"
-								bundle="loanUIResources" /><mifos:mifoslabel
-								keyhm="Loan.PurposeOfLoan" name="${ConfigurationConstants.LOAN}"
-								isColonRequired="yes" bundle="loanUIResources"
-								isManadatoryIndicationNotRequired="yes" /></td>
-							<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
-								property="businessActivityId">
-								<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
-									<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
-								</c:forEach>
-							</mifos:select></td>
-						</tr>
+						<script>//setIntrestAtDisb();</script>
+						<c:if test="${loanaccountownerisagroup != 'yes'}">
+							<tr class="fontnormal">
+								<td align="right" class="fontnormal"><mifos:mifoslabel
+									keyhm="Loan.PurposeOfLoan" name="Loan.PurposeOfLoan"
+									bundle="loanUIResources" /><mifos:mifoslabel
+									keyhm="Loan.PurposeOfLoan" name="${ConfigurationConstants.LOAN}"
+									isColonRequired="yes" bundle="loanUIResources"
+									isManadatoryIndicationNotRequired="yes" /></td>
+								<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
+									property="businessActivityId">
+									<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
+										<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+									</c:forEach>
+								</mifos:select></td>
+							</tr>
+						</c:if>
 						<c:if
 							test="${BusinessKey.accountState.id != 1 || BusinessKey.accountState.id != 2}">
 							<html-el:hidden

@@ -95,3 +95,16 @@ function setGracePeriod() {
 		}
 	}
 }
+
+function CalculateTotalLoanAmount(length){
+    var curForm = document.forms["loanAccountActionForm"];
+	var totalLoanAmount = document.getElementById("sumLoanAmount");
+	totalLoanAmount.value = "0.0";
+	for(var i=0;i<length;i++)	{		
+		var curAmountValue = parseInt(curForm.elements["clientDetails["+i+"].loanAmount"].value);
+		if ((curForm.elements["clients["+i+"]"].checked==true) && (!isNaN(curAmountValue)))
+		{
+		    totalLoanAmount.value = parseInt(totalLoanAmount.value) + curAmountValue;
+		}
+	}
+}

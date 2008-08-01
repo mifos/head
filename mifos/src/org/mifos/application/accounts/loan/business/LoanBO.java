@@ -460,13 +460,13 @@ public class LoanBO extends AccountBO {
 						LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
 			}
 		
-		if (isRepaymentIndepOfMeetingEnabled == false)
+		if (!isRepaymentIndepOfMeetingEnabled)
 			if (!isDisbursementDateValid(customer, disbursementDate)) {
 				throw new AccountException(
 						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 			}
 
-		if (interestDeductedAtDisbursement== true
+		if (interestDeductedAtDisbursement
 				&& noOfinstallments.shortValue() <= 1) {
 			
 			throw new AccountException(
@@ -1484,9 +1484,8 @@ public class LoanBO extends AccountBO {
 		loanSummary.setOriginalPrincipal(loanAmount);
 		update();
 	}
+	
 	public void updateLoan(Money loanAmount,Integer businessActivityId) throws AccountException {
-		
-		
 		setLoanAmount(loanAmount);
 		setBusinessActivityId(businessActivityId);
 		update();
@@ -2209,7 +2208,7 @@ public class LoanBO extends AccountBO {
 		throw new AccountException(AccountConstants.NOT_SUPPORTED_GRACE_TYPE);
 	}
 
-	private static Boolean isDisbursementDateValid(
+	public static Boolean isDisbursementDateValid(
 			CustomerBO specifiedCustomer, Date disbursementDate)
 			throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(

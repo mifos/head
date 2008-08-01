@@ -320,17 +320,20 @@
 													</c:choose> </span>
 											</td>
 										</tr>
-										<tr id="Loan.PurposeOfLoan">
-											<td class="fontnormalbold">
-												<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes" />
-												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
-												&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" var="busId">
-														<c:if test="${busId.id eq BusinessKey.businessActivityId}">
-															<c:out value="${busId.name}" />
-														</c:if>
-													</c:forEach> </span>
-											</td>
-										</tr>
+										<c:if test="${loanaccountownerisagroup != 'yes'}">
+											<tr id="Loan.PurposeOfLoan">
+												<td class="fontnormalbold">
+													<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes" />
+													<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
+													&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" var="busId">
+															<c:if test="${busId.id eq BusinessKey.businessActivityId}">
+																<c:out value="${busId.name}" />
+															</c:if>
+														</c:forEach> </span>
+												</td>
+											</tr>
+										</c:if>
+										
 										<tr id="Loan.CollateralType">
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
