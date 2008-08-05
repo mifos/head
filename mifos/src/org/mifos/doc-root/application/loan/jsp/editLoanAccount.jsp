@@ -33,7 +33,6 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<body onload="disableFields()">
 		<SCRIPT SRC="pages/application/loan/js/EditLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/application/loan/js/CreateLoanAccountPreview.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -42,7 +41,21 @@ explanation of the license and how it is applied.
 		<script src="pages/framework/js/con_${sessionScope["UserContext"].currentLocale}.js"></script>
 		
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
-		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
+
+	    <script type="text/javascript">
+					    function addEvent(obj, evType, fn){ 
+								 if (obj.addEventListener){ 
+								 		obj.addEventListener(evType, fn, false); 
+								 		return true; 
+								 } else if (obj.attachEvent){ 
+								 		var r = obj.attachEvent("on"+evType, fn); 
+								 		return r; 
+								 } else { 
+								 		return false; 
+								 } 
+						}
+	    </script>
+
 				<script>
 			function selectAll(x) {
 				for(var i=0,l=x.form.length; i<l; i++)
@@ -95,6 +108,7 @@ explanation of the license and how it is applied.
 		    	form.action="loanAccountAction.do?method=cancel";
 				form.submit();
             }
+            
  		</script>
 
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -108,6 +122,8 @@ explanation of the license and how it is applied.
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'repaymentSchedulesIndependentOfMeetingIsEnabled')}" var="repaymentSchedulesIndependentOfMeetingIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceId')}" var="recurrenceId" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recurrenceName')}" var="recurrenceName" />
+			<c:set value="${requestScope['accountState']}" var="accountState" />
+			<c:set value="${requestScope['frequency']}" var="frequency" />
 
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 
@@ -149,84 +165,12 @@ explanation of the license and how it is applied.
 							<br>
 							</td>
 						</tr>
-						
-		
-					<!-- Prerequisites : create loan account for Group / When Group loan with individual Monitoring is enabled -->
-					<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
-						<c:if test="${loanaccountownerisagroup == 'yes'}">
-
-								<tr>
-									<td width="5%" valign="top"
-										class="drawtablerowboldnolinebg"><input
-										type="checkbox" onclick="for(var i=0,l=this.form.length; i<l; i++){if(this.form[i].type == 'checkbox' && this.form[i].name != 'selectAll1'){this.form[i].checked=this.checked}}"
-										name="selectAll1"></td>
-									<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
-										name="loan.acc_owner" /></td>
-									<td width="31%" class="drawtablerowboldnolinebg">
-										<fmt:message key="loan.loanAmount">
-											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-										</fmt:message></td>
-									<td width="35%" class="drawtablerowboldnolinebg">
-										<fmt:message key="loan.purposeOfLoan">
-											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></fmt:param>
-										</fmt:message></td>
-								</tr>
-								<script type="text/javascript">var CLIENTS_SIZE_COUNTER = 0;</script>
-								<c:forEach var="client" varStatus="loopStatus1"
-									items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
-									<bean:define id="indice" toScope="request">
-										<c:out value="${loopStatus1.index}" />
-									</bean:define>
-									<tr>
-										<td valign="top" class="drawtablerow"><html-el:checkbox
-											property="clients[${indice}]"
-											value="${client.customerId}"
-											onclick="selectAllCheck(this)"
-											onchange="CalculateTotalLoanAmount(CLIENTS_SIZE_COUNTER);" /></td>
-										<td width="29%" valign="top" class="drawtablerow"><span
-											class="fontnormalbold"><mifos:mifoslabel
-											name="${ConfigurationConstants.CLIENT}"
-											isColonRequired="Yes" /></span> <c:out
-											value="${client.displayName}" /> <br>
-											<span class="fontnormalbold"><mifos:mifoslabel
-												name="${ConfigurationConstants.CLIENT_ID}"
-												isColonRequired="Yes" /></span> <c:out
-												value="${client.globalCustNum}" /> <br>
-											<span class="fontnormalbold"><c:out
-												value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
-												value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
-												value="${client.governmentId}" />
-										<br>
-										</td>
-										<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
-											property="clientDetails[${indice}].loanAmount" /></td>
-										<td width="35%" valign="top" class="drawtablerow"><mifos:select
-											property="clientDetails[${indice}].businessActivity">
-											<c:forEach var="BusinessActivity"
-												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
-												<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
-											</c:forEach>
-										</mifos:select></td>										
-									</tr>
-									<script type="text/javascript">CLIENTS_SIZE_COUNTER++;</script>
-								</c:forEach>
-								</table>
-								<table align="right" width="93%" border="0" cellpadding="3"
-										cellspacing="0">
-										<tr>
-											<td align="right" class="fontnormalbold" width="28%"><mifos:mifoslabel
-												name="loan.totalamount" />:</td>
-											<td valign="top" class="fontnormal"><mifos:mifosdecimalinput
-												property="loanAmount" styleId="sumLoanAmount" value="0.0" readonly="true" />
-											<mifos:mifoslabel
-												name="loan.allowed_amount" /> &nbsp; <c:out
-												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
-											<script>CalculateTotalLoanAmount(CLIENTS_SIZE_COUNTER);</script>	
-										</tr>
-								</table>
-						</c:if>
-					</c:if> 
+							<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
+								<c:if test="${loanaccountownerisagroup == 'yes'}">
+									<tiles:insert definition=".individualLoansForm" flush="false">
+									</tiles:insert>
+							    </c:if>
+							</c:if>
 <br>
 <br>					
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -261,7 +205,7 @@ explanation of the license and how it is applied.
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
 								</fmt:message>:&nbsp;</td>
 							<td width="70%" valign="top"><mifos:mifosdecimalinput
-								property="interestRate"
+								property="interestRate" readonly="${loanfn:isDisabledWhileEditingGlim('interestRate',accountState)}"
 								value="${sessionScope.loanAccountActionForm.interestRate}"
 								decimalFmt="10.5" /> 
 								<fmt:message key="loan.allowedInterest">
@@ -277,7 +221,8 @@ explanation of the license and how it is applied.
 							<mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" />:&nbsp;
 							</td>
 							<td valign="top"><mifos:mifosnumbertext
-								name="loanAccountActionForm" property="noOfInstallments"
+								name="loanAccountActionForm" property="noOfInstallments" 
+								readonly="${loanfn:isDisabledWhileEditingGlim('noOfInstallments',accountState)}"
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
 							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <c:out
 								value="${sessionScope.loanAccountActionForm.minNoInstallments}" />&nbsp;
@@ -290,19 +235,12 @@ explanation of the license and how it is applied.
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.proposed_date" mandatory="yes" />:&nbsp;
 							</td>
-							<td valign="top"><date:datetag property="disbursementDate" /></td>
+							<c:set var="Yes" value="No"/>
+							<c:if test="${loanfn:isDisabledWhileEditingGlim('disbursementDate',accountState)}">
+							<c:set var="Yes"  value="Yes"/>
+							</c:if>
+							<td valign="top"><date:datetag isDisabled="${Yes}" property="disbursementDate" /></td>
 						</tr>
-						<!--  Disable interest deducted at disbursement
-						<tr class="fontnormal">
-							<td align="right" class="fontnormal">
-								<fmt:message key="loan.interestDisbursement">
-									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /></fmt:param>
-								</fmt:message>:&nbsp;</td>
-							<td valign="top">
-							<html-el:hidden property="intDedDisbursement" value="${sessionScope.loanAccountActionForm.intDedDisbursement}" />
-							<input type="checkbox" name="intDedDisb" onclick="setGracePeriod()" /></td>
-						</tr>
-						-->
 						
 						<!--  For Repayment day  -->
 						<c:if
@@ -312,26 +250,55 @@ explanation of the license and how it is applied.
 								<td align="right" class="fontnormal"><span
 									class="mandatorytext"></span> <mifos:mifoslabel
 									name="loan.repayment_date" mandatory="yes" />:</td>
-								<td valign="top"><c:if
-									test="${recurrenceId == '2'}">
+								<td valign="top">
+								<c:if test="${recurrenceId == '2'}">
 									<mifos:mifoslabel name="meeting.labelThe"
 										bundle="MeetingResources" />
-									<mifos:select property="monthRank">
-										<c:forEach var="weekRank"
-											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}">
-											<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
-										</c:forEach>
-									</mifos:select>
-								</c:if><mifos:select property="monthWeek">
-									<c:forEach var="weekDay"
+								<c:choose>
+									 <c:when test="${loanfn:isDisabledWhileEditingGlim('ordinalOfMonth',accountState)}">									     
+ 									    <c:forEach var="weekRank"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}">
+ 									         <c:if test="${weekRank.value == requestScope['ordinalOfMonth']}">
+ 									                   <c:out value="${weekRank.name}"/>
+													<html-el:hidden value="${requestScope['ordinalOfMonth']}" property="monthRank" />
+ 									         </c:if>
+ 									     </c:forEach>
+					       			</c:when>
+									<c:otherwise>
+										<mifos:select property="monthRank">
+											<c:forEach var="weekRank"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}">
+												<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
+											</c:forEach>
+										</mifos:select>
+									</c:otherwise>
+								  </c:choose>	
+								</c:if>
+								
+								<c:choose>
+									 <c:when test="${loanfn:isDisabledWhileEditingGlim('weekDayId',accountState)}">									     
+ 									     <c:forEach var="weekDay"
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}">
-										<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
-									</c:forEach>
-								</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
-									bundle="MeetingResources" /> <mifos:mifosnumbertext
-									property="recurMonth" size="3" maxlength="3" disabled="true" />
-								<c:out
-									value="${recurrenceName}" />
+ 									         <c:if test="${weekDay.value == requestScope['weekDayId']}">
+ 									                   <c:out value="${weekDay.name}"/>
+														<html-el:hidden
+															value="${requestScope['weekDayId']}"
+															property="monthWeek" />
+ 									         </c:if>
+ 									     </c:forEach>
+					       			</c:when>
+									<c:otherwise>
+										<mifos:select property="monthWeek">
+											<c:forEach var="weekDay"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekDayList')}">
+												<html-el:option value="${weekDay.value}">${weekDay.name}</html-el:option>
+											</c:forEach>
+										</mifos:select> 
+									</c:otherwise>
+								  </c:choose>								
+								<mifos:mifoslabel name="meeting.labelOfEvery" bundle="MeetingResources" />
+								<mifos:mifosnumbertext property="recurMonth" size="3" maxlength="3" disabled="true" />
+								<c:out value="${recurrenceName}" />
 								</td>
 							</tr>
 						</c:if>
@@ -340,7 +307,7 @@ explanation of the license and how it is applied.
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>
 							<td valign="top">
-								<mifos:mifosnumbertext property="gracePeriod" onchange="setGracePeriodDurationValue();"/></td>
+								<mifos:mifosnumbertext property="gracePeriod"  disabled="${loanfn:isDisabledWhileEditingGlim('gracePeriod',accountState)}" onchange="setGracePeriodDurationValue();"/></td>
 						</tr>
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
@@ -363,41 +330,39 @@ explanation of the license and how it is applied.
 								</mifos:select></td>
 							</tr>
 						</c:if>
-						<c:if
-							test="${BusinessKey.accountState.id != 1 || BusinessKey.accountState.id != 2}">
-							<html-el:hidden
-								value="${sessionScope.loanAccountActionForm.loanAmount}"
-								property="loanAmount" />
-							<html-el:hidden
-								value="${sessionScope.loanAccountActionForm.interestRate}"
-								property="interestRate" />
-							<html-el:hidden
-								value="${sessionScope.loanAccountActionForm.noOfInstallments}"
-								property="noOfInstallments" />
-							<!-- <html-el:hidden value="${requestScope.loan.businessActivityId}" property="businessActivityId"/> -->
-							<html-el:hidden
-								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}"
-								property="gracePeriodDuration" />
-							<html-el:hidden
-								value="${sessionScope.loanAccountActionForm.intDedDisbursement}"
-								property="intDedDisbursement" />
-						</c:if>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								keyhm="Loan.CollateralType" name="Loan.CollateralType"
 								isColonRequired="yes" bundle="loanUIResources" /></td>
-							<td valign="top"><mifos:select keyhm="Loan.CollateralType"
-								property="collateralTypeId">
-								<c:forEach var="CollateralType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" >
-									<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
-								</c:forEach>
-							</mifos:select></td>
+							<td valign="top">
+								<c:choose>
+									 <c:when test="${loanfn:isDisabledWhileEditingGlim('collateralType',accountState)}">									     
+ 									     <c:forEach var="CollateralType" items="${requestScope['CollateralTypes']}" >
+ 									         <c:if test="${CollateralType.id  == requestScope['collateralTypeId']}">
+ 									                   <c:out value="${CollateralType.name}"/>
+														<html-el:hidden
+															value="${requestScope['collateralTypeId']}"
+															property="collateralTypeId" />
+ 									         </c:if>
+ 									     </c:forEach>
+					       			</c:when>
+					       
+									<c:otherwise>
+										<mifos:select keyhm="Loan.CollateralType"
+											property="collateralTypeId">
+											<c:forEach var="CollateralType" items="${requestScope['CollateralTypes']}" >
+												<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
+											</c:forEach>
+										</mifos:select>
+									</c:otherwise>
+								</c:choose>
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right" valign="top" class="fontnormal"><mifos:mifoslabel
 								keyhm="Loan.CollateralNotes" name="Loan.CollateralNotes"
 								isColonRequired="yes" bundle="loanUIResources" /></td>
-							<td valign="top"><mifos:textarea keyhm="Loan.CollateralNotes"
+							<td valign="top"><mifos:textarea keyhm="Loan.CollateralNotes" readonly="${loanfn:isDisabledWhileEditingGlim('collateralNotes',accountState)}"
 								property="collateralNote" style="width:320px; height:110px;"></mifos:textarea></td>
 						</tr>
 					</table>
@@ -419,13 +384,13 @@ explanation of the license and how it is applied.
 							</td>
 			                <td width="70%">
 								<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">
-				                	<mifos:mifosnumbertext  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+				                	<mifos:mifosnumbertext  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"  readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 				                </c:if>
 				               	<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
-				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 								</c:if>
 				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
-				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200" readonly="${loanfn:isDisabledWhileEditingGlim('customField',accountState)}"/>
 				                </c:if>
 				                <html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 				                <html-el:hidden property='customField[${ctr}].fieldType' value='${cf.fieldType}' />
@@ -463,9 +428,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden value="${BusinessKey.accountState.id}"
 				property="accountStateId" />
 			<html-el:hidden value="${recurrenceId}"
-				property="recurrenceId" />
-
+				property="recurrenceId" />			
 		</html-el:form>
-		</body>
 	</tiles:put>
 </tiles:insert>

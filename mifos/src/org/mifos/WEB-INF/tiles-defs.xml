@@ -102,5 +102,11 @@
          <put name="header" value="/pages/framework/jsp/reportsheader.jsp" />
     </definition>
     
+    <definition name=".individualLoansForm" template="/pages/application/loan/jsp/glimLoanForm.jsp">
+    </definition>
+    
 </tiles-definitions>
+
+
+
 

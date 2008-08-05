@@ -13,4 +13,6 @@ public class LoanAccountActionFormTestConstants {
 	public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY = new LoanAccountDetailsViewHelper("1","",null); 
 	public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL = new LoanAccountDetailsViewHelper("2", null, null); 
 	public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2 = new LoanAccountDetailsViewHelper("3", null, null); 
+	
+	public static final LoanAccountDetailsViewHelper LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_200 = new LoanAccountDetailsViewHelper("2","1",Double.valueOf(200), "1");
 }

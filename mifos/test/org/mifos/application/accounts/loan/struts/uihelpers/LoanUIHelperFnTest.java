@@ -5,6 +5,8 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
@@ -16,6 +18,11 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
@@ -86,5 +93,18 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 				.getMiscPenalty().getAmountDoubleValue());
 		assertEquals("principal", m, repaymentScheduleInstallment
 				.getPrincipal().getAmountDoubleValue());
+	}
+	
+	public void testShouldDisableEditAmountForGlimAccountInDifferentAccountStates() throws Exception {
+		ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
+		expect(configServiceMock.isGlimEnabled()).andReturn(true).anyTimes();
+		replay(configServiceMock);
+		assertTrue("assertion failed",LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_APPROVED, configServiceMock));
+		assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_PARTIAL_APPLICATION, configServiceMock));
+		assertFalse(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_PENDING_APPROVAL, configServiceMock));
+		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_ACTIVE_IN_BAD_STANDING, configServiceMock));
+		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, configServiceMock));
+		assertTrue(LoanUIHelperFn.isDisabledWhileEditingGlim("clientDetails.loanAmount", AccountState.LOAN_CLOSED_OBLIGATIONS_MET, configServiceMock));
+		verify(configServiceMock);
 	}
 }

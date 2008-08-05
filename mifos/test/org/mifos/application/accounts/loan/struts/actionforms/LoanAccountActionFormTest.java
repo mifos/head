@@ -1,10 +1,10 @@
 package org.mifos.application.accounts.loan.struts.actionforms;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL;
 import static org.mifos.application.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2;
@@ -278,6 +278,7 @@ public class LoanAccountActionFormTest extends MifosTestCase {
 		replay(requestMock);
 		assertEquals(Arrays.asList("1", "2", "3"), form
 				.getSelectedClientIdsFromRequest(requestMock));
+		verify(requestMock);
 	}
 
 	public void testSetsEmptyStringForClientsNotMatchingInput()

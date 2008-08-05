@@ -15,8 +15,10 @@ import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCre
 import org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalActionTest;
 import org.mifos.application.accounts.loan.struts.action.TestAccountStatusAction;
 import org.mifos.application.accounts.loan.struts.action.TestLoanAccountAction;
+import org.mifos.application.accounts.loan.struts.action.TestLoanAccountActionIndividualLoans;
 import org.mifos.application.accounts.loan.struts.action.TestLoanActivityAction;
 import org.mifos.application.accounts.loan.struts.action.TestRepayLoanAction;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionFormTest;
 import org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFnTest;
 import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanActivityTag;
 import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanRepayTag;
@@ -45,6 +47,8 @@ public class LoanTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestLoanBOForReversal.class);
         testSuite.addTest(TestLoanBORedoDisbursal.testSuite());
         testSuite.addTestSuite(ReverseLoanDisbursalActionTest.class);
+        testSuite.addTestSuite(TestLoanAccountActionIndividualLoans.class);
+        testSuite.addTestSuite(LoanAccountActionFormTest.class);
 		return testSuite;
 	}
 }

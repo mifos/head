@@ -197,8 +197,6 @@ explanation of the license and how it is applied.
 									<td><font class="fontnormalRedBold"> <html-el:errors
 										bundle="loanUIResources" /> </font></td>
 								</tr>
-
-
 								<tr>
 									<td class="fontnormal"><br>
 									<span class="fontnormalbold"> <mifos:mifoslabel
@@ -282,95 +280,12 @@ explanation of the license and how it is applied.
 								</tr>
 							</table>
 							<br>
-
-							<!-- Prerequisites : create loan account for Group / When Group loan with individual Monitoring is enabled -->
 							<c:if test="${loanIndividualMonitoringIsEnabled == '1'}">
 								<c:if test="${loanaccountownerisagroup == 'yes'}">
-									<c:set
-										value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientListSize')}"
-										var="clientListSize" />
-									<table width="96%" border="0" cellpadding="3" cellspacing="0">
-										<tr>
-											<td width="5%" valign="top" class="drawtablerowboldnolinebg"><input
-												type="checkbox"
-												onchange="CalculateTotalLoanAmount(${clientListSize});"
-												onclick="for(var i=0,l=this.form.length; i<l;
-												i++){if(this.form[i].type==
-												'checkbox' && this.form[i].name !='selectAll1'
-												&& this.form[i].name !='intDedDisbursement'
-												){this.form[i].checked=this.checked}}
-												"
-														name="selectAll1"></td>
-											<td width="29%" class="drawtablerowboldnolinebg"><mifos:mifoslabel
-												name="loan.acc_owner" /></td>
-											<td width="31%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
-												name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
-												name="loan.amt" /></td>
-											<td width="35%" class="drawtablerowboldnolinebg"><font color="#FF0000">*</font>&nbsp;<mifos:mifoslabel
-												name="loan.business_work_act" /> <mifos:mifoslabel
-												name="${ConfigurationConstants.LOAN}" /></td>
-										</tr>
-
-										<c:forEach var="client" varStatus="loopStatus1"
-											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
-											<bean:define id="indice" toScope="request">
-												<c:out value="${loopStatus1.index}" />
-											</bean:define>
-											<tr>
-												<td valign="top" class="drawtablerow"><html-el:checkbox
-													property="clients[${indice}]" value="${client.customerId}"
-													onclick="selectAllCheck(this)"
-													onchange="CalculateTotalLoanAmount(${clientListSize});" /></td>
-												<td width="29%" valign="top" class="drawtablerow"><span
-													class="fontnormalbold"><mifos:mifoslabel
-													name="${ConfigurationConstants.CLIENT}"
-													isColonRequired="Yes" /></span> <c:out
-													value="${client.displayName}" /> <br>
-												<span class="fontnormalbold"><mifos:mifoslabel
-													name="${ConfigurationConstants.CLIENT_ID}"
-													isColonRequired="Yes" /></span> <c:out
-													value="${client.globalCustNum}" /> <br>
-												<c:if test="${not empty client.governmentId}">
-													<span class="fontnormalbold"><c:out
-														value="${ConfigurationConstants.GOVERNMENT}" />&nbsp;<c:out
-														value="${ConfigurationConstants.ID}" />:&nbsp;</span> <c:out
-														value="${client.governmentId}" /> <br>
-												</c:if>
-												</td>
-												<td width="31%" valign="top" class="drawtablerow"><mifos:mifosdecimalinput
-													property="clientDetails[${indice}].loanAmount"
-													onchange="CalculateTotalLoanAmount(${clientListSize});" /></td>
-												<td width="35%" valign="top" class="drawtablerow"><mifos:select
-													property="clientDetails[${indice}].businessActivity"
-													style="width:136px;">
-													<c:forEach var="BusinessActivity"
-														items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}">
-														<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
-													</c:forEach>
-												</mifos:select></td>
-											</tr>
-
-										</c:forEach>
-
-									</table>
-									<table align="right" width="93%" border="0" cellpadding="3"
-										cellspacing="0">
-										<tr>
-											<td align="right" class="fontnormalbold" width="28%"><mifos:mifoslabel
-												name="loan.totalamount" />:</td>
-											<td valign="top" class="fontnormal"><mifos:mifosdecimalinput
-												property="loanAmount" value="0.0" readonly="true" />
-											<mifos:mifoslabel
-												name="loan.allowed_amount" /> &nbsp; <c:out
-												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
-											<script>CalculateTotalLoanAmount(${clientListSize});</script>	
-										</tr>
-									</table>
-									
-
-								</c:if>
-							</c:if> <!--  -->
+									<tiles:insert definition=".individualLoansForm" flush="false">
+									</tiles:insert>
+							    </c:if>
+							</c:if>
 <br>
 <br>
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
@@ -382,11 +297,10 @@ explanation of the license and how it is applied.
 								</tr>
 							    <c:if test="${loanaccountownerisagroup != 'yes'}">
 									<tr class="fontnormal">
-
 											<td align="right" class="fontnormal" width="30%"><mifos:mifoslabel
-												name="loan.amount" mandatory="yes" />:</td>
+												name="loan.amount" mandatory="yes"   />:</td>
 											<td valign="top"><mifos:mifosdecimalinput
-												property="loanAmount" readonly="false" /> <mifos:mifoslabel
+												property="loanAmount" readonly="false" styleId="sumLoanAmount"/> <mifos:mifoslabel
 												name="loan.allowed_amount" /> &nbsp; <c:out
 												value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 												value="${loanAccountActionForm.maxLoanAmount}" /> )</td>
@@ -749,7 +663,6 @@ explanation of the license and how it is applied.
 								</c:forEach>
 							</table>
 							<!-- Fees End --> <br>
-
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

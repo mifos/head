@@ -59,7 +59,15 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 		this.businessActivity = businessActivity;
 		this.loanAmount = loanAmount;
 	}
-
+	
+	LoanAccountDetailsViewHelper(String clientId, String businessActivity, Double loanAmount, String accountId){
+		this(null);
+		this.clientId = clientId;
+		this.businessActivity = businessActivity;
+		this.loanAmount = loanAmount;
+		this.accountId = accountId;
+	}
+	
 	private final Integer individualAccountId;
 
 	private String accountId;
@@ -237,5 +245,9 @@ public class LoanAccountDetailsViewHelper extends BusinessObject {
 		else if (!loanPurpose.equals(other.loanPurpose))
 			return false;
 		return true;
-	}	
+	}
+	
+	public static LoanAccountDetailsViewHelper createInstanceForTest(String clientId, String businessActivity, Double loanAmount, String accountId){
+		return new LoanAccountDetailsViewHelper(clientId, businessActivity, loanAmount, accountId);
+	}
 }

@@ -4484,6 +4484,5 @@ public class LoanBO extends AccountBO {
 	public void setRawAmountTotal(Money rawAmountTotal) {
 		this.rawAmountTotal =  rawAmountTotal;
 	}
-
 	
 }

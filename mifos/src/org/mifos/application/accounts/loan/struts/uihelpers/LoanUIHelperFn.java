@@ -39,10 +39,15 @@
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -52,11 +57,12 @@ import org.mifos.framework.util.helpers.DateUtils;
  */
 public class LoanUIHelperFn {
 
+	private static ConfigurationBusinessService configService = new ConfigurationBusinessService();
+
 	public LoanUIHelperFn() {
 		super();
-
 	}
-
+	
 	public static String getCurrrentDate(Locale locale) {
 		return DateUtils.getCurrentDate(locale);
 	}
@@ -71,5 +77,37 @@ public class LoanUIHelperFn {
 		else
 			return "0.0";
 	}
+	
+	static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState, ConfigurationBusinessService configService){
+		try {
+			if(!configService.isGlimEnabled())
+				return false;
+		}
+		catch (ServiceException e) {
+			throw new RuntimeException(e);
+		}
+		if(accountState == null) 
+			return false;
 
+		if(Arrays.asList(AccountState.LOAN_PARTIAL_APPLICATION, AccountState.LOAN_PENDING_APPROVAL).contains(accountState)){
+			return false;
+		}
+		if(Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState))
+			return Arrays.asList("clientDetails.loanAmount",
+					"clientDetails.clientId",
+					"interestRate",
+					"noOfInstallments",					
+					"disbursementDate",
+					"gracePeriod",
+					"collateralType",
+					"collateralNotes",
+					"customField","disbursementDate","weekDayId", "ordinalOfMonth").contains(fieldName);
+		return true;
+	}
+	
+	
+	public static boolean isDisabledWhileEditingGlim(String fieldName, AccountState accountState){
+		return isDisabledWhileEditingGlim(fieldName, accountState, configService);
+	}
+	
 }

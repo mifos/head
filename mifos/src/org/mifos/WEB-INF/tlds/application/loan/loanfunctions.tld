@@ -59,6 +59,18 @@
     </example>
   </function>
   
+  <function>
+    <description>
+    This returns a boolean telling whether to disable the element
+    </description>
+    <name>isDisabledWhileEditingGlim</name>
+  <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-signature>java.lang.String isDisabledWhileEditingGlim(java.lang.String, org.mifos.application.accounts.util.helpers.AccountState)</function-signature>
+    <example>
+      &lt;c:out value="${fn:isDisabledWhileEditingGlim(object,object)}">
+    </example>
+  </function>
+  
 	<tag>
 		<name>getRepaymentTable</name>
 		<tagclass>org.mifos.application.accounts.loan.struts.uihelpers.LoanRepaymentTableTag</tagclass>
