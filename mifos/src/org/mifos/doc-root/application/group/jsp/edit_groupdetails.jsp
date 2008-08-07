@@ -69,7 +69,7 @@
 		<SCRIPT SRC="pages/application/group/js/groupcommon.js"></SCRIPT>
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
-		<html-el:form action="groupCustAction.do?method=previewManage" onsubmit="return chkForValidDates()">
+		<html-el:form action="groupCustAction.do?method=previewManage">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -215,7 +215,7 @@
 											<mifos:mifoslabel keyhm="Group.TrainedDate" name="Group.grouptrainedon" bundle="GroupUIResources"></mifos:mifoslabel>
 										</td>
 										<td>
-											<date:datetag keyhm="Group.TrainedDate" property="trainedDate" renderstyle="simple"/>
+											<date:datetag keyhm="Group.TrainedDate" property="trainedDate"/>
 										</td>
 									</tr>
 								</c:otherwise>

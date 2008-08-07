@@ -39,7 +39,9 @@
 package org.mifos.application.customer.group.struts.action;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -654,7 +656,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestDateParameter("trainedDate", "20/03/2006");
+		addRequestParameter("trainedDate", "20/3/2006");
 		actionPerform();
 		assertEquals(1, getErrorSize());
 		assertEquals("Group Name not present", 1,
@@ -714,7 +716,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			addRequestParameter("customField[" + i + "].fieldValue", "Req");
 			i++;
 		}
-		addRequestDateParameter("trainedDate", "20/03/2006");
+		addRequestParameter("trainedDate", "20/03/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
@@ -744,7 +746,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestDateParameter("trainedDate", "20/03/2006");
+		addRequestParameter("trainedDate", "20/3/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -754,6 +756,50 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 	}
 	
+	/**
+	 * This test asserts that when a group name for a trained group is edited, there are no errors and the trained date is present in the
+	 * action form. 
+	 */
+	public void testPreviewManageSuccessForNameChange_AfterTrainedSet() throws Exception {
+		
+		Calendar cal = new GregorianCalendar();
+		cal.set(Calendar.DAY_OF_MONTH, 2);
+		cal.set(Calendar.MONTH, 5);
+		cal.set(Calendar.YEAR, 2008);
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createTrainedGroupAndSetInSession(cal.getTime());
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+				
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", "group123");  //editing group name
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "2/6/2008");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		GroupCustActionForm actionForm = (GroupCustActionForm)getActionForm();
+
+		assertEquals("2/6/2008",actionForm.getTrainedDate());
+		assertEquals(0, getErrorSize());
+	}
+
 	public void testUpdateSuccess() throws Exception {
 		String newDisplayName ="group_01";
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -776,7 +822,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestDateParameter("trainedDate", "20/03/2006");
+		addRequestParameter("trainedDate", "20/03/2006");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -815,7 +861,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("trained", "1");
-		addRequestDateParameter("trainedDate", "20/03/2006");
+		addRequestParameter("trainedDate", "20/03/2006");
 		addRequestParameter("externalId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
@@ -940,6 +986,12 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 	}
 
+	private void createTrainedGroupAndSetInSession(Date trainedDate) throws Exception{
+		createGroupWithCenterAndSetInSession();
+		group.setTrained(true);
+		group.setTrainedDate(trainedDate);
+	}
+	
 	private void createGroupWithCenter()throws Exception{
 		createParentCustomer();
 		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);

@@ -62,9 +62,6 @@ public class GroupCustActionForm extends CustomerActionForm {
 	private CustomerBO parentCustomer;
 	private String centerSystemId;
 	private String parentOfficeId;
-	private String trainedDateYY;
-	private String trainedDateMM;
-	private String trainedDateDD = "";
 	
 	
 	public String getCenterSystemId() {
@@ -94,41 +91,7 @@ public class GroupCustActionForm extends CustomerActionForm {
 	/*@Override
 	public void setTrainedDate(String s) {
 		throw new IllegalStateException();
-	}*/
-	
-	@Override
-	public String getTrainedDate() {
-		if (!StringUtils.isNullAndEmptySafe(trainedDateDD)
-				|| !StringUtils.isNullAndEmptySafe(trainedDateMM)
-				|| !StringUtils.isNullAndEmptySafe(trainedDateYY)) {
-			return null;
-		}
-		return this.trainedDateDD + "/" + this.trainedDateMM + "/" + this.trainedDateYY;
-	}
-	
-	public void setTrainedDateYY(String trainedDateYY) {
-		this.trainedDateYY = trainedDateYY;
-	}
-
-	public String getTrainedDateYY() {
-		return trainedDateYY;
-	}
-
-	public void setTrainedDateMM(String trainedDateMM) {
-		this.trainedDateMM = trainedDateMM;
-	}
-
-	public String getTrainedDateMM() {
-		return trainedDateMM;
-	}
-
-	public void setTrainedDateDD(String trainedDateDD) {
-		this.trainedDateDD = trainedDateDD;
-	}
-
-	public String getTrainedDateDD() {
-		return trainedDateDD;
-	}
+	}*/	
 
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method)throws ApplicationException {		
