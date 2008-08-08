@@ -1,16 +1,19 @@
 package org.mifos.application.accounts.loan.business.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -20,6 +23,21 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanBusinessService extends BusinessService {
 
+	private LoanPersistence loanPersistence;
+	private ConfigurationBusinessService configService;
+	private AccountBusinessService accountBusinessService;
+
+	
+	public LoanBusinessService() {
+		this(new LoanPersistence(), new ConfigurationBusinessService(),new AccountBusinessService());
+	}
+	
+	LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService, AccountBusinessService accountBusinessService) {
+		this.loanPersistence = loanPersistence;
+		this.configService = configService;
+		this.accountBusinessService = accountBusinessService;
+	}
+
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
@@ -28,7 +46,7 @@ public class LoanBusinessService extends BusinessService {
 	public LoanBO findBySystemId(String accountGlobalNum)
 			throws ServiceException {
 		try {
-			return new LoanPersistence().findBySystemId(accountGlobalNum);
+			return loanPersistence.findBySystemId(accountGlobalNum);
 		} catch (PersistenceException e) {
 			throw new ServiceException(
 					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
@@ -40,7 +58,7 @@ public class LoanBusinessService extends BusinessService {
 	public List<LoanBO>  findIndividualLoans(String accountId)
 			throws ServiceException {
 		try {
-			return new LoanPersistence().findIndividualLoans(accountId);
+			return loanPersistence.findIndividualLoans(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(
 					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
@@ -112,7 +130,7 @@ public class LoanBusinessService extends BusinessService {
 
 	public LoanBO getAccount(Integer accountId) throws ServiceException {
 		try {
-			return new LoanPersistence().getAccount(accountId);
+			return loanPersistence.getAccount(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -120,7 +138,7 @@ public class LoanBusinessService extends BusinessService {
 	public  List<LoanBO> getLoanAccountsActiveInGoodBadStanding(
 			Integer customerId) throws ServiceException {
 		try {
-			return new LoanPersistence().getLoanAccountsActiveInGoodBadStanding(customerId);
+			return loanPersistence.getLoanAccountsActiveInGoodBadStanding(customerId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -129,7 +147,7 @@ public class LoanBusinessService extends BusinessService {
 	public Short getLastPaymentAction(Integer accountId)
 			throws ServiceException {
 		try {
-			return new LoanPersistence().getLastPaymentAction(accountId);
+			return loanPersistence.getLastPaymentAction(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -138,7 +156,7 @@ public class LoanBusinessService extends BusinessService {
 	public List<LoanBO> getSearchResults(String officeId, String personnelId,
 			String type, String currentStatus) throws ServiceException {
 		try {
-			return new LoanPersistence().getSearchResults(officeId,
+			return loanPersistence.getSearchResults(officeId,
 					personnelId, type, currentStatus);
 		} catch (PersistenceException he) {
 			throw new ServiceException(he);
@@ -148,19 +166,47 @@ public class LoanBusinessService extends BusinessService {
 	public List<LoanBO> getAllLoanAccounts()
 			throws ServiceException {		
 		try {
-			return new LoanPersistence().getAllLoanAccounts();
+			return loanPersistence.getAllLoanAccounts();
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
 	}
 
 	public void initialize(Object object) {
-		new LoanPersistence().initialize(object);
+		loanPersistence.initialize(object);
 	}
 	
 	public List<LoanBO> getAllChildrenForParentGlobalAccountNum(
 			String globalAccountNum) throws ServiceException {
 		return findIndividualLoans(findBySystemId(globalAccountNum)
 				.getAccountId().toString());
+	}
+
+	public List<LoanBO> getActiveLoansForAllClientsAssociatedWithGroupLoan(
+			LoanBO loan) throws ServiceException {
+		List<LoanBO> activeLoans = new ArrayList<LoanBO>();
+		Collection<CustomerBO> clients = getClientsAssociatedWithGroupLoan(loan);
+
+		for (CustomerBO customerBO : clients) {
+			for (AccountBO accountBO : customerBO.getAccounts()) {
+				if (accountBO.isActiveLoanAccount()) {
+					activeLoans.add((LoanBO) accountBO);
+				}
+			}
+		}
+		return activeLoans;
+	}
+
+	private Collection<CustomerBO> getClientsAssociatedWithGroupLoan(LoanBO loan)
+			throws ServiceException {
+		Collection<CustomerBO> clients;
+
+		if (configService.isGlimEnabled()) {
+			clients = accountBusinessService.getCoSigningClientsForGlim(loan
+					.getAccountId());
+		}else {
+			clients = loan.getCustomer().getChildren();
+		}
+		return clients;
 	}
 }

@@ -114,6 +114,7 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
@@ -714,10 +715,9 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testPrdOfferingsCanCoexist() throws PersistenceException {
 		LoanBO loan = (LoanBO) createLoanAccount();
-		assertTrue(loan.prdOfferingsCanCoexist(loan.getLoanOffering()
-				.getPrdOfferingId()));
+		assertTrue(new ProductMixBusinessService().canProductsCoExist(loan
+				.getLoanOffering(), loan.getLoanOffering()));
 	}
-
 
 	public void testLoanPerfObject() throws PersistenceException {
 		java.sql.Date currentDate = new java.sql.Date(System

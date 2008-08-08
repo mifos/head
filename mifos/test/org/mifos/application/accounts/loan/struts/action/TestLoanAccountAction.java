@@ -22,6 +22,8 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
+import net.sf.cglib.transform.impl.AddStaticInitTransformer;
+
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 import org.joda.time.LocalDate;
@@ -994,9 +996,11 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	 MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
 	 }*/
 
-//  Commented as LoanBO could not be injected as a dependency to the ActionServlet.
+	//Commented because not able to inject LoanBO as a dependency into the action servlet
 //	public void testManagePrevious() {
 //		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+//		LoanBO loanMock = createMock(LoanBO.class);
+//		request.getSession().setAttribute(Constants.BUSINESS_KEY, loanMock);
 //		setRequestPathInfo("/loanAccountAction.do");
 //		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 //				.getAttribute(Constants.CURRENTFLOWKEY));

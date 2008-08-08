@@ -943,14 +943,9 @@ public class ClientCustAction extends CustAction {
 				getCustomerBusinessService().fetchLoanCycleCounter(
 						clientBO), request);
 		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
-		List<LoanBO> individualLoanAccounts = clientBO.getOpenIndividualLoanAccounts();
 		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-		setLocaleIdToLoanStatus(individualLoanAccounts, localeId);
-		//		 add individualLoanAccounts to loanAccounts
-		for (int i=0; i < individualLoanAccounts.size(); i++)
-			loanAccounts.add(individualLoanAccounts.get(i));	
 		SessionUtils.setCollectionAttribute(
 				ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts,
 				request);		

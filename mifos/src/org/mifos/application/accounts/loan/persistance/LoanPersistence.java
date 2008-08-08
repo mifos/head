@@ -23,19 +23,12 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.branchreport.BranchReportLoanArrearsAgingBO;
-import org.mifos.application.branchreport.LoanArrearsAgingPeriod;
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
-import org.mifos.application.customer.util.helpers.QueryParamConstants;
-import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -326,4 +319,5 @@ public class LoanPersistence extends Persistence {
 		return queryResult;
 
 	}
+
 }

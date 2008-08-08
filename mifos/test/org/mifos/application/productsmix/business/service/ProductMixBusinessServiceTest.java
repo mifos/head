@@ -14,6 +14,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productsmix.business.ProductMixBO;
+import org.mifos.application.productsmix.persistence.ProductMixPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -22,6 +23,12 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 public class ProductMixBusinessServiceTest  extends MifosTestCase {
 	
@@ -227,6 +234,22 @@ public class ProductMixBusinessServiceTest  extends MifosTestCase {
 				startDate, meetingIntCalc);
 		loanOffering2.updatePrdOfferingFlag();
 
+	}
+	
+	public void testCanProductsExist() throws Exception {
+		ProductMixPersistence productMixPersistenceMock = createMock(ProductMixPersistence.class);
+		short PRD_OFFERING_ID_ONE = (short)1;
+		short PRD_OFFERING_ID_TWO = (short)2;
+		LoanOfferingBO loanOfferingMock1 = createMock(LoanOfferingBO.class);
+		LoanOfferingBO loanOfferingMock2 = createMock(LoanOfferingBO.class);
+		
+		expect(productMixPersistenceMock.doesPrdOfferingsCanCoexist(PRD_OFFERING_ID_ONE, PRD_OFFERING_ID_TWO)).andReturn(true);
+		expect(loanOfferingMock1.getPrdOfferingId()).andReturn(PRD_OFFERING_ID_ONE);
+		expect(loanOfferingMock2.getPrdOfferingId()).andReturn(PRD_OFFERING_ID_TWO);
+		replay(loanOfferingMock1,loanOfferingMock2,productMixPersistenceMock);
+		
+		new ProductMixBusinessService(productMixPersistenceMock).canProductsCoExist(loanOfferingMock1, loanOfferingMock2);
+		verify(loanOfferingMock1,loanOfferingMock2,productMixPersistenceMock);
 	}
 
 }

@@ -1,18 +1,35 @@
 package org.mifos.application.accounts.loan.business.service;
 
+import static java.util.Arrays.asList;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -205,4 +222,38 @@ public class TestLoanBusinessService extends MifosTestCase {
 		paymentData.setRecieptNum("423423");
 		return paymentData;
 	}
+	
+	public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
+		int groupLoanAccountId = 1;
+		GroupBO groupMock = createMock(GroupBO.class);
+		CustomerBO clientMock = createMock(ClientBO.class);
+		LoanBO groupLoanMock = createMock(LoanBO.class);
+		ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
+		LoanBO loanMock1 = createMock(LoanBO.class);
+		LoanBO loanMock2 = createMock(LoanBO.class);
+		AccountBusinessService accountBusinessServiceMock = createMock(AccountBusinessService.class);
+
+		expect(accountBusinessServiceMock.getCoSigningClientsForGlim(groupLoanAccountId))
+				.andReturn(Arrays.asList(clientMock));
+		expect(configServiceMock.isGlimEnabled()).andReturn(true);
+		expect(loanMock1.isActiveLoanAccount()).andReturn(true);
+		expect(loanMock2.isActiveLoanAccount()).andReturn(false);
+		expect(groupLoanMock.getAccountId()).andReturn(groupLoanAccountId);
+		
+		expect(clientMock.getAccounts()).andReturn(
+				new HashSet(asList(loanMock1, loanMock2)));
+
+		replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock,
+				configServiceMock, accountBusinessServiceMock);
+
+		assertEquals(asList(loanMock1), new LoanBusinessService(
+				new LoanPersistence(), configServiceMock,
+				accountBusinessServiceMock)
+				.getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
+
+		verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock,
+				configServiceMock, accountBusinessServiceMock);
+		
+	}
+	
 }

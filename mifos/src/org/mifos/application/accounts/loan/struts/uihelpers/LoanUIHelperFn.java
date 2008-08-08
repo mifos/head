@@ -93,15 +93,17 @@ public class LoanUIHelperFn {
 			return false;
 		}
 		if(Arrays.asList(AccountState.LOAN_APPROVED, AccountState.LOAN_ACTIVE_IN_BAD_STANDING,AccountState.LOAN_ACTIVE_IN_GOOD_STANDING).contains(accountState))
+			//disabling only the GLIM parts of the loan
 			return Arrays.asList("clientDetails.loanAmount",
-					"clientDetails.clientId",
-					"interestRate",
-					"noOfInstallments",					
-					"disbursementDate",
-					"gracePeriod",
-					"collateralType",
-					"collateralNotes",
-					"customField","disbursementDate","weekDayId", "ordinalOfMonth").contains(fieldName);
+					"clientDetails.clientId"					
+					//,"noOfInstallments",					
+					//"disbursementDate",
+					//"gracePeriod",
+					//"collateralType",
+					//"collateralNotes",
+					//"customField","disbursementDate",
+					//"weekDayId", "ordinalOfMonth"
+					).contains(fieldName);
 		return true;
 	}
 	

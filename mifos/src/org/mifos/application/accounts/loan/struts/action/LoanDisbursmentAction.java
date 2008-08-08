@@ -3,30 +3,37 @@
  */
 package org.mifos.application.accounts.loan.struts.action;
 
+import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
+
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.application.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
@@ -41,7 +48,17 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class LoanDisbursmentAction extends BaseAction {
 
 	private LoanBusinessService loanBusinessService = null;
+	private final ProductMixValidator productMixValidator;
 	
+	 LoanDisbursmentAction(LoanBusinessService service, ProductMixValidator validator) {
+		this.loanBusinessService = service;
+		this.productMixValidator = validator;
+	}
+	 
+	public LoanDisbursmentAction(){
+		this(new LoanBusinessService(), new ProductMixValidator());
+	}
+
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("loanDisbursmentAction");
 		security.allow("load", SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
@@ -55,66 +72,65 @@ public class LoanDisbursmentAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-        SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
-        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
+        setIsRepaymentScheduleEnabled(request);
 
-        boolean allowBackDatedTransactions = AccountingRules.isBackDatedTxnAllowed();
-        SessionUtils.setAttribute(ConfigConstants.BACK_DATED_TRANSACTIONS_ALLOWED, allowBackDatedTransactions,request);
+        setIsBackdatedTransactionAllowed(request);
 		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
 		loanDisbursmentActionForm.clear();
-		Date currentDate = new Date(System.currentTimeMillis());
 
-		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
-				.valueOf(loanDisbursmentActionForm.getAccountId()));
-		checkIfProductsOfferingCanCoexist(mapping,form,request,response);
+		new ProductMixValidator().checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
 		
+		Date currentDate = new Date(System.currentTimeMillis());
+		LoanBO loan = getLoan(loanDisbursmentActionForm);
+		setProposedDisbursementDate(request, currentDate, loan);
+		loanDisbursmentActionForm.setTransactionDate(getUserLocaleDate(getUserContext(request).getPreferredLocale(),
+														getProposedDisbursementDateFromSession(request)));
+		
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		loan.setUserContext(uc);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+		
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
+				getAcceptedPaymentTypes(uc.getLocaleId()), request);
+		loanDisbursmentActionForm.setAmount(loan
+				.getAmountTobePaidAtdisburtail(currentDate));
+		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
+		return mapping.findForward(Constants.LOAD_SUCCESS);
+	}
+
+	private LoanBO getLoan(LoanDisbursmentActionForm loanDisbursmentActionForm) throws ServiceException {
+		return ((LoanBusinessService) getService()).getAccount(Integer
+				.valueOf(loanDisbursmentActionForm.getAccountId()));
+	}
+
+	private static List<PaymentTypeEntity> getAcceptedPaymentTypes(Short localeId) throws Exception {
+		return AcceptedPaymentTypeService.getAcceptedPaymentTypes(localeId);
+	}
+
+	private String getProposedDisbursementDateFromSession(HttpServletRequest request) throws PageExpiredException {
+		return SessionUtils.getAttribute(LoanConstants.PROPOSEDDISBDATE, request).toString();
+	}
+
+	private void setProposedDisbursementDate(HttpServletRequest request, Date currentDate, LoanBO loan) throws PageExpiredException {
 		if(AccountingRules.isBackDatedTxnAllowed()) {
 			SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan
 					.getDisbursementDate(), request);
 		} else {
 			SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, DateUtils.toDatabaseFormat(currentDate), request);
 		}
-		loanDisbursmentActionForm.setTransactionDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
-														SessionUtils.getAttribute(LoanConstants.PROPOSEDDISBDATE, request).toString()));
-		loan.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-				persistence.getAcceptedPaymentTypesForATransaction(
-						uc.getLocaleId(),
-						TrxnTypes.loan_disbursement.getValue()), request);
-		loanDisbursmentActionForm.setAmount(loan
-				.getAmountTobePaidAtdisburtail(currentDate));
-		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
-		return mapping.findForward(Constants.LOAD_SUCCESS);
+	}
+
+	private void setIsBackdatedTransactionAllowed(HttpServletRequest request) throws PageExpiredException {
+		SessionUtils.setAttribute(ConfigConstants.BACK_DATED_TRANSACTIONS_ALLOWED, AccountingRules.isBackDatedTxnAllowed(),request);
+	}
+
+	private void setIsRepaymentScheduleEnabled(HttpServletRequest request) throws PageExpiredException, PersistenceException {
+		SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED,
+        		ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled() ? 1 : 0, request);
 	}
 	
-	
-	private void checkIfProductsOfferingCanCoexist(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
-		
-		LoanBO newloan = ((LoanBusinessService) getService()).getAccount(Integer
-				.valueOf(loanDisbursmentActionForm.getAccountId()));
-		List<LoanBO> loanList = ((LoanBusinessService) getService())
-				.getLoanAccountsActiveInGoodBadStanding(newloan.getCustomer().getCustomerId());
-		// Check if the client has an active loan accounts
-		if(null!=loanList){
-		for (LoanBO oldloan : loanList){
-		// Check if the new loan product to disburse is allowed to the existent active loan product
-			if(!oldloan.prdOfferingsCanCoexist(newloan.getLoanOffering().getPrdOfferingId()))
-			{
-				String[] param={oldloan.getLoanOffering().getPrdOfferingName(),newloan.getLoanOffering().getPrdOfferingName()};
-				throw new AccountException(LoanExceptionConstants.LOANCOULDNOTCOEXIST,param);
-			} 
-			
-			
-		}
-		}	
-	}
+
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
@@ -140,8 +156,7 @@ public class LoanDisbursmentAction extends BaseAction {
 		LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
-		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
-				.valueOf(actionForm.getAccountId()));
+		LoanBO loan = getLoan(actionForm);
 		checkVersionMismatch(savedloan.getVersionNo(),loan.getVersionNo());
 		loan.setVersionNo(savedloan.getVersionNo());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
@@ -166,17 +181,16 @@ public class LoanDisbursmentAction extends BaseAction {
 		if(loan.getCustomer().hasActiveLoanAccountsForProduct(loan.getLoanOffering())) {
 			throw new AccountException("errors.cannotDisburseLoan.because.otherLoansAreActive");
 		}
-
-		if (actionForm.getPaymentModeOfPayment() != null
-				&& actionForm.getPaymentModeOfPayment().equals(""))
-			loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short
-					.valueOf(actionForm.getPaymentTypeId()), personnel,
-					receiptDate, Short.valueOf(actionForm
-							.getPaymentModeOfPayment()));
-		else
-			loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short
-					.valueOf(actionForm.getPaymentTypeId()), personnel,
-					receiptDate, Short.valueOf("1"));
+		
+		
+		String modeOfPayment = actionForm.getPaymentModeOfPayment();
+		Short modeOfPaymentId = StringUtils.isEmpty(modeOfPayment) ? PaymentTypes.CASH
+				.getValue()
+				: Short.valueOf(modeOfPayment);
+				
+		loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short
+				.valueOf(actionForm.getPaymentTypeId()), personnel,
+				receiptDate, modeOfPaymentId);
 		return mapping.findForward(Constants.UPDATE_SUCCESS);
 	}
 

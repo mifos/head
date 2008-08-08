@@ -369,7 +369,7 @@
 		<![CDATA[from org.mifos.application.accounts.loan.business.LoanBO account
 			where 
 			account.accountState.id in (:loanactiveingoodstand,:loanactiveinbadstand)
-			and account.accountType.accountTypeId=:accounttype_id  
+			and account.accountType.accountTypeId = :accounttype_id
 			and account.customer.customerId=:customer
 			group by account.accountId]]>
 	</query>

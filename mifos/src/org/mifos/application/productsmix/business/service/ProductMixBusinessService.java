@@ -60,6 +60,16 @@ import org.mifos.framework.security.util.UserContext;
 
 public class ProductMixBusinessService extends BusinessService {
 
+	private final ProductMixPersistence productMixPersistence;
+
+	public ProductMixBusinessService(ProductMixPersistence productMixPersistence) {
+		this.productMixPersistence = productMixPersistence;
+	}
+	
+	public ProductMixBusinessService() {
+		this(new ProductMixPersistence());
+	}
+	
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
@@ -251,6 +261,12 @@ public class ProductMixBusinessService extends BusinessService {
 		catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	public boolean canProductsCoExist(LoanOfferingBO offeringBO,
+			LoanOfferingBO offeringBO2) throws PersistenceException {
+		return productMixPersistence.doesPrdOfferingsCanCoexist(
+				offeringBO.getPrdOfferingId(), offeringBO2.getPrdOfferingId());
 	}
 
 }

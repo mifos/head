@@ -59,11 +59,12 @@ public interface LoanExceptionConstants {
 	public final String INVALIDFIELD = "exceptions.application.loan.invalidfield";
 	public final String INVALIDMINMAX = "errors.defMinMax";
 	public final String SELECT_ATLEAST_ONE_RECORD = "errors.alleastonerecord";
-	public final String LOANCOULDNOTCOEXIST = "errors.loancouldnotcoexist";
+	public final String LOANS_CANNOT_COEXIST = "errors.loancouldnotcoexist";
+	public final String LOANS_CANNOT_COEXIST_ACROSS_CUSTOMER_LEVELS = "errors.loancouldnotcoexistacrosscustomerlevels";	
 	public final String LOAN_DETAILS_ENTERED_WITHOUT_SELECTING_INDIVIDUAL = "errors.loanandpurposeentredwithoutselectingindividual";
 	public final String NUMBER_OF_SELECTED_MEMBERS_IS_LESS_THAN_TWO = "errors.numberofselectedmembersisnotatleasttwo";
 	public final String SUM_OF_INDIVIDUAL_AMOUNTS_IS_NOT_IN_THE_RANGE_OF_ALLOWED_AMOUNTS = "errors.sumofindividualamountsisnotintherangeofallowedamounts";
 	public final String CUSTOMER_LOAN_AMOUNT_FIELD = "errors.individualamountfield";
 	public final String CUSTOMER_PURPOSE_OF_LOAN_FIELD = "errors.individualpurposeofloanfield";
-	public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";	
+	public final String REPAYMENTDAYISREQUIRED = "errors.repaymentDayIsRequired";
 }

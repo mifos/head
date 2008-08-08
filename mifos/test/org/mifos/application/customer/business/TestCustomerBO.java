@@ -459,7 +459,7 @@ public class TestCustomerBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		List<LoanBO> loans = group.getOpenIndividualLoanAccounts();
-		assertEquals(0, loans.size());
+		assertEquals(1, loans.size());
 		
 		TestObjectFactory.flushandCloseSession();
 

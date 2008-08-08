@@ -99,7 +99,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productsmix.persistence.ProductMixPersistence;
+import org.mifos.application.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.business.PersistentObject;
@@ -661,7 +661,7 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public AccountTypes getType() {
-		return AccountTypes.LOAN_ACCOUNT;
+		return AccountTypes.getAccountType(getAccountType().getAccountTypeId());
 	}
 
 	@Override
@@ -3106,17 +3106,6 @@ public class LoanBO extends AccountBO {
 	public Money getNetOfSaving() {
 		return getRemainingPrincipalAmount().subtract(
 				getCustomer().getSavingsBalance());
-	}
-
-	public boolean prdOfferingsCanCoexist(Short idPrdOff_B)
-			throws PersistenceException {
-		try {
-			return new ProductMixPersistence().doesPrdOfferingsCanCoexist(this
-					.getLoanOffering().getPrdOfferingId(), idPrdOff_B);
-		}
-		catch (PersistenceException e) {
-			throw new PersistenceException(e);
-		}
 	}
 
 	public Set<LoanBO> getLoanAccountDetails() {
