@@ -100,6 +100,7 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.business.RankOfDaysEntity;
@@ -729,6 +730,8 @@ public class LoanAccountAction extends AccountAppAction {
 		CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(
 				LOANACCOUNTOWNER, request);
 		CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
+		//TODO: Why are these getters being called without the values used anywhere?
+		//To avoid lazy loading?
 		customer.getPersonnel().getDisplayName();
 		customer.getOffice().getOfficeName();
 		// TODO: I'm not sure why we're resetting version number - need to investigate this
@@ -739,24 +742,21 @@ public class LoanAccountAction extends AccountAppAction {
 	private LoanBO constructLoan(LoanAccountActionForm loanActionForm,
 			HttpServletRequest request) throws AccountException,
 			ServiceException, PageExpiredException, PersistenceException, NumberFormatException, MeetingException {
+		boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();        
+		CustomerBO customer = getCustomer(request);
+		// Resolve new meeting for repayment day
+		MeetingBO newMeetingForRepaymentDay = null;
+		if (isRepaymentIndepOfMeetingEnabled){
+        	newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanActionForm, customer);
+        }
+        
 		LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(
 				((LoanOfferingBO) SessionUtils.getAttribute(
 						LOANOFFERING, request))
 						.getPrdOfferingId(), getUserContext(request)
 						.getLocaleId());
-		String perspective = request.getParameter(PERSPECTIVE);
-		CustomerBO customer = getCustomer(request);
 		LoanBO loan;
-		MeetingBO newMeetingForRepaymentDay = null;
-		boolean isRepaymentIndepOfMeetingEnabled = ConfigurationPersistence.isRepaymentIndepOfMeetingEnabled();        
-        
-		// Resolve new meeting for repayment day
-		if (isRepaymentIndepOfMeetingEnabled){
-        	newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(request, loanActionForm, customer);
-        }
-        
-
-  		if (perspective != null && perspective.equalsIgnoreCase("redoloan")) {
+  		if (isRedoOperation(request.getParameter(PERSPECTIVE))) {
 			loan = LoanBO
 					.redoLoan(getUserContext(request), loanOffering, customer,
 							AccountState.LOAN_PARTIAL_APPLICATION,
@@ -842,7 +842,7 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 
 		// We're assuming cash disbursal for this situation right now
-		loan.disburseLoan(personnel, Short.valueOf((short) 1), false);
+		loan.disburseLoan(personnel, PaymentTypes.CASH.getValue(), false);
 
 		List<PaymentDataHtmlBean> paymentDataBeans = loanActionForm
 				.getPaymentDataBeans();
@@ -999,8 +999,7 @@ public class LoanAccountAction extends AccountAppAction {
 		CustomerBO customer = getCustomer(((CustomerBO) SessionUtils
 				.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId());
 		LoanBO loan;
-		if (perspective != null
-				&& perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
+		if (isRedoOperation(perspective)) {
 			loan = redoLoan(loanActionForm, request);
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 			loan.save();
@@ -1015,13 +1014,15 @@ public class LoanAccountAction extends AccountAppAction {
 			loan.save(loanActionForm.getState());
 
 		}
-		boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
+		boolean isRepaymentIndepOfMeetingEnabled = configService
+				.isRepaymentIndepOfMeetingEnabled();
 		if (configService.isGlimEnabled() && customer.isGroup()) {
 			List<LoanAccountDetailsViewHelper> loanAccountDetailsList = (List<LoanAccountDetailsViewHelper>) SessionUtils
 					.getAttribute("loanAccountDetailsView", request);
 			for (LoanAccountDetailsViewHelper loanAccountDetail : loanAccountDetailsList) {
-				createIndividualLoanAccount(loanActionForm, loan, isRepaymentIndepOfMeetingEnabled, loanAccountDetail);
-
+				createIndividualLoanAccount(loanActionForm, loan,
+						isRepaymentIndepOfMeetingEnabled, loanAccountDetail,
+						isRedoOperation(perspective));
 			}
 		}
 
@@ -1032,19 +1033,45 @@ public class LoanAccountAction extends AccountAppAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	private void createIndividualLoanAccount(LoanAccountActionForm loanActionForm, LoanBO loan, boolean isRepaymentIndepOfMeetingEnabled, LoanAccountDetailsViewHelper loanAccountDetail) throws AccountException, ServiceException, PropertyNotFoundException {
-		LoanBO individualLoan = LoanBO.createIndividualLoan(loan
-				.getUserContext(), loan.getLoanOffering(),
-				getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()),
-				loanActionForm.getState(), new Money(loanAccountDetail
-						.getLoanAmount().toString()), loan
-						.getNoOfInstallments(), loan
-						.getDisbursementDate(), false,
-				isRepaymentIndepOfMeetingEnabled, loan
-						.getInterestRate(), loan
-						.getGracePeriodDuration(), loan.getFund(),
-				new ArrayList<FeeView>(),
-				new ArrayList<CustomFieldView>());
+	private boolean isRedoOperation(String perspective) {
+		return PERSPECTIVE_VALUE_REDO_LOAN.equals(perspective);
+	}
+
+	//TODO: merge this with GlimLoanUpdater.createIndividualLoan. But note that this method
+	// depends on findSystemId which expects globalCustNum. The other one expects actual client id
+	// This is because the LoanAccountActionForm.java is implemented such that client id becomes globalcustnum
+	// somewhere during the Create Account flow 
+	private void createIndividualLoanAccount(
+			LoanAccountActionForm loanActionForm, LoanBO loan,
+			boolean isRepaymentIndepOfMeetingEnabled,
+			LoanAccountDetailsViewHelper loanAccountDetail,
+			boolean isRedoOperation) throws AccountException, ServiceException,
+			PropertyNotFoundException {
+		LoanBO individualLoan;
+		if (isRedoOperation) {
+			individualLoan = LoanBO.redoIndividualLoan(loan.getUserContext(),
+					loan.getLoanOffering(), getCustomerBusinessService()
+							.findBySystemId(loanAccountDetail.getClientId()),
+					loanActionForm.getState(), new Money(loanAccountDetail
+							.getLoanAmount().toString()), loan
+							.getNoOfInstallments(), loan.getDisbursementDate(),
+					false, isRepaymentIndepOfMeetingEnabled, loan
+							.getInterestRate(), loan.getGracePeriodDuration(),
+					loan.getFund(), new ArrayList<FeeView>(),
+					new ArrayList<CustomFieldView>());
+
+		}else {
+			individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(),
+					loan.getLoanOffering(), getCustomerBusinessService()
+							.findBySystemId(loanAccountDetail.getClientId()),
+					loanActionForm.getState(), new Money(loanAccountDetail
+							.getLoanAmount().toString()), loan
+							.getNoOfInstallments(), loan.getDisbursementDate(),
+					false, isRepaymentIndepOfMeetingEnabled, loan
+							.getInterestRate(), loan.getGracePeriodDuration(),
+					loan.getFund(), new ArrayList<FeeView>(),
+					new ArrayList<CustomFieldView>());
+		}
 
 		individualLoan.setParentAccount(loan);
 
@@ -1179,13 +1206,6 @@ public class LoanAccountAction extends AccountAppAction {
 			return new GlimSessionAttributes(LoanConstants.GLIM_DISABLED_VALUE);
 		}
 	}
-
-//	private Map<Integer, Object[]> getClientBusinessActivities(List<LoanAccountDetailsViewHelper> clientDetails) {
-//		HashMap<Integer, Object[]> clientBusinessActivities = new HashMap<Integer, Object[]>();
-//		for (LoanAccountDetailsViewHelper clientDetail : clientDetails) {
-//			clientDetail.getBusinessActivity()
-//		}
-//	}
 
 	private List<String> fetchClientIdsWithMatchingLoans(List<LoanBO> individualLoans, List<LoanAccountDetailsViewHelper> clientDetails) {
 		List<String> clientIds = new ArrayList<String>();
@@ -1436,8 +1456,7 @@ public class LoanAccountAction extends AccountAppAction {
 						public boolean evaluate(Object object) {
 							return ((LoanBO) object).getCustomer()
 									.getGlobalCustNum().equals(
-											loanAccountDetail
-													.getClientId());
+											loanAccountDetail.getClientId());
 						}
 
 					});
@@ -1448,11 +1467,12 @@ public class LoanAccountAction extends AccountAppAction {
 			}
 			else {
 				foundLoans.add(individualLoan.getAccountId());
-				glimLoanUpdater.updateIndividualLoan(loanAccountDetail, individualLoan);
+				glimLoanUpdater.updateIndividualLoan(loanAccountDetail,
+						individualLoan);
 			}
 		}
 		for (LoanBO loan : individualLoans) {
-			if(!foundLoans.contains(loan.getAccountId())){
+			if (!foundLoans.contains(loan.getAccountId())) {
 				glimLoanUpdater.delete(loan);
 			}
 		}

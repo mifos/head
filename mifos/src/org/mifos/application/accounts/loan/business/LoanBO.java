@@ -344,46 +344,88 @@ public class LoanBO extends AccountBO {
 			LoanOfferingBO loanOffering, CustomerBO customer,
 			AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
-			boolean interestDeductedAtDisbursement,boolean isRepaymentIndepOfMeetingEnabled,Double interestRate,
+			boolean interestDeductedAtDisbursement,
+			boolean isRepaymentIndepOfMeetingEnabled, Double interestRate,
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields) throws AccountException {
-			
-		if (loanOffering == null || loanAmount == null
-				|| noOfinstallments == null || disbursementDate == null
-				|| interestRate == null || customer == null)
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION);
 
-		if (!customer.isActive()) {
-
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-		}
-
-		if (!loanOffering.isActive())
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+		commonValidationsForCreateAndRedoIndividualLoans(loanOffering,
+				customer, loanAmount, noOfinstallments, disbursementDate,
+				interestRate, isRepaymentIndepOfMeetingEnabled, interestDeductedAtDisbursement);
 
 
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 			throw new AccountException(
 					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
-		if (isRepaymentIndepOfMeetingEnabled == false)
-		if (!isDisbursementDateValid(customer, disbursementDate))
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
-	
-		if (interestDeductedAtDisbursement == true
-				&& noOfinstallments.shortValue() <= 1)
-			throw new AccountException(
-					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+		
 		return new LoanBO(userContext, loanOffering, customer, accountState,
 				loanAmount, noOfinstallments, disbursementDate,
 				interestDeductedAtDisbursement, interestRate,
 				gracePeriodDuration, fund, feeViews, customFields, false,
-				AccountTypes.INDIVIDUAL_LOAN_ACCOUNT,false,null);
+				AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
 	}
     
+    public static LoanBO redoIndividualLoan(UserContext userContext,
+			LoanOfferingBO loanOffering, CustomerBO customer,
+			AccountState accountState, Money loanAmount,
+			Short noOfinstallments, Date disbursementDate,
+			boolean interestDeductedAtDisbursement,
+			boolean isRepaymentIndepOfMeetingEnabled, Double interestRate,
+			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
+			List<CustomFieldView> customFields) throws AccountException {
+
+		commonValidationsForCreateAndRedoIndividualLoans(loanOffering,
+				customer, loanAmount, noOfinstallments, disbursementDate,
+				interestRate, isRepaymentIndepOfMeetingEnabled, interestDeductedAtDisbursement);
+
+		if (!isDisbursementDateLessThanCurrentDate(disbursementDate))
+			throw new AccountException(
+					LoanExceptionConstants.ERROR_INVALIDDISBURSEMENTDATE);
+
+		return new LoanBO(userContext, loanOffering, customer, accountState,
+				loanAmount, noOfinstallments, disbursementDate,
+				interestDeductedAtDisbursement, interestRate,
+				gracePeriodDuration, fund, feeViews, customFields, false,
+				AccountTypes.INDIVIDUAL_LOAN_ACCOUNT, false, null);
+	}
+
+
+	private static void commonValidationsForCreateAndRedoIndividualLoans(
+			LoanOfferingBO loanOffering, CustomerBO customer, Money loanAmount,
+			Short noOfinstallments, Date disbursementDate, Double interestRate, boolean isRepaymentIndepOfMeetingEnabled, boolean interestDeductedAtDisbursement)
+			throws AccountException {
+		if (isAnyLoanParamsNull(loanOffering, customer, loanAmount,
+				noOfinstallments, disbursementDate, interestRate)) {
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTION);
+		}
+
+		if (!customer.isActive()) {
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
+		}
+
+		if (!loanOffering.isActive()){
+			throw new AccountException(
+					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
+		}
+		
+		if (!isRepaymentIndepOfMeetingEnabled
+				&& !isDisbursementDateValid(customer, disbursementDate)) {
+			throw new AccountException(
+					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+		}
+
+		if (interestDeductedAtDisbursement && noOfinstallments.shortValue() <= 1){
+			throw new AccountException(
+					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);		
+		}
+	}
+
+	private static boolean isAnyLoanParamsNull(Object... args) {
+		return Arrays.asList(args).contains(null);
+	}
+        
     public static LoanBO createLoan(UserContext userContext,
 			LoanOfferingBO loanOffering, CustomerBO customer,
 			AccountState accountState, Money loanAmount,
@@ -393,13 +435,13 @@ public class LoanBO extends AccountBO {
 			List<CustomFieldView> customFields, Double maxLoanAmount,
 			Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall)
 			throws AccountException {
-		if (loanOffering == null || loanAmount == null
-				|| noOfinstallments == null || disbursementDate == null
-				|| interestRate == null || customer == null)
+    	
+		if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 
 		if (!customer.isActive()) {
+
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
 		}
@@ -439,9 +481,7 @@ public class LoanBO extends AccountBO {
 			Double minLoanAmount, Short maxNoOfInstall, Short minNoOfInstall,
 			boolean isRepaymentIndepOfMeetingEnabled,
 			MeetingBO newMeetingForRepaymentDay) throws AccountException {
-		if (loanOffering == null || loanAmount == null
-				|| noOfinstallments == null || disbursementDate == null
-				|| interestRate == null || customer == null)
+		if (isAnyLoanParamsNull(loanOffering, customer, loanAmount, noOfinstallments, disbursementDate, interestRate))
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 

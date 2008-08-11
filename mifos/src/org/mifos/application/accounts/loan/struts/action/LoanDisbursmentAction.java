@@ -78,7 +78,7 @@ public class LoanDisbursmentAction extends BaseAction {
 		LoanDisbursmentActionForm loanDisbursmentActionForm = (LoanDisbursmentActionForm) form;
 		loanDisbursmentActionForm.clear();
 
-		new ProductMixValidator().checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
+		productMixValidator.checkIfProductsOfferingCanCoexist(getLoan(loanDisbursmentActionForm));
 		
 		Date currentDate = new Date(System.currentTimeMillis());
 		LoanBO loan = getLoan(loanDisbursmentActionForm);
