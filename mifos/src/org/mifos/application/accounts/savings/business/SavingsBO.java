@@ -608,7 +608,7 @@ public class SavingsBO extends AccountBO {
 			if (payment.getAmount().getAmountDoubleValue() > 0) {
 
 				payment
-						.addAcountTrxn(helper
+						.addAccountTrxn(helper
 								.createAccountPaymentTrxn(
 										payment,
 										new Money(),
@@ -658,7 +658,7 @@ public class SavingsBO extends AccountBO {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		try {
 			interestPayment
-					.addAcountTrxn(helper
+					.addAccountTrxn(helper
 							.createAccountPaymentTrxn(
 									interestPayment,
 									interestAmt,
@@ -986,7 +986,7 @@ public class SavingsBO extends AccountBO {
 			SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(
 					accountPayment, totalAmount, paymentData.getPersonnel(),
 					customer, transactionDate);
-			accountPayment.addAcountTrxn(accountTrxn);
+			accountPayment.addAccountTrxn(accountTrxn);
 			addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 					getSavingsBalance(),
 					AccountActionTypes.SAVINGS_DEPOSIT.getValue(), transactionDate,
@@ -1043,7 +1043,7 @@ public class SavingsBO extends AccountBO {
 					throw new AccountException(e);
 				}
 
-				accountPayment.addAcountTrxn(accountTrxn);
+				accountPayment.addAccountTrxn(accountTrxn);
 			}
 		}
 
@@ -1051,7 +1051,7 @@ public class SavingsBO extends AccountBO {
 			SavingsTrxnDetailEntity accountTrxn = buildUnscheduledDeposit(
 					accountPayment, enteredAmount, paymentData.getPersonnel(),
 					customer, transactionDate);
-			accountPayment.addAcountTrxn(accountTrxn);
+			accountPayment.addAccountTrxn(accountTrxn);
 		}
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 				getSavingsBalance(), AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
@@ -1120,7 +1120,7 @@ public class SavingsBO extends AccountBO {
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
-		accountPayment.addAcountTrxn(accountTrxnBO);
+		accountPayment.addAccountTrxn(accountTrxnBO);
 		addAccountPayment(accountPayment);
 		addSavingsActivityDetails(buildSavingsActivity(totalAmount,
 				getSavingsBalance(),
@@ -1375,7 +1375,7 @@ public class SavingsBO extends AccountBO {
 				Set<AccountTrxnEntity> accountTrxns = createTrxnsForAmountAdjusted(
 						newAccountPayment, lastPayment, amountAdjustedTo);
 				for (AccountTrxnEntity accountTrxn : accountTrxns) {
-					newAccountPayment.addAcountTrxn(accountTrxn);
+					newAccountPayment.addAccountTrxn(accountTrxn);
 				}
 				this.addAccountPayment(newAccountPayment);
 				buildFinancialEntries(newAccountPayment.getAccountTrxns());

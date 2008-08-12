@@ -159,7 +159,7 @@ public class AccountPaymentEntity extends PersistentObject {
 		this.amount = amount;
 	}
 
-	public void addAcountTrxn(AccountTrxnEntity accountTrxn) {
+	public void addAccountTrxn(AccountTrxnEntity accountTrxn) {
 		accountTrxns.add(accountTrxn);
 	}
 
@@ -167,49 +167,53 @@ public class AccountPaymentEntity extends PersistentObject {
 	 * Create reverse entries of all the transactions associated with this
 	 * payment and adds them to the set of transactions associated.
 	 */
-	List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel, String adjustmentComment)
-			throws AccountException {
+	List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel,
+			String adjustmentComment) throws AccountException {
 		List<AccountTrxnEntity> newlyAddedTrxns = null;
 		this.setAmount(getAmount().subtract(getAmount()));
-		logger.debug(
-				"The amount in account payment is "
-						+ getAmount().getAmountDoubleValue());
+		logger.debug("The amount in account payment is "
+				+ getAmount().getAmountDoubleValue());
 
 		if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
 			newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
-			logger.debug(
-					"The number of transactions before adjustment are "
-							+ getAccountTrxns().size());
-			Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
-			for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
-				logger
-						.debug(
-								"Generating reverse transactions for transaction id "
-										+ accntTrxn.getAccountTrxnId());
-				AccountTrxnEntity reverseAccntTrxn = accntTrxn
-						.generateReverseTrxn(personnel, adjustmentComment);
-				logger
-						.debug(
-								"Amount associated with reverse transaction is "
-										+ reverseAccntTrxn.getAmount()
-												.getAmountDoubleValue());
-				reverseAccntTrxns.add(reverseAccntTrxn);
-				logger
-						.debug(
-								"After succesfully adding the reverse transaction");
-			}
+			logger.debug("The number of transactions before adjustment are "
+					+ getAccountTrxns().size());
+			Set<AccountTrxnEntity> reverseAccntTrxns = generateReverseAccountTransactions(
+					personnel, adjustmentComment);
 
 			for (AccountTrxnEntity reverseAccntTrxn : reverseAccntTrxns) {
-				addAcountTrxn(reverseAccntTrxn);
+				addAccountTrxn(reverseAccntTrxn);
 			}
 
 			newlyAddedTrxns.addAll(reverseAccntTrxns);
 		}
 
-		logger.debug(
-				"After adding adjustment transactions the total no of transactions are "
+		logger
+				.debug("After adding adjustment transactions the total no of transactions are "
 						+ getAccountTrxns().size());
 		return newlyAddedTrxns;
+	}
+
+	private Set<AccountTrxnEntity> generateReverseAccountTransactions(PersonnelBO personnel, String adjustmentComment) throws AccountException {
+		Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
+		for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
+			logger
+					.debug(
+							"Generating reverse transactions for transaction id "
+									+ accntTrxn.getAccountTrxnId());
+			AccountTrxnEntity reverseAccntTrxn = accntTrxn
+					.generateReverseTrxn(personnel, adjustmentComment);
+			logger
+					.debug(
+							"Amount associated with reverse transaction is "
+									+ reverseAccntTrxn.getAmount()
+											.getAmountDoubleValue());
+			reverseAccntTrxns.add(reverseAccntTrxn);
+			logger
+					.debug(
+							"After succesfully adding the reverse transaction");
+		}
+		return reverseAccntTrxns;
 	}
 
     @Override

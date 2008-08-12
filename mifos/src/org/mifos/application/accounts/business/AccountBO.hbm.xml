@@ -498,7 +498,8 @@
 				where atxn.accountTrxnId=(select max(at.accountTrxnId)
 				from org.mifos.application.accounts.business.AccountTrxnEntity at
 				where at.account.customer.customerId=:customerId 
-				and at.account.accountState.id in (5,6,7,8,9) and at.accountActionEntity.id=10))
+				and at.account.accountState.id in (5,6,7,8,9) and at.accountActionEntity.id=10 
+				and at.account.accountId!=:excludeAccountId))
 		]]>
 	</query>
 

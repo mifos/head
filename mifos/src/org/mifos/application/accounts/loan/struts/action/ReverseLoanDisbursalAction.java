@@ -245,14 +245,15 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 					if (i == 0) {
 						for (AccountTrxnEntity accountTrxn : accountPayment
 								.getAccountTrxns()) {
-							if (accountTrxn.getAccountActionEntity().getId()
-									.shortValue() == AccountActionTypes.LOAN_REPAYMENT.getValue()
-									|| accountTrxn.getAccountActionEntity()
-											.getId().shortValue() == AccountActionTypes.FEE_REPAYMENT.getValue()) {
+							short accountActionTypeId = accountTrxn.getAccountActionEntity().getId().shortValue();
+							boolean isLoanRepayment = accountActionTypeId == AccountActionTypes.LOAN_REPAYMENT.getValue();
+							boolean isFeeRepayment = accountActionTypeId == AccountActionTypes.FEE_REPAYMENT.getValue();
+							if (isLoanRepayment || isFeeRepayment) {
 								amount = amount.add(accountTrxn.getAmount());
 							}
 						}
-					} else {
+					}
+					else {
 						amount = accountPayment.getAmount();
 					}
 					if (amount.getAmountDoubleValue() > 0.0) {

@@ -343,4 +343,37 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		}
 	}
 	
+	static class PerfHistoryReversalClosure implements Closure {
+
+		private final LoanBO loan;
+
+		public PerfHistoryReversalClosure(LoanBO loan) {
+			this.loan = loan;
+		}
+
+		public void execute(Object arg0) {
+			CustomerBO clientBO = (CustomerBO) arg0;
+			ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
+					.getPerformanceHistory());
+			clientPerformanceHistoryEntity.updateCommonHistoryOnReversal(loan
+					.getLoanOffering());
+		}
+	}
+
+	public void updateOnReversal(LoanBO loan, Money lastLoanAmount)
+			throws AccountException {
+		setLastGroupLoanAmount(lastLoanAmount);
+		updateLoanCounter(loan.getLoanOffering(), YesNoFlag.NO);
+		try {
+			if (configService.isGlimEnabled()) {
+				CollectionUtils.forAllDo(accountBusinessService
+						.getCoSigningClientsForGlim(loan.getAccountId()),
+						new PerfHistoryReversalClosure(loan));
+			}
+		}
+		catch (ServiceException e) {
+			throw new AccountException(e);
+		}
+	}
+	
 }

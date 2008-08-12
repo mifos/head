@@ -39,6 +39,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.surveys.business.SurveyInstance;
@@ -934,6 +935,13 @@ public class ClientBO extends CustomerBO {
 		performanceHistory.updateOnWriteOff(loan.getLoanOffering());
 		performanceHistory.setNoOfActiveLoans(performanceHistory
 				.getNoOfActiveLoans() - 1);
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnReversal(LoanBO loan,
+			Money lastLoanAmount) throws CustomerException {
+		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getPerformanceHistory();
+		clientPerfHistory.updateOnReversal(loan.getLoanOffering(),lastLoanAmount);
 	}
 	
 }

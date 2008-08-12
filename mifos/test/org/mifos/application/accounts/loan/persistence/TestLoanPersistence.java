@@ -233,7 +233,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		disburseLoan(startDate);
 		assertEquals(((LoanBO) loanAccountForDisbursement).getLoanAmount(),
 				loanPersistence.getLastLoanAmountForCustomer(group
-						.getCustomerId()));
+						.getCustomerId(), loanAccountForDisbursement.getAccountId()+1));
 	}
 
 	private void disburseLoan(Date startDate) throws Exception {

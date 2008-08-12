@@ -100,7 +100,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 			//TODO: is there anything to assert on here?
 			//totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
-		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
+		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
 		customerAccountBO.addAccountPayment(accountPaymentEntity);
 		
 		TestObjectFactory.updateObject(customerAccountBO);

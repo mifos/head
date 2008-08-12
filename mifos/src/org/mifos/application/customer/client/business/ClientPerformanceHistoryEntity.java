@@ -206,4 +206,15 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	public void updateOnWriteOff(LoanOfferingBO loanOffering) {
 		updateLoanCounter(loanOffering, YesNoFlag.NO);
 	}
+
+	public void updateOnReversal(LoanOfferingBO loanOffering,
+			Money lastLoanAmount) {
+		updateCommonHistoryOnReversal(loanOffering);
+		setNoOfActiveLoans(getNoOfActiveLoans() - 1);
+		setLastLoanAmount(lastLoanAmount);
+	}
+	
+	public void updateCommonHistoryOnReversal(LoanOfferingBO loanOffering){
+		updateLoanCounter(loanOffering, YesNoFlag.NO);
+	}
 }

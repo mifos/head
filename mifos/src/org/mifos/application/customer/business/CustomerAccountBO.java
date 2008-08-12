@@ -199,7 +199,7 @@ public class CustomerAccountBO extends AccountBO {
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
-			accountPayment.addAcountTrxn(accountTrxn);
+			accountPayment.addAccountTrxn(accountTrxn);
 		}
 		addCustomerActivity(new CustomerActivityEntity(this, paymentData
 				.getPersonnel(), paymentData.getTotalAmount(), AccountConstants.PAYMENT_RCVD,

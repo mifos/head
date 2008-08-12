@@ -206,7 +206,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money initialBal = new Money(currency, "5500");
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "5500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				initialBal, initialBal, helper.getDate("04/01/2006"), null,
 				null, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings,
 				createdBy, group));
@@ -243,7 +243,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Money initialBal = new Money(currency, "5500");
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "5500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				initialBal, initialBal, helper.getDate("04/01/2006"), null,
 				null, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group));
@@ -253,7 +253,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "2500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "2500"), new Money(currency, "7500"),
 				helper.getDate("10/01/2006"), null, null,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
@@ -264,7 +264,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "3500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "3500"), new Money(currency, "4000"),
 				helper.getDate("16/02/2006"), null, null,
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
@@ -275,7 +275,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "1000.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "1000"), new Money(currency, "5000"),
 				helper.getDate("05/03/2006"), null, null,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
@@ -286,7 +286,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "1200.0"), new Money(currency, "3800.0"),
 				helper.getDate("05/03/2006"), null, null,
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
@@ -297,7 +297,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "500.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "500.0"), new Money(currency, "4200.0"),
 				helper.getDate("05/03/2006"), null, null,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
@@ -308,7 +308,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		payment = helper.createAccountPayment(savings, null, new Money(
 				currency, "200.0"), new Date(), createdBy);
-		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+		payment.addAccountTrxn(helper.createAccountTrxn(payment, null,
 				new Money(currency, "200"), new Money(currency, "4000"), helper
 						.getDate("05/04/2006"), null, null,
 				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
@@ -1459,9 +1459,9 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group);
 
-		payment.addAcountTrxn(trxn1);
-		payment.addAcountTrxn(trxn2);
-		payment.addAcountTrxn(trxn3);
+		payment.addAccountTrxn(trxn1);
+		payment.addAccountTrxn(trxn2);
+		payment.addAccountTrxn(trxn3);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -1554,7 +1554,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 
-		payment.addAcountTrxn(trxn1);
+		payment.addAccountTrxn(trxn1);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -1645,8 +1645,8 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 
-		payment.addAcountTrxn(trxn1);
-		payment.addAcountTrxn(trxn2);
+		payment.addAccountTrxn(trxn1);
+		payment.addAccountTrxn(trxn2);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -1726,7 +1726,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group);
 
-		payment.addAcountTrxn(trxn1);
+		payment.addAccountTrxn(trxn1);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -1802,7 +1802,7 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 
-		payment.addAcountTrxn(trxn1);
+		payment.addAccountTrxn(trxn1);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -3224,9 +3224,9 @@ public class TestSavingsBO extends MifosTestCase {
 				null, null, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group);
 
-		payment3.addAcountTrxn(trxn1);
-		payment3.addAcountTrxn(trxn2);
-		payment3.addAcountTrxn(trxn3);
+		payment3.addAccountTrxn(trxn1);
+		payment3.addAccountTrxn(trxn2);
+		payment3.addAccountTrxn(trxn3);
 		TestAccountPaymentEntity.addAccountPayment(payment3,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -3374,9 +3374,9 @@ public class TestSavingsBO extends MifosTestCase {
 				null, null, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group);
 
-		payment3.addAcountTrxn(trxn1);
-		payment3.addAcountTrxn(trxn2);
-		payment3.addAcountTrxn(trxn3);
+		payment3.addAccountTrxn(trxn1);
+		payment3.addAccountTrxn(trxn2);
+		payment3.addAccountTrxn(trxn3);
 		TestAccountPaymentEntity.addAccountPayment(payment3,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -3525,9 +3525,9 @@ public class TestSavingsBO extends MifosTestCase {
 				null, null, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 				createdBy, group);
 
-		payment3.addAcountTrxn(trxn1);
-		payment3.addAcountTrxn(trxn2);
-		payment3.addAcountTrxn(trxn3);
+		payment3.addAccountTrxn(trxn1);
+		payment3.addAccountTrxn(trxn2);
+		payment3.addAccountTrxn(trxn3);
 		TestAccountPaymentEntity.addAccountPayment(payment3,savings);
 
 		savings.setSavingsBalance(balanceAmount);
@@ -3758,9 +3758,9 @@ public class TestSavingsBO extends MifosTestCase {
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 
-		payment2.addAcountTrxn(trxn1);
-		payment2.addAcountTrxn(trxn2);
-		payment2.addAcountTrxn(trxn3);
+		payment2.addAccountTrxn(trxn1);
+		payment2.addAccountTrxn(trxn2);
+		payment2.addAccountTrxn(trxn3);
 		TestAccountPaymentEntity.addAccountPayment(payment2,savings);
 
 		savings.setSavingsBalance(balanceAmount);

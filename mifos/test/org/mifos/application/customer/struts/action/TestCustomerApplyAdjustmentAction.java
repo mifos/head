@@ -233,7 +233,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 					accountTrxnEntity,feeTrxn);
 //			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
-		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
+		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);
 
 		TestObjectFactory.updateObject(customerAccountBO);

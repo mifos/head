@@ -27,6 +27,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -158,11 +159,17 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
-		//centers do no have performace history
+		//centers do not have performace history
 	}
 
 	@Override
 	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) {
-		//centers do no have performace history	
+		//centers do not have performace history	
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException
+	{
+		//centers do not have performace history
 	}
 }

@@ -1426,4 +1426,6 @@ public abstract class CustomerBO extends BusinessObject {
 			Money disburseAmount) throws CustomerException;
 
 	public abstract void updatePerformanceHistoryOnWriteOff(LoanBO loan) throws CustomerException;
+
+	public abstract void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException;
 }

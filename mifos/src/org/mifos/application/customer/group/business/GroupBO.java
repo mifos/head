@@ -71,6 +71,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.framework.business.util.Address;
@@ -567,6 +568,19 @@ public class GroupBO extends CustomerBO {
 		try {
 			performanceHistory.updateOnWriteOff(loan);
 		}catch (AccountException e) {
+			throw new CustomerException(e);
+		}
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnReversal(LoanBO loan,
+			Money lastLoanAmount) throws CustomerException {
+		try {
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getPerformanceHistory();
+			groupPerformanceHistoryEntity
+					.updateOnReversal(loan, lastLoanAmount);
+		}
+		catch (AccountException e) {
 			throw new CustomerException(e);
 		}
 	}	

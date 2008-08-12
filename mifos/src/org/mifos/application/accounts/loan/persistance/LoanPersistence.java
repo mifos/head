@@ -206,10 +206,11 @@ public class LoanPersistence extends Persistence {
 		return (AccountBO) obj1[0];
 	}
 
-	public Money getLastLoanAmountForCustomer(Integer customerId)
+	public Money getLastLoanAmountForCustomer(Integer customerId, Integer excludeAccountId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("customerId", customerId);
+		queryParameters.put("excludeAccountId", excludeAccountId);
 		Object obj = execUniqueResultNamedQuery(
 				NamedQueryConstants.LAST_LOAN_AMOUNT_CUSTOMER, queryParameters);
 		if (null != obj) {

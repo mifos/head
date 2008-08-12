@@ -65,7 +65,7 @@ public class SavingsTestHelper {
 			CustomerBO customer) throws Exception {
 		AccountPaymentEntity payment = createAccountPayment(account, amount,
 				new Date(), createdBy);
-		payment.addAcountTrxn(createAccountTrxn(payment, null, amount, balance,
+		payment.addAccountTrxn(createAccountTrxn(payment, null, amount, balance,
 				trxnDate, trxnDate, null, accountAction, savingsObj, createdBy,
 				customer));
 		return payment;

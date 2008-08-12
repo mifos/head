@@ -1300,7 +1300,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 		}
-		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
+		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,
 				customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);

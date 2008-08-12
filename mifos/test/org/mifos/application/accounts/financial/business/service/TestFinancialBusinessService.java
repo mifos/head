@@ -88,7 +88,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		FinancialBusinessService financialBusinessService = 
 			new FinancialBusinessService();
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
-		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
+		accountPaymentEntity.addAccountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
 		
 
@@ -199,7 +199,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				depositAmount.negate(), balanceAmount, trxnDate, trxnDate,
 				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "", null);
-		payment.addAcountTrxn(accountTrxn);
+		payment.addAccountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = 
@@ -275,7 +275,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				withdrawalAmount, balanceAmount, trxnDate, trxnDate,
 				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "correction entry", null);
-		payment.addAcountTrxn(accountTrxn);
+		payment.addAccountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = 
@@ -413,7 +413,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
 				new Money(), new Money(), new Money(), new Money(), null);
 
-		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);
@@ -461,7 +461,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
 				new Money(), new Money(), new Money(), new Money(), null);
 
-		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);

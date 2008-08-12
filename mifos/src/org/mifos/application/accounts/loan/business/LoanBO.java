@@ -1054,7 +1054,7 @@ public class LoanBO extends AccountBO {
 				null, rcvdPaymentTypeId, persistChange);
 	}
 
-	public void disburseLoan(String recieptNum, Date transactionDate,
+	private void disburseLoan(String recieptNum, Date transactionDate,
 			Short paymentTypeId, PersonnelBO personnel, Date receiptDate,
 			Short rcvdPaymentTypeId, boolean persistChange)
 			throws AccountException {
@@ -1131,7 +1131,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(e);
 		}
 
-		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 		this.addAccountPayment(accountPaymentEntity);
 		this.buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -1679,7 +1679,7 @@ public class LoanBO extends AccountBO {
 			catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
-			accountPayment.addAcountTrxn(accountTrxnBO);
+			accountPayment.addAccountTrxn(accountTrxnBO);
 
 			loanSummary.updatePaymentDetails(
 					loanPaymentData.getPrincipalPaid(), loanPaymentData
@@ -1730,16 +1730,10 @@ public class LoanBO extends AccountBO {
 		List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 		
 		if (null != reversedTrxns && reversedTrxns.size() > 0) {
-			Short currentInstallmentId = null;
-			Short prevInstallmentId = null;
 			for (AccountTrxnEntity accntTrxn : reversedTrxns) {
-				currentInstallmentId = accntTrxn.getInstallmentId();
-				if (!currentInstallmentId.equals(prevInstallmentId))
-				{
-					if (isInstallmentPaid(currentInstallmentId,  allInstallments))
-						numberOfFullPayments++;
-					prevInstallmentId = currentInstallmentId;
-				}
+				Short prevInstallmentId = null;
+				Short currentInstallmentId = accntTrxn.getInstallmentId();
+				numberOfFullPayments = getIncrementedNumberOfFullPaymentsIfPaid(numberOfFullPayments, allInstallments, prevInstallmentId, currentInstallmentId);
 					
 				if (!accntTrxn.getAccountActionEntity().getId().equals(
 						AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL
@@ -1840,6 +1834,18 @@ public class LoanBO extends AccountBO {
 				throw new AccountException(e);
 			}
 		}
+	}
+
+	
+
+	private int getIncrementedNumberOfFullPaymentsIfPaid(Integer numberOfFullPayments, List<AccountActionDateEntity> allInstallments, Short prevInstallmentId, Short currentInstallmentId) {
+		if (!currentInstallmentId.equals(prevInstallmentId))
+		{
+			if (isInstallmentPaid(currentInstallmentId,  allInstallments))
+				numberOfFullPayments++;
+			prevInstallmentId = currentInstallmentId;
+		}
+		return numberOfFullPayments;
 	}
 	
 	/**
@@ -2657,34 +2663,20 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void updateCustomerHistoryOnReverseLoan() {
+	private void updateCustomerHistoryOnReverseLoan() throws AccountException {
 		Money lastLoanAmount = new Money();
 		try {
 			lastLoanAmount = new LoanPersistence()
-					.getLastLoanAmountForCustomer(getCustomer().getCustomerId());
+					.getLastLoanAmountForCustomer(getCustomer().getCustomerId(),getAccountId());
+			customer.updatePerformanceHistoryOnReversal(this, lastLoanAmount);
 		}
 		catch (PersistenceException e) {
+			throw new AccountException(e);
 		}
-		if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.CLIENT.getValue()))
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory
-					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() - 1);
-			clientPerfHistory.setLastLoanAmount(lastLoanAmount);
+		catch (CustomerException e) {
+			throw new AccountException(e);
 		}
-		else if (getCustomer().getCustomerLevel().getId().equals(
-				Short.valueOf(CustomerLevel.GROUP.getValue()))
-				&& getCustomer().getPerformanceHistory() != null) {
-			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			groupPerformanceHistoryEntity
-					.setLastGroupLoanAmount(lastLoanAmount);
-			groupPerformanceHistoryEntity.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
-		}
+
 	}
 
 	private void regeneratePaymentSchedule(boolean isRepaymentIndepOfMeetingEnabled,MeetingBO newMeetingForRepaymentDay) throws AccountException {
@@ -2866,7 +2858,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(e);
 		}
 
-		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+		accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
 				.getAccountTrxns(), personnel, AccountConstants.PAYMENT_RCVD,
@@ -3061,7 +3053,7 @@ public class LoanBO extends AccountBO {
 				}
 			}
 
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+			accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 
 			loanSchedule
 					.makeEarlyRepaymentEnteries(LoanConstants.PAY_FEES_PENALTY_INTEREST);
@@ -3100,7 +3092,7 @@ public class LoanBO extends AccountBO {
 				throw new AccountException(e);
 			}
 
-			accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
+			accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
 
 			loanSchedule
 					.makeEarlyRepaymentEnteries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST);
