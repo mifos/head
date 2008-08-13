@@ -925,16 +925,12 @@ public class ClientBO extends CustomerBO {
 			Money disburseAmount) {
 		ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
 		performanceHistory.updateOnDisbursement(loan.getLoanOffering());
-		performanceHistory.setNoOfActiveLoans(performanceHistory
-				.getNoOfActiveLoans() + 1);
 	}
 
 	@Override
 	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) {
 		ClientPerformanceHistoryEntity performanceHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
 		performanceHistory.updateOnWriteOff(loan.getLoanOffering());
-		performanceHistory.setNoOfActiveLoans(performanceHistory
-				.getNoOfActiveLoans() - 1);
 	}
 
 	@Override
@@ -943,5 +939,16 @@ public class ClientBO extends CustomerBO {
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity)getPerformanceHistory();
 		clientPerfHistory.updateOnReversal(loan.getLoanOffering(),lastLoanAmount);
 	}
+
+	@Override
+	public void updatePerformanceHistoryOnRepayment(LoanBO loan, Money totalAmount) {
+		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getPerformanceHistory();
+		clientPerfHistory.updateOnRepayment(totalAmount);
+	}
 	
+	
+	@Override
+	public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
+		updatePerformanceHistoryOnRepayment(loan,totalAmount);
+	}
 }

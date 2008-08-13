@@ -1422,10 +1422,19 @@ public abstract class CustomerBO extends BusinessObject {
 		};
 	}
 
-	public abstract void updatePerformanceHistoryOnDisbursement(LoanBO loan,
-			Money disburseAmount) throws CustomerException;
+	public void updatePerformanceHistoryOnDisbursement(LoanBO loan,
+			Money disburseAmount) throws CustomerException{
+	}
 
-	public abstract void updatePerformanceHistoryOnWriteOff(LoanBO loan) throws CustomerException;
+	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) throws CustomerException{
+	}
 
-	public abstract void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException;
+	public void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException{
+	}
+
+	public void updatePerformanceHistoryOnRepayment(LoanBO loan, Money totalAmount) throws CustomerException{
+	}
+	
+	public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException{
+	}
 }

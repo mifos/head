@@ -583,5 +583,22 @@ public class GroupBO extends CustomerBO {
 		catch (AccountException e) {
 			throw new CustomerException(e);
 		}
+	}
+
+	@Override
+	public void updatePerformanceHistoryOnRepayment(LoanBO loan, Money totalAmount) throws CustomerException {
+		GroupPerformanceHistoryEntity performanceHistory = (GroupPerformanceHistoryEntity) getPerformanceHistory();
+		try {
+			performanceHistory.updateOnRepayment(loan, totalAmount);
+		}
+		catch (AccountException e) {
+			throw new CustomerException(e);
+		}
 	}	
+	
+	
+	@Override
+	public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
+		updatePerformanceHistoryOnRepayment(loan, totalAmount);
+	}
 }

@@ -2601,14 +2601,12 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory.setLastLoanAmount(totalAmount);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() - 1);
+	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) throws AccountException {
+		try {
+			getCustomer().updatePerformanceHistoryOnLastInstlPayment(this, totalAmount);
+		}
+		catch (CustomerException e) {
+			throw new AccountException(e);
 		}
 	}
 
@@ -2632,14 +2630,14 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void updateCustomerHistoryOnRepayment(Money totalAmount) {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory.setLastLoanAmount(totalAmount);
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() - 1);
+	private void updateCustomerHistoryOnRepayment(Money totalAmount)
+			throws AccountException {
+		try {
+			getCustomer()
+					.updatePerformanceHistoryOnRepayment(this, totalAmount);
+		}
+		catch (CustomerException e) {
+			throw new AccountException(e);
 		}
 	}
 

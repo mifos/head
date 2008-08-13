@@ -10,26 +10,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
-import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnDisbursement;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnRepayment;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnReversal;
+import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
+
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
@@ -283,7 +284,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			if (configService.isGlimEnabled()) {
 				CollectionUtils.forAllDo(accountBusinessService
 						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new PerfHistoryDisburseClosure(loan));
+						new UpdateClientPerfHistoryForGroupLoanOnDisbursement(loan));
 			}
 		}
 		catch (ServiceException e) {
@@ -301,7 +302,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			if (configService.isGlimEnabled()) {
 				CollectionUtils.forAllDo(accountBusinessService
 						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new PerfHistoryWriteOffClosure(loan));
+						new UpdateClientPerfHistoryForGroupLoanOnWriteOff(loan));
 			}
 		}
 		catch (ServiceException e) {
@@ -309,57 +310,6 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		}
 	}
 	
-	static class PerfHistoryWriteOffClosure implements Closure{
-		
-		private final LoanBO loan;
-
-		PerfHistoryWriteOffClosure(LoanBO loan){
-			this.loan = loan;
-		}
-		
-		public void execute(Object arg0) {
-			CustomerBO clientBO = (CustomerBO)arg0;
-			ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
-					.getPerformanceHistory());
-			clientPerformanceHistoryEntity
-					.updateOnWriteOff(loan.getLoanOffering());
-		}
-	}
-	
-	static class PerfHistoryDisburseClosure implements Closure{
-		
-		private final LoanBO loan;
-
-		PerfHistoryDisburseClosure(LoanBO loan){
-			this.loan = loan;
-		}
-		
-		public void execute(Object arg0) {
-			CustomerBO clientBO = (CustomerBO)arg0;
-			ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
-					.getPerformanceHistory());
-			clientPerformanceHistoryEntity
-					.updateOnDisbursement(loan.getLoanOffering());
-		}
-	}
-	
-	static class PerfHistoryReversalClosure implements Closure {
-
-		private final LoanBO loan;
-
-		public PerfHistoryReversalClosure(LoanBO loan) {
-			this.loan = loan;
-		}
-
-		public void execute(Object arg0) {
-			CustomerBO clientBO = (CustomerBO) arg0;
-			ClientPerformanceHistoryEntity clientPerformanceHistoryEntity = ((ClientPerformanceHistoryEntity) clientBO
-					.getPerformanceHistory());
-			clientPerformanceHistoryEntity.updateCommonHistoryOnReversal(loan
-					.getLoanOffering());
-		}
-	}
-
 	public void updateOnReversal(LoanBO loan, Money lastLoanAmount)
 			throws AccountException {
 		setLastGroupLoanAmount(lastLoanAmount);
@@ -368,12 +318,24 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			if (configService.isGlimEnabled()) {
 				CollectionUtils.forAllDo(accountBusinessService
 						.getCoSigningClientsForGlim(loan.getAccountId()),
-						new PerfHistoryReversalClosure(loan));
+						new UpdateClientPerfHistoryForGroupLoanOnReversal(loan));
 			}
 		}
 		catch (ServiceException e) {
 			throw new AccountException(e);
 		}
 	}
-	
+
+	public void updateOnRepayment(LoanBO loan, Money totalAmount) throws AccountException {
+		try {
+			if (configService.isGlimEnabled()) {
+				CollectionUtils.forAllDo(accountBusinessService
+						.getCoSigningClientsForGlim(loan.getAccountId()),
+						new UpdateClientPerfHistoryForGroupLoanOnRepayment(loan));
+			}
+		}
+		catch (ServiceException e) {
+			throw new AccountException(e);
+		}
+	}
 }

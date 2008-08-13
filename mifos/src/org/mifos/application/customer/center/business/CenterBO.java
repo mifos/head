@@ -156,20 +156,4 @@ public class CenterBO extends CustomerBO {
 		super.saveUpdatedMeeting(meeting);
 		deleteMeeting(newMeeting);
 	}
-
-	@Override
-	public void updatePerformanceHistoryOnDisbursement(LoanBO loan, Money disburseAmount) {
-		//centers do not have performace history
-	}
-
-	@Override
-	public void updatePerformanceHistoryOnWriteOff(LoanBO loan) {
-		//centers do not have performace history	
-	}
-
-	@Override
-	public void updatePerformanceHistoryOnReversal(LoanBO loan, Money lastLoanAmount) throws CustomerException
-	{
-		//centers do not have performace history
-	}
 }

@@ -662,7 +662,6 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("300.0"), group.getGroupPerformanceHistory().getAvgLoanAmountForMember());
 		assertEquals(new Money("300.0"), group
 				.getGroupPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
