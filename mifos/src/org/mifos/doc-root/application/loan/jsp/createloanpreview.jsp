@@ -267,6 +267,11 @@
                                  </c:if>										
 										<!--  -->
 										<tr>
+											<td>
+												&nbsp;
+											</td>
+										</tr>
+										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
 												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
