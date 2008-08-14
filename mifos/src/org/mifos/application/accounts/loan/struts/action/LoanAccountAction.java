@@ -565,6 +565,47 @@ public class LoanAccountAction extends AccountAppAction {
 		loanActionForm.setClientDetails(clientDetails);
 		logger.debug("outside setClientDetails method");
 	}
+	
+	private void setMonthlySchedule(LoanAccountActionForm loanActionForm, MeetingDetailsEntity loanMeetingDetail, 
+			MeetingDetailsEntity meetingDetails)
+	{
+		// 2 is signaled as the schedule is monthly on jsp page (Monthradio button is clicked)
+		loanActionForm.setFrequency("2");
+		loanActionForm.setRecurMonth(meetingDetails.getRecurAfter().toString());
+		loanActionForm.setDayRecurMonth(meetingDetails.getRecurAfter().toString());
+		if  (meetingDetails.getWeekRank() != null) 
+		{
+			// 2 is signaled as the day of week is chosen on jsp page. For ex,  First Monday of every 2 months
+			loanActionForm.setMonthType("2");
+			loanActionForm.setMonthRank(meetingDetails.getWeekRank().getValue()
+					.toString()); 
+			loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
+			
+		}
+		else
+		{
+			// 1 is signaled as the day of month is chosen on jsp page. For ex, 12 th day of every 1 month
+			loanActionForm.setMonthType("1");
+			loanActionForm.setMonthDay(meetingDetails.getDayNumber().toString());
+		}
+	}
+	
+	private void setWeeklySchedule(LoanAccountActionForm loanActionForm, MeetingDetailsEntity loanMeetingDetail, 
+			MeetingDetailsEntity meetingDetails)
+	{
+		// 1 is signaled as the schedule is weekly on jsp page. Week radio button is clicked
+		loanActionForm.setFrequency("1");
+		loanActionForm.setRecurWeek(loanMeetingDetail.getRecurAfter().toString());
+		loanActionForm.setWeekDay(meetingDetails.getWeekDay().getValue().toString());
+	}
+	
+	private void clearFields(LoanAccountActionForm loanActionForm)
+	{
+		loanActionForm.setMonthDay("");
+		loanActionForm.setMonthWeek("0");
+		loanActionForm.setMonthRank("0");
+	}
+	
 		
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
@@ -577,10 +618,13 @@ public class LoanAccountAction extends AccountAppAction {
 				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
 		setDataIntoForm(loanOffering, loanActionForm, request);
 		loadCreateMasterData(loanActionForm, request);
-		RecurrenceType recurrenceType = loanOffering.getLoanOfferingMeeting()
-				.getMeeting().getMeetingDetails().getRecurrenceTypeEnum();
+		MeetingDetailsEntity loanMeetingDetail =loanOffering.getLoanOfferingMeeting()
+		.getMeeting().getMeetingDetails();
+		RecurrenceType recurrenceType = loanMeetingDetail.getRecurrenceTypeEnum();
+		
 		SessionUtils.setAttribute(RECURRENCEID, recurrenceType
 				.getValue(), request);
+		request.setAttribute(RECURRENCEID, recurrenceType.getValue());
 		Object object = request.getSession().getAttribute(
 				Constants.BUSINESS_KEY);
 		CustomerBO customerBO = null;
@@ -593,17 +637,17 @@ public class LoanAccountAction extends AccountAppAction {
 					LOANACCOUNTOWNER, request);
 
 		}
+		clearFields(loanActionForm);
 		MeetingDetailsEntity meetingDetails = customerBO.getCustomerMeeting()
 				.getMeeting().getMeetingDetails();
-		if (meetingDetails.getWeekDay() == null) {
-			loanActionForm.setMonthWeek(meetingDetails.getDayNumber().toString());			
-		} else {
-			loanActionForm.setMonthWeek(meetingDetails.getWeekDay().getValue().toString());
+		
+		if (recurrenceType == RecurrenceType.MONTHLY)
+		{
+			setMonthlySchedule(loanActionForm, loanMeetingDetail, meetingDetails);
 		}
-		if (recurrenceType == RecurrenceType.MONTHLY
-				&& meetingDetails.getWeekRank() != null) {
-			loanActionForm.setMonthRank(meetingDetails.getWeekRank().getValue()
-					.toString());
+		else
+		{
+			setWeeklySchedule(loanActionForm, loanMeetingDetail, meetingDetails);
 		}
 
 		SessionUtils.removeAttribute(LOANOFFERING, request);

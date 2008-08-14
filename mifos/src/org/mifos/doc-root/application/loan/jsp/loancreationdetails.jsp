@@ -54,6 +54,7 @@ explanation of the license and how it is applied.
 		<script>
 		function showMeetingFrequency(){
 			if (document.loanAccountActionForm.frequency[1].checked == true) {
+				document.loanAccountActionForm.frequency[0].disabled=true;
 				document.getElementById("weekDIV").style.display = "none";
 				document.getElementById("monthDIV").style.display = "block";
 				document.getElementsByName("recurrenceId")[0].value = "2";
@@ -61,6 +62,7 @@ explanation of the license and how it is applied.
 					document.getElementsByName("monthType")[0].checked=true;
 			} else {
 				document.loanAccountActionForm.frequency[0].checked=true;
+				document.loanAccountActionForm.frequency[1].disabled=true;
 				document.getElementById("weekDIV").style.display = "block";
 				document.getElementById("monthDIV").style.display = "none";
 				document.getElementsByName("recurrenceId")[0].value = "1";
@@ -257,8 +259,9 @@ explanation of the license and how it is applied.
 										value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" />
 									&nbsp; <c:choose>
 										<c:when
-											test="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == 1}">
+											test="${recurrenceId == 1}">
 											<mifos:mifoslabel name="loan.week(s)" />
+											
 										</c:when>
 										<c:otherwise>
 											<mifos:mifoslabel name="loan.month(s)" />
@@ -402,7 +405,7 @@ explanation of the license and how it is applied.
 												property="monthDay" size="3" onfocus="checkMonthType1()" maxlength="2"/> 
 												 <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3"/> <mifos:mifoslabel
+												property="dayRecurMonth" size="3" onfocus="checkMonthType1()" maxlength="3" disabled="true"/> <mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></td>
 										</tr>
 										<tr class="fontnormal">
@@ -420,7 +423,7 @@ explanation of the license and how it is applied.
 												</c:forEach>
 											</mifos:select> <mifos:mifoslabel name="meeting.labelOfEvery"
 												bundle="MeetingResources" /> <mifos:mifosnumbertext
-												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3"/> <mifos:mifoslabel
+												property="recurMonth" size="3" onfocus="checkMonthType2()" maxlength="3" disabled="true"/> <mifos:mifoslabel
 												name="meeting.labelMonths" bundle="MeetingResources" /></td>
 										</tr>
 									</table>
