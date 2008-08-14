@@ -54,6 +54,7 @@ explanation of the license and how it is applied.
 								 		return false; 
 								 } 
 						}
+						addEvent(window, "load", disableFields);
 	    </script>
 
 				<script>
