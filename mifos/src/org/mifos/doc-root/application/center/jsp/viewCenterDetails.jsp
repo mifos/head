@@ -127,6 +127,7 @@
 									</c:forEach>
 								</c:when>
 								<c:otherwise>
+                                                                <%-- FIXME: JSP tags inside HTML comments?? --%>
 									<!-- <c:if test="${performanceHistory.numberOfGroups==0}">-->
 									<mifos:mifoslabel name="Center.No" bundle="CenterUIResources" />
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="Center.s" bundle="CenterUIResources" />
@@ -352,7 +353,7 @@
 								name="Center.MeetingsSubHeading" />:&nbsp;
 							<c:out value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" /></span>
 							<c:set var="updatedMeetingScheduleMessage" value="${customerfn:getUpdatedMeetingSchedule(BusinessKey.customerMeeting,UserContext)}" />
-							<c:if test="${!empty(updatedMeetingScheduleMessage)}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
+							<c:if test="${!empty updatedMeetingScheduleMessage}"><span class="fontnormalRed"><br><c:out value="${updatedMeetingScheduleMessage}" /></span></c:if>
 							<span class="fontnormal"><br></span>
 							<span class="fontnormal"><c:out
 								value="${BusinessKey.customerMeeting.meeting.meetingPlace}" /></span>
