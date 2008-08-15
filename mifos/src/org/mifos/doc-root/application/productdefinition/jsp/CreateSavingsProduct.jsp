@@ -67,12 +67,12 @@
 			}
 			function fnCheckRecMand() {
 				if(document.getElementsByName("savingsType")[0].value==1) {
-					document.getElementsByName("mandamnt")[0].style.display = "block";
-					document.getElementsByName("recamnt")[0].style.display = "none";
+					document.getElementById("mandamnt").style.display = "block";
+					document.getElementById("recamnt").style.display = "none";
 				}
 				else {
-					document.getElementsByName("mandamnt")[0].style.display = "none";
-					document.getElementsByName("recamnt")[0].style.display = "block";
+					document.getElementById("mandamnt").style.display = "none";
+					document.getElementById("recamnt").style.display = "block";
 				}
 			}
 
@@ -256,13 +256,11 @@
 								</td>
 							</tr>
 							<tr class="fontnormal">
-								<td align="right" id="recamnt">
-									<mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/>
+								<td align="right">
+                                                                    <div id="recamnt"><mifos:mifoslabel name="product.recamtdep" bundle="ProductDefUIResources" isColonRequired="yes"/></div>
+                                                                    <div id="mandamnt"><mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/></div>
 								</td>
-								<td align="right" id="mandamnt">
-									<mifos:mifoslabel name="product.mandamntdep" mandatory="yes" bundle="ProductDefUIResources" isColonRequired="yes"/>
-								</td>
-								<td valign="top">
+								<td align="left">
 									<mifos:mifosdecimalinput property="recommendedAmount" />
 								</td>
 							</tr>
