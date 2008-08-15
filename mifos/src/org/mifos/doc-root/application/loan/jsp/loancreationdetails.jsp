@@ -350,7 +350,7 @@ explanation of the license and how it is applied.
 									test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '1'}">
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
-										name="meeting.labelFrequencyOfMeeting" mandatory="yes"
+										name="meeting.labelRepaymentDay" mandatory="yes"
 										bundle="MeetingResources">
 									</mifos:mifoslabel></td>
 									<td align="left" valign="top"
