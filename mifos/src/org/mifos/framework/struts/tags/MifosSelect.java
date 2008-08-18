@@ -43,6 +43,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -359,9 +360,9 @@ public class MifosSelect extends BodyTagSupport {
 			throw new RuntimeException(e);
 		} 
 		
-		Map inputCopy = new TreeMap();
+		Map inputCopy = new LinkedHashMap();
 		if (inMap != null) {
-			inputCopy = new TreeMap(inMap);
+			inputCopy = new LinkedHashMap(inMap);
 			if (outMap != null) {
 				Set input = inMap.keySet();
 				Set output = outMap.keySet();
@@ -473,7 +474,7 @@ public class MifosSelect extends BodyTagSupport {
     Map helper(Collection coll) throws SecurityException,
 			NoSuchMethodException, IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
-		Map<Object, Object> map = new TreeMap<Object, Object>();
+		Map<Object, Object> map = new LinkedHashMap<Object, Object>();
 		if (coll != null && !coll.isEmpty()) {
 			for (Iterator it = coll.iterator(); it.hasNext();) {
 				Object object = it.next();
