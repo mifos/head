@@ -214,27 +214,23 @@
 							<table width="100%" border="0" cellspacing="0" cellpadding="0">
 								<tr valign="top" class="fontnormal">
 									<td>&nbsp;</td>
-									<td>&nbsp;</td>
 								</tr>
-
-								<tr valign="top" class="fontnormal">
-								<br>
-									<td colspan="2">
-
 
 										<c:forEach var="item"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 											varStatus="loop">
 												<tr id="myvalue${loop.index}div">
+													<td class="fontnormal">
 													<input name='mycheckBOx' type="checkbox"
 														value="${item}" />${item}
 													<input name='detailsList[${loop.index}]' type="hidden"
 														value="${item}" />
-
+													</td>
 												</tr>
 
 										</c:forEach>
-
+								<tr>
+									<td>
 										<div id="myDiv">
 										</div>
 										<br>

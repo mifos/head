@@ -61,6 +61,7 @@ function createCheckList()
 	{
 		var para = document.getElementById("myDiv");
 		var detailsTxt  = document.createElement("TD");
+		detailsTxt.className = "fontnormal";
 		var divIdName = "my"+k+"Div";
 		detailsTxt.setAttribute("id",divIdName);
 		var textArea=document.getElementsByName('text')[0].value;
