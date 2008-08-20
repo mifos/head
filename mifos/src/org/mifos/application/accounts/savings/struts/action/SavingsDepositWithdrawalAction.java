@@ -219,7 +219,10 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 					savings));
 		} else if (trxnTypeId
 				.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()))
-			savings.withdraw(createPaymentData(actionForm, uc));
+		{
+			boolean persist = true;
+			savings.withdraw(createPaymentData(actionForm, uc), persist);
+		}
 
 		return mapping.findForward(ActionForwards.account_details_page
 				.toString());

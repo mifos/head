@@ -753,8 +753,8 @@ public class TestSavingsBO extends MifosTestCase {
 		paymentData.setCustomer(client1);
 		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
 		paymentData.setRecieptNum("34244");
-
-		savings.withdraw(paymentData);
+        boolean persist = true;
+		savings.withdraw(paymentData, persist);
 		assertEquals(0.0, savings.getSavingsBalance().getAmountDoubleValue());
 		assertEquals(1, savings.getSavingsActivityDetails().size());
 		savings.getAccountPayments().clear();
@@ -916,7 +916,8 @@ public class TestSavingsBO extends MifosTestCase {
 		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
 		paymentData.setRecieptNum("34244");
 		try {
-			savings.withdraw(paymentData);
+			boolean persist = true;
+			savings.withdraw(paymentData, persist);
 			assertTrue(
 					"No Exception is thrown. Even amount greater than max withdrawal allowed to be withdrawn",
 					false);

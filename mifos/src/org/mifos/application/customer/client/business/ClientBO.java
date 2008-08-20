@@ -315,8 +315,9 @@ public class ClientBO extends CustomerBO {
 		}
 		return null;
 	}
-
-	public void handleAttendance(Date meetingDate, Short attendance)
+	
+    // when this method is called from Bulk Entry preview persist will be false
+	public void handleAttendance(Date meetingDate, Short attendance, boolean persist)
 			throws ServiceException, CustomerException {
 		ClientAttendanceBO clientAttendance = getClientAttendanceForMeeting(meetingDate);
 		if (clientAttendance == null) {
@@ -325,16 +326,20 @@ public class ClientBO extends CustomerBO {
 			addClientAttendance(clientAttendance);
 		}
 		clientAttendance.setAttendance(attendance);
-		try {
-			new CustomerPersistence().createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new CustomerException(e);
+		if (persist)
+		{
+			try {
+				new CustomerPersistence().createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new CustomerException(e);
+			}
 		}
 	}
 
 	public void handleAttendance(Date meetingDate, AttendanceType attendance) 
 	throws ServiceException, CustomerException {
-		handleAttendance(meetingDate, attendance.getValue());
+		boolean persist = true;
+		handleAttendance(meetingDate, attendance.getValue(), persist);
 	}
 
 	@Override

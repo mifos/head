@@ -167,14 +167,12 @@ public class BulkEntryBusinessService extends BusinessService {
 							savings.get(accountView.getAccountId())
 									.setYesNoFlag(YesNoFlag.NO);
 						accountNums.add((String) (be.getValues()[0]));
-						HibernateUtil.rollbackTransaction();
 
 					} catch (Exception e) {
 						if (savings.containsKey(accountView.getAccountId()))
 							savings.get(accountView.getAccountId())
 									.setYesNoFlag(YesNoFlag.NO);
 						accountNums.add(accountView.getAccountId().toString());
-						HibernateUtil.rollbackTransaction();
 					} finally {
 						HibernateUtil.closeSession();
 					}
@@ -220,14 +218,14 @@ public class BulkEntryBusinessService extends BusinessService {
 								savings.get(accountView.getAccountId())
 										.setYesNoFlag(YesNoFlag.NO);
 							accountNums.add((String) (be.getValues()[0]));
-							HibernateUtil.rollbackTransaction();
+							
 						} catch (Exception e) {
 							if (savings.containsKey(accountView.getAccountId()))
 								savings.get(accountView.getAccountId())
 										.setYesNoFlag(YesNoFlag.NO);
 							accountNums.add(accountView.getAccountId()
 									.toString());
-							HibernateUtil.rollbackTransaction();
+							
 						} finally {
 							HibernateUtil.closeSession();
 						}
@@ -384,9 +382,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			Short attendance, List<ClientBO> clients) throws ServiceException {
 		try {
 			ClientBO client = (ClientBO) getCustomer(customerId);
-			//HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
-			client.handleAttendance(meetingDate, attendance);
-			//HibernateUtil.getSessionTL().clear();
+			boolean persist = false; // this is for Preview so no persistence
+			client.handleAttendance(meetingDate, attendance, persist);
 			clients.add(client);
 		} catch (Exception e) {
 			throw new ServiceException("errors.update", e,
@@ -461,7 +458,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			String recieptId, Short paymentId, Date transactionDate,
 			String disbursementAmountEntered, Date receiptDate)
 			throws ServiceException {
-		if (getDoubleValue(disbursementAmountEntered).doubleValue() > 0) {
+		Double amount = getDoubleValue(disbursementAmountEntered);
+		if ((amount != null) && (amount.doubleValue() > 0)) {
 			LoanBO account = null;
 			try {
 				account = (LoanBO) getAccount(accountId,
@@ -527,9 +525,8 @@ public class BulkEntryBusinessService extends BusinessService {
 				account = savings.get(accountId).getAccount();
 			else
 				account = getAccount(accountId, AccountTypes.SAVINGS_ACCOUNT);
-			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
-			account.applyPaymentWithPersist(accountPaymentDataView);
-			HibernateUtil.getSessionTL().clear();
+			boolean persist = false;
+			account.applyPayment(accountPaymentDataView, persist);
 			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
 					(SavingsBO) account, YesNoFlag.YES));
 		} catch (Exception ae) {
@@ -581,11 +578,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			else
 				account = (SavingsBO) getAccount(accountId,
 						AccountTypes.SAVINGS_ACCOUNT);
-			// TODO: Committing the transaction fixes unit test, but is this the right thing to do?
-			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
-			account.withdraw(accountPaymentDataView);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.getSessionTL().clear();
+			boolean persist = false;
+			account.withdraw(accountPaymentDataView, persist);
 			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
 					account, YesNoFlag.YES));
 		} catch (Exception ae) {

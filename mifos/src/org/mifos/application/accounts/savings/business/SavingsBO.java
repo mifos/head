@@ -1082,7 +1082,7 @@ public class SavingsBO extends AccountBO {
 		return accountTrxn;
 	}
 
-	public void withdraw(PaymentData accountPaymentData)
+	public void withdraw(PaymentData accountPaymentData, boolean persist)
 			throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		Money totalAmount = accountPaymentData.getTotalAmount();
@@ -1137,10 +1137,13 @@ public class SavingsBO extends AccountBO {
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
-		try {
-			(new SavingsPersistence()).createOrUpdate(this);
-		} catch (PersistenceException e) {
-			throw new AccountException(e);
+		if (persist)
+		{
+			try {
+				(new SavingsPersistence()).createOrUpdate(this);
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
 		}
 	}
 

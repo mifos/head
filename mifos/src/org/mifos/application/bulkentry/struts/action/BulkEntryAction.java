@@ -421,9 +421,9 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		
 		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
 				BulkEntryConstants.BULKENTRY, request);
+		
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		List<String> customerNames = new ArrayList<String>();
@@ -526,6 +526,7 @@ public class BulkEntryAction extends BaseAction {
 			throws Exception {
 		logger.debug("create ");
 		UserContext userContext = getUserContext(request);
+		
 		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.BULKENTRY_RESOURCE, userContext.getPreferredLocale());
 		String loan = MessageLookup.getInstance().lookupLabel(ConfigurationConstants.LOAN, userContext);
 		String attendance = resources.getString(BulkEntryConstants.ATTENDANCE);
@@ -561,11 +562,23 @@ public class BulkEntryAction extends BaseAction {
 		List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) 
 			SessionUtils
 				.getAttribute(BulkEntryConstants.CUSTOMERACCOUNTS, request);
-		bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(),
+		try
+		{
+			bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(),
 				bulkEntry.getPaymentType().getPaymentTypeId(), bulkEntry
 						.getReceiptDate(), bulkEntry.getTransactionDate(),
 				loanAccountNums, savings, savingsDepositAccountNums, clients,
 				customerNames, customerAccounts, customerAccountNums);
+		}
+		catch (Exception e)
+		{
+			throw e;
+		}
+		finally
+		{
+			// remove lock on the center
+			removeLock(form);
+		}
 		request.setAttribute(BulkEntryConstants.CENTER, bulkEntry
 				.getBulkEntryParent().getCustomerDetail().getDisplayName());
 		if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
@@ -586,8 +599,6 @@ public class BulkEntryAction extends BaseAction {
 		}
 		// TO clear bulk entry cache in persistence service
 		bulkEntryService = null;
-		// remove lock on the center
-		removeLock(form);
 		return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
 	}
 

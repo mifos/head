@@ -127,7 +127,9 @@ public class BulkEntryView extends View {
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails)
 			if (savingsAccount.getSavingsOffering().getPrdOfferingId().equals(
 					savingsAccountView.getSavingsOffering().getPrdOfferingId()))
+			{
 				return;
+			}
 		this.savingsAccountDetails.add(savingsAccount);
 	}
 
