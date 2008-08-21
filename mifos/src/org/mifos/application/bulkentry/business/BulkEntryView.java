@@ -49,6 +49,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
@@ -330,8 +331,12 @@ public class BulkEntryView extends View {
 		if (customerSavingsAccounts != null
 				&& customerSavingsAccounts.size() > 0)
 			for (SavingsBO savingsAccount : customerSavingsAccounts) {
-				SavingsAccountView savingsAccountView = getSavingsAccountView(savingsAccount);
-				savingsAccounts.add(savingsAccountView);
+				// kim, check if account is active
+				if (savingsAccount.getAccountState().getId().equals(AccountState.SAVINGS_ACTIVE.getValue()))
+				{
+					SavingsAccountView savingsAccountView = getSavingsAccountView(savingsAccount);
+					savingsAccounts.add(savingsAccountView);
+				}
 			}
 		return savingsAccounts;
 	}

@@ -70,7 +70,7 @@
 			<one-to-many class="org.mifos.application.customer.business.CustomerPositionEntity" />
 		</set>
 
-		<set name="accounts" cascade="all" table="ACCOUNT" lazy="true" access="field">
+		<set name="accounts" cascade="all" table="ACCOUNT" lazy="true" order-by="ACCOUNT_ID asc" access="field">
 			<key column="CUSTOMER_ID" />
 			<one-to-many class="org.mifos.application.accounts.business.AccountBO" />
 		</set>
