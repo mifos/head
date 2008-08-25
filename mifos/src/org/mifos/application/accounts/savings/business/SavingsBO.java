@@ -672,13 +672,11 @@ public class SavingsBO extends AccountBO {
 		}
 		this.addAccountPayment(interestPayment);
 		if (userContext == null)
-			addSavingsActivityDetails(buildSavingsActivity(interestAmt,
-					getSavingsBalance().add(interestAmt),
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),
 					AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue(),
 					postingDate, null));
 		else
-			addSavingsActivityDetails(buildSavingsActivity(interestAmt,
-					getSavingsBalance().add(interestAmt),
+			addSavingsActivityDetails(buildSavingsActivity(interestAmt, getSavingsBalance(),
 					AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue(),
 					postingDate, loggedInUser));
 		buildFinancialEntries(interestPayment.getAccountTrxns());
@@ -1821,9 +1819,7 @@ public class SavingsBO extends AccountBO {
 				savingActivity.getAmount()).toString());
 		savingsRecentActivityView.setActivity(savingActivity.getActivity()
 				.getName());
-		savingsRecentActivityView.setRunningBalance(String
-				.valueOf(savingActivity.getBalanceAmount()
-						.getAmountDoubleValue()));
+		savingsRecentActivityView.setRunningBalance(savingActivity.getBalanceAmount().toString());
 		return savingsRecentActivityView;
 	}
 
