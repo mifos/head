@@ -223,8 +223,9 @@ public class GroupTransferAction extends BaseAction {
 
 		actionForm.setAssignedLoanOfficerId(clientInSession.getPersonnel()
 				.getPersonnelId().toString());
+		
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
-				userContext, activeBranches.get(0).getOfficeId());
+						userContext, customerBO.getOffice().getOfficeId());
 		SessionUtils.setCollectionAttribute(
 				CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientInSession, request);
