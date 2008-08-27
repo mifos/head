@@ -709,8 +709,9 @@ public class SavingsBO extends AccountBO {
 
 		for (int i = 0; i < accountTrxnList.size(); i++) {
 			if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
-				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) < 0) {
+				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) <= 0) {
 					fromDate = accountTrxnList.get(i).getActionDate();
+					minBal = minBal.add(accountTrxnList.get(i).getAmount());
 					continue;
 				}
 			}			
