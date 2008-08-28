@@ -503,10 +503,10 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = createSavingsWithAccountPayments();
 		SavingsTrxnDetailEntity initialTrxn = new SavingsPersistence()
 				.retrieveFirstTransaction(savings.getAccountId());
-
+        boolean initialBalance = false;
 		Money minBal = savings.getMinimumBalance(getTimeStampDate(helper
 				.getDate("05/01/2006")), getTimeStampDate(helper
-				.getDate("10/05/2006")), initialTrxn, null);
+				.getDate("10/05/2006")), initialTrxn, null,initialBalance);
 		assertEquals(Double.valueOf("4000"), minBal.getAmountDoubleValue());
 		TestObjectFactory.flushandCloseSession();
 		savings = TestObjectFactory.getObject(SavingsBO.class,

@@ -516,6 +516,7 @@ public class SavingsBO extends AccountBO {
 	private Money calculateInterest(Date fromDate, Date toDate,
 			double interestRate, SavingsTrxnDetailEntity adjustedTrxn)
 			throws AccountException {
+		boolean initialBalance = false;
 		if (fromDate == null)
 			fromDate = getFromDate();
 
@@ -532,6 +533,7 @@ public class SavingsBO extends AccountBO {
 				if (trxn == null || (trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING))) {
 					trxn = (new SavingsPersistence())
 							.retrieveFirstTransaction(getAccountId());
+					initialBalance = true;
 				}
 								
 				if (trxn == null || (trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_ADJUSTMENT))) {
@@ -556,7 +558,7 @@ public class SavingsBO extends AccountBO {
 			if (getInterestCalcType().getId().equals(
 					InterestCalcType.MINIMUM_BALANCE.getValue()))
 				principal = getMinimumBalance(fromDate, toDate, trxn,
-						adjustedTrxn);
+						adjustedTrxn, initialBalance);
 			else if (getInterestCalcType().getId().equals(
 					InterestCalcType.AVERAGE_BALANCE.getValue()))
 				principal = getAverageBalance(fromDate, toDate, trxn,
@@ -696,7 +698,7 @@ public class SavingsBO extends AccountBO {
 
 	protected Money getMinimumBalance(Date fromDate, Date toDate,
 			SavingsTrxnDetailEntity initialTrxn,
-			SavingsTrxnDetailEntity adjustedTrxn) {
+			SavingsTrxnDetailEntity adjustedTrxn, boolean initialBalance) {
 		logger.debug("In SavingsBO::getMinimumBalance(), accountId: "
 				+ getAccountId());
 		Money minBal = initialTrxn.getBalance();
@@ -714,7 +716,27 @@ public class SavingsBO extends AccountBO {
 					minBal = minBal.add(accountTrxnList.get(i).getAmount());
 					continue;
 				}
-			}			
+			}
+			if (initialBalance)
+			{
+				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) > 0) {
+					if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
+						if (!initialTrxn.getActionDate().equals(accountTrxnList.get(i).getActionDate()))
+						{
+							minBal = minBal.add(accountTrxnList.get(i).getAmount());
+							continue;
+						}
+					}
+					else if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
+						minBal = minBal.subtract(accountTrxnList.get(i).getAmount());
+						continue;
+					}
+					if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+						minBal = minBal.add(accountTrxnList.get(i).getAmount());
+					}
+					
+				}
+			}
 			if ((accountTrxnList.get(i).getActionDate()).compareTo(fromDate) >= 0
 					&& DateUtils.getDateWithoutTimeStamp(
 							accountTrxnList.get(i).getActionDate().getTime())
