@@ -180,6 +180,7 @@
             <forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
             <forward name="loan_detail_page" path="/loanAccountAction.do?method=get"/>
         </action>
+        <!--  redo loan -->
         <action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction"
                 name="loanAccountActionForm" parameter="method"
                 input="/loanAccountAction.do?method=validate" scope="session" validate="true" >
