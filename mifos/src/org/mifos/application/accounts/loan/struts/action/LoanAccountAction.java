@@ -1175,10 +1175,10 @@ public class LoanAccountAction extends AccountAppAction {
 				request.setAttribute("weekDayId", weekday.getValue());
 			}
 		} else if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isMonthly()) {
-			Short weekDayValue = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue().getValue();		
-			if (null != weekDayValue) {
-				loanActionForm.setMonthWeek(weekDayValue.toString());
-				request.setAttribute("weekDayId", weekDayValue);
+			WeekDay weekDay = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue();		
+			if (null != weekDay) {
+				loanActionForm.setMonthWeek(weekDay.getValue().toString());
+				request.setAttribute("weekDayId", weekDay.getValue());
 			}
 			RankOfDaysEntity rankOfDays = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getRankOfDays();			
 			if (null != rankOfDays) {
