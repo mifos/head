@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -868,7 +867,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private LoanBO redoLoan(LoanAccountActionForm loanActionForm,
-			HttpServletRequest request) throws PageExpiredException,
+			HttpServletRequest request, SaveLoan save) throws PageExpiredException,
 			AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException {
 		LoanBO loan = constructLoan(loanActionForm, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
@@ -876,6 +875,18 @@ public class LoanAccountAction extends AccountAppAction {
 		loan.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null,
 				"Automatic Status Update (Redo Loan)");
 
+		PersonnelBO personnel = getPersonnel(request);
+		
+		 if (save.equals(SaveLoan.YES)) {
+			loan.save();
+		}
+		 else
+			 loanDisbursementAndPayments(loanActionForm, request, save, loan, personnel);
+
+		return loan;
+	}
+
+	private PersonnelBO getPersonnel(HttpServletRequest request) {
 		PersonnelBO personnel = null;
 		try {
 			personnel = new PersonnelPersistence().getPersonnel(getUserContext(
@@ -884,9 +895,12 @@ public class LoanAccountAction extends AccountAppAction {
 		catch (PersistenceException e) {
 			throw new IllegalStateException(e);
 		}
+		return personnel;
+	}
 
+	private void loanDisbursementAndPayments(LoanAccountActionForm loanActionForm, HttpServletRequest request, SaveLoan save, LoanBO loan, PersonnelBO personnel) throws AccountException, PageExpiredException, ServiceException {
 		// We're assuming cash disbursal for this situation right now
-		loan.disburseLoan(personnel, PaymentTypes.CASH.getValue(), false);
+		loan.disburseLoan(personnel, PaymentTypes.CASH.getValue(), save.equals(SaveLoan.YES));
 
 		List<PaymentDataHtmlBean> paymentDataBeans = loanActionForm
 				.getPaymentDataBeans();
@@ -909,8 +923,6 @@ public class LoanAccountAction extends AccountAppAction {
 		catch (MeetingException e) {
 			throw new ServiceException(e);
 		}
-
-		return loan;
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -923,7 +935,7 @@ public class LoanAccountAction extends AccountAppAction {
 		if (perspective != null) {
 			if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
 				LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-				LoanBO loan = redoLoan(loanActionForm, request);
+				LoanBO loan = redoLoan(loanActionForm, request,SaveLoan.NO);
 				SessionUtils
 						.setAttribute(Constants.BUSINESS_KEY, loan, request);
 			}
@@ -1044,9 +1056,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId());
 		LoanBO loan;
 		if (isRedoOperation(perspective)) {
-			loan = redoLoan(loanActionForm, request);
+			loan = redoLoan(loanActionForm, request,SaveLoan.YES);
 			SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-			loan.save();
 		}
 		else {
 			checkPermissionForCreate(loanActionForm.getState().getValue(),
@@ -1069,6 +1080,8 @@ public class LoanAccountAction extends AccountAppAction {
 						isRedoOperation(perspective));
 			}
 		}
+		if (isRedoOperation(perspective)) 
+			loanDisbursementAndPayments(loanActionForm, request, SaveLoan.YES, loan, getPersonnel(request));
 
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
@@ -1176,7 +1189,7 @@ public class LoanAccountAction extends AccountAppAction {
 			}
 		} else if (loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceType().isMonthly()) {
 			WeekDay weekDay = loanBO.getLoanMeeting().getMeetingDetails().getMeetingRecurrence().getWeekDayValue();		
-			if (null != weekDay) {
+			if (null != weekDay) {	
 				loanActionForm.setMonthWeek(weekDay.getValue().toString());
 				request.setAttribute("weekDayId", weekDay.getValue());
 			}
@@ -1997,6 +2010,10 @@ public class LoanAccountAction extends AccountAppAction {
 			return "isGlimEnabled:"+isGlimEnabled+" loanAccountOwnerIsAGroup:"+loanAccountOwnerIsGroup+" clients:"+clients;
 		}
 
+	}
+	
+	private static enum SaveLoan{
+		YES, NO;
 	}
 
 }
