@@ -84,20 +84,8 @@ explanation of the license and how it is applied.
 				    ROUND(IFNULL(SUM(COALESCE(UNPAID_PRINCIPAL,0)),0),3) as unpaidBalance
 				    FROM 
 				    	LOAN_ARREARS_AGING la 
-				    LEFT JOIN
-				        CUSTOMER cust on cust.customer_id=la.customer_id
-                    LEFT JOIN
-                        customer_state cs on cs.status_id=cust.status_id
 				    WHERE 
 				        la.OFFICE_ID=:officeId
-                    AND
-                        cs.description='Customer Was Active'
-				    AND
-				        cust.customer_level_id=:customerLevelId
-				    AND 
-				    	UNPAID_BALANCE_CURRENCY_ID=:currencyId 
-				    AND 
-				    	OVERDUE_BALANCE_CURRENCY_ID=:currencyId
 		]]>
 	</sql-query>
 	<!-- 
@@ -121,42 +109,24 @@ explanation of the license and how it is applied.
 			        loan_arrears_aging laa
 			    LEFT JOIN 
 			        customer cust on cust.customer_id=laa.customer_id
-                LEFT JOIN
-                    customer_state cs on cs.status_id=cust.status_id
 			    WHERE
 			        cust.customer_level_id= :customerLevelId
-                AND
-                    cs.description='Customer Was Active'
 			    AND 
 			        laa.office_id = :officeId
 			    AND 
 			        days_in_arrears >= :daysInArrears
-			    AND 
-			        laa.unpaid_balance_currency_id = :currencyId
-			    AND 
-			        laa.overdue_balance_currency_id = :currencyId
 		]]>
 	</sql-query>
-	<!-- 
-			SELECT COUNT(laa.customer_id) AS loansAtRisk,
-				ROUND(IFNULL(SUM(COALESCE(unpaid_balance)),0),3) AS outstandingAmountAtRisk,
-				ROUND(IFNULL(SUM(COALESCE(overdue_balance)),0),3) AS overdueAmountAtRisk
-				FROM loan_arrears_aging laa ,customer c
-				WHERE laa.customer_id=c.customer_id
-				AND c.customer_level_id=1
-				AND c.branch_id = :officeId
-				AND days_in_arrears > :daysInArrears
-				AND laa.unpaid_balance_currency_id=:currencyId
-				AND laa.overdue_balance_currency_id=:currencyId
-	-->
+
 	<sql-query name="branchReport.extractLoanArrearsProfileClientsAtRiskForBranch">
 		<return-scalar column="clientsAtRisk" type="integer" />
-		<![CDATA[SELECT COUNT(DISTINCT cph.CUSTOMER_ID) as clientsAtRisk  
-					FROM client_perf_history cph, customer c WHERE 
-				    cph.CUSTOMER_ID=c.CUSTOMER_ID AND 
-				    c.CUSTOMER_LEVEL_ID=1 AND
-				    c.BRANCH_ID=:officeId AND
-				    cph.DELINQUINT_PORTFOLIO > 0
+		<![CDATA[	
+			SELECT COUNT(laa.customer_id) AS clientsAtRisk
+				FROM loan_arrears_aging laa ,customer c
+				WHERE laa.customer_id=c.customer_id
+				AND c.customer_level_id=:customerLevelId
+				AND c.branch_id = :officeId
+				AND days_in_arrears > :daysInArrears
 		]]>
 	</sql-query>
 </hibernate-mapping>

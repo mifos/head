@@ -845,7 +845,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 </structure>
                 <structure>
                     <property name="name">loan_due</property>
-                    <expression name="expression">dataSetRow["loan_due"]</expression>
+                    <expression name="expression">dataSetRow["loan_due"]=="0"?"":dataSetRow["loan_due"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -884,12 +884,12 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 </structure>
                 <structure>
                     <property name="name">loan_disb</property>
-                    <expression name="expression">dataSetRow["loan_disb"]</expression>
+                    <expression name="expression">dataSetRow["loan_disb"]=="0"?"":dataSetRow["loan_disb"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">loan_fees</property>
-                    <expression name="expression">dataSetRow["loan_fees"]</expression>
+                    <expression name="expression">dataSetRow["loan_fees"]=="0"?"":dataSetRow["loan_fees"]</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
@@ -909,6 +909,12 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                     <property name="dataType">float</property>
                     <property name="aggregateOn">center_group</property>
                 </structure>
+                <structure>
+                    <property name="name">center_total_loan_disb</property>
+                    <expression name="expression">Total.sum(dataSetRow["total_loan_disb"])</expression>
+                    <property name="dataType">float</property>
+                    <property name="aggregateOn">center_group</property>
+                </structure>
             </list-property>
             <column id="175">
                 <property name="width">0.6in</property>
@@ -917,31 +923,31 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                 <property name="width">0.8854166667in</property>
             </column>
             <column id="177">
-                <property name="width">0.875in</property>
+                <property name="width">1.22in</property>
             </column>
             <column id="178">
-                <property name="width">0.71875in</property>
+                <property name="width">0.45in</property>
             </column>
             <column id="181">
-                <property name="width">0.875in</property>
+                <property name="width">0.9in</property>
             </column>
             <column id="182">
-                <property name="width">0.6458333333in</property>
+                <property name="width">0.5104166667in</property>
             </column>
             <column id="186">
-                <property name="width">0.625in</property>
+                <property name="width">0.4in</property>
             </column>
             <column id="1505">
-                <property name="width">0.5416666667in</property>
+                <property name="width">0.53125in</property>
             </column>
             <column id="208">
-                <property name="width">0.375in</property>
+                <property name="width">0.4in</property>
             </column>
             <column id="851">
-                <property name="width">0.4895833333in</property>
+                <property name="width">0.4in</property>
             </column>
             <column id="1490">
-                <property name="width">0.6354166667in</property>
+                <property name="width">0.62in</property>
             </column>
             <column id="978">
                 <property name="width">0.55in</property>
@@ -1401,6 +1407,9 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                             <property name="borderBottomWidth">thin</property>
                             <property name="paddingRight">5px</property>
                             <property name="textAlign">right</property>
+                            <data id="1651">
+                                <property name="resultSetColumn">center_total_loan_disb</property>
+                            </data>
                         </cell>
                         <cell id="859">
                             <property name="style">centerFooter</property>
@@ -1832,71 +1841,7 @@ reportContext.setPersistentGlobalVariable("pageNum",pgNum.toString());]]></metho
                         <cell id="1442">
                             <property name="colSpan">13</property>
                             <property name="rowSpan">1</property>
-                            <grid name="NewGrid" id="1585" extends="UI.NewGrid">
-                                <overridden-values>
-                                    <ref-entry baseId="40" name="NewGrid1">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(1)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="52" name="NewLabel">
-                                        <property name="textID">collection.sheet.signature.center.leader</property>
-                                    </ref-entry>
-                                    <ref-entry baseId="46" name="NewGrid2">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(2)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="53" name="NewLabel1"/>
-                                    <ref-entry baseId="55" name="NewGrid3">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(3)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="79" name="NewLabel11">
-                                        <property name="textID">collection.sheet.signature.center.manager</property>
-                                    </ref-entry>
-                                    <ref-entry baseId="61" name="NewGrid4">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(4)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="80" name="NewLabel12"/>
-                                    <ref-entry baseId="67" name="NewGrid5">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(5)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="81" name="NewLabel13"/>
-                                    <ref-entry baseId="73" name="NewGrid6">
-                                        <list-property name="visibility">
-                                            <structure>
-                                                <property name="format">all</property>
-                                                <expression name="valueExpr">!Packages.org.mifos.application.reports.business.service.ReportServiceFactory.getCacheEnabledCollectionSheetReportService().displaySignatureColumn(6)</expression>
-                                            </structure>
-                                        </list-property>
-                                    </ref-entry>
-                                    <ref-entry baseId="82" name="NewLabel14">
-                                        <property name="text">Cashier</property>
-                                        <property name="textID">collection.sheet.signature.cashier</property>
-                                    </ref-entry>
-                                </overridden-values>
-                            </grid>
+                            <grid name="NewGrid" id="1585" extends="UI.NewGrid"/>
                         </cell>
                     </row>
                 </footer>

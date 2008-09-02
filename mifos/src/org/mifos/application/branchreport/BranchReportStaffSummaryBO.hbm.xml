@@ -182,16 +182,6 @@ explanation of the license and how it is applied.
 					p.personnel_status=1
 				and 
 					p.office_id=:officeId 
-				and 
-					loan.orig_principal_currency_id=:currencyId 
-				and 
-					loan.principal_paid_currency_id=:currencyId 
-				and 
-					loan.orig_interest_currency_id=:currencyId 
-				and 
-					loan.orig_fees_currency_id=:currencyId 
-				and 
-					loan.interest_paid_currency_id=:currencyId 
 				group by 
 					p.personnel_id			
 		]]>		   

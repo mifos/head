@@ -155,7 +155,6 @@ public class BranchReportPersistence extends Persistence {
 		params.put(MAX_DAYS, period.getMaxDays());
 		params.put(MIN_DAYS, period.getMinDays());
 		params.put(NOT_LESS_THAN_DAYS, period.getNotLessThanDays());
-		params.put(CURRENCY_ID, currency.getCurrencyId());
 		params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
 		List queryResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOAN_ARREARS_IN_PERIOD, params);
@@ -286,7 +285,7 @@ public class BranchReportPersistence extends Persistence {
 			MifosCurrency currency) throws PersistenceException {
 		List<Object[]> resultSet = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOAN_DETAILS,
-				populateQueryParamsWithBranchCurrencyAndCustomerLevel(branchId, currency));
+				populateQueryParamsWithBranchCurrencyAndCustomerLevel(branchId));
 		ArrayList<BranchReportLoanDetailsBO> loanDetails = new ArrayList<BranchReportLoanDetailsBO>();
 		for (Object[] result : resultSet) {
 			loanDetails.add(new BranchReportLoanDetailsBO((String) result[0],
@@ -306,7 +305,7 @@ public class BranchReportPersistence extends Persistence {
 		List<Object[]> riskListResult = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_AND_OUTSTANDING_AMOUNTS_AT_RISK,
 				populateQueryParamsWithBranchCurrencyCustomerLevelAndRiskDays(branchId,
-						currency, daysInArrearsForRisk));
+						daysInArrearsForRisk));
 		LoanArrearsProfileForLoansAtRisk profileForLoansAtRisk = riskListResult
 				.isEmpty() ? new LoanArrearsProfileForLoansAtRisk(currency)
 				: new LoanArrearsProfileForLoansAtRisk(riskListResult.get(0),
@@ -314,7 +313,7 @@ public class BranchReportPersistence extends Persistence {
 
 		List<Object[]> resultListForBranch = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOANS_IN_ARREARS,
-				populateQueryParamsWithBranchCurrencyAndCustomerLevel(branchId, currency));
+				populateQueryParamsWithBranchId(branchId));
 
 		LoanArrearsProfileForBranch resultForBranch = resultListForBranch
 				.isEmpty() ? new LoanArrearsProfileForBranch(currency)
@@ -323,7 +322,7 @@ public class BranchReportPersistence extends Persistence {
 
 		Integer clientsAtRisk = getCountFromQueryResult(executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_LOAN_PROFILE_CLIENTS_AT_RISK,
-				populateQueryParams(branchId)));
+				populateQueryParamsWithBranchCurrencyCustomerLevelAndRiskDays(branchId, daysInArrearsForRisk)));
 
 		BranchReportLoanArrearsProfileBO loanArrearProfileForBranch = new BranchReportLoanArrearsProfileBO(
 				resultForBranch.loansInArrears,
@@ -335,8 +334,14 @@ public class BranchReportPersistence extends Persistence {
 		return loanArrearProfileForBranch;
 	}
 
-	private Map populateQueryParamsWithBranchCurrencyAndCustomerLevel(Short branchId, MifosCurrency currency) {
-		Map params = populateQueryParamsWithBranchAndCurrency(branchId, currency);
+	private Map populateQueryParamsWithBranchId(Short branchId) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put(OFFICEID, branchId);
+		return params;
+	}
+
+	private Map populateQueryParamsWithBranchCurrencyAndCustomerLevel(Short branchId) {
+		Map params = populateQueryParamsWithBranchAndCurrency(branchId);
 		params.put(CUSTOMER_LEVEL_ID, CLIENT.getValue());
 		return params;
 	}
@@ -358,7 +363,7 @@ public class BranchReportPersistence extends Persistence {
 			Short branchId, MifosCurrency currency) throws PersistenceException {
 		List<Object[]> resultSet = executeNamedQuery(
 				EXTRACT_BRANCH_REPORT_STAFF_SUMMARY_LOAN_AMOUNT_OUTSTANDING,
-				populateQueryParamsWithBranchAndCurrency(branchId, currency));
+				populateQueryParamsWithBranchAndCurrency(branchId));
 		for (Object[] outstandingAmounts : resultSet) {
 			BranchReportStaffSummaryBO staffSummary = staffSummaries
 					.get(outstandingAmounts[0]);
@@ -409,17 +414,15 @@ public class BranchReportPersistence extends Persistence {
 		return params;
 	}
 
-	private Map populateQueryParamsWithBranchAndCurrency(Short branchId,
-			MifosCurrency currency) {
+	private Map populateQueryParamsWithBranchAndCurrency(Short branchId) {
 		HashMap<String, Object> params = populateQueryParams(branchId);
-		params.put(CURRENCY_ID, currency.getCurrencyId());
 		return params;
 	}
 
 	private Map<String, Object> populateQueryParamsWithBranchCurrencyCustomerLevelAndRiskDays(
-			Short branchId, MifosCurrency currency, Integer daysInArrearsForRisk) {
+			Short branchId, Integer daysInArrearsForRisk) {
 		Map<String, Object> params = populateQueryParamsWithBranchCurrencyAndCustomerLevel(
-				branchId, currency);
+				branchId);
 		params.put(QueryParamConstants.DAYS_IN_ARREARS, daysInArrearsForRisk);
 		return params;
 	}

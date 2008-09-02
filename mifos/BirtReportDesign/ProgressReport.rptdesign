@@ -4177,6 +4177,36 @@ return true;]]></method>
                                             <expression name="expression">dataSetRow["loan_outstanding_interest"]</expression>
                                             <property name="dataType">float</property>
                                         </structure>
+                                        <structure>
+                                            <property name="name">total_loan_count</property>
+                                            <expression name="expression">Total.sum(dataSetRow["no_of_loans_issued"])</expression>
+                                            <property name="dataType">integer</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">total_loan_amount_issued</property>
+                                            <expression name="expression">Total.sum(dataSetRow["loan_amount_issued"])</expression>
+                                            <property name="dataType">float</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">total_loans_issued</property>
+                                            <expression name="expression">Total.sum(dataSetRow["no_of_loans_outstanding"])</expression>
+                                            <property name="dataType">integer</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">total_loan_oustanding</property>
+                                            <expression name="expression">Total.sum(dataSetRow["loan_outstanding_amount"])</expression>
+                                            <property name="dataType">float</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">total_loan_interest</property>
+                                            <expression name="expression">Total.sum(dataSetRow["loan_interest_issued"])</expression>
+                                            <property name="dataType">float</property>
+                                        </structure>
+                                        <structure>
+                                            <property name="name">total_interest_outstanding</property>
+                                            <expression name="expression">Total.sum(dataSetRow["loan_outstanding_interest"])</expression>
+                                            <property name="dataType">float</property>
+                                        </structure>
                                     </list-property>
                                     <column id="370"/>
                                     <column id="371">
@@ -4251,14 +4281,14 @@ return true;]]></method>
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="411">
-                                                    <text-property name="text" key="branch.report.loan.details.amount.header">Amount Disbursed</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.all.loans.amount.header">Amount Disbursed</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="385">
                                                 <property name="style">fieldText</property>
                                                 <property name="textAlign">center</property>
                                                 <label id="412">
-                                                    <text-property name="text" key="branch.report.loan.details.interest.header">Interest</text-property>
+                                                    <text-property name="text" key="branch.report.loan.details.all.loans.interest.header">Interest</text-property>
                                                 </label>
                                             </cell>
                                             <cell id="386">
@@ -4376,6 +4406,149 @@ return true;]]></method>
                                             </cell>
                                         </row>
                                     </detail>
+                                    <footer>
+                                        <row id="673">
+                                            <cell id="674">
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                            </cell>
+                                            <cell id="675">
+                                                <property name="style">numberFormat</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <data id="671">
+                                                    <property name="resultSetColumn">total_loan_count</property>
+                                                </data>
+                                            </cell>
+                                            <cell id="676">
+                                                <property name="style">numberFormat</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <data id="672">
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Currency</property>
+                                                        <property name="pattern">###0.00</property>
+                                                    </structure>
+                                                    <property name="resultSetColumn">total_loan_amount_issued</property>
+                                                </data>
+                                            </cell>
+                                            <cell id="677">
+                                                <property name="style">numberFormat</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <data id="683">
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Currency</property>
+                                                        <property name="pattern">###0.00</property>
+                                                    </structure>
+                                                    <property name="resultSetColumn">total_loan_interest</property>
+                                                </data>
+                                            </cell>
+                                            <cell id="678">
+                                                <property name="style">valueText</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <property name="textAlign">right</property>
+                                                <data id="681">
+                                                    <property name="resultSetColumn">total_loans_issued</property>
+                                                </data>
+                                            </cell>
+                                            <cell id="679">
+                                                <property name="style">numberFormat</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <data id="682">
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Currency</property>
+                                                        <property name="pattern">###0.00</property>
+                                                    </structure>
+                                                    <property name="resultSetColumn">total_loan_oustanding</property>
+                                                </data>
+                                            </cell>
+                                            <cell id="680">
+                                                <property name="style">numberFormat</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <data id="684">
+                                                    <structure name="numberFormat">
+                                                        <property name="category">Currency</property>
+                                                        <property name="pattern">###0.00</property>
+                                                    </structure>
+                                                    <property name="resultSetColumn">total_interest_outstanding</property>
+                                                </data>
+                                            </cell>
+                                        </row>
+                                    </footer>
                                 </table>
                             </cell>
                         </row>

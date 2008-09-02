@@ -1015,6 +1015,8 @@
 				CUST.CUSTOMER_LEVEL_ID=:customerLevelId
 			AND
 				CUST.BRANCH_ID=:officeId
+			AND
+			    (CUST.STATUS_ID = 9 OR CUST.STATUS_ID = 13)
 		]]>
 	</sql-query>
 	<sql-query name="Customer.Sql.getCustomerCountBasedOnStatusForOffice">
@@ -1069,34 +1071,34 @@
 		SELECT 
 				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
 			FROM 
-				CUSTOMER CUST 
- 			LEFT JOIN 
-  				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
+				CUSTOMER CUST  			
  			LEFT JOIN
   				ACCOUNT ACC ON ACC.CUSTOMER_ID=CUST.CUSTOMER_ID
+  			LEFT JOIN
+  				LOAN_ACCOUNT LACC ON ACC.ACCOUNT_ID = LACC.ACCOUNT_ID  			
  			WHERE 
   				CUST.CUSTOMER_LEVEL_ID=:customerLevelId
  			AND
   				CUST.BRANCH_ID=:officeId
  			AND 
-  				CS.DESCRIPTION='Customer Was Active'
+  				CUST.STATUS_ID= 3
  			AND 
   				ACC.ACCOUNT_TYPE_ID=:accountTypeId
  			AND
-  				ACC.ACCOUNT_STATE_ID=:accountStateId
+  				ACC.ACCOUNT_STATE_ID in (:accountStateIds)
 	]]>
 	</sql-query>
 	<sql-query name="Customer.Sql.getVeryPoorActiveBorrowersCountForOffice">
 	<return-scalar column="customerCount" type="integer"/>
 	<![CDATA[
-		SELECT 
+			SELECT 
 				COUNT(DISTINCT CUST.CUSTOMER_ID) as customerCount
 			FROM 
 				CUSTOMER CUST 
- 			LEFT JOIN 
-  				CUSTOMER_STATE CS ON CS.STATUS_ID=CUST.STATUS_ID 
  			LEFT JOIN
   				ACCOUNT ACC ON ACC.CUSTOMER_ID=CUST.CUSTOMER_ID
+  			LEFT JOIN
+  				LOAN_ACCOUNT LACC ON ACC.ACCOUNT_ID = LACC.ACCOUNT_ID  			
  			LEFT JOIN
   				CUSTOMER_DETAIL CD ON CD.CUSTOMER_ID=CUST.CUSTOMER_ID
  			WHERE 
@@ -1104,11 +1106,11 @@
  			AND
   				CUST.BRANCH_ID=:officeId
  			AND 
-  				CS.DESCRIPTION='Customer Was Active'
+  				CUST.STATUS_ID = 3
  			AND 
   				ACC.ACCOUNT_TYPE_ID=:accountTypeId
  			AND
-  				ACC.ACCOUNT_STATE_ID=:accountStateId
+  				ACC.ACCOUNT_STATE_ID in (:accountStateIds)
 			AND
 				CD.POVERTY_STATUS=41
 	]]>

@@ -4,6 +4,7 @@ import static org.mifos.application.customer.util.helpers.QueryParamConstants.CU
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.CUSTOMER_STATUS_DESCRIPTION;
 import static org.mifos.application.customer.util.helpers.QueryParamConstants.OFFICE_ID;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,42 +39,51 @@ public class BranchReportSqlPersistence extends Persistence {
 
 	public Integer getActiveBorrowersCount(Short officeId,
 			CustomerLevel customerLevel) throws PersistenceException {
+		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+		query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+		
 		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE,
-				params));
+				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT);
+		setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+		return getCountFromQueryResult(runQuery(query));
+	}
+
+	private Map<String, Object> populateParamsForActiveClientAccountSummary(Short officeId, CustomerLevel customerLevel, AccountTypes accountTypes) {
+		Map<String, Object> params = populateQueryParams(officeId,
+				customerLevel);
+		params.put("accountTypeId", accountTypes.getValue());
+		return params;
 	}
 
 	public Integer getVeryPoorActiveBorrowersCount(Short officeId,
 			CustomerLevel customerLevel) throws PersistenceException {
+		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+		query.setParameterList("accountStateIds", Arrays.asList(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
+		
 		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE,
-				params));
+				officeId, customerLevel, AccountTypes.LOAN_ACCOUNT);
+		setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+		return getCountFromQueryResult(runQuery(query));		
 	}
 
 	public Integer getActiveSaversCount(Short officeId,
 			CustomerLevel customerLevel) throws PersistenceException {
 		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT,
-				AccountState.SAVINGS_ACTIVE);
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE,
-				params));
+				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT);
+		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+		query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
+		setParametersInQuery(query, NamedQueryConstants.GET_SQL_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+		return getCountFromQueryResult(runQuery(query));
 	}
 
 	public Integer getVeryPoorActiveSaversCount(Short officeId,
 			CustomerLevel customerLevel) throws PersistenceException {
 		Map<String, Object> params = populateParamsForActiveClientAccountSummary(
-				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT,
-				AccountState.SAVINGS_ACTIVE);
-		return getCountFromQueryResult(executeNamedQuery(
-				NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE,
-				params));
+				officeId, customerLevel, AccountTypes.SAVINGS_ACCOUNT);
+		Query query = createdNamedQuery(NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE);
+		query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE));
+		setParametersInQuery(query, NamedQueryConstants.GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE, params);
+		return getCountFromQueryResult(runQuery(query));		
 	}
 
 	public Integer getReplacementCountForOffice(Short officeId,

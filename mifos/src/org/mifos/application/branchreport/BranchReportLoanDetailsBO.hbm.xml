@@ -115,17 +115,11 @@ explanation of the license and how it is applied.
 			                   left join
 			                        loan_summary ls on acc.account_id=ls.account_id
 			                   where 
-			                        cust.branch_id=:officeId
-                               and
-                                    cs.description='Customer Was Active'
+			                        acc.office_id=:officeId
 			                   and
-			                        cust.customer_level_id=:customerLevelId
-			                   and
+			                       cust.customer_level_id=:customerLevelId
+			                   and			                   
 			                        acc.account_state_id > 4 and acc.account_state_id < 10 
-			                   and 
-			                   		ls.orig_principal_currency_id=:currencyId
-			                   and
-			                   		ls.orig_interest_currency_id=:currencyId
 			                   group by
 			                        po.prd_offering_id
 			        ) account_disbursed on account_disbursed.prd_offering_id=po.prd_offering_id
@@ -149,17 +143,11 @@ explanation of the license and how it is applied.
 			                   left join
 			                        loan_summary ls on acc.account_id=ls.account_id
 			                   where 
-			                        cust.branch_id=:officeId
-                               and
-                                    cs.description='Customer Was Active'
+			                        acc.office_id=:officeId
 			                   and
 			                        cust.customer_level_id=:customerLevelId
-			                   and
+			                   and			                   
 			                        acc.account_state_id in (5,9)
-			                   and 
-			                   		ls.orig_principal_currency_id=:currencyId
-			                   and
-			                   		ls.orig_interest_currency_id=:currencyId
 			                   group by
 			                        po.prd_offering_id
 			        ) account_open on account_open.prd_offering_id=po.prd_offering_id

@@ -122,10 +122,6 @@ explanation of the license and how it is applied.
 			    la.days_in_arrears <=:MAX_DAYS 
 			and 
 			    la.office_id=:officeId
-			and 
-			    la.overdue_balance_currency_id=:currencyId
-			and 
-			    la.unpaid_balance_currency_id=:currencyId
 	]]>
 	</sql-query>		
 	<!--
