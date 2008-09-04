@@ -171,7 +171,9 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());
-		cal.setTime(helper.getDate("01/05/2006"));
+		// the date has to be 02/05 for the task to pick up the savings accounts
+		// because the nextIntCalcDate is set to 01/05/2006
+		cal.setTime(helper.getDate("02/05/2006"));
 		SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
 		((SavingsIntCalcHelper) savingsIntCalcTask.getTaskHelper()).execute(cal
 				.getTimeInMillis());
@@ -179,7 +181,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		savings1 = persistence.findById(savings1.getAccountId());
 		savings4 = persistence.findById(savings4.getAccountId());
 
-		assertEquals(helper.getDate("01/06/2006"), savings1
+		assertEquals(helper.getDate("31/05/2006"), savings1
 				.getNextIntCalcDate());
 		
 		// using the old money class the result here was 15.4
@@ -189,7 +191,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		// using the old money class the result here was 4.3
 		assertEquals(4.274, savings4.getInterestToBePosted()
 				.getAmountDoubleValue());
-		assertEquals(helper.getDate("01/06/2006"), savings4
+		assertEquals(helper.getDate("31/05/2006"), savings4
 				.getNextIntCalcDate());
 	}
 

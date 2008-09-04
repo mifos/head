@@ -60,39 +60,49 @@ public class TestSavingsHelper extends MifosTestCase {
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, null,
 				meeting);
-		date = getDate("01/05/2006");
+		date = getDate("30/04/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/06/2006");
+		date = getDate("31/05/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/07/2006");
+		date = getDate("30/06/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/08/2006");
+		date = getDate("31/07/2006");
 		assertEquals(date, resultDate);
 
-		date = getDate("01/11/2006");
+		date = getDate("31/08/2006");
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
 
-		date = getDate("01/12/2006");
-		assertEquals(date, resultDate);
-
-		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
-				meeting);
-		date = getDate("01/01/2007");
+		date = getDate("30/09/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/02/2007");
+		date = getDate("31/10/2006");
+		assertEquals(date, resultDate);
+
+		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
+				meeting);
+		date = getDate("30/11/2006");
+		assertEquals(date, resultDate);
+		
+		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
+				meeting);
+		date = getDate("31/12/2006");
+		assertEquals(date, resultDate);
+		
+		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
+				meeting);
+		date = getDate("31/01/2007");
 		assertEquals(date, resultDate);
 	}
 
@@ -108,32 +118,32 @@ public class TestSavingsHelper extends MifosTestCase {
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, null,
 				meeting);
-		date = getDate("01/04/2006");
+		date = getDate("31/03/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/07/2006");
+		date = getDate("30/06/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/10/2006");
+		date = getDate("30/09/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/01/2007");
+		date = getDate("31/12/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/04/2007");
+		date = getDate("31/03/2007");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getNextScheduleDate(accountActivationDate, date,
 				meeting);
-		date = getDate("01/07/2007");
+		date = getDate("30/06/2007");
 		assertEquals(date, resultDate);
 	}
 
@@ -220,15 +230,26 @@ public class TestSavingsHelper extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,
 				EVERY_MONTH, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 
-		Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
-				getDate("01/07/2006"), meeting);
-		Date date = getDate("01/06/2006");
+		/*Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
+				getDate("30/06/2006"), meeting);
+		Date date = getDate("31/05/2006");
 		assertEquals(date, resultDate);
 
 		resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
 				getDate("01/01/2007"), meeting);
 		date = getDate("01/12/2006");
+		assertEquals(date, resultDate);*/
+		
+		Date resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
+				getDate("31/07/2006"), meeting);
+		Date date = getDate("30/06/2006");
 		assertEquals(date, resultDate);
+
+		resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
+				getDate("01/01/2007"), meeting);
+		date = getDate("31/12/2006");
+		assertEquals(date, resultDate);
+		
 	}
 
 	public void testPrevIntCalcDateOnEveryThreeMonths() throws Exception {
@@ -239,13 +260,13 @@ public class TestSavingsHelper extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,
 				EVERY_THREE_MONTHS, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 
-		resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
-				getDate("01/07/2006"), meeting);
-		date = getDate("01/04/2006");
+		resultDate = helper.getPrevScheduleDate(getDate("01/03/2006"),
+				getDate("30/06/2006"), meeting);
+		date = getDate("31/03/2006");
 		assertEquals(date, resultDate);
 
-		resultDate = helper.getPrevScheduleDate(getDate("01/04/2006"),
-				getDate("01/04/2006"), meeting);
+		resultDate = helper.getPrevScheduleDate(getDate("01/03/2006"),
+				getDate("01/03/2006"), meeting);
 		assertNull(resultDate);
 	}
 

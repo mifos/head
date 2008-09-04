@@ -2,7 +2,6 @@ package org.mifos.application.accounts.savings.business;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -498,8 +497,8 @@ public class SavingsBO extends AccountBO {
 		setInterestToBePosted(getInterestToBePosted().add(interestCalculated));
 		setLastIntCalcDate(getNextIntCalcDate());
 		try {
-			setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(),
-					getLastIntCalcDate(), getTimePerForInstcalc()));
+			setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(), getLastIntCalcDate(), getTimePerForInstcalc()));				
+					
 		} catch (MeetingException me) {
 			throw new AccountException(me);
 		}
@@ -1172,11 +1171,11 @@ public class SavingsBO extends AccountBO {
 		this.setActivationDate(new Date(new java.util.Date().getTime()));
 		this.generateDepositAccountActions();
 		try {
-			this.setNextIntCalcDate(helper.getNextScheduleDate(
-					getActivationDate(), null, getTimePerForInstcalc()));
-			this.setNextIntPostDate(helper.getNextScheduleDate(
-					getActivationDate(), null, getMeeting(getSavingsOffering()
-							.getFreqOfPostIntcalc().getMeeting())));
+			Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());	
+			this.setNextIntCalcDate(intCalcDate);
+			Date intPostDate = helper.getNextScheduleDate(getActivationDate(), null, 
+					getMeeting(getSavingsOffering().getFreqOfPostIntcalc().getMeeting()));
+			this.setNextIntPostDate(intPostDate);
 		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
 		} catch (MeetingException me) {

@@ -298,9 +298,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings2 = helper.createSavingsAccount("000100000000023",
 				savingsOffering2, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		TestSavingsBO.setNextIntCalcDate(savings,helper.getDate("01/07/2006"));
-		TestSavingsBO.setNextIntCalcDate(savings1,helper.getDate("01/07/2006"));
-		TestSavingsBO.setNextIntCalcDate(savings2,helper.getDate("01/08/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings,helper.getDate("30/06/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings1,helper.getDate("30/06/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings2,helper.getDate("31/07/2006"));
 		
 		
 		savings.update();

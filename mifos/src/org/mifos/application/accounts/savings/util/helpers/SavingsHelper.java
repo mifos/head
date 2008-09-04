@@ -141,17 +141,19 @@ public class SavingsHelper {
 		return date;
 	}
 
+	/* from Rhino release the interest calculation date and posting are the same, which is at the end of month */
 	private void setDetailsForMeeting(MeetingBO meeting){
 		meeting.setStartDate(getFiscalStartDate());
 		if (meeting.isMonthly()) {
 			if (meeting.getMeetingTypeEnum() == 
 				MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD) {
+				// interest calculation date is the same date as posting date
+				meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1)); 
 				meeting.getMeetingDetails().getMeetingRecurrence()
-					.setDayNumber((short) getFiscalStartDayNumber());
+				.setDayNumber(SavingsConstants.POSTING_DAY);
 			}
 			else if(meeting.getMeetingTypeEnum() == 
 				MeetingType.SAVINGS_INTEREST_POSTING) {
-//				meeting.setStartDate(getFiscalEndDate());
 				meeting.setStartDate(DateUtils.addDays(getFiscalStartDate(), -1));
 				meeting.getMeetingDetails().getMeetingRecurrence()
 					.setDayNumber(SavingsConstants.POSTING_DAY);
