@@ -601,4 +601,15 @@ public class GroupBO extends CustomerBO {
 	public void updatePerformanceHistoryOnLastInstlPayment(LoanBO loan, Money totalAmount) throws CustomerException {
 		updatePerformanceHistoryOnRepayment(loan, totalAmount);
 	}
+	
+	@Override
+	public void update() throws CustomerException {
+		try {
+			setUpdateDetails();
+			new GroupPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+		}
+	}
 }

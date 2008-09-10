@@ -226,9 +226,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		double totalOustandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
-		if (totalOustandingLoanAmount != 0.0)
-			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOustandingLoanAmount)));
+		if (getTotalOutStandingLoanAmount().getAmountDoubleValue() != 0.0)
+			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getTotalOutStandingLoanAmount().getAmountDoubleValue())));
 	}
 	
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.config.GeneralConfig;
@@ -46,7 +47,6 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 		long time1 = System.currentTimeMillis();
 		List<Integer> customerIds = null;
 		List<String> errorList = new ArrayList<String>();
-		CustomerPersistence customerPersistence = new CustomerPersistence();
 		
 		try {
 			customerIds = new CustomerPersistence().getCustomers(CustomerLevel.GROUP.getValue());
@@ -63,19 +63,19 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 			long startTime = System.currentTimeMillis();
 			int i=1;
 			Integer groupId = null;
+			GroupPersistence groupPersistence = new GroupPersistence();
 			try
 			{
 				for (Integer customerId : customerIds) {
 					    groupId = customerId;
-						GroupBO group = (GroupBO) customerPersistence.getCustomer(customerId);
-						GroupPerformanceHistoryEntity groupPerf = group.getGroupPerformanceHistory(); 
+						GroupBO group = groupPersistence.getGroup(customerId);
+						GroupPerformanceHistoryEntity groupPerf = group.getGroupPerformanceHistory();
 						// TODO: HACK done because sometimes the customer performance history for GroupBO is sometimes null???
 						if (null == groupPerf) {						
 							groupPerf = (GroupPerformanceHistoryEntity) HibernateUtil.getSessionTL().createQuery("from org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity e where e.group.customerId = " + group.getCustomerId()).uniqueResult();
 							group.setGroupPerformanceHistory(groupPerf);
-							System.out.println("Got null group performance for group : " + groupId.toString());
 						}
-						groupPerf.generatePortfolioAtRiskForTask();
+						group.getGroupPerformanceHistory().generatePortfolioAtRiskForTask();
 						group.update();
 						HibernateUtil.commitTransaction();
 						if (i % 500 == 0)

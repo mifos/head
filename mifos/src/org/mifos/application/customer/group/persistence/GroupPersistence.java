@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -163,4 +164,11 @@ public class GroupPersistence extends Persistence {
     public CenterPersistence getCenterPersistence() {
         return centerPersistence;
     }
+    
+    public GroupBO getGroup(Integer groupId)
+	throws PersistenceException {
+		return (GroupBO) getPersistentObject(GroupBO.class, groupId);
+	}
+    
+    
 }
