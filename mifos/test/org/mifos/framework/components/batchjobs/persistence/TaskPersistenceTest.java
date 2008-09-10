@@ -25,6 +25,40 @@ public class TaskPersistenceTest extends MifosTestCase {
 		super.tearDown();
 	}
 
+	
+	public void testHasLoanArrearsTaskRunSuccessfully() throws PersistenceException
+	{
+		Task task1 = new Task();
+		task1.setCreatedBy((short) 1);
+		task1.setCreatedDate(new Date(System.currentTimeMillis()));
+		task1.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
+		task1.setStartTime(new Timestamp(System.currentTimeMillis()));
+		task1.setEndTime(new Timestamp(System.currentTimeMillis()));
+		task1.setStatus(TaskStatus.COMPLETE.getValue());
+		task1.setTask("LoanArrearsTask");
+		
+		TaskPersistence p = new TaskPersistence();
+		p.saveAndCommitTask(task1);
+		
+		HibernateUtil.closeSession();
+		p = new TaskPersistence();
+		assertTrue(p.hasLoanArrearsTaskRunSuccessfully());
+		Task task2 = new Task();
+		task2.setCreatedBy((short) 1);
+		task2.setCreatedDate(new Date(System.currentTimeMillis()));
+		task2.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
+		task2.setStartTime(new Timestamp(System.currentTimeMillis()));
+		task2.setEndTime(new Timestamp(System.currentTimeMillis()));
+		task2.setStatus(TaskStatus.INCOMPLETE.getValue());
+		task2.setTask("LoanArrearsTask");
+		new TaskPersistence().saveAndCommitTask(task2);
+		
+		HibernateUtil.closeSession();
+		assertFalse(p.hasLoanArrearsTaskRunSuccessfully());
+		TestObjectFactory.removeObject(task1);
+		TestObjectFactory.removeObject(task2);
+	}
+	
 	public void testSaveAndCommit() throws PersistenceException {
 		Task task = new Task();
 		task.setCreatedBy((short) 1);
@@ -77,5 +111,7 @@ public class TaskPersistenceTest extends MifosTestCase {
 		assertNotNull(tasks);
 		assertEquals(0, tasks.size());
 	}
+	
+	
 
 }

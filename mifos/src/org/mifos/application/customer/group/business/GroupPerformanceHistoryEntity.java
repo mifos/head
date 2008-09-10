@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
@@ -214,6 +217,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return amount;
 	}
 	
+	
 	public void generatePortfolioAtRisk() throws CustomerException {
 		Money amount = group.getBalanceForAccountsAtRisk();
 		List<CustomerBO> clients = getChildren();
@@ -222,8 +226,50 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if (getTotalOutStandingLoanAmount().getAmountDoubleValue() != 0.0)
-			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getTotalOutStandingLoanAmount().getAmountDoubleValue())));
+		double totalOustandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
+		if (totalOustandingLoanAmount != 0.0)
+			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOustandingLoanAmount)));
+	}
+	
+	
+	public void generatePortfolioAtRiskForTask() throws CustomerException {
+		Money balanceForAccountsAtRiskAmount = new Money();
+		Money outstandingLoanAmount = new Money();
+		Set<AccountBO> groupAccounts = group.getAccounts();
+		if ((groupAccounts != null) &&(groupAccounts.size() > 0))
+		{
+			for (AccountBO groupAccount : groupAccounts) {
+				if (groupAccount.getType() == AccountTypes.LOAN_ACCOUNT
+						&& ((LoanBO) groupAccount).isAccountActive()) {
+					LoanBO loan = (LoanBO) groupAccount;
+					Money remainingPrincipalAmount = loan.getRemainingPrincipalAmount();
+					outstandingLoanAmount = outstandingLoanAmount.add(remainingPrincipalAmount);
+					if (loan.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING))
+						balanceForAccountsAtRiskAmount = balanceForAccountsAtRiskAmount.add(remainingPrincipalAmount);
+				}
+			}
+		}
+		
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			for (CustomerBO client : clients) {
+				Set<AccountBO> clientAccounts = client.getAccounts();
+				for (AccountBO clientAccount : clientAccounts) {
+					if (clientAccount.getType() == AccountTypes.LOAN_ACCOUNT
+							&& ((LoanBO) clientAccount).isAccountActive()) {
+						LoanBO loan = (LoanBO) clientAccount;
+						Money remainingPrincipalAmount = loan.getRemainingPrincipalAmount();
+						outstandingLoanAmount = outstandingLoanAmount.add(remainingPrincipalAmount);
+						if (loan.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING))
+							balanceForAccountsAtRiskAmount = balanceForAccountsAtRiskAmount.add(remainingPrincipalAmount);
+					}
+				}
+			}
+		}
+		double totalOustandingLoanAmount = outstandingLoanAmount.getAmountDoubleValue();
+		if (totalOustandingLoanAmount != 0.0)
+			setPortfolioAtRisk(new Money(String.valueOf(balanceForAccountsAtRiskAmount.getAmountDoubleValue()/totalOustandingLoanAmount)));
+		
 	}
 	
 	private List<CustomerBO> getChildren() throws CustomerException {

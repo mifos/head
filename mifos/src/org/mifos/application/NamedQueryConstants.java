@@ -393,6 +393,7 @@ public interface NamedQueryConstants {
 	public String GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE = "Customer.Sql.getVeryPoorActiveBorrowersCountForOffice";
 	public String GET_SQL_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getReplacementCountForOffice";
 	public String GET_SQL_VERY_POOR_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getVeryPoorReplacementCountForOffice";
+	
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID = "office.getOfficeSearchId";
 	public String OFFICE_GET_HEADOFFICE = "office.getHeadOffice";
@@ -789,4 +790,6 @@ public interface NamedQueryConstants {
 	public String GET_BRANCH_CASH_CONFIRMATION_REPORT_FOR_DATE_AND_BRANCH = "branchCashConfirmationReport.getReportForDateAndBranch";
 	public String COLLECTION_SHEET_EXTRACT_COLLECTION_SHEET_REPORT_DATA = "collectionSheet.extractCollectionSheetReportData";
 	
+	public String SCHEDULED_TASK_GET_LATEST_TASK="scheduledTasks.getLatestTask";
+	public String SCHEDULED_TASK_GET_SUCCESSFUL_TASK="scheduledTasks.getSuccessfulTask";
 }

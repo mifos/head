@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
@@ -121,6 +123,76 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
+	public void testGeneratePortfolioAtRiskForTask() throws Exception {
+		createInitialObject();
+		TestObjectFactory.flushandCloseSession();
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		
+		for (AccountBO account : group.getAccounts()) {
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+				changeFirstInstallmentDate(account, 31);
+				((LoanBO)account).handleArrears();
+			}
+		}
+		for (AccountBO account : client.getAccounts()) {
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+				changeFirstInstallmentDate(account, 31);
+				((LoanBO)account).handleArrears();
+			}
+		}
+		group.getGroupPerformanceHistory().generatePortfolioAtRiskForTask();
+		assertEquals(new Money("1.0"), group
+				.getGroupPerformanceHistory().getPortfolioAtRisk());
+		TestObjectFactory.flushandCloseSession();
+		center = TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		account1 = TestObjectFactory.getObject(AccountBO.class,
+				account1.getAccountId());
+		account2 = TestObjectFactory.getObject(AccountBO.class,
+				account2.getAccountId());
+	}
+	
+	public void testGeneratePortfolioAtRisk() throws Exception {
+				createInitialObject();
+				TestObjectFactory.flushandCloseSession();
+				group = TestObjectFactory.getObject(GroupBO.class, group
+						.getCustomerId());
+				client = TestObjectFactory.getObject(ClientBO.class, client
+						.getCustomerId());
+				for (AccountBO account : group.getAccounts()) {
+					if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+						changeFirstInstallmentDate(account, 31);
+					}
+				}
+				for (AccountBO account : client.getAccounts()) {
+					if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+						changeFirstInstallmentDate(account, 31);
+					}
+				}
+				group.getGroupPerformanceHistory().generatePortfolioAtRisk();
+				assertEquals(new Money("1.0"), group
+						.getGroupPerformanceHistory().getPortfolioAtRisk());
+				TestObjectFactory.flushandCloseSession();
+				center = TestObjectFactory.getObject(CenterBO.class, center
+						.getCustomerId());
+				group = TestObjectFactory.getObject(GroupBO.class, group
+						.getCustomerId());
+				client = TestObjectFactory.getObject(ClientBO.class, client
+						.getCustomerId());
+				account1 = TestObjectFactory.getObject(AccountBO.class,
+						account1.getAccountId());
+				account2 = TestObjectFactory.getObject(AccountBO.class,
+						account2.getAccountId());
+			}
+		
 	
 	public static void setLastGroupLoanAmount(
 			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity,
@@ -603,38 +675,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	}
 
-	public void testGeneratePortfolioAtRisk() throws Exception {
-		createInitialObject();
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
-				.getCustomerId());
-		for (AccountBO account : group.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-			}
-		}
-		for (AccountBO account : client.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-			}
-		}
-		group.getGroupPerformanceHistory().generatePortfolioAtRisk();
-		assertEquals(new Money("1.0"), group
-				.getGroupPerformanceHistory().getPortfolioAtRisk());
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
-				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
-				.getCustomerId());
-		account1 = TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		account2 = TestObjectFactory.getObject(AccountBO.class,
-				account2.getAccountId());
-	}
+	
 
 	public void testGetTotalOutStandingLoanAmount() throws Exception {
 		createInitialObject();

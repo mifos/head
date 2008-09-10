@@ -1,11 +1,14 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -17,6 +20,9 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.batchjobs.SchedulerConstants;
+import org.mifos.framework.components.batchjobs.business.Task;
+import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -53,8 +59,27 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
+	// PortfolioAtRisk needs this LoanArrearsTask to run successfully first
+	private Task insertLoanArrearsTask() throws Exception
+	{
+		Task task = new Task();
+		task.setCreatedBy((short) 1);
+		task.setCreatedDate(new Date(System.currentTimeMillis()));
+		task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
+		task.setStartTime(new Timestamp(System.currentTimeMillis()));
+		task.setEndTime(new Timestamp(System.currentTimeMillis()));
+		task.setStatus(TaskStatus.COMPLETE.getValue());
+		task.setTask("LoanArrearsTask");
+		
+		TaskPersistence p = new TaskPersistence();
+		p.saveAndCommitTask(task);
+		return task;
+		
+	}
 
 	public void testExecute() throws Exception {
+		Task task = insertLoanArrearsTask();
 		createInitialObject();
 
 		group = TestObjectFactory.getObject(CustomerBO.class,
@@ -64,11 +89,13 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		for (AccountBO account : group.getAccounts()) {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				changeFirstInstallmentDate(account, 7);
+				((LoanBO)account).handleArrears();
 			}
 		}
 		for (AccountBO account : client.getAccounts()) {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				changeFirstInstallmentDate(account, 7);
+				((LoanBO)account).handleArrears();
 			}
 		}
 		TestObjectFactory.updateObject(client);
@@ -79,6 +106,9 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		PortfolioAtRiskHelper portfolioAtRiskHelper = (PortfolioAtRiskHelper) portfolioAtRiskTask
 				.getTaskHelper();
 		portfolioAtRiskHelper.execute(System.currentTimeMillis());
+		//Session session = HibernateUtil.getSessionTL();
+		//session.delete(task);
+		TestObjectFactory.removeObject(task);
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
