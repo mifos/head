@@ -406,7 +406,7 @@
 			haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
 			dir="${basedir}"
 			failureproperty="tests.failure">
-			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/>
+			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.1.jar"/>
 			<jvmarg value="-Dprofile.properties=${conf.dir}/profile.properties"/>
 			<classpath>
 				<path refid="class.path"/>
