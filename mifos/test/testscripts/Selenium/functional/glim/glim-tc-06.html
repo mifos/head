@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>glim-tc-06</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">glim-tc-06</td></tr>
+</thead><tbody>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Welcome to mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userName</td>
+	<td>mifos</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testmifos</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Login']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Welcome,&nbsp;&nbsp;mifos</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>The last time you logged on was</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>searchString</td>
+	<td>group_16</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>searchButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=exact:Group_16: ID 0006-000000040</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Click on a Client below to view the Client details.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Loan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Create Loan account&nbsp;&nbsp;-&nbsp;&nbsp;Enter Loan account information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>prdOfferingId</td>
+	<td>label=Weekly Flat Rate Interest for Groups</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>continueBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>exact:Complete the fields below. Then click Preview. Click Cancel to return to Clients &amp; Accounts without submitting information. <br /> * Fields marked with an asterisk are required.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>clients[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>clients[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>clients[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clientDetails[0].loanAmount</td>
+	<td>11111</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clientDetails[1].loanAmount</td>
+	<td>22222</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>clientDetails[2].loanAmount</td>
+	<td>33333</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetails[0].businessActivity</td>
+	<td>label=0011-Bear</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetails[1].businessActivity</td>
+	<td>label=0012-Sheep Purchase</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>clientDetails[2].businessActivity</td>
+	<td>label=0013-Hybrid Cow</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>continueButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Create Loan account -&nbsp;&nbsp;Review installments</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>previewBtn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Create Loan account -&nbsp;&nbsp;Preview Loan account information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>saveForLaterButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>You have successfully created a new Loan account.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=View Loan account details now</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Account summary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Partial Application</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit account status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Select from the status options below. Then click Continue. Click Cancel to return to Loan account details without submitting information.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='newStatusId' and @value='10']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>flagId</td>
+	<td>label=Other</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>notes</td>
+	<td>erwe</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Preview']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>New status:</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>btn</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Account summary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
