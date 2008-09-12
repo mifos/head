@@ -1163,6 +1163,11 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
+	/**
+	 * This can be very inefficient if an account has many action dates.
+	 * Note that an account having too many action dates may also be a sign
+	 * of bad data--at least, this was the case with some GK data.
+	 */
 	public Short getLastInstallmentId() {
 		Short lastInstallmentId = null;
 		for (AccountActionDateEntity date : this.getAccountActionDates()) {
