@@ -11,6 +11,8 @@
 		
 		<!-- Is this column just redundant with customerLevel?  It
 		     would appear so... -->
+		<!-- According to <a href="http://www.hibernate.org/hib_docs/reference/en/html/queryhql.html#queryhql-where">the docs</a>,
+		this is supposed to be used for ".class" predicates, so this column may currently be misused. -->
 		<discriminator>
 			<column name="DISCRIMINATOR" />
 		</discriminator>
