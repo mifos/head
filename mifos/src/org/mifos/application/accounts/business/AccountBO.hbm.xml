@@ -437,7 +437,8 @@
 
 	<query name="getActiveCustomerAndSavingsAccounts">
 		<![CDATA[ select ca.accountId from org.mifos.application.accounts.business.AccountBO ca 
-			where  ca.accountState in (11,16) and ca.accountType.accountTypeId in (2,3) and ca.customer.customerStatus in (3,9,13)]]>
+			where  ca.accountState in (11,16) and ca.accountType.accountTypeId in (2,3)
+			and ca.customer.customerStatus in (3,9,13)]]>
 	</query>
 
 	<query name="accounts.getFeeAmountAtDisbursement">
