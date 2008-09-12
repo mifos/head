@@ -1,47 +1,27 @@
-/**
-
- * CustomerAccountBO.java    version: xxx
-
- 
-
- * Copyright (c) 2005-2006 Grameen Foundation USA
-
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
-
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
  * All rights reserved.
-
- 
-
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
  * 
-
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
-
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
-
- * License. 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
-
- * and how it is applied. 
-
- *
-
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 
 package org.mifos.application.customer.business;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -95,6 +75,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.LocalizationConverter;
 
+/**
+ * Clients, groups, and centers are stored in the db as customer accounts.
+ */
 public class CustomerAccountBO extends AccountBO {
 
 	Set<CustomerActivityEntity> customerActivitDetails = null;
@@ -446,15 +429,22 @@ public class CustomerAccountBO extends AccountBO {
 		AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
 		Date meetingStartDate = meeting.getMeetingStartDate();
+		// what does this do? I don't understand why we temporarily
+		// replace the meeting start date
 		meeting.setMeetingStartDate(lastInstallment.getActionDate());
 
 		List<Date> installmentDates = null;
 		try {
+			// we're going to schedule 10 new meetings. Brute force:
+			// generate them, then look for overlap and adjust as
+			// necessary.
 			installmentDates = meeting.getAllDates((short) 11);
 			if (installmentDates.get(0).compareTo(
 					lastInstallment.getActionDate()) == 0) {
+				// date overlap: trim head
 				installmentDates.remove(0);
 			} else {
+				// trim tail
 				installmentDates.remove(10);
 			}
 		} catch (MeetingException me) {
