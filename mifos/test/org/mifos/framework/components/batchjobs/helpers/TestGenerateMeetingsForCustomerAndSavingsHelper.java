@@ -140,6 +140,8 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting, feeView);
+		// give batch jobs something useful to do
+		// TODO: move this method to a shared util class?
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());
 		center.update();
 	}
