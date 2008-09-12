@@ -56,7 +56,8 @@ public class ProductMixValidator {
 		if (customer.isGroup()) {
 			loanList = loanBusinessService
 					.getActiveLoansForAllClientsAssociatedWithGroupLoan(loan);
-		}else if (customer.isClient()) {
+		}else if (customer.isClient() && customer
+				.getParentCustomer() != null) {
 			List<LoanBO> groupLoans = loanBusinessService
 					.getLoanAccountsActiveInGoodBadStanding(customer
 							.getParentCustomer().getCustomerId());
