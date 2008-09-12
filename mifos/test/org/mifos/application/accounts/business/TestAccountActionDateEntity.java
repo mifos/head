@@ -126,6 +126,10 @@ public class TestAccountActionDateEntity extends TestAccount {
 				.getCustomerId());
 	}
 	
+	/**
+	 * Changes <em>all</em> installment dates to yesterday. In production,
+	 * multiple installments should never have the same ACTION_DATE.
+	 */
 	public static void changeInstallmentDatesToPreviousDate(AccountBO accountBO) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
