@@ -13,6 +13,8 @@
 
 		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
 
+		<!-- Not a true identifier, just a counter. Another name for this 
+		property might be "installmentNumber". -->
 		<property name="installmentId" column="INSTALLMENT_ID" access="field" />
 		<property name="actionDate" column="ACTION_DATE" />
 		<property name="paymentStatus" column="PAYMENT_STATUS" />
