@@ -66,4 +66,6 @@ public class SurveysConstants {
     public static final int QUESTION_TYPE_GENERAL = 0;
     public static final int QUESTION_TYPE_PPI = 1;
 	
+    // Is this a PPI survey?
+    public static final String KEY_IS_PPI_SURVEY ="isPPISurvey";
 }

@@ -119,10 +119,12 @@ explanation of the license and how it is applied.
               </tr>
             </table>              
             <br></td>
-            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=edit_entry&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
-            <mifos:mifoslabel name="Surveys.EditSurvey" bundle="SurveysUIResources"/>
-            </html-el:link>
-            </td>
+            <c:if test="${!requestScope.isPPISurvey}">
+	            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=edit_entry&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
+	            <mifos:mifoslabel name="Surveys.EditSurvey" bundle="SurveysUIResources"/>
+	            </html-el:link>
+	            </td>
+            </c:if>
           </tr>
         </table>    
 

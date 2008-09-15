@@ -158,6 +158,10 @@ public class SurveysAction extends BaseAction {
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
 		request.setAttribute(
 				SurveysConstants.KEY_ITEM_COUNT, survey.getQuestions().size());
+		
+		boolean isPPISurvey = (survey instanceof PPISurvey)? true : false;
+		request.setAttribute(SurveysConstants.KEY_IS_PPI_SURVEY, isPPISurvey);
+		
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	
