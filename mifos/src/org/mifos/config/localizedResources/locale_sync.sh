@@ -19,7 +19,6 @@ set -o errexit
 # converted into .po files in their respective directories
 defaults=`\ls *.properties`
 
-# NOTE: new locales MUST be added here or they will not be sync'd!
 for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
 do
     mkdir -p $locale
