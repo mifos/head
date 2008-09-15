@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o errexit
 
 # NAME
 #     update_defaults
@@ -20,7 +21,9 @@ defaults=`\ls *.properties | grep -v _`
 for bundle in $defaults
 do
     bundleBase=`basename $bundle .properties`
-    cp $bundle $bundle.copy
+    # blow away pootle's "memory"... it may interfere with default strings
+    sed -e '/^#~.*/d' $bundle > $bundle.copy
+    cp $bundle.copy $bundle
     po2prop -t $bundle en/${bundleBase}_en.po > $bundle.copy
     mv $bundle.copy $bundle
 done
