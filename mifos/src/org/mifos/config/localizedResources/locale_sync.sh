@@ -5,7 +5,7 @@ set -o errexit
 #     push_prep
 #
 # SYNOPSIS
-#     ./push_prep.sh LANG
+#     ./push_prep.sh
 # 
 # DESCRIPTION
 #     push_prep converts Java .properties-based resource bundles into .po
@@ -13,18 +13,14 @@ set -o errexit
 #     translation tool.
 #
 # OPTIONS
-#     LANG must be a language code like 'fr', 'es', or 'en_GB'.
-#
-# WARNING
-#     This script is brittle and dangerous! Notice how the first argument is a
-#     directory that is promptly nuked. Use at your own risk.
+#     None.
 
 # NOTE: this will break in Rhino until existing locale-specific bundles are
 # converted into .po files in their respective directories
 defaults=`\ls *.properties`
 
 # NOTE: new locales MUST be added here or they will not be sync'd!
-for locale in es fr
+for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
 do
     mkdir -p $locale
 
