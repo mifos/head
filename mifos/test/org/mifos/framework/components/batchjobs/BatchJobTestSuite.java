@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.framework.components.batchjobs.helpers.CollectionSheetHelperTest;
+import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskCalculationTest;
 import org.mifos.framework.components.batchjobs.helpers.TestApplyCustomerFeeChangesHelper;
 import org.mifos.framework.components.batchjobs.helpers.TestApplyHolidayChangesHelper;
 import org.mifos.framework.components.batchjobs.helpers.TestCustomerFeeHelper;
@@ -41,6 +42,7 @@ public class BatchJobTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestGenerateMeetingsForCustomerAndSavingsHelper.class);
 		testSuite.addTestSuite(CollectionSheetHelperTest.class);
 		testSuite.addTestSuite(TestApplyHolidayChangesHelper.class);
+		testSuite.addTestSuite(PortfolioAtRiskCalculationTest.class);
 		return testSuite;
 	}
 }

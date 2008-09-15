@@ -77,6 +77,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		return task;
 		
 	}
+	
 
 	public void testExecute() throws Exception {
 		Task task = insertLoanArrearsTask();
@@ -109,6 +110,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		//Session session = HibernateUtil.getSessionTL();
 		//session.delete(task);
 		TestObjectFactory.removeObject(task);
+		
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());

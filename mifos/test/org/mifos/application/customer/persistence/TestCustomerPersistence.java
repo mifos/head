@@ -36,6 +36,7 @@ import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -61,6 +62,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerPersistence extends MifosTestCase {
@@ -116,6 +118,85 @@ public class TestCustomerPersistence extends MifosTestCase {
 			e.printStackTrace();
 		}
 		super.tearDown();
+	}
+	public void testGetTotalAmountForGroup() throws Exception
+	{
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		center = TestObjectFactory.createCenter("Center", meeting);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
+		AccountBO account1 = getLoanAccount(group1, meeting, "adsfdsfsd", "3saf");
+		AccountBO account2 = getLoanAccount(group1, meeting, "adspp", "kkaf");
+		Money amount = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(), AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
+		assertEquals(new Money("600"), amount);
+		AccountBO account3 = getLoanAccountInActiveBadStanding(group1, meeting, "adsfdsfsd1", "4sa");
+		AccountBO account4 = getLoanAccountInActiveBadStanding(group1, meeting, "adspp2", "kaf5");
+		Money amount2 = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(), AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
+		assertEquals(new Money("600"), amount2);
+		
+		TestObjectFactory.cleanUp(account1);
+		TestObjectFactory.cleanUp(account2);
+		TestObjectFactory.cleanUp(account3);
+		TestObjectFactory.cleanUp(account4);
+		TestObjectFactory.cleanUp(group1);
+	}
+	
+	public void testGetTotalAmountForAllClientsOfGroup() throws Exception
+	{
+		
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getTypicalMeeting());
+		center = createCenter("new_center");
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("client1",
+				CustomerStatus.CLIENT_ACTIVE, group);
+		
+		AccountBO clientAccount1 = getLoanAccount(client, meeting, "fdbdhgsgh",
+		"54hg");
+		AccountBO clientAccount2 = getLoanAccount(client, meeting, "fasdfdsfasdf",
+		"1qwe");
+		Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(), AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
+				group.getSearchId() + ".%");
+		assertEquals(new Money("600"), amount);
+		clientAccount1.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
+				null, "none");
+		clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(),
+				null, "none");
+		TestObjectFactory.updateObject(clientAccount1);
+		TestObjectFactory.updateObject(clientAccount2);
+		HibernateUtil.commitTransaction();
+		Money amount2 = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(), AccountState.LOAN_ACTIVE_IN_BAD_STANDING,
+				group.getSearchId()+ ".%");
+		assertEquals(new Money("600"), amount2);
+		
+		TestObjectFactory.cleanUp(clientAccount1);
+		TestObjectFactory.cleanUp(clientAccount2);
+		
+	}
+	
+	public void testGetAllBasicGroupInfo() throws Exception
+	{
+		CustomerPersistence customerPersistence = new CustomerPersistence();
+		center = createCenter("new_center");
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		GroupBO newGroup = TestObjectFactory.createGroupUnderCenter("newGroup",
+				CustomerStatus.GROUP_ACTIVE, center);
+		List<BasicGroupInfo> groupInfos = customerPersistence.getAllBasicGroupInfo();
+		assertEquals(2, groupInfos.size());
+		assertEquals(group.getDisplayName(), groupInfos.get(0).getGroupName());
+		assertEquals(group.getSearchId(), groupInfos.get(0).getSearchId());
+		assertEquals(group.getOffice().getOfficeId(), groupInfos.get(0).getBranchId());
+		assertEquals(group.getCustomerId(), groupInfos.get(0).getGroupId());
+		assertEquals(newGroup.getDisplayName(), groupInfos.get(1).getGroupName());
+		assertEquals(newGroup.getSearchId(), groupInfos.get(1).getSearchId());
+		assertEquals(newGroup.getOffice().getOfficeId(), groupInfos.get(1).getBranchId());
+		assertEquals(newGroup.getCustomerId(), groupInfos.get(1).getGroupId());
+		TestObjectFactory.cleanUp(newGroup);
+		
 	}
 
 	public void testCustomersUnderLO() throws Exception {
@@ -188,6 +269,17 @@ public class TestCustomerPersistence extends MifosTestCase {
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, 
+				startDate, loanOffering);
+
+	}
+	
+	private AccountBO getLoanAccountInActiveBadStanding(CustomerBO group, MeetingBO meeting,
+			String offeringName, String shortName) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				offeringName, shortName, startDate, meeting);
+		return TestObjectFactory.createLoanAccount("42423141111", group, 
+				AccountState.LOAN_ACTIVE_IN_BAD_STANDING, 
 				startDate, loanOffering);
 
 	}
@@ -1270,4 +1362,5 @@ public class TestCustomerPersistence extends MifosTestCase {
 				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
 				loanOffering);
 	}
+	
 }

@@ -19,6 +19,8 @@
  */
 package org.mifos.application.customer.persistence;
 
+
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +58,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
+import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -88,6 +91,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 public class CustomerPersistence extends Persistence {
 			
@@ -1100,6 +1104,33 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.GET_VERY_POOR_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE,
 				populateDormantQueryParams(office, loanCyclePeriod)));
 	}
+	
+	public Money getTotalAmountForGroup(Integer groupId, AccountState accountState) throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("customerId", groupId);
+		params.put("accountState", accountState.getValue());
+		BigDecimal amount =  getCalculateValueFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_TOTAL_AMOUNT_FOR_GROUP, params));
+		Money totalAmount = new Money(amount);
+		return totalAmount;
+	}
+	
+	public List<BasicGroupInfo> getAllBasicGroupInfo() throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		return executeNamedQuery(NamedQueryConstants.GET_ALL_BASIC_GROUP_INFO,params);
+	}
+	
+	public Money getTotalAmountForAllClientsOfGroup(Short officeId, AccountState accountState,
+			String searchIdString) throws PersistenceException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("officeId", officeId);
+		params.put("accountState", accountState.getValue());
+		params.put("searchId", searchIdString);
+		BigDecimal amount =  getCalculateValueFromQueryResult(executeNamedQuery(
+				NamedQueryConstants.GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP, params));
+		Money totalAmount = new Money(amount);
+		return totalAmount;
+	}
 
 	private HashMap<String, Object> populateDormantQueryParams(OfficeBO office, Integer loanCyclePeriod) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -1156,5 +1187,7 @@ public class CustomerPersistence extends Persistence {
 				}
 			});
 		}
-	};	
+	};
+	
+	
 }

@@ -1204,5 +1204,33 @@
 				 where client.office=:Office
 				 and client.customerStatus.description='Customer Was Active'
 				 and client.customerDetail.povertyStatus=41]]>
-	</query>			
+	</query>
+	<!-- account_type_id=1 is for loan account -->
+	<sql-query name="Customer.getTotalAmountForGroup">
+		<return-scalar column="groupTotalAmount" type="big_decimal"/>	
+		<![CDATA[
+			select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as groupTotalAmount 
+			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
+			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+			and cust.customer_id=:customerId and acc.account_type_id=1
+		]]>	
+	</sql-query>
+	<!-- account_type_id=1 is for loan account, customer_level_id=1 is for client, and status_id=3 for active
+	     and status_id=4 is for active on hold. The clients of the group are found by  -->
+	<sql-query name="Customer.getTotalAmountForAllClientsOfGroup">
+		<return-scalar column="clientTotalAmount" type="big_decimal"/>	
+		<![CDATA[
+			select ifnull(sum(loanSummary.orig_principal - loanSummary.principal_paid), 0) as clientTotalAmount 
+			from loan_summary loanSummary, account acc, customer cust where loanSummary.account_id = acc.account_id 
+			and acc.customer_id = cust.customer_id and acc.account_state_id=:accountState
+			and cust.customer_level_id = 1 and cust.status_id in (3,4)
+			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
+		]]>
+		<!-- customer_level_id = 2 is for group -->	
+	</sql-query>
+	<query name="Customer.getAllBasicGroupInfo">
+		<![CDATA[select new org.mifos.application.customer.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
+		 from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =2 order by customer.customerId]]>
+	</query>
+			
 </hibernate-mapping>

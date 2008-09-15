@@ -185,10 +185,46 @@ public abstract class TaskHelper {
 			return true;
 		}
 	}
+	
+	private boolean isPortfolioAtRiskAllowedToRun() throws BatchJobException
+	{
+		boolean isAllowedToRun = false;
+		TaskPersistence p = new TaskPersistence();
+		try
+		{
+			isAllowedToRun = p.hasLoanArrearsTaskRunSuccessfully();
+			if (isAllowedToRun == false)
+			{
+				String message = "PortfolioAtRisk Task can't run because it requires the LoanArrearsTask to run successfully first.";
+				MifosLogManager.getLogger(LoggerConstants.BATCH_JOBS).error(message);
+				System.out.println(message);
+				return isAllowedToRun;
+			}
+				
+		}
+		catch (PersistenceException ex)
+		{
+			throw new  BatchJobException(ex);
+		}
+		return isAllowedToRun;
+		
+	}
 
 	private void perform(long timeInMillis) {
 		try {
 			registerStartup(timeInMillis);
+			if (mifosTask.name!= null)
+			{
+				if (mifosTask.name.equals("PortfolioAtRiskTask"))
+				{
+					if (!isPortfolioAtRiskAllowedToRun())
+					{
+						String description = "PortfolioAtRisk Task can't run because it requires the LoanArrearsTask to run successfully first.";
+						registerCompletion(0, description, TaskStatus.INCOMPLETE);
+						return;
+					}
+				}
+			}
 			execute(timeInMillis);
 			registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY,
 					TaskStatus.COMPLETE);

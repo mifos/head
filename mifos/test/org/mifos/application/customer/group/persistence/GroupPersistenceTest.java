@@ -27,6 +27,8 @@ import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceTest extends MifosTestCase {
@@ -55,6 +57,23 @@ public class GroupPersistenceTest extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public void testUpdateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk() throws Exception
+	{
+		createGroup();
+		double portfolioAtRisk = 0.567;
+		Integer groupId = group.getCustomerId();
+		boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk
+		(portfolioAtRisk, groupId);
+		assertTrue(result);
+		group = (GroupBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		assertEquals(1, group.getUpdatedBy().intValue());
+		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+		assertEquals(1, group.getUpdatedBy().intValue());
+		assertEquals(currentDate.toString(), group.getUpdatedDate().toString());
+		assertEquals(new Money("0.567"), group.getGroupPerformanceHistory().getPortfolioAtRisk());
+				
 	}
 
     public void testCreateGroup()

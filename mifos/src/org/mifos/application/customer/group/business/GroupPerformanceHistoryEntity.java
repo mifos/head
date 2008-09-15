@@ -25,11 +25,15 @@ import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpda
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnRepayment;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnReversal;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
@@ -52,6 +56,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private Money portfolioAtRisk;
 
 	private GroupBO group;
+	
+	
 	
 	/**
 	 * stores the loan cycle information based
@@ -197,12 +203,17 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	public Money getTotalOutStandingLoanAmount() throws CustomerException {
 		Money amount = group.getOutstandingLoanAmount();
+		//System.out.println("group outstanding amount: " + amount.toString());
+		Money clientAmount = new Money();
 		List<CustomerBO> clients = getChildren();
 		if (clients != null) {
 			for (CustomerBO client : clients) {
 				amount = amount.add(client.getOutstandingLoanAmount());
+				clientAmount = clientAmount.add(client.getOutstandingLoanAmount());
 			}
 		}
+		//System.out.println("client outstanding amount: " + clientAmount.toString());
+		
 		return amount;
 	}
 
@@ -217,7 +228,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return amount;
 	}
 	
-	
+	// this method calculates the PAR using the method LoanBO.hasPortfolioAtRisk() to determine if a loan is in arrears
 	public void generatePortfolioAtRisk() throws CustomerException {
 		Money amount = group.getBalanceForAccountsAtRisk();
 		List<CustomerBO> clients = getChildren();
@@ -226,50 +237,12 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 				amount = amount.add(client.getBalanceForAccountsAtRisk());
 			}
 		}
-		if (getTotalOutStandingLoanAmount().getAmountDoubleValue() != 0.0)
-			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getTotalOutStandingLoanAmount().getAmountDoubleValue())));
+		double totalOutstandingLoanAmount = getTotalOutStandingLoanAmount().getAmountDoubleValue();
+		if (totalOutstandingLoanAmount != 0.0)
+			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/totalOutstandingLoanAmount)));
 	}
 	
 	
-	public void generatePortfolioAtRiskForTask() throws CustomerException {
-		Money balanceForAccountsAtRiskAmount = new Money();
-		Money outstandingLoanAmount = new Money();
-		Set<AccountBO> groupAccounts = group.getAccounts();
-		if ((groupAccounts != null) &&(groupAccounts.size() > 0))
-		{
-			for (AccountBO groupAccount : groupAccounts) {
-				if (groupAccount.getType() == AccountTypes.LOAN_ACCOUNT
-						&& ((LoanBO) groupAccount).isAccountActive()) {
-					LoanBO loan = (LoanBO) groupAccount;
-					Money remainingPrincipalAmount = loan.getRemainingPrincipalAmount();
-					outstandingLoanAmount = outstandingLoanAmount.add(remainingPrincipalAmount);
-					if (loan.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING))
-						balanceForAccountsAtRiskAmount = balanceForAccountsAtRiskAmount.add(remainingPrincipalAmount);
-				}
-			}
-		}
-		
-		List<CustomerBO> clients = getChildren();
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				Set<AccountBO> clientAccounts = client.getAccounts();
-				for (AccountBO clientAccount : clientAccounts) {
-					if (clientAccount.getType() == AccountTypes.LOAN_ACCOUNT
-							&& ((LoanBO) clientAccount).isAccountActive()) {
-						LoanBO loan = (LoanBO) clientAccount;
-						Money remainingPrincipalAmount = loan.getRemainingPrincipalAmount();
-						outstandingLoanAmount = outstandingLoanAmount.add(remainingPrincipalAmount);
-						if (loan.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING))
-							balanceForAccountsAtRiskAmount = balanceForAccountsAtRiskAmount.add(remainingPrincipalAmount);
-					}
-				}
-			}
-		}
-		double totalOustandingLoanAmount = outstandingLoanAmount.getAmountDoubleValue();
-		if (totalOustandingLoanAmount != 0.0)
-			setPortfolioAtRisk(new Money(String.valueOf(balanceForAccountsAtRiskAmount.getAmountDoubleValue()/totalOustandingLoanAmount)));
-		
-	}
 	
 	private List<CustomerBO> getChildren() throws CustomerException {
 		return group.getChildren(CustomerLevel.CLIENT,ChildrenStateType.ACTIVE_AND_ONHOLD);
@@ -383,4 +356,5 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 			throw new AccountException(e);
 		}
 	}
+	
 }

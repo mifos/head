@@ -3,13 +3,14 @@ package org.mifos.framework.components.batchjobs.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
+import org.mifos.application.customer.group.BasicGroupInfo;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.persistence.GroupPersistence;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -19,6 +20,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 
 public class PortfolioAtRiskHelper extends TaskHelper {
 
@@ -26,39 +28,26 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 		super(mifosTask);
 	}
 
+	
 	@Override
 	public void execute(long timeInMillis) throws BatchJobException {
-		TaskPersistence p = new TaskPersistence();
-		try
-		{
-			if (p.hasLoanArrearsTaskRunSuccessfully() == false)
-			{
-				String message = "PortfolioAtRisk Task can't run because it requires the LoanArrearsTask to run successfully first.";
-				MifosLogManager.getLogger(LoggerConstants.BATCH_JOBS).error(message);
-				System.out.println(message);
-				return;
-			}
-		}
-		catch (PersistenceException ex)
-		{
-			throw new  BatchJobException(ex);
-		}
+
 		System.out.println("PortfolioAtRiskTask starts");
 		long time1 = System.currentTimeMillis();
-		List<Integer> customerIds = null;
+		List<BasicGroupInfo> groupInfos = null;
 		List<String> errorList = new ArrayList<String>();
 		
 		try {
-			customerIds = new CustomerPersistence().getCustomers(CustomerLevel.GROUP.getValue());
+			groupInfos = new CustomerPersistence().getAllBasicGroupInfo();
 			
 		} catch (Exception e) {
 			throw new BatchJobException(e);
 		}
 		
-		if (customerIds != null && !customerIds.isEmpty())
+		if (groupInfos != null && !groupInfos.isEmpty())
 		{
 			
-			int groupCount = customerIds.size();
+			int groupCount = groupInfos.size();
 			System.out.println("PortfolioAtRisk: got " + groupCount + " groups to process.");
 			long startTime = System.currentTimeMillis();
 			int i=1;
@@ -66,18 +55,19 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 			GroupPersistence groupPersistence = new GroupPersistence();
 			try
 			{
-				for (Integer customerId : customerIds) {
-					    groupId = customerId;
-						GroupBO group = groupPersistence.getGroup(customerId);
-						GroupPerformanceHistoryEntity groupPerf = group.getGroupPerformanceHistory();
-						// TODO: HACK done because sometimes the customer performance history for GroupBO is sometimes null???
-						if (null == groupPerf) {						
-							groupPerf = (GroupPerformanceHistoryEntity) HibernateUtil.getSessionTL().createQuery("from org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity e where e.group.customerId = " + group.getCustomerId()).uniqueResult();
-							group.setGroupPerformanceHistory(groupPerf);
+				for (BasicGroupInfo groupInfo : groupInfos) {
+					    groupId = groupInfo.getGroupId();
+					    String searchStr = groupInfo.getSearchId() + ".%";
+						double portfolioAtRisk = 
+							PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(groupId, groupInfo.getBranchId(), searchStr);
+						//System.out.println("Group " + groupInfo.getGroupName() + " groupId " + groupId + " branchId " + groupInfo.getBranchId() 
+						//		+ " searchID "+ groupInfo.getSearchId() + " portfolio " + portfolioAtRisk);
+								
+						// update group perf history and group table for the field updated_by and updated_date
+						if (portfolioAtRisk > -1)
+						{
+							groupPersistence.updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(portfolioAtRisk, groupId);
 						}
-						group.getGroupPerformanceHistory().generatePortfolioAtRiskForTask();
-						group.update();
-						HibernateUtil.commitTransaction();
 						if (i % 500 == 0)
 						{
 							long time = System.currentTimeMillis();
@@ -99,7 +89,8 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 							e.getMessage() + " at group " + groupId.toString());
 					
 					HibernateUtil.rollbackTransaction();
-					errorList.add(groupId.toString());
+					if (groupId != null)
+						errorList.add(groupId.toString());
 				} finally {
 					HibernateUtil.closeSession();
 				}

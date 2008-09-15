@@ -393,6 +393,10 @@ public interface NamedQueryConstants {
 	public String GET_SQL_VERY_POOR_ACTIVE_ACCOUNT_USER_COUNT_FOR_OFFICE = "Customer.Sql.getVeryPoorActiveBorrowersCountForOffice";
 	public String GET_SQL_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getReplacementCountForOffice";
 	public String GET_SQL_VERY_POOR_REPLACEMENT_COUNT_FOR_OFFICE = "Customer.Sql.getVeryPoorReplacementCountForOffice";
+	public String GET_TOTAL_AMOUNT_FOR_GROUP="Customer.getTotalAmountForGroup";
+	public String GET_TOTAL_AMOUNT_FOR_ALL_CLIENTS_OF_GROUP="Customer.getTotalAmountForAllClientsOfGroup";
+	public String GET_ALL_BASIC_GROUP_INFO="Customer.getAllBasicGroupInfo";
+	
 	
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID = "office.getOfficeSearchId";

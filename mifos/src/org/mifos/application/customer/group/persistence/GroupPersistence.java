@@ -1,6 +1,7 @@
 package org.mifos.application.customer.group.persistence;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +26,17 @@ import org.mifos.config.ClientRules;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class GroupPersistence extends Persistence {
     private CenterPersistence centerPersistence = new CenterPersistence();
@@ -169,6 +176,57 @@ public class GroupPersistence extends Persistence {
 	throws PersistenceException {
 		return (GroupBO) getPersistentObject(GroupBO.class, groupId);
 	}
+    
+    // this code is used in the PAR task to improve performance
+    public boolean updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(double portfolioAtRisk, Integer groupId)
+     throws Exception
+    {
+    	boolean result = false;
+    	Connection connection = null;
+    	
+    	try
+    	{
+	    	connection = HibernateUtil.getSessionTL().connection();
+	    	connection.setAutoCommit(false);
+	    	Statement statement = connection.createStatement();
+	    	short userId = 1; // this is bach job, so no user
+	    	java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+	    
+			int rows = statement.executeUpdate("UPDATE CUSTOMER SET UPDATED_BY = " + userId + 
+					", UPDATED_DATE='" + currentDate + "' WHERE CUSTOMER_ID=" + groupId.toString());
+							
+			statement.close();
+			if (rows != 1) {
+				throw new PersistenceException("Unable to update group table for group id " + groupId.toString());
+			}
+			statement = connection.createStatement();
+			rows = statement.executeUpdate("UPDATE GROUP_PERF_HISTORY SET PORTFOLIO_AT_RISK = " + portfolioAtRisk + 
+					" WHERE CUSTOMER_ID=" + groupId.toString());
+							
+			statement.close();
+			if (rows != 1) {
+				throw new PersistenceException("Unable to update group performance history for group id " + groupId.toString());
+			}
+			connection.commit();
+			result = true;
+    	}
+    	catch (Exception ex)
+    	{
+    		if (connection != null)
+    			connection.rollback();
+    		throw new PersistenceException(ex);
+    	}
+    	finally
+    	{
+    		if (connection != null)
+    		{
+    			connection.close();
+    			HibernateUtil.closeSession();
+    		}
+    	}
+    	
+    	return result;
+    }
     
     
 }

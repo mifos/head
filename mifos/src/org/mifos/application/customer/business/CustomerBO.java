@@ -623,14 +623,31 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return amount;
 	}
-
-	public Money getOutstandingLoanAmount() {
+	
+	public Money getBalanceForAccountsAtRiskForTask() {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
-				amount = amount.add(((LoanBO) account)
-						.getRemainingPrincipalAmount());
+				LoanBO loan = (LoanBO) account;
+				if (loan.getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()))
+					amount = amount.add(loan.getRemainingPrincipalAmount());
+			}
+		}
+		return amount;
+	}
+
+	public Money getOutstandingLoanAmount() {
+		Money amount = new Money();
+		Set<AccountBO> accounts = getAccounts();
+		if (accounts != null)
+		{
+			for (AccountBO account : getAccounts()) {
+				if (account.getType() == AccountTypes.LOAN_ACCOUNT
+						&& ((LoanBO) account).isAccountActive()) {
+					amount = amount.add(((LoanBO) account)
+							.getRemainingPrincipalAmount());
+				}
 			}
 		}
 		return amount;

@@ -1,15 +1,19 @@
 package org.mifos.application.customer.group.business;
 
+
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanCalculationTest;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
@@ -17,6 +21,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
@@ -35,6 +40,7 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
+import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
@@ -46,6 +52,8 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -58,6 +66,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskCalculation;
+import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -124,41 +134,6 @@ public class GroupBOTest extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	public void testGeneratePortfolioAtRiskForTask() throws Exception {
-		createInitialObject();
-		TestObjectFactory.flushandCloseSession();
-		group = TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
-				.getCustomerId());
-		
-		for (AccountBO account : group.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-				((LoanBO)account).handleArrears();
-			}
-		}
-		for (AccountBO account : client.getAccounts()) {
-			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-				changeFirstInstallmentDate(account, 31);
-				((LoanBO)account).handleArrears();
-			}
-		}
-		group.getGroupPerformanceHistory().generatePortfolioAtRiskForTask();
-		assertEquals(new Money("1.0"), group
-				.getGroupPerformanceHistory().getPortfolioAtRisk());
-		TestObjectFactory.flushandCloseSession();
-		center = TestObjectFactory.getObject(CenterBO.class, center
-				.getCustomerId());
-		group = TestObjectFactory.getObject(GroupBO.class, group
-				.getCustomerId());
-		client = TestObjectFactory.getObject(ClientBO.class, client
-				.getCustomerId());
-		account1 = TestObjectFactory.getObject(AccountBO.class,
-				account1.getAccountId());
-		account2 = TestObjectFactory.getObject(AccountBO.class,
-				account2.getAccountId());
-	}
 	
 	public void testGeneratePortfolioAtRisk() throws Exception {
 				createInitialObject();
