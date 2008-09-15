@@ -1,10 +1,18 @@
 #!/bin/bash
+set -o errexit
 
-# TODO, for the pseudolocale (is_IS):
-#   specific Ant task(?) to autogenerate *_is_IS.properties
+for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
+do
+    for translated in `find $locale -type f -name "*$locale.po"`
+    do
+        # remove directory part of path
+        translatedBase=`basename $translated`
 
-# TODO, for the "real" locales (like French):
-#   Ant task
-#   example: po2prop.py -t message.properties message_is.properties.po message_is.properties
+        # remove locale and file extension
+        bundleBase=`echo $translatedBase | sed -e 's/_[a-zA-Z]*\.po//'`
 
-# NOTE: This may also be implemented as a build step (say, in Java)
+        # create locale-specific .properties files for use by Mifos web app
+        po2prop -t $bundleBase.properties \
+            $translated ${bundleBase}_$locale.properties
+    done
+done
