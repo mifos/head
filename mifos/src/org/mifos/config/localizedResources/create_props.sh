@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # TODO, for the pseudolocale (is_IS):
 #   specific Ant task(?) to autogenerate *_is_IS.properties
