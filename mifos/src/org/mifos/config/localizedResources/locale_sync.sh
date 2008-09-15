@@ -15,9 +15,7 @@ set -o errexit
 # OPTIONS
 #     None.
 
-# NOTE: this will break in Rhino until existing locale-specific bundles are
-# converted into .po files in their respective directories
-defaults=`\ls *.properties`
+defaults=`\ls *.properties | grep -v _`
 
 for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
 do

@@ -14,8 +14,6 @@ set -o errexit
 # OPTIONS
 #     None.
 
-# NOTE: leave the "grep -v" until existing locale-specific bundles are
-# converted into .po files in their respective directories
 defaults=`\ls *.properties | grep -v _`
 
 for bundle in $defaults
