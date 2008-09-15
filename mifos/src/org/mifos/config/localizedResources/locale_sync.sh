@@ -21,8 +21,6 @@ defaults=`\ls *.properties`
 
 for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
 do
-    mkdir -p $locale
-
     for bundle in $defaults
     do
         bundleBase=`basename $bundle .properties`
@@ -37,7 +35,6 @@ do
             mv ${bundleBase}_$locale.po.TEMP $locale/${bundleBase}_$locale.po
         fi
         rm $bundleBase.pot
-        # do instead at build time to generate language-specific .properties
         # NOTE: initial locale-specific .po files for Rhino should be generated
         #       using something like this.
         #prop2po -t $bundle \
