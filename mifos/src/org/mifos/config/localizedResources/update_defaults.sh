@@ -20,5 +20,7 @@ defaults=`\ls *.properties | grep -v _`
 for bundle in $defaults
 do
     bundleBase=`basename $bundle .properties`
-    po2prop -t $bundle en/${bundleBase}_en.po > $bundle
+    cp $bundle $bundle.copy
+    po2prop -t $bundle en/${bundleBase}_en.po > $bundle.copy
+    mv $bundle.copy $bundle
 done
