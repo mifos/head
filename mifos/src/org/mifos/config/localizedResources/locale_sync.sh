@@ -19,27 +19,33 @@ set -o errexit
 #     This script is brittle and dangerous! Notice how the first argument is a
 #     directory that is promptly nuked. Use at your own risk.
 
-locale=$1
-mkdir -p $locale
-defaults=`\ls *.properties | grep -v _`
+# NOTE: this will break in Rhino until existing locale-specific bundles are
+# converted into .po files in their respective directories
+defaults=`\ls *.properties`
 
-for bundle in $defaults
+# NOTE: new locales MUST be added here or they will not be sync'd!
+for locale in es fr
 do
-    bundleBase=`basename $bundle .properties`
-    echo $bundleBase
-    prop2po $bundle --pot $bundleBase.pot
-    if [ ! -e $locale/${bundleBase}_$locale.po ]
-    then
-        pot2po $bundleBase.pot $locale/${bundleBase}_$locale.po
-    else
-        pot2po -t $locale/${bundleBase}_$locale.po $bundleBase.pot \
-            ${bundleBase}_$locale.po.TEMP
-        mv ${bundleBase}_$locale.po.TEMP $locale/${bundleBase}_$locale.po
-    fi
-    rm $bundleBase.pot
-    # do instead at build time to generate language-specific .properties
-    # NOTE: initial locale-specific .po files for Rhino should be generated
-    #       using something like this.
-    #prop2po -t $bundle \
-    #  -i $locale/${bundleBase}_$locale.properties > $locale/$bundleBase.po
+    mkdir -p $locale
+
+    for bundle in $defaults
+    do
+        bundleBase=`basename $bundle .properties`
+        echo $bundleBase
+        prop2po $bundle --pot $bundleBase.pot
+        if [ ! -e $locale/${bundleBase}_$locale.po ]
+        then
+            pot2po $bundleBase.pot $locale/${bundleBase}_$locale.po
+        else
+            pot2po -t $locale/${bundleBase}_$locale.po $bundleBase.pot \
+                ${bundleBase}_$locale.po.TEMP
+            mv ${bundleBase}_$locale.po.TEMP $locale/${bundleBase}_$locale.po
+        fi
+        rm $bundleBase.pot
+        # do instead at build time to generate language-specific .properties
+        # NOTE: initial locale-specific .po files for Rhino should be generated
+        #       using something like this.
+        #prop2po -t $bundle \
+        #  -i $locale/${bundleBase}_$locale.properties > $locale/$bundleBase.po
+    done
 done
