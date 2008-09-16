@@ -1226,11 +1226,12 @@
 			and cust.customer_level_id = 1 and cust.status_id in (3,4)
 			and cust.branch_id=:officeId and cust.search_id like :searchId and acc.account_type_id=1
 		]]>
-		<!-- customer_level_id = 2 is for group -->	
+		
 	</sql-query>
+	<!-- customer_level_id = 2 is for group. Status is 9 is group active and 10 is group on hold -->	
 	<query name="Customer.getAllBasicGroupInfo">
 		<![CDATA[select new org.mifos.application.customer.group.BasicGroupInfo(customer.customerId, customer.office.officeId, customer.searchId, customer.displayName)
-		 from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =2 order by customer.customerId]]>
+		 from org.mifos.application.customer.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
 	</query>
 			
 </hibernate-mapping>

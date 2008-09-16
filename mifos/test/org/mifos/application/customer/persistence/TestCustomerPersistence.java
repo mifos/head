@@ -184,7 +184,15 @@ public class TestCustomerPersistence extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
 		GroupBO newGroup = TestObjectFactory.createGroupUnderCenter("newGroup",
-				CustomerStatus.GROUP_ACTIVE, center);
+				CustomerStatus.GROUP_HOLD, center);
+		GroupBO newGroup2 = TestObjectFactory.createGroupUnderCenter("newGroup2",
+				CustomerStatus.GROUP_CANCELLED, center);
+		GroupBO newGroup3 = TestObjectFactory.createGroupUnderCenter("newGroup3",
+				CustomerStatus.GROUP_CLOSED, center);
+		GroupBO newGroup4 = TestObjectFactory.createGroupUnderCenter("newGroup4",
+				CustomerStatus.GROUP_PARTIAL, center);
+		GroupBO newGroup5 = TestObjectFactory.createGroupUnderCenter("newGroup5",
+				CustomerStatus.GROUP_PENDING, center);
 		List<BasicGroupInfo> groupInfos = customerPersistence.getAllBasicGroupInfo();
 		assertEquals(2, groupInfos.size());
 		assertEquals(group.getDisplayName(), groupInfos.get(0).getGroupName());
@@ -196,6 +204,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(newGroup.getOffice().getOfficeId(), groupInfos.get(1).getBranchId());
 		assertEquals(newGroup.getCustomerId(), groupInfos.get(1).getGroupId());
 		TestObjectFactory.cleanUp(newGroup);
+		TestObjectFactory.cleanUp(newGroup2);
+		TestObjectFactory.cleanUp(newGroup3);
+		TestObjectFactory.cleanUp(newGroup4);
+		TestObjectFactory.cleanUp(newGroup5);
 		
 	}
 
