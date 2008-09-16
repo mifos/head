@@ -67,7 +67,7 @@
 	</scheduler>
 	<scheduler>
 		<task-class-name>BranchReportTask</task-class-name>
-		<initial-time>24:00:00</initial-time>
+		<initial-time>24:05:00</initial-time>
 		<delay-time>86400</delay-time>
 	</scheduler>
 	<!-- Temporarily commented out as requested by issue 1881
