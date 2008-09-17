@@ -102,7 +102,7 @@
 		<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.GroupUIResources"/>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
-		<html-el:form action="groupCustAction.do?method=preview" onsubmit="return chkForValidDates()">
+		<html-el:form action="groupCustAction.do?method=preview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -342,7 +342,7 @@
 												<mifos:mifoslabel keyhm="Group.TrainedDate" name="Group.grouptrainedon" bundle="GroupUIResources" />
 											</td>
 											<td>
-												<date:datetag keyhm="Group.TrainedDate" property="trainedDate" renderstyle="simple"/>
+												<date:datetag keyhm="Group.TrainedDate" property="trainedDate"/>
 											</td>
 										</tr>
 
