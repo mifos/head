@@ -22,19 +22,17 @@ import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
-import net.sf.cglib.transform.impl.AddStaticInitTransformer;
-
-import org.easymock.classextension.EasyMock;
-import org.easymock.classextension.IMocksControl;
 import org.joda.time.LocalDate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.LoanCalculationTest;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
@@ -47,40 +45,51 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.CenterTemplate;
+import org.mifos.application.customer.center.CenterTemplateImpl;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.GroupTemplate;
+import org.mifos.application.customer.group.GroupTemplateImpl;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.group.persistence.GroupPersistence;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.master.util.helpers.PaymentTypes;
+import org.mifos.application.meeting.MeetingTemplateImpl;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.WeekDaysEntity;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.application.productdefinition.business.NoOfInstallSameForAllLoanBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -88,25 +97,25 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyFactory;
-import org.mifos.framework.util.helpers.NumberUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
@@ -118,6 +127,10 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	private LoanBusinessService loanBusinessServiceMock;
 	private ConfigurationBusinessService configurationBusinessServiceMock;
 	private HttpServletRequest requestMock;
+	private CustomerBO groupForLoanRedo = null;
+	private CustomerBO clientForLoanRedo = null;
+	private LoanOfferingBO loanOfferingForLoanRedo = null;
+	private CenterBO centerForLoanRedo = null;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -131,6 +144,214 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+	}
+	
+	private void initSchedulePreviewPageParamsForLoanRedo(LoanOfferingBO loanOffering, String disbursementDate) {
+		schedulePreviewPageParams = new HashMap<String, String>();
+		schedulePreviewPageParams.put("loanAmount", loanOffering
+				.eligibleLoanAmount(group.getMaxLoanAmount(loanOffering),
+						group.getMaxLoanCycleForProduct(loanOffering))
+				.getDefaultLoanAmount().toString());
+		schedulePreviewPageParams.put("interestRate", loanOffering
+				.getMaxInterestRate().toString());
+		schedulePreviewPageParams.put("noOfInstallments", loanOffering
+				.eligibleNoOfInstall(group.getMaxLoanAmount(loanOffering),
+						group.getMaxLoanCycleForProduct(loanOffering))
+				.getDefaultNoOfInstall().toString());
+		schedulePreviewPageParams.put("disbursementDate", disbursementDate);
+		schedulePreviewPageParams.put("gracePeriodDuration", "1");
+		schedulePreviewPageParams.put("businessActivityId", "1");		
+		
+	}
+	
+	private void createPayment(LoanBO loan, Money amountPaid) throws Exception
+	{
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = LoanCalculationTest.getSortedAccountActionDateEntity(actionDateEntities, 
+				6);
+        PersonnelBO personnelBO =  new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
+        LoanScheduleEntity loanSchedule = paymentsArray[0];
+        Short paymentTypeId = PaymentTypes.CASH.getValue();
+        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+		loan.applyPayment(paymentData, true);
+		paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+		loan.applyPayment(paymentData, true);
+	}
+	private Date createPreviousDate(int numberOfDays) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, -numberOfDays);
+        Date pastDate =  DateUtils.getDateWithoutTimeStamp(calendar.getTime());
+        return pastDate;
+    }
+	
+	private GroupBO createGroup(
+			UserContext userContext, 
+			GroupTemplate groupTemplate, 
+			final Date disbursementDate) 
+		throws PersistenceException, ValidationException, CustomerException {
+			CenterBO center = null;
+			if (groupTemplate.getParentCenterId() != null) {
+			center = new GroupPersistence()
+						.getCenterPersistence()
+						.getCenter(groupTemplate.getParentCenterId());
+			if (center == null) {
+			    throw new ValidationException(GroupConstants.PARENT_OFFICE_ID);
+			}
+			}
+			GroupBO group = GroupBO.createInstanceForTest(userContext, groupTemplate, center, disbursementDate);
+			group.save();
+			return group;
+		}
+	
+		private LoanOfferingBO createLoanOffering
+				(UserContext userContext, MeetingBO meeting, Date loanProductStartDate)
+							throws ProductDefinitionException {
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.GROUPS);
+		ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(GraceType.NONE) ;
+		InterestTypesEntity interestType = new InterestTypesEntity(InterestType.FLAT);
+		GLCodeEntity glCodePrincipal = 
+		(GLCodeEntity) HibernateUtil
+							.getSessionTL()
+							.get(GLCodeEntity.class, TestGeneralLedgerCode.LOANS_TO_CLIENTS);
+		GLCodeEntity glCodeInterest = 
+		(GLCodeEntity) HibernateUtil
+							.getSessionTL()
+							.get(GLCodeEntity.class, TestGeneralLedgerCode.INTEREST_ON_LOANS);
+		
+		boolean interestDeductedAtDisbursement = false;
+		boolean principalDueInLastInstallment = false;
+		Money loanAmount = new Money("300");
+		Double interestRate = new Double(1.2);
+		Short installments = new Short((short) 6);
+		LoanOfferingBO loanOffering = LoanOfferingBO.createInstanceForTest(
+			userContext, "TestLoanOffering", "TLO",
+			productCategory, prdApplicableMaster, loanProductStartDate, null,
+			null, gracePeriodType, (short) 0, interestType,
+		    loanAmount, loanAmount, loanAmount,
+			interestRate, interestRate, interestRate,
+		    installments, installments, installments,
+		    true, interestDeductedAtDisbursement,
+			principalDueInLastInstallment, new ArrayList<FundBO>(),
+			new ArrayList<FeeBO>(), meeting, glCodePrincipal, glCodeInterest);
+		
+		PrdStatusEntity prdStatus = new TestObjectPersistence()
+		    .retrievePrdStatus(PrdStatus.LOAN_ACTIVE);
+		LoanOfferingBOTest.setStatus(loanOffering,prdStatus);
+		LoanOfferingBOTest.setGracePeriodType(loanOffering,gracePeriodType);
+		loanOffering.save();
+		
+		return loanOffering;
+	}
+	
+		private void initPageParamsForLoanRedo(LoanOfferingBO loanOffering, String disbursementDate) {
+			initPrdOfferingPageParams(loanOffering);
+			initSchedulePreviewPageParamsForLoanRedo(loanOffering, disbursementDate);
+		}
+
+	
+	private void createInitialObjectsForLoanRedo() throws Exception {
+		//groupForLoanRedo = TestObjectFactory.createGroupUnderCenter("MyGroup",
+		//		CustomerStatus.GROUP_ACTIVE, center);
+		//String newDate = offSetCurrentDate(-2, userContext.getPreferredLocale());
+		//groupForLoanRedo.setCreatedDate(DateUtils.getDate(newDate));
+		//clientForLoanRedo = TestObjectFactory.createClient("MyClient",
+		//		CustomerStatus.CLIENT_ACTIVE, groupForLoanRedo);
+		//clientForLoanRedo.setCreatedDate(DateUtils.getDate(newDate));
+		int loanStartDaysAgo = 14;
+		Date disbursementDate = createPreviousDate(loanStartDaysAgo);
+		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+        MeetingBO meeting = 
+        		new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplateStartingFrom(disbursementDate));
+							//.createWeeklyMeetingTemplateOnMondaysStartingFrom(disbursementDate));
+
+        CenterTemplate centerTemplate = new CenterTemplateImpl(meeting, office.getOfficeId());
+        centerForLoanRedo = new CenterPersistence().createCenter(userContext, centerTemplate);
+
+        GroupTemplate groupTemplate = 
+        		GroupTemplateImpl.createNonUniqueGroupTemplate(centerForLoanRedo.getCustomerId());
+		
+        groupForLoanRedo = createGroup(userContext, groupTemplate, disbursementDate);
+        
+        loanOfferingForLoanRedo = createLoanOffering(userContext, meeting, disbursementDate);
+        initPageParamsForLoanRedo(loanOfferingForLoanRedo, disbursementDate.toString());
+	}
+	
+	private void goToLoanAccountInputPageForLoanRedo() {
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", groupForLoanRedo.getCustomerId().toString());
+		Set<Entry<String, String>> entrySet = prdOfferingPageParams.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			addRequestParameter(entry.getKey(), entry.getValue());
+		}
+	}
+	
+	private void goToPrdOfferingPageForLoanRedo() throws Exception{
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, groupForLoanRedo);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", groupForLoanRedo.getCustomerId().toString());
+	}
+	
+	private void goToSchedulePreviewPageForLoanRedo() {
+		setRequestPathInfo("/loanAccountAction.do");
+		Set<Entry<String, String>> entrySet = schedulePreviewPageParams.entrySet();
+		for (Entry<String, String> entry : entrySet) {
+			addRequestParameter(entry.getKey(), entry.getValue());
+		}
+		addRequestParameter("method", "schedulePreview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		int loanStartDaysAgo = 14;
+		String disbursementDate = offSetCurrentDate(-loanStartDaysAgo, userContext.getPreferredLocale());
+		addRequestParameter("disbursementDate", disbursementDate);
+		
+	}
+	private void jumpToSchedulePreviewForLoanRedo() throws Exception{
+		
+		goToPrdOfferingPageForLoanRedo();
+		actionPerform();
+		goToLoanAccountInputPageForLoanRedo();
+		actionPerform();
+		goToSchedulePreviewPageForLoanRedo();
+	}
+	
+	public void testRedoLoanThenApplyPayment() throws Exception {
+		createInitialObjectsForLoanRedo();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		jumpToSchedulePreviewForLoanRedo();
+		//actionPerform();
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "create");
+		//addRequestParameter("stateSelected", "1");
+		addRequestParameter("perspective", LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
+		int loanStartDaysAgo = 14;
+		String disbursementDate = offSetCurrentDate(-loanStartDaysAgo, userContext.getPreferredLocale());
+		addRequestParameter("disbursementDate", disbursementDate);
+		
+		performNoErrors();
+		verifyForward(ActionForwards.create_success.toString());
+		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
+				.getSession().getAttribute("loanAccountActionForm");
+		LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(
+				actionForm.getAccountId()).intValue());
+		createPayment(loan, new Money("100"));
+		HibernateUtil.commitTransaction();
+		loan = TestObjectFactory.getObject(LoanBO.class, new Integer(
+				actionForm.getAccountId()).intValue());
+		assertEquals(new LocalDate(), new LocalDate(loan.getAccountApprovalDate().getTime()));		
+		assertEquals(new LocalDate(), new LocalDate(loan.getCreatedDate().getTime()));	
+		
+		TestObjectFactory.cleanUp(loan);
+		TestObjectFactory.cleanUp(clientForLoanRedo);
+		TestObjectFactory.cleanUp(groupForLoanRedo);
+		TestObjectFactory.cleanUp(centerForLoanRedo);
+	
 	}
 
 	public void testCreateWithoutPermission() throws Exception {
@@ -1399,6 +1620,7 @@ public class TestLoanAccountAction extends AbstractLoanActionTestCase {
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
+		
 	}
 
 

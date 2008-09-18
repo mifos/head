@@ -871,9 +871,10 @@ public class LoanAccountAction extends AccountAppAction {
 			AccountException, ServiceException, PersistenceException, NumberFormatException, MeetingException {
 		LoanBO loan = constructLoan(loanActionForm, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-
-		loan.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null,
-				"Automatic Status Update (Redo Loan)");
+	
+		loan.changeStatus(AccountState.LOAN_APPROVED, null,
+						"Automatic Status Update (Redo Loan)");
+		
 
 		PersonnelBO personnel = getPersonnel(request);
 		
