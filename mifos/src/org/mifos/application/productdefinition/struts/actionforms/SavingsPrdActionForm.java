@@ -249,7 +249,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	}
 
 	public SavingsType getSavingsTypeValue() {
-		return getSavingsType() != null ? SavingsType
+		return (StringUtils.isNullAndEmptySafe(getSavingsType())) ? SavingsType
 				.fromInt(getShortValue(getSavingsType())) : null;
 	}
 
@@ -382,8 +382,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
 									SavingsType.MANDATORY)
 							&& getRecommendedAmountValue()
 									.getAmountDoubleValue() <= 0.0)
+					{
 						addError(errors, "recommendedAmount",
 								ProductDefinitionConstants.ERRORMANDAMOUNT);
+					}
+					
 					validateInterestRate(errors, request);
 					validateInterestGLCode( request,errors);
 				} else if (method.equals(Methods.previewManage.toString())) {

@@ -332,6 +332,8 @@ public class MeetingBO extends BusinessObject {
 				.getTime();
 		//return currentScheduleDate;
 	}
+	
+	
 
 	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date afterDate)throws MeetingException{
 		validateMeetingDate(afterDate);

@@ -89,9 +89,24 @@ public class SavingsHelper {
 		cal = Calendar.getInstance();
 		cal.setTime(getFiscalStartDate());
 	}
+	
+	/**
+	 * start from getting a next schedule date after fiscal start date and loop till get a 
+	 * meeting date after account activation date. This won't move if the date is not working date
+	 */
+	private Date getFirstDateForSavingsCalculationAndPosting(MeetingBO meeting,
+			Date accountActivationDate) throws MeetingException {
+		Date date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(getFiscalStartDate());
+		while (date.compareTo(accountActivationDate) <= 0)
+		{
+			date = meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(date);
+		}
+		
+		return date;
+	}
 
 	/*
-	 * set the day number as 1 for interest calculation and 31 for interest posting date
+	 * set the day number as end of month for interest calculation and interest posting date
 	 * and get the meeting date according to the rules set for meeting
 	 */
 	public Date getNextScheduleDate(Date accountActivationDate,
@@ -100,9 +115,8 @@ public class SavingsHelper {
 		Date oldMeetingStartDate = meeting.getStartDate();
 		Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
 		setDetailsForMeeting(meeting);
-		Date scheduleDate = (currentScheduleDate == null) ? getFirstDate(meeting,
-				accountActivationDate) : meeting
-				.getNextScheduleDateAfterRecurrence(currentScheduleDate);
+		Date scheduleDate = (currentScheduleDate == null) ? getFirstDateForSavingsCalculationAndPosting(meeting,
+				accountActivationDate) : meeting.getNextScheduleDateAfterRecurrenceWithoutAdjustment(currentScheduleDate);
 		meeting.setStartDate(oldMeetingStartDate);
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
 		return scheduleDate;

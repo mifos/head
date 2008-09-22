@@ -171,6 +171,157 @@ public class TestSavingsBO extends MifosTestCase {
 				meetingIntCalc, meetingIntPost);
 	}
 	
+	private SavingsOfferingBO createSavingsOfferingForWeekly(
+			String offeringName, String shortName, SavingsType savingsType,
+			InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc,
+			short recurAfterIntCalc, double interestRate, Date startDate, Double minAmtToCalculateInterest,
+			Double maxAmtToWithdraw) throws Exception {
+		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper
+				.getMeeting(freqeuncyIntCalc, recurAfterIntCalc, 
+						SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
+		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper
+				.getMeeting(WEEKLY, EVERY_WEEK, SAVINGS_INTEREST_POSTING));
+		return TestObjectFactory.createSavingsProduct(offeringName, shortName, 
+				ApplicableTo.GROUPS, startDate, 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, interestRate, 
+				maxAmtToWithdraw, minAmtToCalculateInterest, savingsType, 
+				interestCalcType, 
+				meetingIntCalc, meetingIntPost);
+	}
+	private SavingsOfferingBO createSavingsOfferingForDaily(
+			String offeringName, String shortName, SavingsType savingsType,
+			InterestCalcType interestCalcType, RecurrenceType freqeuncyIntCalc,
+			short recurAfterIntCalc, double interestRate, Date startDate, Double minAmtToCalculateInterest,
+			Double maxAmtToWithdraw) throws Exception {
+		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper
+				.getMeeting(freqeuncyIntCalc, recurAfterIntCalc, 
+						SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
+		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper
+				.getMeeting(DAILY, EVERY_DAY, SAVINGS_INTEREST_POSTING));
+		return TestObjectFactory.createSavingsProduct(offeringName, shortName, 
+				ApplicableTo.GROUPS, startDate, 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, interestRate, 
+				maxAmtToWithdraw, minAmtToCalculateInterest, savingsType, 
+				interestCalcType, 
+				meetingIntCalc, meetingIntPost);
+	}
+	
+	public void testCalcDateAndPostDatesAreSameForDaily()
+	throws Exception {
+		
+		createInitialObjects();
+		Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		savingsOffering = createSavingsOfferingForDaily("prd2", "cfgg",
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, DAILY,
+				new Short("1"), 10.0, startDate, 200.0, 0.0);
+		savings = helper.createSavingsAccount(savingsOffering, group,
+				AccountState.SAVINGS_ACTIVE, userContext);
+		savings.setActivationDate(startDate);
+		Short flagId = 1;
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		Money depositMoney = new Money(currency, "200.0");
+		Money balanceAmt = new Money(currency, "200.0");
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, depositMoney, balanceAmt,
+				startDate,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
+				group);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		savings.setSavingsBalance(balanceAmt);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		for (int i=0; i < 12; i++)
+		{
+			savings.updateInterestAccrued();
+			savings.postInterest();
+			assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 1) , savings.getNextIntPostDate());
+			assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 1) , savings.getNextIntCalcDate());
+			assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		}
+		
+	}
+
+	
+	public void testCalcDateAndPostDatesAreSameForWeekly()
+	throws Exception {
+		
+		createInitialObjects();
+		Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		savingsOffering = createSavingsOfferingForWeekly("prd2", "cfgg",
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, WEEKLY,
+				new Short("1"), 10.0, startDate, 200.0, 0.0);
+		savings = helper.createSavingsAccount(savingsOffering, group,
+				AccountState.SAVINGS_ACTIVE, userContext);
+		savings.setActivationDate(startDate);
+		Short flagId = 1;
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		Money depositMoney = new Money(currency, "200.0");
+		Money balanceAmt = new Money(currency, "200.0");
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, depositMoney, balanceAmt,
+				startDate,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
+				group);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		savings.setSavingsBalance(balanceAmt);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		for (int i=0; i < 12; i++)
+		{
+			savings.updateInterestAccrued();
+			savings.postInterest();
+			assertEquals(DateUtils.addDays(savings.getLastIntPostDate(), 7) , savings.getNextIntPostDate());
+			assertEquals(DateUtils.addDays(savings.getLastIntCalcDate(), 7) , savings.getNextIntCalcDate());
+			assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		}
+		
+	}
+
+	public void testCalcDateAndPostDatesAreSameForMonthly()
+	throws Exception {
+		
+		createInitialObjects();
+		Date startDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		savingsOffering = createSavingsOffering("prd4", "cfgl",
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, MONTHLY,
+				new Short("1"), 10.0, startDate, 200.0, 0.0);
+		savings = helper.createSavingsAccount(savingsOffering, group,
+				AccountState.SAVINGS_ACTIVE, userContext);
+		savings.setActivationDate(startDate);
+		Short flagId = 1;
+		savings.changeStatus(AccountState.LOAN_APPROVED, flagId, "approved");
+		assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		Money depositMoney = new Money(currency, "200.0");
+		Money balanceAmt = new Money(currency, "200.0");
+		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
+				savings, depositMoney, balanceAmt,
+				startDate,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
+				group);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		savings.setSavingsBalance(balanceAmt);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		for (int i=0; i < 12; i++)
+		{
+			savings.updateInterestAccrued();
+			savings.postInterest();
+			assertEquals(savings.getNextIntPostDate(), savings.getNextIntCalcDate());
+		}
+		
+	}
+	
+	
 	public void testCalculateInterest_IntCalcFreqMonthly_minbal()
 	throws Exception {
 		
@@ -235,6 +386,7 @@ public class TestSavingsBO extends MifosTestCase {
 		
 		AccountingRules.setDigitsAfterDecimal(savedDigits);
 }
+	
 	
 	
 	////////////////////////////////////////////////////
