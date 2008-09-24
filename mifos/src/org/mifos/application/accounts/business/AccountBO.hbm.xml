@@ -323,7 +323,7 @@
 		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn 
 			where  savingsTrxn.accountTrxnId = (select max(savingsTrxn1.accountTrxnId) 
 			from org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity savingsTrxn1 
-			where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate < date(:date))]]>
+			where savingsTrxn1.account.accountId=:accountId and savingsTrxn1.actionDate <= date(:date))]]>
 	</query>
 
 	<query name="accounts.retrieveFirstTrxn">
