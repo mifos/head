@@ -89,7 +89,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormal">
-								<fmt:message key="client.EditGroupInstructions1">
+								<fmt:message key="client.EditGroupInstructions">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/></fmt:param>
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/></fmt:param>
