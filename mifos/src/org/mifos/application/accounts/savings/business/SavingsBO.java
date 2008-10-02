@@ -575,6 +575,7 @@ public class SavingsBO extends AccountBO {
 		logger.info("In SavingsBO::calculateInterest(), accountId: "
 				+ getAccountId() + ", from date:" + fromDate + ", toDate:"
 				+ toDate + "InterestAmt: " + interestAmount);
+		
 		return interestAmount;
 	}
 
@@ -878,6 +879,8 @@ public class SavingsBO extends AccountBO {
 		}
 		Money interestAmount = principal.multiply(
 				new Double(1 + (intRate / 100.0))).subtract(principal);
+        
+		interestAmount = Money.roundToCurrencyPrecision(interestAmount);
 		return interestAmount;
 	}
 

@@ -29,6 +29,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.config.AccountingRules;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -36,6 +37,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import java.math.RoundingMode;
 
 public class TestSavingsIntCalcHelper extends MifosTestCase {
 	private UserContext userContext;
@@ -86,6 +88,8 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 	}
 
 	public void testIntCalculation() throws Exception {
+		Short savedDigits = AccountingRules.getDigitsAfterDecimal();
+		AccountingRules.setDigitsAfterDecimal(new Short("3"));
 		createInitialObjects();
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
@@ -185,7 +189,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				.getNextIntCalcDate());
 		
 		// using the old money class the result here was 15.4
-		assertEquals(15.386, savings1.getInterestToBePosted()
+		assertEquals(15.387, savings1.getInterestToBePosted()
 				.getAmountDoubleValue());
 
 		// using the old money class the result here was 4.3
@@ -193,6 +197,8 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				.getAmountDoubleValue());
 		assertEquals(helper.getDate("31/05/2006"), savings4
 				.getNextIntCalcDate());
+		AccountingRules.setDigitsAfterDecimal(savedDigits);
+		
 	}
 
 	private void createInitialObjects() throws Exception {

@@ -580,7 +580,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 71.3 + 2.6 = 73.9
 		// * TODO: financial_calculation_rounding
 		//assertEquals(73.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals(71.7, getRoundedDouble(savings.getInterestToBePosted()
+		assertEquals(71.8, getRoundedDouble(savings.getInterestToBePosted()
 				.getAmountDoubleValue()));
 		
 		savings.setUserContext(userContext);
@@ -602,7 +602,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 71.3 + 2.0 = 73.9
 		// * TODO: financial_calculation_rounding
 		//assertEquals(73.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("71.7", savings.getInterestToBePosted().toString());
+		assertEquals("71.8", savings.getInterestToBePosted().toString());
 
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -687,7 +687,7 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals("51.0", oldInterest.toString());
 		// 51.0 + 2.0 = 53.0
 		// * TODO: financial_calculation_rounding
-		assertEquals("52.9", savings.getInterestToBePosted().toString());
+		assertEquals("53.0", savings.getInterestToBePosted().toString());
 		
 		savings.setUserContext(userContext);
 		// Nullifying last payment
@@ -708,7 +708,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 71.3 + 2.0 = 73.3
 		// * TODO: financial_calculation_rounding
 		//assertEquals(73.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("73.3", savings.getInterestToBePosted().toString());
+		assertEquals("73.4", savings.getInterestToBePosted().toString());
 		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -807,7 +807,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest 11000/3*.12*3/365 = 3.6
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.6", savings.getInterestToBePosted().toString());
+		assertEquals("3.7", savings.getInterestToBePosted().toString());
 		
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
@@ -824,7 +824,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 77.7 + 3.6 = 81.3
 		// * TODO: financial_calculation_rounding
 		//assertEquals(83.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("81.3", savings.getInterestToBePosted().toString());
+		assertEquals("81.4", savings.getInterestToBePosted().toString());
 		
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money(currency, "2000");
@@ -844,7 +844,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Total Interest = 82.5 + 3.6 = 86.1
 		// * TODO: financial_calculation_rounding
 		//assertEquals(88.4, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("85.5", savings.getInterestToBePosted().toString());
+		assertEquals("85.6", savings.getInterestToBePosted().toString());
 		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -954,7 +954,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest 11000/3 *.12*3/365 = 3.6
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.6", savings.getInterestToBePosted().toString());
+		assertEquals("3.7", savings.getInterestToBePosted().toString());
 		
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
@@ -971,7 +971,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 77.7 + 3.6 = 81.3
 		// * TODO: financial_calculation_rounding
 		//assertEquals(83.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("81.3", savings.getInterestToBePosted().toString());
+		assertEquals("81.4", savings.getInterestToBePosted().toString());
 		
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money(currency, "2000");
@@ -991,7 +991,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Total Interest = 82.5 + 3.6 = 86.1
 		// * TODO: financial_calculation_rounding
 		//assertEquals(88.4, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("85.5", savings.getInterestToBePosted().toString());
+		assertEquals("85.6", savings.getInterestToBePosted().toString());
 		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -1101,7 +1101,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest (11000/3)*.12*3/365 = 3.6
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.6", savings.getInterestToBePosted().toString());
+		assertEquals("3.7", savings.getInterestToBePosted().toString());
 		
 		savings.updateInterestAccrued();
 		HibernateUtil.commitTransaction();
@@ -1118,7 +1118,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// 77.7 + 3.6 = 81.3
 		// * TODO: financial_calculation_rounding
 		//assertEquals(83.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("81.3", savings.getInterestToBePosted().toString());
+		assertEquals("81.4", savings.getInterestToBePosted().toString());
 		
 		savings.setUserContext(userContext);
 		// Nullifying last payment
@@ -1139,7 +1139,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Total Interest = 71.3 + 3.6 = 74.9
 		// * TODO: financial_calculation_rounding
 		//assertEquals(77.2, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("75.0", savings.getInterestToBePosted().toString());
+		assertEquals("75.1", savings.getInterestToBePosted().toString());
 		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -1213,8 +1213,8 @@ public class TestSavingsBO extends MifosTestCase {
 		//assertEquals(73.9, oldInterest.getAmountDoubleValue());
 		//assertEquals(73.9, savings.getInterestToBePosted()
 		//		.getAmountDoubleValue());
-		assertEquals("73.3", oldInterest.toString());
-		assertEquals("73.3", savings.getInterestToBePosted().toString());
+		assertEquals("73.4", oldInterest.toString());
+		assertEquals("73.4", savings.getInterestToBePosted().toString());
 		
 		savings.setUserContext(userContext);
 		Money amountAdjustedTo = new Money(currency, "4000");
@@ -1234,7 +1234,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest 6000*.12*31/365 = 61.2
 		// Total Interest 61.2 + 2.0 = 63.2
 		// * TODO: financial_calculation_rounding
-		assertEquals("63.1", savings.getInterestToBePosted().toString());
+		assertEquals("63.2", savings.getInterestToBePosted().toString());
 		
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -1544,12 +1544,12 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest = (21500 * .12 / 365 * 8) = 6.2
 		
 		// * TODO: financial_calculation_rounding
-		assertEquals("6.2", savings.getInterestToBePosted().toString());
+		assertEquals("6.3", savings.getInterestToBePosted().toString());
 		
 		oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
 		// * TODO: financial_calculation_rounding
-		assertEquals("6.2", oldInterest.toString());
+		assertEquals("6.3", oldInterest.toString());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1627,13 +1627,13 @@ public class TestSavingsBO extends MifosTestCase {
 		
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.6", savings.getInterestToBePosted().toString());
+		assertEquals("3.7", savings.getInterestToBePosted().toString());
 		
 		oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, oldInterest.getAmountDoubleValue());
-		assertEquals("3.6", oldInterest.toString());
+		assertEquals("3.7", oldInterest.toString());
 		
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -3952,13 +3952,13 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest 1500*.12*8/365 = 3.9
 		// * TODO: financial_calculation_rounding
 		//assertEquals(4.4, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.9", savings.getInterestToBePosted().toString());
+		assertEquals("4.0", savings.getInterestToBePosted().toString());
 
 		oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("25/02/2006"), null);
 		// * TODO: financial_calculation_rounding
 		//assertEquals(4.4, oldInterest.getAmountDoubleValue());
-		assertEquals("3.9", oldInterest.toString());
+		assertEquals("4.0", oldInterest.toString());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -3977,7 +3977,7 @@ public class TestSavingsBO extends MifosTestCase {
 		// MinBal from 20/02 - 28/02 = 1000
 		// Interest 1000*.12*8/365 = 3.0
 		// * TODO: financial_calculation_rounding
-		assertEquals("2.6", savings.getInterestToBePosted().toString());
+		assertEquals("2.7", savings.getInterestToBePosted().toString());
 
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -4035,13 +4035,13 @@ public class TestSavingsBO extends MifosTestCase {
 		// Interest 3666.667*.12*3/365 = 5.91
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, savings.getInterestToBePosted().getAmountDoubleValue());
-		assertEquals("3.6", savings.getInterestToBePosted().toString());
+		assertEquals("3.7", savings.getInterestToBePosted().toString());
 
 		oldInterest = savings.calculateInterestForAdjustment(helper
 				.getDate("27/02/2006"), null);
 		// * TODO: financial_calculation_rounding
 		//assertEquals(5.9, oldInterest.getAmountDoubleValue());
-		assertEquals("3.6", oldInterest.toString());
+		assertEquals("3.7", oldInterest.toString());
 
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
