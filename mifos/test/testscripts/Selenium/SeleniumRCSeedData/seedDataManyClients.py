@@ -28,6 +28,8 @@ class SeedDataManyClients(unittest.TestCase):
 
    def setUp(self):
       self.verificationErrors = []
+      # if you have both Firefox 2 and 3 installed, change the third argument
+      # of this instantiation call to "*chrome /usr/lib/firefox/firefox-2-bin"
       self.selenium = selenium("localhost", 4444, "*chrome", "http://%s:8080" % HOST)
       self.selenium.start()
 
@@ -42,7 +44,7 @@ class SeedDataManyClients(unittest.TestCase):
       sel.type("userName", USER)
       sel.type("password", PASSWORD)
       self.clickAndWaitForPageToLoad("//input[@value='Login']")
-      self.failUnless(sel.is_text_present("Welcome,  mifos"))
+      self.failUnless(sel.is_text_present("Welcome,"))
       self.loanProduct1 = self.addLoanProduct(sel)
       self.loanProduct2 = self.addLoanProduct(sel)
       self.savingsProduct1 = self.addSavingsProduct(sel)
