@@ -1,0 +1,8 @@
+create_loan_only.jmx
+    Create many loans. No bootstrapping--relies on certain data being present.
+    Adjust global variables in "Test Plan" and "HTTP Request Defaults"
+    according to the database used during testing.
+
+load.jmx
+    (incomplete) Bootstraps itself by adding fixture data necessary to run load
+    tests.
