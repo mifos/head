@@ -182,7 +182,7 @@ public class GroupBO extends CustomerBO {
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields,
 			List<CustomerPositionView> customerPositions)
-			throws CustomerException {
+			throws Exception {
 		validateFieldsForUpdate(displayName, loanOfficerId);
 		if (trained != null)
 			setTrained(trained);

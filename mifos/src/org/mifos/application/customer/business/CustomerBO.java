@@ -1057,7 +1057,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected void updateLoanOfficer(Short loanOfficerId)
-			throws CustomerException {
+			throws Exception {
 
 		try {
 			if (isLOChanged(loanOfficerId)) {

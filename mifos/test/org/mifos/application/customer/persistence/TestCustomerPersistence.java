@@ -998,7 +998,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getPersonnelId());
 	}
 	
-	public void testUpdateLOsForAllChildrenAccounts() {
+	public void testUpdateLOsForAllChildrenAccounts() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		assertEquals(center.getPersonnel().getPersonnelId(), group

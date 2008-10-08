@@ -21,7 +21,10 @@ package org.mifos.application.customer.persistence;
 
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -889,6 +892,19 @@ public class CustomerPersistence extends Persistence {
 		update.setParameter("parentOfficeId", parentOfficeId);
 		update.executeUpdate();	}
 	
+	
+	
+	private void updateAccountsForOneCustomer(Integer customerId, Short parentLO, Connection connection) throws Exception
+	{
+		    	
+    	Statement statement = connection.createStatement();
+    	String sql = "update account " +
+		" set personnel_id = " + parentLO.shortValue() +
+		" where account.customer_id = " + customerId.intValue();
+    	statement.executeUpdate(sql);
+    	statement.close();
+	}
+	
 	/**
 	 * Update loan officer for all children accounts.
 	 * 
@@ -898,27 +914,59 @@ public class CustomerPersistence extends Persistence {
 	 * but for each account belonging to those customers.
 	 * 
 	 * Note: Required as to fix issues 1570 and 1804 
+	 * Note 10/08/2008: direct sqls are used to improve performance (issue 2209)
 	 * 
 	 * @param parentLO the parent loan officer
 	 * @param parentSearchId the parent search id
 	 * @param parentOfficeId the parent office id
 	 */
+	
 	public void updateLOsForAllChildrenAccounts(Short parentLO, String parentSearchId,
-			Short parentOfficeId) {
-		String hql = "update AccountBO account " +
-				" set account.personnel.personnelId = :parentLoanOfficer " +
-				" where account.customer.customerId IN (" 
-				+ " select customer.customerId from CustomerBO customer where "
-				+ " customer.searchId like :parentSearchId"
-				+ " and customer.office.officeId = :parentOfficeId"
-				+ ")";
-		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
-		Query update = session.createQuery(hql);
-		update.setParameter("parentLoanOfficer", parentLO);
-		update.setParameter("parentSearchId", parentSearchId + ".%");
-		update.setParameter("parentOfficeId", parentOfficeId);
-		update.executeUpdate();	}
+			Short parentOfficeId) throws Exception
+   {
+
+		if ((parentLO == null) || (parentSearchId == null) || (parentOfficeId == null))
+			return;
+	   
+	   	ResultSet customerIds = null;
+	   	Statement statement = null;
+	   	parentSearchId = parentSearchId + ".%";
+	   	
+	   	try
+	   	{
+	   			Connection connection = HibernateUtil.getSessionTL().connection();
+		    	statement = connection.createStatement();
+		    	String sql =  " select customer_id from customer where "
+				+ " customer.search_id like '" + parentSearchId 
+				+ "' and customer.branch_id = " + parentOfficeId.shortValue();
+				customerIds = statement.executeQuery(sql);	
+				if (customerIds != null)
+				{
+			    	while (customerIds.next())
+			    	{
+			    		int customerId = customerIds.getInt("customer_id");
+			    		updateAccountsForOneCustomer(customerId, parentLO, connection);
+			    	}
+
+				}
+		    	
+	   	}
+	   	
+	   	finally
+	   	{
+	   		if (statement != null)
+	   		{
+	   			statement.close();
+	   		}
+	   		if (customerIds != null)
+	   		{
+	   			customerIds.close();
+	   		}
+	   	}
+				
+   }
+	
+	
 
 	public void deleteCustomerMeeting(CustomerBO customer)
 			throws PersistenceException {
