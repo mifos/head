@@ -547,13 +547,41 @@ public class TestObjectFactory {
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
-			client = new ClientBO(TestUtils.makeUserWithLocales(),
-					clientNameDetailView.getDisplayName(), status, null, null,
-					null, null, getFees(), null, personnel, parentCustomer
-							.getOffice().getOfficeId(), parentCustomer, null,
-					null, null, null, YesNoFlag.YES.getValue(),
-					clientNameDetailView, spouseNameDetailView,
-					clientDetailView, null);
+
+			// Add a way to create parentless clients; like clients outside groups
+			if (null == parentCustomer)
+				client = new ClientBO(
+						TestUtils.makeUserWithLocales(), // UserContext
+						clientNameDetailView.getDisplayName(), // String displayName 
+						status, // CustomerStatus
+						null, // String externalId
+						null, // Date mfiJoiningDate
+						null, // Address
+						null, // List<CustomFieldView> customFields
+						getFees(), // List<FeeView> fees
+						null, // List<SavingsOfferingBO> offeringsSelected
+						personnel, // Short formedById
+						SAMPLE_BRANCH_OFFICE, // Short officeId
+						null, // MeetingBO
+						null, // Short loanOfficerId
+						null, // Date dateOfBirth
+						"", // String governmentId
+						null, // Short trained
+						null, // Date trainedDate
+						YesNoFlag.NO.getValue(), // Short groupFlag
+						clientNameDetailView, // ClientNameDetailView
+						spouseNameDetailView, // ClientNameDetailView
+						clientDetailView, // ClientDetailView
+						null // InputStream picture
+						);
+			else
+				client = new ClientBO(TestUtils.makeUserWithLocales(),
+						clientNameDetailView.getDisplayName(), status, null, null,
+						null, null, getFees(), null, personnel,
+						parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
+						null, null, null, YesNoFlag.YES.getValue(),
+						clientNameDetailView, spouseNameDetailView,
+						clientDetailView, null);
 
 			client.save();
 			HibernateUtil.commitTransaction();

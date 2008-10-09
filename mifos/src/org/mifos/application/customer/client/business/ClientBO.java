@@ -19,6 +19,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
@@ -908,10 +909,20 @@ public class ClientBO extends CustomerBO {
 
 		if (!isSameBranch(newParent.getOffice()))
 			makeCustomerMovementEntries(newParent.getOffice());
-		addParentCustomer(newParent);
-		this.groupFlag = YesNoFlag.YES.getValue();
-		this.update();
+		
+		setParentCustomer(newParent);
+		addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
+		handleAddClientToGroup();
+		childAddedForParent(newParent);
+		setSearchId(newParent.getSearchId() + "."
+				+ String.valueOf(newParent.getMaxChildCount()));
+		newParent.setUserContext(getUserContext());
+		newParent.update();
+		
+		groupFlag = YesNoFlag.YES.getValue();
+		update();
 	}
+	
 	private void validateAddClientToGroup(GroupBO toGroup)
 			throws CustomerException {
 

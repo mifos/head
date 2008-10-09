@@ -1096,7 +1096,7 @@ public abstract class CustomerBO extends BusinessObject {
 			this.addCustomerMovement(currentCustomerMovement);
 		}
 
-		currentCustomerMovement.makeInActive(userContext.getId());
+		currentCustomerMovement.makeInactive(userContext.getId());
 		this.setOffice(officeToTransfer);
 		CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(
 				this, new Date());
@@ -1109,7 +1109,8 @@ public abstract class CustomerBO extends BusinessObject {
 		setParentCustomer(newParent);
 
 		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-		currentHierarchy.makeInActive(userContext.getId());
+		if (null != currentHierarchy)
+			currentHierarchy.makeInactive(userContext.getId());
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
 		this.handleParentTransfer();
 		childRemovedForParent(oldParent);
@@ -1253,7 +1254,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	protected void makeInactive(CustomerBO newParent)  {
 		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-		currentHierarchy.makeInActive(userContext.getId());
+		currentHierarchy.makeInactive(userContext.getId());
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
 
 	}
@@ -1325,19 +1326,7 @@ public abstract class CustomerBO extends BusinessObject {
 			this.update();
 		}
 
-	protected void addParentCustomer(CustomerBO newParent)
-			throws CustomerException {
-		setParentCustomer(newParent);
-		this.handleAddClientToGroup();
-		childAddedForParent(newParent);
-		setSearchId(newParent.getSearchId() + "."
-				+ String.valueOf(newParent.getMaxChildCount()));
-
-		newParent.setUserContext(getUserContext());
-		newParent.update();
-	}
-
-	private void handleAddClientToGroup() throws CustomerException {
+	protected void handleAddClientToGroup() throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
 			if (getCustomerMeeting() != null){
 					deleteCustomerMeeting();		

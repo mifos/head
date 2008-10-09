@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
 package org.mifos.application.customer.client.business;
 
 import java.sql.Date;
@@ -135,7 +154,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulAddClientToGroupWithMeeting()throws Exception{
-		createObjectsForTranferToGroup_WithMeeting();
+		createObjectsForTransferToGroup_WithMeeting();
 		assertEquals(0, group1.getMaxChildCount().intValue());
 		
 		client.addClientToGroup(group1);
@@ -745,7 +764,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateGroupFailure_GroupCancelled()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		refetchGroup();
 		group1.changeStatus(CustomerStatus.GROUP_CANCELLED,
 				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
@@ -766,7 +785,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateGroupFailure_GroupClosed()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		refetchGroup();
 		group1.changeStatus(CustomerStatus.GROUP_CLOSED,
 				CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED, 
@@ -783,7 +802,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateGroupFailure_GroupStatusLower()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);		
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);		
 		try {
 			client.transferToGroup(group1);
 			fail();
@@ -796,7 +815,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateGroupFailure_GroupStatusLower_Client_OnHold()
 	throws Exception {
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);
 		client = (ClientBO) customerPersistence.getCustomer(client.getCustomerId());
 		client.setUserContext(TestUtils.makeUserWithLocales());
 		client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold");
@@ -811,7 +830,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateGroupFailure_ClientHasActiveAccounts()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		accountBO = createSavingsAccount(client,"fsaf6","ads6");
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
@@ -848,7 +867,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulTransferToGroupInSameBranch()throws Exception{
-		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		createObjectsForTransferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		PositionEntity position  = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class, Short.valueOf("1")).get(0);
 		group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
 		center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
@@ -870,7 +889,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulTransferToGroup_WithMeeting()throws Exception{
-		createObjectsForTranferToGroup_WithMeeting();
+		createObjectsForTransferToGroup_WithMeeting();
 		
 		client.transferToGroup(group1);
 		HibernateUtil.commitTransaction();
@@ -891,9 +910,45 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
 		
 	}
+
+	/**
+	 * Transfer a client created outside a group to a group. This was originally
+	 * created to address <a
+	 * href="https://mifos.dev.java.net/issues/show_bug.cgi?id=2184">issue 2184</a>.
+	 * <p>
+	 * In the UI, the second transfer is what causes the the null pointer
+	 * exception to be thrown.
+	 */
+	public void testSuccessfulTransferToGroupFromOutsideGroup()throws Exception{
+		createObjectsForTransferToGroup_OutsideGroup();
+
+		client.addClientToGroup((GroupBO)group); // FIXME: this method should be adding hierarchy
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		assertEquals(1, group.getMaxChildCount().intValue());
+
+		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
+		assertNotNull(
+				"Adding client to group should also create hierarchy entities.", currentHierarchy);
+		assertEquals(group.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+		
+		// this "normal" group transfer is tested elsewhere, but I added this specifically because
+		// issue 2184 reproduced after *two* transfers, one into a group from outside any group,
+		// the 2nd from group to group.
+		HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		client.transferToGroup(group1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		currentHierarchy = client.getActiveCustomerHierarchy();
+		assertNotNull(currentHierarchy);
+		assertEquals(group1.getCustomerId(), currentHierarchy.getParentCustomer().getCustomerId());
+	}
 	
 	public void testSuccessfulTransferToGroup_WithOutMeeting()throws Exception{
-		createObjectsForTranferToGroup_WithoutMeeting();
+		createObjectsForTransferToGroup_WithoutMeeting();
 		assertNotNull(client.getCustomerMeeting());
 		
 		client.transferToGroup(group1);
@@ -909,7 +964,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulTransferToGroupInDifferentBranch()throws Exception{
-		createObjectsForTranferToGroup_DifferentBranch();
+		createObjectsForTransferToGroup_DifferentBranch();
 		PositionEntity position  = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class, Short.valueOf("1")).get(0);
 		group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
 		center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
@@ -1157,7 +1212,7 @@ public class TestClientBO extends MifosTestCase {
 						.currentTimeMillis()), savingsOffering);
 	}
 	
-	private void createObjectsForTranferToGroup_WithMeeting()throws Exception{
+	private void createObjectsForTransferToGroup_WithMeeting()throws Exception{
 		Short officeId = new Short("3");
 		Short personnel = new Short("1");
 		group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING, officeId, null, personnel);
@@ -1166,7 +1221,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	private void createObjectsForTranferToGroup_WithoutMeeting()throws Exception{
+	private void createObjectsForTransferToGroup_WithoutMeeting()throws Exception{
 		Short officeId = new Short("3");
 		Short personnel = new Short("1");
 		group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING,
@@ -1177,8 +1232,24 @@ public class TestClientBO extends MifosTestCase {
 				CustomerStatus.CLIENT_PARTIAL, group, new java.util.Date());
 		HibernateUtil.closeSession();
 	}
+
+	private void createObjectsForTransferToGroup_OutsideGroup()
+			throws Exception {
+		Short officeId = new Short("3");
+		Short personnel = new Short("1");
+		group = TestObjectFactory
+				.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING,
+						officeId, getMeeting(), personnel);
+		group1 = TestObjectFactory
+				.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING,
+						officeId, getMeeting(), personnel);
+		client = TestObjectFactory.createClient("new client",
+				CustomerStatus.CLIENT_PARTIAL, null, new java.util.Date());
+		HibernateUtil.closeSession();
+	}
+
 	
-	private void createObjectsForTranferToGroup_SameBranch(
+	private void createObjectsForTransferToGroup_SameBranch(
 			CustomerStatus groupStatus)
 	throws Exception {
 		createInitialObjects();
@@ -1191,7 +1262,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
-	private void createObjectsForTranferToGroup_DifferentBranch()throws Exception{
+	private void createObjectsForTransferToGroup_DifferentBranch()throws Exception{
 		createInitialObjects();
 		office = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, 
