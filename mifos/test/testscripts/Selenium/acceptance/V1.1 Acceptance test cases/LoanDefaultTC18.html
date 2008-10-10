@@ -1093,7 +1093,7 @@
 </tr>
 <tr>
 	<td>storeExpression</td>
-	<td>javascript{'0'+(1+(new Date().getMonth()))}</td>
+	<td>javascript{var m=new Date().getMonth()+1; if (m &lt; 10) {m='0'+m}; m}</td>
 	<td>month</td>
 </tr>
 <tr>
@@ -1378,7 +1378,7 @@
 </tr>
 <tr>
 	<td>storeExpression</td>
-	<td>javascript{'0'+(1+(new Date().getMonth()))}</td>
+	<td>javascript{var m=new Date().getMonth()+1; if (m &lt; 10) {m='0'+m}; m}</td>
 	<td>month</td>
 </tr>
 <tr>
