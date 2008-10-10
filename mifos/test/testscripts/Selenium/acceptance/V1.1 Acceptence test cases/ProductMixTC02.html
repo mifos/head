@@ -368,7 +368,7 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>Product mix details </td>
+	<td>Product mix details</td>
 	<td></td>
 </tr>
 <tr>
@@ -1137,13 +1137,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertTitle</td>
-	<td>Mifos</td>
+	<td>assertTextPresent</td>
+	<td>Disbursement details</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>The loan could not be disbursed as ${randomLoanProductName} and ${randomLoanProductNam1} are not allowed</td>
+	<td>select</td>
+	<td>paymentTypeId</td>
+	<td>label=Cash</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Review Transaction']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Review the transaction below. If satisfied click Submit. Click Cancel to return to account details without submitting information or to try again with changes.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>This loan cannot be disbursed because the customer has other active loans for the same product.</td>
 	<td></td>
 </tr>
 
