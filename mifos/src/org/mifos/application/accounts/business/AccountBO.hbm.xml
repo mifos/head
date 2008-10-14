@@ -451,6 +451,7 @@
 				where loanAccount.accountState.id = :CURRENT_STATUS
 				and loanAccount.office.officeId = :OFFICE_ID
 				and loanAccount.personnel.personnelId = :PERSONNEL_ID
+				and loanAccount.accountType.accountTypeId != 4
 				order by loanAccount.accountId]]>
 	</query>
 	<query name="accounts.account_IdSearch">
