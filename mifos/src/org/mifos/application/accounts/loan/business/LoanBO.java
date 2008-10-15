@@ -1244,9 +1244,6 @@ public class LoanBO extends AccountBO {
 		Date currrentDate = DateUtils.getLocaleDate(systemDate);
 		this.setUpdatedDate(currrentDate);
 
-		// Client performance entry
-		updateCustomerHistoryOnArrears();
-
 		try {
 			new LoanPersistence().createOrUpdate(this);
 		}
@@ -2641,15 +2638,6 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	private void updateCustomerHistoryOnArrears() {
-		if (getCustomer().isClient()
-				&& getCustomer().getPerformanceHistory() != null) {
-			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
-					.getPerformanceHistory();
-			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
-					.getNoOfActiveLoans() + 1);
-		}
-	}
 
 	private void updateCustomerHistoryOnWriteOff() throws AccountException {
 		try {

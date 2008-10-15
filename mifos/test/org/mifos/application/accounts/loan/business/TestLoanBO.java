@@ -3256,7 +3256,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loan = (LoanBO) accountBO;
 		clientPerfHistory = (ClientPerformanceHistoryEntity) loan.getCustomer()
 				.getPerformanceHistory();
-		assertEquals(noOfActiveLoans + 1, clientPerfHistory
+		assertEquals(noOfActiveLoans.intValue(), clientPerfHistory
 				.getNoOfActiveLoans().intValue());
 	}
 
