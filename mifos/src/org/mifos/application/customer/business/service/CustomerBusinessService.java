@@ -52,6 +52,7 @@ import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -304,12 +305,25 @@ public class CustomerBusinessService extends BusinessService {
 		return total;
 	}
 
+	private Money getTotalUnpaidPrincipal(List<AccountBO> accountList)
+			throws ServiceException {
+		Money total = new Money();
+		for (AccountBO accountBO : accountList) {
+			LoanBO loanBO = (LoanBO) accountBO;
+			if (loanBO.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)) {
+				total = total.add(loanBO.getLoanAmount());
+			}
+		}
+		return total;
+	}
+
 	private Money getPortfolioAtRisk(List<AccountBO> accountList)
 			throws ServiceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getType() == AccountTypes.LOAN_ACCOUNT
-					&& ((LoanBO) account).isAccountActive()) {
+					&& ((LoanBO) account).isAccountActive()
+					&& ((LoanBO) account).getDaysInArrears() > 1) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk()) {
 					amount = getBalanceForPortfolioAtRisk(accountList);
@@ -367,17 +381,25 @@ public class CustomerBusinessService extends BusinessService {
 		if (groups != null)
 			groupSize = groups.size();
 		Money portfolioAtRisk = new Money();
-		Money totalOutstandingLoan = getTotalOutstandingLoan(loanList);
-		if (totalOutstandingLoan.getAmountDoubleValue() != 0)
-			portfolioAtRisk = new Money(String.valueOf(getPortfolioAtRisk(
-					loanList).getAmountDoubleValue()
-					/ totalOutstandingLoan.getAmountDoubleValue()));
+		Money totalLoan = getTotalOutstandingLoan(loanList);
+		Money unpaidBadStanding = getTotalUnpaidPrincipal(loanList);
+		
+		String amountAtRisk = String.valueOf(getPortfolioAtRisk(
+				loanList).getAmountDoubleValue());
+		Money amountAtRiskMoney = new Money(amountAtRisk);
+		
+		if (unpaidBadStanding.getAmountDoubleValue() != 0) {
+			portfolioAtRisk = new Money(String.valueOf(
+					unpaidBadStanding.getAmountDoubleValue()
+					/ amountAtRiskMoney.getAmountDoubleValue()
+					));
+		}
 		Money totalSavings = getTotalSavings(savingsList);
 
 		CenterPerformanceHistory centerPerformanceHistory = new CenterPerformanceHistory();
 		centerPerformanceHistory
 				.setPerformanceHistoryDetails(groupSize, clientSize,
-						totalOutstandingLoan, totalSavings, portfolioAtRisk);
+						totalLoan, totalSavings, portfolioAtRisk);
 		return centerPerformanceHistory;
 
 	}

@@ -514,16 +514,20 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		AccountBO account6 = getSavingsAccountWithBalance(center1, meeting,
 				"savings prd1236", "xyz7");
 
-		AccountBO account7 = getLoanAccount(client, meeting, "fdbdhgsgh",
-				"54hg");
+		AccountBO account7 = getLoanAccount(client,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting,
+				"fdbdhgsgh", "54hg");
 		changeFirstInstallmentDateToPastDate(account7);
-		AccountBO account8 = getLoanAccount(client2, meeting, "dsafasdf",
+		AccountBO account8 = getLoanAccount(client2,
+				AccountState.LOAN_ACTIVE_IN_BAD_STANDING, meeting, "dsafasdf",
 				"32fs");
 		changeFirstInstallmentDateToPastDate(account8);
-		AccountBO account9 = getLoanAccount(client, meeting, "afvasfgfdg",
-				"a12w");
+		AccountBO account9 = getLoanAccount(client,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting,
+				"afvasfgfdg", "a12w");
 		changeFirstInstallmentDateToPastDate(account9);
-		AccountBO account10 = getLoanAccount(group, meeting, "afadsff", "23e");
+		AccountBO account10 = getLoanAccount(group,
+				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, meeting, "afadsff", "23e");
 		TestCustomerBO.setCustomerStatus(client2, new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
 
@@ -545,9 +549,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(1, centerPerformanceHistory.getNumberOfGroups().intValue());
 		assertEquals(1, centerPerformanceHistory.getNumberOfClients()
 				.intValue());
-		assertEquals(new Money("2400.0"), totalLoan);
-		assertEquals(new Money("400.0"), totalSavings);
-		assertEquals(new Money("0.5"), totalPortfolioAtRisk);
 
 		account1 = (AccountBO) (HibernateUtil.getSessionTL().get(
 				AccountBO.class, Integer.valueOf(account1.getAccountId())));
@@ -599,6 +600,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.cleanUp(account6);
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(account7);
+
+		// temporarily(?) moved so assertion failure doesn't preclude cleanup
+		assertEquals(new Money("1200.0"), totalLoan);
+		assertEquals(new Money("400.0"), totalSavings);
+		assertEquals(new Money("0.25"), totalPortfolioAtRisk);
 	}
 
 	public void testGetCustomerChecklist() throws Exception {
@@ -982,13 +988,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	}
 
-	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
-			String offeringName, String shortName) {
+	private AccountBO getLoanAccount(CustomerBO customer, AccountState accountState,
+			MeetingBO meeting,String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate,
+		return TestObjectFactory.createBasicLoanAccount(customer,
+				accountState, startDate,
 				loanOffering);
 
 	}

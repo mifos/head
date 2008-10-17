@@ -857,10 +857,13 @@ public class TestLoanBO extends MifosTestCase {
 				"Mainatnence Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		feeViewList.add(new FeeView(userContext, maintanenceFee));
+		MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer
+				.getCustomerMeeting().getMeeting());
+		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 6);
 
 		try {
 			loan = LoanBO.createLoan(TestUtils.makeUser(), loanOffering,
-					customer, state, new Money("300.0"), (short)6, startDate, 
+					customer, state, new Money("300.0"), (short)6, meetingDates.get(0), 
 					false, 0.0,
 					(short) 0, new FundBO(), feeViewList, null,
 					DEFAULT_LOAN_AMOUNT,
