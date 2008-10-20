@@ -521,9 +521,15 @@ public class SavingsBO extends AccountBO {
 
 		SavingsTrxnDetailEntity trxn = null;
 		try {
-			if (getActivationDate().equals(fromDate)) {
+			
+			if ((adjustedTrxn != null) && (fromDate.compareTo(adjustedTrxn.getActionDate()) >= 0 ))
+			{
+				trxn = adjustedTrxn;
+			}
+			else if (getActivationDate().equals(fromDate)) {
 				trxn = (new SavingsPersistence())
 						.retrieveFirstTransaction(getAccountId());
+				initialBalance = true;
 				if (trxn != null)
 					fromDate = trxn.getActionDate();
 			} else {
@@ -537,10 +543,12 @@ public class SavingsBO extends AccountBO {
 								
 				if (trxn == null || (trxn.getAccountAction().equals(AccountActionTypes.SAVINGS_ADJUSTMENT))) {
 					//trxn = (new SavingsPersistence()).retrieveLastTransactionAtAdjustment(getAccountId(), fromDate);
+					
 					final List<AccountTrxnEntity> transactions = this.getAccountTrxnsOrderByTrxnCreationDate();
 
 					if (transactions != null && !transactions.isEmpty()) {
 						trxn = (SavingsTrxnDetailEntity) transactions.get(transactions.size() - 1);
+						initialBalance = true;
 					}
 				}
 			}
@@ -551,9 +559,14 @@ public class SavingsBO extends AccountBO {
 		Money interestAmount = new Money();
 		
 		if (trxn != null) {
+				SavingsTrxnDetailEntity savedTrxn = trxn;
 				trxn = (trxn.getAccountPayment().getAmount().getAmountDoubleValue() > 0)
 						? getLastTrxnForPayment(trxn.getAccountPayment())
 						: getLastTrxnForAdjustedPayment(trxn.getAccountPayment());
+				if (!savedTrxn.getAccountTrxnId().equals(trxn.getAccountTrxnId()))
+				{
+					initialBalance = false;
+				}
 			if (getInterestCalcType().getId().equals(
 					InterestCalcType.MINIMUM_BALANCE.getValue()))
 				principal = getMinimumBalance(fromDate, toDate, trxn,
@@ -695,14 +708,34 @@ public class SavingsBO extends AccountBO {
 						accountTrxnList.get(i).getActionDate()));
 		return i - 1;
 	}
+	
+	private Money getMinimumBalanceForAdjustment(SavingsTrxnDetailEntity initialTrxn, List<AccountTrxnEntity> accountTrxnList)
+	{
+		int i=0;
+		for (AccountTrxnEntity trxn : accountTrxnList)
+		{
+			if (trxn.getAccountTrxnId().equals(initialTrxn.getAccountTrxnId()))
+					break;
+		}
+		return getLastTrxnBalance(accountTrxnList, i);
+	}
 
 	protected Money getMinimumBalance(Date fromDate, Date toDate,
 			SavingsTrxnDetailEntity initialTrxn,
 			SavingsTrxnDetailEntity adjustedTrxn, boolean initialBalance) {
 		logger.debug("In SavingsBO::getMinimumBalance(), accountId: "
 				+ getAccountId());
-		Money minBal = initialTrxn.getBalance();
+		Money minBal = null;
 		List<AccountTrxnEntity> accountTrxnList = getAccountTrxnsOrderByTrxnDate();
+		if (initialTrxn.getAccountAction().equals(AccountActionTypes.SAVINGS_ADJUSTMENT))
+		{
+			minBal = getMinimumBalanceForAdjustment(initialTrxn, accountTrxnList);
+		}
+		else 
+		{
+			minBal = initialTrxn.getBalance();
+		}
+		
 
 		if (adjustedTrxn != null
 				&& getLastPmnt().getPaymentId().equals(
@@ -710,39 +743,58 @@ public class SavingsBO extends AccountBO {
 			minBal = adjustedTrxn.getBalance();
 
 		for (int i = 0; i < accountTrxnList.size(); i++) {
-			if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
-				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) <= 0) {
-					fromDate = accountTrxnList.get(i).getActionDate();
-					minBal = minBal.add(accountTrxnList.get(i).getAmount());
+			AccountTrxnEntity currentTrxn = accountTrxnList.get(i);
+			AccountActionTypes actionType = currentTrxn.getAccountAction();
+			Date actionDate = currentTrxn.getActionDate();
+			if (actionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+				if(initialTrxn.getActionDate().compareTo(actionDate) <= 0) {
+					minBal = minBal.add(currentTrxn.getAmount());
 					continue;
 				}
 			}
+			
+			
 			if (initialBalance)
 			{
-				if(fromDate.compareTo(accountTrxnList.get(i).getActionDate()) > 0) {
-					if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-						if (!initialTrxn.getActionDate().equals(accountTrxnList.get(i).getActionDate()))
+				
+				if(fromDate.compareTo(actionDate) > 0) {
+					if (actionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
+						if (!initialTrxn.getAccountTrxnId().equals(currentTrxn.getAccountTrxnId()))
 						{
-							minBal = minBal.add(accountTrxnList.get(i).getAmount());
+							minBal = minBal.add(currentTrxn.getAmount());
 							continue;
 						}
 					}
-					else if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
-						minBal = minBal.subtract(accountTrxnList.get(i).getAmount());
+					else if (actionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
+						minBal = minBal.subtract(currentTrxn.getAmount());
 						continue;
 					}
-					if (accountTrxnList.get(i).getAccountAction().equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
-						minBal = minBal.add(accountTrxnList.get(i).getAmount());
+					else if (actionType.equals(AccountActionTypes.SAVINGS_ADJUSTMENT)) {
+						SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity)currentTrxn;
+						if (!savingsTrxn.getDepositAmount().equals(new Money("0")))
+						{
+							minBal = minBal.add(currentTrxn.getAmount());
+						}
+						else if (!savingsTrxn.getWithdrawlAmount().equals(new Money("0")))
+						{
+							minBal = minBal.subtract(currentTrxn.getAmount());
+						}
+						continue;
+					}
+					if (actionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
+						minBal = minBal.add(currentTrxn.getAmount());
+						continue;
 					}
 					
 				}
 			}
-			if ((accountTrxnList.get(i).getActionDate()).compareTo(fromDate) >= 0
+			if (actionDate.compareTo(fromDate) >= 0
 					&& DateUtils.getDateWithoutTimeStamp(
-							accountTrxnList.get(i).getActionDate().getTime())
+							actionDate.getTime())
 							.compareTo(
 									DateUtils.getDateWithoutTimeStamp(toDate
-											.getTime())) < 0) {
+											.getTime())) < 0) 
+			{
 				Money lastTrxnAmt = getLastTrxnBalance(accountTrxnList, i);
 				i = getLastTrxnIndexForDay(accountTrxnList, i);
 
