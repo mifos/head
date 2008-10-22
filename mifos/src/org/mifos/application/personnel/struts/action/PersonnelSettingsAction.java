@@ -112,7 +112,13 @@ public class PersonnelSettingsAction extends BaseAction {
 			throws Exception {
 		PersonnelSettingsActionForm personnelSettingsActionForm = (PersonnelSettingsActionForm) form;
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-		personnel.update(personnelSettingsActionForm.getEmailId(),
+		PersonnelBO personnelInit = ((PersonnelBusinessService) getService())
+		.getPersonnel(personnel.getPersonnelId());
+		checkVersionMismatch(personnel.getVersionNo(),personnelInit.getVersionNo());
+		personnelInit.setVersionNo(personnel.getVersionNo());
+		personnelInit.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(personnelInit);
+		personnelInit.update(personnelSettingsActionForm.getEmailId(),
 				personnelSettingsActionForm.getName(),
 				personnelSettingsActionForm.getMaritalStatusValue(),
 				personnelSettingsActionForm.getGenderValue(),

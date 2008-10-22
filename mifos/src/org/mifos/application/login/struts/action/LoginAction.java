@@ -113,9 +113,16 @@ public class LoginAction extends BaseAction {
 			userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
 		else
 			userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
-		personnelBO.updatePassword(oldPassword,newpassword, userContext.getId());
+		PersonnelBO personnelInit = ((PersonnelBusinessService) getService())
+		.getPersonnel(Short.valueOf(personnelBO.getPersonnelId()));
+		checkVersionMismatch(personnelBO.getVersionNo(),personnelInit.getVersionNo());
+		personnelInit.setVersionNo(personnelBO.getVersionNo());
+		personnelInit.setUserContext(userContext);
+		setInitialObjectForAuditLogging(personnelInit);
+		personnelInit.updatePassword(oldPassword,newpassword, userContext.getId());
 		setUserContextInSession(userContext, request);
 		personnelBO = null;
+		personnelInit = null;
 		return mapping.findForward(ActionForwards.updatePassword_success.toString());
 	}
 

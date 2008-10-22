@@ -12,10 +12,13 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -143,6 +146,24 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.commitTransaction();
 		personnel = (PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
 		assertTrue(personnel.isPasswordChanged());
+		// add verifying change log
+		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
+				EntityType.PERSONNEL, personnel.getPersonnelId().intValue());
+		assertEquals(1, auditLogList.size());
+		for (int auditLogListIndex = 0; 
+						auditLogListIndex < auditLogList.size(); 
+						auditLogListIndex++) {
+			auditLogList.get(auditLogListIndex).getAuditLogRecords();
+		}
+		assertEquals(EntityType.PERSONNEL, auditLogList.get(0).getEntityTypeAsEnum());
+		assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
+				.getAuditLogRecords()) {
+			assertEquals (true, auditLogRecord.getFieldName().equalsIgnoreCase(
+					"lastLogin") || auditLogRecord.getFieldName().equalsIgnoreCase(
+					"Password"));
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testUpdatePasswordWithUserNull() throws Exception {
