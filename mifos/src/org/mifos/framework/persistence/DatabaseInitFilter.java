@@ -1,7 +1,21 @@
 /*
- * DatabaseVersionFilter.java
- *
- * Created on December 13, 2006, 5:14 PM
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
 
 package org.mifos.framework.persistence;
@@ -20,13 +34,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.mifos.framework.ApplicationInitializer;
 import org.mifos.framework.struts.tags.XmlBuilder;
 
-
-public class DatabaseVersionFilter implements Filter {
+// TODO: rename to DatabaseInitFilter
+public class DatabaseInitFilter implements Filter {
     
     private static boolean databaseVerified = false;
     private static int databaseVersion = -1;
     
-    public DatabaseVersionFilter() {
+    public DatabaseInitFilter() {
     }
     
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -56,37 +70,26 @@ public class DatabaseVersionFilter implements Filter {
         xml.startTag("html");
         xml.startTag("head");
         xml.startTag("title");
-        xml.text("Mifos Database Upgrade Error");
-        xml.endTag("title");
-        xml.endTag("head");
+        xml.text("Mifos Database Error");  xml.text("\n");
+        xml.endTag("title");  xml.text("\n");
+        xml.endTag("head");  xml.text("\n");
 
         xml.startTag("body");
         xml.startTag("h2");
-        xml.text("Mifos Database Upgrade Error");
-        xml.endTag("h2");
+        xml.text("Mifos Database Error");
+        xml.endTag("h2");  xml.text("\n");
         
         xml.startTag("p");
-        xml.text("The system was not able to automatically upgrade the database. ");
+        xml.text("A database error occurred. ");
         xml.text("Correct the error and restart the application. ");
-
-        xml.startTag("a", "href", "http://mifos.org/developers/technical-orientation/coding-standards#databasestandards");
-        xml.text("More about database upgrades.");
-        xml.endTag("a");
         
-        xml.endTag("p");
-        xml.startTag("pre");
-		if (version == -1) {
-			xml.text("Database is too old to have a version\n");
-        }
-        else {
-        	xml.text("Database Version = "+version+"\n");
-        }
-		xml.text("Application Version = "+DatabaseVersionPersistence.APPLICATION_VERSION+"\n");
-        xml.endTag("pre");
+        xml.text("Details:");
         
-        ApplicationInitializer.printDatabaseError(xml);
+        xml.endTag("p");  xml.text("\n");
         
-        xml.endTag("body");
+        ApplicationInitializer.printDatabaseError(xml, version);
+        
+        xml.endTag("body");  xml.text("\n");
         xml.endTag("html");
         out.println(xml.getOutput());
 	}

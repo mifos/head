@@ -1,9 +1,34 @@
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.framework;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
+import java.util.Locale;
+import java.util.Properties;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
@@ -20,6 +45,7 @@ import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -39,38 +65,131 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
-import java.util.Locale;
-
 /**
  * This class should prepare all the sub-systems that are required by the app.
- * Cleanup should also happen here, when the application is shutdown. 
- * */
-public class ApplicationInitializer implements ServletContextListener, ServletRequestListener {
+ * Cleanup should also happen here when the application is shutdown.
+ */
+public class ApplicationInitializer implements ServletContextListener,
+		ServletRequestListener {
 
-	private static Throwable databaseVersionError;
+	private static MifosLogger LOG = null;
+
+	private static class DatabaseError {
+		boolean isError = false;
+		DatabaseErrorCode errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
+		String errmsg = "";
+		Throwable error = null;
+
+		void logError() {
+			LOG.fatal(errmsg, false, null, error);
+		}
+	}
+
+	public static void setDatabaseError(DatabaseErrorCode errcode,
+			String errmsg, Throwable error) {
+		databaseError.isError = true;
+		databaseError.errorCode = errcode;
+		databaseError.error = error;
+		databaseError.errmsg = errmsg;
+	}
+
+	public static void clearDatabaseError() {
+		databaseError.isError = false;
+		databaseError.errorCode = DatabaseErrorCode.NO_DATABASE_ERROR;
+		databaseError.error = null;
+		databaseError.errmsg = null;
+	}
+
+	private static String getDatabaseConnectionInfo() {
+		String info = "";
+		if (isHibernateConfigOverride()) {
+			info += "Using custom Mifos database connection settings since "
+					+ FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE
+					+ " was found on application server classpath.";
+		}
+		else {
+			info += "Mifos database connection using default settings.";
+		}
+		Properties hibernateCfg = new Properties();
+		try {
+			URI uri = ResourceLoader.getURI(getHibernateProperties());
+			if (null != uri)
+				hibernateCfg.load(new FileInputStream(new File(uri)));
+		}
+		catch (Exception e) {
+			/*
+			 * not sure if we can actually do anything useful with this
+			 * exception since we're likely running during container
+			 * initialization
+			 */
+			e.printStackTrace();
+		}
+		info += " Connection URL="
+				+ hibernateCfg.getProperty("hibernate.connection.url");
+		info += ". Username="
+				+ hibernateCfg.getProperty("hibernate.connection.username");
+		info += ". Password=********";
+		return info;
+	}
+
+	private static DatabaseError databaseError = new DatabaseError();
 
 	public void contextInitialized(ServletContextEvent ctx) {
 		init();
 	}
-	
+
 	public void init() {
-		try{
-			synchronized(ApplicationInitializer.class){
+		try {
+			synchronized (ApplicationInitializer.class) {
 				initializeLogger();
 				initializeHibernate();
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
-						"Logger has been initialised", false, null);
-				try{
-					syncDatabaseVersion();
-				}catch(Throwable t){
-					databaseVersionError = t;
-					MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).fatal(
-							"Failed to upgrade/downgrade database version", false, null, t);
+
+				/*
+				 * getLogger() cannot be called statically (ie: when
+				 * initializing LOG) because MifosLogManager.initializeLogger()
+				 * hasn't been called yet, so MifosLogManager.loggerRepository
+				 * will be null.
+				 */
+				LOG = MifosLogManager
+						.getLogger(LoggerConstants.FRAMEWORKLOGGER);
+				LOG.info("Logger has been initialised", false, null);
+
+				System.out.println(getDatabaseConnectionInfo());
+				LOG.info(getDatabaseConnectionInfo(), false, null);
+
+				DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+				try {
+					/*
+					 * This is an easy way to force an actual database query to
+					 * happen via Hibernate. Simply opening a Hibernate session
+					 * may not actually connect to the database.
+					 */
+					persistence.isVersioned();
 				}
-				if(databaseVersionError==null){
-					// this method is called so that supported locales will be loaded
+				catch (Throwable t) {
+					setDatabaseError(DatabaseErrorCode.CONNECTION_FAILURE,
+							"Unable to connect to database.", t);
+				}
+
+				if (!databaseError.isError) {
+					try {
+						persistence.upgradeDatabase();
+					}
+					catch (Throwable t) {
+						setDatabaseError(DatabaseErrorCode.UPGRADE_FAILURE,
+								"Failed to upgrade database.", t);
+					}
+				}
+
+
+				if (databaseError.isError) {
+					databaseError.logError();
+				}
+				else {
+					// this method is called so that supported locales will be
+					// loaded
 					// from db and stored in cache for later use
-					Localization.getInstance().init(); 
+					Localization.getInstance().init();
 					// Check ClientRules configuration in db and config file(s)
 					// for errors. Also caches ClientRules values.
 					ClientRules.init();
@@ -79,12 +198,14 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 					ProcessFlowRules.init();
 					initializeSecurity();
 
-					Money.setDefaultCurrency(AccountingRules.getMifosCurrency());
-					
+					Money
+							.setDefaultCurrency(AccountingRules
+									.getMifosCurrency());
+
 					// 1/4/08 Hopefully a temporary change to force Spring
 					// to initialize here (rather than in struts-config.xml
-					// prior to loading label values into a 
-					// cache in MifosConfiguration.  When the use of the 
+					// prior to loading label values into a
+					// cache in MifosConfiguration. When the use of the
 					// cache is refactored away, we should be able to move
 					// back to the struts based Spring initialization
 					SpringUtil.initializeSpring();
@@ -97,57 +218,123 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
 					Configuration.getInstance();
 					MifosConfiguration.getInstance().init();
-					configureAuditLogValues(Localization.getInstance().getMainLocale());
-					
+					configureAuditLogValues(Localization.getInstance()
+							.getMainLocale());
+
 				}
 			}
-		}catch(Exception e){
+		}
+		catch (Exception e) {
 			throw new Error(e);
 		}
 	}
-	
-	public static void printDatabaseError(XmlBuilder xml) {
-		synchronized(ApplicationInitializer.class){
-	        if(databaseVersionError != null) {
-	        	xml.startTag("p");
-	        	xml.text("Here are details of what went wrong:");
-	        	xml.endTag("p");
 
-	        	xml.startTag("pre");
-	        	StringWriter stackTrace = new StringWriter();
-				databaseVersionError.printStackTrace(new PrintWriter(stackTrace));
+	public static void printDatabaseError(XmlBuilder xml, int dbVersion) {
+		synchronized (ApplicationInitializer.class) {
+			if (databaseError.isError) {
+				xml.startTag("p", "style",
+						"font-weight: bolder; color: red; font-size: x-large;");
+
+				xml.text(databaseError.errmsg);
+				xml.text("\n");
+
+				if (databaseError.errorCode
+						.equals(DatabaseErrorCode.UPGRADE_FAILURE)) {
+					if (dbVersion == -1) {
+						xml.text("Database is too old to have a version.\n");
+					}
+					else {
+						xml.text("Database Version = " + dbVersion + "\n");
+					}
+					xml.text("Application Version = "
+							+ DatabaseVersionPersistence.APPLICATION_VERSION
+							+ ".\n");
+				}
+
+				xml.endTag("p");
+
+				if (databaseError.errorCode
+						.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
+					xml.startTag("p");
+					xml
+							.startTag("a", "href",
+									"http://mifos.org/developers/wiki/ConfiguringMifos#database-connection");
+					xml
+							.text("More about configuring your database connection.");
+					xml.endTag("a");
+					xml.endTag("p");
+					xml.text("\n");
+				}
+
+				xml.text("\n");
+
+				xml.startTag("p");
+				xml.text("More details:");
+				xml.endTag("p");
+				xml.text("\n");
+
+				if (null != databaseError.error.getCause()) {
+					xml.startTag("p", "style",
+							"font-weight: bolder; color: blue;");
+					xml.text(databaseError.error.getCause().toString());
+					xml.endTag("p");
+					xml.text("\n");
+				}
+
+				xml.startTag("p", "style", "font-weight: bolder; color: blue;");
+				xml.text(getDatabaseConnectionInfo());
+				xml.endTag("p");
+				xml.text("\n");
+
+				xml.startTag("p");
+				xml.text("Stack trace:");
+				xml.endTag("p");
+				xml.text("\n");
+
+				xml.startTag("pre");
+				StringWriter stackTrace = new StringWriter();
+				databaseError.error
+						.printStackTrace(new PrintWriter(stackTrace));
 				xml.text("\n" + stackTrace.toString());
-	        	xml.endTag("pre");
+				xml.endTag("pre");
+				xml.text("\n");
 			}
-	        else {
-	        	xml.startTag("p");
-	        	xml.text("I don't have any further details, unfortunately.");
-	        	xml.endTag("p");
-	        }
-	    }
+			else {
+				xml.startTag("p");
+				xml.text("I don't have any further details, unfortunately.");
+				xml.endTag("p");
+				xml.text("\n");
+			}
+		}
 	}
-	
-	public static void setDatabaseVersionError(Throwable error) {
-		databaseVersionError = error;
+
+	public static boolean isHibernateConfigOverride() {
+		try {
+			if (ResourceLoader
+					.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null)
+				return true;
+		}
+		catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		return false;
 	}
-	
+
+	public static String getHibernateProperties() {
+		if (isHibernateConfigOverride())
+			return FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
+		else return FilePaths.HIBERNATE_PROPERTIES;
+	}
+
 	/**
 	 * Initializes Hibernate by making it read the hibernate.cfg file and also
 	 * setting the same with hibernate session factory.
 	 */
-	public static void initializeHibernate()
-			throws AppNotConfiguredException {
+	public static void initializeHibernate() throws AppNotConfiguredException {
 		try {
-			String hibernatePropertiesPath = FilePaths.HIBERNATE_PROPERTIES;
-			try {
-				if (ResourceLoader
-						.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null)
-					hibernatePropertiesPath = FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
-			} catch (URISyntaxException e) {
-				throw new AppNotConfiguredException(e);
-			}
-			HibernateStartUp.initialize(hibernatePropertiesPath);
-		} catch (HibernateStartUpException e) {
+			HibernateStartUp.initialize(getHibernateProperties());
+		}
+		catch (HibernateStartUpException e) {
 			throw new AppNotConfiguredException(e);
 		}
 	}
@@ -161,7 +348,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 	private void initializeLogger() throws AppNotConfiguredException {
 		try {
 			MifosLogManager.configure(FilePaths.LOGFILE);
-		} catch (LoggerConfigurationException lce) {
+		}
+		catch (LoggerConfigurationException lce) {
 
 			lce.printStackTrace();
 			throw new AppNotConfiguredException(lce);
@@ -183,12 +371,15 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
 			HierarchyManager.getInstance().init();
 
-		} catch (XMLReaderException e) {
+		}
+		catch (XMLReaderException e) {
 
 			throw new AppNotConfiguredException(e);
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new AppNotConfiguredException(ae);
-		} catch (SystemException se) {
+		}
+		catch (SystemException se) {
 			throw new AppNotConfiguredException(se);
 		}
 
@@ -197,26 +388,21 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 	private void initializeEntityMaster() throws HibernateProcessException {
 		EntityMasterData.getInstance().init();
 	}
-	
-	private void syncDatabaseVersion() throws SQLException, Exception {
-		DatabaseVersionPersistence persistance = new DatabaseVersionPersistence();
-		persistance.upgradeDatabase();
-	}
 
 	private void configureAuditLogValues(Locale locale) throws SystemException {
 		AuditConfigurtion.init(locale);
 	}
-	
+
 	public void contextDestroyed(ServletContextEvent ctx) {
-		
+
 	}
 
-    public void requestDestroyed(ServletRequestEvent event) {
-        HibernateUtil.closeSession();
-    }
+	public void requestDestroyed(ServletRequestEvent event) {
+		HibernateUtil.closeSession();
+	}
 
-    public void requestInitialized(ServletRequestEvent event) {
-        
-    }
-	
+	public void requestInitialized(ServletRequestEvent event) {
+
+	}
+
 }

@@ -62,7 +62,7 @@ import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.formulaic.TestValidators;
 import org.mifos.framework.persistence.CompositeUpgradeTest;
-import org.mifos.framework.persistence.DatabaseVersionFilterTest;
+import org.mifos.framework.persistence.DatabaseInitFilterTest;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.UpgradeTest;
 import org.mifos.framework.struts.tags.MifosSelectTest;
@@ -127,7 +127,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(DispatcherTest.class);
 		suite.addTestSuite(CreateReportTest.class);
 		
-		suite.addTestSuite(DatabaseVersionFilterTest.class);
+		suite.addTestSuite(DatabaseInitFilterTest.class);
 		suite.addTest(DatabaseVersionPersistenceTest.suite());
 		suite.addTest(UpgradeTest.suite());
 		suite.addTest(CompositeUpgradeTest.suite());
