@@ -256,6 +256,25 @@ public class ApplicationInitializer implements ServletContextListener,
 				if (databaseError.errorCode
 						.equals(DatabaseErrorCode.CONNECTION_FAILURE)) {
 					xml.startTag("p");
+					xml.text("Possible causes:");
+
+					xml.startTag("ul");
+					xml.startTag("li");
+					xml.text("MySQL is not running");
+					xml.endTag("li");
+
+					xml.startTag("li");
+					xml.text("MySQL is listening on a different port than Mifos is expecting");
+					xml.endTag("li");
+
+					xml.startTag("li");
+					xml.text("incorrect username or password");
+					xml.endTag("li");
+					xml.endTag("ul");
+					xml.endTag("p");
+					xml.text("\n");
+
+					xml.startTag("p");
 					xml
 							.startTag("a", "href",
 									"http://mifos.org/developers/wiki/ConfiguringMifos#database-connection");
