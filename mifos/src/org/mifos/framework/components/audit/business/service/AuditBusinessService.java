@@ -3,6 +3,8 @@ package org.mifos.framework.components.audit.business.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -26,6 +28,7 @@ public class AuditBusinessService extends BusinessService {
 			Integer entityId) throws ServiceException {
 		try {
 			AuditPersistence auditPersistence = new AuditPersistence();
+			PersonnelBusinessService personnelService = new PersonnelBusinessService();
 			List<AuditLog> auditLogRecords = auditPersistence
 					.getAuditLogRecords(entityType, entityId);
 			List<AuditLogView> auditLogViewList = new ArrayList<AuditLogView>();
@@ -34,7 +37,9 @@ public class AuditBusinessService extends BusinessService {
 						.getAuditLogRecords()) {
 					AuditLogView auditLogView = new AuditLogView();
 					auditLogView.setDate(auditLog.getUpdatedDate().toString());
-					auditLogView.setUser(auditLog.getModifierName());
+					Short userId = auditLog.getUpdatedBy();
+					PersonnelBO personnel = personnelService.getPersonnel(userId) ;
+					auditLogView.setUser(personnel.getUserName());
 					auditLogView.setField(auditLogRecord.getFieldName());
 					String encryptedPasswordAuditFieldName = AuditConfigurtion.getColumnNameForPropertyName(AuditConstants.PERSONNEL,AuditConstants.Audit_PASSWORD);
 					if((null != encryptedPasswordAuditFieldName) && (auditLogRecord.getFieldName().equals(encryptedPasswordAuditFieldName.trim()))){
