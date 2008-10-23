@@ -388,7 +388,8 @@ public class CustomerBusinessService extends BusinessService {
 				loanList).getAmountDoubleValue());
 		Money amountAtRiskMoney = new Money(amountAtRisk);
 		
-		if (unpaidBadStanding.getAmountDoubleValue() != 0) {
+		if (amountAtRiskMoney.getAmountDoubleValue() != 0 &&
+				unpaidBadStanding.getAmountDoubleValue() != 0) {
 			portfolioAtRisk = new Money(String.valueOf(
 					unpaidBadStanding.getAmountDoubleValue()
 					/ amountAtRiskMoney.getAmountDoubleValue()
