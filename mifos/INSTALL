@@ -85,9 +85,9 @@ production environment.
         quickly up and running to try it out, then no configuration is needed.
 
     4.2. Running Mifos
-        Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat was
-        installed as a service on Windows, check in Control Panel /
-        Administrative Tools/Services to verify that the status is started, 
+        Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat
+        was installed as a service on Windows, check in Control Panel /
+        Administrative Tools/Services to verify that the status is started,
         then visit the base URL in a browser:
 
         http://localhost:8080/mifos
@@ -105,12 +105,20 @@ production environment.
         configuration file. Chart of accounts configuration is one such
         "trapdoor".
 
-    5.2. Release Notes - http://mifos.org/developers/wiki/ReleaseNotes/V12
-    5.3. System Recommendations (hardware, networking) - http://mifos.org/developers/wiki/MifosSystemRecommendationsV12
-    5.4. Ubuntu Install Guide - http://mifos.org/developers/wiki/MifosUbuntuInstall
-        This is an installation guide describing how to install Mifos by building it from the source code. 
-    5.5. Ubuntu Quick Install Guide - http://mifos.org/developers/wiki/UbuntuWARInstall
-        This is an installation guide describing how to install Mifos from the WAR file, similar to this INSTALL file. 
-    5.6. Windows Install Guide - http://mifos.org/developers/install-mifos/install-windows
-        This is an installation guide describing how to install Mifos by building it from the source code. 
+    5.2. Release Notes
+        http://mifos.org/developers/wiki/ReleaseNotes/V12
+    5.3. System Recommendations (hardware, networking)
+        http://mifos.org/developers/wiki/MifosSystemRecommendationsV12
+    5.4. Ubuntu Install Guide
+        http://mifos.org/developers/wiki/MifosUbuntuInstall
+        This is an installation guide describing how to install Mifos by
+        building it from the source code. 
+    5.5. Ubuntu Quick Install Guide
+        http://mifos.org/developers/wiki/UbuntuWARInstall
+        This is an installation guide describing how to install Mifos from the
+        WAR file, similar to this INSTALL file. 
+    5.6. Windows Install Guide
+        http://mifos.org/developers/install-mifos/install-windows
+        This is an installation guide describing how to install Mifos by
+        building it from the source code. 
     
