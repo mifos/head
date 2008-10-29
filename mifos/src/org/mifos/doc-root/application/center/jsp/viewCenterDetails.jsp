@@ -533,12 +533,6 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="Center.PortfolioAtRisk" bundle="CenterUIResources"
-								isColonRequired="yes" /> <c:out
-								value="${performanceHistory.portfolioAtRisk}" /></span></td>
-						</tr>
-						<tr>
-							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 								name="Center.Total" bundle="CenterUIResources" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.SAVINGS}" isColonRequired="yes" />
 							<c:out value="${performanceHistory.totalSavings}" /></span></td>
