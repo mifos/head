@@ -357,6 +357,10 @@ public class CustomerBusinessService extends BusinessService {
 		return total;
 	}
 
+	/**
+	 * FIXME: THIS METHOD DOES NOT WORK. Specifically, the portfolioAtRisk
+	 * calculation. Please see issue 2204.
+	 */
 	public CenterPerformanceHistory getCenterPerformanceHistory(
 			String searchId, Short officeId) throws ServiceException {
 		List<CustomerBO> groups = null;
