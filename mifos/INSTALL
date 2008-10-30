@@ -84,6 +84,12 @@ production environment.
         A default configuration is provided, so if you just want to get Mifos
         quickly up and running to try it out, then no configuration is needed.
 
+        If you wish to make changes you need to copy the files
+        conf/applicationConfiguration.custom.properties and
+        conf/deploymifosDB.properties into the Tomcat class path (see
+        http://mifos.org/developers/wiki/AppServerClasspath ) and edit to suit
+        your installation.
+
     4.2. Running Mifos
         Execute the Tomcat startup script in CATALINA_HOME/bin, or if Tomcat
         was installed as a service on Windows, check in Control Panel /
