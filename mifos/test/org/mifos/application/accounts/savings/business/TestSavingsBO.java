@@ -279,6 +279,11 @@ public class TestSavingsBO extends MifosTestCase {
 		center = group.getParentCustomer();
 		}
 	
+	/**
+	 * FIXME: notice the hardcoded dates in the year 2030, below. This is likely
+	 * a time bomb, but perhaps not as much of a problem as when we reach the
+	 * year 2038.
+	 */
 	public void testInterestAdjustmentOnLaterDeposit()
 	throws Exception {
 		createInitialObjects();
@@ -288,13 +293,13 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering.setInterestRate(8.0);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACTIVE, userContext);
-		savings.setActivationDate(helper.getDate("25/09/2008"));
-		savings.setNextIntCalcDate(helper.getDate("30/09/2008"));
+		savings.setActivationDate(helper.getDate("25/09/2030"));
+		savings.setNextIntCalcDate(helper.getDate("30/09/2030"));
 		
 		Money depositMoney = new Money(currency, "2000.0");
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, depositMoney, depositMoney, helper
-						.getDate("25/09/2008"),
+						.getDate("25/09/2030"),
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
@@ -320,9 +325,9 @@ public class TestSavingsBO extends MifosTestCase {
 		
 		savings = savingsPersistence.findById(savings.getAccountId());
 		Money recommendedAmnt = new Money(currency, "234.0");
-		Date paymentDate = helper.getDate("26/10/2008");
+		Date paymentDate = helper.getDate("26/10/2030");
 		AccountActionDateEntity actionDate1 = helper.createAccountActionDate(
-				savings, Short.valueOf("1"), helper.getDate("26/10/2008"),
+				savings, Short.valueOf("1"), helper.getDate("26/10/2030"),
 				paymentDate, savings.getCustomer(), recommendedAmnt,
 				recommendedAmnt, PaymentStatus.PAID);
 		TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
@@ -332,7 +337,7 @@ public class TestSavingsBO extends MifosTestCase {
 		balanceAmount = new Money(currency, "2236.2");
 		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(payment2,
 				Short.valueOf("1"), recommendedAmnt, balanceAmount,
-				paymentDate, helper.getDate("26/10/2008"), null,
+				paymentDate, helper.getDate("26/10/2030"), null,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		payment2.addAccountTrxn(trxn1);
@@ -356,9 +361,9 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(new Money(currency, "2002.2"), savings.getSavingsBalance());
 		
 		recommendedAmnt = new Money(currency, "345.0");
-		paymentDate = helper.getDate("26/10/2008");
+		paymentDate = helper.getDate("26/10/2030");
 		actionDate1 = helper.createAccountActionDate(
-				savings, Short.valueOf("1"), helper.getDate("26/10/2008"),
+				savings, Short.valueOf("1"), helper.getDate("26/10/2030"),
 				paymentDate, savings.getCustomer(), recommendedAmnt,
 				recommendedAmnt, PaymentStatus.PAID);
 		TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
@@ -367,7 +372,7 @@ public class TestSavingsBO extends MifosTestCase {
 		balanceAmount = new Money(currency, "2347.2");
 		SavingsTrxnDetailEntity trxn2 = helper.createAccountTrxn(payment2,
 				Short.valueOf("1"), recommendedAmnt, balanceAmount,
-				paymentDate, helper.getDate("26/10/2008"), null,
+				paymentDate, helper.getDate("26/10/2030"), null,
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		payment3.addAccountTrxn(trxn2);
