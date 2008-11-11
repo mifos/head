@@ -22,6 +22,7 @@ package org.mifos.application.admin.system;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 public class MockDatabaseMetaData implements DatabaseMetaData {
@@ -710,6 +711,46 @@ public class MockDatabaseMetaData implements DatabaseMetaData {
 	}
 
 	public boolean usesLocalFiles() throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public ResultSet getClientInfoProperties() throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public ResultSet getFunctionColumns(String catalog, String schemaPattern,
+			String functionNamePattern, String columnNamePattern)
+			throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public ResultSet getFunctions(String catalog, String schemaPattern,
+			String functionNamePattern) throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public RowIdLifetime getRowIdLifetime() throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public ResultSet getSchemas(String catalog, String schemaPattern)
+			throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		throw new RuntimeException("not implemented");
+	}
+
+	public <T> T unwrap(Class<T> iface) throws SQLException {
 		throw new RuntimeException("not implemented");
 	}
 

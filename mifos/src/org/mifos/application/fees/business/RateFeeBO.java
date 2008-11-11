@@ -50,8 +50,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyFactory;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 public class RateFeeBO extends FeeBO {
 
 	private Double rate;
