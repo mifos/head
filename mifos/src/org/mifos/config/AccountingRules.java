@@ -121,27 +121,29 @@ public class AccountingRules {
 		return digits;
 	}
 	
+	/**
+	 * Broken. See <a href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1537">issue
+	 * 1537</a>
+	 */
 	public static Short getDigitsBeforeDecimal()
 	{
-
 		Short digits;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimal))
-			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimal);
-		else
-			throw new RuntimeException("The number of digits before decimal is not defined in the config file.");
+		// default from applicationConfiguration.default.properties revision 14052
+		digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimal, (short)7);
 		return digits;
 	}
-	
+
+	/**
+	 * Broken. See <a href="https://mifos.dev.java.net/issues/show_bug.cgi?id=1537">issue
+	 * 1537</a>
+	 */
 	public static Short getDigitsBeforeDecimalForInterest()
 	{
-
 		Short digits;
 		ConfigurationManager configMgr = ConfigurationManager.getInstance();
-		if (configMgr.containsKey(AccountingRulesDigitsBeforeDecimalForInterest))
-			digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimalForInterest);
-		else
-			throw new RuntimeException("The number of digits before decimal for interest is not defined in the config file.");
+		// default from applicationConfiguration.default.properties revision 14052
+		digits = configMgr.getShort(AccountingRulesDigitsBeforeDecimalForInterest, (short)10);
 		return digits;
 	}
 	

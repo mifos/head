@@ -65,11 +65,6 @@
 			<attribute name="javadoc_location" value="http://jsourcery.com/api/sourceforge/junit/4.3.1/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/spring-2.0.5.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://static.springframework.org/spring/docs/2.0.x/api/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-configuration-1.4.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://commons.apache.org/configuration/apidocs_1.4/"/>
@@ -94,5 +89,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-03-25.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.5.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
