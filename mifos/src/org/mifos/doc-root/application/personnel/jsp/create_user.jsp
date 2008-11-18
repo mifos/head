@@ -209,16 +209,18 @@
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td width="22%" align="right"><mifos:mifoslabel
-										name="${ConfigurationConstants.ADDRESS1}" bundle="PersonnelUIResources"/>:</td>
-									<td width="78%"><mifos:mifosalphanumtext
+									<td width="22%" align="right"><mifos:mifoslabel keyhm="Personnel.Address1" isColonRequired="yes" 
+										name="${ConfigurationConstants.ADDRESS1}" bundle="PersonnelUIResources"/></td>
+									<td width="78%"><mifos:mifosalphanumtext keyhm="Personnel.Address1" 
 										name="personActionForm"
 										property="address.line1" maxlength="200"/></td>
 								</tr>
-								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel
-										name="${ConfigurationConstants.ADDRESS2}" bundle="PersonnelUIResources"/>:</td>
-									<td><mifos:mifosalphanumtext name="personActionForm"
+								<tr class="fontnormal">							
+									<td align="right"><mifos:mifoslabel keyhm="Personnel.Address2"
+										isColonRequired="yes" 
+										name="${ConfigurationConstants.ADDRESS2}" bundle="PersonnelUIResources"/></td>
+									<td><mifos:mifosalphanumtext keyhm="Personnel.Address2"
+										name="personActionForm"
 										property="address.line2" maxlength="200"/></td>
 								</tr>
 								<tr class="fontnormal">

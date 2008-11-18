@@ -16,7 +16,7 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 			.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 
 	private String hideSystemExternalId;
-
+	
 	private String mandatorySystemExternalId;
 
 	private String hideSystemEthnicity;
@@ -43,6 +43,8 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
 	private String mandatorySystemAddress1;
 
+	private String hideSystemAddress2;	
+	
 	private String hideSystemAddress3;
 
 	private String hideSystemCity;
@@ -84,14 +86,6 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 	private String mandatoryClientTrainedOn;
 
 	private String hideClientBusinessWorkActivities;
-
-	private String hideGroupAddress1;
-
-	private String mandatoryGroupAddress1;
-
-	private String hideGroupAddress2;
-
-	private String hideGroupAddress3;
 
 	private String hideGroupTrained;
 	
@@ -162,30 +156,6 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 
 	public void setHideClientTrained(String hideClientTrained) {
 		this.hideClientTrained = hideClientTrained;
-	}
-
-	public String getHideGroupAddress1() {
-		return hideGroupAddress1;
-	}
-
-	public void setHideGroupAddress1(String hideGroupAddress1) {
-		this.hideGroupAddress1 = hideGroupAddress1;
-	}
-
-	public String getHideGroupAddress2() {
-		return hideGroupAddress2;
-	}
-
-	public void setHideGroupAddress2(String hideGroupAddress2) {
-		this.hideGroupAddress2 = hideGroupAddress2;
-	}
-
-	public String getHideGroupAddress3() {
-		return hideGroupAddress3;
-	}
-
-	public void setHideGroupAddress3(String hideGroupAddress3) {
-		this.hideGroupAddress3 = hideGroupAddress3;
 	}
 
 	public String getHideGroupTrained() {
@@ -360,14 +330,6 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 		this.mandatoryClientTrainedOn = mandatoryClientTrainedOn;
 	}
 
-	public String getMandatoryGroupAddress1() {
-		return mandatoryGroupAddress1;
-	}
-
-	public void setMandatoryGroupAddress1(String mandatoryGroupAddress1) {
-		this.mandatoryGroupAddress1 = mandatoryGroupAddress1;
-	}
-
 	public String getMandatorySystemAddress1() {
 		return mandatorySystemAddress1;
 	}
@@ -476,6 +438,7 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 		this.mandatorySystemPhoto = "0";
 		this.hideSystemAssignClientPostions = "0";
 		this.mandatorySystemAddress1 = "0";
+		this.hideSystemAddress2 = "0";
 		this.hideSystemAddress3 = "0";
 		this.hideSystemCity = "0";
 		this.hideSystemState = "0";
@@ -496,12 +459,16 @@ public class HiddenMandatoryConfigurationActionForm extends BaseActionForm {
 		this.hideClientTrained = "0";
 		this.mandatoryClientTrained = "0";
 		this.mandatoryClientTrainedOn = "0";
-		this.hideClientBusinessWorkActivities = "0";
-		this.hideGroupAddress1 = "0";
-		this.mandatoryGroupAddress1 = "0";
-		this.hideGroupAddress2 = "0";
-		this.hideGroupAddress3 = "0";
+		this.hideClientBusinessWorkActivities = "0";		
 		this.hideGroupTrained = "0";
+	}
+
+	public String getHideSystemAddress2() {
+		return hideSystemAddress2;
+	}
+
+	public void setHideSystemAddress2(String hideSystemAddress2) {
+		this.hideSystemAddress2 = hideSystemAddress2;
 	}
 
 }

@@ -192,18 +192,18 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr class="fontnormal">
 							<td width="20%" align="right"><mifos:mifoslabel
-								name="${ConfigurationConstants.ADDRESS1}"
+								name="${ConfigurationConstants.ADDRESS1}" keyhm="Office.Address1" isColonRequired="yes"
 								bundle="OfficeUIResources"/>:</td>
 							<td width="80%"><mifos:mifosalphanumtext
-								property="address.line1"
+								property="address.line1" keyhm="Office.Address1"
 								value="${offActionForm.address.line1}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS2}"
-								bundle="OfficeUIResources"/>:</td>
-							<td><mifos:mifosalphanumtext property="address.line2"
+								bundle="OfficeUIResources" keyhm="Office.Address2" isColonRequired="yes"/></td>
+							<td><mifos:mifosalphanumtext property="address.line2"  keyhm="Office.Address2"
 								value="${offActionForm.address.line2}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>

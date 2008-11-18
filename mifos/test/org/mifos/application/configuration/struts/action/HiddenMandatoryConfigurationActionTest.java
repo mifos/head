@@ -5,8 +5,12 @@ import org.mifos.application.configuration.struts.actionform.HiddenMandatoryConf
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
+import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -53,10 +57,8 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertEquals("0", actionForm.getHideClientSpouseFatherMiddleName());
 		assertEquals("1", actionForm.getHideClientSpouseFatherSecondLastName());
 		assertEquals("1", actionForm.getHideClientTrained());
-		assertEquals("1", actionForm.getHideGroupAddress1());
-		assertEquals("1", actionForm.getHideGroupAddress2());
-		assertEquals("1", actionForm.getHideGroupAddress3());
 		assertEquals("1", actionForm.getHideGroupTrained());
+		assertEquals("0", actionForm.getHideSystemAddress2());
 		assertEquals("1", actionForm.getHideSystemAddress3());
 		assertEquals("0", actionForm.getHideSystemAssignClientPostions());
 		assertEquals("1", actionForm.getHideSystemCitizenShip());
@@ -78,7 +80,6 @@ public class HiddenMandatoryConfigurationActionTest extends
 				.getMandatoryClientSpouseFatherSecondLastName());
 		assertEquals("0", actionForm.getMandatoryClientTrained());
 		assertEquals("0", actionForm.getMandatoryClientTrainedOn());
-		assertEquals("1", actionForm.getMandatoryGroupAddress1());
 		assertEquals("0", actionForm.getMandatorySystemAddress1());
 		assertEquals("1", actionForm.getMandatorySystemCitizenShip());
 		assertEquals("1", actionForm.getMandatorySystemEducationLevel());
@@ -88,7 +89,64 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertEquals("0", actionForm.getMandatorySystemPhoto());
 		assertEquals("1", actionForm.getMandatoryLoanAccountPurpose());
 	}
+	
+	public void testAddressFields() throws HibernateProcessException, PersistenceException{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("hideSystemAddress2","1");
+		addRequestParameter("hideSystemAddress3","1");
+		actionPerform();
+		EntityMasterData.getInstance().init();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
+		
+		assertTrue(fieldConfig.isFieldHidden("Client.Address2"));
+		assertTrue(fieldConfig.isFieldHidden("Group.Address2"));
+		assertTrue(fieldConfig.isFieldHidden("Office.Address2"));
+		assertTrue(fieldConfig.isFieldHidden("Personnel.Address2"));
+		assertTrue(fieldConfig.isFieldHidden("Center.Address2"));
 
+		assertTrue(fieldConfig.isFieldHidden("Client.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Group.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Office.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Personnel.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Center.Address3"));
+		
+		HibernateUtil.closeSession();
+
+		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		HibernateUtil.closeSession();
+
+		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("hideSystemAddress2","0");
+		addRequestParameter("hideSystemAddress3","1");
+		actionPerform();
+		EntityMasterData.getInstance().init();
+		fieldConfig.init();
+		
+		assertFalse(fieldConfig.isFieldHidden("Client.Address2"));
+		assertFalse(fieldConfig.isFieldHidden("Group.Address2"));
+		assertFalse(fieldConfig.isFieldHidden("Office.Address2"));
+		assertFalse(fieldConfig.isFieldHidden("Personnel.Address2"));
+		assertFalse(fieldConfig.isFieldHidden("Center.Address2"));
+
+		assertTrue(fieldConfig.isFieldHidden("Client.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Group.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Office.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Personnel.Address3"));
+		assertTrue(fieldConfig.isFieldHidden("Center.Address3"));
+
+	}
+	
+	
 	public void testUpdate() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/hiddenmandatoryconfigurationaction.do");
@@ -97,7 +155,8 @@ public class HiddenMandatoryConfigurationActionTest extends
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("mandatoryClientGovtId", "1");
 		addRequestParameter("mandatorySystemPhoto", "1");
-		
+		addRequestParameter("hideSystemAddress2","1");
+		addRequestParameter("hideSystemAddress3","1");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -118,11 +177,9 @@ public class HiddenMandatoryConfigurationActionTest extends
 		assertEquals("0", actionForm.getHideClientSpouseFatherMiddleName());
 		assertEquals("0", actionForm.getHideClientSpouseFatherSecondLastName());
 		assertEquals("0", actionForm.getHideClientTrained());
-		assertEquals("0", actionForm.getHideGroupAddress1());
-		assertEquals("0", actionForm.getHideGroupAddress2());
-		assertEquals("0", actionForm.getHideGroupAddress3());
 		assertEquals("0", actionForm.getHideGroupTrained());
-		assertEquals("0", actionForm.getHideSystemAddress3());
+		assertEquals("1", actionForm.getHideSystemAddress2());
+		assertEquals("1", actionForm.getHideSystemAddress3());
 		assertEquals("0", actionForm.getHideSystemAssignClientPostions());
 		assertEquals("0", actionForm.getHideSystemCitizenShip());
 		assertEquals("0", actionForm.getHideSystemCity());
@@ -143,7 +200,6 @@ public class HiddenMandatoryConfigurationActionTest extends
 				.getMandatoryClientSpouseFatherSecondLastName());
 		assertEquals("0", actionForm.getMandatoryClientTrained());
 		assertEquals("0", actionForm.getMandatoryClientTrainedOn());
-		assertEquals("0", actionForm.getMandatoryGroupAddress1());
 		assertEquals("0", actionForm.getMandatorySystemAddress1());
 		assertEquals("0", actionForm.getMandatorySystemCitizenShip());
 		assertEquals("0", actionForm.getMandatorySystemEducationLevel());
@@ -166,6 +222,7 @@ public class HiddenMandatoryConfigurationActionTest extends
 		addRequestParameter("hideGroupAddress2", "1");
 		addRequestParameter("hideGroupAddress3", "1");
 		addRequestParameter("hideGroupTrained", "1");
+		addRequestParameter("hideSystemAddress2","0");//restore back to default state
 		addRequestParameter("hideSystemAddress3", "1");
 		addRequestParameter("hideSystemCitizenShip", "1");
 		addRequestParameter("hideSystemCity", "1");

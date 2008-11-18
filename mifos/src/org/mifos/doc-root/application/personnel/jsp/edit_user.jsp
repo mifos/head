@@ -242,21 +242,20 @@
             </tr>
             <tr class="fontnormal">
                 <td width="22%" align="right">
-			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS1}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
+			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS1}"  keyhm="Personnel.Address1" isColonRequired="yes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
                 <td width="78%">
-	                <mifos:mifosalphanumtext name="personActionForm"  property="address.line1" maxlength="200" />
+	                <mifos:mifosalphanumtext name="personActionForm"  keyhm="Personnel.Address1" property="address.line1" maxlength="200" />
                 </td>
               </tr>
-              <tr class="fontnormal">
-                <td align="right">
-			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS2}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
-		</td>
-                <td>
-		            <mifos:mifosalphanumtext name="personActionForm" property="address.line2" maxlength="200" />
-                </td>
-              </tr>
-              <tr class="fontnormal">
+				<tr class="fontnormal">							
+					<td align="right"><mifos:mifoslabel keyhm="Personnel.Address2"
+						isColonRequired="yes" 
+						name="${ConfigurationConstants.ADDRESS2}" bundle="PersonnelUIResources"/></td>
+					<td><mifos:mifosalphanumtext name="personActionForm" keyhm="Personnel.Address2"
+						property="address.line2" maxlength="200"/></td>
+				</tr>
+               <tr class="fontnormal">
                 <td align="right">
 			<mifos:mifoslabel keyhm="Personnel.Address3" isColonRequired="yes" name="${ConfigurationConstants.ADDRESS3}"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>

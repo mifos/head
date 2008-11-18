@@ -161,21 +161,24 @@ explanation of the license and how it is applied.
 								<tr class="fontnormal">
 									<td width="20%" align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.ADDRESS1}"
-										bundle="OfficeUIResources"/>:</td>
-									<td width="80%"><mifos:mifosalphanumtext
+										keyhm="Office.Address1" isColonRequired="yes"
+										bundle="OfficeUIResources"/></td>
+									<td width="80%"><mifos:mifosalphanumtext keyhm="Office.Address1"
 										property="address.line1" maxlength="200" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.ADDRESS2}"
-										bundle="OfficeUIResources"/>:</td>
-									<td><mifos:mifosalphanumtext property="address.line2"
+										bundle="OfficeUIResources" keyhm="Office.Address2"
+										isColonRequired="yes"/></td>
+									<td><mifos:mifosalphanumtext property="address.line2"  keyhm="Office.Address2"
 										maxlength="200"/></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.ADDRESS3}"
-										bundle="OfficeUIResources" keyhm="Office.Address3"
+										bundle="OfficeUIResources" 
+										keyhm="Office.Address3"
 										isColonRequired="yes"></mifos:mifoslabel></td>
 									<td><mifos:mifosalphanumtext property="address.line3"
 										maxlength="200" keyhm="Office.Address3"></mifos:mifosalphanumtext></td>

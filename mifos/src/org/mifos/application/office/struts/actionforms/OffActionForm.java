@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
@@ -37,6 +36,7 @@ import org.mifos.application.master.business.CustomFieldView;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -44,9 +44,9 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
-import org.mifos.framework.util.helpers.FilePaths;
 
 public class OffActionForm extends BaseActionForm {
 
@@ -248,6 +248,7 @@ public class OffActionForm extends BaseActionForm {
 		if (method.equals(Methods.preview.toString()) ||method.equals(Methods.editpreview.toString())) {
 			verifyFields(errors, getUserContext(request));
 			validateCustomFields(request, errors);
+			checkForMandatoryFields(EntityType.OFFICE.getValue(), errors, request);
 			errors.add(super.validate(mapping, request));
 		}
 		if (null != errors && !errors.isEmpty()) {

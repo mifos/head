@@ -178,6 +178,17 @@
 							</tr>
 							<tr>
 								<td class="drawtablerow">
+									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS2}" />
+								</td>
+								<td class="drawtablerow">
+									<html-el:checkbox property="hideSystemAddress2" value="1"/>
+								</td>
+								<td class="drawtablerow">
+									&nbsp;
+								</td>
+							</tr>							
+							<tr>
+								<td class="drawtablerow">
 									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS3}" />
 								</td>
 								<td class="drawtablerow">
@@ -381,39 +392,6 @@
 								</td>
 								<td width="28%" class="drawtablehd">
 									<mifos:mifoslabel name="configuration.mandatory" />
-								</td>
-							</tr>
-							<tr>
-								<td class="drawtablerow">
-									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS1}" />
-								</td>
-								<td class="drawtablerow">
-									<html-el:checkbox property="hideGroupAddress1" value="1"/>
-								</td>
-								<td class="drawtablerow">
-									<html-el:checkbox property="mandatoryGroupAddress1" value="1"/>
-								</td>
-							</tr>
-							<tr>
-								<td class="drawtablerow">
-									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS2}" />
-								</td>
-								<td class="drawtablerow">
-									<html-el:checkbox property="hideGroupAddress2" value="1"/>
-								</td>
-								<td class="drawtablerow">
-									&nbsp;
-								</td>
-							</tr>
-							<tr>
-								<td class="drawtablerow">
-									<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS3}" />
-								</td>
-								<td class="drawtablerow">
-									<html-el:checkbox property="hideGroupAddress3" value="1"/>
-								</td>
-								<td class="drawtablerow">
-									&nbsp;
 								</td>
 							</tr>
 							<tr>

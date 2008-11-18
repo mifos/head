@@ -166,6 +166,11 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 					.getHiddenFlag());
 		}
 		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
+					getShortValue(actionForm.getHideSystemAddress2()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
 			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
 					getShortValue(actionForm.getHideSystemAddress3()));
@@ -228,18 +233,18 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 		if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
 			fieldConfiguration.update(getShortValue(actionForm
-					.getMandatoryGroupAddress1()), getShortValue(actionForm
-					.getHideGroupAddress1()));
+					.getMandatorySystemAddress1()), fieldConfiguration
+					.getHiddenFlag());
 		}
 		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
 			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
-					getShortValue(actionForm.getHideGroupAddress2()));
+					getShortValue(actionForm.getHideSystemAddress2()));
 		}
 		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
 			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
-					getShortValue(actionForm.getHideGroupAddress3()));
+					getShortValue(actionForm.getHideSystemAddress3()));
 		}
 		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.TRAINED)) {
@@ -425,6 +430,11 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 					.getHiddenFlag());
 		}
 		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
+					getShortValue(actionForm.getHideSystemAddress2()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
 			fieldConfiguration.update(fieldConfiguration.getMandatoryFlag(),
 					getShortValue(actionForm.getHideSystemAddress3()));
@@ -605,6 +615,11 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 							.getMandatoryFlag()));
 		}
 		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+			actionForm.setHideSystemAddress2(getStringValue(fieldConfiguration
+					.getHiddenFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
 			actionForm.setHideSystemAddress3(getStringValue(fieldConfiguration
 					.getHiddenFlag()));
@@ -642,28 +657,27 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 			HiddenMandatoryConfigurationActionForm actionForm,
 			FieldConfigurationEntity fieldConfiguration) {
 		if (fieldConfiguration.getFieldName().equals(
-				HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
-			actionForm.setHideGroupAddress1(getStringValue(fieldConfiguration
-					.getHiddenFlag()));
-			actionForm
-					.setMandatoryGroupAddress1(getStringValue(fieldConfiguration
-							.getMandatoryFlag()));
-		}
-		else if (fieldConfiguration.getFieldName().equals(
-				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
-			actionForm.setHideGroupAddress2(getStringValue(fieldConfiguration
-					.getHiddenFlag()));
-		}
-		else if (fieldConfiguration.getFieldName().equals(
-				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
-			actionForm.setHideGroupAddress3(getStringValue(fieldConfiguration
-					.getHiddenFlag()));
-		}
-		else if (fieldConfiguration.getFieldName().equals(
 				HiddenMandatoryFieldNamesConstants.TRAINED)) {
 			actionForm.setHideGroupTrained(getStringValue(fieldConfiguration
 					.getHiddenFlag()));
 		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
+			actionForm
+					.setMandatorySystemAddress1(getStringValue(fieldConfiguration
+							.getMandatoryFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+			actionForm.setHideSystemAddress2(getStringValue(fieldConfiguration
+					.getHiddenFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
+			actionForm.setHideSystemAddress3(getStringValue(fieldConfiguration
+					.getHiddenFlag()));
+		}
+
 	}
 
 	private void populateSystemFields(
@@ -696,6 +710,22 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 			actionForm
 					.setHideSystemCollateralTypeNotes(getStringValue(fieldConfiguration
 							.getHiddenFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS1)) {
+			actionForm
+					.setMandatorySystemAddress1(getStringValue(fieldConfiguration
+							.getMandatoryFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS2)) {
+			actionForm.setHideSystemAddress2(getStringValue(fieldConfiguration
+					.getHiddenFlag()));
+		}
+		else if (fieldConfiguration.getFieldName().equals(
+				HiddenMandatoryFieldNamesConstants.ADDRESS3)) {
+			actionForm.setHideSystemAddress3(getStringValue(fieldConfiguration
+					.getHiddenFlag()));
 		}
 	}
 }
