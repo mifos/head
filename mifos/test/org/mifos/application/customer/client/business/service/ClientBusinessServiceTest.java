@@ -123,7 +123,7 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 		ClientBO client1 = TestObjectFactory.createClient("Client Two",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		List<ClientBO> clients = new ClientBusinessService()
-				.getActiveClientsUnderGroup(group.getCustomerId().shortValue());
+				.getActiveClientsUnderGroup(group.getCustomerId());
 		assertEquals(2, clients.size());
 
 		TestObjectFactory.cleanUp(client);

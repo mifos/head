@@ -83,7 +83,7 @@ public class ClientBusinessService extends BusinessService {
 			throw new ServiceException(pe);
 		}
 	}
-	public List<ClientBO> getActiveClientsUnderGroup(Short groupId) throws ServiceException {
+	public List<ClientBO> getActiveClientsUnderGroup(Integer groupId) throws ServiceException {
 			try {
 				return new ClientPersistence().getActiveClientsUnderGroup(groupId);
 			}

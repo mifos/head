@@ -487,8 +487,7 @@ public class LoanAccountAction extends AccountAppAction {
 				setBusinessActivitiesIntoSession(request);
 
 				List<ClientBO> clients = clientBusinessService
-						.getActiveClientsUnderGroup(customer.getCustomerId()
-								.shortValue());
+						.getActiveClientsUnderGroup(customer.getCustomerId());
 				if (clients == null || clients.size() == 0) {
 					throw new ApplicationException(
 							GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
@@ -1251,8 +1250,7 @@ public class LoanAccountAction extends AccountAppAction {
 			List<LoanBO> individualLoans = loanBusinessService
 					.getAllChildrenForParentGlobalAccountNum(globalAccountNum);
 			List<ClientBO> activeClientsUnderGroup = clientBusinessService
-					.getActiveClientsUnderGroup(customer.getCustomerId()
-							.shortValue());
+					.getActiveClientsUnderGroup(customer.getCustomerId());
 			List<LoanAccountDetailsViewHelper> clientDetails = populateClientDetailsFromLoan(
 					activeClientsUnderGroup, individualLoans, businessActivities);
 			loanActionForm.setClientDetails(clientDetails);

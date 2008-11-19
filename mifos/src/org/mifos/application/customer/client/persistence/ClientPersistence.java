@@ -195,7 +195,7 @@ public class ClientPersistence extends Persistence {
 				queryParameters);
 		return queryResult;
 	}
-		public List<ClientBO> getActiveClientsUnderGroup(Short groupId)
+		public List<ClientBO> getActiveClientsUnderGroup(Integer groupId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("GROUP_ID", groupId.intValue());
