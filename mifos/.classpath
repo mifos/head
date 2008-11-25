@@ -19,11 +19,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-validator.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.11.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/1.2/apidocs/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/struts-el.jar"/>
 	<classpathentry kind="lib" path="lib/jta.jar"/>
 	<classpathentry kind="lib" path="lib/axis2-kernel-1.0.jar"/>
@@ -89,6 +84,22 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/mayfly-cvs-2008-03-25.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.5-bin.jar"/>
-	<classpathentry kind="lib" path="lib/spring-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://logging.apache.org/log4j/1.2/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-2.5.5.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://static.springframework.org/spring/docs/2.5.x/api/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-webmvc-2.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/cheetah-serviceInterfaces-0.0.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/cheetah-userInterface-0.0.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/spring-security-core-2.0-M2.jar"/>
+	<classpathentry kind="lib" path="lib/spring-security-taglibs-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/spring-security-acl-2.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

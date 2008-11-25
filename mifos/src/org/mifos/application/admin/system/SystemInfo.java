@@ -50,6 +50,15 @@ public class SystemInfo implements Serializable {
 		setOsVersion(System.getProperty("os.version"));
 	}
 	
+	public SystemInfo() {
+		setJavaVendor(System.getProperty("java.vendor"));
+		setJavaVersion(System.getProperty("java.version"));
+		setSvnRevision(new SvnRevision());
+		setOsName(System.getProperty("os.name"));
+		setOsArch(System.getProperty("os.arch"));
+		setOsVersion(System.getProperty("os.version"));
+	}
+	
 	public int getApplicationVersion() {
 		return DatabaseVersionPersistence.APPLICATION_VERSION;
 	}

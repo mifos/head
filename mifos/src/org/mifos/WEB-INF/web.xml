@@ -187,4 +187,16 @@
 		<taglib-uri>/mifos/custom-tags</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/customtags.tld</taglib-location>
 	</taglib>
+
+	<!-- Cheetah integration -->
+	<servlet>
+		<servlet-name>cheetah</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>cheetah</servlet-name>
+		<url-pattern>*.ftl</url-pattern>
+	</servlet-mapping>
 </web-app>

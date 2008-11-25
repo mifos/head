@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+    <!-- FIXME: this schema location requires the application to be online at
+    runtime! Compare with
+    https://mifos.dev.java.net/svn/mifos/cheetah/trunk/application/src/main/webapp/WEB-INF/mifos-servlet.xml
+    -->
+    
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+        	<list>
+        		<value>org.mifos.ui.localizedProperties.messages</value>
+        	</list>
+        </property>
+    </bean>
+    
+   <!-- freemarker config -->
+   <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+     <property name="templateLoaderPaths">
+       <list>
+         <value>/WEB-INF/freemarker/</value>
+         <value>classpath:org/mifos/ui/freemarker/core</value>
+         <value>classpath:org/mifos/ui/freemarker/css</value>
+       </list>
+     </property>
+     <property name="preferFileSystemAccess" value="false"/>
+     <property name="defaultEncoding" value="UTF-8" />
+     <property name="freemarkerVariables">
+        <map>
+           <entry key="xml_escape" value-ref="fmXmlEscape"/>
+        </map>
+       </property>
+   </bean>
+
+   <bean id="freemarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+     <property name="cache" value="true"/>
+     <property name="prefix" value=""/>
+     <property name="suffix" value=".ftl"/>
+     <property name="contentType" value="text/html; charset=UTF-8" />
+     <!-- if you want to use the Spring FreeMarker macros, set this property to true -->
+     <property name="exposeSpringMacroHelpers" value="true"/>
+   </bean>
+
+   <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+
+    <bean id="genericController" class="org.mifos.ui.core.controller.GenericController"/>
+
+    <bean id="publicUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<value>
+            /ping.ftl=genericController
+            /cheetah.css.ftl=genericController
+            /gazelle.css.ftl=genericController
+    			/appInfoNoSecurity.ftl=appInfoController
+			</value>
+		</property>
+    </bean>
+    
+    <bean id="applicationInformation" class="org.mifos.core.service.ApplicationInformationDto">
+    	<property name="buildId" value="ID 1"/>
+    	<property name="buildTag" value="TAG 1"/>
+    	<property name="svnRevision" value="Revision 1"/>
+    </bean>
+    
+    <bean id="ApplicationInformationService" class="org.mifos.application.admin.system.StandardApplicationInformationService">
+    	<property name="applicationInformation" ref="applicationInformation"/>
+    </bean>
+    
+    <bean id="appInfoController" class="org.mifos.ui.core.controller.AppInfoController">
+        <property name="appInfo" ref="applicationInformation"/>
+    </bean>
+
+    
+</beans>

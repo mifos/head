@@ -57,7 +57,7 @@ public interface FilePaths {
 	public static final String JAXBPACKAGEPATH = 
 		"org.mifos.framework.util.jaxb.";
 	public static final String HIBERNATE_PROPERTIES = 
-		"conf/hibernate.properties";
+		"org/mifos/conf/hibernate.properties";
 	public static final String HIBERNATECFGFILE = 
 		"org/mifos/framework/util/resources/hibernate.cfg.xml";
 	public static final String CUSTOMTABLETAGXSD = 

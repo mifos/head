@@ -25,6 +25,7 @@ import junit.textui.TestRunner;
 
 import org.mifos.application.admin.struts.action.TestAdminAction;
 import org.mifos.application.admin.struts.action.ViewOrganizationSettingsActionTest;
+import org.mifos.application.admin.system.ApplicationInformationTest;
 import org.mifos.application.admin.system.SystemInfoTest;
 
 public class AdminTestSuite extends TestSuite{
@@ -48,6 +49,7 @@ public class AdminTestSuite extends TestSuite{
 		TestSuite testSuite = new AdminTestSuite();
 		testSuite.addTestSuite(TestAdminAction.class);
 		testSuite.addTest(SystemInfoTest.suite());
+		testSuite.addTest(ApplicationInformationTest.suite());
 		testSuite.addTestSuite(ViewOrganizationSettingsActionTest.class);
 		return testSuite;
 	}

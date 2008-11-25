@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mifos</groupId>
+	<artifactId>gazelle</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Mifos Wrapper</name>
+	<parent>
+		<groupId>org.mifos</groupId>
+		<artifactId>gazelle-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<id>build-gazelle-war</id>
+						<configuration>
+							<tasks>
+								<property name="basedir" value="${basedir}/../mifos" />
+								<property name="build.compiler" value="extJavac" />
+								<ant dir="${basedir}/../mifos">
+									<target name="war" />
+								</ant>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-nodeps</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<id>install-gazelle-war</id>
+						<configuration>
+							<file>${basedir}/../mifos/dist/mifos.war</file>
+							<version>0.0.3-SNAPSHOT</version>
+							<groupId>org.mifos</groupId>
+							<packaging>war</packaging>
+							<artifactId>gazelle-webapp</artifactId>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

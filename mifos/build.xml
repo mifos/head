@@ -4,7 +4,7 @@
 	<property environment="env"/>
 	<property name="build.compiler" value="modern"/>
 	<property name="java.home" value="${env.JAVA_HOME}"/>
-	<property name="conf.dir" value="${basedir}/conf"/>
+	<property name="conf.dir" value="${basedir}/src/org/mifos/conf"/>
 
 	<!-- my.build.properties is your way to override
 		properties which are not supposed to be
@@ -122,8 +122,6 @@
 		<mkdir dir="${build.web-inf}/services/MifosService/META-INF"/>
 		<mkdir dir="${build.web-inf}/services/MifosService/modules"/>
 		<mkdir dir="${test.classes}"/>
-		<mkdir dir="${build.classes}/conf"/>
-		<mkdir dir="${test.classes}/conf"/>
 	</target>
 
 	<target name="clean_src_classes" description="Cleans the source classes">
@@ -229,7 +227,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy tofile="${build.classes}/conf/hibernate.properties" verbose="true">
+		<copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
 			<fileset dir="${conf.dir}">
 				<include name="my.hibernate.properties" 
                 	if="my.hibernate.properties.present" />
@@ -237,7 +235,7 @@
                 	unless="my.hibernate.properties.present" />
 			</fileset>
 		</copy>
-		<copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/conf"/>
+		<copy file="${conf.dir}/ehcache.xml" todir="${build.classes}/org/mifos/conf"/>
 		<copy todir="${build.web-inf}/services/MifosService/META-INF">
 			<fileset dir="${src.dir}/org/mifos/api/resources">
 				<include name="services.xml"/>
@@ -250,7 +248,7 @@
 				<include name="*.jasper"/>
 			</fileset>
 		</copy>
-		<jsmin force="true">
+		<jsmin>
        		<fileset dir="${build.src.dir}/pages" includes="**/*.js"/>
        		<!-- fileset dir="${build.src.dir}/webcontent" includes="**/*.js"/ -->
 		</jsmin>
@@ -313,7 +311,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy tofile="${test.classes}/conf/HibernateTest.properties" verbose="true">
+		<copy tofile="${test.classes}/org/mifos/conf/HibernateTest.properties" verbose="true">
 			<fileset dir="${conf.dir}">
 				<include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
 				<include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
@@ -329,7 +327,7 @@
 	</target>
 
 	<target name="run_test" 
-		depends="clean,compile,copy_files,compile_test,copy_test_files,build_test_db" 
+		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests.">
 		<echo>Using database: ${testdb.name}</echo>
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
@@ -425,10 +423,9 @@
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-    <target name="build" depends="clean,compile,copy_files,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
+    <target name="build" depends="compile,copy_files,compile_test,copy_test_files,integrate_birt_web_viewer,copy_birt_reports"/>
 
     <target name="war" depends="build">
-		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" 
 			webxml="${build.web-inf}/web.xml">
 			<fileset dir="${build.src.dir}" excludes="**/web.xml" />
@@ -517,7 +514,7 @@
 	</target>
 
     <target name="run_test_parallel_2"
-		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		depends="compile,copy_files,compile_test,copy_test_files">
 		<parallel>
 			<antcall target="run_test_no_compile">
 				<param name="testdb.name" value="test1"/>
@@ -531,7 +528,7 @@
 	</target>
 
 	<target name="run_test_parallel_2x2"
-		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		depends="compile,copy_files,compile_test,copy_test_files">
 		<parallel>
 			<sequential>
 				<antcall target="run_test_no_compile">
@@ -557,7 +554,7 @@
 	</target>
 	
 	<target name="run_test_parallel_4"
-		depends="clean,compile,copy_files,compile_test,copy_test_files">
+		depends="compile,copy_files,compile_test,copy_test_files">
 		<parallel>
 			<antcall target="run_test_no_compile">
 				<param name="testdb.name" value="test1"/>

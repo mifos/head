@@ -46,7 +46,7 @@
     <target name="update_hibernate_props">
         <echo>Updating Mifos hibernate properties</echo>
         <copy file="resources/hibernate.properties" todir="${catalina.home}/apache-tomcat-6.0.16/webapps/mifos/WEB-INF/classes/conf"/>
-                <replace file="${catalina.home}/apache-tomcat-6.0.16/webapps/mifos/WEB-INF/classes/conf/hibernate.properties">
+                <replace file="${catalina.home}/apache-tomcat-6.0.16/webapps/mifos/WEB-INF/classes/org/mifos/conf/hibernate.properties">
                   <replacefilter 
                     token="@hibernate.connection.url@"
                     value="jdbc:mysql://${db.host}:${db.port}/${db.schema}?useUnicode=true&amp;characterEncoding=UTF-8"/>
