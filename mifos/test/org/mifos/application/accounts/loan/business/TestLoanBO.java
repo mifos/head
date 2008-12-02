@@ -4736,7 +4736,7 @@ public class TestLoanBO extends MifosTestCase {
 		 * year in the future (it really means an end date less than the end of
 		 * next year).
 		 */
-		long sampleTime = new DateMidnight(2008, 11, 25).getMillis();
+		long sampleTime = new DateMidnight(2009, 11, 25).getMillis();
 
 		MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY,
 				EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
