@@ -20,11 +20,8 @@ package org.mifos.test.acceptance.user;
  */
 
 import org.mifos.test.acceptance.framework.AppInfoNoSecurityPage;
-import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

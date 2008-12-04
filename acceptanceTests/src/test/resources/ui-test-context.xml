@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    classpath:xsd/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/aop 
+    classpath:xsd/spring-aop-2.5.xsd">
+
+    <aop:aspectj-autoproxy />
+
+    <bean id="propertyConfigurer" 
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:acceptanceTest.properties</value>
+                <value>file:${user.home}/.mifos/local.properties</value>
+                <value>file:${user.home}/.mifos/acceptance/deploymifosDB.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="seleniumSpeedControl" class="org.mifos.test.acceptance.framework.util.SeleniumSpeedControl" />
+
+    <bean id="selenium" class="com.thoughtworks.selenium.DefaultSelenium" >
+        <constructor-arg type="java.lang.String" value="localhost" />
+        <constructor-arg type="int" value="4445" />
+        <constructor-arg type="java.lang.String" value="${selenium.browser.start.command}" />
+        <constructor-arg type="java.lang.String" value="http://localhost:8083/mifos/" />
+    </bean>
+
+    <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
+
+</beans>

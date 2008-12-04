@@ -9,8 +9,8 @@
 	<url>http://www.mifos.org</url>
 	<properties>
 		<cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
-		<selenium.port>4444</selenium.port>
-		<servlet.port>8080</servlet.port>
+		<selenium.port>4445</selenium.port>
+		<servlet.port>8083</servlet.port>
 		<selenium.background>true</selenium.background>
 		<tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
 		<cargo.wait>false</cargo.wait>
@@ -163,7 +163,7 @@
 							<container>
 								<dependencies>
 									<dependency>
-										<location>${continuous.integration.resources.dir}</location>
+										<location>${user.home}/.mifos/acceptance/deploymifosDB.properties</location>
 									</dependency>
 								</dependencies>
 							</container>
