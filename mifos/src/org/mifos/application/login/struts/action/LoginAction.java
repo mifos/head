@@ -1,5 +1,8 @@
 package org.mifos.application.login.struts.action;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +33,7 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -88,12 +92,23 @@ public class LoginAction extends BaseAction {
 		return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
 	}
 
-	public ActionForward logout(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward logout(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside logout of LoginAction");
+
+		// get locale first
+		Locale locale = getUserContext(request).getPreferredLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
-		error.add(LoginConstants.LOGOUTOUT,new ActionMessage(LoginConstants.LOGOUTOUT));
-		request.setAttribute(Globals.ERROR_KEY, error);
+		
+		String errorMessage = resources.getString(LoginConstants.LOGOUTOUT);
+		
+		// ActionMessage: take errorMessage as literal
+		error.add(LoginConstants.LOGOUTOUT, new ActionMessage(errorMessage, false));
+		
+		request.setAttribute(Globals.ERROR_KEY, error);		
 		return mapping.findForward(ActionForwards.logout_success.toString());
 	}
 

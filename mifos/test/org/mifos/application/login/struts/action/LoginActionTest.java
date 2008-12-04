@@ -3,7 +3,10 @@ package org.mifos.application.login.struts.action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
+import org.apache.struts.action.ActionErrors;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.CustomFieldView;
@@ -23,18 +26,16 @@ import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import org.mifos.config.Localization;
 
 public class LoginActionTest extends MifosMockStrutsTestCase {
 
 	private OfficeBO office;
 
 	private PersonnelBO personnel;
-
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -368,10 +369,18 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testLogout() {
+		UserContext userContext = TestObjectFactory.getContext();
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.logout.toString());
 		actionPerform();
-		verifyActionErrors(new String[] { LoginConstants.LOGOUTOUT });
+
+		Locale locale = userContext.getCurrentLocale();
+		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+		String errorMessage = resources.getString(LoginConstants.LOGOUTOUT);
+
+		verifyActionErrors(new String[] { errorMessage });
 		verifyForward(ActionForwards.logout_success.toString());
 	}
 
