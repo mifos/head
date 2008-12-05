@@ -163,7 +163,7 @@
 							<container>
 								<dependencies>
 									<dependency>
-										<location>${user.home}/.mifos/acceptance/deploymifosDB.properties</location>
+										<location>${user.home}/.mifos/acceptance</location>
 									</dependency>
 								</dependencies>
 							</container>
