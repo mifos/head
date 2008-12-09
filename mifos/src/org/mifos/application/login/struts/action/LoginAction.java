@@ -98,7 +98,13 @@ public class LoginAction extends BaseAction {
 
 		// get locale first
 		Locale locale = getUserContext(request).getPreferredLocale();
-		ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+		ResourceBundle resources;
+		// but the user might not have a session, so we can't assume that
+		// their session has a preferred locale 
+		if (null == locale)
+			resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
+		else
+			resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
 
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
