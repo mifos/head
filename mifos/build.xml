@@ -324,7 +324,7 @@
 	<target name="run_test" 
 		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests.">
-		<echo>Using database: ${testdb.name}</echo>
+		<echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
 		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
 			haltonfailure="${test.haltonfailure}" haltonerror="${test.haltonerror}"
@@ -468,6 +468,7 @@
     </target>
 
 	<target name="build_db" description="Builds the application database">
+		<echo>Using database: ${db.name} at ${db.ip} port ${db.port}</echo>
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
 			userid="${db.user}" password="${db.pwd}"
 			classpath="${database.driver.jar}">
@@ -486,7 +487,7 @@
     </target>
 
 	<target name="build_test_db">
-		<echo>Using database: ${testdb.name}</echo>
+		<echo>Using database: ${testdb.name} at ${testdb.ip} port ${testdb.port}</echo>
 		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
 			userid="${testdb.user}" password="${testdb.pwd}"
 			classpath="${database.driver.jar}">
