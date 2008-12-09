@@ -96,15 +96,19 @@ public class LoginAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside logout of LoginAction");
 
-		// get locale first
-		Locale locale = getUserContext(request).getPreferredLocale();
 		ResourceBundle resources;
-		// but the user might not have a session, so we can't assume that
-		// their session has a preferred locale 
-		if (null == locale)
-			resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
-		else
-			resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+		UserContext userContext = getUserContext(request);
+		if (null == userContext) {
+			// user might have just been given an empty session, so we
+			// can't assume that their session has a preferred locale
+			resources = ResourceBundle
+					.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
+		} else {
+			// get locale first
+			Locale locale = userContext.getPreferredLocale();
+			resources = ResourceBundle.getBundle(
+					FilePaths.LOGIN_UI_PROPERTY_FILE, locale);
+		}
 
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
