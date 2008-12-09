@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" output="mifos/build/test_pkg/classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="src" output="mifos/build/src_pkg/pages" path="mifos/src/org/mifos/doc-root"/>
 	<classpathentry excluding="org/mifos/doc-root/" kind="src" output="mifos/build/src_pkg/WEB-INF/classes" path="mifos/src"/>
 	<classpathentry kind="src" output="mifos/build/test_pkg/classes" path="mifos/test"/>
