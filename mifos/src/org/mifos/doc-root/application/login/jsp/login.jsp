@@ -50,14 +50,14 @@
 				cellspacing="0" class="bluetableborder">
 				<tr>
 					<td colspan="2" align="left" valign="top"
-						class="tableContentLightBlue"><span class="heading" id="login.form.heading"> <mifos:mifoslabel
+						class="tableContentLightBlue"><span class="heading" id="login.label.heading"> <mifos:mifoslabel
 						name="login.login" bundle="LoginUIResources"/></span></td>
 				</tr>
 				<tr>
 					<td width="45%" align="left" valign="top"
 						style="BORDER-RIGHT: #d7deee 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px;
 					PADDING-BOTTOM: 10px; PADDING-TOP: 10px"><span
-						class="fontnormal" id="login.form.welcome"><mifos:mifoslabel name="login.welcome" bundle="LoginUIResources"/> <br>
+						class="fontnormal" id="login.label.welcome"><mifos:mifoslabel name="login.welcome" bundle="LoginUIResources"/> <br>
 					<br>
 					</span><br>
 					</td>
@@ -69,22 +69,22 @@
 						<font class="fontnormalRedBold"><span id="login.error.message"><html-el:errors
 							bundle="LoginUIResources" /></span></font></td></tr>
 						<tr class="fontnormal">
-							<td width="33%" align="right"><span id="login.form.label.username"><mifos:mifoslabel
+							<td width="33%" align="right"><span id="login.label.username"><mifos:mifoslabel
                      name="login.username" bundle="LoginUIResources"/></span>:</td>
 
-							<td width="67%"><html-el:text property="userName" /></td>
+							<td width="67%"><html-el:text styleId="login.input.username" property="userName" /></td>
 						</tr>
 
 						<tr class="fontnormal">
 							<td align="right">
-                        <span id="login.form.label.password"><mifos:mifoslabel name="login.password" bundle="LoginUIResources"/></span>:</td>
-							<td><html-el:password property="password" redisplay="false" /></td>
+                        <span id="login.label.password"><mifos:mifoslabel name="login.password" bundle="LoginUIResources"/></span>:</td>
+							<td><html-el:password styleId="login.input.password" property="password" redisplay="false" /></td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"></td>
 
 							<td><br>
-							<html-el:submit styleClass="buttn">
+							<html-el:submit styleClass="buttn" styleId="login.button.login">
 								<mifos:mifoslabel name="login.login" bundle="LoginUIResources"/>
 							</html-el:submit>
 							<html-el:hidden property="method" value="login" />
