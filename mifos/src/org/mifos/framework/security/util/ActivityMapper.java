@@ -1,6 +1,23 @@
-/**
- *
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
+
 package org.mifos.framework.security.util;
 
 import java.util.ArrayList;
@@ -85,102 +102,78 @@ import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
-
-
+/**
+ * Singleton.
+ */
 public class ActivityMapper {
-
 	private final short SAVING_CANCHANGESTATETO_PARTIALAPPLICATION = 140;
-
 	private final short SAVING_CANCHANGESTATETO_PENDINGAPPROVAL = 180;
-
 	private final short SAVING_CANCHANGESTATETO_CANCEL = 181;
-
 	private final short SAVING_CANCHANGESTATETO_APPROVED = 182;
-
 	private final short SAVING_CANCHANGESTATETO_INACTIVE = 183;
-
 	private final short SAVING_CANCHANGESTATETO_INACTIVE_BLACKLISTED = 184;
-
 	private final short SAVING_BLACKLISTED_FLAG = 6;
-
 	private final short SAVING_CANSAVEFORLATER = 137;
-
 	private final short SAVING_CANSUBMITFORAPPROVAL = 185;
-
 	private final short LOANACC_CANCHANGETO_PARTIALAPPLICATION = 103;
-
 	private final short LOANACC_CANCHANGETO_PENDINGAPPROVAL = 108;
-
 	private final short LOANACC_CANCHANGETO_APPROVED = 104;
-
 	private final short LOANACC_CANCHANGETO_DBTOLOANOFFICER = 106;
-
 	private final short LOANACC_CANCHANGETO_ACTIVEINGOODSTANDING = 107;
-
 	private final short LOANACC_CANCHANGETO_OBLIGATIONSMET = 111;
-
 	private final short LOANACC_CANCHANGETO_WRITTENOFF = 109;
-
 	private final short LOANACC_CANCHANGETO_RESCHEDULED = 110;
-
 	private final short LOANACC_CANCHANGETO_BADSTANDING = 112;
-
 	private final short LOANACC_CANCHANGETO_CANCEL = 105;
-
 	private final short LOANACC_CANSAVEFORLATER = 101;
-
 	private final short LOANACC_CANSUBMITFORAPPROVAL = 102;
 
 	// client state change mappings
-
 	private final short CLIENT_CANCHANGETO_PARTIALAPPLICATION = 37;
-
 	private final short CLIENT_CANCHANGETO_APPROVED = 38;
-
 	private final short CLIENT_CANCHANGETO_CANCELLED = 39;
-
 	private final short CLIENT_CANCHANGETO_ONHOLD = 40;
-
 	private final short CLIENT_CANCHANGETO_CLOSED = 41;
-
 	private final short CLIENT_CANCHANGETO_PENDINGAPPROVAL = 42;
-
 	private final short CLIENT_BLACKLISTED_FLAG = 3;
-
 	private final short CLIENT_CLOSED_BLACKLISTED_FLAG = 8;
-
 	private final short CLIENT_CANCHANGETO_CANCEL_BLACKLISTED = 55;
-
 	private final short CLIENT_CREATEPARTIAL = 35;
-
 	private final short CLIENT_CREATEPENDING = 36;
 
 	// group sate change mappings
 	private final short GROUP_CANCHANGETO_PARTIALAPPLICATION = 59;
-
 	private final short GROUP_CANCHANGETO_APPROVED = 60;
-
 	private final short GROUP_CANCHANGETO_CANCELLED = 61;
-
 	private final short GROUP_CANCHANGETO_ONHOLD = 62;
-
 	private final short GROUP_CANCHANGETO_CLOSED = 63;
-
 	private final short GROUP_CANCHANGETO_PENDINGAPPROVAL = 64;
-
 	private final short GROUP_CANCEL_BLACKLISTED_FLAG = 13;
-
 	private final short GROUP_CLOSED_BLACKLISTED_FLAG = 18;
-
 	private final short GROUP_CANCHANGETO_CANCEL_BLACKLISTED = 77;
-
 	private final short GROUP_CREATEPARTIAL = 57;
-
 	private final short GROUP_CREATEPENDING = 58;
-	
 	private final short CENTER_CHANGE_STATUS = 81;
 
-	private ActivityMapper() {
+	private static ActivityMapper instance = new ActivityMapper();
+
+	public static ActivityMapper getInstance() {
+		return instance;
+	}
+
+	private Map<String, Short> activityMap = new HashMap<String, Short>();
+
+	private List<ActionSecurity> allSecurity = new ArrayList<ActionSecurity>();
+
+	public Short getActivityId(String key) {
+		return activityMap.get(key);
+	}
+	
+	public List<ActionSecurity> getAllSecurity() {
+		return Collections.unmodifiableList(allSecurity);
+	}
+	
+	public void init() {
 		// these lines don't seem to refer to a real action
 		// if so, these methods can be removed safely
 		addApplyChargesMappings2();
@@ -423,24 +416,6 @@ public class ActivityMapper {
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
 		activityMap.put("/AccountsApplyChargesAction-create",
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
-	}
-
-	private static ActivityMapper instance = new ActivityMapper();
-
-	public static ActivityMapper getInstance() {
-		return instance;
-	}
-
-	private Map<String, Short> activityMap = new HashMap<String, Short>();
-
-	private List<ActionSecurity> allSecurity = new ArrayList<ActionSecurity>();
-
-	public Short getActivityId(String key) {
-		return activityMap.get(key);
-	}
-	
-	public List<ActionSecurity> getAllSecurity() {
-		return Collections.unmodifiableList(allSecurity);
 	}
 
 	public short getActivityIdForNewStateId(short newState, short cancelFlag) {

@@ -58,6 +58,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.spring.SpringUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -385,6 +386,7 @@ public class ApplicationInitializer implements ServletContextListener,
 	 */
 	private void initializeSecurity() throws AppNotConfiguredException {
 		try {
+			ActivityMapper.getInstance().init();
 
 			AuthorizationManager.getInstance().init();
 
