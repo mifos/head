@@ -4,6 +4,7 @@
 package org.mifos.test.acceptance.bulkentry;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.BulkEntrySelectPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,12 +31,22 @@ public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
 		(new MifosPage(selenium)).logout();
 	}
 	
-	public void navigateToBulkEntrySelection() {
-		appLauncher
-			.launchMifos()
-			.loginSuccessfulAs("mifos", "testmifos")
-			.navigateToClientsAndAccountsUsingHeaderTab()
-			.navigateToEnterCollectionSheetDataUsingLeftMenu()
+	public void defaultAdminNavigateToBulkEntrySelection() {
+		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
 			.verifyPage();
+	}
+	
+	public void defaultAdminUserSelectsValidBulkEntryParameters() {
+		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
+			.submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
+			.verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
+	}
+	
+	private BulkEntrySelectPage loginAndNavigateToBulkEntrySelectPage(String userName, String password) {
+		return appLauncher
+		 .launchMifos()
+		 .loginSuccessfulAs(userName, password)
+		 .navigateToClientsAndAccountsUsingHeaderTab()
+		 .navigateToEnterCollectionSheetDataUsingLeftMenu();
 	}
 }
