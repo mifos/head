@@ -2,13 +2,13 @@
 set -o errexit
 
 # NAME
-#     push_prep
+#     locale_sync
 #
 # SYNOPSIS
-#     ./push_prep.sh
+#     ./locale_sync.sh
 # 
 # DESCRIPTION
-#     push_prep converts Java .properties-based resource bundles into .po
+#     locale_sync converts Java .properties-based resource bundles into .po
 #     (portable object) format in preparation for use with an external
 #     translation tool.
 #

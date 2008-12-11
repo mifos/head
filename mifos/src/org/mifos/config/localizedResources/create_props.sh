@@ -1,6 +1,11 @@
 #!/bin/bash
 set -o errexit
 
+# creates locale-specific .properties files for use by Mifos web app.
+# [_] integrate into build process
+# 	  [_] on build server
+# 	  [_] as part of Maven build
+
 for locale in `find . -regex '[^/]*/[a-zA-Z_]*$' -type d | cut -c3-`
 do
     for translated in `find $locale -type f -name "*$locale.po"`
