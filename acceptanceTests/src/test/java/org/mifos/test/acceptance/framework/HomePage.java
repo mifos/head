@@ -45,4 +45,10 @@ public class HomePage extends MifosPage {
 		Assert.assertTrue(selenium.isTextPresent("The last time you logged on was"));
 		return this;
     }
+
+	public ClientsAndAccountsHomepage navigateToClientsAndAccountsUsingHeaderTab() {
+		selenium.click("link=Clients & Accounts");
+		waitForPageToLoad();
+		return new ClientsAndAccountsHomepage(selenium);
+	}
 }

@@ -30,6 +30,13 @@ import com.thoughtworks.selenium.Selenium;
  *
  */
 public class LoginPage extends AbstractPage {
+	
+	private static String USERNAME_INPUT_ID = "login.input.username";
+	private static String PASSWORD_INPUT_ID = "login.input.password";
+	private static String LOGIN_SUBMIT_BUTTON_ID = "foo";
+	
+	
+	
 
 	public LoginPage() {
 		super();
@@ -64,10 +71,10 @@ public class LoginPage extends AbstractPage {
 	}
 
 	public LoginPage verifyPage() {
-        Assert.assertEquals(selenium.getText("login.form.heading"), "Login");
-        Assert.assertEquals(selenium.getText("login.form.welcome"), "Welcome to mifos");
-        Assert.assertEquals(selenium.getText("login.form.label.username"), "Username");
-        Assert.assertEquals(selenium.getText("login.form.label.password"), "Password");
+        Assert.assertEquals(selenium.getText("login.label.heading"), "Login");
+        Assert.assertEquals(selenium.getText("login.label.welcome"), "Welcome to mifos");
+        Assert.assertEquals(selenium.getText("login.label.username"), "Username");
+        Assert.assertEquals(selenium.getText("login.label.password"), "Password");
 		return this;
 	}
 
