@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.mifos.test.acceptance.user;
+package org.mifos.test.acceptance.bulkentry;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.MifosPage;
