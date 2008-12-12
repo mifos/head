@@ -12,6 +12,9 @@ set -o errexit
 #     (portable object) format in preparation for use with an external
 #     translation tool.
 #
+#     Should be executed after updating default translations to update .po
+#     files.
+#
 # OPTIONS
 #     None.
 
