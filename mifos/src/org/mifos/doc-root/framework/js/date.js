@@ -66,19 +66,19 @@ function validateDate(field,pat,field2)
 		 var delim2 = datePattern.substring(iDelim2, iDelim2 + 1);
 		 if (iDelim1 == orderDay && iDelim2 == orderYear) 
 		 {
-			dateRegexp = new RegExp("^(\\d{2})(\\d{2})(\\d{4})$");
+			dateRegexp = new RegExp("^(\\d{1,2})(\\d{1,2})(\\d{4})$");
 		 } 
 		 else if (iDelim1 == orderDay) 
 		 {
-                     dateRegexp = new RegExp("^(\\d{2})(\\d{2})[" + delim2 + "](\\d{4})$");
+                     dateRegexp = new RegExp("^(\\d{1,2})(\\d{1,2})[" + delim2 + "](\\d{4})$");
   			 }
 		 else if (iDelim2 == orderYear) 
 		 {
-                     dateRegexp = new RegExp("^(\\d{2})[" + delim1 + "](\\d{2})(\\d{4})$");
+                     dateRegexp = new RegExp("^(\\d{1,2})[" + delim1 + "](\\d{1,2})(\\d{4})$");
 		 } 
 		 else 
 		 {
-                     dateRegexp = new RegExp("^(\\d{2})[" + delim1 + "](\\d{2})[" + delim2 + "](\\d{4})$");
+                     dateRegexp = new RegExp("^(\\d{1,2})[" + delim1 + "](\\d{1,2})[" + delim2 + "](\\d{4})$");
 		 }
 		 
 		 var matched = dateRegexp.exec(value);
@@ -112,13 +112,13 @@ function validateDate(field,pat,field2)
             var delim1 = datePattern.substring(iDelim1, iDelim1 + 1);
             var delim2 = datePattern.substring(iDelim2, iDelim2 + 1);
             if (iDelim1 == orderMonth && iDelim2 == orderYear) {
-                dateRegexp = new RegExp("^(\\d{2})(\\d{2})(\\d{4})$");
+                dateRegexp = new RegExp("^(\\d{1,2})(\\d{1,2})(\\d{4})$");
             } else if (iDelim1 == orderMonth) {
-                dateRegexp = new RegExp("^(\\d{2})(\\d{2})[" + delim2 + "](\\d{4})$");
+                dateRegexp = new RegExp("^(\\d{1,2})(\\d{1,2})[" + delim2 + "](\\d{4})$");
             } else if (iDelim2 == orderYear) {
-                dateRegexp = new RegExp("^(\\d{2})[" + delim1 + "](\\d{2})(\\d{4})$");
+                dateRegexp = new RegExp("^(\\d{1,2})[" + delim1 + "](\\d{1,2})(\\d{4})$");
             } else {
-                dateRegexp = new RegExp("^(\\d{2})[" + delim1 + "](\\d{2})[" + delim2 + "](\\d{4})$");
+                dateRegexp = new RegExp("^(\\d{1,2})[" + delim1 + "](\\d{1,2})[" + delim2 + "](\\d{4})$");
             }
             var matched = dateRegexp.exec(value);
             if(matched != null) {
@@ -145,13 +145,13 @@ function validateDate(field,pat,field2)
 		     var delim2 = datePattern.substring(iDelim2, iDelim2 + 1);
 	
               if (iDelim1 == orderMonth && iDelim2 == orderDay) {
-                  dateRegexp = new RegExp("^(\\d{4})(\\d{2})(\\d{2})$");
+                  dateRegexp = new RegExp("^(\\d{4})(\\d{1,2})(\\d{1,2})$");
               } else if (iDelim1 == orderMonth) {
-                  dateRegexp = new RegExp("^(\\d{4})(\\d{2})[" + delim2 + "](\\d{2})$");
+                  dateRegexp = new RegExp("^(\\d{4})(\\d{1,2})[" + delim2 + "](\\d{1,2})$");
               } else if (iDelim2 == orderDay) {
-                  dateRegexp = new RegExp("^(\\d{4})[" + delim1 + "](\\d{2})(\\d{2})$");
+                  dateRegexp = new RegExp("^(\\d{4})[" + delim1 + "](\\d{1,2})(\\d{1,2})$");
               } else {
-				  dateRegexp = new RegExp("^(\\d{4})[" + delim1 + "](\\d{2})[" + delim2 + "](\\d{2})$");
+				  dateRegexp = new RegExp("^(\\d{4})[" + delim1 + "](\\d{1,2})[" + delim2 + "](\\d{1,2})$");
               }
 			 if(value!="//")
 			 {
