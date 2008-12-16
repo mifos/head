@@ -70,9 +70,6 @@ explanation of the license and how it is applied.
 								<mifos:mifoslabel name="VOS.offDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.offDays}"/>
 								<br/>
-								<mifos:mifoslabel name="VOS.weekDays" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
-								<c:out value="${orgSettings.weekDays}"/>
-								<br/>
 								<mifos:mifoslabel name="VOS.holidayMeeting" bundle="viewOrganizationSettingsUIResources" isColonRequired="Yes"/> 
 								<c:out value="${orgSettings.holidayMeeting}"/>
 								<br/>
