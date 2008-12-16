@@ -27,18 +27,14 @@ do
         bundleBase=`basename $bundle .properties`
         echo $bundleBase
         prop2po $bundle --pot $bundleBase.pot
-        if [ ! -e $locale/${bundleBase}_$locale.po ]
+        if [ ! -e $locale/${bundleBase}.po ]
         then
-            pot2po $bundleBase.pot $locale/${bundleBase}_$locale.po
+            pot2po $bundleBase.pot $locale/${bundleBase}.po
         else
-            pot2po -t $locale/${bundleBase}_$locale.po $bundleBase.pot \
-                ${bundleBase}_$locale.po.TEMP
-            mv ${bundleBase}_$locale.po.TEMP $locale/${bundleBase}_$locale.po
+            pot2po -t $locale/${bundleBase}.po $bundleBase.pot \
+                ${bundleBase}.po.TEMP
+            mv ${bundleBase}.po.TEMP $locale/${bundleBase}.po
         fi
         rm $bundleBase.pot
-        # NOTE: initial locale-specific .po files for Rhino should be generated
-        #       using something like this.
-        #prop2po -t $bundle \
-        #  -i $locale/${bundleBase}_$locale.properties > $locale/$bundleBase.po
     done
 done

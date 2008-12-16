@@ -13,7 +13,7 @@ do
         # remove directory part of path
         translatedBase=`basename $translated`
 
-        # remove locale and file extension
+        # remove file extension
         bundleBase=`echo $translatedBase | sed -e 's/\.po$//'`
 
         # create locale-specific .properties files for use by Mifos web app

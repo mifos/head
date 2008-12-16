@@ -8,7 +8,7 @@ set -o errexit
 #     ./update_defaults.sh
 # 
 # DESCRIPTION
-#     Uses *_en.po translations to rebuild default translations in Java
+#     Uses en/*.po translations to rebuild default translations in Java
 #     .properties format resource bundles.
 #
 # OPTIONS
@@ -19,16 +19,16 @@ defaults=`\ls *.properties | grep -v _`
 for bundle in $defaults
 do
     bundleBase=`basename $bundle .properties`
-    en_po="${bundleBase}_en.po"
+    en_po="en/${bundleBase}.po"
 
     # blow away pootle's "memory"... it may interfere with default strings
-    sed -e '/^#~.*/d' en/$en_po > $en_po.copy
-    mv $en_po.copy en/$en_po
+    sed -e '/^#~.*/d' $en_po > $en_po.copy
+    mv $en_po.copy $en_po
 
-    po2prop -t $bundle en/$en_po > $bundle.copy
+    po2prop -t $bundle $en_po > $bundle.copy
     mv $bundle.copy $bundle
 
-    prop2po $bundle > en/$en_po
+    prop2po $bundle > $en_po
 
     ./locale_sync.sh
 done
