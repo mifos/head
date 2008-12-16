@@ -164,7 +164,14 @@
   <tr>
     <td width="51%" class="fontnormal"><mifos:mifoslabel name="Personnel.UserName"/> <c:out value="${Personnel.userName}"/> </td>
     <td width="49%" align="right" class="fontnormal">
-    	<a href="yourSettings.do?method=loadChangePassword&userName=${Personnel.userName}randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"><mifos:mifoslabel name="Personnel.ChangePassword"/></a>
+    	<a href="<c:url value='yourSettings.do'>
+	   		<c:param name='method' value='loadChangePassword'/>
+			<c:param name='userName' value='${Personnel.userName}'/>
+			<c:param name='randomNUm' value='${sessionScope.randomNUm}'/>
+			<c:param name='currentFlowKey' value='${requestScope.currentFlowKey}'/>
+		</c:url>">
+		<mifos:mifoslabel name="Personnel.ChangePassword"/>
+	</a>
     </td>
   </tr>
 </table><br>
