@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
-@Test(sequential=true, groups={"userLoginStory","acceptance","ui"})
+@Test(sequential=true, groups={"userLoginStory","acceptance","ui"}, enabled=false)
 public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
 		UiTestCaseBase {
 
@@ -34,9 +34,9 @@ public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
 	}
 	
 	public void defaultAdminUserSelectsValidBulkEntryParameters() {
-//		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
-//			.submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
-//			.verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
+		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
+			.submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
+			.verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
 	}
 	
 	private BulkEntrySelectPage loginAndNavigateToBulkEntrySelectPage(String userName, String password) {
