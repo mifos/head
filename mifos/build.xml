@@ -35,19 +35,19 @@
 	<property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
 	<property name="test.dir" value="${basedir}/test"/>
 	<property name="sql.dir" value="${basedir}/sql"/>
-	<property name="build.dir" value="${basedir}/build"/>
+	<property name="build.dir" value="${basedir}/target"/>
 	<property name="dist.dir" value="${basedir}/dist"/>
 
 	<!--Helper path for building, copying resources etc-->
 	<property name="doc.dir" value="${dist.dir}/docs"/>
-	<property name="build.src.dir" value="${build.dir}/src_pkg"/>
-	<property name="build.test.dir" value="${build.dir}/test_pkg"/>
+	<property name="build.src.dir" value="${build.dir}/mifos"/>
+	<property name="build.test.dir" value="${build.dir}/test-classes"/>
 	<property name="build.web-inf" value="${build.src.dir}/WEB-INF"/>
 	<property name="build.classes" value="${build.web-inf}/classes"/>
 	<property name="build.lib" value="${build.dir}/lib"/>
 	<property name="build.adminReport" value="${build.src.dir}/adminReport"/>
 
-	<property name="test.classes" value="${build.test.dir}/classes"/>
+	<property name="test.classes" value="${build.test.dir}"/>
 
 	<property name="current.release.number" value="1.1.0"/>
 	<property name="current.release.name" value="mifos_v${current.release.number}"/>

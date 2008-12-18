@@ -12,6 +12,12 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<build>
+      <finalName>mifos</finalName>
+      <defaultGoal>war:war</defaultGoal>
+      <sourceDirectory>src</sourceDirectory>
+      <testSourceDirectory>test</testSourceDirectory>
+      <outputDirectory>target/mifos/WEB-INF/classes</outputDirectory>
+      <testOutputDirectory>target/test-classes</testOutputDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>

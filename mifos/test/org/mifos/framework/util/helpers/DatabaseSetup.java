@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -44,11 +46,21 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
-		if (new File(LOCAL_HIBERNATE_TEST_PROPERTIES).exists()) {
+		if (resourceExists(LOCAL_HIBERNATE_TEST_PROPERTIES)) {
 			initializeHibernate(LOCAL_HIBERNATE_TEST_PROPERTIES);
 		} else {
 			initializeHibernate(DEFAULT_HIBERNATE_TEST_PROPERTIES);
 		}
+	}
+	
+	private static boolean resourceExists(String resourcePath) {
+        URI uri;
+        try {
+            uri = ResourceLoader.getURI(resourcePath);
+        } catch (URISyntaxException e) {
+            return false;
+        }
+        return (null != uri);
 	}
 
 	public static void initializeHibernate(String hibernatePropertiesFileName) {

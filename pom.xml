@@ -8,7 +8,7 @@
 	<name>gazelle-parent</name>
 	
 	<modules>
-		<module>application</module>
+		<module>mifos</module>
 		<module>acceptanceTests</module>
 	</modules>
 	
