@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ import org.hibernate.cfg.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
 public class DatabaseSetup {
@@ -131,16 +133,17 @@ public class DatabaseSetup {
 	private static DataStore createStandardStore() {
 		Database database = new Database();
 	    // Should be the same as the files in build.xml
-	    executeScript(database, "sql/latest-schema.sql");
-	    executeScript(database, "sql/latest-data.sql");
+	    executeScript(database, "latest-schema.sql");
+	    executeScript(database, "latest-data.sql");
 
-	    executeScript(database, "sql/testdbinsertionscript.sql");
+	    executeScript(database, "testdbinsertionscript.sql");
 
 	    return database.dataStore();
 	}
 
 	public static void executeScript(Database database, String name) {
-        Reader sql = openFile(name);
+	    
+        Reader sql = SqlResource.getInstance().getAsReader(name);
 
         try {
 	        database.executeScript(sql);
@@ -168,8 +171,8 @@ public class DatabaseSetup {
 	}
 	
 	public static void executeScript(Connection connection, String name) 
-	throws FileNotFoundException, SQLException {
-		FileInputStream sql = new FileInputStream(name);
+	throws SQLException, IOException {
+		InputStream sql = SqlResource.getInstance().getAsStream(name);
         try {
         	SqlUpgrade.execute(sql, connection);
 	    }

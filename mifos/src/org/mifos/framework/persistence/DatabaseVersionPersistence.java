@@ -43,6 +43,8 @@ import org.mifos.application.master.persistence.Upgrade167;
 import org.mifos.application.master.persistence.Upgrade169;
 import org.mifos.application.master.persistence.Upgrade173;
 import org.mifos.application.master.persistence.Upgrade176;
+import org.mifos.application.master.persistence.Upgrade183;
+import org.mifos.application.master.persistence.Upgrade198;
 import org.mifos.application.productdefinition.business.AddInterestCalcRule;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productsmix.persistence.Upgrade127;
@@ -53,15 +55,16 @@ import org.mifos.framework.components.fieldConfiguration.business.AddField;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.AddActivity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.application.master.persistence.Upgrade183;
-import org.mifos.application.master.persistence.Upgrade198;
 
 public class DatabaseVersionPersistence {
 
 	public static final int APPLICATION_VERSION = 207;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
-
+    private final Connection connection;
+    private final Map<Integer, Upgrade> registeredUpgrades;
+    private SqlResource sqlResource;
+    
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
 		int higherVersion = upgrade.higherVersion();
 		if (register.containsKey(higherVersion)) {
@@ -379,14 +382,16 @@ public class DatabaseVersionPersistence {
 		);
 	}	
 	
-	private final Connection connection;
-	private final Map<Integer, Upgrade> registeredUpgrades;
-
 	public DatabaseVersionPersistence() {
 		this(HibernateUtil.getOrCreateSessionHolder().getSession().connection());
+		this.sqlResource = new SqlResource();
 	}
 
-	public DatabaseVersionPersistence(Connection connection) {
+	public void setSqlResource(SqlResource sqlResource) {
+        this.sqlResource = sqlResource;
+    }
+
+    public DatabaseVersionPersistence(Connection connection) {
 		this(connection, masterRegister());
 	}
 
@@ -477,7 +482,7 @@ public class DatabaseVersionPersistence {
 		boolean foundInJava = registeredUpgrades.containsKey(higherVersion);
 
 		String name = "upgrade_to_" + higherVersion + ".sql";
-		URL url = lookup(name);
+        URL url = getSqlResourceLocation(name);
 		boolean foundInSql = url != null;
 
 		if (foundInJava && foundInSql) {
@@ -506,15 +511,14 @@ public class DatabaseVersionPersistence {
 		}
 	}
 
-	
-	URL lookup(String name) {
-		return getClass().getResource(name);
-	}
-	
+    URL getSqlResourceLocation(String name) {
+        return this.sqlResource.getInstance().getUrl(name);
+    }
+
 	public SqlUpgrade findUpgradeScript(int higherVersion, String scriptName) {
 		// Currently, SQL files are located in the same package as
 		// DatabaseVersionPersistence so we need to load the file from this class
-		URL url = lookup(scriptName);
+		URL url = getSqlResourceLocation(scriptName);
 		boolean foundInSql = url != null;
 
 		if (foundInSql) {
@@ -579,4 +583,6 @@ public class DatabaseVersionPersistence {
 			version = upgradedVersion;
 		}
 	}
+	
+	
 }

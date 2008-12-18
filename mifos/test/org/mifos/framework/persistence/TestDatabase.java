@@ -3,8 +3,6 @@ package org.mifos.framework.persistence;
 import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
 import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -125,8 +123,7 @@ public class TestDatabase implements SessionOpener {
 
 	public static void runUpgradeScripts(int fromVersion, Connection connection)
 	throws Exception {
-		DatabaseVersionPersistence persistence = 
-	    	new FileReadingPersistence(connection);
+		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence(connection);
 	    Assert.assertEquals(fromVersion, persistence.read());
 	    persistence.upgradeDatabase();
 	}
@@ -134,42 +131,44 @@ public class TestDatabase implements SessionOpener {
 	/**
 	 * Create a database and upgrade it to the first database version
 	 * with a number.  Should be run on an empty database (no tables).
+	 * @throws IOException 
 	 */
 	public static void upgradeToFirstNumberedVersion(Connection connection) 
-	throws FileNotFoundException, SQLException {
-		executeScript(connection, "sql/mifosdbcreationscript.sql");
-	    executeScript(connection, "sql/mifosmasterdata.sql");
-	    executeScript(connection, "sql/rmpdbcreationscript.sql");
-	    executeScript(connection, "sql/rmpmasterdata.sql");
-	    executeScript(connection, "sql/Iteration13-DBScripts25092006.sql");
-	    executeScript(connection, "sql/Iteration14-DDL-DBScripts10102006.sql");
-	    executeScript(connection, "sql/Iteration14-DML-DBScripts10102006.sql");
-	    executeScript(connection, "sql/Iteration15-DDL-DBScripts24102006.sql");
-	    executeScript(connection, "sql/Iteration15-DBScripts20061012.sql");
-	    executeScript(connection, "sql/add-version.sql");
-	    executeScript(connection, "sql/Index.sql");
+	throws SQLException, IOException {
+		executeScript(connection, "mifosdbcreationscript.sql");
+	    executeScript(connection, "mifosmasterdata.sql");
+	    executeScript(connection, "rmpdbcreationscript.sql");
+	    executeScript(connection, "rmpmasterdata.sql");
+	    executeScript(connection, "Iteration13-DBScripts25092006.sql");
+	    executeScript(connection, "Iteration14-DDL-DBScripts10102006.sql");
+	    executeScript(connection, "Iteration14-DML-DBScripts10102006.sql");
+	    executeScript(connection, "Iteration15-DDL-DBScripts24102006.sql");
+	    executeScript(connection, "Iteration15-DBScripts20061012.sql");
+	    executeScript(connection, "add-version.sql");
+	    executeScript(connection, "Index.sql");
 	}
 
 	/**
 	 * Create a database and upgrade it to the latest checkpoint database 
 	 * version.  Should be run on an empty database (no tables).
+	 * @throws IOException 
 	 */
 	public static void upgradeLatestCheckpointVersion(Connection connection) 
-	throws FileNotFoundException, SQLException {
-	    executeScript(connection, "sql/latest-schema-checkpoint.sql");
-		executeScript(connection, "sql/latest-data-checkpoint.sql");
+	throws SQLException, IOException {
+	    executeScript(connection, "latest-schema-checkpoint.sql");
+		executeScript(connection, "latest-data-checkpoint.sql");
 	}
 
 	public static void resetMySQLDatabase() throws Exception {
 		Connection connection = HibernateUtil.getSessionTL().connection();
 		HibernateUtil.startTransaction();
-		SqlUpgrade.execute(new FileInputStream("sql/mifosdroptables.sql"), connection);
-		SqlUpgrade.execute(new FileInputStream("sql/latest-schema.sql"), connection);
-		SqlUpgrade.execute(new FileInputStream("sql/latest-data.sql"), connection);
-		SqlUpgrade.execute(new FileInputStream("sql/custom_data.sql"), connection);
-		SqlUpgrade.execute(new FileInputStream("sql/testdbinsertionscript.sql"), connection);
+		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("mifosdroptables.sql"), connection);
+		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-schema.sql"), connection);
+		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("latest-data.sql"), connection);
+		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("custom_data.sql"), connection);
+		SqlUpgrade.execute(SqlResource.getInstance().getAsStream("testdbinsertionscript.sql"), connection);
 
-		// Don't execute "sql/init_mifos_password.sql" ... this is only for
+		// Don't execute "init_mifos_password.sql" ... this is only for
 		// "production" databases (those that Mifos running under an app
 		// server will connect to).
 

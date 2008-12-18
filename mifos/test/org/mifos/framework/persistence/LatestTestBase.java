@@ -33,8 +33,8 @@ public class LatestTestBase {
 	 * but without testdbinsertionscript.sql.
 	 */
 	protected void loadRealLatest(Database database) {
-	    DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
-	    DatabaseSetup.executeScript(database, "sql/latest-data.sql");
+	    DatabaseSetup.executeScript(database, "latest-schema.sql");
+	    DatabaseSetup.executeScript(database, "latest-data.sql");
 	}
 
 	protected int largestLookupId(Connection connection) throws SQLException {
@@ -70,7 +70,7 @@ public class LatestTestBase {
 	protected DataStore upgrade(DataStore current, int nextVersion) throws Exception {
 		Database database = new Database(current);
 		DatabaseVersionPersistence persistence =
-			new FileReadingPersistence(database.openConnection());
+			new DatabaseVersionPersistence(database.openConnection());
 		Upgrade upgrade = persistence.findUpgrade(nextVersion);
 		if (upgrade instanceof SqlUpgrade)
 			assertNoHardcodedValues((SqlUpgrade) upgrade, nextVersion);

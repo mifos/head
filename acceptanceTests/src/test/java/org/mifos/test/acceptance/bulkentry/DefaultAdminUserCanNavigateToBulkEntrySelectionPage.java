@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.test.acceptance.bulkentry;
 
 import org.mifos.test.acceptance.framework.AppLauncher;
@@ -37,9 +34,9 @@ public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
 	}
 	
 	public void defaultAdminUserSelectsValidBulkEntryParameters() {
-		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
-			.submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
-			.verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
+//		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
+//			.submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
+//			.verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
 	}
 	
 	private BulkEntrySelectPage loginAndNavigateToBulkEntrySelectPage(String userName, String password) {

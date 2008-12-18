@@ -150,6 +150,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					String reportId = request.getParameter("reportId");
 					activityKey = key + "-" + reportId;
 					activityId = activityMapper.getActivityId(activityKey);
+					// FIXME: AF 
+                    System.out.println("**** Report activity key: " + activityKey);
+                    System.out.println("**** Report activity id: " + activityId);
 				} else {
 					activityId = activityMapper.getActivityId(key);
 					request.setAttribute(Globals.ERROR_KEY, null);

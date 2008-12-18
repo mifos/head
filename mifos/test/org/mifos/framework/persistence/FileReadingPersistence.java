@@ -14,8 +14,7 @@ class FileReadingPersistence extends DatabaseVersionPersistence {
 		super(connection);
 	}
 
-	@Override
-	URL lookup(String name) {
+	URL getSqlResourceLocation(String name) {
 		try {
 			String filename = "sql/" + name;
 			if (new File(filename).exists()) {

@@ -18,7 +18,7 @@ public class Upgrader {
 			"jdbc:mysql://localhost:3306/test", "root", "mysql");
 		connection.setAutoCommit(false);
 
-		DatabaseSetup.executeScript(connection, "sql/mifosdroptables.sql");
+		DatabaseSetup.executeScript(connection, "mifosdroptables.sql");
 		TestDatabase.upgradeToFirstNumberedVersion(connection);
 		TestDatabase.runUpgradeScripts(connection);
 	}

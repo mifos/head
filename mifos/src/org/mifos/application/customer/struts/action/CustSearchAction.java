@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.SystemException;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -27,8 +28,11 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
@@ -148,9 +152,22 @@ public class CustSearchAction extends SearchAction {
 				Constants.USERCONTEXT, request.getSession());
 		SessionUtils.setAttribute("isCenterHeirarchyExists", ClientRules.getCenterHierarchyExists(), request);
 		loadMasterData(userContext.getId(), request, actionForm);
+		
+		fixUpReportSecurity();
+		
 		return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
 	}
 
+    private static void fixUpReportSecurity() {
+        ActivityMapper.getInstance().getActivityMap().put("/reportsUserParamsAction-loadAddList-"+ 4, (short) -1);
+        try {
+             AuthorizationManager.getInstance().init();
+         } catch (ApplicationException e) {
+             e.printStackTrace();
+         }
+     }
+	
+	
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

@@ -79,8 +79,8 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 	public void dropTables() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		String blankDB = new SqlDumper().dump(database.dataStore());
-		DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
-		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");
+		DatabaseSetup.executeScript(database, "latest-schema.sql");
+		DatabaseSetup.executeScript(database, "mifosdroptables.sql");
 		String cleanedDB = new SqlDumper().dump(database.dataStore());
 		assertEquals(blankDB, cleanedDB);
 	}
@@ -94,7 +94,7 @@ public class LatestTestAfterCheckpoint extends LatestTestBase {
 	public void dropTablesWithData() throws Exception {
 		TestDatabase database = TestDatabase.makeStandard();
 		DatabaseSetup.executeScript(
-			database.openConnection(), "sql/mifosdroptables.sql");
+			database.openConnection(), "mifosdroptables.sql");
 		assertEquals("", database.dumpForComparison());
 	}
 	

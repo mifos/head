@@ -117,7 +117,7 @@ public class DatabaseVersionPersistenceTest {
 	private DatabaseVersionPersistence sqlFor89And90() {
 		return new DatabaseVersionPersistence(null) {
 			@Override
-			URL lookup(String name) {
+			URL getSqlResourceLocation(String name) {
 				if ("upgrade_to_89.sql".equals(name) 
 					|| "upgrade_to_90.sql".equals(name)) {
 					try {
@@ -245,6 +245,7 @@ public class DatabaseVersionPersistenceTest {
 		connection.setAutoCommit(false);
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(connection);
+		persistence.setSqlResource(new SqlResourceForTest());
 		persistence.upgradeDatabase(connection, 80);
 		connection.commit();
 		
@@ -295,7 +296,7 @@ public class DatabaseVersionPersistenceTest {
 			new DatabaseVersionPersistence(database.openConnection(),
 				Collections.EMPTY_MAP) {
 			@Override
-			URL lookup(String name) {
+			URL getSqlResourceLocation(String name) {
 				return null;
 			}
 		};
@@ -340,7 +341,7 @@ public class DatabaseVersionPersistenceTest {
 			new DatabaseVersionPersistence(database.openConnection(),
 				registrations) {
 			@Override
-			URL lookup(String name) {
+			URL getSqlResourceLocation(String name) {
 				return null;
 			}
 		};
@@ -369,7 +370,7 @@ public class DatabaseVersionPersistenceTest {
 			new DatabaseVersionPersistence(database.openConnection(),
 				registrations) {
 			@Override
-			URL lookup(String name) {
+			URL getSqlResourceLocation(String name) {
 				if ("upgrade_to_69.sql".equals(name)) {
 					try {
 						return new URL("file:" + name);
@@ -392,7 +393,7 @@ public class DatabaseVersionPersistenceTest {
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(database.openConnection()) {
 			@Override
-			public URL lookup(String name) {
+			public URL getSqlResourceLocation(String name) {
 				if (CONDITIONAL_UPGRADE_10_NAME.equals(name) || 
 					CONDITIONAL_DOWNGRADE_10_NAME.equals(name)) {
 					try {
