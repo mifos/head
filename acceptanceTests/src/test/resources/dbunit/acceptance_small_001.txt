@@ -1,0 +1,7 @@
+Database version: 206
+Description:
+This is a minimal data set.
+Add more description here about users, centers, etc.
+
+The sql data was originally named "demo_data_4Dec08.sql"
+
