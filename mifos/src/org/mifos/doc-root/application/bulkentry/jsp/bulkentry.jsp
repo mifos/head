@@ -176,7 +176,7 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
+												<span id="bulkentry.heading" class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
 												<mifos:mifoslabel name="bulkEntry.select" />
 												<c:choose>
 													<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
@@ -329,7 +329,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel keyhm="BulkEntry.ReceiptId" isColonRequired="Yes" name="bulkEntry.rcptid" />
 											</td>
 											<td>
-												<mifos:mifosalphanumtext keyhm="BulkEntry.ReceiptId" property="receiptId" style="width:136px" maxlength="25" />
+												<mifos:mifosalphanumtext styleId="bulkentry.input.receiptId" keyhm="BulkEntry.ReceiptId" property="receiptId" style="width:136px" maxlength="25" />
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -356,11 +356,11 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn"  onclick="fnSubmit(this.form, this)">
+												<html-el:submit styleId="bulkentry.button.continue" styleClass="buttn"  onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.cont" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn"  onclick="fnCancel(this.form);">
+												<html-el:button  styleId="bulkentry.button.cancel" property="cancel" styleClass="cancelbuttn"  onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>
