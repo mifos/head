@@ -152,7 +152,7 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
+												<span class="heading" id="bulkentry_preview.heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" /> - </span>
 												<mifos:mifoslabel name="bulkEntry.revnsub" />
 												<br>
 												<br>
@@ -228,7 +228,7 @@
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td>
-												<html-el:button property="edit" styleClass="insidebuttn"  onclick="fnPrevious(this.form);">
+												<html-el:button styleId="bulkentry_preview.button.editdata" property="edit" styleClass="insidebuttn"  onclick="fnPrevious(this.form);">
 													<mifos:mifoslabel name="bulkEntry.editdata" />
 												</html-el:button>
 											</td>
@@ -246,11 +246,11 @@
 									<table width="97%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td align="center">
-												<html-el:submit styleClass="buttn"  property="submitBttn" onclick="fnSubmit(this.form, this)">
+												<html-el:submit styleId="bulkentry_preview.button.submit" styleClass="buttn"  property="submitBttn" onclick="fnSubmit(this.form, this)">
 													<mifos:mifoslabel name="bulkEntry.submit" />
 												</html-el:submit>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
+												<html-el:button styleId="bulkentry_preview.button.cancel" property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>
