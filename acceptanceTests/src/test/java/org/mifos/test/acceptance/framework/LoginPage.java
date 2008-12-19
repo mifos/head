@@ -78,9 +78,19 @@ public class LoginPage extends AbstractPage {
 		return this;
 	}
 
-	public LoginPage verifyFailedLogin() {
+	public LoginPage verifyFailedLoginBadPassword() {
         Assert.assertEquals(selenium.getText("login.error.message"), "Please specify valid username/password to access the application.");
 		return this;
+	}
+
+	public LoginPage verifyFailedLoginNoPassword() {
+	        Assert.assertEquals(selenium.getText("login.error.message"), "Please specify the value for Password.");
+			return this;
+	}
+
+	public LoginPage verifyFailedLoginNoUsername() {
+		        Assert.assertEquals(selenium.getText("login.error.message"), "Please specify the value for Username.");
+				return this;
 	}
 
 }

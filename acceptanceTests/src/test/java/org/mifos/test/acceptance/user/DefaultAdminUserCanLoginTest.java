@@ -67,8 +67,23 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 		appLauncher
 			.launchMifos()
 				.loginFailedAs("mifos", "mifos3")
-					.verifyFailedLogin();
+					.verifyFailedLoginBadPassword();
 	}
 
-}
 
+	@Test(groups={"userLoginStory","ui"})
+	public void userLoginFailureNoPasswordTest() {
+		appLauncher
+			.launchMifos()
+				.loginFailedAs("mifos", "")
+					.verifyFailedLoginNoPassword();
+	}
+
+	@Test(groups={"userLoginStory","ui"})
+	public void userLoginFailureNoUsernameTest() {
+		appLauncher
+			.launchMifos()
+				.loginFailedAs("", "abc")
+					.verifyFailedLoginNoUsername();
+	}
+}
