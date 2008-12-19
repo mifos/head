@@ -127,7 +127,7 @@
 											<tr class="fontnormal">
 												<td>
 												
-													<html-el:text property="searchString" maxlength="200"/>
+													<html-el:text styleId="home.input.search" property="searchString" maxlength="200"/>
 													<c:choose>
 													<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
 													<html-el:hidden property="officeId" value="${sessionScope.UserContext.branchId}"/> 
@@ -143,7 +143,7 @@
 												
 											<tr class="fontnormal8pt">
 												<td width="88%">
-													<html-el:submit property="searchButton" styleClass="buttn">
+													<html-el:submit styleId="home.button.search" property="searchButton" styleClass="buttn">
 														<mifos:mifoslabel name="CustomerSearch.search"/>
 													</html-el:submit>
 												</td>
