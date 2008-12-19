@@ -89,7 +89,7 @@ explanation of the license and how it is applied.
 															<img src="pages/framework/images/timeline/bigarrow.gif" width="17" height="17">
 														</td>
 														<td class="timelineboldorange">
-															<mifos:mifoslabel name="bulkEntry.enterdata" />
+															<span id="bulkentry_data.label.enterdata"><mifos:mifoslabel name="bulkEntry.enterdata" /></span>
 														</td>
 													</tr>
 												</table>
@@ -117,7 +117,7 @@ explanation of the license and how it is applied.
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td class="headingorange">
-												<span class="heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" />- </span>
+												<span class="heading" id="bulkentry_data.heading"> <mifos:mifoslabel name="${ConfigurationConstants.BULKENTRY}" />- </span>
 												<mifos:mifoslabel name="bulkEntry.enterdata" />
 												<br>
 												<br>
@@ -207,18 +207,18 @@ explanation of the license and how it is applied.
 											<td align="center">
 												<c:choose>
 													<c:when test="${requestScope.isDisabled}">
-														<html-el:submit styleClass="buttn"  disabled="true">
+														<html-el:submit styleId="bulkentry_data.button.preview" styleClass="buttn"  disabled="true">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:when>
 													<c:otherwise>
-														<html-el:submit styleClass="buttn"  onclick="fnSubmit(this.form, this)">
+														<html-el:submit styleId="bulkentry_data.button.preview" styleClass="buttn"  onclick="fnSubmit(this.form, this)">
 															<mifos:mifoslabel name="bulkEntry.preview" />
 														</html-el:submit>
 													</c:otherwise>
 												</c:choose>
 												&nbsp;
-												<html-el:button property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
+												<html-el:button styleId="bulkentry_data.button.cancel" property="cancel" styleClass="cancelbuttn" onclick="fnCancel(this.form);">
 													<mifos:mifoslabel name="bulkEntry.cancel" />
 												</html-el:button>
 											</td>
