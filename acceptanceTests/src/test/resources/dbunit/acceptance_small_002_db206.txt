@@ -1,4 +1,0 @@
-This data set is derived from acceptance_small_001
-
-A single bulk entry payment has been made and attendence added.
-

@@ -42,7 +42,7 @@ public class HomePage extends MifosPage {
 	
 
     public HomePage verifyPage() {
-		Assert.assertTrue(selenium.isTextPresent("The last time you logged on was"));
+		Assert.assertTrue(selenium.isTextPresent("You can navigate your way through Mifos using:"));
 		return this;
     }
 

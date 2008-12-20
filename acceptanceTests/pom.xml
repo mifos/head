@@ -282,6 +282,11 @@
 			<version>0.0.3-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
+	    <dependency>
+	        <groupId>org.dbunit</groupId>
+	        <artifactId>dbunit</artifactId>
+	        <version>2.4.1</version>
+	    </dependency>		
 	</dependencies>
 	<build>
 		<finalName>gazelle-testing</finalName>
@@ -413,6 +418,27 @@
 					<logOutput>${selenium.log.output}</logOutput>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>[ groupId ]</groupId>
+							<artifactId>[ artifactId ]</artifactId>
+							<version>[ version ]</version>
+							<type>[ packaging ]</type>
+							<classifier> [classifier - optional] </classifier>
+							<overWrite>[ true or false ]</overWrite>
+							<outputDirectory>[ output directory ]</outputDirectory>
+							<destFileName>[ filename ]</destFileName>
+						</artifactItem>
+					</artifactItems>
+		          <!-- other configurations here -->
+				</configuration>
+			</plugin>
+
+			
 		</plugins>
 	</build>
 	<reporting>
