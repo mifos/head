@@ -31,10 +31,14 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class LoginPage extends AbstractPage {
 	
-	private static String USERNAME_INPUT_ID = "login.input.username";
+	private static String USERNAME_INPUT_ID	= "login.input.username";
 	private static String PASSWORD_INPUT_ID = "login.input.password";
-	private static String LOGIN_SUBMIT_BUTTON_ID = "foo";
-	
+	private static String LOGIN_BUTTON_ID 	= "login.button.login";
+	private static String HEADING_LABEL_ID 	= "login.label.heading";
+	private static String WELCOME_LABEL_ID 	= "login.label.welcome";
+	private static String USERNAME_LABEL_ID = "login.label.username";
+	private static String PASSWORD_LABEL_ID = "login.label.password";
+	private static String MESSAGE_ERROR_ID 	= "login.error.message";
 	
 	
 
@@ -48,18 +52,18 @@ public class LoginPage extends AbstractPage {
 	
 	public HomePage loginSuccessfulAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");
-		selenium.type("userName", userName);
-		selenium.type("password", password);
-		selenium.click("//input[@value='Login']");
+		selenium.type(USERNAME_INPUT_ID, userName);
+		selenium.type(PASSWORD_INPUT_ID, password);
+		selenium.click(LOGIN_BUTTON_ID);
 		waitForPageToLoad();
 		return new HomePage(selenium);
 	}
 	
 	public LoginPage loginFailedAs(String userName, String password) {
 		selenium.open("loginAction.do?method=load");
-		selenium.type("userName", userName);
-		selenium.type("password", password);
-		selenium.click("//input[@value='Login']");
+		selenium.type(USERNAME_INPUT_ID, userName);
+		selenium.type(PASSWORD_INPUT_ID, password);
+		selenium.click(LOGIN_BUTTON_ID);
 		waitForPageToLoad();
 		return new LoginPage(selenium);
 	}
@@ -71,25 +75,25 @@ public class LoginPage extends AbstractPage {
 	}
 
 	public LoginPage verifyPage() {
-        Assert.assertEquals(selenium.getText("login.label.heading"), "Login");
-        Assert.assertEquals(selenium.getText("login.label.welcome"), "Welcome to mifos");
-        Assert.assertEquals(selenium.getText("login.label.username"), "Username");
-        Assert.assertEquals(selenium.getText("login.label.password"), "Password");
+        Assert.assertEquals(selenium.getText(HEADING_LABEL_ID), "Login");
+        Assert.assertEquals(selenium.getText(WELCOME_LABEL_ID), "Welcome to mifos");
+        Assert.assertEquals(selenium.getText(USERNAME_LABEL_ID), "Username");
+        Assert.assertEquals(selenium.getText(PASSWORD_LABEL_ID), "Password");
 		return this;
 	}
 
 	public LoginPage verifyFailedLoginBadPassword() {
-        Assert.assertEquals(selenium.getText("login.error.message"), "Please specify valid username/password to access the application.");
+        Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify valid username/password to access the application.");
 		return this;
 	}
 
 	public LoginPage verifyFailedLoginNoPassword() {
-	        Assert.assertEquals(selenium.getText("login.error.message"), "Please specify the value for Password.");
+	        Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Password.");
 			return this;
 	}
 
 	public LoginPage verifyFailedLoginNoUsername() {
-		        Assert.assertEquals(selenium.getText("login.error.message"), "Please specify the value for Username.");
+		        Assert.assertEquals(selenium.getText(MESSAGE_ERROR_ID), "Please specify the value for Username.");
 				return this;
 	}
 
