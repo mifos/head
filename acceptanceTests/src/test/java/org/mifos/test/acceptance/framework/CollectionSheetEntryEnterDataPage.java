@@ -7,16 +7,16 @@ import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
-public class BulkEntryEnterDataPage extends AbstractPage {
+public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 
-	public BulkEntryEnterDataPage() {
+	public CollectionSheetEntryEnterDataPage() {
 		super();
 	}
 
 	/**
 	 * @param selenium
 	 */
-	public BulkEntryEnterDataPage(Selenium selenium) {
+	public CollectionSheetEntryEnterDataPage(Selenium selenium) {
 		super(selenium);
 	}
 	

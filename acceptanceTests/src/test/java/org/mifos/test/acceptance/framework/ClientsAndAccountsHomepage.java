@@ -12,10 +12,10 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 		super(selenium);
 	}
 
-	public BulkEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
+	public CollectionSheetEntrySelectPage navigateToEnterCollectionSheetDataUsingLeftMenu() {
 		selenium.click("link=Enter Collection Sheet Data");
 		waitForPageToLoad();
-		return new BulkEntrySelectPage(selenium);
+		return new CollectionSheetEntrySelectPage(selenium);
 	}
 
 }

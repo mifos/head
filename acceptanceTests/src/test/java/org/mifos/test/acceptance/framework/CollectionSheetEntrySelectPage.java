@@ -12,14 +12,14 @@ import com.thoughtworks.selenium.Selenium;
  * @author keith
  *
  */
-public class BulkEntrySelectPage extends AbstractPage {
+public class CollectionSheetEntrySelectPage extends AbstractPage {
 
 	
-	public BulkEntrySelectPage() {
+	public CollectionSheetEntrySelectPage() {
 		super();
 	}
 
-	public BulkEntrySelectPage(Selenium selenium) {
+	public CollectionSheetEntrySelectPage(Selenium selenium) {
 		super(selenium);
 	}
 
@@ -27,7 +27,7 @@ public class BulkEntrySelectPage extends AbstractPage {
 		Assert.assertTrue(selenium.isTextPresent(" Bulk entry - Select Center"), "Didn't reach Bulk entry select page");
 	}
 
-	public BulkEntryEnterDataPage submitForm(
+	public CollectionSheetEntryEnterDataPage submitForm(
 						String branch, String loanOfficer, String center,
 						String transactionDay, String transactionMonth, String transactionYear, 
 						String paymentMode, String receiptId, 
@@ -49,7 +49,7 @@ public class BulkEntrySelectPage extends AbstractPage {
 		typeTextIfNotEmpty  ("receiptDateYY",     receiptYear);
 		selenium.click ("//input[@value='Continue']");
 		waitForPageToLoad();
-		return new BulkEntryEnterDataPage(selenium);
+		return new CollectionSheetEntryEnterDataPage(selenium);
 	}
 	
 	private void typeTextIfNotEmpty(String locator, String value) {

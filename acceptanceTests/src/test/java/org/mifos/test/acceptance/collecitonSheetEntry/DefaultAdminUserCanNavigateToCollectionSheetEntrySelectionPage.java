@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.bulkentry;
+package org.mifos.test.acceptance.collecitonSheetEntry;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,7 +12,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.test.acceptance.framework.AppLauncher;
-import org.mifos.test.acceptance.framework.BulkEntrySelectPage;
+import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"acceptance","ui"})
-public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
+public class DefaultAdminUserCanNavigateToCollectionSheetEntrySelectionPage extends
 		UiTestCaseBase {
 
 	private AppLauncher appLauncher;
@@ -89,7 +89,7 @@ public class DefaultAdminUserCanNavigateToBulkEntrySelectionPage extends
 	}
 
 	
-	private BulkEntrySelectPage loginAndNavigateToBulkEntrySelectPage(String userName, String password) {
+	private CollectionSheetEntrySelectPage loginAndNavigateToBulkEntrySelectPage(String userName, String password) {
 		return appLauncher
 		 .launchMifos()
 		 .loginSuccessfulAs(userName, password)

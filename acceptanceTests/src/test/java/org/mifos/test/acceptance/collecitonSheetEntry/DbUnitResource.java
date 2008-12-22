@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.bulkentry;
+package org.mifos.test.acceptance.collecitonSheetEntry;
 
 import java.io.IOException;
 import java.io.InputStream;
