@@ -53,6 +53,16 @@ public class DefaultAdminUserCanNavigateToCollectionSheetEntrySelectionPage exte
 			.verifyPage();
 	}
 	
+	/*
+	 * Enable this test when mingle card 1187 is completed.
+	 */
+	@Test(enabled=false)
+	public void defaultAdminNavigateToBulkEntryAndCancel() throws DatabaseUnitException, SQLException, IOException {
+		loginAndNavigateToBulkEntrySelectPage("mifos", "testmifos")
+			.cancelPage()
+			.verifyPage();
+	}
+
 	@Test(enabled=true)
 	public void testLoadData() throws DatabaseUnitException, SQLException, IOException {
 		loadDataFromFile("acceptance_small_001_dbunit.xml");

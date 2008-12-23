@@ -14,7 +14,10 @@ import com.thoughtworks.selenium.Selenium;
  */
 public class CollectionSheetEntrySelectPage extends AbstractPage {
 
-	
+	private static String RECEIPT_INPUT_ID	= "bulkentry.input.receiptId";
+	private static String CONTINUE_BUTTON_ID = "bulkentry.button.continue";
+	private static String CANCEL_BUTTON_ID = "bulkentry.button.cancel";
+
 	public CollectionSheetEntrySelectPage() {
 		super();
 	}
@@ -27,6 +30,13 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 		Assert.assertTrue(selenium.isTextPresent(" Bulk entry - Select Center"), "Didn't reach Bulk entry select page");
 	}
 
+	public HomePage cancelPage() {
+		verifyPage();
+		selenium.click(CANCEL_BUTTON_ID);
+		waitForPageToLoad();
+		return new HomePage(selenium);
+	}
+	
 	public CollectionSheetEntryEnterDataPage submitForm(
 						String branch, String loanOfficer, String center,
 						String transactionDay, String transactionMonth, String transactionYear, 
@@ -43,11 +53,11 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 		typeTextIfNotEmpty  ("transactionDateMM", transactionMonth);
 		typeTextIfNotEmpty  ("transactionDateYY", transactionYear);
 		selenium.select("paymentId",         "label=" + paymentMode);
-		typeTextIfNotEmpty  ("receiptId",         "123456789");
+		typeTextIfNotEmpty  (RECEIPT_INPUT_ID,         "123456789");
 		typeTextIfNotEmpty  ("receiptDateDD",     receiptDay);
 		typeTextIfNotEmpty  ("receiptDateMM",     receiptMonth);
 		typeTextIfNotEmpty  ("receiptDateYY",     receiptYear);
-		selenium.click ("//input[@value='Continue']");
+		selenium.click (CONTINUE_BUTTON_ID);
 		waitForPageToLoad();
 		return new CollectionSheetEntryEnterDataPage(selenium);
 	}
