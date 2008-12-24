@@ -51,7 +51,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -101,8 +101,7 @@ public class StateXMLParser {
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(null);
-			Document document = builder.parse(new File(ResourceLoader
-					.getURI(filename)));
+			Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
 			Node mapToprocess = null;
 			/*
 			 * String configurationName = ""; if

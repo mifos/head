@@ -64,7 +64,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 
 /**
  * This class should prepare all the sub-systems that are required by the app.
@@ -113,7 +113,7 @@ public class ApplicationInitializer implements ServletContextListener,
 		}
 		Properties hibernateCfg = new Properties();
 		try {
-			URI uri = ResourceLoader.getURI(getHibernateProperties());
+			URI uri = ClasspathResource.getURI(getHibernateProperties());
 			if (null != uri)
 				hibernateCfg.load(new FileInputStream(new File(uri)));
 		}
@@ -330,7 +330,7 @@ public class ApplicationInitializer implements ServletContextListener,
 
 	public static boolean isHibernateConfigOverride() {
 		try {
-			if (ResourceLoader.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null) {
+			if (ClasspathResource.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null) {
 	            System.out.println("**** deploymifoDB.properties path: " + FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE + " File not found!");
 				return true;
 			}

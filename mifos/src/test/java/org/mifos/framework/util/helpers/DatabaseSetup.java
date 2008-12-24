@@ -21,6 +21,7 @@ import net.sourceforge.mayfly.datastore.DataStore;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.HibernateStartUp;
@@ -61,7 +62,7 @@ public class DatabaseSetup {
 	private static boolean resourceExists(String resourcePath) {
         URI uri;
         try {
-            uri = ResourceLoader.getURI(resourcePath);
+            uri = ClasspathResource.getURI(resourcePath);
         } catch (URISyntaxException e) {
             return false;
         }
@@ -91,13 +92,8 @@ public class DatabaseSetup {
 		configureLogging();
 		
 		Configuration configuration = new Configuration();
-		// This step is slow (about 1-2 s for me) because it
-		// it reading and parsing a whole bunch of xml files.
-		// That's why we try to share it between different tests.
         try {
-            configuration.configure(
-                ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL()
-            );
+            configuration.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
         } catch (Exception e) {
             throw new HibernateStartUpException(
                     HibernateConstants.CFGFILENOTFOUND, e);

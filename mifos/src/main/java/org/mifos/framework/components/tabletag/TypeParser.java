@@ -9,7 +9,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.framework.exceptions.TableTagTypeParserException;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,8 +49,7 @@ public class TypeParser {
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(null);
-			Document document = builder.parse(new File(ResourceLoader
-					.getURI(filename)));
+			Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
 			Node fileNode = document.getFirstChild();
 			file=new Files();
 			file.setFileName(createFileName(fileNode));

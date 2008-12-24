@@ -46,8 +46,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -88,8 +88,7 @@ public class TableTagParser {
 
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			builder.setErrorHandler(null);
-			Document document = builder.parse(new File(ResourceLoader
-					.getURI(filename)));
+			Document document = builder.parse(new File(ClasspathResource.getURI(filename)));
 			/*
 			 * NodeList tableNodeList =
 			 * document.getElementsByTagName(TableTagConstants.TABLE); table =

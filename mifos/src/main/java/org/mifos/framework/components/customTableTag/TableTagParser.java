@@ -12,9 +12,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -39,7 +39,7 @@ public class TableTagParser {
 
 		SchemaFactory schfactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		schfactory.setErrorHandler(null);
-		Schema schema = schfactory.newSchema(new StreamSource(new File(ResourceLoader.getURI(FilePaths.CUSTOMTABLETAGXSD))));
+		Schema schema = schfactory.newSchema(new StreamSource(new File(ClasspathResource.getURI(FilePaths.CUSTOMTABLETAGXSD))));
 		factory.setNamespaceAware(false);
 		factory.setValidating(false);
 		factory.setSchema(schema);

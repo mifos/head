@@ -34,14 +34,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.mifos.application.ppi.business.PPIChoice;
 import org.mifos.application.ppi.business.PPILikelihood;
 import org.mifos.application.ppi.business.PPISurvey;
-import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.config.GeneralConfig;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,7 +52,7 @@ public class XmlPPISurveyParser {
 	/** TODO: Should be private */
 	public PPISurvey parseInto(String uri, PPISurvey survey)
             throws URISyntaxException, IOException, ParserConfigurationException, SAXException {
-		InputStream xml = ResourceLoader.getURI(uri).toURL().openStream();
+		InputStream xml = ClasspathResource.getURI(uri).toURL().openStream();
 		return parseInto(xml, survey);
 	}
 	

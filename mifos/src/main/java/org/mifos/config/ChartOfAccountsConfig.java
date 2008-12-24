@@ -44,7 +44,7 @@ import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.GLCategoryType;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -87,16 +87,14 @@ public class ChartOfAccountsConfig {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder parser = dbf.newDocumentBuilder();
-			document = parser.parse(new File(ResourceLoader
-					.getURI(chartOfAccountsXml)));
+			document = parser.parse(new File(ClasspathResource.getURI(chartOfAccountsXml)));
 
 			// create a SchemaFactory capable of understanding XML schemas
 			SchemaFactory factory = SchemaFactory
 					.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 			// load an XML schema
-			Source schemaFile = new StreamSource(new File(ResourceLoader
-					.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
+			Source schemaFile = new StreamSource(new File(ClasspathResource.getURI(FilePaths.CHART_OF_ACCOUNTS_SCHEMA)));
 			Schema schema = factory.newSchema(schemaFile);
 
 			// create a Validator instance and validate document
@@ -135,8 +133,7 @@ public class ChartOfAccountsConfig {
 	 *         location.
 	 */
 	public static String getCoaUri(Session session) {
-		final boolean customCoaExists = (null != ResourceLoader
-				.findResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM));
+		final boolean customCoaExists = (null != ClasspathResource.findResource(FilePaths.CHART_OF_ACCOUNTS_CUSTOM));
 
 		if (customCoaExists)
 			return FilePaths.CHART_OF_ACCOUNTS_CUSTOM;

@@ -9,7 +9,7 @@ import junitx.framework.ObjectAssert;
 import static junitx.framework.StringAssert.assertContains;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 
 public class TableTagParserTest extends TestCase {
 
@@ -26,10 +26,7 @@ public class TableTagParserTest extends TestCase {
 	}
 	public void testParser() throws Exception {
 		Table table = TableTagParser.getInstance()
-				.parser(ResourceLoader
-						.getURI(
-								"org/mifos/framework/util/resources/customTableTag/example.xml")
-						.toString());
+				.parser(ClasspathResource.getURI("org/mifos/framework/util/resources/customTableTag/example.xml").toString());
 		assertNotNull(table);
 		HeaderDetails details = table.getHeaderDetails();
 		assertEquals("drawtablerowbold", details.getHeaderStyle());

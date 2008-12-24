@@ -11,7 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -34,12 +34,7 @@ public class XMLParser {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			document = builder
-					.parse(ResourceLoader
-							.getURI(
-									"org/mifos/framework/util/resources/audit/ColumnMapping.xml")
-							.toString());
-
+			document = builder.parse(ClasspathResource.getURI("org/mifos/framework/util/resources/audit/ColumnMapping.xml").toString());
 			getColumnPropertyMapping(document);
 		} catch (URISyntaxException e) {
 			throw new SystemException(e);

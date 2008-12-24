@@ -25,7 +25,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -65,8 +65,7 @@ public class SpringUtil {
 		// required config file. exception thrown if not found.
 		configFiles.add(FilePaths.SPRING_CONFIG_CORE);
 
-		if (null != ResourceLoader
-				.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
+		if (null != ClasspathResource.findResource(FilePaths.SPRING_CONFIG_CUSTOM_BEANS)) {
 			logger.info("using " + FilePaths.SPRING_CONFIG_CUSTOM_BEANS
 					+ " for custom bean configuration");
 			configFiles.add(FilePaths.SPRING_CONFIG_CUSTOM_BEANS);

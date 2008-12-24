@@ -19,7 +19,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

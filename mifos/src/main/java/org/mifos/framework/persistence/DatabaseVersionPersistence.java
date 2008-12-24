@@ -63,7 +63,6 @@ public class DatabaseVersionPersistence {
 	public static final int LATEST_CHECKPOINT_VERSION = 174;
     private final Connection connection;
     private final Map<Integer, Upgrade> registeredUpgrades;
-    private SqlResource sqlResource;
     
 	public static void register(Map<Integer, Upgrade> register, Upgrade upgrade) {
 		int higherVersion = upgrade.higherVersion();
@@ -384,12 +383,7 @@ public class DatabaseVersionPersistence {
 	
 	public DatabaseVersionPersistence() {
 		this(HibernateUtil.getOrCreateSessionHolder().getSession().connection());
-		this.sqlResource = new SqlResource();
 	}
-
-	public void setSqlResource(SqlResource sqlResource) {
-        this.sqlResource = sqlResource;
-    }
 
     public DatabaseVersionPersistence(Connection connection) {
 		this(connection, masterRegister());
@@ -512,7 +506,7 @@ public class DatabaseVersionPersistence {
 	}
 
     URL getSqlResourceLocation(String name) {
-        return this.sqlResource.getInstance().getUrl(name);
+        return SqlResource.getInstance().getUrl(name);
     }
 
 	public SqlUpgrade findUpgradeScript(int higherVersion, String scriptName) {

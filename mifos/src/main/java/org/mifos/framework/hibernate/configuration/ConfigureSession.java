@@ -29,7 +29,7 @@ import org.hibernate.cfg.Configuration;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 
 /**
 	Create the hibernate configuration object from the 
@@ -61,9 +61,7 @@ public class ConfigureSession
 			throws HibernateStartUpException {
 		config = new Configuration();
 		try {
-			config.configure(
-				ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL()
-			);
+			config.configure(ClasspathResource.getURI(FilePaths.HIBERNATECFGFILE).toURL());
 		} catch (Exception e) {
 			throw new HibernateStartUpException(
 					HibernateConstants.CFGFILENOTFOUND, e);
@@ -73,7 +71,7 @@ public class ConfigureSession
 			// TODO: factor this out instead of repeating it in ApplicationInitializer
 			Properties hibernateProperties = new Properties();
 
-			URI uri = ResourceLoader.getURI(hibernatePropertiesPath);
+			URI uri = ClasspathResource.getURI(hibernatePropertiesPath);
 			File propertiesFile;
 			if (uri == null) {
 				// Look for it in the current directory.

@@ -70,6 +70,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -79,7 +80,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -2185,7 +2185,7 @@ class LoanTestCaseData {
 	
 	private LoanTestCaseData loadSpreadSheetData(String fileName) throws URISyntaxException
 	{
-		File file = new File(ResourceLoader.getURI(fileName));
+		File file = new File(ClasspathResource.getURI(fileName));
 	    FileInputStream fileInputStream = null;
 	    InputStreamReader inputStreamReader = null;
 	    BufferedReader bufferedReader = null;
@@ -2301,7 +2301,7 @@ class LoanTestCaseData {
 	
 
 	private String[] getCSVFiles(String directoryPath) throws URISyntaxException {
-		File dir = new File(ResourceLoader.getURI(directoryPath));
+		File dir = new File(ClasspathResource.getURI(directoryPath));
 	    
 	    FilenameFilter filter = new FilenameFilter() {
 	        public boolean accept(File dir, String name) {

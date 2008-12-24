@@ -90,5 +90,6 @@
 	<classpathentry kind="lib" path="mifos/lib/wstx-asl-2.9.3.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/XmlSchema-1.0.2.jar"/>
 	<classpathentry kind="lib" path="mifos/lib/xmlunit-1.1.jar"/>
+	<classpathentry kind="lib" path="mifos/lib/cheetah-common-0.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

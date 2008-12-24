@@ -1,15 +1,11 @@
 package org.mifos.framework.persistence;
 
-import org.mifos.framework.util.ClasspathResource;
+import org.mifos.core.ClasspathResource;
 
-public class SqlResource extends ClasspathResource {
+public class SqlResource {
 
-    public static SqlResource getInstance() {
-        return new SqlResource();
+    public static ClasspathResource getInstance() {
+        return ClasspathResource.getInstance("/org/mifos/framework/persistence/sql/");
     }
 
-    public SqlResource() {
-        this.path = "sql/";
-    }
-    
 }

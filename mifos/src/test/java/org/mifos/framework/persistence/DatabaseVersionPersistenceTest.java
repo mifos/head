@@ -245,7 +245,6 @@ public class DatabaseVersionPersistenceTest {
 		connection.setAutoCommit(false);
 		DatabaseVersionPersistence persistence = 
 			new DatabaseVersionPersistence(connection);
-		persistence.setSqlResource(new SqlResourceForTest());
 		persistence.upgradeDatabase(connection, 80);
 		connection.commit();
 		

@@ -47,7 +47,7 @@ import java.util.Timer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.core.ClasspathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -80,7 +80,7 @@ public class MifosScheduler extends Timer {
 		MifosTask mifosTask;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(ResourceLoader.getURI(
+		Document document = builder.parse(ClasspathResource.getURI(
 				SchedulerConstants.PATH).toString());
 		NodeList rootSchedulerTasks = document
 				.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);

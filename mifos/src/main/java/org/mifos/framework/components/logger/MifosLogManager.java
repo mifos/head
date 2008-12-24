@@ -33,9 +33,9 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 import org.mifos.config.Localization;
+import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
-import org.mifos.framework.util.helpers.ResourceLoader;
 
 /**	
  *  A class with static methods to obtain instances of the logger. It also keeps a HashMap of the actual logger instances per module
@@ -175,7 +175,7 @@ public class MifosLogManager {
 	 */
 	public static void readConfiguration(String fileName)
 	throws MalformedURLException, URISyntaxException {
-		File configFile = new File(ResourceLoader.getURI(fileName));
+		File configFile = new File(ClasspathResource.getURI(fileName));
 
 		MifosDOMConfigurator.configureAndWatch(
 			configFile.getAbsolutePath() , LoggerConstants.DELAY);
