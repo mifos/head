@@ -156,19 +156,6 @@
 							</additionalClasspathElements>
 						</configuration>
 					</plugin>
-					<plugin>
-						<groupId>org.codehaus.cargo</groupId>
-						<artifactId>cargo-maven2-plugin</artifactId>
-						<configuration>
-							<container>
-								<dependencies>
-									<dependency>
-										<location>${user.home}/.mifos/acceptance</location>
-									</dependency>
-								</dependencies>
-							</container>
-						</configuration>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -379,6 +366,11 @@
 						<log>${basedir}/target/logs/${container.name}.log</log>
 						<output>${basedir}/target/logs/${container.name}.out</output>
 						<timeout>600000</timeout>
+                  <dependencies>
+                     <dependency>
+                        <location>${user.home}/.mifos/acceptance</location>
+                     </dependency>
+                  </dependencies>
 					</container>
 					<configuration>
 						<properties>

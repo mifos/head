@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.collecitonSheetEntry;
+package org.mifos.framework.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,17 +7,29 @@ import java.io.BufferedReader;
 import java.io.Reader;
 import java.net.URL;
 
+/**
+ * Load a resource from the classpath. 
+ * 
+ * Derive this and override the path constant to load resources local to your directory.
+ * 
+ */
 
-// TODO: Refactor me later (see SqlResource.java)
-public class DbUnitResource {
+public class ClasspathResource {
 
-    public static DbUnitResource getInstance() {
-        return new DbUnitResource();
+    public static ClasspathResource getInstance() {
+        return new ClasspathResource();
+    }
+
+    protected String path;
+
+    @SuppressWarnings("unchecked")
+    public ClasspathResource() {
+        this.path = "";
     }
     
     public URL getUrl(String name) {
-        String sqlResourcePath = "dbunit/" + name;
-        return getClass().getResource(sqlResourcePath);
+        String resourcePath = this.path + name;
+        return this.getClass().getResource(resourcePath);
     }
     
     public InputStream getAsStream(String name) throws IOException {

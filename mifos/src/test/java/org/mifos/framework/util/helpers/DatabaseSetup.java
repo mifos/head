@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -21,8 +22,10 @@ import net.sourceforge.mayfly.datastore.DataStore;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.hibernate.helper.HibernateConstants;
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
@@ -91,9 +94,14 @@ public class DatabaseSetup {
 		// This step is slow (about 1-2 s for me) because it
 		// it reading and parsing a whole bunch of xml files.
 		// That's why we try to share it between different tests.
-		configuration.configure(
-		    new File("src/" + FilePaths.HIBERNATECFGFILE)
-		);
+        try {
+            configuration.configure(
+                ResourceLoader.getURI(FilePaths.HIBERNATECFGFILE).toURL()
+            );
+        } catch (Exception e) {
+            throw new HibernateStartUpException(
+                    HibernateConstants.CFGFILENOTFOUND, e);
+        }
 		return configuration;
 	}
 

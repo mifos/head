@@ -91,7 +91,7 @@ public class ProperlyAdaptedJUnit4Test {
 
 	private static List<String> getJavaTestSourceFiles() throws IOException {
 		List<String> files = new ArrayList<String>();
-		findJavaSourceFiles("test", files);
+		findJavaSourceFiles("src/test/java", files);
 		return files;
 	}
 

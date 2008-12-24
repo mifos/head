@@ -4,7 +4,9 @@
 	<property environment="env"/>
 	<property name="build.compiler" value="modern"/>
 	<property name="java.home" value="${env.JAVA_HOME}"/>
-	<property name="conf.dir" value="${basedir}/src/org/mifos/conf"/>
+   <property name="src.dir" value="${basedir}/src/main/java"/>
+   <property name="test.dir" value="${basedir}/src/test/java"/>
+   <property name="conf.dir" value="${src.dir}/org/mifos/conf"/>
 
 	<!-- my.build.properties is your way to override
 		properties which are not supposed to be
@@ -13,10 +15,9 @@
 		there override those defined in build.properties
 		or in this file -->
 	<property file="${conf.dir}/my.build.properties"/>
-
 	<property file="${conf.dir}/build.properties"/>
 
-	<!-- Which suite to run in the run_test and profile_test
+	<!-- Which suite to run in the run_test an  d profile_test
 	     targets.  Normally the whole suite, but can be
 	     set to a sub-suite or individual test, for example by specifying
 	     -Dtest.suite=FastTests on the ant command line.  -->
@@ -29,12 +30,10 @@
 	<property name="profile.memory" value="550M" />
 
 	<property name="lib.dir" value="${basedir}/lib"/>
-	<property name="src.dir" value="${basedir}/src"/>
 	<property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
 	<property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
 	<property name="birt.report.resource.dir" value="${basedir}/BirtReportResource"/>
-	<property name="test.dir" value="${basedir}/test"/>
-	<property name="sql.dir" value="${basedir}/src/org/mifos/framework/persistence/sql"/>
+	<property name="sql.dir" value="${src.dir}/org/mifos/framework/persistence/sql"/>
 	<property name="build.dir" value="${basedir}/target"/>
 	<property name="dist.dir" value="${basedir}/dist"/>
 
@@ -222,7 +221,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
+		<copy todir="${build.classes}/org/mifos/conf" verbose="true">
 			<fileset dir="${conf.dir}">
 				<include name="my.hibernate.properties" 
                 	if="my.hibernate.properties.present" />
