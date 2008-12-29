@@ -47,9 +47,11 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -130,6 +132,9 @@ public class AddGroupMembershipAction extends BaseAction {
 		AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
 		GroupBO addToGroup = (GroupBO) getCustomerBusinessService()
 				.getCustomer(actionForm.getParentGroupIdValue());
+		if(!addToGroup.isActive()) {
+			throw new CustomerException(CustomerConstants.CLIENT_CANT_BE_ADDED_TO_INACTIVE_GROUP);
+		}
 		addToGroup.setUserContext(getUserContext(request));
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
