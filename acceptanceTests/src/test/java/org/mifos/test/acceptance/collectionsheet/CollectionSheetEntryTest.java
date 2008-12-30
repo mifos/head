@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.collectionSheetEntry;
+package org.mifos.test.acceptance.collectionsheet;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,13 +34,12 @@ import org.dbunit.operation.DatabaseOperation;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.PingPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -94,10 +93,20 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws DatabaseUnitException, SQLException, IOException, InterruptedException {
+        final String BRANCH = "Office1";
+        final String CENTER = "Center1";
+        final String LOAN_OFFICER = "Bagonza Wilson";
+        final String PAYMENT_MODE = "Cash";
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        formParameters.setBranch(BRANCH);
+        formParameters.setLoanOfficer(LOAN_OFFICER);
+        formParameters.setCenter(CENTER);
+        formParameters.setPaymentMode(PAYMENT_MODE);
+        
         loadDataFromFile("acceptance_small_001_dbunit.xml");
         loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos")
-            .submitForm("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "")
-            .verifyPage ("Office1","Bagonza Wilson", "Center1", "", "", "", "Cash", "", "", "", "");
+            .submitForm(formParameters)
+            .verifyPage(formParameters);
     }
 
     

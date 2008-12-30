@@ -8,6 +8,7 @@
 	<name>Mifos - Gazelle Acceptance Tests</name>
 	<url>http://www.mifos.org</url>
 	<properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
 		<cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
 		<selenium.port>4445</selenium.port>
 		<servlet.port>8083</servlet.port>
@@ -88,8 +89,7 @@
 								<phase>process-resources</phase>
 								<configuration>
 									<tasks>
-                              <copy todir="${tomcat.home.directory}/conf"
-                                 overwrite="true">
+										<copy todir="${tomcat.home.directory}/conf" overwrite="true">
 											<fileset dir="${basedir}/src/test/containers/${container.name}" />
 										</copy>
 									</tasks>
@@ -141,7 +141,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>properties-maven-plugin</artifactId>
-                  <version>1.0-SNAPSHOT</version>
+						<version>1.0-SNAPSHOT</version>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -219,12 +219,12 @@
 			<artifactId>cheetah-common</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 		</dependency>
-      <dependency>
-         <groupId>org.mifos</groupId>
-         <artifactId>gazelle-webapp</artifactId>
-         <version>0.0.3-SNAPSHOT</version>
-         <type>war</type>
-      </dependency>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>gazelle-webapp</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
@@ -258,27 +258,27 @@
 			<artifactId>aspectjrt</artifactId>
 			<version>1.5.4</version>
 		</dependency>
-      <dependency>
-         <groupId>org.aspectj</groupId>
-         <artifactId>aspectjweaver</artifactId>
-         <version>1.5.4</version>
-      </dependency>
-      <dependency>
-         <groupId>xml-apis</groupId>
-         <artifactId>xml-apis</artifactId>
-         <version>1.3.03</version>
-      </dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.3.03</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mifos</groupId>
 			<artifactId>cheetahTestFramework</artifactId>
 			<version>0.0.3-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
-	    <dependency>
-	        <groupId>org.dbunit</groupId>
-	        <artifactId>dbunit</artifactId>
-	        <version>2.4.1</version>
-	    </dependency>		
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>2.4.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>gazelle-testing</finalName>
@@ -300,14 +300,34 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<rulesets>
+						<ruleset>${modules.root.dir}/.ruleset</ruleset>
+					</rulesets>
+					<includeTests>true</includeTests>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+							<goal>cpd-check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.4.2</version>
 				<configuration>
 					<includedGroups>ui</includedGroups>
 					<excludedGroups>workInProgress</excludedGroups>
 					<!--
-                  Skip the normal tests, we'll run them in the
-                  integration-test phase
+						Skip the normal tests, we'll run them in the integration-test
+						phase
 					-->
 					<skip>true</skip>
 					<systemProperties>
@@ -371,11 +391,11 @@
 						<log>${basedir}/target/logs/${container.name}.log</log>
 						<output>${basedir}/target/logs/${container.name}.out</output>
 						<timeout>600000</timeout>
-                  <dependencies>
-                     <dependency>
-                        <location>${user.home}/.mifos/acceptance</location>
-                     </dependency>
-                  </dependencies>
+						<dependencies>
+							<dependency>
+								<location>${user.home}/.mifos/acceptance</location>
+							</dependency>
+						</dependencies>
 					</container>
 					<configuration>
 						<properties>
@@ -434,8 +454,6 @@
 		          <!-- other configurations here -->
 				</configuration>
 			</plugin>
-
-			
 		</plugins>
 	</build>
 	<reporting>

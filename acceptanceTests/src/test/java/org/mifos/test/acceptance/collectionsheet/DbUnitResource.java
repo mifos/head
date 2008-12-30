@@ -1,4 +1,4 @@
-package org.mifos.test.acceptance.collectionSheetEntry;
+package org.mifos.test.acceptance.collectionsheet;
 
 import org.mifos.core.ClasspathResource;
 
