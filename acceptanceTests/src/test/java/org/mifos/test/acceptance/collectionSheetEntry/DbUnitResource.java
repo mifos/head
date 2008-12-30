@@ -5,7 +5,7 @@ import org.mifos.core.ClasspathResource;
 public class DbUnitResource {
 
     public static ClasspathResource getInstance() {
-        return ClasspathResource.getInstance("/org/mifos/test/acceptance/collectionSheetEntry/dbUnit");
+        return ClasspathResource.getInstance("/dbunit/");
     }
 
 

@@ -71,7 +71,6 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 	}
 
 
-	@Test(groups={"userLoginStory","ui"})
 	public void userLoginFailureNoPasswordTest() {
 		appLauncher
 			.launchMifos()
@@ -79,7 +78,6 @@ public class DefaultAdminUserCanLoginTest extends UiTestCaseBase {
 					.verifyFailedLoginNoPassword();
 	}
 
-	@Test(groups={"userLoginStory","ui"})
 	public void userLoginFailureNoUsernameTest() {
 		appLauncher
 			.launchMifos()
