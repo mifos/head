@@ -31,6 +31,7 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -76,7 +77,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         boolean enableColumnSensing = true;
         URL url = DbUnitResource.getInstance().getUrl(filename);
         if (url == null) {
-            throw new RuntimeException("Couldn't find file:" + filename);
+            throw new MifosRuntimeException("Couldn't find file:" + filename);
         }
         IDataSet dataSet = new FlatXmlDataSet(url,false,enableColumnSensing);
         try {
@@ -93,10 +94,10 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
 
     public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws DatabaseUnitException, SQLException, IOException, InterruptedException {
-        final String BRANCH = "Office1";
-        final String CENTER = "Center1";
-        final String LOAN_OFFICER = "Bagonza Wilson";
-        final String PAYMENT_MODE = "Cash";
+        String BRANCH = "Office1";
+        String CENTER = "Center1";
+        String LOAN_OFFICER = "Bagonza Wilson";
+        String PAYMENT_MODE = "Cash";
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch(BRANCH);
         formParameters.setLoanOfficer(LOAN_OFFICER);

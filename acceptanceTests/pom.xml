@@ -16,6 +16,7 @@
 		<selenium.background>true</selenium.background>
 		<tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
 		<cargo.wait>false</cargo.wait>
+		<jdk.version>1.6</jdk.version>
 
       <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/jdbc.properties</database.properties.file>
       <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/java/org/mifos/framework/persistence/sql</sql.resources.src.directory>
@@ -357,15 +358,6 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<debug>true</debug>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
@@ -373,16 +365,26 @@
 						<ruleset>${modules.root.dir}/.ruleset</ruleset>
 					</rulesets>
 					<includeTests>true</includeTests>
-				</configuration>
+ 			        <targetJdk>${jdk.version}</targetJdk>
+ 				</configuration>
 				<executions>
 					<execution>
-						<phase>verify</phase>
+						<phase>compile</phase>
 						<goals>
 							<goal>check</goal>
 							<goal>cpd-check</goal>
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<debug>true</debug>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
