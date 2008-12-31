@@ -21,9 +21,7 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 	}
 	
 
-	public void verifyPage(String branch, String loanOfficer, String center,
-			String transactionDay, String transactionMonth, String transactionYear, String paymentMode,
-			String receiptId, String receiptDay, String receiptMonth, String receiptYear) {
+	public void verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
 		Assert.assertTrue(selenium.isTextPresent("Bulk entry-") && selenium.isTextPresent("Preview data"), "Didn't get to Bulk Entry Preview Data page");
 	}
 

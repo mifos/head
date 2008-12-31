@@ -142,8 +142,6 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-				<continuous.integration.resources.dir>${modules.root.dir}/resources/continuous-integration/acceptance</continuous.integration.resources.dir>
-				<database.properties.file>${continuous.integration.resources.dir}/jdbc.local.properties</database.properties.file>
 				<tomcat.container.url>file:///home/hudson/arc/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
 			</properties>
 			<build>
