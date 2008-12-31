@@ -24,5 +24,11 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 		Assert.assertTrue(selenium.isTextPresent("Bulk entry-") && selenium.isTextPresent("Enter data"), "Didn't get to Bulk Entry Enter Data page");
 	}
 
+	public CollectionSheetEntryPreviewDataPage previewPage() {
+		selenium.click("bulkentry_data.button.preview");
+		waitForPageToLoad();
+		return new CollectionSheetEntryPreviewDataPage(selenium);
+		
+	}
 
 }
