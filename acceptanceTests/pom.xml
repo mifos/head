@@ -7,15 +7,25 @@
 	<version>0.0.3-SNAPSHOT</version>
 	<name>Mifos - Gazelle Acceptance Tests</name>
 	<url>http://www.mifos.org</url>
+
 	<properties>
-        <modules.root.dir>${basedir}/..</modules.root.dir>
+      <modules.root.dir>${basedir}/..</modules.root.dir>
 		<cargo.install.directory>${basedir}/target/installs</cargo.install.directory>
 		<selenium.port>4445</selenium.port>
 		<servlet.port>8083</servlet.port>
 		<selenium.background>true</selenium.background>
 		<tomcat.container.url>http://www.apache.org/dist/tomcat/tomcat-6/v${tomcat.version}/bin/apache-tomcat-${tomcat.version}.zip</tomcat.container.url>
 		<cargo.wait>false</cargo.wait>
+
+      <database.properties.file>${modules.root.dir}/acceptanceTests/src/test/resources/jdbc.properties</database.properties.file>
+      <sql.resources.src.directory>${modules.root.dir}/mifos/src/main/java/org/mifos/framework/persistence/sql</sql.resources.src.directory>
+      <sql.resources.target.directory>${project.build.outputDirectory}/sql</sql.resources.target.directory>
+      <!-- This must be set to something known to exist. Override this
+      property in M2_REPO/settings.xml to allow local settings. -->
+      <local.property.overrides>${database.properties.file}</local.property.overrides> 
+
 	</properties>
+
 	<profiles>
 		<profile>
 			<id>download-container</id>
@@ -286,9 +296,76 @@
 		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 		<scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
 		<testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-		<outputDirectory>target/gazelle-testing/WEB-INF/classes</outputDirectory>
+		<outputDirectory>target/classes</outputDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
+      
+      <resources>
+         <resource>
+             <directory>${sql.resources.src.directory}</directory>
+             <filtering>true</filtering>
+             <targetPath>sql</targetPath>
+         </resource>
+      </resources> 
+      
 		<plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <executions>
+            <execution>
+                <phase>initialize</phase>
+                <goals>
+                    <goal>read-project-properties</goal>
+                </goals>
+                <configuration>
+                    <files>
+                        <file>${database.properties.file}</file>
+                        <file>${local.property.overrides}</file>
+                    </files>
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>  
+      <plugin>
+         <groupId>org.codehaus.mojo</groupId>
+         <artifactId>sql-maven-plugin</artifactId>
+         <version>1.2</version>
+         <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.6</version>
+            </dependency>
+         </dependencies>
+         <configuration>
+            <driver>com.mysql.jdbc.Driver</driver>
+            <url><![CDATA[jdbc:mysql://localhost:3306?useUnicode=true&characterEncoding=UTF-8]]></url>
+            <username>${jdbc.username}</username>
+            <password>${jdbc.password}</password>
+            <autocommit>true</autocommit>
+         </configuration>
+         <executions>
+            <execution>
+                <id>pre-application-startup</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                    <goal>execute</goal>
+                </goals>
+                <configuration>
+               <srcFiles>
+                  <srcFile>${sql.resources.target.directory}/create_database.sql</srcFile>
+                  <srcFile>${sql.resources.target.directory}/mifosdroptables.sql</srcFile>
+                  <srcFile>${sql.resources.target.directory}/latest-schema.sql</srcFile>
+                  <srcFile>${sql.resources.target.directory}/latest-data.sql</srcFile>
+                  <srcFile>${sql.resources.target.directory}/custom_data.sql</srcFile>
+                  <srcFile>${sql.resources.target.directory}/init_mifos_password.sql</srcFile>
+               </srcFiles>
+                </configuration>
+            </execution>
+         </executions>           
+         </plugin>   
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
