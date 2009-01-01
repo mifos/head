@@ -72,6 +72,7 @@ public class MifosSelectTest {
 			"<td align=\"center\">" +
 			"<INPUT  name=\"MoveRight\" type=\"button\" value=\"Add >>\" " +
 			"style=\"width:65px\" class=\"insidebuttn\" " +
+			"id=\"null.button.add\" " + 
 			"onclick=\"moveOptions(this.form.LeftSelect,this.form.null)\"" +
 			"onMouseover=\"showtip(this,event,'Click To move the selected item')\" " +
 			"onMouseout=\"hidetip()\" >" +
@@ -82,6 +83,7 @@ public class MifosSelectTest {
 			"<td height=\"26\" align=\"center\">" +
 			"<INPUT  type=\"button\" value=\"<< Remove\" " +
 			"style=\"width:65px\" class=\"insidebuttn\" " +
+            "id=\"null.button.remove\" " + 
 			"onclick=\"moveOptions(this.form.null,this.form.LeftSelect)\"" +
 			"onMouseover=\"showtip(this,event,'Click To move the selected item')\" " +
 			"onMouseout=\"hidetip()\" >" +

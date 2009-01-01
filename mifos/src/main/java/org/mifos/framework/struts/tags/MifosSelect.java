@@ -437,12 +437,17 @@ public class MifosSelect extends BodyTagSupport {
      * Function to Initialize the members of the MifosSelect class
      */
     private void init() {
-    	if (getAddButtonName() == null)
-    		rawbutton[0].setName("MoveRight");
-    	else
+    	if (getAddButtonName() == null) {
+    	    rawbutton[0].setName("MoveRight");
+    	    rawbutton[0].setId(getInput()+ ".button.add");
+    	} else {
     		rawbutton[0].setName(getAddButtonName());
-    	if (getRemoveButtonName() != null)
+    	    rawbutton[0].setId(getInput()+".button.add");
+    	}
+    	if (getRemoveButtonName() != null) {
     		rawbutton[1].setName(getRemoveButtonName());
+    		rawbutton[1].setId(getInput()+".button.remove");
+    	}
     	if (getLeftListName() == null)
     	{
 	        if(getProperty1() != null)
@@ -465,6 +470,7 @@ public class MifosSelect extends BodyTagSupport {
             rawselect[1].setMultiple(getSize());
         }
         rawbutton[1].setValue("<< Remove");
+        rawbutton[1].setId(getInput()+".button.remove");
         rawbutton[0].setOnclick("moveOptions(this.form."+ rawselect[0].getName() + "," + "this.form."+ rawselect[1].getName() + ")");
         rawbutton[1].setOnclick("moveOptions(this.form."
                 + rawselect[1].getName() + "," + "this.form."

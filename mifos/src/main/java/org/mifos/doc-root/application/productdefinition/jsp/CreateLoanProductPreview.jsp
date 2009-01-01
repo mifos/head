@@ -126,7 +126,7 @@
 							<td align="left" valign="top" class="paddingleftCreates">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
-									<td class="headingorange"><span class="heading"> 
+									<td class="headingorange"><span class="heading" id="createLoanProductPreview.heading"> 
 										<fmt:message key="product.addNewLoanProduct">
 										<fmt:param><mifos:mifoslabel
 										name="${ConfigurationConstants.LOAN}"
@@ -852,6 +852,7 @@
 
 								<tr>
 									<td class="blueline"><html-el:button property="edit"
+										styleId="createLoanProductPreview.button.editLoanInfo"
 										styleClass="insidebuttn" onclick="fnEdit(this.form)">
 										<fmt:message key="product.editLoanInfo">
 											<fmt:param><mifos:mifoslabel
@@ -867,10 +868,12 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit styleClass="buttn"
+										styleId="createLoanProductPreview.button.submit"
 										property="submitBut">
 										<mifos:mifoslabel name="product.butsubmit"
 											bundle="ProductDefUIResources" />
-									</html-el:submit> &nbsp; <html-el:button property="cancel"
+									</html-el:submit> &nbsp; <html-el:button styleId="createLoanProductPreview.button.cancel" 
+										property="cancel"
 										styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="product.cancel"

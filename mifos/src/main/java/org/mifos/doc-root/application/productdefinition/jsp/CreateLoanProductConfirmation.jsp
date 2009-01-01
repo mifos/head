@@ -76,12 +76,12 @@
 								</fmt:message>:</span>
 								<c:out value="${requestScope.loanprdglobalofferingnum}" />
 								<span class="fontnormal"><br> </span><span class="fontnormal"><br> <br> </span>
-								<html-el:link href="loanproductaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link styleId="createLoanProductConfirmation.link.viewLoanDetails" href="loanproductaction.do?method=get&prdOfferingId=${requestScope.loanId}&randomNUm=${sessionScope.randomNUm}">
 									<fmt:message key="product.viewLoanDetails">
 									<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 									</fmt:message>
 								</html-el:link>
-								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<span class="fontnormal"><br> <br> </span><span class="fontnormal"> <html-el:link styleId="createLoanProductConfirmation.link.defineNew" href="loanproductaction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 										<fmt:message key="product.defineNew">
 										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /></fmt:param>
 										</fmt:message>

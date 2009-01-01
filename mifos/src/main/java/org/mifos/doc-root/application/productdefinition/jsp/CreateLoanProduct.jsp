@@ -29,8 +29,8 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<fmt:setLocale value='${sessionScope["LOCALE"]}'/>
-<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources"/>
+<fmt:setLocale value='${sessionScope["LOCALE"]}' />
+<fmt:setBundle basename="org.mifos.config.localizedResources.ProductDefinitionResources" />
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -189,13 +189,13 @@ explanation of the license and how it is applied.
 											<td><img
 												src=" pages/framework/images/timeline/bigarrow.gif"
 												width="17" height="17"></td>
-											<td class="timelineboldorange">
-												<fmt:message key="product.loanProductInfo">
-												<fmt:param><mifos:mifoslabel
-												name="${ConfigurationConstants.LOAN}"
-												bundle="ProductDefUIResources" /></fmt:param>
-												</fmt:message>
-											</td>
+											<td class="timelineboldorange"><fmt:message
+												key="product.loanProductInfo">
+												<fmt:param>
+													<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+														bundle="ProductDefUIResources" />
+												</fmt:param>
+											</fmt:message></td>
 										</tr>
 									</table>
 									</td>
@@ -221,21 +221,23 @@ explanation of the license and how it is applied.
 							<td align="left" valign="top" class="paddingleftCreates">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
-									<td class="headingorange"><span class="heading"> 
-										<fmt:message key="product.addNewLoanProduct">
-										<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-										</fmt:message> - </span> <fmt:message key="product.enterLoanProductInfo">
-										<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-										</fmt:message>
-									</td>
+									<td class="headingorange"><span class="heading" id="createLoanProduct.heading"> <fmt:message
+										key="product.addNewLoanProduct">
+										<fmt:param>
+											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+												bundle="ProductDefUIResources" />
+										</fmt:param>
+									</fmt:message> - </span> <fmt:message key="product.enterLoanProductInfo">
+										<fmt:param>
+											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+												bundle="ProductDefUIResources" />
+										</fmt:param>
+									</fmt:message></td>
 								</tr>
 								<tr>
 									<td class="fontnormal"><mifos:mifoslabel
-										name="product.completeFieldsInstructional" bundle="ProductDefUIResources" /> <br>
+										name="product.completeFieldsInstructional"
+										bundle="ProductDefUIResources" /> <br>
 									<mifos:mifoslabel name="product.fieldsrequired" mandatory="yes"
 										bundle="ProductDefUIResources" /></td>
 								</tr>
@@ -245,19 +247,21 @@ explanation of the license and how it is applied.
 								bundle="ProductDefUIResources" /></font>
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
-									<td colspan="2" class="fontnormalbold">
-										<fmt:message key="product.loanProductDetails">
-										<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-										</fmt:message><br>
+									<td colspan="2" class="fontnormalbold"><fmt:message
+										key="product.loanProductDetails">
+										<fmt:param>
+											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+												bundle="ProductDefUIResources" />
+										</fmt:param>
+									</fmt:message><br>
 									<br>
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td width="30%" align="right"><mifos:mifoslabel
+									<td width="30%" align="right"><span
+										id=createLoanProduct.label.prdOfferingName><mifos:mifoslabel
 										name="product.prodinstname" mandatory="yes"
-										bundle="ProductDefUIResources" /> :</td>
+										bundle="ProductDefUIResources" /> </span>:</td>
 									<td width="70%" valign="top"><mifos:mifosalphanumtext
 										property="prdOfferingName" /></td>
 								</tr>
@@ -311,13 +315,14 @@ explanation of the license and how it is applied.
 									</mifos:select></td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><fmt:message key="product.inclInLoanCycleCounter">
-									<fmt:param><mifos:mifoslabel
-										name="${ConfigurationConstants.LOAN}"
-										bundle="ProductDefUIResources" /></fmt:param>
-									</fmt:message>
-									:</td>
-									<td valign="top"><html-el:checkbox property="loanCounter"
+									<td align="right"><fmt:message
+										key="product.inclInLoanCycleCounter">
+										<fmt:param>
+											<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"
+												bundle="ProductDefUIResources" />
+										</fmt:param>
+									</fmt:message> :</td>
+									<td valign="top"><html-el:checkbox styleId="createLoanProduct.checkbox.loanCounter" property="loanCounter"
 										value="1" /></td>
 								</tr>
 
@@ -368,19 +373,19 @@ explanation of the license and how it is applied.
 										<td width="30%" align="right"><mifos:mifoslabel
 											name="product.calcloanamount" mandatory="yes"
 											bundle="ProductDefUIResources" />:</td>
-										<td width="70%" valign="top"><html-el:radio
+										<td width="70%" valign="top"><html-el:radio styleId="createLoanProduct.radio.calcLoanAmountsameForAllLoans"
 											property="loanAmtCalcType" value="1" onclick="checkRow();" />
 										<mifos:mifoslabel name="product.sameforallloans"
-											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio
+											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio styleId="createLoanProduct.radio.calcLoanAmountByLastLoanAmount"
 											property="loanAmtCalcType" value="2" onclick="checkRow();" />
 										<mifos:mifoslabel name="product.bylastloanamount"
-											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio
+											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio styleId="createLoanProduct.radio.calcLoanAmountByLoanCycle"
 											property="loanAmtCalcType" value="3" onclick="checkRow();" />
 										<mifos:mifoslabel name="product.byloancycle"
 											bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp;</td>
 									</tr>
 								</table>
-								<div id="option0" style="display:block;">
+								<div id="option0" style="display: block;">
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr class="fontnormal">
 										<td width="30%" align="right">&nbsp;</td>
@@ -408,7 +413,7 @@ explanation of the license and how it is applied.
 									</tr>
 								</table>
 								</div>
-								<div id="option1" style="display:none;">
+								<div id="option1" style="display: none;">
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr class="fontnormal">
 										<td width="30%" align="right">&nbsp;</td>
@@ -508,7 +513,7 @@ explanation of the license and how it is applied.
 									</tr>
 								</table>
 								</div>
-								<div id="option2" style="display:none;">
+								<div id="option2" style="display: none;">
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr class="fontnormal">
 										<td width="30%" align="right">&nbsp;</td>
@@ -589,18 +594,26 @@ explanation of the license and how it is applied.
 
 								<table width="93%" border="0" cellpadding="3" cellspacing="0">
 									<tr>
-										<td colspan="2" class="fontnormalbold">
-											<fmt:message key="product.productRate">
-											<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
-											</fmt:message> <br>
+										<td colspan="2" class="fontnormalbold"><fmt:message
+											key="product.productRate">
+											<fmt:param>
+												<mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" />
+											</fmt:param>
+										</fmt:message> <br>
 										<br>
 										</td>
 									</tr>
 									<tr class="fontnormal">
-										<td width="30%" align="right">
-										<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-										<fmt:message key="product.rateType">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+										<td width="30%" align="right"><span class="mandatorytext">
+										<font color="#FF0000">*</font></span> <fmt:message
+											key="product.rateType">
+											<fmt:param>
+												<mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" />
+											</fmt:param>
 										</fmt:message>:</td>
 										<td width="70%" valign="top"><mifos:select
 											property="interestTypes">
@@ -613,30 +626,40 @@ explanation of the license and how it is applied.
 										</mifos:select></td>
 									</tr>
 									<tr class="fontnormal">
-										<td align="right">
-										<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-										<fmt:message key="product.maxRate">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+										<td align="right"><span class="mandatorytext"> <font
+											color="#FF0000">*</font></span> <fmt:message key="product.maxRate">
+											<fmt:param>
+												<mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" />
+											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
 											property="maxInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
-										<td align="right">
-										<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-										<fmt:message key="product.minRate">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+										<td align="right"><span class="mandatorytext"> <font
+											color="#FF0000">*</font></span> <fmt:message key="product.minRate">
+											<fmt:param>
+												<mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" />
+											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
 											property="minInterestRate" /> <mifos:mifoslabel
 											name="product.rate" bundle="ProductDefUIResources" /></td>
 									</tr>
 									<tr class="fontnormal">
-										<td align="right">
-										<span class="mandatorytext"> <font color="#FF0000">*</font></span>
-										<fmt:message key="product.defaultRate">
-										<fmt:param><mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /></fmt:param>
+										<td align="right"><span class="mandatorytext"> <font
+											color="#FF0000">*</font></span> <fmt:message
+											key="product.defaultRate">
+											<fmt:param>
+												<mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}"
+													bundle="ProductDefUIResources" />
+											</fmt:param>
 										</fmt:message>:</td>
 										<td valign="top"><mifos:decimalinput
 											property="defInterestRate" /> <mifos:mifoslabel
@@ -664,11 +687,11 @@ explanation of the license and how it is applied.
 												<table width="98%" border="0" cellspacing="0"
 													cellpadding="2">
 													<tr valign="top" class="fontnormal">
-														<td width="24%"><html-el:radio
+														<td width="24%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsWeeks"
 															property="freqOfInstallments" value="1"
 															onclick="showMeetingFrequency();" /> <mifos:mifoslabel
 															name="product.weeks" bundle="ProductDefUIResources" /></td>
-														<td width="55%"><html-el:radio
+														<td width="55%"><html-el:radio styleId="createLoanProduct.radio.freqOfInstallmentsMonths"
 															property="freqOfInstallments" value="2"
 															onclick="showMeetingFrequency();" /> <mifos:mifoslabel
 															name="product.months" bundle="ProductDefUIResources" /></td>
@@ -679,8 +702,8 @@ explanation of the license and how it is applied.
 											<tr class="fontnormal">
 												<td width="59%" align="left" valign="top"
 													style="border: 1px solid #CECECE;">
-												<div id="weekDIV" style="height:40px; width:380px;"><mifos:mifoslabel
-													name="product.enterfoll" bundle="ProductDefUIResources" 
+												<div id="weekDIV" style="height: 40px; width: 380px;"><mifos:mifoslabel
+													name="product.enterfoll" bundle="ProductDefUIResources"
 													isColonRequired="yes" />
 												<table border="0" cellspacing="0" cellpadding="2">
 													<tr class="fontnormal">
@@ -727,14 +750,17 @@ explanation of the license and how it is applied.
 												name="product.calcInstallment" mandatory="yes"
 												bundle="ProductDefUIResources" />:</td>
 											<td width="70%" valign="top"><html-el:radio
+												styleId="createLoanProduct.radio.calcInstallmentSameForAll"
 												property="calcInstallmentType" value="1"
 												onclick="checkType();" /> <mifos:mifoslabel
 												name="product.sameforallinstallment"
 												bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio
+												styleId="createLoanProduct.radio.calcInstallmentByLastLoanAmount"
 												property="calcInstallmentType" value="2"
 												onclick="checkType();" /> <mifos:mifoslabel
 												name="product.installbylastloanamount"
 												bundle="ProductDefUIResources" /> &nbsp;&nbsp;&nbsp; <html-el:radio
+												styleId="createLoanProduct.radio.calcInstallmentByLoanCycle"
 												property="calcInstallmentType" value="3"
 												onclick="checkType();" /> <mifos:mifoslabel
 												name="product.installbyloancycle"
@@ -742,7 +768,7 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr>
 											<td colspan="2">
-											<div id="install0" style="display:block;">
+											<div id="install0" style="display: block;">
 											<table width="93%" border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
 													<td width="30%" align="right">&nbsp;</td>
@@ -772,7 +798,7 @@ explanation of the license and how it is applied.
 												</tr>
 											</table>
 											</div>
-											<div id="install1" style="display:none;">
+											<div id="install1" style="display: none;">
 											<table width="93%" border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
 													<td width="30%" align="right">&nbsp;</td>
@@ -873,7 +899,7 @@ explanation of the license and how it is applied.
 											</table>
 											<br>
 											</div>
-											<div id="install2" style="display:none;">
+											<div id="install2" style="display: none;">
 											<table width="93%" border="0" cellpadding="3" cellspacing="0">
 												<tr class="fontnormal">
 													<td width="30%" align="right">&nbsp;</td>
@@ -970,24 +996,26 @@ explanation of the license and how it is applied.
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled == '0'}">
 
 
-												<html-el:checkbox style="visibility:hidden"  property="intDedDisbursementFlag"
-													value="1" onclick="fnIntDesbr();"/>
+												<html-el:checkbox style="visibility:hidden"
+													property="intDedDisbursementFlag" value="1"
+													onclick="fnIntDesbr();" />
 											</c:if> <c:if
 												test="${repaymentSchedulesIndependentOfMeetingIsEnabled != '0'}">
 
 
-												<html-el:checkbox property="intDedDisbursementFlag" style="visibility:hidden"
-													value="1" onclick="fnIntDesbr();"  />
+												<html-el:checkbox property="intDedDisbursementFlag"
+													style="visibility:hidden" value="1" onclick="fnIntDesbr();" />
 											</c:if></td>
 										</tr>
 										<tr class="fontnormal">
-										    <!--  
+											<!--  
 											<td align="right"><mifos:mifoslabel
 												name="product.prinlastinst" bundle="ProductDefUIResources" />
 											:</td>
 											-->
 											<td valign="top"><html-el:checkbox
-												property="prinDueLastInstFlag" value="1" style="visibility:hidden" /></td>
+												property="prinDueLastInstFlag" value="1"
+												style="visibility:hidden" /></td>
 										</tr>
 										<tr class="fontnormal" id="gracepertype">
 											<td align="right"><mifos:mifoslabel
@@ -1069,7 +1097,8 @@ explanation of the license and how it is applied.
 										</tr>
 										<tr class="fontnormal">
 											<td width="30%" align="right" valign="top"><mifos:mifoslabel
-												name="product.srcfunds" bundle="ProductDefUIResources" isColonRequired="yes" /></td>
+												name="product.srcfunds" bundle="ProductDefUIResources"
+												isColonRequired="yes" /></td>
 											<td width="70%" valign="top">
 											<table width="80%" border="0" cellspacing="0" cellpadding="0">
 												<tr>
@@ -1092,7 +1121,7 @@ explanation of the license and how it is applied.
 											</mifos:MifosSelect></td>
 										</tr>
 										<tr class="fontnormal">
-											<td align="right" valign="top" style="padding-top:8px;"><mifos:mifoslabel
+											<td align="right" valign="top" style="padding-top: 8px;"><mifos:mifoslabel
 												mandatory="yes" name="product.productglcode"
 												bundle="ProductDefUIResources" /> :</td>
 											<td valign="top">
@@ -1134,11 +1163,11 @@ explanation of the license and how it is applied.
 									<br>
 									<table width="93%" border="0" cellpadding="0" cellspacing="0">
 										<tr>
-											<td align="center"><html-el:submit styleClass="buttn"
+											<td align="center"><html-el:submit styleId="createLoanProduct.button.preview" styleClass="buttn"
 												onclick="transferData(this.form.loanOfferingFunds);transferData(this.form.prdOfferinFees);">
 												<mifos:mifoslabel name="product.preview"
 													bundle="ProductDefUIResources" />
-											</html-el:submit> &nbsp; <html-el:button property="cancel"
+											</html-el:submit> &nbsp; <html-el:button styleId="createLoanProduct.button.cancel" property="cancel"
 												styleClass="cancelbuttn"
 												onclick="javascript:fnCancel(this.form)">
 												<mifos:mifoslabel name="product.cancel"
