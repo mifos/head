@@ -20,8 +20,9 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 		super(selenium);
 	}
 	
-    public void verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
-		Assert.assertTrue(selenium.isTextPresent("Bulk entry-") && selenium.isTextPresent("Enter data"), "Didn't get to Bulk Entry Enter Data page");
+    public CollectionSheetEntryEnterDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
+        Assert.assertTrue(selenium.isElementPresent("bulkentry_data.heading"),"Didn't get to Bulk Entry Enter Data page");
+		return this;
 	}
 
 	public CollectionSheetEntryPreviewDataPage previewPage() {
@@ -30,5 +31,15 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 		return new CollectionSheetEntryPreviewDataPage(selenium);
 		
 	}
+
+    public CollectionSheetEntryEnterDataPage enterAccountValue(int row, int column, double amount) {
+        selenium.type("enteredAmount[" + row + "][" + column + "]", Double.toString(amount));
+        return this;
+    }
+
+    public CollectionSheetEntryEnterDataPage enterCustomerAccountValue(int row, int column, double amount) {
+        selenium.type("customerAccountAmountEntered[" + row + "][" + column + "]", Double.toString(amount));
+        return this;
+    }
 
 }

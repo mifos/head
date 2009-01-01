@@ -23,8 +23,9 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 		super(selenium);
 	}
 
-	public void verifyPage() {
-		Assert.assertTrue(selenium.isTextPresent(" Bulk entry - Select Center"), "Didn't reach Bulk entry select page");
+	public CollectionSheetEntrySelectPage verifyPage() {
+        Assert.assertTrue(selenium.isElementPresent("bulkentry.heading"),"Didn't reach Bulk entry select page");
+		return this;
 	}
 
 	public HomePage cancelPage() {

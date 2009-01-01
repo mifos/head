@@ -21,9 +21,18 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 	}
 	
 
-	public void verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
-		Assert.assertTrue(selenium.isTextPresent("Bulk entry-") && selenium.isTextPresent("Preview data"), "Didn't get to Bulk Entry Preview Data page");
+	public CollectionSheetEntryPreviewDataPage verifyPage(CollectionSheetEntrySelectPage.SubmitFormParameters parameters) {
+	    Assert.assertTrue(selenium.isElementPresent("bulkentry_preview.heading"),"Didn't get to Bulk Entry Preview Data page");
+		return this;
 	}
 
+    public CollectionSheetEntryConfirmationPage submitForm() {
+        selenium.click("bulkentry_preview.button.submit");
+        waitForPageToLoad();
+        return new CollectionSheetEntryConfirmationPage(selenium);
+        
+    }
+
+	
 
 }

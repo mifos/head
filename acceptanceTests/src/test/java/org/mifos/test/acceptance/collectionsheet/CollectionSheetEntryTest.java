@@ -66,12 +66,36 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
     
-    public void defaultAdminNavigateToCollectionSheetEntrySelection() throws DatabaseUnitException, SQLException, IOException {
+    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws DatabaseUnitException, SQLException, IOException, InterruptedException {
+        SubmitFormParameters formParameters = new SubmitFormParameters();
+        formParameters.setBranch("Office1");
+        formParameters.setLoanOfficer("Bagonza Wilson");
+        formParameters.setCenter("Center1");
+        formParameters.setPaymentMode("Cash");
+        
         loadDataFromFile("acceptance_small_001_dbunit.xml");
+        
         loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos")
+            .verifyPage()
+            .submitForm(formParameters)
+            .verifyPage(formParameters)
+            .enterAccountValue(0,0,99.0)
+            .enterAccountValue(1,1,0.0)
+            .enterAccountValue(2,0,0.0)
+            .previewPage()
+            .verifyPage(formParameters)
+            .submitForm()
             .verifyPage();
     }
     
+    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
+        return appLauncher
+         .launchMifos()
+         .loginSuccessfulAs(userName, password)
+         .navigateToClientsAndAccountsUsingHeaderTab()
+         .navigateToEnterCollectionSheetDataUsingLeftMenu();
+    }
+
     private void loadDataFromFile(String filename) throws DatabaseUnitException, SQLException, IOException {
         Connection jdbcConnection = null;
         boolean enableColumnSensing = true;
@@ -93,31 +117,6 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         }
     }
 
-    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws DatabaseUnitException, SQLException, IOException, InterruptedException {
-        String BRANCH = "Office1";
-        String CENTER = "Center1";
-        String LOAN_OFFICER = "Bagonza Wilson";
-        String PAYMENT_MODE = "Cash";
-        SubmitFormParameters formParameters = new SubmitFormParameters();
-        formParameters.setBranch(BRANCH);
-        formParameters.setLoanOfficer(LOAN_OFFICER);
-        formParameters.setCenter(CENTER);
-        formParameters.setPaymentMode(PAYMENT_MODE);
-        
-        loadDataFromFile("acceptance_small_001_dbunit.xml");
-        loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos")
-            .submitForm(formParameters)
-            .verifyPage(formParameters);
-    }
-
     
-    private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
-        return appLauncher
-         .launchMifos()
-         .loginSuccessfulAs(userName, password)
-         .navigateToClientsAndAccountsUsingHeaderTab()
-         .navigateToEnterCollectionSheetDataUsingLeftMenu();
-    }
-	
 }
 
