@@ -331,7 +331,6 @@ public class ApplicationInitializer implements ServletContextListener,
 	public static boolean isHibernateConfigOverride() {
 		try {
 			if (ClasspathResource.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null) {
-	            System.out.println("**** deploymifoDB.properties path: " + FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE + " File not found!");
 				return true;
 			}
 		}
@@ -343,10 +342,8 @@ public class ApplicationInitializer implements ServletContextListener,
 
 	public static String getHibernateProperties() {
 		if (isHibernateConfigOverride()) {
-		    System.out.println("**** using deploymifosDB.properties");
 			return FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
 		} else {
-            System.out.println("**** using hibernate.properties");
 		    return FilePaths.HIBERNATE_PROPERTIES;
 		}
 	}

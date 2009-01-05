@@ -42,9 +42,9 @@ public class MessageLookupTest {
 		assertEquals("Saturday",messageLookup.lookup(WeekDay.SATURDAY, Locale.US));
 		assertEquals("Sunday",messageLookup.lookup(WeekDay.SUNDAY, Locale.US));
 		// Spanish locale
-		assertEquals("Lunes",messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
+		assertEquals("lunes",messageLookup.lookup(WeekDay.MONDAY, new Locale("es")));
 		// French locale
-		assertEquals("Lundi",messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
+		assertEquals("lundi",messageLookup.lookup(WeekDay.MONDAY, new Locale("fr")));
 	}
 	
 	private void ChangeLocale(ConfigLocale newLocale) {
