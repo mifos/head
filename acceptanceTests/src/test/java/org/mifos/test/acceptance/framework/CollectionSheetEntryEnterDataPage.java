@@ -25,7 +25,7 @@ public class CollectionSheetEntryEnterDataPage extends AbstractPage {
 		return this;
 	}
 
-	public CollectionSheetEntryPreviewDataPage previewPage() {
+	public CollectionSheetEntryPreviewDataPage submitAndGotoCollectionSheetEntryPreviewDataPage() {
 		selenium.click("bulkentry_data.button.preview");
 		waitForPageToLoad();
 		return new CollectionSheetEntryPreviewDataPage(selenium);

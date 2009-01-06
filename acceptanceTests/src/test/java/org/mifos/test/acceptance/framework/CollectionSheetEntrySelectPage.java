@@ -138,7 +138,7 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 
     }
 
-    public CollectionSheetEntryEnterDataPage submitForm(SubmitFormParameters parameters) {
+    public CollectionSheetEntryEnterDataPage submitAndGotoCollectionSheetEntryEnterDataPage(SubmitFormParameters parameters) {
 		
 		selenium.select("officeId",          "label=" + parameters.getBranch());
 		waitForPageToLoad();
@@ -150,7 +150,7 @@ public class CollectionSheetEntrySelectPage extends AbstractPage {
 		typeTextIfNotEmpty  ("transactionDateMM", parameters.getTransactionMonth());
 		typeTextIfNotEmpty  ("transactionDateYY", parameters.getTransactionYear());
 		selenium.select("paymentId",         "label=" + parameters.getPaymentMode());
-		typeTextIfNotEmpty  (RECEIPT_INPUT_ID,         "123456789");
+		typeTextIfNotEmpty  (RECEIPT_INPUT_ID,    parameters.getReceiptId());
 		typeTextIfNotEmpty  ("receiptDateDD",     parameters.getReceiptDay());
 		typeTextIfNotEmpty  ("receiptDateMM",     parameters.getReceiptMonth());
 		typeTextIfNotEmpty  ("receiptDateYY",     parameters.getReceiptYear());

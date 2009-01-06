@@ -24,11 +24,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.dbunit.Assertion;
+import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.core.MifosRuntimeException;
@@ -41,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -66,7 +75,8 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
     
-    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws DatabaseUnitException, SQLException, IOException, InterruptedException {
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
@@ -77,17 +87,63 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         
         loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos")
             .verifyPage()
-            .submitForm(formParameters)
+            .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters)
             .verifyPage(formParameters)
             .enterAccountValue(0,0,99.0)
             .enterAccountValue(1,1,0.0)
             .enterAccountValue(2,0,0.0)
-            .previewPage()
+            .submitAndGotoCollectionSheetEntryPreviewDataPage()
             .verifyPage(formParameters)
-            .submitForm()
+            .submitAndGotoCollectionSheetEntryConfirmationPage()
             .verifyPage();
+        
+        verifyCollectionSheetData("acceptance_small_002_dbunit.xml");
     }
     
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
+    private void verifyCollectionSheetData(String filename) throws Exception {
+        Connection jdbcConnection = null;
+        try {
+            jdbcConnection = DataSourceUtils.getConnection(dataSource);
+            IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+            IDatabaseConnection databaseConnection = databaseTester.getConnection();
+            IDataSet databaseDataSet = databaseConnection.createDataSet();
+            IDataSet expectedDataSet = getDataSetFromFile(filename);
+            
+            // not testing CUSTOMER_ATTENDANCE here
+            verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
+            verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
+            // the ordering of the financial transactions is not fixed, need to address this
+            //verifyTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet);  
+            verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
+            
+        }
+        finally {
+            jdbcConnection.close();
+            DataSourceUtils.releaseConnection(jdbcConnection, dataSource);
+        }
+    }
+
+    
+    static Map<String, String[]> columnsToIgnore = new HashMap<String, String[]>();
+    static {
+        columnsToIgnore.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
+        columnsToIgnore.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
+        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id" });        
+        columnsToIgnore.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
+    }
+    
+    private void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
+            DatabaseUnitException {
+        
+        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
+        ITable expectedTable = expectedDataSet.getTable(tableName);
+        ITable actualTable = databaseDataSet.getTable(tableName);
+        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
+                expectedTable.getTableMetaData().getColumns());
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
+    }
+
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
         return appLauncher
          .launchMifos()
@@ -98,12 +154,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     private void loadDataFromFile(String filename) throws DatabaseUnitException, SQLException, IOException {
         Connection jdbcConnection = null;
-        boolean enableColumnSensing = true;
-        URL url = DbUnitResource.getInstance().getUrl(filename);
-        if (url == null) {
-            throw new MifosRuntimeException("Couldn't find file:" + filename);
-        }
-        IDataSet dataSet = new FlatXmlDataSet(url,false,enableColumnSensing);
+        IDataSet dataSet = getDataSetFromFile(filename);
         try {
             jdbcConnection = DataSourceUtils.getConnection(dataSource);
             IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
@@ -115,6 +166,15 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             }
             DataSourceUtils.releaseConnection(jdbcConnection, dataSource);
         }
+    }
+
+    private IDataSet getDataSetFromFile(String filename) throws IOException, DataSetException {
+        boolean enableColumnSensing = true;
+        URL url = DbUnitResource.getInstance().getUrl(filename);
+        if (url == null) {
+            throw new MifosRuntimeException("Couldn't find file:" + filename);
+        }
+        return new FlatXmlDataSet(url,false,enableColumnSensing);
     }
 
     

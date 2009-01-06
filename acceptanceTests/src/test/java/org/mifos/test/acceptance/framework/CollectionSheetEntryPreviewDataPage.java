@@ -26,7 +26,7 @@ public class CollectionSheetEntryPreviewDataPage extends AbstractPage {
 		return this;
 	}
 
-    public CollectionSheetEntryConfirmationPage submitForm() {
+    public CollectionSheetEntryConfirmationPage submitAndGotoCollectionSheetEntryConfirmationPage() {
         selenium.click("bulkentry_preview.button.submit");
         waitForPageToLoad();
         return new CollectionSheetEntryConfirmationPage(selenium);
