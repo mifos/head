@@ -41,6 +41,9 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
+import org.mifos.test.acceptance.framework.CollectionSheetEntryEnterDataPage;
+import org.mifos.test.acceptance.framework.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -85,17 +88,21 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         
         loadDataFromFile("acceptance_small_001_dbunit.xml");
         
-        loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos")
-            .verifyPage()
-            .submitAndGotoCollectionSheetEntryEnterDataPage(formParameters)
-            .verifyPage(formParameters)
-            .enterAccountValue(0,0,99.0)
-            .enterAccountValue(1,1,0.0)
-            .enterAccountValue(2,0,0.0)
-            .submitAndGotoCollectionSheetEntryPreviewDataPage()
-            .verifyPage(formParameters)
-            .submitAndGotoCollectionSheetEntryConfirmationPage()
-            .verifyPage();
+        CollectionSheetEntrySelectPage selectPage = 
+            loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos");
+        selectPage.verifyPage();
+        CollectionSheetEntryEnterDataPage enterDataPage = 
+            selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
+        enterDataPage.verifyPage(formParameters);
+        enterDataPage.enterAccountValue(0,0,99.0);
+        enterDataPage.enterAccountValue(1,1,0.0);
+        enterDataPage.enterAccountValue(2,0,0.0);
+        CollectionSheetEntryPreviewDataPage previewPage = 
+            enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
+        previewPage.verifyPage(formParameters);
+        CollectionSheetEntryConfirmationPage confirmationPage = 
+            previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
+        confirmationPage.verifyPage();
         
         verifyCollectionSheetData("acceptance_small_002_dbunit.xml");
     }
@@ -110,13 +117,16 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             IDataSet databaseDataSet = databaseConnection.createDataSet();
             IDataSet expectedDataSet = getDataSetFromFile(filename);
             
-            // not testing CUSTOMER_ATTENDANCE here
             verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
             verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
-            // the ordering of the financial transactions is not fixed, need to address this
-            //verifyTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet);  
+            // the ordering of the financial transactions is not fixed, attempting
+            // to get a fixed order by sorting columns-- not yet working
+            // verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
+            //    new String[]{"account_trxn_id","fin_action_id","glcode_id"});  
             verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
-            
+            verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
+            verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
+            // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
         }
         finally {
             jdbcConnection.close();
@@ -124,15 +134,17 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         }
     }
 
-    
+    // TODO: Refactor this to better encapsulate this information + move it to a utility class
     static Map<String, String[]> columnsToIgnore = new HashMap<String, String[]>();
     static {
         columnsToIgnore.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
         columnsToIgnore.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
-        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id" });        
+        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount" });        
         columnsToIgnore.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
+        columnsToIgnore.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
+        columnsToIgnore.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
     }
-    
+
     private void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
             DatabaseUnitException {
         
@@ -144,6 +156,27 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
     }
 
+    /*  referenced by temporarily commented out code above
+    private void verifySortedTable(String tableName, IDataSet databaseDataSet, 
+            IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException,
+    DatabaseUnitException {
+
+        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
+        ITable expectedTable = expectedDataSet.getTable(tableName);
+        ITable actualTable = databaseDataSet.getTable(tableName);
+        SortedTable sortedExpectedTable = new SortedTable(expectedTable, sortingColumns);
+        sortedExpectedTable.setUseComparable(true);
+        expectedTable = sortedExpectedTable;
+        SortedTable sortedActualTable = new SortedTable(actualTable, sortingColumns);
+        sortedActualTable.setUseComparable(true);
+        actualTable = sortedActualTable;
+        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
+                expectedTable.getTableMetaData().getColumns());
+        
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
+    }
+    */
+    
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
         return appLauncher
          .launchMifos()
