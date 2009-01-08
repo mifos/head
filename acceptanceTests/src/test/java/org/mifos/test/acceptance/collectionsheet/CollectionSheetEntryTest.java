@@ -20,35 +20,18 @@
 
 package org.mifos.test.acceptance.collectionsheet;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.dbunit.Assertion;
 import org.dbunit.DataSourceDatabaseTester;
-import org.dbunit.DatabaseUnitException;
 import org.dbunit.IDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.SortedTable;
-import org.dbunit.dataset.filter.DefaultColumnFilter;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
-import org.dbunit.util.TableFormatter;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryEnterDataPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryPreviewDataPage;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage;
+import org.mifos.test.acceptance.framework.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.CollectionSheetEntrySelectPage.SubmitFormParameters;
@@ -56,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -64,8 +46,6 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
-    private static final Log LOG = LogFactory.getLog(CollectionSheetEntryTest.class);
-
     private AppLauncher appLauncher;
 
     @Autowired
@@ -91,7 +71,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         
-        loadDataFromFile("acceptance_small_001_dbunit.xml");
+        DbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
             loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos");
@@ -120,19 +100,19 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
             IDatabaseConnection databaseConnection = databaseTester.getConnection();
             IDataSet databaseDataSet = databaseConnection.createDataSet();
-            IDataSet expectedDataSet = getDataSetFromFile(filename);
+            IDataSet expectedDataSet = DbUnitUtilities.getDataSetFromFile(filename);
             
-            verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
-            verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
+            DbUnitUtilities.verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
+            DbUnitUtilities.verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
             // the ordering of the financial transactions varies per test run,
             // so sort the columns to get a fixed order
             String[] orderByColumns = 
                 new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
-            verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
+            DbUnitUtilities.verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
                 orderByColumns);
-            verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
-            verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
-            verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
+            DbUnitUtilities.verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
+            DbUnitUtilities.verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
+            DbUnitUtilities.verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
             // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
         }
         finally {
@@ -141,90 +121,13 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         }
     }
 
-    // TODO: Refactor this to better encapsulate this information + move it to a utility class
-    static Map<String, String[]> columnsToIgnore = new HashMap<String, String[]>();
-    static {
-        columnsToIgnore.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
-        columnsToIgnore.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
-        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
-        columnsToIgnore.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
-        columnsToIgnore.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
-        columnsToIgnore.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
-    }
 
-    private void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
-            DatabaseUnitException {
-        
-        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
-        ITable expectedTable = expectedDataSet.getTable(tableName);
-        ITable actualTable = databaseDataSet.getTable(tableName);
-        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
-                expectedTable.getTableMetaData().getColumns());
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
-    }
-
-    private void verifySortedTable(String tableName, IDataSet databaseDataSet, 
-            IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException,
-    DatabaseUnitException {
-
-        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
-        ITable expectedTable = expectedDataSet.getTable(tableName);
-        ITable actualTable = databaseDataSet.getTable(tableName);
-
-        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
-                expectedTable.getTableMetaData().getColumns());
-
-        SortedTable sortedExpectedTable = new SortedTable(expectedTable, sortingColumns);
-        sortedExpectedTable.setUseComparable(true);
-        expectedTable = sortedExpectedTable;
-        SortedTable sortedActualTable = new SortedTable(actualTable, sortingColumns);
-        sortedActualTable.setUseComparable(true);
-        actualTable = sortedActualTable;
-        
-        if (LOG.isDebugEnabled()) {
-            printTable(expectedTable);
-            printTable(actualTable);
-        }
-        
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
-    }
-    
-    private void printTable(ITable table) throws DataSetException {
-       TableFormatter formatter = new TableFormatter();
-       LOG.debug(formatter.format(table));
-    }    
-    
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
         return appLauncher
          .launchMifos()
          .loginSuccessfulAs(userName, password)
          .navigateToClientsAndAccountsUsingHeaderTab()
          .navigateToEnterCollectionSheetDataUsingLeftMenu();
-    }
-
-    private void loadDataFromFile(String filename) throws DatabaseUnitException, SQLException, IOException {
-        Connection jdbcConnection = null;
-        IDataSet dataSet = getDataSetFromFile(filename);
-        try {
-            jdbcConnection = DataSourceUtils.getConnection(dataSource);
-            IDatabaseConnection databaseConnection = new DatabaseConnection(jdbcConnection);
-            DatabaseOperation.CLEAN_INSERT.execute(databaseConnection, dataSet);
-        }
-        finally {
-            if (jdbcConnection != null) {
-                jdbcConnection.close();
-            }
-            DataSourceUtils.releaseConnection(jdbcConnection, dataSource);
-        }
-    }
-
-    private IDataSet getDataSetFromFile(String filename) throws IOException, DataSetException {
-        boolean enableColumnSensing = true;
-        URL url = DbUnitResource.getInstance().getUrl(filename);
-        if (url == null) {
-            throw new MifosRuntimeException("Couldn't find file:" + filename);
-        }
-        return new FlatXmlDataSet(url,false,enableColumnSensing);
     }
 
     
