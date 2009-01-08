@@ -27,6 +27,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dbunit.Assertion;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
@@ -36,9 +38,11 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.SortedTable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
+import org.dbunit.util.TableFormatter;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.CollectionSheetEntryConfirmationPage;
@@ -60,6 +64,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"CollectionSheetEntryTest","acceptance","ui"})
 public class CollectionSheetEntryTest extends UiTestCaseBase {
+    private static final Log LOG = LogFactory.getLog(CollectionSheetEntryTest.class);
 
     private AppLauncher appLauncher;
 
@@ -77,7 +82,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+  
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
@@ -119,10 +124,12 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             
             verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
             verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
-            // the ordering of the financial transactions is not fixed, attempting
-            // to get a fixed order by sorting columns-- not yet working
-            // verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
-            //    new String[]{"account_trxn_id","fin_action_id","glcode_id"});  
+            // the ordering of the financial transactions varies per test run,
+            // so sort the columns to get a fixed order
+            String[] orderByColumns = 
+                new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
+            verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
+                orderByColumns);
             verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
             verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
             verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
@@ -139,7 +146,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     static {
         columnsToIgnore.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
         columnsToIgnore.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
-        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount" });        
+        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
         columnsToIgnore.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
         columnsToIgnore.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
         columnsToIgnore.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
@@ -156,7 +163,6 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
     }
 
-    /*  referenced by temporarily commented out code above
     private void verifySortedTable(String tableName, IDataSet databaseDataSet, 
             IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException,
     DatabaseUnitException {
@@ -164,18 +170,29 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
         ITable expectedTable = expectedDataSet.getTable(tableName);
         ITable actualTable = databaseDataSet.getTable(tableName);
+
+        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
+                expectedTable.getTableMetaData().getColumns());
+
         SortedTable sortedExpectedTable = new SortedTable(expectedTable, sortingColumns);
         sortedExpectedTable.setUseComparable(true);
         expectedTable = sortedExpectedTable;
         SortedTable sortedActualTable = new SortedTable(actualTable, sortingColumns);
         sortedActualTable.setUseComparable(true);
         actualTable = sortedActualTable;
-        actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
-                expectedTable.getTableMetaData().getColumns());
+        
+        if (LOG.isDebugEnabled()) {
+            printTable(expectedTable);
+            printTable(actualTable);
+        }
         
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
     }
-    */
+    
+    private void printTable(ITable table) throws DataSetException {
+       TableFormatter formatter = new TableFormatter();
+       LOG.debug(formatter.format(table));
+    }    
     
     private CollectionSheetEntrySelectPage loginAndNavigateToCollectionSheetEntrySelectPage(String userName, String password) {
         return appLauncher
