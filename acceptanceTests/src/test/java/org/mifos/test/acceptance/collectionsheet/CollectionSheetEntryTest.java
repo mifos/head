@@ -64,7 +64,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
+    public void defaultAdminUserEntersSingleLoanPayment() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
@@ -79,9 +79,9 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage(formParameters);
-        enterDataPage.enterAccountValue(0,0,99.0);
-        enterDataPage.enterAccountValue(1,1,0.0);
-        enterDataPage.enterAccountValue(2,0,0.0);
+        enterDataPage.enterAccountValue(0,0,99.0);  // enter a payment of 99.0 for one loan
+        enterDataPage.enterAccountValue(1,1,0.0);   // zero out other entries
+        enterDataPage.enterAccountValue(2,0,0.0);   // zero out other entries
         CollectionSheetEntryPreviewDataPage previewPage = 
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);

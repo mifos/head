@@ -61,7 +61,7 @@ import java.util.Locale;
  * 
  */
 public final class Money implements Serializable {
-	// adding a comparator, if currency are different throws a RuntimeException saying cannot compare
+    // adding a comparator, if currency are different throws a RuntimeException saying cannot compare
 	// otherwise delegates to BigDecimal.compareTo for comparision 
 	public static Comparator<Money> DEFAULT_COMPARATOR = new Comparator<Money>() {
 		public int compare(Money m1, Money m2) {
@@ -401,6 +401,14 @@ public final class Money implements Serializable {
 		}
 		return "0";
 	}
+
+    public boolean isGreaterThan(Money money) {
+        return Money.DEFAULT_COMPARATOR.compare(this,money) > 0; 
+    }
+
+    public boolean isLessThan(Money money) {
+        return Money.DEFAULT_COMPARATOR.compare(this,money) < 0; 
+    }
 
 
 }

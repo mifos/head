@@ -2889,29 +2889,42 @@ public class LoanBO extends AccountBO {
 						.getAmountPaidWithFeeForInstallment());
 			}
 		}
-		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		if (nextInstallment != null
-				&& !nextInstallment.isPaid()
-				&& DateUtils.getDateWithoutTimeStamp(
-						nextInstallment.getActionDate().getTime()).equals(
-						DateUtils.getCurrentDateWithoutTimeStamp()))
-			paymentData.addAccountPaymentData(new LoanPaymentData(
-					nextInstallment, totalAmount));
+        if (totalAmount.isGreaterThan(new Money(totalAmount.getCurrency(),"0"))) {
+		    addAccountPaymentToNextInstallmentIfNecessary(paymentData, totalAmount);
+		}
 	}
+
+    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData) {
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null) {
+            addAccountPaymentToNextInstallmentIfNecessary(paymentData, 
+                    new LoanPaymentData(nextInstallment), nextInstallment);
+        }
+    }
+
+    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData, Money totalAmount) {
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (nextInstallment != null) {
+            addAccountPaymentToNextInstallmentIfNecessary(paymentData, 
+                new LoanPaymentData(nextInstallment, totalAmount), nextInstallment);
+        }
+    }
+    
+    private void addAccountPaymentToNextInstallmentIfNecessary(PaymentData paymentData, LoanPaymentData loanPaymentData,
+            AccountActionDateEntity nextInstallment) {
+        if (!nextInstallment.isPaid()
+                && DateUtils.getDateWithoutTimeStamp(
+                        nextInstallment.getActionDate().getTime()).equals(
+                                DateUtils.getCurrentDateWithoutTimeStamp()))
+            paymentData.addAccountPaymentData(loanPaymentData);
+    }
 
 	private void handleFullPayment(PaymentData paymentData) {
 		for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
 			paymentData.addAccountPaymentData(new LoanPaymentData(
 					accountActionDate));
 		}
-		AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-		if (nextInstallment != null
-				&& !nextInstallment.isPaid()
-				&& DateUtils.getDateWithoutTimeStamp(
-						nextInstallment.getActionDate().getTime()).equals(
-						DateUtils.getCurrentDateWithoutTimeStamp()))
-			paymentData.addAccountPaymentData(new LoanPaymentData(
-					nextInstallment));
+		addAccountPaymentToNextInstallmentIfNecessary(paymentData);
 	}
 
 	private void handleFuturePayment(PaymentData paymentData) {

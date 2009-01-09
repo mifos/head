@@ -240,5 +240,50 @@ public class MoneyTest {
 		assertEquals("The toString of money returns : ", "4456456456.6", money
 				.toString());
 	}
+	
+	@Test
+	public void testIsGreaterThan() {
+        Money large = new Money(RUPEE, "10.0");
+        Money small = new Money(RUPEE, "1.0");
+	    
+        assertTrue("large should be greater than small", large.isGreaterThan(small));
+        assertFalse("large should not be greater than itself", large.isGreaterThan(large));
+        assertFalse("small should not be greater than large", small.isGreaterThan(large));
+	}
 
+    @Test
+    public void testIsLessThan() {
+        Money large = new Money(EURO, "10.0");
+        Money small = new Money(EURO, "1.0");
+        
+        assertTrue("small should be less than large", small.isLessThan(large));
+        assertFalse("small should not be less than itself", small.isLessThan(small));
+        assertFalse("large should not be less than small", large.isLessThan(small));
+
+    }
+	
+    @Test
+    public void testIsLessThanForDifferentCurrencies() {
+        Money large = new Money(RUPEE, "10.0");
+        Money small = new Money(EURO, "1.0");
+
+        try {
+            assertFalse("large should not be less than small", large.isLessThan(small));
+            fail("Comparing two different currencies should throw and exceeption");
+        } catch (RuntimeException e) {
+        }
+    }
+
+    @Test
+    public void testIsGreaterThanForDifferentCurrencies() {
+        Money large = new Money(RUPEE, "10.0");
+        Money small = new Money(EURO, "1.0");
+
+        try {
+            assertFalse("large should not be less than small", large.isGreaterThan(small));
+            fail("Comparing two different currencies should throw and exceeption");
+        } catch (RuntimeException e) {
+        }
+    }
+    
 }
