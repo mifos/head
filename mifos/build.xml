@@ -467,7 +467,7 @@
     </target>
 
 	<target name="build_db" description="Builds the application database">
-		<echo>Using database: ${db.name} at ${db.ip} port ${db.port}</echo>
+		<echo>Using database: ${db.name} at ${db.ip} port ${db.port}, user: ${db.user}</echo>
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
 			userid="${db.user}" password="${db.pwd}"
 			classpath="${database.driver.jar}">
