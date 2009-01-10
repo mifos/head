@@ -50,6 +50,8 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
 
     @Autowired
     private DriverManagerDataSource dataSource;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
     
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @BeforeMethod
@@ -64,14 +66,14 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
     }
   
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
-    public void defaultAdminUserEntersSingleLoanPayment() throws Exception {
+    public void defaultAdminUserSelectsValidCollectionSheetEntryParameters() throws Exception {
         SubmitFormParameters formParameters = new SubmitFormParameters();
         formParameters.setBranch("Office1");
         formParameters.setLoanOfficer("Bagonza Wilson");
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
         
-        DbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_small_001_dbunit.xml", dataSource);
         
         CollectionSheetEntrySelectPage selectPage = 
             loginAndNavigateToCollectionSheetEntrySelectPage("mifos", "testmifos");
@@ -79,9 +81,9 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         CollectionSheetEntryEnterDataPage enterDataPage = 
             selectPage.submitAndGotoCollectionSheetEntryEnterDataPage(formParameters);
         enterDataPage.verifyPage(formParameters);
-        enterDataPage.enterAccountValue(0,0,99.0);  // enter a payment of 99.0 for one loan
-        enterDataPage.enterAccountValue(1,1,0.0);   // zero out other entries
-        enterDataPage.enterAccountValue(2,0,0.0);   // zero out other entries
+        enterDataPage.enterAccountValue(0,0,99.0);
+        enterDataPage.enterAccountValue(1,1,0.0);
+        enterDataPage.enterAccountValue(2,0,0.0);
         CollectionSheetEntryPreviewDataPage previewPage = 
             enterDataPage.submitAndGotoCollectionSheetEntryPreviewDataPage();
         previewPage.verifyPage(formParameters);
@@ -100,19 +102,19 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
             IDatabaseConnection databaseConnection = databaseTester.getConnection();
             IDataSet databaseDataSet = databaseConnection.createDataSet();
-            IDataSet expectedDataSet = DbUnitUtilities.getDataSetFromFile(filename);
+            IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromFile(filename);
             
-            DbUnitUtilities.verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
-            DbUnitUtilities.verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
+            dbUnitUtilities.verifyTable("ACCOUNT_PAYMENT", databaseDataSet, expectedDataSet);   
+            dbUnitUtilities.verifyTable("ACCOUNT_TRXN", databaseDataSet, expectedDataSet);  
             // the ordering of the financial transactions varies per test run,
             // so sort the columns to get a fixed order
             String[] orderByColumns = 
                 new String[]{"account_trxn_id","fin_action_id","debit_credit_flag"};   
-            DbUnitUtilities.verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
+            dbUnitUtilities.verifySortedTable("FINANCIAL_TRXN", databaseDataSet, expectedDataSet, 
                 orderByColumns);
-            DbUnitUtilities.verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
-            DbUnitUtilities.verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
-            DbUnitUtilities.verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
+            dbUnitUtilities.verifyTable("LOAN_ACTIVITY_DETAILS", databaseDataSet, expectedDataSet);  
+            dbUnitUtilities.verifyTable("LOAN_SCHEDULE", databaseDataSet, expectedDataSet);  
+            dbUnitUtilities.verifyTable("LOAN_TRXN_DETAIL", databaseDataSet, expectedDataSet);              
             // Note: CUSTOMER_ATTENDANCE is updated but we are not verifying it in this test
         }
         finally {

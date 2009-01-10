@@ -20,5 +20,6 @@
     </bean>
 
     <bean id="databaseTestUtils" class="org.mifos.test.framework.util.DatabaseTestUtils" />
+    <bean id="dbUnitUtilities" class="org.mifos.test.acceptance.framework.DbUnitUtilities" />
 
 </beans>

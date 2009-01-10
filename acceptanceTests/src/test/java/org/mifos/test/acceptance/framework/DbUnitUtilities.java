@@ -1,6 +1,23 @@
-/**
+/*
+ * Copyright (c) 2005-2008 Grameen Foundation USA
+ * All rights reserved.
  * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ * 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
  */
+
 package org.mifos.test.acceptance.framework;
 
 import java.io.IOException;
@@ -32,40 +49,41 @@ import org.testng.Assert;
 
 /**
  * Utility methods for operating on dbunit data.
- *
  */
 public class DbUnitUtilities {
     private static final Log LOG = LogFactory.getLog(DbUnitUtilities.class);
     
-    // Below are sets of columns to ignore when calling verify table methods
-    // These could be refactored to better encapsulate this information,
-    // perhaps with a DatabaseTable class of some kind
-    static Map<String, String[]> columnsToIgnore = new HashMap<String, String[]>();
-    static {
-        columnsToIgnore.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
-        columnsToIgnore.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
-        columnsToIgnore.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
-        columnsToIgnore.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
-        columnsToIgnore.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
-        columnsToIgnore.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
+    static Map<String, String[]> columnsToIgnoreWhenVerifyingTables = new HashMap<String, String[]>();
+
+    public DbUnitUtilities() {
+        initialize();
+    }
+    
+    private void initialize() {
+        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_PAYMENT", new String[] { "payment_id","payment_date" });
+        columnsToIgnoreWhenVerifyingTables.put("ACCOUNT_TRXN", new String[] { "account_trxn_id","created_date","action_date","payment_id" });        
+        columnsToIgnoreWhenVerifyingTables.put("FINANCIAL_TRXN", new String[] { "trxn_id","action_date", "account_trxn_id","balance_amount","posted_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_ACTIVITY_DETAILS", new String[] { "id","created_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_SCHEDULE", new String[] { "id","payment_date" });        
+        columnsToIgnoreWhenVerifyingTables.put("LOAN_TRXN_DETAIL", new String[] { "account_trxn_id" });        
     }
 
-    public static void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
+    public void verifyTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet) throws DataSetException,
             DatabaseUnitException {
         
-        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
+        Assert.assertNotNull(columnsToIgnoreWhenVerifyingTables.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.");
         ITable expectedTable = expectedDataSet.getTable(tableName);
         ITable actualTable = databaseDataSet.getTable(tableName);
         actualTable = DefaultColumnFilter.includedColumnsTable(actualTable, 
                 expectedTable.getTableMetaData().getColumns());
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
     }
 
-    public static void verifySortedTable(String tableName, IDataSet databaseDataSet, 
+    public void verifySortedTable(String tableName, IDataSet databaseDataSet, 
             IDataSet expectedDataSet, String[] sortingColumns) throws DataSetException,
     DatabaseUnitException {
 
-        Assert.assertNotNull(columnsToIgnore.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnore map.");
+        Assert.assertNotNull(columnsToIgnoreWhenVerifyingTables.get(tableName), "Didn't find requested table [" + tableName + "] in columnsToIgnoreWhenVerifyingTables map.");
         ITable expectedTable = expectedDataSet.getTable(tableName);
         ITable actualTable = databaseDataSet.getTable(tableName);
 
@@ -84,15 +102,15 @@ public class DbUnitUtilities {
             printTable(actualTable);
         }
         
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnore.get(tableName));
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, columnsToIgnoreWhenVerifyingTables.get(tableName));
     }
     
-    public static void printTable(ITable table) throws DataSetException {
+    public void printTable(ITable table) throws DataSetException {
        TableFormatter formatter = new TableFormatter();
        LOG.debug(formatter.format(table));
     }    
     
-    public static void loadDataFromFile(String filename, DriverManagerDataSource dataSource) 
+    public void loadDataFromFile(String filename, DriverManagerDataSource dataSource) 
     throws DatabaseUnitException, SQLException, IOException {
         Connection jdbcConnection = null;
         IDataSet dataSet = getDataSetFromFile(filename);
@@ -109,7 +127,7 @@ public class DbUnitUtilities {
         }
     }
 
-    public static IDataSet getDataSetFromFile(String filename) throws IOException, DataSetException {
+    public IDataSet getDataSetFromFile(String filename) throws IOException, DataSetException {
         boolean enableColumnSensing = true;
         URL url = DbUnitResource.getInstance().getUrl(filename);
         if (url == null) {
