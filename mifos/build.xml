@@ -221,7 +221,7 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy todir="${build.classes}/org/mifos/conf" verbose="true">
+		<copy tofile="${build.classes}/org/mifos/conf/hibernate.properties" verbose="true">
 			<fileset dir="${conf.dir}">
 				<include name="my.hibernate.properties" 
                 	if="my.hibernate.properties.present" />
