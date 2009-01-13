@@ -20,6 +20,12 @@
 
 package org.mifos.test.acceptance.framework;
 
-public class CreateLoanAccountsSearchPage {
+import com.thoughtworks.selenium.Selenium;
+
+public class CreateLoanAccountsSearchPage extends AbstractPage {
+
+    public CreateLoanAccountsSearchPage(Selenium selenium) {
+        super(selenium);
+    }
 
 }

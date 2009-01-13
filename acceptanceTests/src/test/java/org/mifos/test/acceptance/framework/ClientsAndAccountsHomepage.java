@@ -38,4 +38,10 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 		return new CollectionSheetEntrySelectPage(selenium);
 	}
 
+    public CreateLoanAccountsSearchPage navigateToCreateLoanAccountsSearchPageUsingLeftMenu() {
+        selenium.click("link=Create multiple Loan accounts");
+        waitForPageToLoad();
+        return new CreateLoanAccountsSearchPage(selenium);
+    }
+
 }
