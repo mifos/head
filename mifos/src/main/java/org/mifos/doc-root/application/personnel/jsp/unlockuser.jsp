@@ -54,14 +54,14 @@
 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td class="bluetablehead05"><span class="fontnormal8pt"> <a
+          <td class="bluetablehead05"><span class="fontnormal8pt"> <a id="unlockuser.link.admin"
 						href="AdminAction.do?method=load"> <mifos:mifoslabel
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					</a> / <a id="unlockuser.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-						<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">
+						<a id="unlockuser.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">
            		<c:out value="${personnelBO.displayName}"/>
            	</a>
             </span>
@@ -103,11 +103,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <html-el:submit styleClass="buttn" property="submitBtn">
+                  <html-el:submit styleId="unlockuser.button.submit" styleClass="buttn" property="submitBtn">
 					<mifos:mifoslabel name="button.submit" bundle="PersonnelUIResources"></mifos:mifoslabel>
 				   </html-el:submit>
                     &nbsp;&nbsp;
-                    <html-el:button property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage()">
+                    <html-el:button styleId="unlockuser.button.cancel" property="cancelBtn" styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
                     </html-el:button>
                 </td></tr>

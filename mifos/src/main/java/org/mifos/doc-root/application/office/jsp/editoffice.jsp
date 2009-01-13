@@ -45,13 +45,13 @@ explanation of the license and how it is applied.
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="editoffice.link.admin"
 						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkAdmin" />
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="editoffice.link.viewOffices"
 						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkViewOffices" />
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="editoffice.link.viewOffice"
 						href="offAction.do?method=get&officeId=${offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
@@ -73,8 +73,8 @@ explanation of the license and how it is applied.
 						</tr>
 					</table>
 					<br>
-					<font class="fontnormalRedBold"><html-el:errors
-						bundle="OfficeUIResources" /> </font>
+					<font class="fontnormalRedBold"><span id="editoffice.error.message"><html-el:errors
+						bundle="OfficeUIResources" /></span> </font>
 
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
@@ -84,15 +84,15 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td width="20%" align="right"><mifos:mifoslabel
-								name="Office.labelOfficeName" mandatory="yes" /></td>
-							<td width="80%"><mifos:mifosalphanumtext property="officeName"
+							<td width="20%" align="right"><span id="editoffice.label.officeName"><mifos:mifoslabel
+								name="Office.labelOfficeName" mandatory="yes" /></span></td>
+							<td width="80%"><mifos:mifosalphanumtext styleId="editoffice.input.officeName" property="officeName"
 								maxlength="200" name="offActionForm" ></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="Office.labelOfficeShortName" mandatory="yes" /></td>
-							<td><mifos:mifosalphanumtext property="shortName" size="4"
+							<td align="right"><span id="editoffice.label.shortName"><mifos:mifoslabel
+								name="Office.labelOfficeShortName" mandatory="yes" /></span></td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.shortName" property="shortName" size="4"
 								maxlength="4" name="offActionForm"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
@@ -191,69 +191,69 @@ explanation of the license and how it is applied.
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td width="20%" align="right"><mifos:mifoslabel
+							<td width="20%" align="right"><span id="editoffice.label.address1"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS1}" keyhm="Office.Address1" isColonRequired="yes"
-								bundle="OfficeUIResources"/>:</td>
-							<td width="80%"><mifos:mifosalphanumtext
+								bundle="OfficeUIResources"/></span>:</td>
+							<td width="80%"><mifos:mifosalphanumtext styleId="editoffice.input.address1"
 								property="address.line1" keyhm="Office.Address1"
 								value="${offActionForm.address.line1}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="editoffice.label.address2"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS2}"
-								bundle="OfficeUIResources" keyhm="Office.Address2" isColonRequired="yes"/></td>
-							<td><mifos:mifosalphanumtext property="address.line2"  keyhm="Office.Address2"
+								bundle="OfficeUIResources" keyhm="Office.Address2" isColonRequired="yes"/></span></td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.address2" property="address.line2"  keyhm="Office.Address2"
 								value="${offActionForm.address.line2}"
 								maxlength="200"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal" id="Office.Address3">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="editoffice.label.address3"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS3}"
 								bundle="OfficeUIResources" keyhm="Office.Address3">
-								</mifos:mifoslabel>:</td>
-							<td><mifos:mifosalphanumtext property="address.line3"
+								</mifos:mifoslabel></span>:</td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.address3" property="address.line3"
 								value="${offActionForm.address.line3}"
 								maxlength="200" keyhm="Office.Address3">
 							</mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
-								name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources"/>:</td>
-							<td><mifos:mifosalphanumtext property="address.city"
+							<td align="right"><span id="editoffice.label.city"><mifos:mifoslabel
+								name="${ConfigurationConstants.CITY}" bundle="OfficeUIResources"/></span>:</td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.city" property="address.city"
 								value="${offActionForm.address.city}" maxlength="100"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="editoffice.label.state"><mifos:mifoslabel
 								name="${ConfigurationConstants.STATE}" bundle="OfficeUIResources"
-								keyhm="Office.State" isColonRequired="yes"/></td>
-							<td><mifos:mifosalphanumtext property="address.state"
+								keyhm="Office.State" isColonRequired="yes"/></span></td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.state" property="address.state"
 								value="${offActionForm.address.state}" maxlength="100"
 								keyhm="Office.State"/></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="Office.labelCountry"
-								 keyhm="Office.Country"/></td>
-							<td><mifos:mifosalphanumtext property="address.country"
+							<td align="right"><span id="editoffice.label.country"><mifos:mifoslabel name="Office.labelCountry"
+								 keyhm="Office.Country"/></span></td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.country" property="address.country"
 								value="${offActionForm.address.country}" maxlength="100"
 								keyhm="Office.Country"/></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel
+							<td align="right"><span id="editoffice.label.postalCode"><mifos:mifoslabel
 								name="${ConfigurationConstants.POSTAL_CODE}"
 								bundle="OfficeUIResources" keyhm="Office.PostalCode"
-								isColonRequired="yes"/></td>
-							<td><mifos:mifosalphanumtext property="address.zip"
+								isColonRequired="yes"/></span></td>
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.postalCode" property="address.zip"
 								value="${offActionForm.address.zip}"
 								maxlength="20" keyhm="Office.PostalCode"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="Office.labelTelephone"
-								/></td>
+							<td align="right"><span id="editoffice.label.phoneNumber"><mifos:mifoslabel name="Office.labelTelephone"
+								/></span></td>
 
-							<td><mifos:mifosalphanumtext property="address.phoneNumber"
+							<td><mifos:mifosalphanumtext styleId="editoffice.input.phoneNumber" property="address.phoneNumber"
 								value="${offActionForm.address.phoneNumber}"
 								maxlength="20"/></td>
 						</tr>
@@ -278,21 +278,21 @@ explanation of the license and how it is applied.
 								items="${offActionForm.customFields}">
 								<c:if test="${customFieldDef.fieldId==cf.fieldId}">
 									<tr class="fontnormal">
-										<td width="21%" align="right"><mifos:mifoslabel
+										<td width="21%" align="right"><span id="editoffice.label.customField""><mifos:mifoslabel
 											name="${customFieldDef.lookUpEntity.entityType}"
 											mandatory="${customFieldDef.mandatoryStringValue}"
-											bundle="OfficeUIResources"></mifos:mifoslabel>:
+											bundle="OfficeUIResources"></mifos:mifoslabel></span>:
 										</td>
 										<td width="79%"><c:if test="${customFieldDef.fieldType == 1}">
-											<mifos:mifosnumbertext name="offActionForm"
+											<mifos:mifosnumbertext styleId="editoffice.input.customField" name="offActionForm"
 												property='customField[${ctr}].fieldValue'
 												value="${cf.fieldValue}" maxlength="200" />
 										</c:if> <c:if test="${customFieldDef.fieldType == 2}">
-											<mifos:mifosalphanumtext name="offActionForm"
+											<mifos:mifosalphanumtext styleId="editoffice.input.customField" name="offActionForm"
 												property='customField[${ctr}].fieldValue'
 												value="${cf.fieldValue}" maxlength="200" />
 										</c:if> <c:if test="${customFieldDef.fieldType == 3}">
-											<mifos:mifosalphanumtext name="offActionForm"
+											<mifos:mifosalphanumtext styleId="editoffice.input.customField" name="offActionForm"
 												property='customField[${ctr}].fieldValue'
 												value="${cf.fieldValue}" maxlength="200" />
 
@@ -315,10 +315,10 @@ explanation of the license and how it is applied.
 			<table width="93%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<!-- Next are submit and cancel button -->
-					<td align="center"><html-el:submit styleClass="buttn">
+					<td align="center"><html-el:submit styleId="editoffice.button.preview" styleClass="buttn">
 						<mifos:mifoslabel name="office.button.preview"
 							bundle="OfficeResources"></mifos:mifoslabel>
-					</html-el:submit> &nbsp; <html-el:button
+					</html-el:submit> &nbsp; <html-el:button styleId="editoffice.button.cancel"
 						onclick="goToCancelPage();" property="cancelButton" 
 						styleClass="cancelbuttn">
 						<mifos:mifoslabel name="office.button.cancel"

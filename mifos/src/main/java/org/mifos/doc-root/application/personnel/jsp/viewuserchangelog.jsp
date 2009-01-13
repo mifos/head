@@ -66,14 +66,14 @@
       <tr>
         <td class="bluetablehead05">
         	<span class="fontnormal8pt">
-				<a href="AdminAction.do?method=load">
+				<a id="viewuserchangelog.link.admin" href="AdminAction.do?method=load">
 		           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
 	           	</a>
 			 	/ 
-				<a href="PersonnelAction.do?method=loadSearch">
+				<a id="viewuserchangelog.link.viewUsers" href="PersonnelAction.do?method=loadSearch">
 					<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</a> / 
-				<a href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.PersonnelVO.globalPersonnelNum}"/>">
+				<a id="viewuserchangelog.link.viewUser" href="PersonnelAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.PersonnelVO.globalPersonnelNum}"/>">
 		           <c:out value="${requestScope.PersonnelVO.displayName}"/>            	
 	           	</a>
             </span>
@@ -104,7 +104,7 @@
               <tr>
                 <td align="center">
                
-                <html-el:button property="btn"  styleClass="buttn" onclick="goToCancelPage()">
+                <html-el:button styleId="viewuserchangelogs.button.back" property="btn"  styleClass="buttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="Personnel.BackToDetailsPage" bundle="PersonnelUIResources"></mifos:mifoslabel>
                 </html-el:button>
 

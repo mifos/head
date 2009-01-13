@@ -35,9 +35,9 @@ explanation of the license and how it is applied.
 							<td width="70%" align="left" valign="top" class="paddingL15T15">
 							<table width="98%" border="0" cellspacing="0" cellpadding="3">
 								<tr>
-									<td class="headingorange"><mifos:mifoslabel
+									<td class="headingorange"><span id="createNewOfficeSuccessful.text.confirmation"><mifos:mifoslabel
 										name="Office.labelCreatedSuccessfully"
-										/> <br>
+										/></span> <br>
 									<br>
 									</td>
 								</tr>
@@ -52,14 +52,14 @@ explanation of the license and how it is applied.
 
 
 
-									<html-el:link action="/offAction.do?method=get&officeId=${sessionScope.offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
+									<html-el:link styleId="createNewOfficeSuccessful.link.viewOfficeDetails" action="/offAction.do?method=get&officeId=${sessionScope.offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
 									 <mifos:mifoslabel
 										name="Office.labelViewOfficeDetails" />
 									</html-el:link>
 									<span class="fontnormal"><br>
 									<br>
 									</span><span class="fontnormal">
-									<html-el:link action="/offAction.do?method=load&randomNUm=${sessionScope.randomNUm}" >
+									<html-el:link styleId="createNewOfficeSuccessful.link.newOffice" action="/offAction.do?method=load&randomNUm=${sessionScope.randomNUm}" >
 
 									 <mifos:mifoslabel
 										name="Office.labelAddNewOfficeNow" /></html-el:link> </span></td>

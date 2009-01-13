@@ -200,7 +200,7 @@ function goToCancelPage(){
 										</c:forEach>
 									</c:forEach> </span></c:if> <br>
 									<br>
-									<span class="fontnormal"> <html-el:button
+									<span class="fontnormal"> <html-el:button styleId="preview_new_office.button.edit"
 										onclick="goToPreviousPage();" property="cancelButton"
 										styleClass="insidebuttn">
 										<mifos:mifoslabel name="Office.edit" />
@@ -217,9 +217,9 @@ function goToCancelPage(){
 							<br>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
-									<td align="center">&nbsp; <html-el:submit styleClass="buttn"
+									<td align="center">&nbsp; <html-el:submit styleId="preview_new_office.button.submit" styleClass="buttn"
 										onclick="goToCreatePage()"><mifos:mifoslabel name="Office.submit" /></html-el:submit> &nbsp; <html-el:button
-										onclick="goToCancelPage();" property="cancelButton"
+										styleId="preview_new_office.button.cancel" onclick="goToCancelPage();" property="cancelButton"
 										styleClass="cancelbuttn">
 										<mifos:mifoslabel name="Office.cancel" />
 									</html-el:button></td>

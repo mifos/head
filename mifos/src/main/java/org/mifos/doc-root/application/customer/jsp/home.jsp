@@ -58,17 +58,17 @@
 							<table width="96%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td class="fontnormalboldorange">
-										<mifos:mifoslabel name="CustomerSearch.welcome"/>,&nbsp;
-										<c:out value="${sessionScope.UserContext.name}" />
+										<span id="home.text.welcome"><mifos:mifoslabel name="CustomerSearch.welcome"/>,&nbsp;
+										<c:out value="${sessionScope.UserContext.name}" /></span>
 										<c:if test="${sessionScope.UserContext.lastLogin!=null && !empty sessionScope.UserContext.lastLogin}">
-										<br>	<span class="fontnormal">
+										<br>	<span class="fontnormal" id="home.text.lastLogin">
 												<mifos:mifoslabel name="CustomerSearch.lastlog"/>
 												<c:out value="${userdatefn:getUserLocaleDateObject(sessionScope.UserContext.preferredLocale,sessionScope.UserContext.lastLogin)}" /> 
 											</span>
 										</c:if>
 									</td>
 								</tr>
-								<font class="fontnormalRedBold"><html-el:errors bundle="CustomerSearchUIResources"/> </font>
+								<font class="fontnormalRedBold"><span id="home.error.message"><html-el:errors bundle="CustomerSearchUIResources"/></span> </font>
 								<tr>
 									<td class="fontnormalbold">&nbsp;</td>
 								</tr>
@@ -121,7 +121,7 @@
 										<table width="100%" border="0" cellspacing="0" cellpadding="2">
 											<tr class="fontnormal">
 												<td>
-													<mifos:mifoslabel name="CustomerSearch.searchby"/>:
+													<span id="home.label.search"><mifos:mifoslabel name="CustomerSearch.searchby"/></span>:
 												</td>
 											</tr>
 											<tr class="fontnormal">

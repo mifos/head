@@ -52,4 +52,18 @@ public class HomePage extends MifosPage {
 		waitForPageToLoad();
 		return new ClientsAndAccountsHomepage(selenium);
 	}
+	
+	public AdminPage navigateToAdminPage() {
+        selenium.click("homeheader.link.admin");
+        waitForPageToLoad();
+        return new AdminPage(selenium);	    
+	}
+	
+    public String getWelcome() {
+        return selenium.getText("home.text.welcome");
+    }
+    
+    public String getLastLogin() {
+        return selenium.getText("home.text.lastLogin");
+    }    
 }

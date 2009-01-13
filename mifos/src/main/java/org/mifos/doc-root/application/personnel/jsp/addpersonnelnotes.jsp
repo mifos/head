@@ -55,14 +55,14 @@ function goToCancelPage(){
 		<html-el:form action="personnelNoteAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="addpersonnelnotes.link.admin"
 						href="AdminAction.do?method=load"> <mifos:mifoslabel
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					</a> / <a id="addpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / 
 					<c:set var="personnelBO" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="addpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -94,15 +94,16 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td colspan="2"><font class="fontnormalRedBold"><html-el:errors
-								bundle="PersonnelUIResources" /></font></td>
+							<td colspan="2"><font class="fontnormalRedBold"><span id="addpersonnelnotes.error.message"><html-el:errors
+								bundle="PersonnelUIResources" /></span></font></td>
 						</tr>
 						<tr>
 							<td width="7%" align="left" valign="top" class="fontnormalbold">
+							<span id="addpersonnelnotes.label.note">
 							<mifos:mifoslabel name="Personnel.Note"
-								bundle="PersonnelUIResources" mandatory="yes"></mifos:mifoslabel>
+								bundle="PersonnelUIResources" mandatory="yes"></mifos:mifoslabel></span>
 							</td>
-							<td width="93%" align="left" valign="top"><html-el:textarea
+							<td width="93%" align="left" valign="top"><html-el:textarea styleId="addpersonnelnotes.input.note"
 								property="comment" cols="37" style="width:320px; height:110px;">
 							</html-el:textarea></td>
 						</tr>
@@ -116,10 +117,10 @@ function goToCancelPage(){
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="addpersonnelnotes.button.preview" styleClass="buttn">
 								<mifos:mifoslabel name="button.preview"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="addpersonnelnotes.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"

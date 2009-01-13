@@ -33,7 +33,7 @@ explanation of the license and how it is applied.
 		<html-el:form action="/offAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="viewOffices.link.admin"
 						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
@@ -52,20 +52,20 @@ explanation of the license and how it is applied.
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 								name="office.labelViewOfficeInstruction"
-								bundle="OfficeResources"></mifos:mifoslabel> <html-el:link
+								bundle="OfficeResources"></mifos:mifoslabel> <html-el:link styleId="viewOffices.link.newOffice"
 								href="offAction.do?method=load&officeLevel=&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="office.labelViewOfficeAddNewOffice"
 									bundle="OfficeResources"></mifos:mifoslabel>
 							</html-el:link><br>
 							<br>
-							<font class="fontnormalRedBold"><html-el:errors
-								bundle="OfficeResources" /></font> </span> <c:set
+							<font class="fontnormalRedBold"><span id="viewOffices.error.message"><html-el:errors
+								bundle="OfficeResources" /></span></font>  <c:set
 								var="regional" /> <c:set var="divisional" /> <c:set var="area" />
 							<!-- start main loop from here --> <c:forEach var="office"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'headOfficeList')}">
 								<!-- for head office -->
 								<c:if test="${office.level.id == OfficeLevel.HEADOFFICE.value }">
-									<span class="fontnormalbold"> <html-el:link
+									<span class="fontnormalbold"> <html-el:link styleId="viewOffices.link.viewHeadOffice"
 										href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 										<c:out value="${office.officeName}" />
 									</html-el:link> <br>
@@ -97,7 +97,7 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 											</span></td>
-											<td width="39%" align="right"><html-el:link
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newRegionalOffice"
 												href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
@@ -118,7 +118,7 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link
+													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newRegionalOffice"
 														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
@@ -134,7 +134,7 @@ explanation of the license and how it is applied.
 												<td width="1%"><img
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
-												<td width="99%"><html-el:link
+												<td width="99%"><html-el:link styleId="viewOffices.link.viewRegionalOffice"
 													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
@@ -159,7 +159,7 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelDivisionalOffice"
 												bundle="OfficeUIResources" /> </span></td>
-											<td width="39%" align="right"><html-el:link
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
 												href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
@@ -180,7 +180,7 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link
+													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newDivisionalOffice"
 														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
@@ -196,7 +196,7 @@ explanation of the license and how it is applied.
 												<td width="1%"><img
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
-												<td width="99%"><html-el:link
+												<td width="99%"><html-el:link styleId="viewOffices.link.viewDivisionalOffice"
 													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
@@ -217,7 +217,7 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelAreaOffice" bundle="OfficeUIResources" />
 											</span></td>
-											<td width="39%" align="right"><html-el:link
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newAreaOffice"
 												href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
@@ -238,7 +238,7 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
-													<td width="39%" align="right"><html-el:link
+													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newAreaOffice"
 														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
@@ -254,7 +254,7 @@ explanation of the license and how it is applied.
 												<td width="1%"><img
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
-												<td width="99%"><html-el:link
+												<td width="99%"><html-el:link styleId="viewOffices.link.viewAreaOffice"
 													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
@@ -277,7 +277,7 @@ explanation of the license and how it is applied.
 											<td width="61%"><span class="fontnormalbold"> <mifos:mifoslabel
 												name="Office.labelBranchOffice" bundle="OfficeUIResources" />
 											</span></td>
-											<td width="39%" align="right"><html-el:link
+											<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newBranchOffice"
 												href="offAction.do?method=load&officeLevel=${OfficeLevel.BRANCHOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
@@ -298,7 +298,7 @@ explanation of the license and how it is applied.
 												<tr>
 													<td width="61%"><span class="fontnormalbold"> <c:out
 														value="${office.level.name}"></c:out> </span></td>
-													<td width="39%" align="right"><html-el:link
+													<td width="39%" align="right"><html-el:link styleId="viewOffices.link.newBranchOffice"
 														href="offAction.do?method=load&officeLevel=5&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources" />
@@ -325,7 +325,7 @@ explanation of the license and how it is applied.
 												<td width="1%"><img
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
-												<td width="99%"><html-el:link
+												<td width="99%"><html-el:link styleId="viewOffices.link.viewBranchOffice"
 													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link> &nbsp;&nbsp;&nbsp; <c:if

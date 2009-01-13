@@ -64,14 +64,14 @@
 	 <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
-          <span class="fontnormal8pt"><a href="AdminAction.do?method=load">
+          <span class="fontnormal8pt"><a id="edit_user.link.admin" href="AdminAction.do?method=load">
 	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
            	</a>
 		 / 
-			<a href="PersonAction.do?method=loadSearch">
+			<a id="edit_user.link.viewUsers" href="PersonAction.do?method=loadSearch">
 			<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a> / 
-			<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
+			<a id="edit_user.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
 	           <c:out value="${BusinessKey.displayName}"/>            	
            	</a>
           </span></td>
@@ -102,7 +102,7 @@
                 <tr>
    				<td colspan="2">
    				<font class="fontnormalRedBold">
-   					<html-el:errors bundle="PersonnelUIResources"/>
+   					<span id="edit_user.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
    				</font>
 				</td>
 		     	</tr>
@@ -117,35 +117,43 @@
 		
 		<tr class="fontnormal">
                 <td width="22%" height="28" align="right">
+                <span id="edit_user.label.firstName">
 			<mifos:mifoslabel name="Personnel.FirstName" bundle="PersonnelUIResources" mandatory="yes"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td width="78%">
-                	<mifos:mifosalphanumtext name="personActionForm" property="firstName" maxlength="200" />
+                	<mifos:mifosalphanumtext styleId="edit_user.input.firstName" name="personActionForm" property="firstName" maxlength="200" />
                 </td>
               </tr>
               
 	            <tr class="fontnormal">
                 <td align="right">
+                	<span id="edit_user.label.firstName">
 					<mifos:mifoslabel name="Personnel.MiddleName" bundle="PersonnelUIResources" keyhm="Personnel.MiddleName"></mifos:mifoslabel>
+					</span>
 				</td>
                 <td>
-                	<mifos:mifosalphanumtext name="personActionForm" property="middleName" keyhm="Personnel.MiddleName" maxlength="200"/>
+                	<mifos:mifosalphanumtext styleId="edit_user.input.middleName" name="personActionForm" property="middleName" keyhm="Personnel.MiddleName" maxlength="200"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.SecondLastName">
 			<mifos:mifoslabel keyhm="Personnel.SecondLastName" name="Personnel.SecondLastName" bundle="PersonnelUIResources"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td>
-	             	<mifos:mifosalphanumtext keyhm="Personnel.SecondLastName" name="personActionForm" property="secondLastName" maxlength="200"/>
+	             	<mifos:mifosalphanumtext styleId="edit_user.input.secondLastName" keyhm="Personnel.SecondLastName" name="personActionForm" property="secondLastName" maxlength="200"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.lastName">
 			<mifos:mifoslabel name="Personnel.LastName" mandatory="yes" bundle="PersonnelUIResources"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td>  
-                	<mifos:mifosalphanumtext name="personActionForm" property="lastName" maxlength="200" />
+                	<mifos:mifosalphanumtext styleId="edit_user.input.lastName" name="personActionForm" property="lastName" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -158,10 +166,12 @@
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.email">
 			<mifos:mifoslabel name="Personnel.Email" bundle="PersonnelUIResources"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td>
-                	<mifos:mifosalphanumtext  property="emailId"/>
+                	<mifos:mifosalphanumtext styleId="edit_user.input.email"  property="emailId"/>
                 </td>
               </tr>
 			<tr class="fontnormal">
@@ -242,64 +252,78 @@
             </tr>
             <tr class="fontnormal">
                 <td width="22%" align="right">
+                <span id="edit_user.label.address1">
 			<mifos:mifoslabel name="${ConfigurationConstants.ADDRESS1}"  keyhm="Personnel.Address1" isColonRequired="yes" bundle="PersonnelUIResources"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td width="78%">
-	                <mifos:mifosalphanumtext name="personActionForm"  keyhm="Personnel.Address1" property="address.line1" maxlength="200" />
+	                <mifos:mifosalphanumtext styleId="edit_user.input.address1" name="personActionForm"  keyhm="Personnel.Address1" property="address.line1" maxlength="200" />
                 </td>
               </tr>
 				<tr class="fontnormal">							
-					<td align="right"><mifos:mifoslabel keyhm="Personnel.Address2"
+					<td align="right"><span id="edit_user.label.address2"><mifos:mifoslabel keyhm="Personnel.Address2"
 						isColonRequired="yes" 
-						name="${ConfigurationConstants.ADDRESS2}" bundle="PersonnelUIResources"/></td>
-					<td><mifos:mifosalphanumtext name="personActionForm" keyhm="Personnel.Address2"
+						name="${ConfigurationConstants.ADDRESS2}" bundle="PersonnelUIResources"/></span></td>
+					<td><mifos:mifosalphanumtext styleId="edit_user.input.address2" name="personActionForm" keyhm="Personnel.Address2"
 						property="address.line2" maxlength="200"/></td>
 				</tr>
                <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.address3">
 			<mifos:mifoslabel keyhm="Personnel.Address3" isColonRequired="yes" name="${ConfigurationConstants.ADDRESS3}"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td>
-		            <mifos:mifosalphanumtext keyhm="Personnel.Address3" name="personActionForm" property="address.line3" maxlength="200" />
+		            <mifos:mifosalphanumtext styleId="edit_user.input.address3" keyhm="Personnel.Address3" name="personActionForm" property="address.line3" maxlength="200" />
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.city">
 			<mifos:mifoslabel name="${ConfigurationConstants.CITY}"  bundle="PersonnelUIResources"></mifos:mifoslabel>:
+			</span>
 		</td>
                 <td>
-                    <mifos:mifosalphanumtext name="personActionForm" property="address.city" maxlength="100" />
+                    <mifos:mifosalphanumtext styleId="edit_user.input.city" name="personActionForm" property="address.city" maxlength="100" />
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.state">
 			<mifos:mifoslabel name="${ConfigurationConstants.STATE}"  bundle="PersonnelUIResources" keyhm="Personnel.State" isColonRequired="yes"></mifos:mifoslabel>
+			</span>
 		</td>
                 <td>
-		            <mifos:mifosalphanumtext name="personActionForm" property="address.state"  keyhm="Personnel.State" maxlength="100"/>
+		            <mifos:mifosalphanumtext styleId="edit_user.input.state" name="personActionForm" property="address.state"  keyhm="Personnel.State" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.country">
 			<mifos:mifoslabel name="Personnel.Country"  bundle="PersonnelUIResources" keyhm="Personnel.Country"></mifos:mifoslabel>		</td>
+			</span>
                 <td>	
-                    <mifos:mifosalphanumtext name="personActionForm" property="address.country" keyhm="Personnel.Country" maxlength="100"/>
+                    <mifos:mifosalphanumtext styleId="edit_user.input.country" name="personActionForm" property="address.country" keyhm="Personnel.Country" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.postalCode">
 				<mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"  bundle="PersonnelUIResources" keyhm="Personnel.PostalCode" isColonRequired="yes"></mifos:mifoslabel>
+				</span>
 				</td>
                 <td>
-		           <mifos:mifosalphanumtext name="personActionForm" property="address.zip" keyhm="Personnel.PostalCode" maxlength="100"/>
+		           <mifos:mifosalphanumtext styleId="edit_user.input.postalCode" name="personActionForm" property="address.zip" keyhm="Personnel.PostalCode" maxlength="100"/>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td align="right">
+                <span id="edit_user.label.phoneNumber">
 					<mifos:mifoslabel keyhm="Personnel.PhoneNumber" name="Personnel.Telephone"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+					</span>
 				</td>
                 <td>
-                  <mifos:mifosalphanumtext keyhm="Personnel.PhoneNumber" name="personActionForm" property="address.phoneNumber" maxlength="20" />
+                  <mifos:mifosalphanumtext styleId="edit_user.input.phoneNumber" keyhm="Personnel.PhoneNumber" name="personActionForm" property="address.phoneNumber" maxlength="20" />
                 </td>
               </tr>
            </table>
@@ -420,19 +444,19 @@
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
 									<tr class="fontnormal">
-										<td width="22%" align="right"><mifos:mifoslabel
+										<td width="22%" align="right"><span id="edit_user.label.customField"><mifos:mifoslabel
 											name="${cf.lookUpEntity.entityType}"
 											mandatory="${cf.mandatoryStringValue}"
-											bundle="PersonnelUIResources"></mifos:mifoslabel>: 
+											bundle="PersonnelUIResources"></mifos:mifoslabel></span>: 
 										</td>
 										<td width="78%"><c:if test="${cf.fieldType == 1}">
-											<mifos:mifosnumbertext name="personActionForm"
+											<mifos:mifosnumbertext styleId="edit_user.input.customField" name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 2}">
-											<mifos:mifosalphanumtext name="personActionForm"
+											<mifos:mifosalphanumtext styleId="edit_user.input.customField" name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 										</c:if> <c:if test="${cf.fieldType == 3}">
-											<mifos:mifosalphanumtext name="personActionForm"
+											<mifos:mifosalphanumtext styleId="edit_user.input.customField" name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 
 										</c:if>
@@ -450,11 +474,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-         	<html-el:submit styleClass="buttn" onclick="transferData(this.form.personnelRoles)">
+         	<html-el:submit styleId="edit_user.button.preview" styleClass="buttn" onclick="transferData(this.form.personnelRoles)">
 	               	<mifos:mifoslabel name="button.preview" bundle="PersonnelUIResources"></mifos:mifoslabel>
               	</html-el:submit>
 &nbsp;
-               	<html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+               	<html-el:button styleId="edit_user.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
                	</html-el:button>
                         </td>

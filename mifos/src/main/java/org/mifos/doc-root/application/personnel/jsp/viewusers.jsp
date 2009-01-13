@@ -49,7 +49,7 @@
       <tr>
         <td class="bluetablehead05">
         <span class="fontnormal8pt">
-        	<a href="AdminAction.do?method=load">
+        	<a id="viewusers.link.admin" href="AdminAction.do?method=load">
 	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
          	</a> / 
         </span>
@@ -72,22 +72,23 @@
                <tr>
    				<td colspan="2">
    				<font class="fontnormalRedBold">
-   					<html-el:errors bundle="PersonnelUIResources"/>
+   					<span id="viewusers.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
    				</font>
 				</td>
 				</tr>
                 <tr class="fontnormal">
                   <td colspan="2">
-                  <mifos:mifoslabel name="Personnel.SearchMsg" bundle="PersonnelUIResources"></mifos:mifoslabel>
+                  <span id="viewusers.label.search">
+                  <mifos:mifoslabel name="Personnel.SearchMsg" bundle="PersonnelUIResources"></mifos:mifoslabel></span>
                    </td>
                 </tr>
                 <tr class="fontnormal8pt">
                   <td width="17%">
-                  	<html-el:text property="searchString" maxlength="200"/>
+                  	<html-el:text styleId="viewusers.input.search" property="searchString" maxlength="200"/>
  	                
                   </td>
                   <td width="83%">&nbsp;
-                  	<html-el:submit styleClass="buttn">
+                  	<html-el:submit styleId="viewusers.button.search" styleClass="buttn">
                   		<mifos:mifoslabel name="button.search" bundle ="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:submit>
                   </td>

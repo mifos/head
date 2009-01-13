@@ -49,20 +49,20 @@
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="viewpersonnelnotes.link.admin"
 						href="AdminAction.do?method=load"> <mifos:mifoslabel
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					</a> / <a id="viewpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="viewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td><font class="fontnormalRedBold"> <html-el:errors
-						bundle="PersonnelUIResources" /> </font></td>
+					<td><font class="fontnormalRedBold"> <span id="viewpersonnelnotess.error.message"><html-el:errors
+						bundle="PersonnelUIResources" /></span> </font></td>
 				</tr>
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -72,7 +72,7 @@
 								value="${sessionScope.personnelNoteActionForm.personnelName}" />
 							- </span> <mifos:mifoslabel name="Personnel.Notes"
 								bundle="PersonnelUIResources"></mifos:mifoslabel></td>
-							<td width="17%" align="right" class="fontnormal"><a
+							<td width="17%" align="right" class="fontnormal"><a id="viewpersonnelnotes.link.addNote"
 								href="personnelNoteAction.do?method=load&randomNUm=${sessionScope.randomNUm}&personnelId=<c:out value="${sessionScope.personnelNoteActionForm.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}"> <mifos:mifoslabel
 								name="Personnel.AddNewNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a></td>

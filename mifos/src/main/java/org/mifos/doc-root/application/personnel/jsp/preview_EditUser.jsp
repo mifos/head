@@ -67,14 +67,14 @@
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
-          <span class="fontnormal8pt"><a href="AdminAction.do?method=load">
+          <span class="fontnormal8pt"><a id="preview_EditUser.link.admin" href="AdminAction.do?method=load">
 	           <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>             	
            	</a>
 		 / 
-			<a href="PersonAction.do?method=loadSearch">
+			<a id="preview_EditUser.link.viewUsers" href="PersonAction.do?method=loadSearch">
 			<mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a> / 
-			<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
+			<a id="preview_EditUser.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
 	           <c:out value="${BusinessKey.displayName}"/>            	
            	</a>
           </span></td>
@@ -103,7 +103,7 @@
             <tr>
    				<td>
    				<font class="fontnormalRedBold">
-   					<html-el:errors bundle="PersonnelUIResources"/>
+   					<span id="preview_EditUser.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
    				</font>
 				</td>
 			</tr>
@@ -320,7 +320,7 @@
 	</c:if>
 	<span class="fontnormal">
       <br>
-	   <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
+	   <html-el:button styleId="preview_EditUser.button.edit" property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
 		 <mifos:mifoslabel name="button.EditUserInformation"  bundle="PersonnelUIResources"></mifos:mifoslabel>
        </html-el:button>
 
@@ -336,11 +336,11 @@
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">	
-	                <html-el:submit property="submitBtn" styleClass="buttn">
+	                <html-el:submit styleId="preview_EditUser.button.submit" property="submitBtn" styleClass="buttn">
 	                  	<mifos:mifoslabel name="button.submit" bundle="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:submit>
 &nbsp;
-                  	<html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+                  	<html-el:button styleId="preview_EditUser.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
                   	</html-el:button>  
         	</td>

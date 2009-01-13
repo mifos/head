@@ -72,7 +72,7 @@
                   <td align="center">   
                   
                                    &nbsp;
-	                  <html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+	                  <html-el:button styleId="choose_office.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                    <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
     	              </html-el:button>
                   </td></tr>

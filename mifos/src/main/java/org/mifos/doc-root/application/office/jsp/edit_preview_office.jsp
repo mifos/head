@@ -48,16 +48,16 @@ function goToCancelPage(id){
 			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
+					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link styleId="edit_preview_office.link.admin"
 						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="edit_preview_office.link.viewOffices"
 						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkViewOffices"
 							bundle="OfficeResources"></mifos:mifoslabel>
 
-					</html-el:link> / <html-el:link
+					</html-el:link> / <html-el:link styleId="edit_preview_office.link.viewOffice"
 						href="offAction.do?method=get&officeId=${BusinessKey.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
@@ -85,8 +85,8 @@ function goToCancelPage(id){
 
 								<logic:messagesPresent>
 								<td>
-								<font class="fontnormalRedBold"><html-el:errors
-									bundle="OfficeUIResources" /></font>
+								<font class="fontnormalRedBold"><span id="edit_preview_office.error.message"><html-el:errors
+									bundle="OfficeUIResources" /></span></font>
 									<br><br></td>
 								</logic:messagesPresent>
 								</tr>
@@ -174,7 +174,7 @@ function goToCancelPage(id){
 							</c:forEach> </span></c:if> <br>
 							<br>
 							<span class="fontnormal">
-							 <html-el:button
+							 <html-el:button styleId="edit_preview_office.button.cancel"
 								onclick="goToPreviousPage();" property="cancelButton"
 								styleClass="insidebuttn">
 								<mifos:mifoslabel name="Office.edit" />
@@ -194,8 +194,8 @@ function goToCancelPage(id){
 						<tr>
 							<td align="center">&nbsp; <!-- Next are submit and cancel button -->
 
-							<html-el:submit styleClass="buttn"><mifos:mifoslabel name="Office.submit" /></html-el:submit>
-							&nbsp; <html-el:button
+							<html-el:submit styleId="edit_preview_office.button.submit" styleClass="buttn"><mifos:mifoslabel name="Office.submit" /></html-el:submit>
+							&nbsp; <html-el:button styleId="edit_preview_office.button.cancel"
 								onclick="goToCancelPage(${BusinessKey.officeId});"
 								property="cancelButton"  styleClass="cancelbuttn">
 								<mifos:mifoslabel name="Office.cancel" />

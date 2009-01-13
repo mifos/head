@@ -66,7 +66,7 @@
             <tr>
 	   			<td>
 	   				<font class="fontnormalRedBold">
-	   					<html-el:errors bundle="PersonnelUIResources"/>
+	   					<span id="yoursettings.error.message"><html-el:errors bundle="PersonnelUIResources"/>
 	   				</font>
 				</td>
 			</tr>
@@ -83,7 +83,7 @@
                       <td width="51%" class="fontnormal">
                       <span class="fontnormalbold"><mifos:mifoslabel name="Personnel.YourDetails"/></span></td>
                       <td width="49%" align="right" class="fontnormal">
-                      <a href="yourSettings.do?method=manage&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                      <a id="yoursettings.link.edit" href="yourSettings.do?method=manage&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
                      	 <mifos:mifoslabel name="Personnel.EditInformation"/>
                       </a></td>
                     </tr>
@@ -164,7 +164,7 @@
   <tr>
     <td width="51%" class="fontnormal"><mifos:mifoslabel name="Personnel.UserName"/> <c:out value="${Personnel.userName}"/> </td>
     <td width="49%" align="right" class="fontnormal">
-    	<a href="<c:url value='yourSettings.do'>
+    	<a id="yoursettings.link.changePassword" href="<c:url value='yourSettings.do'>
 	   		<c:param name='method' value='loadChangePassword'/>
 			<c:param name='userName' value='${Personnel.userName}'/>
 			<c:param name='randomNUm' value='${sessionScope.randomNUm}'/>

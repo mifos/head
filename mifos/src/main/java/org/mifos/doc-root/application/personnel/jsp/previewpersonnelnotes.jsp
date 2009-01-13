@@ -61,14 +61,14 @@
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="previewpersonnelnotes.link.admin"
 						href="AdminAction.do?method=load"> <mifos:mifoslabel
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					</a> / <a id="previewpersonnelnotes.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
-					<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
+					<a id="previewpersonnelnotes.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${personnelBO.globalPersonnelNum}"/>">	<c:out	value="${personnelBO.displayName}" /></a></span></td>
 				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -85,7 +85,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td>
-								<font class="fontnormalRedBold"><html-el:errors	bundle="PersonnelUIResources" /></font>
+								<font class="fontnormalRedBold"><span id="previewpersonnelnotes.error.message"><html-el:errors	bundle="PersonnelUIResources" /></span></font>
 							</td>
 						</tr>
 						<tr>
@@ -117,7 +117,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="left" valign="top"><html-el:button property="btn"
+							<td align="left" valign="top"><html-el:button styleId="previewpersonnelnotes.button.edit" property="btn"
 								styleClass="insidebuttn" onclick="goToEditPage()">
 								<mifos:mifoslabel name="Personnel.EditLabel"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -132,10 +132,10 @@
 					<br>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:submit styleClass="buttn">
+							<td align="center"><html-el:submit styleId="previewpersonnelnotes.button.submit" styleClass="buttn">
 								<mifos:mifoslabel name="button.submit"
 									bundle="PersonnelUIResources"></mifos:mifoslabel>
-							</html-el:submit> &nbsp;&nbsp; <html-el:button
+							</html-el:submit> &nbsp;&nbsp; <html-el:button styleId="previewpersonnelnotes.button.cancel"
 								property="cancelBtn" styleClass="cancelbuttn"
 								onclick="goToCancelPage()">
 								<mifos:mifoslabel name="button.cancel"

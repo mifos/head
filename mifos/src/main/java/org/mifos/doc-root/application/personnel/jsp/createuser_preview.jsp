@@ -101,7 +101,7 @@
 							</table>
 							<table width="93%" border="0" cellspacing="0" cellpadding="3">
 								<tr>
-									<td><font class="fontnormalRedBold"> <html-el:errors
+									<td><font class="fontnormalRedBold"> <span id="createuser_preview.error.message"><html-el:errors
 										bundle="PersonnelUIResources" /> </font></td>
 								</tr>
 								<tr>
@@ -401,7 +401,7 @@
 										</c:forEach>
 									</c:forEach> <br>
 									</c:if>
-									<html-el:button property="btn" styleClass="insidebuttn"
+									<html-el:button styleId="createuser_preview.button.edit" property="btn" styleClass="insidebuttn"
 										onclick="goToEditPage()">
 										<mifos:mifoslabel name="button.EditUserInformation"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -417,11 +417,11 @@
 									<td align="center">&nbsp;</td>
 								</tr>
 								<tr>
-									<td align="center">&nbsp; <html-el:submit property="submitBtn"
+									<td align="center">&nbsp; <html-el:submit styleId="createuser_preview.button.submit" property="submitBtn"
 										styleClass="buttn">
 										<mifos:mifoslabel name="button.submit"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
-									</html-el:submit> &nbsp; <html-el:button property="cancelBtn"
+									</html-el:submit> &nbsp; <html-el:button styleId="createuser_preview.button.cancel" property="cancelBtn"
 										styleClass="cancelbuttn" onclick="goToCancelPage()">
 										<mifos:mifoslabel name="button.cancel"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>

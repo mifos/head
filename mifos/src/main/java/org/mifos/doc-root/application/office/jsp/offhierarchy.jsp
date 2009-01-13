@@ -59,7 +59,7 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="offhierarchyaction.do?method=cancel&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+						<span class="fontnormal8pt"><html-el:link styleId="offhierarchy.link.admin" href="offhierarchyaction.do?method=cancel&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Office.labelLinkAdmin" ></mifos:mifoslabel>
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="Office.labelViewOfficeHierarchy" /></span>
 					</td>
@@ -83,8 +83,8 @@
 
 								<logic:messagesPresent>
 								<td>
-								<font class="fontnormalRedBold"><html-el:errors
-									bundle="OfficeUIResources" /></font>
+								<font class="fontnormalRedBold"><span id="offhierarchy.error.message"><html-el:errors
+									bundle="OfficeUIResources" /></span></font>
 									</td>
 								</logic:messagesPresent>
 							</tr>
@@ -104,23 +104,23 @@
 								<tr class="fontnormal">
 									<td width="8%" align="right">
 										<c:if test='${ol.id == 1}'>
-											<html-el:checkbox property="headOffice" value="1" disabled="true" />
+											<html-el:checkbox styleId="offhierarchy.input.officeLevel" property="headOffice" value="1" disabled="true" />
 										</c:if>
 										<c:if test='${ol.id == 2}'>
-											<html-el:checkbox property="regionalOffice" value="1" />
+											<html-el:checkbox styleId="offhierarchy.input.officeLevel" property="regionalOffice" value="1" />
 										</c:if>
 										<c:if test='${ol.id == 3}'>
-											<html-el:checkbox property="subRegionalOffice" value="1" />
+											<html-el:checkbox styleId="offhierarchy.input.officeLevel" property="subRegionalOffice" value="1" />
 										</c:if>
 										<c:if test='${ol.id == 4}'>
-											<html-el:checkbox property="areaOffice" value="1" />
+											<html-el:checkbox styleId="offhierarchy.input.officeLevel" property="areaOffice" value="1" />
 										</c:if>
 										<c:if test='${ol.id == 5}'>
-											<html-el:checkbox property="branchOffice" value="1" disabled="true" />
+											<html-el:checkbox styleId="offhierarchy.input.officeLevel" property="branchOffice" value="1" disabled="true" />
 										</c:if>
 									</td>
 									<td width="92%">
-										<c:out value="${ol.name}" />
+										<span id="offhierarchy.label.officeLevel"><c:out value="${ol.name}" /></span>
 									</td>
 								</tr>
 							</c:forEach>
@@ -137,11 +137,11 @@
 							<tr>
 								<td align="center">
 									&nbsp;
-									<html-el:submit property="submitBtn" styleClass="buttn">
+									<html-el:submit styleId="offhierarchy.button.submit" property="submitBtn" styleClass="buttn">
 									<mifos:mifoslabel name="Office.submit"/>
 									</html-el:submit>
 									&nbsp;
-									<html-el:button onclick="cancel()" property="cancelButton"  styleClass="cancelbuttn">
+									<html-el:button styleId="offhierarchy.button.cancel" onclick="cancel()" property="cancelButton"  styleClass="cancelbuttn">
 										<mifos:mifoslabel name="Office.cancel" />
 									</html-el:button>
 								</td>

@@ -90,7 +90,7 @@
            <tr>
 	   			<td>
 	   				<font class="fontnormalRedBold">
-	   					<html-el:errors bundle="PersonnelUIResources"/>
+	   					<span id="previewyoursettings.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
 	   				</font>
 				</td>
 		   </tr>
@@ -227,7 +227,7 @@
 
       <tr class="fontnormal">
 	   <td>
-           <html-el:button property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
+           <html-el:button styleId="previewyoursettings.button.edit" property="btn" styleClass="insidebuttn" onclick="goToEditPage()">
 		   <mifos:mifoslabel name="Personnel.EditInformation" />
            </html-el:button>
         </td>
@@ -246,7 +246,7 @@
 	               	<mifos:mifoslabel name="button.submit" bundle="PersonnelUIResources"></mifos:mifoslabel>
               	 </html-el:submit>
 &nbsp;
-		      	<html-el:button property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
+		      	<html-el:button styleId="previewyoursettings.button.cancel" property="cancelBtn"  styleClass="cancelbuttn" onclick="goToCancelPage()">
 	                <mifos:mifoslabel name="button.cancel" bundle="PersonnelUIResources"></mifos:mifoslabel>
                	</html-el:button>
                   </td>

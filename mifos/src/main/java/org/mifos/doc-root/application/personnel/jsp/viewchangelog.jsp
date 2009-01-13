@@ -67,14 +67,14 @@
 		   <table width="95%" border="0" cellpadding="0" cellspacing="0">
 	          <tr>
 	            <td class="bluetablehead05">
-	            <span class="fontnormal8pt"><a href="AdminAction.do?method=load">
+	            <span class="fontnormal8pt"><a id="viewchangelog.link.admin" href="AdminAction.do?method=load">
 		             <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
 	           	  </a>
 			   /
-			  	  <a href="PersonAction.do?method=loadSearch">
+			  	  <a id="viewchangelog.link.viewUsers" href="PersonAction.do?method=loadSearch">
 			  	  <mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			  	  </a> /
-				  <a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
+				  <a id="viewchangelog.link.viewUser" href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
 		             <c:out value="${BusinessKey.displayName}"/>
 	           	  </a>
 	            </span></td>
@@ -88,7 +88,7 @@
 						<tr>
 									<td>
 										<font class="fontnormalRedBold">
-											<html-el:errors bundle="PersonnelUIResources" />
+											<span id="viewchangelog.error.message"><html-el:errors bundle="PersonnelUIResources" /></span>
 										</font>
 									</td>
 						</tr>
@@ -113,7 +113,7 @@
 					<br>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
-							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
+							<td align="center"><html-el:button styleId="viewchangelog.button.back" property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()" styleClass="buttn">
 								<mifos:mifoslabel name="Personnel.returnToDetails"
 									bundle="PersonnelUIResources" />

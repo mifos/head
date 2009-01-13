@@ -25,10 +25,10 @@
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td class="bluetablehead05"><span class="fontnormal8pt"> <a
+					<td class="bluetablehead05"><span class="fontnormal8pt"> <a id="personneldetails.link.admin"
 						href="AdminAction.do?method=load"> <mifos:mifoslabel
 						name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
-					</a> / <a href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
+					</a> / <a id="personneldetails.link.viewUsers" href="PersonAction.do?method=loadSearch"> <mifos:mifoslabel
 						name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 					</a> / </span> <c:set var="personnelBO" scope="request"
 						value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
@@ -41,16 +41,16 @@
 				<td width="70%" align="left" valign="top" class="paddingL15T15">
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<tr>
-						<td width="50%" height="23" class="headingorange"><c:out
-							value="${personnelBO.displayName}" /></td>
-						<td width="50%" align="right"><a
+						<td width="50%" height="23" class="headingorange"><span id="personneldetails.text.fullName"><c:out
+							value="${personnelBO.displayName}" /></span></td>
+						<td width="50%" align="right"><a id="personneldetails.link.editUser"
 							href="PersonAction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.EditUserInformation"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> </a></td>
 					</tr>
 					<tr>
-						<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
-							bundle="PersonnelUIResources" /> </font></td>
+						<td colspan="2"><font class="fontnormalRedBold"> <span id="personneldetails.error.message"><html-el:errors
+							bundle="PersonnelUIResources" /></span> </font></td>
 					</tr>
 					<tr>
 						<td height="23" class="fontnormalbold"><span class="fontnormal"> <c:choose>
@@ -63,7 +63,7 @@
 							</c:when>
 							<c:otherwise>
 							</c:otherwise>
-						</c:choose> <c:out value="${personnelBO.status.name}" /> </span>
+						</c:choose> <span id="personneldetails.text.status"><c:out value="${personnelBO.status.name}" /></span> </span>
 						<c:if test="${personnelBO.locked == 'true'}">
 							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Personnel.Locked" bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -84,7 +84,7 @@
 					<tr>
 						<td class="fontnormalbold"><span class="fontnormal"> <mifos:mifoslabel
 							name="Personnel.Email" bundle="PersonnelUIResources"></mifos:mifoslabel>
-						<c:out value="${personnelBO.emailId}" /> <br>
+						<span id="personneldetails.text.email"><c:out value="${personnelBO.emailId}" /></span> <br>
 
 						<mifos:mifoslabel name="Personnel.DOB"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
@@ -249,7 +249,7 @@
 							</c:forEach>
 						</c:forEach> <br>
 						</c:if>
-						<span class="fontnormal"> <html-el:link
+						<span class="fontnormal"> <html-el:link styleId="personneldetails.link.viewChangeLog"
 							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelBO.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -257,7 +257,7 @@
 						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
 							test="${personnelBO.locked == 'true'}">
-							<a href="PersonAction.do?method=loadUnLockUser&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+							<a id="personneldetails.link.unlockUser" href="PersonAction.do?method=loadUnLockUser&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							 <mifos:mifoslabel
 								name="Personnel.UnlockUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
@@ -302,11 +302,11 @@
 					<tr>
 						<td align="right" class="paddingleft05"><span
 							class="fontnormal8pt"> <c:if test="${!empty personnelBO.recentPersonnelNotes}">
-							<a href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelBO.displayName}"/>"> <mifos:mifoslabel
+							<a id="personneldetails.link.seeAllNotes" href="personnelNoteAction.do?method=search&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&personnelName=<c:out value="${personnelBO.displayName}"/>"> <mifos:mifoslabel
 								name="Personnel.SeeAllNotes" bundle="PersonnelUIResources"></mifos:mifoslabel>
 							</a>
 							<br>
-						</c:if> <a href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
+						</c:if> <a id="personneldetails.link.addNote" href="personnelNoteAction.do?method=load&personnelId=<c:out value="${personnelBO.personnelId}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 							name="Personnel.AddNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						</a> </span></td>
 					</tr>

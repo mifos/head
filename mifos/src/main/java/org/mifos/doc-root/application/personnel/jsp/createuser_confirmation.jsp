@@ -16,7 +16,7 @@
 			<mifos:mifoslabel name="Personnel.UserAdded" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			<br><br>
    				<font class="fontnormalRedBold">
-   					<html-el:errors bundle="PersonnelUIResources"/>
+   					<span id="createuser_confirmation.error.message"><html-el:errors bundle="PersonnelUIResources"/></span>
    				</font>
 		     
               </td>
@@ -24,22 +24,23 @@
             <tr>
               <td class="fontnormalbold"> 
 		<mifos:mifoslabel name="Personnel.PleaseNote" bundle="PersonnelUIResources"></mifos:mifoslabel>
+		<span id="createuser_confirmation.text.confirmation">
 		<span class="fontnormal"> 
 		<c:out value="${requestScope.displayName}"/>
 		 <mifos:mifoslabel name="Personnel.SystemIdAssigned" bundle="PersonnelUIResources"/>
 		 </span> 
-		<c:out value="${requestScope.globalPersonnelNum}"/>
+		<c:out value="${requestScope.globalPersonnelNum}"/></span>
 		<span class="fontnormal"><br>    
                             <br>
                             </span>
-			<a href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
+			<a id="createuser_confirmation.link.viewUser"  href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
 			<mifos:mifoslabel name="Personnel.ViewUserdetailsNow" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			<span class="fontnormal"><br>
                             <br>
                         </span>
 			<span class="fontnormal">
-			 <a href="PersonAction.do?method=chooseOffice&randomNUm=${sessionScope.randomNUm}">
+			 <a id="createuser_confirmation.link.addNewUser" href="PersonAction.do?method=chooseOffice&randomNUm=${sessionScope.randomNUm}">
 			<mifos:mifoslabel name="Personnel.AddNewUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			</span></td>
